@@ -1,0 +1,5 @@
+<h5>{{ record.metadata.title }}</h5>
+<p>
+    <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+</p>
+<div *ngIf="record.metadata.abstracts">{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>

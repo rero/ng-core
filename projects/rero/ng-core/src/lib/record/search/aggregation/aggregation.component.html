@@ -1,0 +1,39 @@
+<!--
+ Invenio angular core
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="card mb-2" *ngIf="aggregation.value.buckets.length">
+  <div class="card-header p-0">
+    <h5 class="mb-0">
+      <button class="btn btn-link" type="button" (click)="show = !show;">
+        {{ aggregation.key | translate | capitalize }}
+      </button>
+    </h5>
+  </div>
+  <div class="collapse" [class.show]="showAggregation()">
+    <div class="card-body">
+      <ul class="list-unstyled m-0">
+        <li class="form-check" *ngFor="let bucket of aggregation.value.buckets">
+          <input class="form-check-input" type="checkbox" [checked]="isSelected(bucket.key)"
+            (click)="updateFilter(bucket.key) ">
+          <label class="form-check-label">
+            <span *ngIf="bucket.name">{{ bucket.name }}</span>
+            <span *ngIf="!bucket.name">{{ bucket.key }}</span> ({{ bucket.doc_count }})
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
