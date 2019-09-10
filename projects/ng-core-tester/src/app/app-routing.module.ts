@@ -20,6 +20,18 @@ import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
 
+const canAdd = (record) => {
+  return true;
+}
+
+const canUpdate = (record) => {
+  return false;
+}
+
+const canDelete = (record) => {
+  return true;
+}
+
 const routes: Routes = [
   {
     path: '',
@@ -51,15 +63,9 @@ const routes: Routes = [
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
-          canAdd: () => {
-            return true;
-          },
-          canUpdate: (record: object) => {
-            return false;
-          },
-          canDelete: (record: object) => {
-            return true;
-          }
+          canAdd: canAdd,
+          canUpdate: canUpdate,
+          canDelete: canDelete
         },
         {
           key: 'institutions',
