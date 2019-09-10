@@ -19,8 +19,14 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchInputComponent } from './search-input.component';
 
 describe('SearchInputComponent', () => {
+  
+
   let component: SearchInputComponent;
   let fixture: ComponentFixture<SearchInputComponent>;
+
+  let searchInput: HTMLInputElement;
+  let searchButton: HTMLInputElement;
+
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,9 +39,41 @@ describe('SearchInputComponent', () => {
     fixture = TestBed.createComponent(SearchInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    searchInput = fixture.nativeElement.querySelector('#search');
+    searchButton = fixture.nativeElement.querySelector('#button-search');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should emit event on click on search button', () => {
+    const query = 'search click';
+    searchInput.value = query;
+
+    component.search.subscribe((text: String) => {
+      expect(text).toBe(query)
+    });
+
+    searchButton.dispatchEvent(new Event('click'));
+
+    fixture.detectChanges();
+  });
+
+  it('should emit event on enter key pressed', () => {
+    const query = 'search enter key';
+    searchInput.value = query;
+
+    component.search.subscribe((text: String) => {
+      expect(text).toBe(query)
+    });
+
+    const event = new KeyboardEvent('keyup', {
+      'key': 'Enter'
+    });
+    searchInput.dispatchEvent(event);
+
+    fixture.detectChanges();
   });
 });

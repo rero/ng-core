@@ -218,7 +218,7 @@ export class RecordSearchComponent implements OnInit {
    * Store or remove facet filter.
    * @param event - object, containing term and selected values
    */
-  public updateAggregationFilter(event: { term: string, values: [] }) {
+  public updateAggregationFilter(event: { term: string, values: string[] }) {
     const term = event.term;
     const values = event.values;
 
@@ -340,7 +340,7 @@ export class RecordSearchComponent implements OnInit {
   public canAddRecord() {
     const config = this.getResourceConfig(this.currentType);
 
-    if (config.canUpdate) {
+    if (config.canAdd) {
       return config.canAdd();
     }
     return true;
@@ -382,7 +382,7 @@ export class RecordSearchComponent implements OnInit {
     const index = this.types.findIndex(item => item.key === type);
 
     if (index === -1) {
-      return null;
+      throw `Configuration not found for type "${type}"`;
     }
 
     return this.types[index];

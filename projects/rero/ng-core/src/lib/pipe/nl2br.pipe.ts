@@ -23,8 +23,11 @@ export class Nl2brPipe implements PipeTransform {
   public constructor(public sanitizer: DomSanitizer) { }
 
   transform(value: string): any {
+    if(!value) {
+      return this.sanitizer.bypassSecurityTrustHtml('');
+    }
     return this.sanitizer.bypassSecurityTrustHtml(
-      value.replace(/\n/g, '<br>\n')
+      value.replace(/\r\n?|\n/g, '<br>\n')
     );
   }
 }

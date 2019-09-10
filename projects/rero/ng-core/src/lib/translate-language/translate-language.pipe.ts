@@ -16,7 +16,7 @@
  */
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 
-import { TranslateLanguageService } from '../translate-language/translate-language.service';
+import { TranslateLanguageService } from './translate-language.service';
 
 @Pipe({
   name: 'translateLanguage'

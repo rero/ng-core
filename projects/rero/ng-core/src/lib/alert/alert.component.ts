@@ -28,12 +28,15 @@ export class AlertComponent implements OnInit {
   private _timeout = 5000;
 
   @Input()
-  set timeout(timeout: string) {
-    this._timeout = +timeout;
-
-    if (isNaN(this._timeout)) {
-      this._timeout = 5000;
+  set timeout(timeout: number) {
+    if (timeout < 0) {
+      timeout = 5000;
     }
+
+    this._timeout = timeout;
+  }
+  get timeout() {
+    return this._timeout;
   }
 
   constructor(
@@ -41,7 +44,6 @@ export class AlertComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.addAlert('success', 'test');
     this.alertsService.alert.subscribe(alert => {
       if (alert) {
         this.addAlert(alert.type, alert.message);
@@ -49,8 +51,9 @@ export class AlertComponent implements OnInit {
     });
   }
 
-  onAlertClosed(dismissedAlert: AlertComponent): void {
-    this.alerts = this.alerts.filter(alert => alert !== dismissedAlert);
+  onAlertClosed(indexToRemove: number): void {
+    this.alerts = this.alerts.filter((alert, index: number) => index !== indexToRemove);
+
   }
 
   addAlert(type: string, message: string) {

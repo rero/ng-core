@@ -15,32 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader, TranslateService } from '@ngx-translate/core';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 
-import { DialogComponent } from './dialog.component';
-import { Nl2brPipe } from '../pipe/nl2br.pipe';
-import { ModalModule, BsModalRef } from 'ngx-bootstrap';
+import { RecordSearchResultComponent } from './record-search-result.component';
+import { JsonComponent } from './item/json.component';
+import { RecordSearchResultDirective } from './record-search-result.directive';
 
-describe('DialogComponent', () => {
-  let component: DialogComponent;
-  let fixture: ComponentFixture<DialogComponent>;
+describe('RecordSearchAggregationComponent', () => {
+  let component: RecordSearchResultComponent;
+  let fixture: ComponentFixture<RecordSearchResultComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [
+        JsonComponent,
+        RecordSearchResultDirective,
+        RecordSearchResultComponent
+      ],
       imports: [
-        ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
-      ],
-      declarations: [DialogComponent, Nl2brPipe],
-      providers: [BsModalRef, TranslateService]
+      ]
     })
+      .overrideModule(BrowserDynamicTestingModule, {
+        set: {
+          entryComponents: [JsonComponent],
+        }
+      })
       .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DialogComponent);
+    fixture = TestBed.createComponent(RecordSearchResultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -49,17 +57,15 @@ describe('DialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should confirm', () => {
-    component.onClose.subscribe(test => {
-      expect(test).toBe(true);
-    });
-    component.confirm();
+  it('should have a custom component view', () => {
+    component.itemViewComponent = JsonComponent;
+    component.loadItemView();
   });
 
-  it('should decline', () => {
-    component.onClose.subscribe(test => {
-      expect(test).toBe(false);
+  it('should delete record', () => {
+    component.deletedRecord.subscribe((pid: string) => {
+      expect(pid).toBe('1');
     });
-    component.decline();
+    component.deleteRecord(new Event('click'), '1');
   });
 });

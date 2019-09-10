@@ -28,11 +28,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { TranslateLoader } from './translate/translate-loader';
 import { AlertComponent } from './alert/alert.component';
 import { SearchInputComponent } from './search-input/search-input.component';
-import { Nl2brPipe } from './pipe/nl2br';
-import { TranslateLanguagePipe } from './pipe/translate-language.pipe';
-import { DefaultPipe } from './pipe/default';
-import { TruncateTextPipe } from './pipe/truncate-text';
-import { UpperCaseFirstPipe } from './pipe/ucfirst';
+import { Nl2brPipe } from './pipe/nl2br.pipe';
+import { TranslateLanguagePipe } from './translate-language/translate-language.pipe';
+import { DefaultPipe } from './pipe/default.pipe';
+import { TruncateTextPipe } from './pipe/truncate-text.pipe';
+import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
 import { DialogComponent } from './dialog/dialog.component';
 
 @NgModule({

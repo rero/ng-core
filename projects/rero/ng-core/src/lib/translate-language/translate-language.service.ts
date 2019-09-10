@@ -33,10 +33,12 @@ export class TranslateLanguageService {
     }
 
     for (const lang of this._languages) {
-      if (lang) {
+      try {
         I18nIsoLanguages.registerLocale(
           require('@cospired/i18n-iso-languages/langs/' + lang + '.json')
-        );
+        ); 
+      } catch (error) {
+        
       }
     }
   }

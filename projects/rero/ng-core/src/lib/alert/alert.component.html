@@ -17,9 +17,9 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div *ngFor="let alert of alerts">
+        <div *ngFor="let alert of alerts; let i = index">
             <alert [dismissible]="true" [type]="alert.type" [dismissOnTimeout]="alert.timeout"
-                (onClosed)="onAlertClosed(alert)">{{ alert.message }}</alert>
+                (onClosed)="onAlertClosed(i)">{{ alert.message }}</alert>
         </div>
     </div>
 </div>

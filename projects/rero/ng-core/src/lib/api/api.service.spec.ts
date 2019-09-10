@@ -17,12 +17,39 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ApiService } from './api.service';
+import { CONFIG } from '../core.config';
+
+let apiService: ApiService;
 
 describe('ApiService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => {
+    const config = {
+      apiEndpointPrefix: '/api',
+      apiBaseUrl: 'https://localhost:5000'
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        ApiService,
+        { provide: CONFIG, useValue: config }
+      ]
+    })
+
+    apiService = TestBed.get(ApiService);
+  });
 
   it('should be created', () => {
     const service: ApiService = TestBed.get(ApiService);
     expect(service).toBeTruthy();
+  });
+
+  it('#getEndpointByType should return endpoint /api/documents', () => {
+    expect(apiService.getEndpointByType('documents'))
+      .toBe('/api/documents')
+  });
+
+  it('#getEndpointByType should return endpoint with absolute URL', () => {
+    expect(apiService.getEndpointByType('documents', true))
+      .toBe('https://localhost:5000/api/documents')
   });
 });

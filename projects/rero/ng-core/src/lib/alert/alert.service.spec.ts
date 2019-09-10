@@ -25,4 +25,12 @@ describe('AlertService', () => {
     const service: AlertService = TestBed.get(AlertService);
     expect(service).toBeTruthy();
   });
+
+  it('#addAlert call', () => {
+    const expectedAlert = { type: 'success', message: 'Success message !' };
+    const service: AlertService = TestBed.get(AlertService);
+    service.addAlert(expectedAlert.type, expectedAlert.message);
+
+    expect(service.alert.value).toEqual(expectedAlert);
+  });
 });

@@ -15,8 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 
 import { RecordSearchAggregationComponent } from './aggregation.component';
+import { UpperCaseFirstPipe } from '../../../pipe/ucfirst.pipe';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
@@ -24,7 +26,15 @@ describe('RecordSearchAggregationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RecordSearchAggregationComponent]
+      declarations: [
+        RecordSearchAggregationComponent,
+        UpperCaseFirstPipe
+      ],
+      imports: [
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })
+      ]
     })
       .compileComponents();
   }));
@@ -32,10 +42,47 @@ describe('RecordSearchAggregationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecordSearchAggregationComponent);
     component = fixture.componentInstance;
+    component.aggregation = {
+      key: 'author',
+      value: {
+        buckets: [
+          {
+            doc_count: 30,
+            key: "Filippini, Massimo"
+          },
+          {
+            doc_count: 9,
+            key: "Botturi, Luca"
+          }
+        ]
+      }
+    }
+    component.selectedValues = ['Filippini, Massimo']
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should return true if value is selected', () => {
+    expect(component.isSelected('Filippini, Massimo')).toBe(true);
+  });
+
+  it('should show aggregation filter', () => {
+    expect(component.showAggregation()).toBe(true);
+    
+    component.show = false;
+    expect(component.showAggregation()).toBe(true);
+  });
+  
+  it('should add value to selected filters', () => {
+    component.updateFilter('Botturi, Luca');
+    expect(component.selectedValues.includes('Botturi, Luca')).toBe(true);
+  });
+
+  it('should remove value from selected filters', () => {
+    component.updateFilter('Filippini, Massimo');
+    expect(component.selectedValues.includes('Filippini, Massimo')).toBe(false);
   });
 });

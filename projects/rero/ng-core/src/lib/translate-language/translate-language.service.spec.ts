@@ -14,18 +14,39 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 */
-
-import { TestBed } from '@angular/core/testing';
-
 import { TranslateLanguageService } from './translate-language.service';
 
 describe('TranslateLanguageService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service: TranslateLanguageService;
+
+  beforeEach(() => {
+    service = new TranslateLanguageService({});
+    
+  });
 
   it('should be created', () => {
-    const service: TranslateLanguageService = TestBed.get(TranslateLanguageService);
     expect(service).toBeTruthy();
+  });
+
+  it('should pass languages in configuration', () => {
+    service = new TranslateLanguageService({ languages: ['en'] });
+    expect(service).toBeTruthy();
+  });
+
+  it('should have no languages passed in configuration', () => {
+    expect(service.translate('fr', 'de')).toBe('fr');
+  });
+
+  it('should translate "fr" to "French"', () => {
+    expect(service.translate('fr', 'en')).toBe('French');
+  });
+
+  it('should return language code because lang does not exist', () => {
+    expect(service.translate('zz', 'en')).toBe('zz');
+  });
+
+  it('should return language code because translation file is not loaded', () => {
+    expect(service.translate('fr', 'pt')).toBe('fr');
   });
 });

@@ -25,7 +25,7 @@ export class RecordSearchAggregationComponent {
    * Aggregation data
    */
   @Input() 
-  public aggregation: { key: string, value: { buckets: [] } };
+  public aggregation: { key: string, value: { buckets: {}[] } };
 
   /**
    * Selected value for filter
@@ -72,6 +72,6 @@ export class RecordSearchAggregationComponent {
    * Show filter values
    */
   showAggregation() {
-    return this.show || this.selectedValues.length;
+    return this.show || this.selectedValues.length > 0;
   }
 }

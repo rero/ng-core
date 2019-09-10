@@ -16,14 +16,13 @@
  */
 import { Inject } from '@angular/core';
 import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 import fr from './i18n/fr.json'
 import de from './i18n/de.json'
 import en from './i18n/en.json'
 import it from './i18n/it.json'
 import { CONFIG, Config } from '../core.config.js';
-import { first } from 'rxjs/operators';
 
 /**
  * Loader for translations used in ngx-translate library.
