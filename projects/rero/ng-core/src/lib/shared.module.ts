@@ -32,7 +32,7 @@ import { Nl2brPipe } from './pipe/nl2br';
 import { TranslateLanguagePipe } from './pipe/translate-language.pipe';
 import { DefaultPipe } from './pipe/default';
 import { TruncateTextPipe } from './pipe/truncate-text';
-import { CapitalizePipe } from './pipe/capitalize';
+import { UpperCaseFirstPipe } from './pipe/ucfirst';
 import { DialogComponent } from './dialog/dialog.component';
 
 @NgModule({
@@ -44,7 +44,7 @@ import { DialogComponent } from './dialog/dialog.component';
     DefaultPipe,
     TruncateTextPipe,
     TranslateLanguagePipe,
-    CapitalizePipe
+    UpperCaseFirstPipe
   ],
   imports: [
     CommonModule,
@@ -76,7 +76,7 @@ import { DialogComponent } from './dialog/dialog.component';
     DefaultPipe,
     TruncateTextPipe,
     TranslateLanguagePipe,
-    CapitalizePipe
+    UpperCaseFirstPipe
   ],
   entryComponents: [
     DialogComponent

@@ -25,7 +25,7 @@
 <div *ngIf="!isLoading; else loading">
     <div class="d-flex align-items-center my-5">
         <div class="mr-3 w-25" *ngIf="showSearchInput">
-            <invenio-core-search-input [placeholder]="'search' | translate | capitalize" [searchText]="q"
+            <invenio-core-search-input [placeholder]="'search' | translate | ucfirst" [searchText]="q"
                 [displayLabel]="false" (search)="searchByQuery($event)">
             </invenio-core-search-input>
         </div>

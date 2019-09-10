@@ -18,12 +18,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Capitalize the first letter of the string.
+ * Uppercase the first letter of the string.
  */
 @Pipe({
-    name: 'capitalize'
+    name: 'ucfirst'
 })
-export class CapitalizePipe implements PipeTransform {
+export class UpperCaseFirstPipe implements PipeTransform {
     transform(value: string): string {
         if (value === null) {
             return value;
