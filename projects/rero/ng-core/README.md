@@ -1,24 +1,22 @@
-# NgCore
+# RERO angular core library
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.3.
+Library containing components, services and angular filters that can be used on different projects.
 
-## Code scaffolding
+## Components
 
-Run `ng generate component component-name --project ng-core` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ng-core`.
-> Note: Don't forget to add `--project ng-core` or else it will be added to the default project in your `angular.json` file. 
+* Invenio records search
+* Search input
+* Alert messages
+* Modal dialogs
 
-## Build
+## Pipes
 
-Run `ng build ng-core` to build the project. The build artifacts will be stored in the `dist/` directory.
+* Default
+* Nl2br
+* Translate language
+* Truncate text
+* Uppercase first letter
 
-## Publishing
+## Services
 
-After building your library with `ng build ng-core`, go to the dist folder `cd dist/ng-core` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ng-core` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+* API endpoint resolver
