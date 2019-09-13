@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/rero/ng-core",
       "sourceRoot": "projects/rero/ng-core/src",
-      "prefix": "lib",
+      "prefix": "ng-core",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",

@@ -1,7 +1,7 @@
 import { DefaultPipe } from './default.pipe';
 
 describe('DefaultPipe', () => {
-    let pipe = new DefaultPipe();
+    const pipe = new DefaultPipe();
 
     it('return current value because it is not null', () => {
         expect(pipe.transform('Current value', 'New value')).toBe('Current value');

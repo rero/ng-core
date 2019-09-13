@@ -27,7 +27,7 @@ export class HomeComponent {
       key: 'patrons',
       label: 'Utilisateurs'
     }
-  ]
+  ];
 
   constructor(
     private dialogService: DialogService,
@@ -35,9 +35,9 @@ export class HomeComponent {
     private translateLanguageService: TranslateLanguageService
   ) {
     this.apiData = {
-      'relative': this.apiService.getEndpointByType('documents'),
-      'absolute': this.apiService.getEndpointByType('documents', true),
-    }
+      relative: this.apiService.getEndpointByType('documents'),
+      absolute: this.apiService.getEndpointByType('documents', true),
+    };
 
     this.testLanguageTranslation = translateLanguageService.translate('fr', 'fr');
   }
@@ -50,7 +50,7 @@ export class HomeComponent {
         body: 'Exit without saving changes?',
         confirmButton: true
       }
-    }
+    };
 
     this.dialogService.show(config).subscribe((confirm: boolean) => {
       if (confirm) {

@@ -48,16 +48,16 @@ describe('RecordSearchAggregationComponent', () => {
         buckets: [
           {
             doc_count: 30,
-            key: "Filippini, Massimo"
+            key: 'Filippini, Massimo'
           },
           {
             doc_count: 9,
-            key: "Botturi, Luca"
+            key: 'Botturi, Luca'
           }
         ]
       }
-    }
-    component.selectedValues = ['Filippini, Massimo']
+    };
+    component.selectedValues = ['Filippini, Massimo'];
     fixture.detectChanges();
   });
 
@@ -71,11 +71,11 @@ describe('RecordSearchAggregationComponent', () => {
 
   it('should show aggregation filter', () => {
     expect(component.showAggregation()).toBe(true);
-    
+
     component.show = false;
     expect(component.showAggregation()).toBe(true);
   });
-  
+
   it('should add value to selected filters', () => {
     component.updateFilter('Botturi, Luca');
     expect(component.selectedValues.includes('Botturi, Luca')).toBe(true);

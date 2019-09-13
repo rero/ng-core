@@ -31,7 +31,7 @@ describe('DialogService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalModule.forRoot(), 
+        ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })

@@ -22,15 +22,15 @@ import { InstitutionComponent } from './record/institution/institution.component
 
 const canAdd = (record) => {
   return true;
-}
+};
 
 const canUpdate = (record) => {
   return false;
-}
+};
 
 const canDelete = (record) => {
   return true;
-}
+};
 
 const routes: Routes = [
   {
@@ -63,9 +63,9 @@ const routes: Routes = [
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
-          canAdd: canAdd,
-          canUpdate: canUpdate,
-          canDelete: canDelete
+          canAdd,
+          canUpdate,
+          canDelete
         },
         {
           key: 'institutions',

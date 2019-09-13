@@ -23,22 +23,22 @@ declare const require: any;
 
 @Injectable()
 export class TranslateLanguageService {
-  private _languages = ['en'];
+  private languages = ['en'];
 
   constructor(
     @Inject(CONFIG) private config: Config
   ) {
     if (this.config.languages && this.config.languages.length) {
-      this._languages = config.languages;
+      this.languages = config.languages;
     }
 
-    for (const lang of this._languages) {
+    for (const lang of this.languages) {
       try {
         I18nIsoLanguages.registerLocale(
           require('@cospired/i18n-iso-languages/langs/' + lang + '.json')
-        ); 
+        );
       } catch (error) {
-        
+
       }
     }
   }

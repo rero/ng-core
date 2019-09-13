@@ -24,17 +24,17 @@ import { CONFIG, Config } from '../core.config';
 export class ApiService {
   /**
    * API base URL.
-   * 
+   *
    * Ex: https://localhost:5000
    */
-  private baseUrl: string = '';
+  private baseUrl = '';
 
   /**
    * API prefix
-   * 
+   *
    * Ex: /api
    */
-  private endpointPrefix: string = '/';
+  private endpointPrefix = '/';
 
   /**
    * Constructor

@@ -43,7 +43,7 @@ import { TranslateLoader } from './translate/translate-loader';
 export class CoreModule {
   static forRoot(config: Partial<Config>): ModuleWithProviders {
     // Merge configuration provided with default configuration.
-    config = { ...DEFAULT_CONFIG, ...config }
+    config = { ...DEFAULT_CONFIG, ...config };
 
     return {
       ngModule: CoreModule,

@@ -14,16 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, ComponentFactoryResolver, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ComponentFactoryResolver, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 
 import { RecordSearchResultDirective } from './record-search-result.directive';
 import { JsonComponent } from './item/json.component';
 
 @Component({
-  selector: 'invenio-core-record-search-result',
+  selector: 'ng-core-record-search-result',
   templateUrl: './record-search-result.component.html',
 })
-export class RecordSearchResultComponent {
+export class RecordSearchResultComponent implements OnInit {
   /**
    * Record to display
    */
@@ -40,19 +40,19 @@ export class RecordSearchResultComponent {
    * Admin mode (edit, remove, add, ...)
    */
   @Input()
-  adminMode: boolean = false;
+  adminMode = false;
 
   /**
    * Record can be updated
    */
   @Input()
-  canUpdate: boolean = true;
+  canUpdate = true;
 
   /**
    * Record can be removed
    */
   @Input()
-  canDelete: boolean = true;
+  canDelete = true;
 
   /**
    * Event emitted when a record is deleted
@@ -80,12 +80,13 @@ export class RecordSearchResultComponent {
    * Dynamically load component depending on selected resource type.
    */
   public loadItemView() {
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.itemViewComponent ? this.itemViewComponent : JsonComponent);
+    const componentFactory = this.componentFactoryResolver
+      .resolveComponentFactory(this.itemViewComponent ? this.itemViewComponent : JsonComponent);
     const viewContainerRef = this.searchResultItem.viewContainerRef;
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    (<JsonComponent>componentRef.instance).record = this.record;
+    (componentRef.instance as JsonComponent).record = this.record;
   }
 
   /**

@@ -1,19 +1,19 @@
 <h4>Search component</h4>
 <div class="card">
     <div class="card-body">
-        <invenio-core-record-search [adminMode]="true" currentType="documents" [types]="recordConfig">
-        </invenio-core-record-search>
+        <ng-core-record-search [adminMode]="true" currentType="documents" [types]="recordConfig">
+        </ng-core-record-search>
     </div>
 </div>
 
 <h4 class="mt-5">Alert component</h4>
-<invenio-core-alert timeout="100000"></invenio-core-alert>
+<ng-core-alert timeout="100000"></ng-core-alert>
 
 <h4 class="mt-5">Dialog component</h4>
 <button class="btn btn-primary" (click)="showDialog()">Show modal</button>
 
 <h4 class="mt-5">Search input</h4>
-<invenio-core-search-input (search)="doSearch($event, searchText)"></invenio-core-search-input>
+<ng-core-search-input (search)="doSearch($event, searchText)"></ng-core-search-input>
 
 <h4 class="mt-5">API Data</h4>
 <p>{{ apiData | json }}</p>

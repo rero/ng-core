@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'invenio-core-dialog',
+  selector: 'ng-core-dialog',
   templateUrl: './dialog.component.html'
 })
 /**
@@ -39,7 +39,7 @@ export class DialogComponent implements OnInit {
   /**
    * Show button to confirm action.
    */
-  public confirmButton: boolean = true;
+  public confirmButton = true;
 
   /**
    * Event triggered when modal is closed.

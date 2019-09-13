@@ -38,6 +38,6 @@ export const DEFAULT_CONFIG = {
     apiEndpointPrefix: '/api',
     languages: ['en'],
     customTranslations: null
-}
+};
 
 export const CONFIG = new InjectionToken<Config>('core.config');

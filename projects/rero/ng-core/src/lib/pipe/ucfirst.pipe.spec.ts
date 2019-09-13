@@ -1,7 +1,7 @@
 import { UpperCaseFirstPipe } from './ucfirst.pipe';
 
 describe('UpperCaseFirstPipe', () => {
-    let pipe = new UpperCaseFirstPipe();
+    const pipe = new UpperCaseFirstPipe();
 
     it('uppercase the first char of word', () => {
         expect(pipe.transform('the title')).toBe('The title');

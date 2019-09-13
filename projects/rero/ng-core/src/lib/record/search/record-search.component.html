@@ -25,9 +25,9 @@
 <div *ngIf="!isLoading; else loading">
     <div class="d-flex align-items-center my-5">
         <div class="mr-3 w-25" *ngIf="showSearchInput">
-            <invenio-core-search-input [placeholder]="'search' | translate | ucfirst" [searchText]="q"
+            <ng-core-search-input [placeholder]="'search' | translate | ucfirst" [searchText]="q"
                 [displayLabel]="false" (search)="searchByQuery($event)">
-            </invenio-core-search-input>
+            </ng-core-search-input>
         </div>
         <div><strong>{{ total }} {{ 'results'|translate }}</strong></div>
         <div class="ml-auto">
@@ -51,19 +51,19 @@
     <div class="row">
         <div class="col-sm-3" *ngIf="total && aggregations && (aggregations | keyvalue).length">
             <div *ngFor="let item of aggregations | keyvalue">
-                <invenio-core-record-search-aggregation [aggregation]="item"
+                <ng-core-record-search-aggregation [aggregation]="item"
                     [selectedValues]="getFilterSelectedValues(item.key)"
                     (updateAggregationFilter)="updateAggregationFilter($event)">
-                </invenio-core-record-search-aggregation>
+                </ng-core-record-search-aggregation>
             </div>
         </div>
         <div id="recordlist" class="col">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item px-0 py-4" *ngFor="let record of records">
-                    <invenio-core-record-search-result [adminMode]="adminMode" [record]="record"
+                    <ng-core-record-search-result [adminMode]="adminMode" [record]="record"
                         [itemViewComponent]="getResultItemComponentView()" [canUpdate]="canUpdateRecord(record)"
                         [canDelete]="canDeleteRecord(record)" (deletedRecord)="deleteRecord($event)">
-                    </invenio-core-record-search-result>
+                    </ng-core-record-search-result>
                 </li>
             </ul>
             <pagination [(ngModel)]="currentPage" [totalItems]="total" [itemsPerPage]="size" [maxSize]="5"

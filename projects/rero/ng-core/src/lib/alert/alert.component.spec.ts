@@ -57,28 +57,28 @@ describe('AlertComponent', () => {
     const expectedAlert = { type: 'success', message: 'Success message !', timeout: component.timeout };
     component.addAlert(expectedAlert.type, expectedAlert.message);
 
-    expect(component.alerts[component.alerts.length-1]).toEqual(expectedAlert);
-  })
+    expect(component.alerts[component.alerts.length - 1]).toEqual(expectedAlert);
+  });
 
   it('should have an alert on init', () => {
     const expectedAlert = { type: 'warning', message: 'Message onInit call', timeout: component.timeout };
     alertService.addAlert(expectedAlert.type, expectedAlert.message);
-    
-    expect(component.alerts[component.alerts.length-1]).toEqual(expectedAlert);
-  })
+
+    expect(component.alerts[component.alerts.length - 1]).toEqual(expectedAlert);
+  });
 
   it('should close an alert', () => {
     const expectedAlert = { type: 'success', message: 'Success message !', timeout: component.timeout };
     alertService.addAlert(expectedAlert.type, expectedAlert.message);
-    
+
     component.onAlertClosed(0);
 
     expect(component.alerts.length).toBe(0);
-  })
+  });
 
   it('should set default timeout value to 5000 if given is under 0', () => {
     component.timeout = -1000;
     fixture.detectChanges();
     expect(component.timeout).toBe(5000);
-  })
+  });
 });

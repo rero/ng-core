@@ -19,7 +19,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AlertService } from './alert.service';
 
 @Component({
-  selector: 'invenio-core-alert',
+  selector: 'ng-core-alert',
   templateUrl: './alert.component.html'
 })
 export class AlertComponent implements OnInit {
@@ -58,8 +58,8 @@ export class AlertComponent implements OnInit {
 
   addAlert(type: string, message: string) {
     this.alerts.push({
-      type: type,
-      message: message,
+      type,
+      message,
       timeout: this._timeout
     });
   }

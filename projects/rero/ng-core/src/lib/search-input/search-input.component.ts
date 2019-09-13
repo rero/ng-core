@@ -17,12 +17,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'invenio-core-search-input',
+  selector: 'ng-core-search-input',
   templateUrl: './search-input.component.html'
 })
 export class SearchInputComponent {
   @Input()
-  displayLabel: boolean = true;
+  displayLabel = true;
 
   @Input() placeholder = 'search';
   @Output() search = new EventEmitter<string>();

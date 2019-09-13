@@ -42,11 +42,11 @@ describe('RecordSearchComponent', () => {
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 
   const emptyRecords = {
-    "aggregations": {},
-    "hits": {
-      "total": 2
+    aggregations: {},
+    hits: {
+      total: 2
     },
-    "links": {}
+    links: {}
   };
 
   const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete']);
@@ -56,9 +56,9 @@ describe('RecordSearchComponent', () => {
   const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
   dialogServiceSpy.show.and.returnValue(of(true));
 
-  let route = { 
-    data: of({ 
-      linkPrefix: '/records', 
+  const route = {
+    data: of({
+      linkPrefix: '/records',
       types: [
         {
           key: 'documents',
@@ -66,14 +66,14 @@ describe('RecordSearchComponent', () => {
       ],
       showSearchInput: true,
       adminMode: true
-    }), 
+    }),
     queryParams: of({
       q: '',
       page: 1,
       size: 10,
-      author: [ 'Filippini, Massimo' ]
-    }), 
-    params: of({ type: 'documents' }) 
+      author: ['Filippini, Massimo']
+    }),
+    params: of({ type: 'documents' })
   };
 
   beforeEach(async(() => {
@@ -183,7 +183,7 @@ describe('RecordSearchComponent', () => {
 
   it('should delete record', fakeAsync(() => {
     dialogServiceSpy.show.and.returnValue(of(true));
-    
+
     expect(component.types[0].total).toBe(2);
     component.deleteRecord('1');
     tick(10000); // wait for refreshing records
@@ -236,7 +236,7 @@ describe('RecordSearchComponent', () => {
     component.types = [];
     expect(() => {
       fixture.detectChanges();
-    }).toThrow(new Error('Configuration not found for type "documents"'));
+    }).toThrowError('Configuration not found for type "documents"');
   });
 
   it('should get component view for search result', () => {

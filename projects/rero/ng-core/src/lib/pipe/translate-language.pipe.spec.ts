@@ -19,7 +19,7 @@ describe('TranslateLanguagePipe', () => {
     const translateLanguageServiceSpy = jasmine.createSpyObj('TranslateLanguageService', ['translate']);
     translateLanguageServiceSpy.translate.and.returnValue(langText);
 
-    let pipe = new TranslateLanguagePipe(translateLanguageServiceSpy);
+    const pipe = new TranslateLanguagePipe(translateLanguageServiceSpy);
 
     expect(pipe.transform('fr', 'en')).toBe(langText);
   });

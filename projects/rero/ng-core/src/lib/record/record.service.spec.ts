@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed, getTestBed } from '@angular/core/testing';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { RecordService } from './record.service';
@@ -40,7 +40,7 @@ describe('RecordService', () => {
       providers: [
         { provide: ApiService, useValue: spy }
       ]
-    })
+    });
 
     service = TestBed.get(RecordService);
 
@@ -62,18 +62,18 @@ describe('RecordService', () => {
 
   it('should return an Observable<Record>', () => {
     const expectedData: Record = {
-      "aggregations": {},
-      "hits": {
-        "total": 2
+      aggregations: {},
+      hits: {
+        total: 2
       },
-      "links": {}
+      links: {}
     };
 
     service.getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }]).subscribe(data => {
       expect(data.hits.total).toBe(2);
     });
 
-    const req = httpMock.expectOne(req => req.method === 'GET' && req.url === url + '/');
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
 
     req.flush(expectedData);
   });
@@ -87,7 +87,7 @@ describe('RecordService', () => {
         expect(error).toContain('Something bad happened');
       });
 
-    const req = httpMock.expectOne(req => req.method === 'GET' && req.url === url + '/');
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
 
     req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
   });
@@ -101,7 +101,7 @@ describe('RecordService', () => {
         expect(error).toContain('Something bad happened');
       });
 
-    const req = httpMock.expectOne(req => req.method === 'GET' && req.url === url + '/');
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
 
     const mockError = new ErrorEvent('Network error', {
       message: errorMessage,
@@ -115,9 +115,9 @@ describe('RecordService', () => {
 
     service.delete('documents', pid).subscribe();
 
-    const req = httpMock.expectOne(req => {
-      return req.method === 'DELETE' && req.url === url + '/' + pid;
+    const req = httpMock.expectOne(request => {
+      return request.method === 'DELETE' && request.url === url + '/' + pid;
     });
-    req.flush
+    req.flush({});
   });
 });

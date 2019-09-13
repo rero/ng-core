@@ -24,7 +24,7 @@ import { first } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'invenio-core-record-search',
+  selector: 'ng-core-record-search',
   templateUrl: './record-search.component.html',
   styles: []
 })
@@ -37,7 +37,7 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Total of records corresponding to request
    */
-  total: number = 0;
+  total = 0;
 
   /**
    * Facets retreived from request result
@@ -47,12 +47,12 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Search is processing
    */
-  isLoading: boolean = false;
+  isLoading = false;
 
   /**
    * Indicates if the component is included in angular routes
    */
-  inRouting: boolean = false;
+  inRouting = false;
 
   /**
    * Current filters applied
@@ -60,32 +60,32 @@ export class RecordSearchComponent implements OnInit {
   aggFilters = [];
 
   /**
-   * Define the current record's page 
+   * Define the current record's page
    */
   @Input()
-  page: number = 1;
+  page = 1;
 
   /**
    * Define the number of records per page
    */
   @Input()
-  size: number = 10;
+  size = 10;
 
   /**
    * Search query
    */
   @Input()
-  q: string = '';
+  q = '';
 
   /**
    * Admin mode (edit, remove, add, ...)
    */
   @Input()
-  adminMode: boolean = true;
+  adminMode = true;
 
   /**
    * Used only for binding with pagination.
-   * Avoid side effect if "page" property is bound to pagination 
+   * Avoid side effect if "page" property is bound to pagination
    * (infinite calls to get records).
    * @param page - number, new page
    */
@@ -110,25 +110,25 @@ export class RecordSearchComponent implements OnInit {
     canAdd?: any,
     canUpdate?: any,
     canDelete?: any
-  }[] = [{ key: 'documents', 'label': 'Documents' }];
+  }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
    * Url prefix for component routes
    */
   @Input()
-  linkPrefix: string = '';
+  linkPrefix = '';
 
   /**
    * Display search input
    */
   @Input()
-  showSearchInput: boolean = true;
+  showSearchInput = true;
 
   /**
    * Current selected resource type
    */
   @Input()
-  currentType: string = 'documents';
+  currentType = 'documents';
 
   /**
    * Constructor
@@ -178,7 +178,7 @@ export class RecordSearchComponent implements OnInit {
         .pipe(first()) // avoid side effects when type is pushed to route
         .subscribe(
           params => {
-            this.currentType = params['type'];
+            this.currentType = params.type;
           }
         );
 
@@ -186,15 +186,13 @@ export class RecordSearchComponent implements OnInit {
         .pipe(first()) // avoid side effects when queryParams are pushed to route
         .subscribe(
           params => {
-            for (let key in params) {
+            for (const key in params) {
               if (['q', 'page', 'size'].includes(key)) {
-                this[key] = params[key]
-              }
-              else {
+                this[key] = params[key];
+              } else {
                 if (Array.isArray(params[key]) === false) {
                   this.aggFilters.push({ key, values: [params[key]] });
-                }
-                else {
+                } else {
                   this.aggFilters.push({ key, values: params[key] });
                 }
               }
@@ -202,15 +200,14 @@ export class RecordSearchComponent implements OnInit {
             this.getRecords();
           }
         );
-    }
-    else {
+    } else {
       this.getRecords();
     }
 
-    for (const key in this.types) {
-      this.recordService.getRecords(this.types[key].key).subscribe(records => {
-        this.types[key].total = records.hits.total;
-      })
+    for (const type of this.types) {
+      this.recordService.getRecords(type.key).subscribe(records => {
+        type.total = records.hits.total;
+      });
     }
   }
 
@@ -225,10 +222,9 @@ export class RecordSearchComponent implements OnInit {
     const index = this.aggFilters.findIndex(item => item.key === term);
 
     if (index !== -1) {
-      this.aggFilters[index] = { key: term, values: values };
-    }
-    else {
-      this.aggFilters.push({ key: term, values: values });
+      this.aggFilters[index] = { key: term, values };
+    } else {
+      this.aggFilters.push({ key: term, values });
     }
 
     this.getRecords();
@@ -382,7 +378,7 @@ export class RecordSearchComponent implements OnInit {
     const index = this.types.findIndex(item => item.key === type);
 
     if (index === -1) {
-      throw `Configuration not found for type "${type}"`;
+      throw new Error(`Configuration not found for type "${type}"`);
     }
 
     return this.types[index];
@@ -406,7 +402,7 @@ export class RecordSearchComponent implements OnInit {
       this.total = records.hits.total;
       this.aggregations = records.aggregations;
       this.isLoading = false;
-    })
+    });
   }
 
   /**
@@ -431,6 +427,6 @@ export class RecordSearchComponent implements OnInit {
 
     Object.keys(filters).map(key => queryParams[key] = filters[key]);
 
-    this.router.navigate([this.linkPrefix + '/' + this.currentType], { queryParams: queryParams });
+    this.router.navigate([this.linkPrefix + '/' + this.currentType], { queryParams });
   }
 }

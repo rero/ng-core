@@ -17,7 +17,7 @@
 import { PipeTransform, Pipe } from '@angular/core';
 
 @Pipe({name: 'default', pure: true})
-export class DefaultPipe {
+export class DefaultPipe implements PipeTransform {
   transform(value: any, defaultValue: any): any {
     return value || defaultValue;
   }

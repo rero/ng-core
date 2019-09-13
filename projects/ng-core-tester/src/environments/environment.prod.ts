@@ -20,7 +20,7 @@ export const environment = {
   languages: ['fr', 'de', 'it', 'en'],
   customTranslations: {
     fr: {
-      "search": "Rechercher une ressource"
+      search: 'Rechercher une ressource'
     }
   }
 };

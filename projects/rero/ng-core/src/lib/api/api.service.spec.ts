@@ -33,7 +33,7 @@ describe('ApiService', () => {
         ApiService,
         { provide: CONFIG, useValue: config }
       ]
-    })
+    });
 
     apiService = TestBed.get(ApiService);
   });
@@ -45,11 +45,11 @@ describe('ApiService', () => {
 
   it('#getEndpointByType should return endpoint /api/documents', () => {
     expect(apiService.getEndpointByType('documents'))
-      .toBe('/api/documents')
+      .toBe('/api/documents');
   });
 
   it('#getEndpointByType should return endpoint with absolute URL', () => {
     expect(apiService.getEndpointByType('documents', true))
-      .toBe('https://localhost:5000/api/documents')
+      .toBe('https://localhost:5000/api/documents');
   });
 });

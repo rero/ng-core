@@ -22,7 +22,6 @@ describe('TranslateLanguageService', () => {
 
   beforeEach(() => {
     service = new TranslateLanguageService({});
-    
   });
 
   it('should be created', () => {

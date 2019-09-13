@@ -17,14 +17,14 @@
 import { Directive, ViewContainerRef, Input } from '@angular/core';
 
 @Directive({
-    selector: '[invenio-core-record-search-result-item]',
+    selector: '[ngCoreRecordSearchResult]',
 })
 export class RecordSearchResultDirective {
     /**
      * Record to display
      */
     @Input()
-    record: Object = {};
+    record: object = {};
 
     constructor(public viewContainerRef: ViewContainerRef) { }
 }

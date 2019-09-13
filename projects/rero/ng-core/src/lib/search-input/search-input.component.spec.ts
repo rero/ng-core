@@ -19,8 +19,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchInputComponent } from './search-input.component';
 
 describe('SearchInputComponent', () => {
-  
-
   let component: SearchInputComponent;
   let fixture: ComponentFixture<SearchInputComponent>;
 
@@ -52,8 +50,8 @@ describe('SearchInputComponent', () => {
     const query = 'search click';
     searchInput.value = query;
 
-    component.search.subscribe((text: String) => {
-      expect(text).toBe(query)
+    component.search.subscribe((text: string) => {
+      expect(text).toBe(query);
     });
 
     searchButton.dispatchEvent(new Event('click'));
@@ -65,12 +63,12 @@ describe('SearchInputComponent', () => {
     const query = 'search enter key';
     searchInput.value = query;
 
-    component.search.subscribe((text: String) => {
-      expect(text).toBe(query)
+    component.search.subscribe((text: string) => {
+      expect(text).toBe(query);
     });
 
     const event = new KeyboardEvent('keyup', {
-      'key': 'Enter'
+      key: 'Enter'
     });
     searchInput.dispatchEvent(event);
 

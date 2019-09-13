@@ -19,7 +19,7 @@ import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import { Record } from './record'
+import { Record } from './record';
 import { ApiService } from '../api/api.service';
 
 @Injectable({
@@ -88,5 +88,5 @@ export class RecordService {
     // return an observable with a user-facing error message
     return throwError(
       'Something bad happened; please try again later.');
-  };
+  }
 }

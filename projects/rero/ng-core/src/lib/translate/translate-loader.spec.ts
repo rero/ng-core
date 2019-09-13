@@ -21,9 +21,7 @@ import { TranslateLoader } from './translate-loader';
 
 describe('TranslateLoader', () => {
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      
-    })
+    TestBed.configureTestingModule({});
   });
 
   it('should be created', () => {
@@ -31,16 +29,16 @@ describe('TranslateLoader', () => {
     expect(translateLoader).toBeTruthy();
 
   });
-  
+
   it('should override translation', () => {
     const config = {
       languages: ['fr'],
       customTranslations: {
         fr: {
-          "your query": "Traduction surchargée",
+          'your query': 'Traduction surchargée',
         }
       }
-    }
+    };
 
     const translateLoader = new TranslateLoader(config);
     translateLoader.getTranslation('fr').subscribe(translations => {
@@ -51,10 +49,10 @@ describe('TranslateLoader', () => {
   it('should throw an error because translations for language not found', () => {
     const config = {
       languages: ['fr']
-    }
+    };
 
     const translateLoader = new TranslateLoader(config);
-    expect(() => translateLoader.getTranslation('pt')).toThrow('Translations not found for lang "pt"');
+    expect(() => translateLoader.getTranslation('pt')).toThrowError('Translations not found for lang "pt"');
   });
 
   it('should not find custom translation for "en" language', () => {
@@ -62,10 +60,10 @@ describe('TranslateLoader', () => {
       languages: ['fr', 'en'],
       customTranslations: {
         fr: {
-          "your query": "Traduction surchargée",
+          'your query': 'Traduction surchargée',
         }
       }
-    }
+    };
 
     const translateLoader = new TranslateLoader(config);
     translateLoader.getTranslation('en').subscribe(translations => {

@@ -25,8 +25,8 @@ export class AlertService {
 
   addAlert(type: string, message: string) {
     this.alert.next({
-      type: type,
-      message: message
+      type,
+      message
     });
   }
 }

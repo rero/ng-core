@@ -17,14 +17,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'invenio-core-record-search-aggregation',
+  selector: 'ng-core-record-search-aggregation',
   templateUrl: './aggregation.component.html',
 })
 export class RecordSearchAggregationComponent {
   /**
    * Aggregation data
    */
-  @Input() 
+  @Input()
   public aggregation: { key: string, value: { buckets: {}[] } };
 
   /**
@@ -37,19 +37,19 @@ export class RecordSearchAggregationComponent {
    * Show or hide filter items
    */
   @Input()
-  public show: boolean = true;
+  public show = true;
 
   /**
    * Emit event to parent when a value is clicked
    */
-  @Output() 
+  @Output()
   public updateAggregationFilter = new EventEmitter<{ term: string, values: string[] }>();
 
   /**
    * Check if a value is already registered in filters.
    * @param value - string, filter value
    */
-  isSelected(value:string) {
+  isSelected(value: string) {
     return this.selectedValues.includes(value);
   }
 
@@ -60,12 +60,11 @@ export class RecordSearchAggregationComponent {
   updateFilter(value: string) {
     if (this.isSelected(value)) {
       this.selectedValues = this.selectedValues.filter(selectedValue => selectedValue !== value);
-    }
-    else {
+    } else {
       this.selectedValues.push(value);
     }
 
-    this.updateAggregationFilter.emit({ term: this.aggregation.key, values: this.selectedValues })
+    this.updateAggregationFilter.emit({ term: this.aggregation.key, values: this.selectedValues });
   }
 
   /**
