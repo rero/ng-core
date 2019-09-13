@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { DialogService, ApiService, TranslateLanguageService } from '@rero/ng-core';
+import { DialogService, ApiService, TranslateLanguageService, AlertService } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
 import { InstitutionComponent } from '../record/institution/institution.component';
 
@@ -32,14 +32,15 @@ export class HomeComponent {
   constructor(
     private dialogService: DialogService,
     private apiService: ApiService,
-    private translateLanguageService: TranslateLanguageService
+    private translateLanguageService: TranslateLanguageService,
+    private alertService: AlertService
   ) {
     this.apiData = {
       relative: this.apiService.getEndpointByType('documents'),
       absolute: this.apiService.getEndpointByType('documents', true),
     };
 
-    this.testLanguageTranslation = translateLanguageService.translate('fr', 'fr');
+    this.testLanguageTranslation = this.translateLanguageService.translate('fr', 'fr');
   }
 
   showDialog() {
@@ -63,4 +64,10 @@ export class HomeComponent {
     console.log(`You search for: ${searchText}`);
   }
 
+  addAlert() {
+    const type = (document.getElementById('alert-type')) as HTMLSelectElement;
+    const message = (document.getElementById('alert-message')) as HTMLInputElement;
+
+    this.alertService.addAlert(type.value, message.value);
+  }
 }

@@ -21,6 +21,7 @@ export * from './lib/shared.module';
 export * from './lib/dialog/dialog.component';
 export * from './lib/dialog/dialog.service';
 export * from './lib/api/api.service';
+export * from './lib/alert/alert.service';
 export * from './lib/translate-language/translate-language.service';
 export * from './lib/record/search/result/item/result-item';
 export * from './lib/record/record.module';

@@ -7,7 +7,23 @@
 </div>
 
 <h4 class="mt-5">Alert component</h4>
-<ng-core-alert timeout="100000"></ng-core-alert>
+<div class="row mb-2">
+    <div class="col-2">
+        <select class="form-control" id="alert-type">
+            <option value="success">Success</option>
+            <option value="warning">Warning</option>
+            <option value="danger">Danger</option>
+            <option value="info">Info</option>
+        </select>
+    </div>
+    <div class="col-3">
+        <input type="text" class="form-control" id="alert-message" value="Message to display">
+    </div>
+    <div class="col-2">
+        <button type="button" class="btn btn-primary" (click)="addAlert()">Add alert</button>
+    </div>
+</div>
+<ng-core-alert timeout="5000"></ng-core-alert>
 
 <h4 class="mt-5">Dialog component</h4>
 <button class="btn btn-primary" (click)="showDialog()">Show modal</button>
