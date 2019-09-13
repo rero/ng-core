@@ -5,5 +5,9 @@ import { ResultItem } from '@rero/ng-core';
   templateUrl: './institution.component.html'
 })
 export class InstitutionComponent implements ResultItem {
-  @Input() record: object;
+  @Input()
+  record: object;
+
+  @Input()
+  type: string;
 }

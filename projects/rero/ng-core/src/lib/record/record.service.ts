@@ -69,6 +69,17 @@ export class RecordService {
       );
   }
 
+  /**
+   * Get record data
+   * @param type - string, type of resource
+   * @param pid - string, record PID
+   */
+  public getRecord(type: string, pid: string): Observable<any> {
+    return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/' + pid)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
 
   /**
    * Error handling during api call process.

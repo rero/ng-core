@@ -84,21 +84,6 @@ export class RecordSearchComponent implements OnInit {
   adminMode = true;
 
   /**
-   * Used only for binding with pagination.
-   * Avoid side effect if "page" property is bound to pagination
-   * (infinite calls to get records).
-   * @param page - number, new page
-   */
-  set currentPage(page: number) {
-    this.page = +page;
-    this.getRecords(false);
-  }
-
-  get currentPage() {
-    return this.page;
-  }
-
-  /**
    * Types of resources available
    */
   @Input()
@@ -119,6 +104,12 @@ export class RecordSearchComponent implements OnInit {
   linkPrefix = '';
 
   /**
+   * URL to notice detail
+   */
+  @Input()
+  detailUrl: string = null;
+
+  /**
    * Display search input
    */
   @Input()
@@ -129,6 +120,21 @@ export class RecordSearchComponent implements OnInit {
    */
   @Input()
   currentType = 'documents';
+
+  /**
+   * Used only for binding with pagination.
+   * Avoid side effect if "page" property is bound to pagination
+   * (infinite calls to get records).
+   * @param page - number, new page
+   */
+  set currentPage(page: number) {
+    this.page = +page;
+    this.getRecords(false);
+  }
+
+  get currentPage() {
+    return this.page;
+  }
 
   /**
    * Constructor
@@ -171,6 +177,10 @@ export class RecordSearchComponent implements OnInit {
         if (typeof data.adminMode !== 'undefined') {
           this.adminMode = data.adminMode;
         }
+
+        if (data.detailUrl) {
+          this.detailUrl = data.detailUrl;
+        }
       });
 
     if (this.inRouting === true) {
@@ -197,7 +207,7 @@ export class RecordSearchComponent implements OnInit {
                 }
               }
             }
-            this.getRecords();
+            this.getRecords(false);
           }
         );
     } else {

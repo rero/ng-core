@@ -7,6 +7,9 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { SharedModule } from '../shared.module';
+import { DetailComponent } from './detail/detail.component';
+import { RecordDetailDirective } from './detail/detail.directive';
+import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
 
 
 @NgModule({
@@ -15,7 +18,10 @@ import { SharedModule } from '../shared.module';
     RecordSearchResultComponent,
     RecordSearchResultDirective,
     RecordSearchAggregationComponent,
-    JsonComponent
+    JsonComponent,
+    DetailComponent,
+    RecordDetailDirective,
+    DetailJsonComponent
   ],
   imports: [
     SharedModule,
@@ -25,7 +31,8 @@ import { SharedModule } from '../shared.module';
     RecordSearchComponent
   ],
   entryComponents: [
-    JsonComponent
+    JsonComponent,
+    DetailJsonComponent
   ]
 })
 export class RecordModule { }

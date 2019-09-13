@@ -27,6 +27,7 @@ import { environment } from '../environments/environment';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
 import { HomeComponent } from './home/home.component';
+import { DetailComponent } from './record/document/detail/detail.component';
 
 const config: Config = {
   production: environment.production,
@@ -40,7 +41,8 @@ const config: Config = {
     AppComponent,
     DocumentComponent,
     InstitutionComponent,
-    HomeComponent
+    HomeComponent,
+    DetailComponent
   ],
   imports: [
     SharedModule,

@@ -60,7 +60,7 @@ describe('RecordService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return an Observable<Record>', () => {
+  it('should get records list', () => {
     const expectedData: Record = {
       aggregations: {},
       hits: {
@@ -119,5 +119,22 @@ describe('RecordService', () => {
       return request.method === 'DELETE' && request.url === url + '/' + pid;
     });
     req.flush({});
+  });
+
+  it('should get a record detail', () => {
+    const expectedData: any = {
+      id: '1',
+      metadata: {
+        pid: '1'
+      }
+    };
+
+    service.getRecord('documents', '1').subscribe(data => {
+      expect(data.metadata.pid).toBe('1');
+    });
+
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/1');
+
+    req.flush(expectedData);
   });
 });

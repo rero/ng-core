@@ -24,5 +24,9 @@ import { ResultItem } from './result-item';
   `
 })
 export class JsonComponent implements ResultItem {
-  @Input() record: object;
+  @Input()
+  record: object;
+
+  @Input()
+  type: string;
 }

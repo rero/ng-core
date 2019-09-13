@@ -25,8 +25,8 @@
 <div *ngIf="!isLoading; else loading">
     <div class="d-flex align-items-center my-5">
         <div class="mr-3 w-25" *ngIf="showSearchInput">
-            <ng-core-search-input [placeholder]="'search' | translate | ucfirst" [searchText]="q"
-                [displayLabel]="false" (search)="searchByQuery($event)">
+            <ng-core-search-input [placeholder]="'search' | translate | ucfirst" [searchText]="q" [displayLabel]="false"
+                (search)="searchByQuery($event)">
             </ng-core-search-input>
         </div>
         <div><strong>{{ total }} {{ 'results'|translate }}</strong></div>
@@ -60,9 +60,10 @@
         <div id="recordlist" class="col">
             <ul class="list-group list-group-flush">
                 <li class="list-group-item px-0 py-4" *ngFor="let record of records">
-                    <ng-core-record-search-result [adminMode]="adminMode" [record]="record"
+                    <ng-core-record-search-result [adminMode]="adminMode" [record]="record" [type]="currentType"
                         [itemViewComponent]="getResultItemComponentView()" [canUpdate]="canUpdateRecord(record)"
-                        [canDelete]="canDeleteRecord(record)" (deletedRecord)="deleteRecord($event)">
+                        [inRouting]="inRouting" [detailUrl]="detailUrl" [canDelete]="canDeleteRecord(record)"
+                        (deletedRecord)="deleteRecord($event)">
                     </ng-core-record-search-result>
                 </li>
             </ul>

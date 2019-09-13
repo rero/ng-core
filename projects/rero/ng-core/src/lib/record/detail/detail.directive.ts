@@ -14,7 +14,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export interface ResultItem {
-    record: any;
+import { Directive, ViewContainerRef, Input } from '@angular/core';
+
+@Directive({
+    selector: '[ngCoreRecordDetail]',
+})
+export class RecordDetailDirective {
+    /**
+     * Record to display
+     */
+    @Input()
+    record: object = {};
+
+    /**
+     * Type of resource
+     */
+    @Input()
     type: string;
+
+    constructor(public viewContainerRef: ViewContainerRef) { }
 }

@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-9">
+        <h1>{{ record.metadata.title }}</h1>
+    </div>
+    <div class="col-3 text-right">
+        <a href="javascript:void(0);" class="btn btn-sm btn-secondary">
+            <i class="fa fa-pencil"></i>
+            {{ "Edit"|translate }}
+        </a>
+        <a href="javascript:void(0);" class="btn btn-sm btn-secondary ml-1">
+            <i class="fa fa-trash"></i>
+            {{ "Delete"|translate }}
+        </a>
+    </div>
+</div>
+<p>
+    <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+</p>
+<div class="text-justify">
+    {{ record.metadata.abstracts[0].value }}
+</div>

@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -59,6 +60,7 @@ describe('RecordSearchComponent', () => {
   const route = {
     data: of({
       linkPrefix: '/records',
+      detailUrl: '/custom/url/for/detail',
       types: [
         {
           key: 'documents',
@@ -103,7 +105,8 @@ describe('RecordSearchComponent', () => {
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
         { provide: DialogService, useValue: dialogServiceSpy },
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
       .overrideModule(BrowserDynamicTestingModule, {
         set: {

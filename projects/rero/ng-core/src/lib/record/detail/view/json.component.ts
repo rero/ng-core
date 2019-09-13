@@ -14,7 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export interface ResultItem {
-    record: any;
-    type: string;
+import { Component, Input } from '@angular/core';
+
+@Component({
+  template: `
+    <h1>Record of type "{{ type }}" #{{ record.metadata.pid }}</h1>
+    {{ record|json }}
+  `
+})
+export class JsonComponent {
+  @Input()
+  record: any;
+
+  @Input()
+  type: string;
 }

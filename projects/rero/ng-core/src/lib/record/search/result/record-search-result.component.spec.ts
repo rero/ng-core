@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
@@ -22,7 +23,7 @@ import { RecordSearchResultComponent } from './record-search-result.component';
 import { JsonComponent } from './item/json.component';
 import { RecordSearchResultDirective } from './record-search-result.directive';
 
-describe('RecordSearchAggregationComponent', () => {
+describe('RecordSearchResultComponent', () => {
   let component: RecordSearchResultComponent;
   let fixture: ComponentFixture<RecordSearchResultComponent>;
 
@@ -37,7 +38,8 @@ describe('RecordSearchAggregationComponent', () => {
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
-      ]
+      ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
       .overrideModule(BrowserDynamicTestingModule, {
         set: {
@@ -67,5 +69,17 @@ describe('RecordSearchAggregationComponent', () => {
       expect(pid).toBe('1');
     });
     component.deleteRecord(new Event('click'), '1');
+  });
+
+  it('should resolve custom detail URL', () => {
+    component.record = {
+      id: '1',
+      metadata: {
+        pid: '1'
+      }
+    };
+    component.type = 'documents';
+    component.detailUrl = '/custom/url/to/detail/:type/:pid';
+    expect(component.formattedDetailUrl).toBe('/custom/url/to/detail/documents/1');
   });
 });

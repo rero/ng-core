@@ -1,7 +1,7 @@
 <h4>Search component</h4>
 <div class="card">
     <div class="card-body">
-        <ng-core-record-search [adminMode]="true" currentType="documents" [types]="recordConfig">
+        <ng-core-record-search [adminMode]="true" currentType="documents" [types]="recordConfig" [detailUrl]="'/custom/url/to/record/detail/:type/:pid'">
         </ng-core-record-search>
     </div>
 </div>

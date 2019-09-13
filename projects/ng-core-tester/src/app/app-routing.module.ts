@@ -19,6 +19,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
+import { DetailComponent } from './record/document/detail/detail.component';
 
 const canAdd = (record) => {
   return true;
@@ -63,6 +64,7 @@ const routes: Routes = [
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
+          detailComponent: DetailComponent,
           canAdd,
           canUpdate,
           canDelete

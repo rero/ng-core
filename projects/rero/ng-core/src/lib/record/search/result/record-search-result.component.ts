@@ -25,10 +25,21 @@ import { JsonComponent } from './item/json.component';
 })
 export class RecordSearchResultComponent implements OnInit {
   /**
+   * Store current URL to come back to the same page
+   */
+  currentUrl: string = null;
+
+  /**
    * Record to display
    */
   @Input()
-  record: { metadata: { pid: string } };
+  record: { id: string, metadata: { pid: string } };
+
+  /**
+   * Type of record
+   */
+  @Input()
+  type: string;
 
   /**
    * Component for displaying item view
@@ -55,6 +66,25 @@ export class RecordSearchResultComponent implements OnInit {
   canDelete = true;
 
   /**
+   * Indicates if the component is included in angular routes
+   */
+  @Input()
+  inRouting = false;
+
+  /**
+   * URL to notice detail
+   */
+  @Input()
+  detailUrl: string = null;
+
+  /**
+   * Return detail URL with replaced placeholders.
+   */
+  get formattedDetailUrl() {
+    return this.detailUrl.replace(':type', this.type).replace(':pid', this.record.id);
+  }
+
+  /**
    * Event emitted when a record is deleted
    */
   @Output() deletedRecord = new EventEmitter<string>();
@@ -67,7 +97,9 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Constructor
    */
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, ) { }
+  constructor(private componentFactoryResolver: ComponentFactoryResolver, ) {
+    this.currentUrl = window.location.href;
+  }
 
   /**
    * Component init
@@ -87,6 +119,7 @@ export class RecordSearchResultComponent implements OnInit {
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as JsonComponent).record = this.record;
+    (componentRef.instance as JsonComponent).type = this.type;
   }
 
   /**

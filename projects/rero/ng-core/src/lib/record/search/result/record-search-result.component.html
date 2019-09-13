@@ -15,15 +15,23 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="row">
-    <div class="col-11">
+    <div class="col-10">
         <ng-template ngCoreRecordSearchResult></ng-template>
     </div>
-    <div class="col-1 text-right" *ngIf="adminMode">
-        <a href="#" [title]="'Edit'|translate" *ngIf="canUpdate">
+    <div class="col-2 text-right">
+        <a [href]="formattedDetailUrl" *ngIf="detailUrl; else routingDetailLink">
+            <i class="fa fa-search"></i>
+        </a>
+        <ng-template #routingDetailLink>
+            <a href="#" [title]="'Show'|translate" [routerLink]="['detail/', record.metadata.pid]" *ngIf="inRouting">
+                <i class="fa fa-search"></i>
+            </a>
+        </ng-template>
+        <a href="#" class="ml-2" [title]="'Edit'|translate" *ngIf="adminMode && canUpdate">
             <i class="fa fa-pencil"></i>
         </a>
         <a href="#" class="ml-2" [title]="'Delete'|translate" (click)="deleteRecord($event, record.metadata.pid)"
-            *ngIf="canDelete">
+            *ngIf="adminMode && canDelete">
             <i class="fa fa-trash"></i>
         </a>
     </div>
