@@ -19,22 +19,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-import { CoreModule, Config, RecordModule, SharedModule } from '@rero/ng-core';
+import { CoreModule, RecordModule, SharedModule } from '@rero/ng-core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from '../environments/environment';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
-
-const config: Config = {
-  production: environment.production,
-  apiBaseUrl: environment.apiBaseUrl,
-  languages: environment.languages,
-  customTranslations: environment.customTranslations
-};
+import { CoreConfigService } from '@rero/ng-core';
+import { AppConfigService } from './app-config.service';
 
 @NgModule({
   declarations: [
@@ -50,10 +44,15 @@ const config: Config = {
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    CoreModule.forRoot(config),
+    CoreModule,
     RecordModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: CoreConfigService,
+      useClass: AppConfigService
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [
     DocumentComponent,

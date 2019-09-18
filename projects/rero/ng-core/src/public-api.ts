@@ -16,11 +16,12 @@
  */
 
 export * from './lib/core.module';
-export * from './lib/core.config';
+export * from './lib/core-config.service';
 export * from './lib/shared.module';
 export * from './lib/dialog/dialog.component';
 export * from './lib/dialog/dialog.service';
 export * from './lib/api/api.service';
+export * from './lib/record/record.service';
 export * from './lib/alert/alert.service';
 export * from './lib/translate-language/translate-language.service';
 export * from './lib/record/search/result/item/result-item';

@@ -17,11 +17,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TranslateService } from '@ngx-translate/core';
 
 import { RecordService } from '../record.service';
 import { DialogService } from '../../dialog/dialog.service';
-import { first } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -137,6 +136,11 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
+   * Store configuration for type
+   */
+  private config: any;
+
+  /**
    * Constructor
    * @param dialogService - Modal component
    * @param recordService - Service for managing records
@@ -158,64 +162,52 @@ export class RecordSearchComponent implements OnInit {
    */
   ngOnInit() {
     // Load data from routing data. Only relevant when component is loaded into routing.
-    this.route
-      .data
-      .subscribe(data => {
-        if (data.linkPrefix) {
-          this.inRouting = true;
-          this.linkPrefix = data.linkPrefix;
-        }
-
-        if (data.types) {
-          this.types = data.types;
-        }
-
-        if (typeof data.showSearchInput !== 'undefined') {
-          this.showSearchInput = data.showSearchInput;
-        }
-
-        if (typeof data.adminMode !== 'undefined') {
-          this.adminMode = data.adminMode;
-        }
-
-        if (data.detailUrl) {
-          this.detailUrl = data.detailUrl;
-        }
-      });
-
-    if (this.inRouting === true) {
-      this.route.params
-        .pipe(first()) // avoid side effects when type is pushed to route
-        .subscribe(
-          params => {
-            this.currentType = params.type;
-          }
-        );
-
-      this.route.queryParams
-        .pipe(first()) // avoid side effects when queryParams are pushed to route
-        .subscribe(
-          params => {
-            for (const key in params) {
-              if (['q', 'page', 'size'].includes(key)) {
-                this[key] = params[key];
-              } else {
-                if (Array.isArray(params[key]) === false) {
-                  this.aggFilters.push({ key, values: [params[key]] });
-                } else {
-                  this.aggFilters.push({ key, values: params[key] });
-                }
-              }
-            }
-            this.getRecords(false);
-          }
-        );
-    } else {
-      this.getRecords();
+    const data = this.route.snapshot.data;
+    if (data.linkPrefix) {
+      this.inRouting = true;
+      this.linkPrefix = data.linkPrefix;
     }
 
+    if (data.types) {
+      this.types = data.types;
+    }
+
+    if (typeof data.showSearchInput !== 'undefined') {
+      this.showSearchInput = data.showSearchInput;
+    }
+
+    if (typeof data.adminMode !== 'undefined') {
+      this.adminMode = data.adminMode;
+    }
+
+    if (data.detailUrl) {
+      this.detailUrl = data.detailUrl;
+    }
+
+    if (this.inRouting === true) {
+      this.currentType = this.route.snapshot.paramMap.get('type');
+
+      const queryParams = this.route.snapshot.queryParams;
+
+      for (const key in queryParams) {
+        if (['q', 'page', 'size'].includes(key)) {
+          this[key] = queryParams[key];
+        } else {
+          if (Array.isArray(queryParams[key]) === false) {
+            this.aggFilters.push({ key, values: [queryParams[key]] });
+          } else {
+            this.aggFilters.push({ key, values: queryParams[key] });
+          }
+        }
+      }
+    }
+
+    this.loadResourceConfig();
+
+    this.getRecords(this.inRouting === false);
+
     for (const type of this.types) {
-      this.recordService.getRecords(type.key).subscribe(records => {
+      this.recordService.getRecords(type.key, '', 1, 0, [], this.config.preFilters || {}).subscribe(records => {
         type.total = records.hits.total;
       });
     }
@@ -269,6 +261,7 @@ export class RecordSearchComponent implements OnInit {
     event.preventDefault();
     this.currentType = type;
     this.aggFilters = [];
+    this.loadResourceConfig();
     this.getRecords();
   }
 
@@ -321,8 +314,7 @@ export class RecordSearchComponent implements OnInit {
           }, 1000);
 
           // update main counter
-          const config = this.getResourceConfig(this.currentType);
-          config.total--;
+          this.config.total--;
         });
       }
     });
@@ -332,10 +324,8 @@ export class RecordSearchComponent implements OnInit {
    * Get component view for the current resource type.
    */
   public getResultItemComponentView() {
-    const config = this.getResourceConfig(this.currentType);
-
-    if (config.component) {
-      return config.component;
+    if (this.config.component) {
+      return this.config.component;
     }
     return null;
   }
@@ -344,10 +334,8 @@ export class RecordSearchComponent implements OnInit {
    * Check if a record can be added
    */
   public canAddRecord() {
-    const config = this.getResourceConfig(this.currentType);
-
-    if (config.canAdd) {
-      return config.canAdd();
+    if (this.config.canAdd) {
+      return this.config.canAdd();
     }
     return true;
   }
@@ -357,10 +345,8 @@ export class RecordSearchComponent implements OnInit {
    * @param record - object, record to check
    */
   public canUpdateRecord(record: object) {
-    const config = this.getResourceConfig(this.currentType);
-
-    if (config.canUpdate) {
-      return config.canUpdate(record);
+    if (this.config.canUpdate) {
+      return this.config.canUpdate(record);
     }
 
     return true;
@@ -371,27 +357,24 @@ export class RecordSearchComponent implements OnInit {
    * @param record - object, record to check
    */
   public canDeleteRecord(record: object) {
-    const config = this.getResourceConfig(this.currentType);
-
-    if (config.canDelete) {
-      return config.canDelete(record);
+    if (this.config.canDelete) {
+      return this.config.canDelete(record);
     }
 
     return true;
   }
 
   /**
-   * Get resource configuration for the give resource type.
-   * @param type - string, resource type
+   * Load configuration for current resource type
    */
-  private getResourceConfig(type: string) {
-    const index = this.types.findIndex(item => item.key === type);
+  private loadResourceConfig() {
+    const index = this.types.findIndex(item => item.key === this.currentType);
 
     if (index === -1) {
-      throw new Error(`Configuration not found for type "${type}"`);
+      throw new Error(`Configuration not found for type "${this.currentType}"`);
     }
 
-    return this.types[index];
+    this.config = this.types[index];
   }
 
   /**
@@ -407,7 +390,14 @@ export class RecordSearchComponent implements OnInit {
 
     this.isLoading = true;
 
-    this.recordService.getRecords(this.currentType, this.q, this.page, this.size, this.aggFilters).subscribe(records => {
+    this.recordService.getRecords(
+      this.currentType,
+      this.q,
+      this.page,
+      this.size,
+      this.aggFilters,
+      this.config.preFilters || {}
+    ).subscribe(records => {
       this.records = records.hits.hits;
       this.total = records.hits.total;
       this.aggregations = records.aggregations;

@@ -1,6 +1,6 @@
 {
   "name": "@rero/ng-core",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -22,10 +22,12 @@
     "@cospired/i18n-iso-languages": "^2.0.5",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",
-    "@rero/ng-core": "0.0.1",
+    "@rero/ng-core": "0.0.3",
     "angular6-json-schema-form": "^7.3.0",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
+    "lodash-es": "4.17.14",
+    "moment": "^2.24.0",
     "ngx-bootstrap": "^5.1.1",
     "ngx-toastr": "^10.2.0",
     "ngx-toggle-switch": "^2.0.5",
@@ -36,9 +38,12 @@
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.801.3",
     "@angular-devkit/build-ng-packagr": "~0.801.3",
+    "@angular/cdk": "^8.2.0",
     "@angular/cli": "~8.1.2",
     "@angular/compiler-cli": "~8.1.2",
+    "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/language-service": "~8.1.2",
+    "@angular/material": "^8.2.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -57,11 +62,5 @@
     "tsickle": "^0.35.0",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run test-lib -- --no-watch --no-progress"
-    }
   }
 }

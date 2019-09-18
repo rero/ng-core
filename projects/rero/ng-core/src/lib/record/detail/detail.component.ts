@@ -38,7 +38,7 @@ export class DetailComponent implements OnInit {
   /**
    * Record to display
    */
-  record: object = null;
+  record: any = null;
 
   /**
    * Error message

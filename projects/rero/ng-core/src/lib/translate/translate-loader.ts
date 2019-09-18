@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Inject } from '@angular/core';
 import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 
@@ -22,7 +21,8 @@ import fr from './i18n/fr.json';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
 import it from './i18n/it.json';
-import { CONFIG, Config } from '../core.config.js';
+import { CoreConfigService } from '../core-config.service.js';
+import { Inject } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.
@@ -37,7 +37,7 @@ export class TranslateLoader implements BaseTranslateLoader {
      * Constructor
      * @param config - ConfigService, invenio core configuration
      */
-    constructor(@Inject(CONFIG) private config: Config) {
+    constructor(@Inject(CoreConfigService) private configService) {
         this.loadCustomTranslations();
     }
 
@@ -45,13 +45,13 @@ export class TranslateLoader implements BaseTranslateLoader {
      * Load custom translations
      */
     private loadCustomTranslations() {
-        if (!this.config.customTranslations) {
+        if (!this.configService.customTranslations) {
             return;
         }
 
-        for (const lang of this.config.languages) {
-            if (this.translations[lang] && this.config.customTranslations[lang]) {
-                this.translations[lang] = { ...this.translations[lang], ...this.config.customTranslations[lang] };
+        for (const lang of this.configService.languages) {
+            if (this.translations[lang] && this.configService.customTranslations[lang]) {
+                this.translations[lang] = { ...this.translations[lang], ...this.configService.customTranslations[lang] };
             }
         }
     }

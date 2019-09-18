@@ -16,8 +16,8 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
+import { catchError, map, debounceTime } from 'rxjs/operators';
 
 import { Record } from './record';
 import { ApiService } from '../api/api.service';
@@ -26,11 +26,15 @@ import { ApiService } from '../api/api.service';
   providedIn: 'root'
 })
 export class RecordService {
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
-  constructor(private http: HttpClient, private apiService: ApiService) { }
+  /**
+   * Constructor
+   * @param http - HttpClient
+   * @param apiService - ApiService
+   */
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService
+  ) { }
 
   /**
    * Get records filtered by given parameters.
@@ -40,16 +44,27 @@ export class RecordService {
    * @param itemsPerPage - number, number of records to return
    * @param aggFilters - number, option list of filters
    */
-  public getRecords(type: string, query: string = '', page = 1, itemsPerPage = 20, aggFilters: any[] = []): Observable<Record> {
+  public getRecords(
+    type: string,
+    query: string = '',
+    page = 1,
+    itemsPerPage = 20,
+    aggFilters: any[] = [],
+    preFilters: object = {}
+  ): Observable<Record> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
     httpParams = httpParams.append('page', '' + page);
     httpParams = httpParams.append('size', '' + itemsPerPage);
     aggFilters.forEach((filter) => {
-      filter.values.forEach((value) => {
+      filter.values.forEach((value: string) => {
         httpParams = httpParams.append(filter.key, value);
       });
     });
+
+    for (const key of Object.keys(preFilters)) {
+      httpParams = httpParams.append(key, preFilters[key]);
+    }
 
     return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/', { params: httpParams })
       .pipe(
@@ -74,11 +89,70 @@ export class RecordService {
    * @param type - string, type of resource
    * @param pid - string, record PID
    */
-  public getRecord(type: string, pid: string): Observable<any> {
-    return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/' + pid)
+  public getRecord(type: string, pid: string, resolve = 0): Observable<any> {
+    return this.http.get<Record>(`${this.apiService.getEndpointByType(type, true)}/${pid}?resolve=${resolve}`)
       .pipe(
         catchError(this.handleError)
       );
+  }
+
+  /**
+   * Return the schema form to generate the form based on the resource given.
+   * @param recordType - string, type of the resource
+   */
+  public getSchemaForm(recordType: string) {
+    let recType = recordType.replace(/ies$/, 'y');
+    recType = recType.replace(/s$/, '');
+    const url = `${this.apiService.baseUrl}/api/schemaform/${recordType}`;
+    return this.http.get<any>(url).pipe(
+      catchError(e => {
+        if (e.status === 404) {
+          return of(null);
+        }
+      }),
+      map(data => {
+        return data;
+      })
+    );
+  }
+
+  /**
+   * Create a new record
+   * @param recordType - string, type of resource
+   * @param record - object, record to create
+   */
+  public create(recordType: string, record: object): Observable<any> {
+    return this.http.post(this.apiService.getEndpointByType(recordType, true) + '/', record);
+  }
+
+  /**
+   * Create a new record
+   * @param recordType - string, type of resource
+   * @param record - object, record to create
+   * @param pid - string, record PID
+   */
+  public update(recordType: string, record: { pid: string }) {
+    const url = `${this.apiService.getEndpointByType(recordType, true)}/${record.pid}`;
+    return this.http.put(url, record);
+  }
+
+  /**
+   * Check if a record is already registered with the same value
+   * @param recordType - string, type of record
+   * @param field - string, field to check
+   * @param value - string, value to check
+   * @param excludePid - string, PID to ignore (normally the current record we are checking)
+   */
+  public valueAlreadyExists(recordType: string, field: string, value: string, excludePid: string) {
+    let url = `${this.apiService.getEndpointByType(recordType, true)}/?size=0&q=${field}:"${value}"`;
+    if (excludePid) {
+      url += ` NOT pid:${excludePid}`;
+    }
+    return this.http.get<any>(url).pipe(
+      map(res => res.hits.total),
+      map(total => total ? { alreadyTakenMessage: value } : null),
+      debounceTime(1000)
+    );
   }
 
   /**

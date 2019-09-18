@@ -14,35 +14,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable, Inject } from '@angular/core';
-import { CONFIG, Config } from '../core.config';
+import { Injectable } from '@angular/core';
+import { CoreConfigService } from '../core-config.service';
 
 /**
  * Service giving information about API.
  */
-@Injectable()
+@Injectable(
+  {
+    providedIn: 'root'
+  }
+)
 export class ApiService {
   /**
    * API base URL.
    *
    * Ex: https://localhost:5000
    */
-  private baseUrl = '';
+  public baseUrl = '';
 
   /**
    * API prefix
    *
    * Ex: /api
    */
-  private endpointPrefix = '/';
+  public endpointPrefix = '/';
 
   /**
    * Constructor
    * @param config - Config, global configuration
    */
-  constructor(@Inject(CONFIG) private config: Config) {
-    this.baseUrl = this.config.apiBaseUrl;
-    this.endpointPrefix = this.config.apiEndpointPrefix;
+  constructor(private configService: CoreConfigService) {
+    this.baseUrl = this.configService.apiBaseUrl;
+    this.endpointPrefix = this.configService.apiEndpointPrefix;
   }
 
   /**

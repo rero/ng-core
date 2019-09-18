@@ -26,7 +26,7 @@ const canAdd = (record) => {
 };
 
 const canUpdate = (record) => {
-  return false;
+  return true;
 };
 
 const canDelete = (record) => {
@@ -39,10 +39,52 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'usi/record/search',
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    data: {
+      showSearchInput: true,
+      adminMode: false,
+      linkPrefix: '/usi/record/search',
+      types: [
+        {
+          key: 'documents',
+          label: 'Documents',
+          component: DocumentComponent,
+          preFilters: {
+            institution: 'usi'
+          }
+        },
+        {
+          key: 'patrons',
+          label: 'Utilisateurs'
+        }
+      ]
+    }
+  },
+  {
+    path: 'hevs/record/search',
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    data: {
+      showSearchInput: true,
+      adminMode: false,
+      linkPrefix: '/hevs/record/search',
+      types: [
+        {
+          key: 'documents',
+          label: 'Documents',
+          component: DocumentComponent,
+          preFilters: {
+            institution: 'hevs'
+          }
+        }
+      ]
+    }
+  },
+  {
     path: 'record/search',
     loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
-      showSearchInput: false,
+      showSearchInput: true,
       adminMode: false,
       linkPrefix: '/record/search',
       types: [

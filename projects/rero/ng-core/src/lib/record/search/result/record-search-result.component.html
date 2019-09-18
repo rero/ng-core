@@ -27,7 +27,8 @@
                 <i class="fa fa-search"></i>
             </a>
         </ng-template>
-        <a href="#" class="ml-2" [title]="'Edit'|translate" *ngIf="adminMode && canUpdate">
+        <a class="ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
+            *ngIf="inRouting && adminMode && canUpdate">
             <i class="fa fa-pencil"></i>
         </a>
         <a href="#" class="ml-2" [title]="'Delete'|translate" (click)="deleteRecord($event, record.metadata.pid)"

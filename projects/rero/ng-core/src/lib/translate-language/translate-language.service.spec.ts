@@ -19,9 +19,10 @@ import { TranslateLanguageService } from './translate-language.service';
 
 describe('TranslateLanguageService', () => {
   let service: TranslateLanguageService;
+  const spy = jasmine.createSpyObj('CoreConfigService', []);
 
   beforeEach(() => {
-    service = new TranslateLanguageService({});
+    service = new TranslateLanguageService(spy);
   });
 
   it('should be created', () => {
@@ -29,7 +30,8 @@ describe('TranslateLanguageService', () => {
   });
 
   it('should pass languages in configuration', () => {
-    service = new TranslateLanguageService({ languages: ['en'] });
+    spy.languages = ['en'];
+    service = new TranslateLanguageService(spy);
     expect(service).toBeTruthy();
   });
 

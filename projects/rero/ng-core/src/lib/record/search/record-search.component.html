@@ -31,7 +31,7 @@
         </div>
         <div><strong>{{ total }} {{ 'results'|translate }}</strong></div>
         <div class="ml-auto">
-            <a href="#" class="btn btn-primary" *ngIf="adminMode && canAddRecord()">
+            <a class="btn btn-primary" routerLink="new" *ngIf="adminMode && canAddRecord()">
                 <i class="fa fa-plus mr-1"></i>
                 {{ 'Add'|translate }}
             </a>

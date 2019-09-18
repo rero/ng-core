@@ -17,7 +17,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ApiService } from './api.service';
-import { CONFIG } from '../core.config';
+import { CoreConfigService } from '../core-config.service';
 
 let apiService: ApiService;
 
@@ -31,7 +31,7 @@ describe('ApiService', () => {
     TestBed.configureTestingModule({
       providers: [
         ApiService,
-        { provide: CONFIG, useValue: config }
+        { provide: CoreConfigService, useValue: config }
       ]
     });
 

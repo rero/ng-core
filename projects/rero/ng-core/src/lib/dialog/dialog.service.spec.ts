@@ -22,7 +22,7 @@ import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-tran
 import { DialogService } from './dialog.service';
 import { DialogComponent } from './dialog.component';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
-import { CONFIG } from '../core.config';
+import { CoreConfigService } from '../core-config.service';
 
 let service: DialogService;
 let bsModalService: BsModalService;
@@ -41,7 +41,7 @@ describe('DialogService', () => {
         Nl2brPipe
       ],
       providers: [
-        { provide: CONFIG, useValue: {} }
+        { provide: CoreConfigService, useValue: {} }
       ]
     }).overrideModule(BrowserDynamicTestingModule, {
       set: {

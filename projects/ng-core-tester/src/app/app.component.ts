@@ -16,7 +16,7 @@
  */
 import { Component, Inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CONFIG, Config } from '@rero/ng-core';
+import { CoreConfigService } from '@rero/ng-core';
 
 @Component({
   selector: 'app-root',
@@ -29,9 +29,9 @@ export class AppComponent {
 
   constructor(
     private translateService: TranslateService,
-    @Inject(CONFIG) private config: Config
+    private configService: CoreConfigService
   ) {
-    this.languages = this.config.languages;
+    this.languages = this.configService.languages;
     this.translateService.use(this.lang);
   }
   changeLang(event, lang) {

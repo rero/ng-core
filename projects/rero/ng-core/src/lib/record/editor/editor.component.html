@@ -1,0 +1,10 @@
+<header class="d-flex mb-4">
+    <h3 class="mb-0 mr-4">{{ recordType | translate }}</h3>
+    <button (click)="cancel()" class="btn btn-warning btn-sm" translate>Cancel</button>
+</header>
+
+<json-schema-form *ngIf="schemaForm" [form]="schemaForm" [model]="schemaForm.data" (onSubmit)="save($event)"
+    framework="custom" [language]="currentLocale" (validationErrors)="validationErrors($event)"
+    (onChanges)="debug($event)" [options]="formOptions">
+</json-schema-form>
+<div *ngIf="debugMode && validationErrors" class="text-danger" [innerHTML]="prettyValidationErrors"></div>

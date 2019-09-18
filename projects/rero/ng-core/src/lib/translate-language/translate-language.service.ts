@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as I18nIsoLanguages from '@cospired/i18n-iso-languages';
 
-import { CONFIG, Config } from '../core.config';
+import { CoreConfigService } from '../core-config.service';
 
 declare const require: any;
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TranslateLanguageService {
   private languages = ['en'];
 
   constructor(
-    @Inject(CONFIG) private config: Config
+    private configService: CoreConfigService
   ) {
-    if (this.config.languages && this.config.languages.length) {
-      this.languages = config.languages;
+    if (this.configService.languages && this.configService.languages.length) {
+      this.languages = configService.languages;
     }
 
     for (const lang of this.languages) {
