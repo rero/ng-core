@@ -19,7 +19,7 @@ export interface Config {
 })
 export class CoreConfigService implements Config {
   production = false;
-  apiBaseUrl = 'toto';
+  apiBaseUrl = '';
   apiEndpointPrefix = '/api';
   $refPrefix = undefined;
   languages = ['en'];
