@@ -14,7 +14,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="card mb-2" *ngIf="aggregation.value.buckets.length">
+<div class="card mb-2" *ngIf="aggregation.value.buckets && aggregation.value.buckets.length">
   <div class="card-header p-0">
     <h5 class="mb-0">
       <button class="btn btn-link" type="button" (click)="show = !show;">
