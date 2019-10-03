@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { DialogService, ApiService, TranslateLanguageService, AlertService } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
 import { InstitutionComponent } from '../record/institution/institution.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -29,11 +30,32 @@ export class HomeComponent {
     }
   ];
 
+  demoMenu = {
+    entries: [
+      {
+        routerLink: '/',
+        cssActiveClass: '',
+        iconCssClass: 'fa fa-home'
+      },
+      {
+        name: 'Sonar',
+        href: 'http://sonar.ch',
+        iconCssClass: 'fa fa-external-link'
+      }, {
+        name: 'Alert',
+        iconCssClass: 'fa fa-exclamation-triangle'
+      }, {
+        name: 'Hidden'
+      }
+    ]
+  };
+
   constructor(
     private dialogService: DialogService,
     private apiService: ApiService,
     private translateLanguageService: TranslateLanguageService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private toastrService: ToastrService
   ) {
     this.apiData = {
       relative: this.apiService.getEndpointByType('documents'),
@@ -69,5 +91,16 @@ export class HomeComponent {
     const message = (document.getElementById('alert-message')) as HTMLInputElement;
 
     this.alertService.addAlert(type.value, message.value);
+  }
+
+  clickLinkItemMenu(item) {
+    this.toastrService.success(`menu ${item.name} clicked`);
+  }
+
+  isItemMenuVisible(itemMenu) {
+    if (itemMenu.name === 'Hidden') {
+      return false;
+    }
+    return true;
   }
 }

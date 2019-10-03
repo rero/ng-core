@@ -23,7 +23,6 @@
         <button type="button" class="btn btn-primary" (click)="addAlert()">Add alert</button>
     </div>
 </div>
-<ng-core-alert timeout="5000"></ng-core-alert>
 
 <h4 class="mt-5">Dialog component</h4>
 <button class="btn btn-primary" (click)="showDialog()">Show modal</button>
@@ -46,3 +45,6 @@
 <p>Translate "zzz" code in italian: <strong>{{ 'zzz' | translateLanguage: 'it' }}</strong> (code not available)</p>
 <p>Translate "fr" code in not language loaded: <strong>{{ 'fr' | translateLanguage: 'pt' }}</strong> (return initial
     value)</p>
+
+<h4>Menu</h4>
+<ng-core-menu [menu]="demoMenu" (clickItem)="clickLinkItemMenu($event)" [isItemMenuVisible] = "isItemMenuVisible"></ng-core-menu>

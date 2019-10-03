@@ -34,6 +34,10 @@ import { DefaultPipe } from './pipe/default.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
 import { DialogComponent } from './dialog/dialog.component';
+import { MenuComponent } from './widget/menu/menu.component';
+import { RouterModule } from '@angular/router';
+import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
+
 
 @NgModule({
   declarations: [
@@ -44,10 +48,13 @@ import { DialogComponent } from './dialog/dialog.component';
     DefaultPipe,
     TruncateTextPipe,
     TranslateLanguagePipe,
-    UpperCaseFirstPipe
+    UpperCaseFirstPipe,
+    MenuComponent,
+    CallbackArrayFilterPipe
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FormsModule,
     AlertModule.forRoot(),
     ModalModule.forRoot(),
@@ -76,7 +83,8 @@ import { DialogComponent } from './dialog/dialog.component';
     DefaultPipe,
     TruncateTextPipe,
     TranslateLanguagePipe,
-    UpperCaseFirstPipe
+    UpperCaseFirstPipe,
+    MenuComponent
   ],
   entryComponents: [
     DialogComponent

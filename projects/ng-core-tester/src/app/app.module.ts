@@ -29,6 +29,7 @@ import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { CoreConfigService } from '@rero/ng-core';
 import { AppConfigService } from './app-config.service';
+import { CollapseModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { AppConfigService } from './app-config.service';
     HttpClientModule,
     AppRoutingModule,
     CoreModule,
+    CollapseModule.forRoot(),
     RecordModule
   ],
   providers: [
