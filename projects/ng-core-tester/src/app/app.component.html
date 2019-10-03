@@ -17,37 +17,19 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <a class="navbar-brand" routerLink="/">Invenio Core</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button type="button" class="navbar-toggler" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="navbarSupportedContent">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/">Home</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/record/search/documents">Global records</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/usi/record/search/documents">USI records</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/hevs/record/search/documents">HEVS records</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/admin/record/search/documents">Backend records</a>
-        </li>
-      </ul>
-      <ul class="navbar-nav">
-        <li class="nav-item" *ngFor="let l of languages">
-          <a href="#" class="nav-link" (click)="changeLang($event, l)" [class.active]="lang === l">{{ l }}</a>
-        </li>
-      </ul>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent" [collapse]="isCollapsed" [isAnimated]="true">
+      <ng-core-menu class="mr-auto" [menu]="linksMenu"></ng-core-menu>
+      <ng-core-menu [menu]="languagesMenu" (clickItem)="changeLang($event)"></ng-core-menu>
     </div>
   </div>
 </nav>
+<ng-core-alert timeout="5000"></ng-core-alert>
+
 <div class="container my-5">
   <router-outlet></router-outlet>
 </div>
