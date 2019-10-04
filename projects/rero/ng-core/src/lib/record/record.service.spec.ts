@@ -133,7 +133,9 @@ describe('RecordService', () => {
       expect(data.metadata.pid).toBe('1');
     });
 
-    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/1');
+    const req = httpMock.expectOne(request => {
+      return request.method === 'GET' && request.url === url + '/1?resolve=0';
+    });
 
     req.flush(expectedData);
   });

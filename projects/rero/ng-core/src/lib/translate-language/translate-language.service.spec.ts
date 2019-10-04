@@ -19,7 +19,7 @@ import { TranslateLanguageService } from './translate-language.service';
 
 describe('TranslateLanguageService', () => {
   let service: TranslateLanguageService;
-  const spy = jasmine.createSpyObj('CoreConfigService', []);
+  const spy = jasmine.createSpyObj('CoreConfigService', { languages: [] });
 
   beforeEach(() => {
     service = new TranslateLanguageService(spy);
