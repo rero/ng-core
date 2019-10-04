@@ -26,3 +26,6 @@ export * from './lib/alert/alert.service';
 export * from './lib/translate-language/translate-language.service';
 export * from './lib/record/search/result/item/result-item';
 export * from './lib/record/record.module';
+export * from './lib/record/editor/editor.component';
+export * from './lib/record/search/record-search.component';
+export * from './lib/record/detail/detail.component';

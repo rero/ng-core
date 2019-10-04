@@ -20,6 +20,9 @@ import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
 import { DetailComponent } from './record/document/detail/detail.component';
+import { EditorComponent } from '@rero/ng-core';
+import { RecordSearchComponent } from '@rero/ng-core';
+import { DetailComponent as RecordDetailComponent } from '@rero/ng-core';
 
 const canAdd = (record) => {
   return true;
@@ -40,7 +43,10 @@ const routes: Routes = [
   },
   {
     path: 'usi/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent }
+    ],
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -63,7 +69,10 @@ const routes: Routes = [
   },
   {
     path: 'hevs/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent }
+    ],
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -82,7 +91,10 @@ const routes: Routes = [
   },
   {
     path: 'record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent }
+    ],
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -98,7 +110,12 @@ const routes: Routes = [
   },
   {
     path: 'admin/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent },
+      { path: ':type/edit/:pid', component: EditorComponent },
+      { path: ':type/new', component: EditorComponent }
+    ],
     data: {
       linkPrefix: '/admin/record/search',
       types: [
