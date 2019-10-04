@@ -28,3 +28,4 @@ export * from './lib/record/record.module';
 export * from './lib/record/editor/editor.component';
 export * from './lib/record/search/record-search.component';
 export * from './lib/record/detail/detail.component';
+export * from './lib/utils/utils';
