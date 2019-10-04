@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
@@ -58,24 +58,29 @@ describe('RecordSearchComponent', () => {
   dialogServiceSpy.show.and.returnValue(of(true));
 
   const route = {
-    data: of({
-      linkPrefix: '/records',
-      detailUrl: '/custom/url/for/detail',
-      types: [
-        {
-          key: 'documents',
-        }
-      ],
-      showSearchInput: true,
-      adminMode: true
-    }),
-    queryParams: of({
-      q: '',
-      page: 1,
-      size: 10,
-      author: ['Filippini, Massimo']
-    }),
-    params: of({ type: 'documents' })
+    snapshot: {
+      data: {
+        linkPrefix: '/records',
+        detailUrl: '/custom/url/for/detail',
+        types: [
+          {
+            key: 'documents',
+          },
+          {
+            key: 'institutions',
+          }
+        ],
+        showSearchInput: true,
+        adminMode: true
+      },
+      queryParams: {
+        q: '',
+        page: 1,
+        size: 10,
+        author: ['Filippini, Massimo']
+      },
+      paramMap: convertToParamMap({ type: 'documents' })
+    }
   };
 
   beforeEach(async(() => {
@@ -154,8 +159,8 @@ describe('RecordSearchComponent', () => {
 
   it('should change type', () => {
     expect(component.currentType).toBe('documents');
-    component.changeType(new Event('click'), 'patrons');
-    expect(component.currentType).toBe('patrons');
+    component.changeType(new Event('click'), 'institutions');
+    expect(component.currentType).toBe('institutions');
     expect(component.aggFilters.length).toBe(0);
   });
 
@@ -203,6 +208,8 @@ describe('RecordSearchComponent', () => {
         canAdd: () => false
       }
     ];
+    /* tslint:disable:no-string-literal */
+    component['loadResourceConfig']();
 
     expect(component.canAddRecord()).toBe(false);
   });
@@ -217,6 +224,8 @@ describe('RecordSearchComponent', () => {
         canUpdate: () => false
       }
     ];
+    /* tslint:disable:no-string-literal */
+    component['loadResourceConfig']();
 
     expect(component.canUpdateRecord({})).toBe(false);
   });
@@ -231,6 +240,8 @@ describe('RecordSearchComponent', () => {
         canDelete: () => false
       }
     ];
+    /* tslint:disable:no-string-literal */
+    component['loadResourceConfig']();
 
     expect(component.canDeleteRecord({})).toBe(false);
   });
@@ -238,7 +249,8 @@ describe('RecordSearchComponent', () => {
   it('should raise exception when configuration not found for type', () => {
     component.types = [];
     expect(() => {
-      fixture.detectChanges();
+      /* tslint:disable:no-string-literal */
+      component['loadResourceConfig']();
     }).toThrowError('Configuration not found for type "documents"');
   });
 
@@ -251,7 +263,7 @@ describe('RecordSearchComponent', () => {
 
   it('should configure component without routing', () => {
     component.inRouting = false;
-    TestBed.get(ActivatedRoute).data = of({});
+    TestBed.get(ActivatedRoute).snapshot.data = {};
 
     component.ngOnInit();
 
