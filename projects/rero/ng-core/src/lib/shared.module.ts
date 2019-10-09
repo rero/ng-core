@@ -20,13 +20,11 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ToastrModule } from 'ngx-toastr';
 
 import { TranslateLoader } from './translate/translate-loader';
-import { AlertComponent } from './alert/alert.component';
 import { SearchInputComponent } from './search-input/search-input.component';
 import { Nl2brPipe } from './pipe/nl2br.pipe';
 import { TranslateLanguagePipe } from './translate-language/translate-language.pipe';
@@ -41,7 +39,6 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 
 @NgModule({
   declarations: [
-    AlertComponent,
     DialogComponent,
     SearchInputComponent,
     Nl2brPipe,
@@ -56,7 +53,6 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
     CommonModule,
     RouterModule,
     FormsModule,
-    AlertModule.forRoot(),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
@@ -76,7 +72,6 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
     PaginationModule,
     BsDropdownModule,
     TranslateModule,
-    AlertComponent,
     DialogComponent,
     SearchInputComponent,
     Nl2brPipe,

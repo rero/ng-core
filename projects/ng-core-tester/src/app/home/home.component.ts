@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { DialogService, ApiService, TranslateLanguageService, AlertService } from '@rero/ng-core';
+import { DialogService, ApiService, TranslateLanguageService } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
 import { InstitutionComponent } from '../record/institution/institution.component';
 import { ToastrService } from 'ngx-toastr';
@@ -54,7 +54,6 @@ export class HomeComponent {
     private dialogService: DialogService,
     private apiService: ApiService,
     private translateLanguageService: TranslateLanguageService,
-    private alertService: AlertService,
     private toastrService: ToastrService
   ) {
     this.apiData = {
@@ -89,8 +88,21 @@ export class HomeComponent {
   addAlert() {
     const type = (document.getElementById('alert-type')) as HTMLSelectElement;
     const message = (document.getElementById('alert-message')) as HTMLInputElement;
-
-    this.alertService.addAlert(type.value, message.value);
+    switch (type.value) {
+      // Checkbox controls
+      case 'success':
+        this.toastrService.success(message.value);
+        break;
+      case 'info':
+        this.toastrService.info(message.value);
+        break;
+      case 'warning':
+        this.toastrService.warning(message.value);
+        break;
+      case 'danger':
+        this.toastrService.error(message.value);
+        break;
+    }
   }
 
   clickLinkItemMenu(item) {
