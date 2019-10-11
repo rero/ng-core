@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, UrlSegment } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
@@ -36,10 +36,72 @@ const canDelete = (record) => {
   return true;
 };
 
+export function matchedUrl(url: UrlSegment[]) {
+  const segments = [
+    new UrlSegment(url[0].path, {}),
+    new UrlSegment(url[1].path, {})
+  ];
+
+  return {
+    consumed: segments,
+    posParams: { type: new UrlSegment(url[1].path, {}) }
+  };
+}
+
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    matcher: (url) => {
+      if (url[0].path === 'records' && url[1].path === 'documents') {
+        return matchedUrl(url);
+      }
+      return null;
+    },
+    children: [
+      { path: '', component: RecordSearchComponent },
+      { path: 'detail/:pid', component: RecordDetailComponent }
+    ],
+    data: {
+      showSearchInput: true,
+      adminMode: false,
+      linkPrefix: 'records',
+      types: [
+        {
+          key: 'documents',
+          label: 'Documents',
+          component: DocumentComponent,
+          preFilters: {
+            institution: 'usi'
+          }
+        }
+      ]
+    }
+  },
+  {
+    matcher: (url) => {
+      if (url[0].path === 'records' && url[1].path === 'institutions') {
+        return matchedUrl(url);
+      }
+      return null;
+    },
+    children: [
+      { path: '', component: RecordSearchComponent },
+      { path: 'detail/:pid', component: RecordDetailComponent }
+    ],
+    data: {
+      showSearchInput: true,
+      adminMode: false,
+      linkPrefix: 'records',
+      types: [
+        {
+          key: 'institutions',
+          label: 'Institutions'
+        }
+      ]
+    }
   },
   {
     path: 'usi/record/search',

@@ -14,10 +14,9 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreConfigService } from '@rero/ng-core';
-import { Config, AlertService } from '@rero/ng-core';
 
 
 @Component({
@@ -40,21 +39,36 @@ export class AppComponent implements OnInit {
         iconCssClass: 'fa fa-home'
       },
       {
-        name: 'Global records',
-        routerLink: '/record/search/documents',
-        iconCssClass: 'fa fa-book'
-      },
-      {
-        name: 'USI records',
-        routerLink: '/usi/record/search/documents'
-      },
-      {
-        name: 'HEVS records',
-        routerLink: '/hevs/record/search/documents'
-      },
-      {
-        name: 'Backend records',
-        routerLink: '/admin/record/search/documents'
+        name: 'Records',
+        href: '#',
+        cssActiveClass: '',
+        entries: [
+          {
+            name: 'Global records',
+            routerLink: '/record/search/documents',
+            iconCssClass: 'fa fa-book'
+          },
+          {
+            name: 'USI records',
+            routerLink: '/usi/record/search/documents'
+          },
+          {
+            name: 'HEVS records',
+            routerLink: '/hevs/record/search/documents'
+          },
+          {
+            name: 'Backend records',
+            routerLink: '/admin/record/search/documents'
+          },
+          {
+            name: 'Document records',
+            routerLink: '/records/documents'
+          },
+          {
+            name: 'Organizations records',
+            routerLink: '/records/institutions'
+          }
+        ]
       }
     ]
   };
