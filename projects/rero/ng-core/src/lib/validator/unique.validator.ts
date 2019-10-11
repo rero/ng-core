@@ -14,21 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export function _(str: string) {
-    return str;
-}
 
-export function extractIdOnRef(ref: string) {
-  const rx = /.*\/?(.+)$/ig;
-  return rx.exec(ref)[1];
-}
+import { AbstractControl } from '@angular/forms';
+import { RecordService } from '../record/record.service';
 
-export function cleanDictKeys(data: any) {
-  // let data = _.cloneDeep(data);
-  for (const key in data) {
-    if (data[key] === null || data[key] === undefined || data[key].length === 0) {
-      delete data[key];
-    }
+// @dynamic
+export class UniqueValidator {
+  static createValidator(
+    recordService: RecordService,
+    recordType: string,
+    fieldName: string,
+    excludePid: string = null
+  ) {
+    return (control: AbstractControl) => {
+      return recordService.valueAlreadyExists (
+        recordType,
+        fieldName,
+        control.value,
+        excludePid
+      );
+    };
   }
-  return data;
 }
