@@ -35,6 +35,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { MenuComponent } from './widget/menu/menu.component';
 import { RouterModule } from '@angular/router';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
+import { UniqueValidator } from './validator/unique.validator';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
       isolate: false
     })
   ],
+  // providers: [UniqueValidator],
   exports: [
     CommonModule,
     FormsModule,

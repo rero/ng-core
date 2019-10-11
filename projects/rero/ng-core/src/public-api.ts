@@ -29,3 +29,5 @@ export * from './lib/record/editor/editor.component';
 export * from './lib/record/search/record-search.component';
 export * from './lib/record/detail/detail.component';
 export * from './lib/utils/utils';
+export * from './lib/validator/unique.validator';
+export * from './lib/validator/time.validator';

@@ -26,6 +26,8 @@ import { ApiService } from '../api/api.service';
   providedIn: 'root'
 })
 export class RecordService {
+  public static readonly DEFAULT_REST_RESULTS_SIZE = 10;
+  public static readonly MAX_REST_RESULTS_SIZE = 9999;
   /**
    * Constructor
    * @param http - HttpClient
@@ -48,7 +50,7 @@ export class RecordService {
     type: string,
     query: string = '',
     page = 1,
-    itemsPerPage = 20,
+    itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
     aggFilters: any[] = [],
     preFilters: object = {}
   ): Observable<Record> {
@@ -144,11 +146,11 @@ export class RecordService {
    * @param excludePid - string, PID to ignore (normally the current record we are checking)
    */
   public valueAlreadyExists(recordType: string, field: string, value: string, excludePid: string) {
-    let url = `${this.apiService.getEndpointByType(recordType, true)}/?size=0&q=${field}:"${value}"`;
+    let query = `${field}:"${value}"`;
     if (excludePid) {
-      url += ` NOT pid:${excludePid}`;
+      query += ` NOT pid:${excludePid}`;
     }
-    return this.http.get<any>(url).pipe(
+    return this.getRecords(recordType, query, 1, 0).pipe(
       map(res => res.hits.total),
       map(total => total ? { alreadyTakenMessage: value } : null),
       debounceTime(1000)
