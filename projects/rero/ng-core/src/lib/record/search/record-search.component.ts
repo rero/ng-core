@@ -207,7 +207,7 @@ export class RecordSearchComponent implements OnInit {
     this.getRecords(this.inRouting === false);
 
     for (const type of this.types) {
-      this.recordService.getRecords(type.key, '', 1, 0, [], this.config.preFilters || {}).subscribe(records => {
+      this.recordService.getRecords(type.key, '', 1, 1, [], this.config.preFilters || {}).subscribe(records => {
         type.total = records.hits.total;
       });
     }
