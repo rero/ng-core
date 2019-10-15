@@ -16,6 +16,8 @@
  */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, UrlSegment } from '@angular/router';
+import { of } from 'rxjs';
+
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { InstitutionComponent } from './record/institution/institution.component';
@@ -33,7 +35,10 @@ const canUpdate = (record) => {
 };
 
 const canDelete = (record) => {
-  return true;
+  return of({
+    can: Math.random() >= 0.5,
+    message: `You <strong>cannot</strong> delete this record #${record.id} !`
+  });
 };
 
 export function matchedUrl(url: UrlSegment[]) {

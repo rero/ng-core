@@ -18,6 +18,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
+import { ModalModule } from 'ngx-bootstrap';
 
 import { RecordSearchResultComponent } from './record-search-result.component';
 import { JsonComponent } from './item/json.component';
@@ -35,6 +36,7 @@ describe('RecordSearchResultComponent', () => {
         RecordSearchResultComponent
       ],
       imports: [
+        ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })

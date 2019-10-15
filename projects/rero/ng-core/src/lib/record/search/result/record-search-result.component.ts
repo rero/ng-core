@@ -15,9 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, Input, ComponentFactoryResolver, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 import { RecordSearchResultDirective } from './record-search-result.directive';
 import { JsonComponent } from './item/json.component';
+import { DialogService } from '../../../dialog/dialog.service';
+import { DeleteRecordStatus } from '../../record-status';
+import { _ } from '../../../utils/utils';
 
 @Component({
   selector: 'ng-core-record-search-result',
@@ -28,6 +33,8 @@ export class RecordSearchResultComponent implements OnInit {
    * Store current URL to come back to the same page
    */
   currentUrl: string = null;
+
+  canDeleteResult: DeleteRecordStatus;
 
   /**
    * Record to display
@@ -63,7 +70,7 @@ export class RecordSearchResultComponent implements OnInit {
    * Record can be removed
    */
   @Input()
-  canDelete = true;
+  canDelete: Observable<DeleteRecordStatus>;
 
   /**
    * Indicates if the component is included in angular routes
@@ -97,7 +104,11 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Constructor
    */
-  constructor(private componentFactoryResolver: ComponentFactoryResolver, ) {
+  constructor(
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private dialogService: DialogService,
+    private translate: TranslateService,
+  ) {
     this.currentUrl = window.location.href;
   }
 
@@ -106,6 +117,12 @@ export class RecordSearchResultComponent implements OnInit {
    */
   ngOnInit() {
     this.loadItemView();
+
+    if (this.canDelete) {
+      this.canDelete.subscribe((result: DeleteRecordStatus) => {
+        this.canDeleteResult = result;
+      });
+    }
   }
 
   /**
@@ -130,5 +147,22 @@ export class RecordSearchResultComponent implements OnInit {
   public deleteRecord(event: Event, pid: string) {
     event.preventDefault();
     return this.deletedRecord.emit(pid);
+  }
+
+  /**
+   * Show dialog with the reason why record cannot be deleted.
+   * @param event - Event
+   * @param message - string, message to display
+   */
+  public showDeleteMessage(event: Event, message: string) {
+    event.preventDefault();
+    this.dialogService.show({
+      initialState: {
+        title: this.translate.instant(_('Confirmation')),
+        body: message,
+        confirmButton: false,
+        cancelTitleButton: this.translate.instant(_('OK'))
+      }
+    }).subscribe();
   }
 }
