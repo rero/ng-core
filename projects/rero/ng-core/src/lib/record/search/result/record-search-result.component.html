@@ -31,9 +31,17 @@
             *ngIf="inRouting && adminMode && canUpdate">
             <i class="fa fa-pencil"></i>
         </a>
-        <a href="#" class="ml-2" [title]="'Delete'|translate" (click)="deleteRecord($event, record.metadata.pid)"
-            *ngIf="adminMode && canDelete">
-            <i class="fa fa-trash"></i>
-        </a>
+        <span class="ml-2" *ngIf="adminMode && canDeleteResult">
+            <a href="#" [title]="'Delete'|translate" (click)="deleteRecord($event, record.metadata.pid)" *ngIf="canDeleteResult.can; else deleteMessageLink">
+                <i class="fa fa-trash"></i>
+            </a>
+            <ng-template #deleteMessageLink>
+                <a href="#" class="text-muted" [title]="'Delete'|translate" (click)="showDeleteMessage($event, canDeleteResult.message)" *ngIf="canDeleteResult.message">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </ng-template>
+            
+        </span>
+
     </div>
 </div>

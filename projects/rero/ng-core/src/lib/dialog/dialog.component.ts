@@ -42,6 +42,16 @@ export class DialogComponent implements OnInit {
   public confirmButton = true;
 
   /**
+   * Label of cancel button
+   */
+  public cancelTitleButton: string;
+
+  /**
+   * Label of confirmation button
+   */
+  public confirmTitleButton: string;
+
+  /**
    * Event triggered when modal is closed.
    */
   public onClose: Subject<boolean>;

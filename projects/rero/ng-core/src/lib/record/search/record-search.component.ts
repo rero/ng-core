@@ -18,9 +18,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
+import { of, Observable } from 'rxjs';
 
 import { RecordService } from '../record.service';
 import { DialogService } from '../../dialog/dialog.service';
+import { DeleteRecordStatus } from '../record-status';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -356,12 +358,15 @@ export class RecordSearchComponent implements OnInit {
    * Check if a record can be deleted
    * @param record - object, record to check
    */
-  public canDeleteRecord(record: object) {
+  public canDeleteRecord(record: object): Observable<DeleteRecordStatus> {
     if (this.config.canDelete) {
       return this.config.canDelete(record);
     }
 
-    return true;
+    return of({
+      can: true,
+      message: ''
+    });
   }
 
   /**

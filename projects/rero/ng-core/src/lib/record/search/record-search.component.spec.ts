@@ -231,19 +231,23 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should have permission to delete record', () => {
-    expect(component.canDeleteRecord({})).toBe(true);
+    component.canDeleteRecord({}).subscribe((result) => {
+      expect(result.can).toBe(true);
+    });
 
     component.types = [
       {
         key: 'documents',
         label: 'Documents',
-        canDelete: () => false
+        canDelete: () => of({ can: false, message: '' })
       }
     ];
     /* tslint:disable:no-string-literal */
     component['loadResourceConfig']();
 
-    expect(component.canDeleteRecord({})).toBe(false);
+    component.canDeleteRecord({}).subscribe((result) => {
+      expect(result.can).toBe(false);
+    });
   });
 
   it('should raise exception when configuration not found for type', () => {
