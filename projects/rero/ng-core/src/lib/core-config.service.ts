@@ -6,6 +6,7 @@ export interface Config {
   apiEndpointPrefix?: string;
   $refPrefix: string;
   languages?: string[];
+  defaultLanguage?: string;
   customTranslations?: {
       fr?: {},
       de?: {},
@@ -23,5 +24,6 @@ export class CoreConfigService implements Config {
   apiEndpointPrefix = '/api';
   $refPrefix = undefined;
   languages = ['en'];
+  defaultLanguage = 'en';
   customTranslations = null;
 }
