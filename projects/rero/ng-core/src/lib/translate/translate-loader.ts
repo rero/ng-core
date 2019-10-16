@@ -31,7 +31,7 @@ export class TranslateLoader implements BaseTranslateLoader {
     /**
      * Store translations in available languages.
      */
-    private translations: object = { fr, de, en, it };
+    public translations: object = { fr, de, en, it };
 
     /**
      * Constructor
@@ -64,7 +64,6 @@ export class TranslateLoader implements BaseTranslateLoader {
         if (!this.translations[lang]) {
             throw new Error(`Translations not found for lang "${lang}"`);
         }
-
         return of(this.translations[lang]);
     }
 }

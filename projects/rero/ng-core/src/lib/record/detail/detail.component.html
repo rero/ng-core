@@ -14,7 +14,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="alert alert-danger" *ngIf="error">{{ error | translate }}</div>
+<div class="alert alert-danger" *ngIf="error">{{ error|translate }}</div>
 <div class="row">
     <div class="col-9">
         <ng-template ngCoreRecordDetail></ng-template>
@@ -31,4 +31,4 @@
     </div>
 </div>
 <hr class="my-4">
-<a href="#" (click)="goBack($event)">&laquo; {{ "Back" | translate }}</a>
+<a href="#" (click)="goBack($event)">&laquo; {{ 'Back'|translate }}</a>
