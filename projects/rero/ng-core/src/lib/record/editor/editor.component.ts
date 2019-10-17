@@ -1,12 +1,28 @@
+/*
+ * Invenio angular core
+ * Copyright (C) 2019 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import { Component, OnInit, Inject } from '@angular/core';
 import { WidgetLibraryService, FrameworkLibraryService, JsonPointer } from 'angular6-json-schema-form';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RecordService } from '../record.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { _ } from '../../utils/utils';
 import { Location } from '@angular/common';
 import { FieldsetComponent } from './fieldset/fieldset.component';
 import { CustomBootstrap4Framework } from './bootstrap4-framework/custombootstrap4-framework';
@@ -16,6 +32,8 @@ import { RemoteSelectComponent } from './remote-select/remote-select.component';
 import { RolesCheckboxesComponent } from './roles-checkboxes/roles-checkboxes.component';
 import { RemoteInputComponent } from './remote-input/remote-input.component';
 import { MainFieldsManagerComponent } from './main-fields-manager/main-fields-manager.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 
 @Component({
   selector: 'ng-core-editor',
@@ -35,7 +53,6 @@ export class EditorComponent implements OnInit {
   public data;
   public currentLocale = undefined;
   public formValidationErrors: any;
-  private userSettings = undefined;
   private goToDetailedView = false;
 
   /**
@@ -143,7 +160,7 @@ export class EditorComponent implements OnInit {
           _('Record Updated!'),
           _(this.recordType)
         );
-        this.goToNext(this.pid);
+        this.location.back();
       });
     } else {
       this.recordService.create(this.recordType, record).subscribe(res => {
@@ -151,27 +168,9 @@ export class EditorComponent implements OnInit {
           _('Record Created with pid: ') + res.metadata.pid,
           _(this.recordType)
         );
-        this.goToNext(res.metadata.pid);
+        this.location.back();
       });
     }
-  }
-
-  /**
-   * Go to next page after successful save
-   * @param pid - string, record PID
-   */
-  public goToNext(pid: string) {
-    // console.log(this.goToDetailedView, this.userSettings, document.referrer, window.location);
-    // if (this.goToDetailedView && this.userSettings !== undefined) {
-    //   window.location.href = `/${this.userSettings.global_view}/${this.recordType}/${pid}`;
-    // } else {
-    // if (document.referrer.search(/admin/)) {
-    //   this.location.back();
-    // } else {
-    //   window.location.href = document.referrer + '?nocache=' + (new Date()).getTime();
-    // }
-    // }
-    this.location.back();
   }
 
   /**

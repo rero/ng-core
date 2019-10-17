@@ -1,21 +1,19 @@
 /*
-
-RERO ILS
-Copyright (C) 2019 RERO
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, version 3 of the License.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-*/
+ * Invenio angular core
+ * Copyright (C) 2019 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 import { AbstractControl } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
@@ -25,7 +23,6 @@ import { mergeMap, map } from 'rxjs/operators';
 import { RecordService } from '../../record.service';
 import { TypeaheadMatch } from 'ngx-bootstrap';
 // import { UserService } from '../../../user.service';
-import { _ } from '../../../utils/utils';
 import { TranslateService} from '@ngx-translate/core';
 import moment from 'moment';
 
@@ -85,7 +82,7 @@ export class MefComponent implements OnInit, OnDestroy {
           name: this.getName(authority.metadata),
           ref: this.controlValue,
           query: undefined,
-          category: this.translateService.instant(_('link to authority'))
+          category: this.translateService.instant('link to authority')
         };
         this.jsf.updateValue(this, this.controlValue);
       });
@@ -95,7 +92,7 @@ export class MefComponent implements OnInit, OnDestroy {
         name,
         ref: undefined,
         query: name,
-        category: this.translateService.instant(_('create'))
+        category: this.translateService.instant('create')
       };
     }
     this.dataSource = new Observable((observer: any) => {
@@ -123,7 +120,7 @@ export class MefComponent implements OnInit, OnDestroy {
           name: query,
           ref: undefined,
           query,
-          category: this.translateService.instant(_('create'))
+          category: this.translateService.instant('create')
         }];
         if (!results) {
           return [];
@@ -133,7 +130,7 @@ export class MefComponent implements OnInit, OnDestroy {
             name: this.getName(hit.metadata),
             ref: `https://mef.rero.ch/api/mef/${hit.metadata.pid}`,
             query,
-            category: this.translateService.instant(_('link to authority'))
+            category: this.translateService.instant('link to authority')
           });
         });
         return names;

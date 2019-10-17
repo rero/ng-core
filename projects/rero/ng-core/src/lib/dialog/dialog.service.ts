@@ -16,9 +16,7 @@
  */
 import { Injectable } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap';
-
 import { DialogComponent } from './dialog.component';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

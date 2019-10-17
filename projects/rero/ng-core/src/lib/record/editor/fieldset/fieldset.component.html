@@ -35,8 +35,7 @@
           <button *ngIf="canAddItem" class="dropdown-item" (click)="addItem($event)" translate>New</button>
           <button *ngIf="canRemoveItem" class="dropdown-item" (click)="removeItem($event)" translate>Remove</button>
           <button *ngIf="canHideItem && canHide" class="dropdown-item" (click)="hide()" translate>Remove</button>
-          <button *ngIf="canHideMultipleItems && canHide" class="dropdown-item" (click)="hide()" translate>Remove
-            all</button>
+          <button *ngIf="canHideMultipleItems && canHide" class="dropdown-item" (click)="hide()" translate>Remove all</button>
           <a class="dropdown-item disabled" href="/cataloging/help" translate>Help</a>
         </div>
       </div>

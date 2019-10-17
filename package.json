@@ -7,7 +7,9 @@
     "build-lib": "ng build @rero/ng-core",
     "test-lib": "ng test @rero/ng-core",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/en_US.json --fi '  '",
+    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/{de,en,fr,it}.json --fi '  '"
   },
   "private": true,
   "dependencies": {
@@ -19,6 +21,8 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
+    "@biesbjerg/ngx-translate-extract": "^4.2.0",
+    "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@cospired/i18n-iso-languages": "^2.0.6",
     "@ngx-translate/core": "^11.0.1",
     "@ngx-translate/http-loader": "^4.0.0",

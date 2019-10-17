@@ -14,34 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 
-import { TranslateUtil } from './translate-util';
-
-class MockTranslateService {
-  instant(value: string): string {
-    return value;
-  }
-}
-
-describe('TranslateUtil', () => {
-  let service: MockTranslateService;
-  let translate: TranslateUtil;
-
-  beforeEach(() => {
-    service = new MockTranslateService();
-    translate = new TranslateUtil(service);
-  });
-
-  afterEach(() => {
-    service = null;
-    translate = null;
-  });
-
-  it('should create an instance', () => {
-    expect(translate).toBeTruthy();
-  });
-
-  it('should translate string', () => {
-    expect(translate._('String to translate')).toBe('String to translate');
-  });
-});
+// Languages
+_('de');
+_('en');
+_('fr');
+_('it');
