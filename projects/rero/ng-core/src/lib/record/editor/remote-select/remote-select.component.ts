@@ -1,22 +1,19 @@
 /*
-
-RERO ILS
-Copyright (C) 2019 RERO
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, version 3 of the License.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program. If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
+ * Invenio angular core
+ * Copyright (C) 2019 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import { AbstractControl } from '@angular/forms';
 import { buildTitleMap, isArray } from 'angular6-json-schema-form';
 import { Component, Input, OnInit } from '@angular/core';
@@ -24,12 +21,11 @@ import { JsonSchemaFormService } from 'angular6-json-schema-form';
 import { RecordService } from '../../record.service';
 import { ApiService } from '../../../api/api.service';
 import { CoreConfigService } from '../../../core-config.service';
-// import { UserService } from '../../../user.service';
 
 @Component({
   selector: 'ng-core-remote-select',
   templateUrl: './remote-select.component.html',
-  styleUrls: ['./remote-select.component.scss']
+  styles: []
 })
 export class RemoteSelectComponent implements OnInit {
 
@@ -50,7 +46,6 @@ export class RemoteSelectComponent implements OnInit {
     private recordService: RecordService,
     private apiService: ApiService,
     private configService: CoreConfigService
-    // private userService: UserService
     ) { }
 
   ngOnInit() {

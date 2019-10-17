@@ -22,7 +22,6 @@ import { RecordSearchResultDirective } from './record-search-result.directive';
 import { JsonComponent } from './item/json.component';
 import { DialogService } from '../../../dialog/dialog.service';
 import { DeleteRecordStatus } from '../../record-status';
-import { _ } from '../../../utils/utils';
 
 @Component({
   selector: 'ng-core-record-search-result',
@@ -158,10 +157,10 @@ export class RecordSearchResultComponent implements OnInit {
     event.preventDefault();
     this.dialogService.show({
       initialState: {
-        title: this.translate.instant(_('Confirmation')),
+        title: this.translate.instant('Confirmation'),
         body: message,
         confirmButton: false,
-        cancelTitleButton: this.translate.instant(_('OK'))
+        cancelTitleButton: this.translate.instant('OK')
       }
     }).subscribe();
   }

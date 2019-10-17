@@ -14,7 +14,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="alert alert-danger" *ngIf="error">{{ error|translate }}</div>
+<div class="alert alert-danger" *ngIf="error">{{ error | translate }}</div>
 <div class="row">
     <div class="col-9">
         <ng-template ngCoreRecordDetail></ng-template>
@@ -22,13 +22,13 @@
     <div class="col-3" *ngIf="record">
         <a href="javascript:void(0);" class="btn btn-sm btn-secondary" routerLink="../../edit/{{ record.metadata.pid }}">
             <i class="fa fa-pencil"></i>
-            {{ "Edit"|translate }}
+            {{ 'Edit' | translate }}
         </a>
         <a href="javascript:void(0);" class="btn btn-sm btn-secondary ml-1">
             <i class="fa fa-trash"></i>
-            {{ "Delete"|translate }}
+            {{ 'Delete' | translate }}
         </a>
     </div>
 </div>
 <hr class="my-4">
-<a href="#" (click)="goBack($event)">&laquo; {{ 'Back'|translate }}</a>
+<a href="#" (click)="goBack($event)">&laquo; {{ 'Back' | translate }}</a>

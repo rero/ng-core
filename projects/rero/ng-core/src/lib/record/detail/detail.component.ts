@@ -17,8 +17,6 @@
 import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { zip } from 'rxjs';
-import { first, map } from 'rxjs/operators';
 
 import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
