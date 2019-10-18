@@ -63,4 +63,13 @@ export class ApiService {
 
     return endpoint;
   }
+
+  /**
+   * Returne $ref endpoint to resource
+   * @param type - string, type of resource
+   * @param id - string id of the record
+   */
+  getRefEndpoint(type: string, id: string) {
+    return `${this.configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
+  }
 }
