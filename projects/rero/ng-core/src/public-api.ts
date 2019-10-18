@@ -32,3 +32,5 @@ export * from './lib/utils/utils';
 export * from './lib/validator/unique.validator';
 export * from './lib/validator/time.validator';
 export * from './lib/translate/translate-loader';
+export * from './lib/translate/translate-service';
+export * from './lib/translate/date-translate-pipe';

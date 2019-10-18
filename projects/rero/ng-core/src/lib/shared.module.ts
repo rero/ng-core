@@ -35,6 +35,7 @@ import { DialogComponent } from './dialog/dialog.component';
 import { MenuComponent } from './widget/menu/menu.component';
 import { RouterModule } from '@angular/router';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
+import { DateTranslatePipe } from './translate/date-translate-pipe';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
     TranslateLanguagePipe,
     UpperCaseFirstPipe,
     MenuComponent,
-    CallbackArrayFilterPipe
+    CallbackArrayFilterPipe,
+    DateTranslatePipe
   ],
   imports: [
     CommonModule,
@@ -80,7 +82,8 @@ import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
     TruncateTextPipe,
     TranslateLanguagePipe,
     UpperCaseFirstPipe,
-    MenuComponent
+    MenuComponent,
+    DateTranslatePipe
   ],
   entryComponents: [
     DialogComponent
