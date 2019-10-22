@@ -105,7 +105,7 @@ export class RecordService {
   public getSchemaForm(recordType: string) {
     let recType = recordType.replace(/ies$/, 'y');
     recType = recType.replace(/s$/, '');
-    const url = `${this.apiService.baseUrl}/api/schemaform/${recordType}`;
+    const url = this.apiService.getSchemaFormEndpoint(recordType);
     return this.http.get<any>(url).pipe(
       catchError(e => {
         if (e.status === 404) {

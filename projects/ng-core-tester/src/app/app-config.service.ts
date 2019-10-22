@@ -11,6 +11,7 @@ export class AppConfigService extends CoreConfigService {
     super();
     this.production = false;
     this.apiBaseUrl = 'https://localhost:5000';
+    this.schemaFormEndpoint = '/api/schemaform';
     this.$refPrefix = environment.$refPrefix;
     this.languages = environment.languages;
     this.customTranslations = environment.customTranslations;

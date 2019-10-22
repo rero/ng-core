@@ -72,4 +72,20 @@ export class ApiService {
   getRefEndpoint(type: string, id: string) {
     return `${this.configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
   }
+
+  /**
+   * Return invenio API FormOption Endpoint corresponding to type.
+   * @param type - string, type of the resource
+   * @param absolute - boolean, if absolute or relative url must be returned.
+   */
+  public getSchemaFormEndpoint(type: string, absolute: boolean = false) {
+    let endpoint = this.configService.schemaFormEndpoint + '/' + type;
+
+    if (absolute === true) {
+      endpoint = this.baseUrl + endpoint;
+    }
+
+    return endpoint;
+
+  }
 }

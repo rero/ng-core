@@ -21,6 +21,7 @@ export interface Config {
   apiBaseUrl?: string;
   apiEndpointPrefix?: string;
   $refPrefix: string;
+  schemaFormEndpoint: string;
   languages?: string[];
   defaultLanguage?: string;
   customTranslations?: {
@@ -38,6 +39,7 @@ export class CoreConfigService implements Config {
   production = false;
   apiBaseUrl = '';
   apiEndpointPrefix = '/api';
+  schemaFormEndpoint = '/api/schemaform';
   $refPrefix = undefined;
   languages = ['en'];
   defaultLanguage = 'en';
