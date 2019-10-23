@@ -53,6 +53,7 @@
             <div *ngFor="let item of aggregations | keyvalue">
                 <ng-core-record-search-aggregation [aggregation]="item"
                     [selectedValues]="getFilterSelectedValues(item.key)"
+                    [expand]="expandFacet(item.key)"
                     (updateAggregationFilter)="updateAggregationFilter($event)">
                 </ng-core-record-search-aggregation>
             </div>

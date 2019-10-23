@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ng-core-record-search-aggregation',
@@ -37,13 +38,26 @@ export class RecordSearchAggregationComponent {
    * Show or hide filter items
    */
   @Input()
-  public show = true;
+  public expand = true;
 
   /**
    * Emit event to parent when a value is clicked
    */
   @Output()
   public updateAggregationFilter = new EventEmitter<{ term: string, values: string[] }>();
+
+  /**
+   * Constructor
+   * @param translate TranslateService
+   */
+  constructor(private translate: TranslateService) {}
+
+  /**
+   * Interface language
+   */
+  get language() {
+    return this.translate.currentLang;
+  }
 
   /**
    * Check if a value is already registered in filters.
@@ -71,6 +85,6 @@ export class RecordSearchAggregationComponent {
    * Show filter values
    */
   showAggregation() {
-    return this.show || this.selectedValues.length > 0;
+    return this.expand || this.selectedValues.length > 0;
   }
 }

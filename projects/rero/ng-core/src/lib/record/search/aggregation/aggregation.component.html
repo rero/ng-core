@@ -17,8 +17,8 @@
 <div class="card mb-2" *ngIf="aggregation.value.buckets && aggregation.value.buckets.length">
   <div class="card-header p-0">
     <h5 class="mb-0">
-      <button class="btn btn-link" type="button" (click)="show = !show;">
-        {{ aggregation.key|translate|ucfirst }}
+      <button class="btn btn-link" type="button" (click)="expand = !expand;">
+        {{ aggregation.key | translate | ucfirst }}
       </button>
     </h5>
   </div>
@@ -30,7 +30,8 @@
             (click)="updateFilter(bucket.key) ">
           <label class="form-check-label">
             <span *ngIf="bucket.name">{{ bucket.name }}</span>
-            <span *ngIf="!bucket.name">{{ bucket.key }}</span> ({{ bucket.doc_count }})
+            <span *ngIf="!bucket.name && aggregation.key != 'language'">{{ bucket.key | translate }}</span>
+            <span *ngIf="!bucket.name && aggregation.key == 'language'">{{ bucket.key | translateLanguage:language }}</span> ({{ bucket.doc_count }})
           </label>
         </li>
       </ul>

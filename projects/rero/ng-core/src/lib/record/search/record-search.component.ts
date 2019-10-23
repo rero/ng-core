@@ -95,7 +95,8 @@ export class RecordSearchComponent implements OnInit {
     total?: number,
     canAdd?: any,
     canUpdate?: any,
-    canDelete?: any
+    canDelete?: any,
+    aggregations?: any
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -405,9 +406,39 @@ export class RecordSearchComponent implements OnInit {
     ).subscribe(records => {
       this.records = records.hits.hits;
       this.total = records.hits.total;
-      this.aggregations = records.aggregations;
+      this.aggregationsFilters(records.aggregations).subscribe((aggr: any) => {
+        this.aggregations = aggr;
+      });
       this.isLoading = false;
     });
+  }
+
+  /**
+   * Aggregations filters (facets)
+   * @param records - Result records
+   */
+  aggregationsFilters(aggregations: object) {
+    if (this.config.aggregations) {
+      return this.config.aggregations(aggregations);
+    } else {
+      return of(aggregations);
+    }
+  }
+
+  /**
+   * Show or hide facet section
+   * @param key facet key
+   */
+  expandFacet(key: string) {
+    if ('_settings' in this.aggregations) {
+      const settings = this.aggregations._settings;
+      const keyExtand = 'expand';
+      if (keyExtand in settings && settings[keyExtand].indexOf(key) > -1) {
+        return true;
+      }
+      return false;
+    }
+    return true;
   }
 
   /**

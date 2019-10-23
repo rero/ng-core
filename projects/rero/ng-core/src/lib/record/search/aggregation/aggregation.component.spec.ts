@@ -19,6 +19,7 @@ import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-tran
 
 import { RecordSearchAggregationComponent } from './aggregation.component';
 import { UpperCaseFirstPipe } from '../../../pipe/ucfirst.pipe';
+import { TranslateLanguagePipe } from '../../../translate-language/translate-language.pipe';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
@@ -28,7 +29,8 @@ describe('RecordSearchAggregationComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         RecordSearchAggregationComponent,
-        UpperCaseFirstPipe
+        UpperCaseFirstPipe,
+        TranslateLanguagePipe
       ],
       imports: [
         TranslateModule.forRoot({
@@ -72,7 +74,7 @@ describe('RecordSearchAggregationComponent', () => {
   it('should show aggregation filter', () => {
     expect(component.showAggregation()).toBe(true);
 
-    component.show = false;
+    component.expand = false;
     expect(component.showAggregation()).toBe(true);
   });
 

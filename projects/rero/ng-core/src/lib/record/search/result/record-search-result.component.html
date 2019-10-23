@@ -20,11 +20,11 @@
     </div>
     <div class="col-2 text-right">
         <a [href]="formattedDetailUrl" *ngIf="detailUrl; else routingDetailLink">
-            <i class="fa fa-search"></i>
+            <i class="fa fa-file-o"></i>
         </a>
         <ng-template #routingDetailLink>
             <a href="#" [title]="'Show'|translate" [routerLink]="['detail/', record.metadata.pid]" *ngIf="inRouting">
-                <i class="fa fa-search"></i>
+                <i class="fa fa-file-o"></i>
             </a>
         </ng-template>
         <a class="ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
@@ -40,7 +40,7 @@
                     <i class="fa fa-trash"></i>
                 </a>
             </ng-template>
-            
+
         </span>
 
     </div>

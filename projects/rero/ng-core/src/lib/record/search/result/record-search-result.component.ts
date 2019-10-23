@@ -72,6 +72,12 @@ export class RecordSearchResultComponent implements OnInit {
   canDelete: Observable<DeleteRecordStatus>;
 
   /**
+   * Aggregations
+   */
+  @Input()
+  aggregations: Array<object>;
+
+  /**
    * Indicates if the component is included in angular routes
    */
   @Input()

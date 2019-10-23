@@ -35,6 +35,7 @@ import { RecordService } from '../record.service';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { DialogService } from '../../dialog/dialog.service';
+import { TranslateLanguagePipe } from '../../translate-language/translate-language.pipe';
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -93,7 +94,8 @@ describe('RecordSearchComponent', () => {
         DefaultPipe,
         UpperCaseFirstPipe,
         Nl2brPipe,
-        DialogComponent
+        DialogComponent,
+        TranslateLanguagePipe
       ],
       imports: [
         BrowserAnimationsModule,
