@@ -22,6 +22,7 @@ import { RecordSearchResultDirective } from './record-search-result.directive';
 import { JsonComponent } from './item/json.component';
 import { DialogService } from '../../../dialog/dialog.service';
 import { DeleteRecordStatus } from '../../record-status';
+import { ResultItem } from './item/result-item';
 
 @Component({
   selector: 'ng-core-record-search-result',
@@ -34,6 +35,11 @@ export class RecordSearchResultComponent implements OnInit {
   currentUrl: string = null;
 
   canDeleteResult: DeleteRecordStatus;
+
+  /**
+   * Detail URL value, resolved by observable property detailUrl$.
+   */
+  detailUrl: string;
 
   /**
    * Record to display
@@ -84,17 +90,10 @@ export class RecordSearchResultComponent implements OnInit {
   inRouting = false;
 
   /**
-   * URL to notice detail
+   * Observable emitting current value of record URL.
    */
   @Input()
-  detailUrl: string = null;
-
-  /**
-   * Return detail URL with replaced placeholders.
-   */
-  get formattedDetailUrl() {
-    return this.detailUrl.replace(':type', this.type).replace(':pid', this.record.id);
-  }
+  detailUrl$: Observable<string> = null;
 
   /**
    * Event emitted when a record is deleted
@@ -121,13 +120,19 @@ export class RecordSearchResultComponent implements OnInit {
    * Component init
    */
   ngOnInit() {
-    this.loadItemView();
-
     if (this.canDelete) {
       this.canDelete.subscribe((result: DeleteRecordStatus) => {
         this.canDeleteResult = result;
       });
     }
+
+    if (this.detailUrl$) {
+      this.detailUrl$.subscribe((url: string) => {
+        this.detailUrl = url;
+      });
+    }
+
+    this.loadItemView();
   }
 
   /**
@@ -140,8 +145,9 @@ export class RecordSearchResultComponent implements OnInit {
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
-    (componentRef.instance as JsonComponent).record = this.record;
-    (componentRef.instance as JsonComponent).type = this.type;
+    (componentRef.instance as ResultItem).record = this.record;
+    (componentRef.instance as ResultItem).type = this.type;
+    (componentRef.instance as ResultItem).detailUrl = this.detailUrl;
   }
 
   /**

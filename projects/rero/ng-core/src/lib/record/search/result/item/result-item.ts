@@ -17,4 +17,5 @@
 export interface ResultItem {
     record: any;
     type: string;
+    detailUrl: string;
 }

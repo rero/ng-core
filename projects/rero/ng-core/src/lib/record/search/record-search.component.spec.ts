@@ -62,7 +62,7 @@ describe('RecordSearchComponent', () => {
     snapshot: {
       data: {
         linkPrefix: '/records',
-        detailUrl: '/custom/url/for/detail',
+        detailUrl: '/custom/url/for/detail/:type/:pid',
         types: [
           {
             key: 'documents',
@@ -290,4 +290,31 @@ describe('RecordSearchComponent', () => {
     expect(component.aggFilters.length).toBe(1);
     expect(component.aggFilters[0].values).toEqual(['Filippini, Massimo']);
   });
+
+  it('should resolve detail url', async(() => {
+    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
+      expect(result).toBe('/custom/url/for/detail/documents/100');
+    });
+
+    component.detailUrl = null;
+
+    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
+      expect(result).toBe('detail/100');
+    });
+
+    component.types = [
+      {
+        key: 'documents',
+        label: 'Documents',
+        canRead: () => of(false)
+      }
+    ];
+    /* tslint:disable:no-string-literal */
+    component['loadResourceConfig']();
+
+    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
+      expect(result).toBe(null);
+    });
+  }));
+
 });

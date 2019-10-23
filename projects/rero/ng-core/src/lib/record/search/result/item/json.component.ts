@@ -29,4 +29,7 @@ export class JsonComponent implements ResultItem {
 
   @Input()
   type: string;
+
+  @Input()
+  detailUrl: string;
 }

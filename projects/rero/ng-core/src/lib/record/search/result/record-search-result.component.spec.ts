@@ -72,16 +72,4 @@ describe('RecordSearchResultComponent', () => {
     });
     component.deleteRecord(new Event('click'), '1');
   });
-
-  it('should resolve custom detail URL', () => {
-    component.record = {
-      id: '1',
-      metadata: {
-        pid: '1'
-      }
-    };
-    component.type = 'documents';
-    component.detailUrl = '/custom/url/to/detail/:type/:pid';
-    expect(component.formattedDetailUrl).toBe('/custom/url/to/detail/documents/1');
-  });
 });

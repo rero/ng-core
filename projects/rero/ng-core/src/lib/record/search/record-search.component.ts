@@ -16,9 +16,11 @@
  */
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { of, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { ToastrService } from 'ngx-toastr';
 import { TranslateService } from '@ngx-translate/core';
-import { of, Observable } from 'rxjs';
 
 import { RecordService } from '../record.service';
 import { DialogService } from '../../dialog/dialog.service';
@@ -96,6 +98,7 @@ export class RecordSearchComponent implements OnInit {
     canAdd?: any,
     canUpdate?: any,
     canDelete?: any,
+    canRead?: any,
     aggregations?: any
   }[] = [{ key: 'documents', label: 'Documents' }];
 
@@ -464,5 +467,30 @@ export class RecordSearchComponent implements OnInit {
     Object.keys(filters).map(key => queryParams[key] = filters[key]);
 
     this.router.navigate([this.linkPrefix + '/' + this.currentType], { queryParams });
+  }
+
+  /**
+   * Returns an observable which emits the URL value for given record.
+   * In case record cannot be read, returns null.
+   * @param record - Generate detail URL for this record.
+   */
+  resolveDetailUrl(record: any) {
+    const url = this.detailUrl ?
+      this.detailUrl.replace(':type', this.currentType).replace(':pid', record.metadata.pid) :
+      `detail/${record.metadata.pid}`;
+
+    if (!this.config.canRead) {
+      return of(url);
+    }
+
+    return this.config.canRead(record).pipe(
+      map((canReadResult: boolean) => {
+        if (canReadResult === false) {
+          return null;
+        }
+
+        return url;
+      })
+    );
   }
 }

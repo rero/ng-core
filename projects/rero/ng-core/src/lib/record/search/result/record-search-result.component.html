@@ -19,14 +19,9 @@
         <ng-template ngCoreRecordSearchResult></ng-template>
     </div>
     <div class="col-2 text-right">
-        <a [href]="formattedDetailUrl" *ngIf="detailUrl; else routingDetailLink">
+        <a href [routerLink]="detailUrl" *ngIf="detailUrl">
             <i class="fa fa-file-o"></i>
         </a>
-        <ng-template #routingDetailLink>
-            <a href="#" [title]="'Show'|translate" [routerLink]="['detail/', record.metadata.pid]" *ngIf="inRouting">
-                <i class="fa fa-file-o"></i>
-            </a>
-        </ng-template>
         <a class="ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
             *ngIf="inRouting && adminMode && canUpdate">
             <i class="fa fa-pencil"></i>
