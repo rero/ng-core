@@ -10,4 +10,7 @@ export class InstitutionComponent implements ResultItem {
 
   @Input()
   type: string;
+
+  @Input()
+  detailUrl: string;
 }

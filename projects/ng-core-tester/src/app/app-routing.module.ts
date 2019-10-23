@@ -16,7 +16,7 @@
  */
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, UrlSegment } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
@@ -39,6 +39,10 @@ const canDelete = (record) => {
     can: Math.random() >= 0.5,
     message: `You <strong>cannot</strong> delete this record #${record.id} !`
   });
+};
+
+const canRead = (record: any): Observable<boolean> => {
+  return of(Math.random() >= 0.5);
 };
 
 const aggregations = (agg: object) => {
@@ -132,7 +136,7 @@ const routes: Routes = [
           }
         },
         {
-          key: 'patrons',
+          key: 'users',
           label: 'Utilisateurs'
         }
       ]
@@ -198,6 +202,7 @@ const routes: Routes = [
           canAdd,
           canUpdate,
           canDelete,
+          canRead,
           aggregations
         },
         {
@@ -206,7 +211,7 @@ const routes: Routes = [
           component: InstitutionComponent
         },
         {
-          key: 'patrons',
+          key: 'users',
           label: 'Utilisateurs'
         }
       ]

@@ -1,4 +1,9 @@
-<h5>{{ record.metadata.title }}</h5>
+<h5>
+    <a href [routerLink]="detailUrl" *ngIf="detailUrl; else titleWithoutLink">{{ record.metadata.title }}</a>
+    <ng-template #titleWithoutLink>
+        {{ record.metadata.title }}
+    </ng-template>
+</h5>
 <p>
     <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
 </p>
