@@ -34,3 +34,4 @@ export * from './lib/validator/time.validator';
 export * from './lib/translate/translate-loader';
 export * from './lib/translate/translate-service';
 export * from './lib/translate/date-translate-pipe';
+export * from './lib/record/record-status';

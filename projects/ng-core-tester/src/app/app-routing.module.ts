@@ -41,6 +41,10 @@ const canDelete = (record) => {
   });
 };
 
+const aggregations = (agg: object) => {
+  return of(agg);
+};
+
 export function matchedUrl(url: UrlSegment[]) {
   const segments = [
     new UrlSegment(url[0].path, {}),
@@ -193,7 +197,8 @@ const routes: Routes = [
           detailComponent: DetailComponent,
           canAdd,
           canUpdate,
-          canDelete
+          canDelete,
+          aggregations
         },
         {
           key: 'institutions',
