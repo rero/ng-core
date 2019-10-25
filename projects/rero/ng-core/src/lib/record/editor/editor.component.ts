@@ -33,6 +33,7 @@ import { RolesCheckboxesComponent } from './roles-checkboxes/roles-checkboxes.co
 import { RemoteInputComponent } from './remote-input/remote-input.component';
 import { MainFieldsManagerComponent } from './main-fields-manager/main-fields-manager.component';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { SubmitComponent } from './submit/submit.component';
 
 
 @Component({
@@ -99,6 +100,7 @@ export class EditorComponent implements OnInit {
     this.widgetLibrary.registerWidget('refAuthority', MefComponent);
     this.widgetLibrary.registerWidget('$ref', AddReferenceComponent);
     this.widgetLibrary.registerWidget('main-fields-manager', MainFieldsManagerComponent);
+    this.widgetLibrary.registerWidget('submit', SubmitComponent);
 
     this.currentLocale = this.translateService.currentLang;
   }
@@ -178,13 +180,5 @@ export class EditorComponent implements OnInit {
    */
   public cancel() {
     this.location.back();
-  }
-
-  /**
-   * Store errors in dedicated property
-   * @param errors - array, list of errors
-   */
-  public validationErrors(errors: []) {
-    this.formValidationErrors = errors;
   }
 }

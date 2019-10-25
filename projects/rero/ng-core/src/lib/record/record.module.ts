@@ -38,6 +38,7 @@ import { RemoteSelectComponent } from './editor/remote-select/remote-select.comp
 import { RolesCheckboxesComponent } from './editor/roles-checkboxes/roles-checkboxes.component';
 import { MainFieldsManagerComponent } from './editor/main-fields-manager/main-fields-manager.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SubmitComponent } from './editor/submit/submit.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     RemoteInputComponent,
     RemoteSelectComponent,
     RolesCheckboxesComponent,
-    MainFieldsManagerComponent
+    MainFieldsManagerComponent,
+    SubmitComponent
   ],
   imports: [
     SharedModule,
@@ -81,7 +83,8 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     RemoteInputComponent,
     RemoteSelectComponent,
     RolesCheckboxesComponent,
-    MainFieldsManagerComponent
+    MainFieldsManagerComponent,
+    SubmitComponent
   ]
 })
 export class RecordModule { }
