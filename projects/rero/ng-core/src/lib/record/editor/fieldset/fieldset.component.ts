@@ -172,6 +172,7 @@ export class FieldsetComponent implements OnInit {
     }
     for (const item of field.items) {
       this.resetFormGroup(item);
+      this.disableFormGroup(item);
     }
   }
 
@@ -184,6 +185,19 @@ export class FieldsetComponent implements OnInit {
       return false;
     }
     control.reset();
+    return true;
+  }
+
+  /**
+   * Mark a layoutNode FormControl as disabled.
+   * @param layoutNode - object, angular6 json schema form layout node
+   */
+  private disableFormGroup(layoutNode) {
+    const control = getControl(this.jsf.formGroup, layoutNode.dataPointer);
+    if (!control) {
+      return false;
+    }
+    control.disable();
     return true;
   }
 }
