@@ -35,3 +35,4 @@ export * from './lib/translate/translate-loader';
 export * from './lib/translate/translate-service';
 export * from './lib/translate/date-translate-pipe';
 export * from './lib/record/record-status';
+export * from './lib/record/editor/bootstrap4-framework/custombootstrap4-framework';
