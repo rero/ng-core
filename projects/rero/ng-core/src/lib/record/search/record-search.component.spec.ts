@@ -81,7 +81,8 @@ describe('RecordSearchComponent', () => {
         author: ['Filippini, Massimo']
       },
       paramMap: convertToParamMap({ type: 'documents' })
-    }
+    },
+    queryParams: of({})
   };
 
   beforeEach(async(() => {

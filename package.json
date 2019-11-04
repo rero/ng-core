@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build-lib": "ng build @rero/ng-core",
+    "pack": "ng build @rero/ng-core; npm pack dist/rero/ng-core",
     "test-lib": "ng test @rero/ng-core",
     "lint": "ng lint",
     "e2e": "ng e2e",

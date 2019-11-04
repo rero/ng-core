@@ -167,7 +167,16 @@ export class RecordSearchComponent implements OnInit {
    * Component initialisation.
    */
   ngOnInit() {
-    // Load data from routing data. Only relevant when component is loaded into routing.
+    this.route.queryParams.subscribe(queryParams => {
+      this.loadData();
+    });
+  }
+
+  /** Load data from routing data.
+   *
+   * Only relevant when component is loaded into routing
+   */
+  loadData() {
     const data = this.route.snapshot.data;
     if (data.linkPrefix) {
       this.inRouting = true;
