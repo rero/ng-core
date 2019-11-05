@@ -39,6 +39,7 @@ import { RolesCheckboxesComponent } from './editor/roles-checkboxes/roles-checkb
 import { MainFieldsManagerComponent } from './editor/main-fields-manager/main-fields-manager.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SubmitComponent } from './editor/submit/submit.component';
+import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { SubmitComponent } from './editor/submit/submit.component';
     RemoteSelectComponent,
     RolesCheckboxesComponent,
     MainFieldsManagerComponent,
-    SubmitComponent
+    SubmitComponent,
+    AutocompleteComponent
   ],
   imports: [
     SharedModule,
@@ -71,7 +73,8 @@ import { SubmitComponent } from './editor/submit/submit.component';
     TypeaheadModule.forRoot()
   ],
   exports: [
-    RecordSearchComponent
+    RecordSearchComponent,
+    AutocompleteComponent
   ],
   entryComponents: [
     JsonComponent,
@@ -84,7 +87,8 @@ import { SubmitComponent } from './editor/submit/submit.component';
     RemoteSelectComponent,
     RolesCheckboxesComponent,
     MainFieldsManagerComponent,
-    SubmitComponent
+    SubmitComponent,
+    AutocompleteComponent
   ]
 })
 export class RecordModule { }

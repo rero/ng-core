@@ -29,7 +29,8 @@ import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { CoreConfigService } from '@rero/ng-core';
 import { AppConfigService } from './app-config.service';
-import { CollapseModule } from 'ngx-bootstrap';
+import { CollapseModule, TypeaheadModule } from 'ngx-bootstrap';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { CollapseModule } from 'ngx-bootstrap';
     DocumentComponent,
     InstitutionComponent,
     HomeComponent,
-    DetailComponent
+    DetailComponent,
+    SearchBarComponent
   ],
   imports: [
     SharedModule,
@@ -47,7 +49,8 @@ import { CollapseModule } from 'ngx-bootstrap';
     AppRoutingModule,
     CoreModule,
     CollapseModule.forRoot(),
-    RecordModule
+    RecordModule,
+    TypeaheadModule.forRoot()
   ],
   providers: [
     {

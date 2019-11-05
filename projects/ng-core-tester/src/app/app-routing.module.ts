@@ -134,10 +134,6 @@ const routes: Routes = [
           preFilters: {
             institution: 'usi'
           }
-        },
-        {
-          key: 'users',
-          label: 'Utilisateurs'
         }
       ]
     }
@@ -209,10 +205,6 @@ const routes: Routes = [
           key: 'institutions',
           label: 'Organisations',
           component: InstitutionComponent
-        },
-        {
-          key: 'users',
-          label: 'Utilisateurs'
         }
       ]
     }
