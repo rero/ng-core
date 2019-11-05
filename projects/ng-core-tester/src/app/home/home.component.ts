@@ -23,10 +23,6 @@ export class HomeComponent {
       key: 'institutions',
       label: 'Organisations',
       component: InstitutionComponent
-    },
-    {
-      key: 'patrons',
-      label: 'Utilisateurs'
     }
   ];
 

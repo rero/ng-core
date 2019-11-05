@@ -25,6 +25,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent" [collapse]="isCollapsed" [isAnimated]="true">
       <ng-core-menu class="mr-auto" [menu]="linksMenu"></ng-core-menu>
       <ng-core-menu [menu]="languagesMenu" (clickItem)="changeLang($event)"></ng-core-menu>
+      <app-search-bar class="ml-md-2" viewcode="sonar" size="small"></app-search-bar>
     </div>
   </div>
 </nav>
