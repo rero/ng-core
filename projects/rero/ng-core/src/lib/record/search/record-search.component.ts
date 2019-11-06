@@ -68,6 +68,11 @@ export class RecordSearchComponent implements OnInit {
   };
 
   /**
+   * Error message
+   */
+  error: string = null;
+
+  /**
    * Define the current record's page
    */
   @Input()
@@ -393,14 +398,20 @@ export class RecordSearchComponent implements OnInit {
       this.size,
       this.aggFilters,
       this.config.preFilters || {}
-    ).subscribe(records => {
-      this.records = records.hits.hits;
-      this.total = records.hits.total;
-      this.aggregationsFilters(records.aggregations).subscribe((aggr: any) => {
-        this.aggregations = aggr;
-      });
-      this.isLoading = false;
-    });
+    ).subscribe(
+      records => {
+        this.records = records.hits.hits;
+        this.total = records.hits.total;
+        this.aggregationsFilters(records.aggregations).subscribe((aggr: any) => {
+          this.aggregations = aggr;
+        });
+        this.isLoading = false;
+      },
+      (error) => {
+        this.error = error;
+        this.isLoading = false;
+      }
+    );
   }
 
   /**
