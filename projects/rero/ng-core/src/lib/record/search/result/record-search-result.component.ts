@@ -16,13 +16,12 @@
  */
 import { Component, Input, ComponentFactoryResolver, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 
 import { RecordSearchResultDirective } from './record-search-result.directive';
 import { JsonComponent } from './item/json.component';
-import { DialogService } from '../../../dialog/dialog.service';
-import { DeleteRecordStatus } from '../../record-status';
+import { ActionStatus } from '../../action-status';
 import { ResultItem } from './item/result-item';
+import { RecordUiService } from '../../record-ui.service';
 
 @Component({
   selector: 'ng-core-record-search-result',
@@ -34,7 +33,15 @@ export class RecordSearchResultComponent implements OnInit {
    */
   currentUrl: string = null;
 
-  canDeleteResult: DeleteRecordStatus;
+  /**
+   * Store if record can be deleted or not
+   */
+  deleteStatus: ActionStatus;
+
+  /**
+   * Store if record can be updated or not
+   */
+  updateStatus: ActionStatus;
 
   /**
    * Detail URL value, resolved by observable property detailUrl$.
@@ -69,13 +76,13 @@ export class RecordSearchResultComponent implements OnInit {
    * Record can be updated
    */
   @Input()
-  canUpdate = true;
+  canUpdate$: Observable<ActionStatus>;
 
   /**
    * Record can be removed
    */
   @Input()
-  canDelete: Observable<DeleteRecordStatus>;
+  canDelete$: Observable<ActionStatus>;
 
   /**
    * Aggregations
@@ -110,8 +117,7 @@ export class RecordSearchResultComponent implements OnInit {
    */
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
-    private dialogService: DialogService,
-    private translate: TranslateService,
+    private recordUiService: RecordUiService
   ) {
     this.currentUrl = window.location.href;
   }
@@ -120,9 +126,15 @@ export class RecordSearchResultComponent implements OnInit {
    * Component init
    */
   ngOnInit() {
-    if (this.canDelete) {
-      this.canDelete.subscribe((result: DeleteRecordStatus) => {
-        this.canDeleteResult = result;
+    if (this.canDelete$) {
+      this.canDelete$.subscribe((result: ActionStatus) => {
+        this.deleteStatus = result;
+      });
+    }
+
+    if (this.canUpdate$) {
+      this.canUpdate$.subscribe((result: ActionStatus) => {
+        this.updateStatus = result;
       });
     }
 
@@ -155,8 +167,7 @@ export class RecordSearchResultComponent implements OnInit {
    * @param event - Event, dom event fired
    * @param pid - string, pid to delete
    */
-  public deleteRecord(event: Event, pid: string) {
-    event.preventDefault();
+  public deleteRecord(pid: string) {
     return this.deletedRecord.emit(pid);
   }
 
@@ -165,15 +176,7 @@ export class RecordSearchResultComponent implements OnInit {
    * @param event - Event
    * @param message - string, message to display
    */
-  public showDeleteMessage(event: Event, message: string) {
-    event.preventDefault();
-    this.dialogService.show({
-      initialState: {
-        title: this.translate.instant('Confirmation'),
-        body: message,
-        confirmButton: false,
-        cancelTitleButton: this.translate.instant('OK')
-      }
-    }).subscribe();
+  public showDeleteMessage(message: string) {
+    this.recordUiService.showDeleteMessage(message);
   }
 }

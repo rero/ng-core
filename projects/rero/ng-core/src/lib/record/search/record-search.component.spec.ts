@@ -202,35 +202,41 @@ describe('RecordSearchComponent', () => {
   }));
 
   it('should have permission to add record', () => {
-    expect(component.canAddRecord()).toBe(true);
+    expect(component.addStatus.can).toBe(true);
 
     component.types = [
       {
         key: 'documents',
         label: 'Documents',
-        canAdd: () => false
+        canAdd: () => of({ can: false, message: '' })
       }
     ];
     /* tslint:disable:no-string-literal */
-    component['loadResourceConfig']();
+    component['config'] = component.types[0];
 
-    expect(component.canAddRecord()).toBe(false);
+    component.checkAddActionStatus().subscribe((result: any) => {
+      expect(result.can).toBe(false);
+    });
   });
 
   it('should have permission to update record', () => {
-    expect(component.canUpdateRecord({})).toBe(true);
+    component.canUpdateRecord({}).subscribe((result: any) => {
+      expect(result.can).toBe(true);
+    });
 
     component.types = [
       {
         key: 'documents',
         label: 'Documents',
-        canUpdate: () => false
+        canUpdate: () => of(false)
       }
     ];
     /* tslint:disable:no-string-literal */
-    component['loadResourceConfig']();
+    component['config'] = component.types[0];
 
-    expect(component.canUpdateRecord({})).toBe(false);
+    component.canUpdateRecord({}).subscribe((result: any) => {
+      expect(result).toBe(false);
+    });
   });
 
   it('should have permission to delete record', () => {
@@ -246,19 +252,11 @@ describe('RecordSearchComponent', () => {
       }
     ];
     /* tslint:disable:no-string-literal */
-    component['loadResourceConfig']();
+    component['config'] = component.types[0];
 
     component.canDeleteRecord({}).subscribe((result) => {
       expect(result.can).toBe(false);
     });
-  });
-
-  it('should raise exception when configuration not found for type', () => {
-    component.types = [];
-    expect(() => {
-      /* tslint:disable:no-string-literal */
-      component['loadResourceConfig']();
-    }).toThrowError('Configuration not found for type "documents"');
   });
 
   it('should get component view for search result', () => {
@@ -307,11 +305,11 @@ describe('RecordSearchComponent', () => {
       {
         key: 'documents',
         label: 'Documents',
-        canRead: () => of(false)
+        canRead: () => of({ can: false, message: '' })
       }
     ];
     /* tslint:disable:no-string-literal */
-    component['loadResourceConfig']();
+    component['config'] = component.types[0];
 
     component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
       expect(result).toBe(null);

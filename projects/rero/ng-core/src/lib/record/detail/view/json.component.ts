@@ -14,18 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { DetailRecord } from './detail-record';
 
 @Component({
   template: `
-    <h1>Record of type "{{ type }}" #{{ record.metadata.pid }}</h1>
-    {{ record|json }}
+    <ng-container *ngIf="record">
+      <h1>Record of type "{{ type }}" #{{ record.metadata.pid }}</h1>
+      {{ record|json }}
+    </ng-container>
   `
 })
-export class JsonComponent {
-  @Input()
+export class JsonComponent implements DetailRecord, OnInit {
+  /**
+   * Observable resolving record data
+   */
+  record$: Observable<any>;
+
+  /**
+   * Resource type
+   */
+  type: string;
+
+  /**
+   * Record data
+   */
   record: any;
 
-  @Input()
-  type: string;
+  ngOnInit(): void {
+    this.record$.subscribe((record) => {
+      this.record = record;
+    });
+  }
 }

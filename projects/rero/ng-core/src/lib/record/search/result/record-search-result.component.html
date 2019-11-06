@@ -19,21 +19,21 @@
         <ng-template ngCoreRecordSearchResult></ng-template>
     </div>
     <div class="col-2 text-right">
-        <a href [routerLink]="detailUrl" *ngIf="detailUrl">
+        <a href class="btn btn-link p-0 ml-2" [title]="'Show'|translate" [routerLink]="detailUrl" *ngIf="detailUrl">
             <i class="fa fa-file-o"></i>
         </a>
-        <a class="ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
-            *ngIf="inRouting && adminMode && canUpdate">
+        <a href class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
+            *ngIf="inRouting && adminMode && updateStatus && updateStatus.can">
             <i class="fa fa-pencil"></i>
         </a>
-        <span class="ml-2" *ngIf="adminMode && canDeleteResult">
-            <a href="#" [title]="'Delete'|translate" (click)="deleteRecord($event, record.metadata.pid)" *ngIf="canDeleteResult.can; else deleteMessageLink">
+        <span class="ml-2" *ngIf="adminMode && deleteStatus">
+            <button class="btn btn-link p-0" [title]="'Delete'|translate" (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
                 <i class="fa fa-trash"></i>
-            </a>
+            </button>
             <ng-template #deleteMessageLink>
-                <a href="#" class="text-muted" [title]="'Delete'|translate" (click)="showDeleteMessage($event, canDeleteResult.message)" *ngIf="canDeleteResult.message">
+                <button class="btn btn-link p-0 text-muted" [title]="'Delete'|translate" (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
                     <i class="fa fa-trash"></i>
-                </a>
+                </button>
             </ng-template>
 
         </span>
