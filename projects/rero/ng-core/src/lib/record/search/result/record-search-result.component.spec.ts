@@ -19,6 +19,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
+import { HttpClientModule } from '@angular/common/http';
 
 import { RecordSearchResultComponent } from './record-search-result.component';
 import { JsonComponent } from './item/json.component';
@@ -39,7 +41,9 @@ describe('RecordSearchResultComponent', () => {
         ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
-        })
+        }),
+        ToastrModule.forRoot(),
+        HttpClientModule
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
@@ -70,6 +74,6 @@ describe('RecordSearchResultComponent', () => {
     component.deletedRecord.subscribe((pid: string) => {
       expect(pid).toBe('1');
     });
-    component.deleteRecord(new Event('click'), '1');
+    component.deleteRecord('1');
   });
 });

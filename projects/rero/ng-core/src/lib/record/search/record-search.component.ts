@@ -17,14 +17,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-
-import { ToastrService } from 'ngx-toastr';
-import { TranslateService } from '@ngx-translate/core';
+import { map, first } from 'rxjs/operators';
 
 import { RecordService } from '../record.service';
-import { DialogService } from '../../dialog/dialog.service';
-import { DeleteRecordStatus } from '../record-status';
+import { ActionStatus } from '../action-status';
+import { RecordUiService } from '../record-ui.service';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -61,6 +58,14 @@ export class RecordSearchComponent implements OnInit {
    * Current filters applied
    */
   aggFilters = [];
+
+  /**
+   * Check if record can be added
+   */
+  addStatus: ActionStatus = {
+    can: true,
+    message: ''
+  };
 
   /**
    * Define the current record's page
@@ -155,11 +160,9 @@ export class RecordSearchComponent implements OnInit {
    * @param router - Angular router
    */
   constructor(
-    private dialogService: DialogService,
     private recordService: RecordService,
-    private toastService: ToastrService,
+    private recordUiService: RecordUiService,
     private route: ActivatedRoute,
-    private translate: TranslateService,
     protected router: Router
   ) { }
 
@@ -217,7 +220,7 @@ export class RecordSearchComponent implements OnInit {
       }
     }
 
-    this.loadResourceConfig();
+    this.config = this.recordUiService.getResourceConfig(this.types, this.currentType);
 
     this.getRecords(this.inRouting === false);
 
@@ -226,6 +229,10 @@ export class RecordSearchComponent implements OnInit {
         type.total = records.hits.total;
       });
     }
+
+    this.checkAddActionStatus().subscribe((result: ActionStatus) => {
+      this.addStatus = result;
+    });
   }
 
   /**
@@ -276,8 +283,12 @@ export class RecordSearchComponent implements OnInit {
     event.preventDefault();
     this.currentType = type;
     this.aggFilters = [];
-    this.loadResourceConfig();
+    this.config = this.recordUiService.getResourceConfig(this.types, this.currentType);
     this.getRecords();
+
+    this.checkAddActionStatus().subscribe((result: ActionStatus) => {
+      this.addStatus = result;
+    });
   }
 
   /**
@@ -306,31 +317,13 @@ export class RecordSearchComponent implements OnInit {
    * @param pid - string, PID to delete
    */
   public deleteRecord(pid: string) {
-    this.dialogService.show({
-      ignoreBackdropClick: true,
-      initialState: {
-        title: this.translate.instant('Confirmation'),
-        body: this.translate.instant('Do you really want to delete this record ?'),
-        confirmButton: true,
-        confirmTitleButton: this.translate.instant('Delete'),
-        cancelTitleButton: this.translate.instant('Cancel')
-      }
-    }).subscribe((confirm: boolean) => {
-      if (confirm === true) {
-        this.isLoading = true;
+    this.recordUiService.deleteRecord(pid, this.currentType).subscribe((result) => {
+      if (result === true) {
+        // refresh records
+        this.getRecords(false);
 
-        this.recordService.delete(this.currentType, pid).subscribe(() => {
-          // show success message
-          this.toastService.success(this.translate.instant('Record deleted.'));
-
-          // update records list, but wait because records are not indexed instantly
-          setTimeout(() => {
-            this.getRecords(false);
-          }, 1000);
-
-          // update main counter
-          this.config.total--;
-        });
+        // update main counter
+        this.config.total--;
       }
     });
   }
@@ -348,51 +341,36 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Check if a record can be added
    */
-  public canAddRecord() {
+  public checkAddActionStatus(): Observable<ActionStatus> {
     if (this.config.canAdd) {
-      return this.config.canAdd();
+      return this.config.canAdd().pipe(first());
     }
-    return true;
+
+    return of({ can: true, message: '' });
   }
 
   /**
    * Check if a record can be updated
    * @param record - object, record to check
    */
-  public canUpdateRecord(record: object) {
+  public canUpdateRecord(record: object): Observable<ActionStatus> {
     if (this.config.canUpdate) {
       return this.config.canUpdate(record);
     }
 
-    return true;
+    return of({ can: true, message: '' });
   }
 
   /**
    * Check if a record can be deleted
    * @param record - object, record to check
    */
-  public canDeleteRecord(record: object): Observable<DeleteRecordStatus> {
+  public canDeleteRecord(record: object): Observable<ActionStatus> {
     if (this.config.canDelete) {
       return this.config.canDelete(record);
     }
 
-    return of({
-      can: true,
-      message: ''
-    });
-  }
-
-  /**
-   * Load configuration for current resource type
-   */
-  private loadResourceConfig() {
-    const index = this.types.findIndex(item => item.key === this.currentType);
-
-    if (index === -1) {
-      throw new Error(`Configuration not found for type "${this.currentType}"`);
-    }
-
-    this.config = this.types[index];
+    return of({ can: true, message: '' });
   }
 
   /**
@@ -493,8 +471,8 @@ export class RecordSearchComponent implements OnInit {
     }
 
     return this.config.canRead(record).pipe(
-      map((canReadResult: boolean) => {
-        if (canReadResult === false) {
+      map((status: ActionStatus) => {
+        if (status.can === false) {
           return null;
         }
 

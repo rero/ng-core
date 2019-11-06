@@ -25,24 +25,34 @@ import { DetailComponent } from './record/document/detail/detail.component';
 import { EditorComponent } from '@rero/ng-core';
 import { RecordSearchComponent } from '@rero/ng-core';
 import { DetailComponent as RecordDetailComponent } from '@rero/ng-core';
+import { ActionStatus } from 'projects/rero/ng-core/src/public-api';
 
-const canAdd = (record) => {
-  return true;
+const canAdd = (record: any): Observable<ActionStatus> => {
+  return of({
+    can: Math.random() >= 0.5,
+    message: ''
+  });
 };
 
-const canUpdate = (record) => {
-  return true;
+const canUpdate = (record: any): Observable<ActionStatus> => {
+  return of({
+    can: Math.random() >= 0.5,
+    message: ''
+  });
 };
 
-const canDelete = (record) => {
+const canDelete = (record: any): Observable<ActionStatus> => {
   return of({
     can: Math.random() >= 0.5,
     message: `You <strong>cannot</strong> delete this record #${record.id} !`
   });
 };
 
-const canRead = (record: any): Observable<boolean> => {
-  return of(Math.random() >= 0.5);
+const canRead = (record: any): Observable<ActionStatus> => {
+  return of({
+    can: Math.random() >= 0.5,
+    message: ''
+  });
 };
 
 const aggregations = (agg: object) => {

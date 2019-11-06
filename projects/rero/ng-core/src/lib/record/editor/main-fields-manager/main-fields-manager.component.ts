@@ -77,9 +77,9 @@ export class MainFieldsManagerComponent implements OnInit {
       }
     }
     // disable FormControls for hidden fields
-    for (const fieldSet of Object.values(this.layoutRefField)) {
+    for (const fieldSet of Object.values(this.layoutRefField) as any) {
       if (this.isHidden(fieldSet)) {
-        for (const field of fieldSet['items']) {
+        for (const field of fieldSet.items) {
           this.disableFormGroup(field);
         }
       }

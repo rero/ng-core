@@ -31,7 +31,7 @@
         </div>
         <div><strong>{{ total }} {{ 'results'|translate }}</strong></div>
         <div class="ml-auto">
-            <a class="btn btn-primary" routerLink="new" *ngIf="adminMode && canAddRecord()">
+            <a class="btn btn-primary" routerLink="new" *ngIf="adminMode && addStatus.can">
                 <i class="fa fa-plus mr-1"></i>
                 {{ 'Add'|translate }}
             </a>
@@ -62,8 +62,8 @@
             <ul class="list-group list-group-flush">
                 <li class="list-group-item px-0 py-4" *ngFor="let record of records">
                     <ng-core-record-search-result [adminMode]="adminMode" [record]="record" [type]="currentType"
-                        [itemViewComponent]="getResultItemComponentView()" [canUpdate]="canUpdateRecord(record)"
-                        [inRouting]="inRouting" [canDelete]="canDeleteRecord(record)" [detailUrl$]="resolveDetailUrl(record)"
+                        [itemViewComponent]="getResultItemComponentView()" [canUpdate$]="canUpdateRecord(record)"
+                        [inRouting]="inRouting" [canDelete$]="canDeleteRecord(record)" [detailUrl$]="resolveDetailUrl(record)"
                         (deletedRecord)="deleteRecord($event)">
                     </ng-core-record-search-result>
                 </li>

@@ -19,8 +19,11 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
+
+import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
+import { ModalModule } from 'ngx-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
 
 import { DetailComponent } from './detail.component';
 import { RecordService } from '../record.service';
@@ -73,7 +76,9 @@ describe('RecordDetailComponent', () => {
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        RouterTestingModule
+        RouterTestingModule,
+        ModalModule.forRoot(),
+        ToastrModule.forRoot()
       ],
       providers: [
         { provide: RecordService, useValue: spy },
@@ -95,13 +100,17 @@ describe('RecordDetailComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => {
+    TestBed.resetTestingModule();
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
     expect(component.record).toEqual(detailRecord);
   });
 
   it('should go back', () => {
-    component.goBack(new Event('click'));
+    component.goBack();
     expect(loc.back).toHaveBeenCalledTimes(1);
   });
 
@@ -161,6 +170,14 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should use a custom view component for displaying record', () => {
+    const routeSpy = TestBed.get(ActivatedRoute);
+    routeSpy.snapshot.data.types = [
+      {
+        key: 'documents',
+        detailComponent: JsonComponent
+      }
+    ];
+
     component.viewComponent = JsonComponent;
     component['loadRecordView']();
   });

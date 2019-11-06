@@ -19,16 +19,27 @@
     <div class="col-9">
         <ng-template ngCoreRecordDetail></ng-template>
     </div>
-    <div class="col-3" *ngIf="record">
-        <a href="javascript:void(0);" class="btn btn-sm btn-secondary" routerLink="../../edit/{{ record.metadata.pid }}">
+    <div class="col-3 text-right" *ngIf="record">
+        <a href class="btn btn-sm btn-primary" routerLink="../../edit/{{ record.metadata.pid }}"
+            *ngIf="updateStatus && updateStatus.can">
             <i class="fa fa-pencil"></i>
             {{ 'Edit' | translate }}
         </a>
-        <a href="javascript:void(0);" class="btn btn-sm btn-secondary ml-1">
-            <i class="fa fa-trash"></i>
-            {{ 'Delete' | translate }}
-        </a>
+        <ng-container *ngIf="deleteStatus">
+            <button class="btn btn-sm btn-primary ml-1" [title]="'Delete'|translate"
+                (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
+                <i class="fa fa-trash"></i>
+                {{ 'Delete' | translate }}
+            </button>
+            <ng-template #deleteMessageLink>
+                <button class="btn btn-sm btn-dark ml-1" [title]="'Delete'|translate"
+                    (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
+                    <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
+                </button>
+            </ng-template>
+        </ng-container>
+
     </div>
 </div>
 <hr class="my-4">
-<a href="#" (click)="goBack($event)">&laquo; {{ 'Back' | translate }}</a>
+<button class="btn btn-link" (click)="goBack()">&laquo; {{ 'Back' | translate }}</button>
