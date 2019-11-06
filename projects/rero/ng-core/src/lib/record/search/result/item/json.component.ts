@@ -21,6 +21,16 @@ import { ResultItem } from './result-item';
 @Component({
   template: `
     {{ record|json }}
+    <div class="mt-3" *ngIf="detailUrl">
+      <a class="btn btn-primary btn-sm" [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
+        <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
+      </a>
+      <ng-template #hrefLink>
+        <a class="btn btn-primary btn-sm" [href]="detailUrl.link">
+          <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
+        </a>
+      </ng-template>
+    </div>
   `
 })
 export class JsonComponent implements ResultItem {
@@ -31,5 +41,5 @@ export class JsonComponent implements ResultItem {
   type: string;
 
   @Input()
-  detailUrl: string;
+  detailUrl: { link: string, external: boolean };
 }

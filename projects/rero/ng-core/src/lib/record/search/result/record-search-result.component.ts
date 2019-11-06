@@ -46,7 +46,7 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Detail URL value, resolved by observable property detailUrl$.
    */
-  detailUrl: string;
+  detailUrl: { link: string, external: boolean };
 
   /**
    * Record to display
@@ -100,7 +100,7 @@ export class RecordSearchResultComponent implements OnInit {
    * Observable emitting current value of record URL.
    */
   @Input()
-  detailUrl$: Observable<string> = null;
+  detailUrl$: Observable<{ link: string, external: boolean }> = null;
 
   /**
    * Event emitted when a record is deleted
@@ -139,7 +139,7 @@ export class RecordSearchResultComponent implements OnInit {
     }
 
     if (this.detailUrl$) {
-      this.detailUrl$.subscribe((url: string) => {
+      this.detailUrl$.subscribe((url: { link: string, external: boolean }) => {
         this.detailUrl = url;
       });
     }

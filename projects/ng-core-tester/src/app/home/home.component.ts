@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 import { DialogService, ApiService, TranslateLanguageService } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
-import { InstitutionComponent } from '../record/institution/institution.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -21,8 +20,7 @@ export class HomeComponent {
     },
     {
       key: 'institutions',
-      label: 'Organisations',
-      component: InstitutionComponent
+      label: 'Organisations'
     }
   ];
 

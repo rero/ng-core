@@ -1,5 +1,14 @@
 <h5>
-    <a href [routerLink]="detailUrl" *ngIf="detailUrl; else titleWithoutLink">{{ record.metadata.title }}</a>
+    <ng-container *ngIf="detailUrl; else titleWithoutLink">
+        <a [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
+            {{ record.metadata.title }}
+        </a>
+        <ng-template #hrefLink>
+            <a [href]="detailUrl.link">
+                {{ record.metadata.title }}
+            </a>
+        </ng-template>
+    </ng-container>
     <ng-template #titleWithoutLink>
         {{ record.metadata.title }}
     </ng-template>

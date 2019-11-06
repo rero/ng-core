@@ -461,10 +461,13 @@ export class RecordSearchComponent implements OnInit {
    * In case record cannot be read, returns null.
    * @param record - Generate detail URL for this record.
    */
-  resolveDetailUrl(record: any) {
-    const url = this.detailUrl ?
-      this.detailUrl.replace(':type', this.currentType).replace(':pid', record.metadata.pid) :
-      `detail/${record.metadata.pid}`;
+  resolveDetailUrl(record: any): Observable<any> {
+    const url = { link: `detail/${record.metadata.pid}`, external: false };
+
+    if (this.detailUrl) {
+      url.link = this.detailUrl.replace(':type', this.currentType).replace(':pid', record.metadata.pid);
+      url.external = true;
+    }
 
     if (!this.config.canRead) {
       return of(url);

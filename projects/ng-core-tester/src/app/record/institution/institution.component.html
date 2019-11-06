@@ -1,7 +1,0 @@
-<h5>
-    <a href [routerLink]="detailUrl" *ngIf="detailUrl; else titleWithoutLink">{{ record.metadata.name }}</a>
-    <ng-template #titleWithoutLink>
-        {{ record.metadata.name }}
-    </ng-template>
-</h5>
-<p class="mb-0"><span class="badge badge-primary">{{ record.metadata.pid }}</span></p>
