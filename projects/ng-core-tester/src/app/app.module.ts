@@ -24,7 +24,6 @@ import { CoreModule, RecordModule, SharedModule } from '@rero/ng-core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DocumentComponent } from './record/document/document.component';
-import { InstitutionComponent } from './record/institution/institution.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { CoreConfigService } from '@rero/ng-core';
@@ -36,7 +35,6 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
   declarations: [
     AppComponent,
     DocumentComponent,
-    InstitutionComponent,
     HomeComponent,
     DetailComponent,
     SearchBarComponent
@@ -60,8 +58,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    DocumentComponent,
-    InstitutionComponent
+    DocumentComponent
   ]
 })
 export class AppModule { }

@@ -20,7 +20,6 @@ import { of, Observable } from 'rxjs';
 
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
-import { InstitutionComponent } from './record/institution/institution.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { EditorComponent } from '@rero/ng-core';
 import { RecordSearchComponent } from '@rero/ng-core';
@@ -213,8 +212,7 @@ const routes: Routes = [
         },
         {
           key: 'institutions',
-          label: 'Organisations',
-          component: InstitutionComponent
+          label: 'Organisations'
         }
       ]
     }

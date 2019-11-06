@@ -292,13 +292,13 @@ describe('RecordSearchComponent', () => {
 
   it('should resolve detail url', async(() => {
     component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
-      expect(result).toBe('/custom/url/for/detail/documents/100');
+      expect(result.link).toBe('/custom/url/for/detail/documents/100');
     });
 
     component.detailUrl = null;
 
     component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
-      expect(result).toBe('detail/100');
+      expect(result.link).toBe('detail/100');
     });
 
     component.types = [

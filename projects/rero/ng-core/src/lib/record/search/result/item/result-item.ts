@@ -17,5 +17,5 @@
 export interface ResultItem {
     record: any;
     type: string;
-    detailUrl: string;
+    detailUrl: { link: string, external: boolean };
 }
