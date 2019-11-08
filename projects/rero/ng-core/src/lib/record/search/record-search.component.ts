@@ -113,12 +113,6 @@ export class RecordSearchComponent implements OnInit {
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
-   * Url prefix for component routes
-   */
-  @Input()
-  linkPrefix = '';
-
-  /**
    * URL to notice detail
    */
   @Input()
@@ -186,12 +180,9 @@ export class RecordSearchComponent implements OnInit {
    */
   loadData() {
     const data = this.route.snapshot.data;
-    if (data.linkPrefix) {
-      this.inRouting = true;
-      this.linkPrefix = data.linkPrefix;
-    }
 
     if (data.types) {
+      this.inRouting = true;
       this.types = data.types;
     }
 
@@ -464,7 +455,7 @@ export class RecordSearchComponent implements OnInit {
 
     Object.keys(filters).map(key => queryParams[key] = filters[key]);
 
-    this.router.navigate([this.linkPrefix + '/' + this.currentType], { queryParams });
+    this.router.navigate([this.getCurrentUrl()], { queryParams });
   }
 
   /**
@@ -493,5 +484,17 @@ export class RecordSearchComponent implements OnInit {
         return url;
       })
     );
+  }
+
+  /**
+   * Return current URL after removing query parameters and updating resource type.
+   *
+   * @returns Updated url without query string
+   */
+  private getCurrentUrl(): string {
+    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments.map(it => it.path);
+    segments[segments.length - 1] = this.currentType;
+
+    return segments.join('/');
   }
 }
