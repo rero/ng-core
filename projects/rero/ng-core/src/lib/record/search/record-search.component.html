@@ -65,8 +65,8 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item px-0 py-4" *ngFor="let record of records">
                         <ng-core-record-search-result [adminMode]="adminMode" [record]="record" [type]="currentType"
-                            [itemViewComponent]="getResultItemComponentView()" [canUpdate$]="canUpdateRecord(record)"
-                            [inRouting]="inRouting" [canDelete$]="canDeleteRecord(record)"
+                            [itemViewComponent]="getResultItemComponentView()" [canUpdate$]="canUpdateRecord$(record)"
+                            [inRouting]="inRouting" [canDelete$]="canDeleteRecord$(record)"
                             [detailUrl$]="resolveDetailUrl(record)" (deletedRecord)="deleteRecord($event)">
                         </ng-core-record-search-result>
                     </li>

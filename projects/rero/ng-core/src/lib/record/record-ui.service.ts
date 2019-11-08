@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-import { map, mergeMap, delay } from 'rxjs/operators';
+import { map, mergeMap, delay, first } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
 import { ToastrService } from 'ngx-toastr';
@@ -23,11 +23,15 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from '../dialog/dialog.service';
 import { RecordService } from './record.service';
+import { ActionStatus } from './action-status';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecordUiService {
+  /** Configuration for all resources. */
+  types = [];
+
   constructor(
     private dialogService: DialogService,
     private toastService: ToastrService,
@@ -94,13 +98,76 @@ export class RecordUiService {
    * @param type Current type to find
    * @returns Object configuration for the current type
    */
-  getResourceConfig(types: any[], type: string): any {
-    const index = types.findIndex(item => item.key === type);
+  getResourceConfig(type: string): any {
+    const index = this.types.findIndex(item => item.key === type);
 
     if (index === -1) {
       throw new Error(`Configuration not found for type "${type}"`);
     }
 
-    return types[index];
+    return this.types[index];
+  }
+
+  /**
+   * Check if a record can be added
+   * @param type Type of resource
+   * @returns Observable resolving an object containing the result of a permission check.
+   */
+  canAddRecord$(type: string): Observable<ActionStatus> {
+    const config = this.getResourceConfig(type);
+
+    if (config.canAdd) {
+      return config.canAdd().pipe(first());
+    }
+
+    return of({ can: true, message: '' });
+  }
+
+  /**
+   * Check if a record can be updated
+   * @param record - object, record to check
+   * @param type Type of resource
+   * @returns Observable resolving an object containing the result of a permission check.
+   */
+  canUpdateRecord$(record: object, type: string): Observable<ActionStatus> {
+    const config = this.getResourceConfig(type);
+
+    if (config.canUpdate) {
+      return config.canUpdate(record).pipe(first());
+    }
+
+    return of({ can: true, message: '' });
+  }
+
+  /**
+   * Check if a record can be deleted
+   * @param record - object, record to check
+   * @param type Type of resource
+   * @returns Observable resolving an object containing the result of a permission check.
+   */
+  canDeleteRecord$(record: object, type: string): Observable<ActionStatus> {
+    const config = this.getResourceConfig(type);
+
+    if (config.canDelete) {
+      return config.canDelete(record).pipe(first());
+    }
+
+    return of({ can: true, message: '' });
+  }
+
+  /**
+   * Check if a record can be read
+   * @param record - object, record to check
+   * @param type Type of resource
+   * @returns Observable resolving an object containing the result of a permission check.
+   */
+  canReadRecord$(record: object, type: string): Observable<ActionStatus> {
+    const config = this.getResourceConfig(type);
+
+    if (config.canRead) {
+      return config.canRead(record).pipe(first());
+    }
+
+    return of({ can: true, message: '' });
   }
 }

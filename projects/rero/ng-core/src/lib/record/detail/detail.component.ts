@@ -19,12 +19,14 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 
+import { ToastrService } from 'ngx-toastr';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
 import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
 import { RecordService } from '../record.service';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'ng-core-record-detail',
@@ -83,7 +85,8 @@ export class DetailComponent implements OnInit {
     private location: Location,
     private componentFactoryResolver: ComponentFactoryResolver,
     private recordService: RecordService,
-    private recordUiService: RecordUiService
+    private recordUiService: RecordUiService,
+    private toastrService: ToastrService
   ) { }
 
   /**
@@ -95,26 +98,33 @@ export class DetailComponent implements OnInit {
     const pid = this.route.snapshot.paramMap.get('pid');
     const type = this.route.snapshot.paramMap.get('type');
 
-    const config = this.recordUiService.getResourceConfig(this.route.snapshot.data.types, type);
+    this.recordUiService.types = this.route.snapshot.data.types;
+    const config = this.recordUiService.getResourceConfig(type);
 
     this.record$ = this.recordService.getRecord(type, pid, 1, config.itemHeaders || null);
     this.record$.subscribe(
       (record) => {
         this.record = record;
 
-        if (config.canDelete) {
-          config.canDelete(this.record).subscribe((result: ActionStatus) => {
-            this.deleteStatus = result;
-          });
-        }
+        this.recordUiService.canReadRecord$(this.record, type).subscribe(result => {
+          if (result.can === false) {
+            this.toastrService.error(
+              _('You cannot read this record'),
+              _(type)
+            );
+            this.location.back();
+          }
+        });
 
-        if (config.canUpdate) {
-          config.canUpdate(this.record).subscribe((result: ActionStatus) => {
-            this.updateStatus = result;
-          });
-        }
+        this.recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
+          this.deleteStatus = result;
+        });
 
-        if (typeof this.route.snapshot.data.adminMode !== 'undefined') {
+        this.recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
+          this.updateStatus = result;
+        });
+
+        if (this.route.snapshot.data.adminMode != null) {
           this.adminMode = this.route.snapshot.data.adminMode;
         }
       },

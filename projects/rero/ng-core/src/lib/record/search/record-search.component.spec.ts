@@ -36,6 +36,7 @@ import { DialogComponent } from '../../dialog/dialog.component';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { DialogService } from '../../dialog/dialog.service';
 import { TranslateLanguagePipe } from '../../translate-language/translate-language.pipe';
+import { RecordUiService } from '../record-ui.service';
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -69,6 +70,29 @@ describe('RecordSearchComponent', () => {
   const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete']);
   recordServiceSpy.getRecords.and.returnValue(of(emptyRecords));
   recordServiceSpy.delete.and.returnValue(of({}));
+
+  const recordUiServiceSpy = jasmine.createSpyObj('RecordUiService', [
+    'getResourceConfig',
+    'deleteRecord',
+    'canReadRecord$',
+    'canAddRecord$',
+    'canUpdateRecord$',
+    'canDeleteRecord$'
+  ]);
+  recordUiServiceSpy.canReadRecord$.and.returnValue(of({ can: true, message: '' }));
+  recordUiServiceSpy.canAddRecord$.and.returnValue(of({ can: true, message: '' }));
+  recordUiServiceSpy.canUpdateRecord$.and.returnValue(of({ can: true, message: '' }));
+  recordUiServiceSpy.canDeleteRecord$.and.returnValue(of({ can: true, message: '' }));
+  recordUiServiceSpy.deleteRecord.and.returnValue(of(true));
+  recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents' });
+  recordUiServiceSpy.types = [
+    {
+      key: 'documents',
+    },
+    {
+      key: 'institutions',
+    }
+  ];
 
   const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
   dialogServiceSpy.show.and.returnValue(of(true));
@@ -124,6 +148,7 @@ describe('RecordSearchComponent', () => {
       ],
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },
+        { provide: RecordUiService, useValue: recordUiServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
         { provide: DialogService, useValue: dialogServiceSpy },
@@ -141,7 +166,15 @@ describe('RecordSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecordSearchComponent);
     component = fixture.componentInstance;
+    /* tslint:disable:no-string-literal */
+    component['config'] = {
+      preFilters: {}
+    };
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
@@ -201,6 +234,8 @@ describe('RecordSearchComponent', () => {
   it('should cancel deleting record process', () => {
     dialogServiceSpy.show.and.returnValue(of(false));
 
+    component.types[0].total = 2;
+
     expect(component.types[0].total).toBe(2);
     component.deleteRecord('1');
     expect(component.types[0].total).toBe(2);
@@ -209,75 +244,37 @@ describe('RecordSearchComponent', () => {
   it('should delete record', fakeAsync(() => {
     dialogServiceSpy.show.and.returnValue(of(true));
 
-    expect(component.types[0].total).toBe(2);
+    /* tslint:disable:no-string-literal */
+    component['config'].total = 2;
+
+    expect(component['config'].total).toBe(2);
     component.deleteRecord('1');
     tick(10000); // wait for refreshing records
-    expect(component.types[0].total).toBe(1);
+    expect(component['config'].total).toBe(1);
   }));
 
-  it('should have permission to add record', () => {
-    expect(component.addStatus.can).toBe(true);
-
-    component.types = [
-      {
-        key: 'documents',
-        label: 'Documents',
-        canAdd: () => of({ can: false, message: '' })
-      }
-    ];
-    /* tslint:disable:no-string-literal */
-    component['config'] = component.types[0];
-
-    component.checkAddActionStatus().subscribe((result: any) => {
-      expect(result.can).toBe(false);
-    });
-  });
-
   it('should have permission to update record', () => {
-    component.canUpdateRecord({}).subscribe((result: any) => {
+    component.canUpdateRecord$({}).subscribe((result: any) => {
       expect(result.can).toBe(true);
     });
 
-    component.types = [
-      {
-        key: 'documents',
-        label: 'Documents',
-        canUpdate: () => of(false)
-      }
-    ];
-    /* tslint:disable:no-string-literal */
-    component['config'] = component.types[0];
+    recordUiServiceSpy.canUpdateRecord$.and.returnValue(of({ can: false, message: '' }));
 
-    component.canUpdateRecord({}).subscribe((result: any) => {
-      expect(result).toBe(false);
+    component.canUpdateRecord$({}).subscribe((result: any) => {
+      expect(result.can).toBe(false);
     });
   });
 
   it('should have permission to delete record', () => {
-    component.canDeleteRecord({}).subscribe((result) => {
+    component.canDeleteRecord$({}).subscribe((result) => {
       expect(result.can).toBe(true);
     });
 
-    component.types = [
-      {
-        key: 'documents',
-        label: 'Documents',
-        canDelete: () => of({ can: false, message: '' })
-      }
-    ];
-    /* tslint:disable:no-string-literal */
-    component['config'] = component.types[0];
+    recordUiServiceSpy.canDeleteRecord$.and.returnValue(of({ can: false, message: '' }));
 
-    component.canDeleteRecord({}).subscribe((result) => {
+    component.canDeleteRecord$({}).subscribe((result) => {
       expect(result.can).toBe(false);
     });
-  });
-
-  it('should get component view for search result', () => {
-    expect(component.getResultItemComponentView()).toBe(null);
-
-    component.types[0].component = {};
-    expect(component.getResultItemComponentView()).toEqual({});
   });
 
   it('should configure component without routing', () => {
@@ -289,22 +286,10 @@ describe('RecordSearchComponent', () => {
     expect(component.inRouting).toBe(false);
   });
 
-  it('should store author filters when it\'s not an array', () => {
-    component.aggFilters = [];
-    TestBed.get(ActivatedRoute).queryParams = of({
-      q: '',
-      page: 1,
-      size: 10,
-      author: 'Filippini, Massimo'
-    });
-
-    component.ngOnInit();
-
-    expect(component.aggFilters.length).toBe(1);
-    expect(component.aggFilters[0].values).toEqual(['Filippini, Massimo']);
-  });
-
   it('should resolve detail url', async(() => {
+    component.inRouting = true;
+    component.detailUrl = '/custom/url/for/detail/:type/:pid';
+
     component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
       expect(result.link).toBe('/custom/url/for/detail/documents/100');
     });
@@ -315,15 +300,7 @@ describe('RecordSearchComponent', () => {
       expect(result.link).toBe('detail/100');
     });
 
-    component.types = [
-      {
-        key: 'documents',
-        label: 'Documents',
-        canRead: () => of({ can: false, message: '' })
-      }
-    ];
-    /* tslint:disable:no-string-literal */
-    component['config'] = component.types[0];
+    component.inRouting = false;
 
     component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
       expect(result).toBe(null);
