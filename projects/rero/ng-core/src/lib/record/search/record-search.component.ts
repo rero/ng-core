@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { of, Observable } from 'rxjs';
-import { map, first } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { RecordService } from '../record.service';
 import { ActionStatus } from '../action-status';
@@ -28,7 +27,7 @@ import { RecordUiService } from '../record-ui.service';
   templateUrl: './record-search.component.html',
   styles: []
 })
-export class RecordSearchComponent implements OnInit {
+export class RecordSearchComponent implements OnInit, OnChanges {
   /**
    * Contain result data
    */
@@ -50,16 +49,6 @@ export class RecordSearchComponent implements OnInit {
   isLoading = false;
 
   /**
-   * Indicates if the component is included in angular routes
-   */
-  inRouting = false;
-
-  /**
-   * Current filters applied
-   */
-  aggFilters = [];
-
-  /**
    * Check if record can be added
    */
   addStatus: ActionStatus = {
@@ -71,6 +60,17 @@ export class RecordSearchComponent implements OnInit {
    * Error message
    */
   error: string = null;
+
+  /**
+   * Store configuration for type
+   */
+  private config: any;
+
+  /**
+   * Current filters applied
+   */
+  @Input()
+  aggFilters = [];
 
   /**
    * Define the current record's page
@@ -95,6 +95,12 @@ export class RecordSearchComponent implements OnInit {
    */
   @Input()
   adminMode = true;
+
+  /**
+   * Component is integrated in angular routing
+   */
+  @Input()
+  inRouting = false;
 
   /**
    * Types of resources available
@@ -133,6 +139,11 @@ export class RecordSearchComponent implements OnInit {
   currentType = 'documents';
 
   /**
+   * Output current state when parameters change.
+   */
+  @Output() parametersChanged = new EventEmitter<any>();
+
+  /**
    * Used only for binding with pagination.
    * Avoid side effect if "page" property is bound to pagination
    * (infinite calls to get records).
@@ -141,6 +152,7 @@ export class RecordSearchComponent implements OnInit {
   set currentPage(page: number) {
     this.page = +page;
     this.getRecords(false);
+    this.emitNewParameters();
   }
 
   get currentPage() {
@@ -148,80 +160,21 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
-   * Store configuration for type
-   */
-  private config: any;
-
-  /**
    * Constructor
    * @param dialogService - Modal component
    * @param recordService - Service for managing records
    * @param toastService - Toast message
-   * @param route - Angular current route
-   * @param router - Angular router
    */
   constructor(
     private recordService: RecordService,
-    private recordUiService: RecordUiService,
-    private route: ActivatedRoute,
-    protected router: Router
+    private recordUiService: RecordUiService
   ) { }
 
   /**
    * Component initialisation.
    */
   ngOnInit() {
-    this.route.queryParams.subscribe(queryParams => {
-      this.loadData();
-    });
-  }
-
-  /** Load data from routing data.
-   *
-   * Only relevant when component is loaded into routing
-   */
-  loadData() {
-    const data = this.route.snapshot.data;
-
-    if (data.types) {
-      this.inRouting = true;
-      this.types = data.types;
-    }
-
-    if (typeof data.showSearchInput !== 'undefined') {
-      this.showSearchInput = data.showSearchInput;
-    }
-
-    if (typeof data.adminMode !== 'undefined') {
-      this.adminMode = data.adminMode;
-    }
-
-    if (data.detailUrl) {
-      this.detailUrl = data.detailUrl;
-    }
-
-    if (this.inRouting === true) {
-      this.currentType = this.route.snapshot.paramMap.get('type');
-
-      const queryParams = this.route.snapshot.queryParams;
-
-      for (const key in queryParams) {
-        if (['q', 'page', 'size'].includes(key)) {
-          this[key] = queryParams[key];
-        } else {
-          if (Array.isArray(queryParams[key]) === false) {
-            this.aggFilters.push({ key, values: [queryParams[key]] });
-          } else {
-            this.aggFilters.push({ key, values: queryParams[key] });
-          }
-        }
-      }
-    }
-
-    this.config = this.recordUiService.getResourceConfig(this.types, this.currentType);
-
-    this.getRecords(this.inRouting === false);
-
+    // Load totals for each resource type
     for (const type of this.types) {
       this.recordService.getRecords(
         type.key, '', 1, 1, [],
@@ -230,29 +183,46 @@ export class RecordSearchComponent implements OnInit {
         type.total = records.hits.total;
       });
     }
+  }
 
-    this.checkAddActionStatus().subscribe((result: ActionStatus) => {
-      this.addStatus = result;
-    });
+  ngOnChanges(changes: SimpleChanges) {
+    // store types in record service for next processings.
+    // TODO: Try to set types directly in RecordUiService using route events.
+    this.recordUiService.types = this.types;
+
+    // load configuration corresponding to current type
+    if (this.isParamChanged('currentType', changes) === true) {
+      this.loadConfigurationForType(this.currentType);
+    }
+
+    // Get records
+    if (this.hasChangedParams(changes) === true) {
+      this.getRecords(false);
+    }
   }
 
   /**
    * Store or remove facet filter.
    * @param event - object, containing term and selected values
    */
-  public updateAggregationFilter(event: { term: string, values: string[] }) {
+  updateAggregationFilter(event: { term: string, values: string[] }) {
     const term = event.term;
     const values = event.values;
-
     const index = this.aggFilters.findIndex(item => item.key === term);
 
-    if (index !== -1) {
-      this.aggFilters[index] = { key: term, values };
+    // no more items selected, remove filter
+    if (values.length === 0) {
+      this.aggFilters.splice(index, 1);
     } else {
-      this.aggFilters.push({ key: term, values });
+      if (index !== -1) {
+        this.aggFilters[index] = { key: term, values };
+      } else {
+        this.aggFilters.push({ key: term, values });
+      }
     }
 
     this.getRecords();
+    this.emitNewParameters();
   }
 
   /**
@@ -260,19 +230,21 @@ export class RecordSearchComponent implements OnInit {
    * @param event - Event, dom event triggered
    * @param size - number, new page size
    */
-  public changeSize(event: Event, size: number) {
+  changeSize(event: Event, size: number) {
     event.preventDefault();
     this.size = size;
     this.getRecords();
+    this.emitNewParameters();
   }
 
   /**
    * Change query text.
    * @param event - string, new query text
    */
-  public searchByQuery(event: string) {
+  searchByQuery(event: string) {
     this.q = event;
     this.getRecords();
+    this.emitNewParameters();
   }
 
   /**
@@ -280,23 +252,20 @@ export class RecordSearchComponent implements OnInit {
    * @param event - Event, dom event triggered
    * @param type - string, type of resource
    */
-  public changeType(event: Event, type: string) {
+  changeType(event: Event, type: string) {
     event.preventDefault();
     this.currentType = type;
     this.aggFilters = [];
-    this.config = this.recordUiService.getResourceConfig(this.types, this.currentType);
     this.getRecords();
-
-    this.checkAddActionStatus().subscribe((result: ActionStatus) => {
-      this.addStatus = result;
-    });
+    this.emitNewParameters();
+    this.loadConfigurationForType(type);
   }
 
   /**
    * Get current selected values for filter
    * @param term - string, aggregation filter key
    */
-  public getFilterSelectedValues(term: string) {
+  getFilterSelectedValues(term: string) {
     const index = this.aggFilters.findIndex(item => item.key === term);
 
     if (index !== -1) {
@@ -309,7 +278,7 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Check if pagination have to be displayed
    */
-  public showPagination() {
+  showPagination() {
     return this.total > this.size;
   }
 
@@ -317,7 +286,7 @@ export class RecordSearchComponent implements OnInit {
    * Delete a record by its PID.
    * @param pid - string, PID to delete
    */
-  public deleteRecord(pid: string) {
+  deleteRecord(pid: string) {
     this.recordUiService.deleteRecord(pid, this.currentType).subscribe((result) => {
       if (result === true) {
         // refresh records
@@ -332,7 +301,7 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Get component view for the current resource type.
    */
-  public getResultItemComponentView() {
+  getResultItemComponentView() {
     if (this.config.component) {
       return this.config.component;
     }
@@ -340,38 +309,19 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
-   * Check if a record can be added
-   */
-  public checkAddActionStatus(): Observable<ActionStatus> {
-    if (this.config.canAdd) {
-      return this.config.canAdd().pipe(first());
-    }
-
-    return of({ can: true, message: '' });
-  }
-
-  /**
    * Check if a record can be updated
    * @param record - object, record to check
    */
-  public canUpdateRecord(record: object): Observable<ActionStatus> {
-    if (this.config.canUpdate) {
-      return this.config.canUpdate(record);
-    }
-
-    return of({ can: true, message: '' });
+  canUpdateRecord$(record: object): Observable<ActionStatus> {
+    return this.recordUiService.canUpdateRecord$(record, this.currentType);
   }
 
   /**
    * Check if a record can be deleted
    * @param record - object, record to check
    */
-  public canDeleteRecord(record: object): Observable<ActionStatus> {
-    if (this.config.canDelete) {
-      return this.config.canDelete(record);
-    }
-
-    return of({ can: true, message: '' });
+  canDeleteRecord$(record: object): Observable<ActionStatus> {
+    return this.recordUiService.canDeleteRecord$(record, this.currentType);
   }
 
   /**
@@ -382,8 +332,6 @@ export class RecordSearchComponent implements OnInit {
     if (resetPage === true) {
       this.page = 1;
     }
-
-    this.updateRoute();
 
     this.isLoading = true;
 
@@ -430,8 +378,8 @@ export class RecordSearchComponent implements OnInit {
   expandFacet(key: string) {
     if ('_settings' in this.aggregations) {
       const settings = this.aggregations._settings;
-      const keyExtand = 'expand';
-      if (keyExtand in settings && settings[keyExtand].indexOf(key) > -1) {
+      const keyExpand = 'expand';
+      if (keyExpand in settings && settings[keyExpand].indexOf(key) > -1) {
         return true;
       }
       return false;
@@ -440,36 +388,15 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
-   * Update route parameters when search criteria are changed.
-   * Only applied if component is integrated in routing.
-   */
-  private updateRoute() {
-    if (this.inRouting === false) {
-      return;
-    }
-
-    const queryParams = {
-      size: this.size,
-      page: this.page,
-      q: this.q
-    };
-
-    const filters = {};
-    for (const filter of this.aggFilters) {
-      filters[filter.key] = filter.values;
-    }
-
-    Object.keys(filters).map(key => queryParams[key] = filters[key]);
-
-    this.router.navigate([this.getCurrentUrl()], { queryParams });
-  }
-
-  /**
    * Returns an observable which emits the URL value for given record.
    * In case record cannot be read, returns null.
    * @param record - Generate detail URL for this record.
    */
   resolveDetailUrl(record: any): Observable<any> {
+    if (this.inRouting === false && !this.detailUrl) {
+      return of(null);
+    }
+
     const url = { link: `detail/${record.metadata.pid}`, external: false };
 
     if (this.detailUrl) {
@@ -481,7 +408,7 @@ export class RecordSearchComponent implements OnInit {
       return of(url);
     }
 
-    return this.config.canRead(record).pipe(
+    return this.recordUiService.canReadRecord$(record, this.currentType).pipe(
       map((status: ActionStatus) => {
         if (status.can === false) {
           return null;
@@ -493,14 +420,62 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
-   * Return current URL after removing query parameters and updating resource type.
-   *
-   * @returns Updated url without query string
+   * Emit new parameters when a change appends.
    */
-  private getCurrentUrl(): string {
-    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments.map(it => it.path);
-    segments[segments.length - 1] = this.currentType;
+  private emitNewParameters() {
+    this.parametersChanged.emit({
+      q: this.q,
+      page: this.page,
+      size: this.size,
+      currentType: this.currentType,
+      aggFilters: this.aggFilters
+    });
+  }
 
-    return segments.join('/');
+  /**
+   * Get configuration for the current resource type.
+   * @param type Type of resource
+   */
+  private loadConfigurationForType(type: string) {
+    this.config = this.recordUiService.getResourceConfig(type);
+    this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
+      this.addStatus = result;
+    });
+  }
+
+  /**
+   * Check if query params or type have changed.
+   * @param simpleChanges Object containing changes
+   */
+  private hasChangedParams(simpleChanges: SimpleChanges) {
+    const params = ['currentType', 'q', 'size', 'page', 'aggFilters'];
+
+    for (const key of params) {
+      if (this.isParamChanged(key, simpleChanges) === true) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Check if parameter given by key has changed.
+   * @param simpleChanges Object containing changes
+   */
+  private isParamChanged(key: string, simpleChanges: SimpleChanges) {
+    if (!simpleChanges[key]) {
+      return false;
+    }
+
+    if (simpleChanges[key].firstChange === true) {
+      return true;
+    }
+
+    if (simpleChanges[key].currentValue !== this[key]) {
+      return true;
+    }
+
+    return false;
   }
 }

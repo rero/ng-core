@@ -19,6 +19,7 @@ import { Bootstrap4FrameworkModule } from 'angular6-json-schema-form';
 
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchComponent } from './search/record-search.component';
+import { RecordSearchComponent as RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
@@ -43,6 +44,7 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 
 @NgModule({
   declarations: [
+    RecordSearchPageComponent,
     RecordSearchComponent,
     RecordSearchResultComponent,
     RecordSearchResultDirective,
