@@ -41,7 +41,22 @@ describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
   let fixture: ComponentFixture<RecordSearchComponent>;
 
-  const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+  const routerSpy = jasmine.createSpyObj('Router', ['navigate', 'parseUrl']);
+  routerSpy.parseUrl.and.returnValue({
+    root: {
+      children: {
+        primary: {
+          segments: [
+            { path: 'admin' },
+            { path: 'record' },
+            { path: 'search' },
+            { path: 'documents' }
+          ]
+        }
+      }
+    }
+  });
+  routerSpy.url = 'admin/record/search/documents';
 
   const emptyRecords = {
     aggregations: {},
@@ -61,7 +76,6 @@ describe('RecordSearchComponent', () => {
   const route = {
     snapshot: {
       data: {
-        linkPrefix: '/records',
         detailUrl: '/custom/url/for/detail/:type/:pid',
         types: [
           {

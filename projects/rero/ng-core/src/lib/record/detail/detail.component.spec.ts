@@ -43,7 +43,6 @@ describe('RecordDetailComponent', () => {
         type: 'documents', pid: '1'
       }),
       data: {
-        linkPrefix: '/records',
         types: [
           {
             key: 'documents',

@@ -89,7 +89,6 @@ const routes: Routes = [
     data: {
       showSearchInput: true,
       adminMode: false,
-      linkPrefix: 'records',
       types: [
         {
           key: 'documents',
@@ -116,7 +115,6 @@ const routes: Routes = [
     data: {
       showSearchInput: true,
       adminMode: false,
-      linkPrefix: 'records',
       types: [
         {
           key: 'institutions',
@@ -134,7 +132,6 @@ const routes: Routes = [
     data: {
       showSearchInput: true,
       adminMode: false,
-      linkPrefix: '/usi/record/search',
       types: [
         {
           key: 'documents',
@@ -156,7 +153,6 @@ const routes: Routes = [
     data: {
       showSearchInput: true,
       adminMode: false,
-      linkPrefix: '/hevs/record/search',
       types: [
         {
           key: 'documents',
@@ -178,7 +174,6 @@ const routes: Routes = [
     data: {
       showSearchInput: true,
       adminMode: false,
-      linkPrefix: '/record/search',
       types: [
         {
           key: 'documents',
@@ -197,7 +192,6 @@ const routes: Routes = [
       { path: ':type/new', component: EditorComponent }
     ],
     data: {
-      linkPrefix: '/admin/record/search',
       types: [
         {
           key: 'documents',
