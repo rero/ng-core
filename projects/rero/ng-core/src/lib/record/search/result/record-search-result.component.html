@@ -14,26 +14,23 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="row">
-    <div class="col-10">
-        <ng-template ngCoreRecordSearchResult></ng-template>
-    </div>
-    <div class="col-2 text-right">
-        <a href class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
-            *ngIf="inRouting && adminMode && updateStatus && updateStatus.can">
-            <i class="fa fa-pencil"></i>
-        </a>
-        <span class="ml-2" *ngIf="adminMode && deleteStatus">
-            <button class="btn btn-link p-0" [title]="'Delete'|translate" (click)="deleteRecord(record.metadata.pid)"
-                *ngIf="deleteStatus.can; else deleteMessageLink">
+
+<div class="float-right ml-5 mb-2" *ngIf="adminMode">
+    <a href class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
+        *ngIf="inRouting && updateStatus && updateStatus.can">
+        <i class="fa fa-pencil"></i>
+    </a>
+    <span class="ml-2" *ngIf="deleteStatus">
+        <button class="btn btn-link p-0" [title]="'Delete'|translate" (click)="deleteRecord(record.metadata.pid)"
+            *ngIf="deleteStatus.can; else deleteMessageLink">
+            <i class="fa fa-trash"></i>
+        </button>
+        <ng-template #deleteMessageLink>
+            <button class="btn btn-link p-0 text-muted" [title]="'Delete'|translate"
+                (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
                 <i class="fa fa-trash"></i>
             </button>
-            <ng-template #deleteMessageLink>
-                <button class="btn btn-link p-0 text-muted" [title]="'Delete'|translate"
-                    (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
-                    <i class="fa fa-trash"></i>
-                </button>
-            </ng-template>
-        </span>
-    </div>
+        </ng-template>
+    </span>
 </div>
+<ng-template ngCoreRecordSearchResult></ng-template>
