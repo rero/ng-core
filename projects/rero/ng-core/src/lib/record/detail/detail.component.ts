@@ -63,6 +63,11 @@ export class DetailComponent implements OnInit {
   error: string = null;
 
   /**
+   * Admin mode for CRUD operations
+   */
+  adminMode = true;
+
+  /**
    * View component for displaying record
    */
   @Input()
@@ -107,6 +112,10 @@ export class DetailComponent implements OnInit {
           config.canUpdate(this.record).subscribe((result: ActionStatus) => {
             this.updateStatus = result;
           });
+        }
+
+        if (typeof this.route.snapshot.data.adminMode !== 'undefined') {
+          this.adminMode = this.route.snapshot.data.adminMode;
         }
       },
       (error) => {

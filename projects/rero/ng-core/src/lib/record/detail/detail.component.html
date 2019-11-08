@@ -15,31 +15,26 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="alert alert-danger" *ngIf="error">{{ error | translate }}</div>
-<div class="row">
-    <div class="col-9">
-        <ng-template ngCoreRecordDetail></ng-template>
-    </div>
-    <div class="col-3 text-right" *ngIf="record">
-        <a href class="btn btn-sm btn-primary" routerLink="../../edit/{{ record.metadata.pid }}"
-            *ngIf="updateStatus && updateStatus.can">
-            <i class="fa fa-pencil"></i>
-            {{ 'Edit' | translate }}
-        </a>
-        <ng-container *ngIf="deleteStatus">
-            <button class="btn btn-sm btn-primary ml-1" [title]="'Delete'|translate"
-                (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
-                <i class="fa fa-trash"></i>
-                {{ 'Delete' | translate }}
+<div class="float-right ml-4 mt-2 mb-4" *ngIf="record && adminMode">
+    <a href class="btn btn-sm btn-primary" routerLink="../../edit/{{ record.metadata.pid }}"
+        *ngIf="updateStatus && updateStatus.can">
+        <i class="fa fa-pencil"></i>
+        {{ 'Edit' | translate }}
+    </a>
+    <ng-container *ngIf="deleteStatus">
+        <button class="btn btn-sm btn-primary ml-1" [title]="'Delete'|translate"
+            (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
+            <i class="fa fa-trash"></i>
+            {{ 'Delete' | translate }}
+        </button>
+        <ng-template #deleteMessageLink>
+            <button class="btn btn-sm btn-dark ml-1" [title]="'Delete'|translate"
+                (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
+                <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
             </button>
-            <ng-template #deleteMessageLink>
-                <button class="btn btn-sm btn-dark ml-1" [title]="'Delete'|translate"
-                    (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
-                    <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
-                </button>
-            </ng-template>
-        </ng-container>
-
-    </div>
+        </ng-template>
+    </ng-container>
 </div>
+<ng-template ngCoreRecordDetail></ng-template>
 <hr class="my-4">
 <button class="btn btn-link" (click)="goBack()">&laquo; {{ 'Back' | translate }}</button>
