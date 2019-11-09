@@ -34,6 +34,7 @@ import { RemoteInputComponent } from './remote-input/remote-input.component';
 import { MainFieldsManagerComponent } from './main-fields-manager/main-fields-manager.component';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { SubmitComponent } from './submit/submit.component';
+import { RecordUiService } from '../record-ui.service';
 
 
 @Component({
@@ -83,6 +84,7 @@ export class EditorComponent implements OnInit {
     @Inject(CustomBootstrap4Framework) bootstrap4framework,
     private route: ActivatedRoute,
     private recordService: RecordService,
+    private recordUiService: RecordUiService,
     private widgetLibrary: WidgetLibraryService,
     private translateService: TranslateService,
     private location: Location,
@@ -140,6 +142,17 @@ export class EditorComponent implements OnInit {
             });
         } else {
           this.recordService.getRecord(this.recordType, this.pid).subscribe(record => {
+            this.recordUiService.types = this.route.snapshot.data.types;
+            this.recordUiService.canReadRecord$(record, this.recordType).subscribe(result => {
+              if (result.can === false) {
+                this.toastrService.error(
+                  _('You cannot update this record'),
+                  _(this.recordType)
+                );
+                this.location.back();
+              }
+            });
+
             this.recordService
               .getSchemaForm(this.recordType)
               .subscribe(schemaForm => {
