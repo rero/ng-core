@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, debounceTime } from 'rxjs/operators';
 
@@ -52,7 +52,8 @@ export class RecordService {
     page = 1,
     itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
     aggFilters: any[] = [],
-    preFilters: object = {}
+    preFilters: object = {},
+    headers: any = null
   ): Observable<Record> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
@@ -68,7 +69,10 @@ export class RecordService {
       httpParams = httpParams.append(key, preFilters[key]);
     }
 
-    return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/', { params: httpParams })
+    return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/', {
+      params: httpParams,
+      headers: this.createRequestHeaders(headers)
+    })
       .pipe(
         catchError(this.handleError)
       );
@@ -91,8 +95,10 @@ export class RecordService {
    * @param type - string, type of resource
    * @param pid - string, record PID
    */
-  public getRecord(type: string, pid: string, resolve = 0): Observable<any> {
-    return this.http.get<Record>(`${this.apiService.getEndpointByType(type, true)}/${pid}?resolve=${resolve}`)
+  public getRecord(type: string, pid: string, resolve = 0, headers: any = {}): Observable<any> {
+    return this.http.get<Record>(`${this.apiService.getEndpointByType(type, true)}/${pid}?resolve=${resolve}`, {
+      headers: this.createRequestHeaders(headers)
+    })
       .pipe(
         catchError(this.handleError)
       );
@@ -175,5 +181,13 @@ export class RecordService {
     // return an observable with a user-facing error message
     return throwError(
       'Something bad happened; please try again later.');
+  }
+
+  /**
+   * Creates and returns a HttpHeader object to send to request.
+   * @param headers Object containing http headers to send to request.
+   */
+  private createRequestHeaders(headers: any = {}) {
+    return headers ? new HttpHeaders(headers) : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 }

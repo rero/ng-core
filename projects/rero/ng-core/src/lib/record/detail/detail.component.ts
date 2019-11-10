@@ -95,12 +95,12 @@ export class DetailComponent implements OnInit {
     const pid = this.route.snapshot.paramMap.get('pid');
     const type = this.route.snapshot.paramMap.get('type');
 
-    this.record$ = this.recordService.getRecord(type, pid, 1);
+    const config = this.recordUiService.getResourceConfig(this.route.snapshot.data.types, type);
+
+    this.record$ = this.recordService.getRecord(type, pid, 1, config.itemHeaders || null);
     this.record$.subscribe(
       (record) => {
         this.record = record;
-
-        const config = this.recordUiService.getResourceConfig(this.route.snapshot.data.types, type);
 
         if (config.canDelete) {
           config.canDelete(this.record).subscribe((result: ActionStatus) => {
