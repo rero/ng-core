@@ -109,7 +109,9 @@ export class RecordSearchComponent implements OnInit {
     canUpdate?: any,
     canDelete?: any,
     canRead?: any,
-    aggregations?: any
+    aggregations?: any,
+    listHeaders?: any,
+    itemHeaders?: any
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -230,7 +232,10 @@ export class RecordSearchComponent implements OnInit {
     this.getRecords(this.inRouting === false);
 
     for (const type of this.types) {
-      this.recordService.getRecords(type.key, '', 1, 1, [], this.config.preFilters || {}).subscribe(records => {
+      this.recordService.getRecords(
+        type.key, '', 1, 1, [],
+        this.config.preFilters || {},
+        this.config.listHeaders || null).subscribe(records => {
         type.total = records.hits.total;
       });
     }
@@ -397,7 +402,8 @@ export class RecordSearchComponent implements OnInit {
       this.page,
       this.size,
       this.aggFilters,
-      this.config.preFilters || {}
+      this.config.preFilters || {},
+      this.config.listHeaders || null
     ).subscribe(
       records => {
         this.records = records.hits.hits;

@@ -208,7 +208,13 @@ const routes: Routes = [
           canUpdate,
           canDelete,
           canRead,
-          aggregations
+          aggregations,
+          listHeaders: {
+            'Content-Type': 'application/rero+json'
+          },
+          itemHeaders: {
+            'Content-Type': 'application/rero+json'
+          },
         },
         {
           key: 'institutions',
