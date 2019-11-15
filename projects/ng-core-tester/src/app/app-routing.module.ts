@@ -21,9 +21,6 @@ import { of, Observable } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { DetailComponent } from './record/document/detail/detail.component';
-import { EditorComponent } from '@rero/ng-core';
-import { RecordSearchComponent } from '@rero/ng-core';
-import { DetailComponent as RecordDetailComponent } from '@rero/ng-core';
 import { ActionStatus } from 'projects/rero/ng-core/src/public-api';
 
 const canAdd = (record: any): Observable<ActionStatus> => {
@@ -60,8 +57,7 @@ const aggregations = (agg: object) => {
 
 export function matchedUrl(url: UrlSegment[]) {
   const segments = [
-    new UrlSegment(url[0].path, {}),
-    new UrlSegment(url[1].path, {})
+    new UrlSegment(url[0].path, {})
   ];
 
   return {
@@ -82,10 +78,7 @@ const routes: Routes = [
       }
       return null;
     },
-    children: [
-      { path: '', component: RecordSearchComponent },
-      { path: 'detail/:pid', component: RecordDetailComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -93,10 +86,7 @@ const routes: Routes = [
         {
           key: 'documents',
           label: 'Documents',
-          component: DocumentComponent,
-          preFilters: {
-            institution: 'usi'
-          }
+          component: DocumentComponent
         }
       ]
     }
@@ -108,10 +98,7 @@ const routes: Routes = [
       }
       return null;
     },
-    children: [
-      { path: '', component: RecordSearchComponent },
-      { path: 'detail/:pid', component: RecordDetailComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -125,10 +112,7 @@ const routes: Routes = [
   },
   {
     path: 'usi/record/search',
-    children: [
-      { path: ':type', component: RecordSearchComponent },
-      { path: ':type/detail/:pid', component: RecordDetailComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -146,10 +130,7 @@ const routes: Routes = [
   },
   {
     path: 'hevs/record/search',
-    children: [
-      { path: ':type', component: RecordSearchComponent },
-      { path: ':type/detail/:pid', component: RecordDetailComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -167,10 +148,7 @@ const routes: Routes = [
   },
   {
     path: 'record/search',
-    children: [
-      { path: ':type', component: RecordSearchComponent },
-      { path: ':type/detail/:pid', component: RecordDetailComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -185,12 +163,7 @@ const routes: Routes = [
   },
   {
     path: 'admin/record/search',
-    children: [
-      { path: ':type', component: RecordSearchComponent },
-      { path: ':type/detail/:pid', component: RecordDetailComponent },
-      { path: ':type/edit/:pid', component: EditorComponent },
-      { path: ':type/new', component: EditorComponent }
-    ],
+    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
     data: {
       types: [
         {
