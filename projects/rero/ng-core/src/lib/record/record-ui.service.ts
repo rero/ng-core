@@ -41,11 +41,11 @@ export class RecordUiService {
 
   /**
    * Delete a record by its PID.
-   * @param pid - string, PID to delete
    * @param type Type of resource
+   * @param pid - string, PID to delete
    * @returns Observable resolving as a boolean
    */
-  deleteRecord(pid: string, type: string): Observable<boolean> {
+  deleteRecord(type: string, pid: string): Observable<boolean> {
     const observable = this.dialogService.show({
       ignoreBackdropClick: true,
       initialState: {

@@ -149,7 +149,7 @@ export class DetailComponent implements OnInit {
    * @param pid - string, PID to remove
    */
   public deleteRecord(pid: string) {
-    this.recordUiService.deleteRecord(pid, this.route.snapshot.paramMap.get('type')).subscribe((result: any) => {
+    this.recordUiService.deleteRecord(this.route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
       if (result === true) {
         this.location.back();
       }
