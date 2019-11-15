@@ -134,11 +134,11 @@ export class RecordSearchComponent implements OnInit {
       this.types = data.types;
     }
 
-    if (typeof data.showSearchInput !== 'undefined') {
+    if (data.showSearchInput != null) {
       this.showSearchInput = data.showSearchInput;
     }
 
-    if (typeof data.adminMode !== 'undefined') {
+    if (data.adminMode != null) {
       this.adminMode = data.adminMode;
     }
 
