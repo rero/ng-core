@@ -23,7 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { TypeaheadModule } from 'ngx-bootstrap';
-import { AutocompleteComponent, SharedModule } from '@rero/ng-core';
+import { AutocompleteComponent, CoreModule } from '@rero/ng-core';
 
 describe('SearchBarComponent', () => {
   let component: SearchBarComponent;
@@ -39,7 +39,7 @@ describe('SearchBarComponent', () => {
         ReactiveFormsModule,
         TranslateModule.forRoot(),
         TypeaheadModule.forRoot(),
-        SharedModule
+        CoreModule
       ]
     })
     .compileComponents();

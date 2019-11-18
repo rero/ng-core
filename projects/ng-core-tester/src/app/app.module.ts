@@ -19,14 +19,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-import { CoreModule, RecordModule, SharedModule } from '@rero/ng-core';
+import { RecordModule } from '@rero/ng-core';
+import { CoreConfigService } from '@rero/ng-core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DocumentComponent } from './record/document/document.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
-import { CoreConfigService } from '@rero/ng-core';
 import { AppConfigService } from './app-config.service';
 import { CollapseModule, TypeaheadModule } from 'ngx-bootstrap';
 import { SearchBarComponent } from './search-bar/search-bar.component';
@@ -40,15 +40,13 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     SearchBarComponent
   ],
   imports: [
-    SharedModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    CoreModule,
     CollapseModule.forRoot(),
-    RecordModule,
-    TypeaheadModule.forRoot()
+    TypeaheadModule.forRoot(),
+    RecordModule
   ],
   providers: [
     {

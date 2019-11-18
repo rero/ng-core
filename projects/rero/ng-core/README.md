@@ -2,7 +2,7 @@
 
 This library provides modules, components, services and pipes for common usage in projects.
 
-The library embed two main modules which ones use a shared module containing common components and pipes.
+The library embed two main modules, CoreModule and RecordModule. RecordModule imports CoreModule to use pipes and components from it.
 
 ## Core module
 
@@ -12,13 +12,9 @@ Core module integrates some components and pipes usable in each angular projects
 
 Record module is a specific module to interact with Invenio resources. It provides CRUD functionalities for managing records.
 
-## Shared module
-
-As its name indicates, the shared module contains functionalities shared with another modules.
-
 ### Components
 
-These components can be found in shared module: 
+These components can be found in core module: 
 
 * DialogComponent: A component allowing to show a dialog modal, for displaying an alert or force user to confirm an action.
 * SearchInputComponent: A component to display a search input and emit an event when search is submitted.
@@ -115,13 +111,11 @@ $ npm i --save @rero/ng-core
 First of all, you have to add modules to *app.module.ts:* 
 
 ```
-import { CoreModule, RecordModule, SharedModule } from '@rero/ng-core';
+import { RecordModule } from '@rero/ng-core';
 
 @NgModule({
   imports: [
-    SharedModule,
-    CoreModule,
-    RecordModule # Not mandatory if you don't want to manage Invenio records
+    RecordModule # Or CoreModule if you don't want to manage Invenio resources
   ]
 })
 ```
