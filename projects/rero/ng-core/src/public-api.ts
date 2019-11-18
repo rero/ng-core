@@ -17,7 +17,6 @@
 
 export * from './lib/core.module';
 export * from './lib/core-config.service';
-export * from './lib/shared.module';
 export * from './lib/dialog/dialog.component';
 export * from './lib/dialog/dialog.service';
 export * from './lib/api/api.service';

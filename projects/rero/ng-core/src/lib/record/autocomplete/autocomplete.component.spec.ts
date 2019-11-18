@@ -23,7 +23,7 @@ import { TypeaheadModule } from 'ngx-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '../../shared.module';
+import { CoreModule } from '../../core.module';
 
 describe('AutocompleteComponent', () => {
   let component: AutocompleteComponent;
@@ -37,7 +37,7 @@ describe('AutocompleteComponent', () => {
         TypeaheadModule.forRoot(),
         RouterTestingModule,
         TranslateModule.forRoot(),
-        SharedModule
+        CoreModule
       ],
       declarations: [ AutocompleteComponent ]
     })
