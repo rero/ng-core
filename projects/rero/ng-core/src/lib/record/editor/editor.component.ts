@@ -81,15 +81,15 @@ export class EditorComponent implements OnInit {
   }
 
   constructor(
-    @Inject(CustomBootstrap4Framework) bootstrap4framework,
-    private route: ActivatedRoute,
-    private recordService: RecordService,
-    private recordUiService: RecordUiService,
-    private widgetLibrary: WidgetLibraryService,
-    private translateService: TranslateService,
-    private location: Location,
-    private toastrService: ToastrService,
-    private frameworkLibrary: FrameworkLibraryService
+    @Inject(CustomBootstrap4Framework) protected bootstrap4framework,
+    protected route: ActivatedRoute,
+    protected recordService: RecordService,
+    protected recordUiService: RecordUiService,
+    protected widgetLibrary: WidgetLibraryService,
+    protected translateService: TranslateService,
+    protected location: Location,
+    protected toastrService: ToastrService,
+    protected frameworkLibrary: FrameworkLibraryService
   ) {
     // TODO: remove this bad hack when the following PR will be integrated
     // https://github.com/hamzahamidi/Angular6-json-schema-form/pull/64
