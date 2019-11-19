@@ -38,3 +38,6 @@ ng lint
 
 display_success_message "Run the tests"
 ng test --no-watch --no-progress --browsers=ChromeHeadlessCI
+
+display_success_message "Run pack"
+npm run pack
