@@ -17,7 +17,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { TranslateModule } from '@ngx-translate/core';
 import { Bootstrap4FrameworkModule } from 'angular6-json-schema-form';
 import { TooltipModule, TypeaheadModule, PaginationModule, CollapseModule } from 'ngx-bootstrap';
 
@@ -43,17 +42,8 @@ import { MainFieldsManagerComponent } from './editor/main-fields-manager/main-fi
 import { SubmitComponent } from './editor/submit/submit.component';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
-import { Nl2brPipe } from '../pipe/nl2br.pipe';
-import { DefaultPipe } from '../pipe/default.pipe';
-import { TruncateTextPipe } from '../pipe/truncate-text.pipe';
-import { TranslateLanguagePipe } from '../translate-language/translate-language.pipe';
-import { UpperCaseFirstPipe } from '../pipe/ucfirst.pipe';
-import { CallbackArrayFilterPipe } from '../pipe/callback-array-filter.pipe';
-import { DateTranslatePipe } from '../translate/date-translate-pipe';
 import { CoreModule } from '../core.module';
-import { DialogComponent } from '../dialog/dialog.component';
-import { SearchInputComponent } from '../search-input/search-input.component';
-import { MenuComponent } from '../widget/menu/menu.component';
+
 
 @NgModule({
   declarations: [
@@ -92,20 +82,10 @@ import { MenuComponent } from '../widget/menu/menu.component';
     PaginationModule.forRoot()
   ],
   exports: [
-    TranslateModule,
-    DialogComponent,
-    SearchInputComponent,
-    MenuComponent,
     RecordSearchComponent,
     AutocompleteComponent,
-    Nl2brPipe,
-    DefaultPipe,
-    TruncateTextPipe,
-    TranslateLanguagePipe,
-    UpperCaseFirstPipe,
-    CallbackArrayFilterPipe,
-    DateTranslatePipe,
-    GetRecordPipe
+    GetRecordPipe,
+    CoreModule
   ],
   entryComponents: [
     JsonComponent,
@@ -119,8 +99,7 @@ import { MenuComponent } from '../widget/menu/menu.component';
     RolesCheckboxesComponent,
     MainFieldsManagerComponent,
     SubmitComponent,
-    AutocompleteComponent,
-    DialogComponent
+    AutocompleteComponent
   ]
 })
 export class RecordModule {}
