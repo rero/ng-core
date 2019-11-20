@@ -18,6 +18,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, UrlSegment } from '@angular/router';
 import { of, Observable } from 'rxjs';
 
+import { DetailComponent as RecordDetailComponent, RecordSearchComponent } from '@rero/ng-core';
+
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
 import { DetailComponent } from './record/document/detail/detail.component';
@@ -56,14 +58,26 @@ const aggregations = (agg: object) => {
 };
 
 export function matchedUrl(url: UrlSegment[]) {
-  const segments = [
-    new UrlSegment(url[0].path, {})
-  ];
+  const segments = [new UrlSegment(url[0].path, {})];
 
   return {
     consumed: segments,
     posParams: { type: new UrlSegment(url[1].path, {}) }
   };
+}
+
+export function documentsMatcher(url: Array<UrlSegment>) {
+  if (url[0].path === 'records' && url[1].path === 'documents') {
+    return matchedUrl(url);
+  }
+  return null;
+}
+
+export function institutionsMatcher(url: Array<UrlSegment>) {
+  if (url[0].path === 'records' && url[1].path === 'institutions') {
+    return matchedUrl(url);
+  }
+  return null;
 }
 
 const routes: Routes = [
@@ -72,13 +86,8 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    matcher: (url) => {
-      if (url[0].path === 'records' && url[1].path === 'documents') {
-        return matchedUrl(url);
-      }
-      return null;
-    },
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    matcher: documentsMatcher,
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -92,13 +101,8 @@ const routes: Routes = [
     }
   },
   {
-    matcher: (url) => {
-      if (url[0].path === 'records' && url[1].path === 'institutions') {
-        return matchedUrl(url);
-      }
-      return null;
-    },
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    matcher: institutionsMatcher,
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -112,7 +116,7 @@ const routes: Routes = [
   },
   {
     path: 'usi/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -130,7 +134,7 @@ const routes: Routes = [
   },
   {
     path: 'hevs/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -148,7 +152,10 @@ const routes: Routes = [
   },
   {
     path: 'record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    children: [
+      { path: ':type', component: RecordSearchComponent },
+      { path: ':type/detail/:pid', component: RecordDetailComponent }
+    ],
     data: {
       showSearchInput: true,
       adminMode: false,
@@ -163,7 +170,7 @@ const routes: Routes = [
   },
   {
     path: 'admin/record/search',
-    loadChildren: () => import('@rero/ng-core').then(m => m.RecordModule),
+    loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       types: [
         {
@@ -181,7 +188,7 @@ const routes: Routes = [
           },
           itemHeaders: {
             'Content-Type': 'application/rero+json'
-          },
+          }
         },
         {
           key: 'institutions',
@@ -196,4 +203,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
