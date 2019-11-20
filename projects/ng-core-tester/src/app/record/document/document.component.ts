@@ -6,7 +6,7 @@ import { ResultItem } from '@rero/ng-core';
 })
 export class DocumentComponent implements ResultItem {
   @Input()
-  record: object;
+  record: any;
 
   @Input()
   type: string;
