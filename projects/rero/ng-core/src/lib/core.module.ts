@@ -50,7 +50,7 @@ import { ToastrModule } from 'ngx-toastr';
   imports: [
     CommonModule,
     RouterModule,
-    TranslateModule.forRoot({
+    TranslateModule.forChild({
       loader: {
         provide: BaseTranslateLoader,
         useClass: TranslateLoader

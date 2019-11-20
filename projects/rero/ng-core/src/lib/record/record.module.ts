@@ -17,7 +17,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { TranslateModule } from '@ngx-translate/core';
 import { Bootstrap4FrameworkModule } from 'angular6-json-schema-form';
 import { TooltipModule, TypeaheadModule, PaginationModule, CollapseModule } from 'ngx-bootstrap';
 
@@ -92,7 +91,6 @@ import { MenuComponent } from '../widget/menu/menu.component';
     PaginationModule.forRoot()
   ],
   exports: [
-    TranslateModule,
     DialogComponent,
     SearchInputComponent,
     MenuComponent,
@@ -105,7 +103,8 @@ import { MenuComponent } from '../widget/menu/menu.component';
     UpperCaseFirstPipe,
     CallbackArrayFilterPipe,
     DateTranslatePipe,
-    GetRecordPipe
+    GetRecordPipe,
+    CoreModule
   ],
   entryComponents: [
     JsonComponent,
