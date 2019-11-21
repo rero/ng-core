@@ -85,6 +85,12 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   size = 10;
 
   /**
+   * Defined the sort order
+   */
+  @Input()
+  sort: string = null;
+
+  /**
    * Search query
    */
   @Input()
@@ -342,7 +348,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       this.size,
       this.aggFilters,
       this.config.preFilters || {},
-      this.config.listHeaders || null
+      this.config.listHeaders || null,
+      this.sort
     ).subscribe(
       records => {
         this.records = records.hits.hits;
@@ -428,7 +435,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       page: this.page,
       size: this.size,
       currentType: this.currentType,
-      aggFilters: this.aggFilters
+      aggFilters: this.aggFilters,
+      sort: this.sort
     });
   }
 
@@ -448,7 +456,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * @param simpleChanges Object containing changes
    */
   private hasChangedParams(simpleChanges: SimpleChanges) {
-    const params = ['currentType', 'q', 'size', 'page', 'aggFilters'];
+    const params = ['currentType', 'q', 'size', 'page', 'aggFilters', 'sort'];
 
     for (const key of params) {
       if (this.isParamChanged(key, simpleChanges) === true) {

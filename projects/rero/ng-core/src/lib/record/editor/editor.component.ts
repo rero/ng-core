@@ -144,8 +144,8 @@ export class EditorComponent implements OnInit {
             this.recordUiService.canReadRecord$(record, this.recordType).subscribe(result => {
               if (result.can === false) {
                 this.toastrService.error(
-                  _('You cannot update this record'),
-                  _(this.recordType)
+                  this.translateService.instant('You cannot update this record'),
+                  this.translateService.instant(this.recordType)
                 );
                 this.location.back();
               }
@@ -182,16 +182,16 @@ export class EditorComponent implements OnInit {
     if (this.pid) {
       this.recordService.update(this.recordType, record).subscribe(res => {
         this.toastrService.success(
-          _('Record Updated!'),
-          _(this.recordType)
+          this.translateService.instant('Record Updated!'),
+          this.translateService.instant(this.recordType)
         );
         this.router.navigate(['../../detail', this.pid], {relativeTo: this.route});
       });
     } else {
       this.recordService.create(this.recordType, record).subscribe(res => {
         this.toastrService.success(
-          _('Record Created with pid: ') + res.metadata.pid,
-          _(this.recordType)
+          this.translateService.instant('Record Created with pid: ') + res.metadata.pid,
+          this.translateService.instant(this.recordType)
         );
         this.router.navigate(['../detail', res.metadata.pid], {relativeTo: this.route});
       });

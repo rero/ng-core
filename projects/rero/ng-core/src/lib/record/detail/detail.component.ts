@@ -27,6 +27,7 @@ import { JsonComponent } from './view/json.component';
 import { RecordService } from '../record.service';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ng-core-record-detail',
@@ -86,7 +87,8 @@ export class DetailComponent implements OnInit {
     private componentFactoryResolver: ComponentFactoryResolver,
     private recordService: RecordService,
     private recordUiService: RecordUiService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private translate: TranslateService
   ) { }
 
   /**
@@ -109,8 +111,8 @@ export class DetailComponent implements OnInit {
         this.recordUiService.canReadRecord$(this.record, type).subscribe(result => {
           if (result.can === false) {
             this.toastrService.error(
-              _('You cannot read this record'),
-              _(type)
+              this.translate.instant('You cannot read this record'),
+              this.translate.instant(type)
             );
             this.location.back();
           }

@@ -65,6 +65,11 @@ export class RecordSearchComponent implements OnInit {
   q = '';
 
   /**
+   * Define the sort order
+   */
+  sort: string = null;
+
+  /**
    * Types of resources available
    */
   types: {
@@ -103,6 +108,9 @@ export class RecordSearchComponent implements OnInit {
       // store query parameters
       if (queryParams.has('q')) {
         this.q = queryParams.get('q');
+      } else {
+        // if no query params is set, put defaults in url
+        this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: [] });
       }
 
       if (queryParams.has('size')) {
@@ -113,9 +121,13 @@ export class RecordSearchComponent implements OnInit {
         this.page = +queryParams.get('page');
       }
 
+      if (queryParams.has('sort')) {
+        this.sort = queryParams.get('sort');
+      }
+
       // loop over all aggregation filters
       queryParams.keys.forEach((key: string) => {
-        if (['q', 'page', 'size'].includes(key) === false) {
+        if (['q', 'page', 'size', 'sort'].includes(key) === false) {
           const values = queryParams.getAll(key);
           const index = this.aggFilters.findIndex(item => item.key === key);
 
@@ -155,7 +167,8 @@ export class RecordSearchComponent implements OnInit {
     const queryParams: any = {
       q: parameters.q,
       page: parameters.page,
-      size: parameters.size
+      size: parameters.size,
+      sort: parameters.sort
     };
 
     for (const filter of parameters.aggFilters) {

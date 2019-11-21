@@ -61,6 +61,7 @@ import { ToastrModule } from 'ngx-toastr';
     ToastrModule.forRoot()
   ],
   exports: [
+    BsDropdownModule,
     CommonModule,
     TranslateModule,
     Nl2brPipe,

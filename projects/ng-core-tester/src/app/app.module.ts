@@ -19,7 +19,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
-import { RecordModule } from '@rero/ng-core';
+import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
+import { RecordModule, TranslateLoader } from '@rero/ng-core';
 import { CoreConfigService } from '@rero/ng-core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -46,6 +47,12 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     AppRoutingModule,
     CollapseModule.forRoot(),
     TypeaheadModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: BaseTranslateLoader,
+        useClass: TranslateLoader
+      }
+    }),
     RecordModule
   ],
   providers: [
