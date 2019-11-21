@@ -472,7 +472,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       return true;
     }
 
-    if (simpleChanges[key].currentValue !== this[key]) {
+    if (simpleChanges[key].currentValue !== simpleChanges[key].previousValue) {
       return true;
     }
 
