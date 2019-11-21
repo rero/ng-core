@@ -45,6 +45,7 @@ export class RecordService {
    * @param page - number, return records corresponding to this page
    * @param itemsPerPage - number, number of records to return
    * @param aggFilters - number, option list of filters
+   * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')
    */
   public getRecords(
     type: string,
@@ -53,12 +54,18 @@ export class RecordService {
     itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
     aggFilters: any[] = [],
     preFilters: object = {},
-    headers: any = null
+    headers: any = null,
+    sort: string = null
   ): Observable<Record> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
     httpParams = httpParams.append('page', '' + page);
     httpParams = httpParams.append('size', '' + itemsPerPage);
+
+    if (sort) {
+      httpParams = httpParams.append('sort', sort);
+    }
+
     aggFilters.forEach((filter) => {
       filter.values.forEach((value: string) => {
         httpParams = httpParams.append(filter.key, value);
