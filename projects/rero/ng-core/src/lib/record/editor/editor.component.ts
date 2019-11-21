@@ -17,7 +17,7 @@
 
 import { Component, OnInit, Inject } from '@angular/core';
 import { WidgetLibraryService, FrameworkLibraryService, JsonPointer } from 'angular6-json-schema-form';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RecordService } from '../record.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
@@ -55,7 +55,6 @@ export class EditorComponent implements OnInit {
   public data;
   public currentLocale = undefined;
   public formValidationErrors: any;
-  private goToDetailedView = false;
 
   /**
    * Get validation errors for displaying in HTML
@@ -89,7 +88,8 @@ export class EditorComponent implements OnInit {
     protected translateService: TranslateService,
     protected location: Location,
     protected toastrService: ToastrService,
-    protected frameworkLibrary: FrameworkLibraryService
+    protected frameworkLibrary: FrameworkLibraryService,
+    protected router: Router
   ) {
     // TODO: remove this bad hack when the following PR will be integrated
     // https://github.com/hamzahamidi/Angular6-json-schema-form/pull/64
@@ -127,18 +127,16 @@ export class EditorComponent implements OnInit {
         const query = results.query;
 
         this.recordType = params.type;
+        this.recordUiService.types = this.route.snapshot.data.types;
+        const config = this.recordUiService.getResourceConfig(this.recordType);
 
         this.pid = params.pid;
-        try {
-          this.goToDetailedView = Boolean(JSON.parse(query.go_to_detailed));
-        } catch (e) {
-          console.log(`unable to parse query option: ${query.go_to_detailed}`);
-        }
         if (!this.pid) {
           this.recordService
             .getSchemaForm(this.recordType)
             .subscribe(schemaForm => {
               this.schemaForm = schemaForm;
+              this.schemaForm.data = this.preprocessRecordEditor({}, config);
             });
         } else {
           this.recordService.getRecord(this.recordType, this.pid).subscribe(record => {
@@ -157,11 +155,23 @@ export class EditorComponent implements OnInit {
               .getSchemaForm(this.recordType)
               .subscribe(schemaForm => {
                 this.schemaForm = schemaForm;
-                this.schemaForm.data = record.metadata;
+                this.schemaForm.data = this.preprocessRecordEditor(record.metadata, config);
               });
           });
         }
       });
+  }
+
+  /**
+   * Preprocess the record before passing it to the editor
+   * @param record - Record object to preprocess
+   * @param config - Object configuration for the current type
+   */
+  private preprocessRecordEditor(record, config) {
+    if (config.preprocessRecordEditor) {
+      return config.preprocessRecordEditor(record);
+    }
+    return record;
   }
 
   /**
@@ -175,7 +185,7 @@ export class EditorComponent implements OnInit {
           _('Record Updated!'),
           _(this.recordType)
         );
-        this.location.back();
+        this.router.navigate(['../../detail', this.pid], {relativeTo: this.route});
       });
     } else {
       this.recordService.create(this.recordType, record).subscribe(res => {
@@ -183,7 +193,7 @@ export class EditorComponent implements OnInit {
           _('Record Created with pid: ') + res.metadata.pid,
           _(this.recordType)
         );
-        this.location.back();
+        this.router.navigate(['../detail', res.metadata.pid], {relativeTo: this.route});
       });
     }
   }
@@ -194,4 +204,5 @@ export class EditorComponent implements OnInit {
   public cancel() {
     this.location.back();
   }
+
 }
