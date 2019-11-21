@@ -94,11 +94,13 @@ export class RecordUiService {
   /**
    * Get resource configuration for given type.
    *
-   * @param types Types in configuration
    * @param type Current type to find
    * @returns Object configuration for the current type
    */
   getResourceConfig(type: string): any {
+    if (this.types == null) {
+      throw new Error(`Configuration not found for type "${type}"`);
+    }
     const index = this.types.findIndex(item => item.key === type);
 
     if (index === -1) {
