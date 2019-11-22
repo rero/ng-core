@@ -33,6 +33,7 @@ import { MenuComponent } from './widget/menu/menu.component';
 import { TranslateLoader } from './translate/translate-loader';
 import { ModalModule, BsDropdownModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
+import { AutoFocusDirective } from './directive/auto-focus.directive';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { ToastrModule } from 'ngx-toastr';
     DateTranslatePipe,
     DialogComponent,
     SearchInputComponent,
-    MenuComponent
+    MenuComponent,
+    AutoFocusDirective
   ],
   imports: [
     CommonModule,
@@ -73,7 +75,8 @@ import { ToastrModule } from 'ngx-toastr';
     DateTranslatePipe,
     DialogComponent,
     SearchInputComponent,
-    MenuComponent
+    MenuComponent,
+    AutoFocusDirective
   ],
   entryComponents: [DialogComponent]
 })
