@@ -25,7 +25,7 @@
   <div class="collapse" [class.show]="showAggregation()">
     <div class="card-body">
       <ul class="list-unstyled m-0">
-        <li class="form-check" *ngFor="let bucket of aggregation.value.buckets">
+        <li class="form-check" *ngFor="let bucket of aggregation.value.buckets|slice:0:bucketSize">
           <input class="form-check-input" type="checkbox" [checked]="isSelected(bucket.key)"
             (click)="updateFilter(bucket.key) ">
           <label class="form-check-label">
@@ -35,6 +35,10 @@
           </label>
         </li>
       </ul>
+      <div *ngIf="displayMoreAndLessLink()">
+        <button class="btn btn-link ml-2" *ngIf="moreMode" (click)="setMoreMode(false)" translate>more…</button>
+        <button class="btn btn-link ml-2" *ngIf="!moreMode" (click)="setMoreMode(true)" translate>less…</button>
+      </div>
     </div>
   </div>
 </div>

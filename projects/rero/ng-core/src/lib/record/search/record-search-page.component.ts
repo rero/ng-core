@@ -81,7 +81,12 @@ export class RecordSearchComponent implements OnInit {
     canUpdate?: any,
     canDelete?: any,
     canRead?: any,
-    aggregations?: any
+    aggregations?: any,
+    listHeaders?: any,
+    itemHeaders?: any,
+    aggregationsOrder?: Array<string>,
+    aggregationsExpand?: Array<string>,
+    aggregationsBucketSize?: number
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**

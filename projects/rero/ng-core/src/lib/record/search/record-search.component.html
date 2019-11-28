@@ -53,8 +53,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3" *ngIf="total && aggregations && (aggregations | keyvalue).length">
-                <div *ngFor="let item of aggregations | keyvalue">
+            <div class="col-sm-3" *ngIf="total && aggregations && aggregations.length">
+                <div *ngFor="let item of aggregations">
                     <ng-core-record-search-aggregation [aggregation]="item"
                         [selectedValues]="getFilterSelectedValues(item.key)" [expand]="expandFacet(item.key)"
                         (updateAggregationFilter)="updateAggregationFilter($event)">

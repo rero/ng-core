@@ -80,6 +80,12 @@ export function institutionsMatcher(url: Array<UrlSegment>) {
   return null;
 }
 
+const aggrDocumentOrder = ['document_type', 'author', 'library', 'organisation', 'language', 'subject', 'status'];
+
+const aggrDocumentExpand = ['document_type'];
+
+const aggrBucketSize = 5;
+
 const routes: Routes = [
   {
     path: '',
@@ -95,7 +101,10 @@ const routes: Routes = [
         {
           key: 'documents',
           label: 'Documents',
-          component: DocumentComponent
+          component: DocumentComponent,
+          aggregationsOrder: aggrDocumentOrder,
+          aggregationsExpand: aggrDocumentExpand,
+          aggregationsBucketSize: aggrBucketSize
         }
       ]
     }
@@ -127,7 +136,10 @@ const routes: Routes = [
           component: DocumentComponent,
           preFilters: {
             institution: 'usi'
-          }
+          },
+          aggregationsOrder: aggrDocumentOrder,
+          aggregationsExpand: aggrDocumentExpand,
+          // aggregationsBucketSize: aggrBucketSize
         }
       ]
     }
@@ -145,7 +157,10 @@ const routes: Routes = [
           component: DocumentComponent,
           preFilters: {
             institution: 'hevs'
-          }
+          },
+          aggregationsOrder: aggrDocumentOrder,
+          aggregationsExpand: aggrDocumentExpand,
+          // aggregationsBucketSize: aggrBucketSize
         }
       ]
     }
@@ -163,7 +178,10 @@ const routes: Routes = [
         {
           key: 'documents',
           label: 'Documents',
-          component: DocumentComponent
+          component: DocumentComponent,
+          aggregationsOrder: aggrDocumentOrder,
+          aggregationsExpand: aggrDocumentExpand,
+          aggregationsBucketSize: aggrBucketSize
         }
       ]
     }
@@ -183,6 +201,9 @@ const routes: Routes = [
           canDelete,
           canRead,
           aggregations,
+          aggregationsOrder: aggrDocumentOrder,
+          aggregationsExpand: aggrDocumentExpand,
+          // aggregationsBucketSize: aggrBucketSize,
           listHeaders: {
             'Content-Type': 'application/rero+json'
           },
