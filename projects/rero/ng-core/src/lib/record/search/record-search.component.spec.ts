@@ -123,6 +123,11 @@ describe('RecordSearchComponent', () => {
     queryParams: of({})
   };
 
+  const aggregations = {
+    author: { buckets: []},
+    language: { buckets: []}
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -307,4 +312,25 @@ describe('RecordSearchComponent', () => {
     });
   }));
 
+  it('should reorder aggregations', async(() => {
+    component.currentType = 'documents';
+    const result = [
+      { key: 'author', bucketSize: null, value: { buckets: [] }},
+      { key: 'language', bucketSize: null, value: { buckets: [] }},
+    ];
+    expect(component.aggregationsOrder(aggregations)).toEqual(result);
+
+    const resultOrder = [
+      { key: 'language', bucketSize: null, value: { buckets: [] }},
+      { key: 'author', bucketSize: null, value: { buckets: [] }},
+    ];
+    recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents', aggregationsOrder: ['language', 'author'] });
+    expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);
+  }));
+
+  it('should expand aggregation', async(() => {
+    recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents', aggregationsExpand: ['language'] });
+    expect(component.expandFacet('language')).toBeTruthy();
+    expect(component.expandFacet('author')).toBeFalsy();
+  }));
 });

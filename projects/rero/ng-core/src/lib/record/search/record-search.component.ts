@@ -41,7 +41,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   /**
    * Facets retreived from request result
    */
-  aggregations: { [key: string]: object } = {};
+  aggregations: Array<{key: string, bucketSize: any, value: {buckets: []}}>;
 
   /**
    * Search is processing
@@ -123,7 +123,10 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     canRead?: any,
     aggregations?: any,
     listHeaders?: any,
-    itemHeaders?: any
+    itemHeaders?: any,
+    aggregationsOrder?: Array<string>,
+    aggregationsExpand?: Array<string>,
+    aggregationsBucketSize?: number
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -355,7 +358,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
         this.records = records.hits.hits;
         this.total = records.hits.total;
         this.aggregationsFilters(records.aggregations).subscribe((aggr: any) => {
-          this.aggregations = aggr;
+          this.aggregations = this.aggregationsOrder(aggr);
         });
         this.isLoading = false;
       },
@@ -364,6 +367,28 @@ export class RecordSearchComponent implements OnInit, OnChanges {
         this.isLoading = false;
       }
     );
+  }
+
+  /**
+   * Aggregations order (facets)
+   * @param aggr - Aggregations dictonary
+   */
+  aggregationsOrder(aggr: any) {
+    const aggregations = [];
+    const config = this.recordUiService.getResourceConfig(this.currentType);
+    const bucketSize = ('aggregationsBucketSize' in config) ? config.aggregationsBucketSize : null;
+    if ('aggregationsOrder' in config) {
+      config.aggregationsOrder.forEach((key: string) => {
+        if (key in aggr) {
+          aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets }});
+        }
+      });
+    } else {
+      Object.keys(aggr).forEach((key: string) => {
+        aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets }});
+      });
+    }
+    return aggregations;
   }
 
   /**
@@ -383,12 +408,9 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * @param key facet key
    */
   expandFacet(key: string) {
-    if ('_settings' in this.aggregations) {
-      const settings = this.aggregations._settings;
-      const keyExpand = 'expand';
-      if (keyExpand in settings && settings[keyExpand].indexOf(key) > -1) {
-        return true;
-      }
+    const config = this.recordUiService.getResourceConfig(this.currentType);
+    const expandConfig = ('aggregationsExpand' in config) ? config.aggregationsExpand : [];
+    if (expandConfig.indexOf(key) === -1) {
       return false;
     }
     return true;

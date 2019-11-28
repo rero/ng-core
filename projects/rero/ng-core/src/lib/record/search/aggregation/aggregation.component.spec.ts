@@ -46,6 +46,7 @@ describe('RecordSearchAggregationComponent', () => {
     component = fixture.componentInstance;
     component.aggregation = {
       key: 'author',
+      bucketSize: 2,
       value: {
         buckets: [
           {
@@ -86,5 +87,25 @@ describe('RecordSearchAggregationComponent', () => {
   it('should remove value from selected filters', () => {
     component.updateFilter('Filippini, Massimo');
     expect(component.selectedValues.includes('Filippini, Massimo')).toBe(false);
+  });
+
+  it('should return a correct bucket size', () => {
+    component.aggregation.bucketSize = null;
+    expect(component.bucketSize).toBe(2);
+
+    component.aggregation.bucketSize = 1;
+    expect(component.bucketSize).toBe(1);
+
+    component.moreMode = false;
+    component.aggregation.bucketSize = 1;
+    expect(component.bucketSize).toBe(2);
+  });
+
+  it('should display link', () => {
+    component.aggregation.bucketSize = 1;
+    expect(component.displayMoreAndLessLink).toBeTruthy();
+
+    component.aggregation.bucketSize = 5;
+    expect(component.displayMoreAndLessLink).toBeTruthy();
   });
 });

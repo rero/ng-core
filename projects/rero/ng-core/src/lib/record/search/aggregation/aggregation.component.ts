@@ -26,7 +26,7 @@ export class RecordSearchAggregationComponent {
    * Aggregation data
    */
   @Input()
-  public aggregation: { key: string, value: { buckets: {}[] } };
+  public aggregation: { key: string, bucketSize: any, value: { buckets: {}[] } };
 
   /**
    * Selected value for filter
@@ -45,6 +45,11 @@ export class RecordSearchAggregationComponent {
    */
   @Output()
   public updateAggregationFilter = new EventEmitter<{ term: string, values: string[] }>();
+
+  /**
+   * More and less on aggregation content (facet)
+   */
+  moreMode = true;
 
   /**
    * Constructor
@@ -82,9 +87,43 @@ export class RecordSearchAggregationComponent {
   }
 
   /**
+   * Return bucket size
+   */
+  get bucketSize() {
+    const aggregationBucketSize = this.aggregation.value.buckets.length;
+    if (this.aggregation.bucketSize === null) {
+      return aggregationBucketSize;
+    } else {
+      if (this.moreMode) {
+        return this.aggregation.bucketSize;
+      } else {
+        return aggregationBucketSize;
+      }
+    }
+  }
+
+  /**
    * Show filter values
+   * @return boolean
    */
   showAggregation() {
     return this.expand || this.selectedValues.length > 0;
+  }
+
+  /**
+   * Display more or less link
+   * @return boolean
+   */
+  displayMoreAndLessLink(): boolean {
+    return this.aggregation.value.buckets.length > this.aggregation.bucketSize;
+  }
+
+  /**
+   * Set More mode
+   * @param state - boolean
+   * @return void
+   */
+  setMoreMode(state: boolean) {
+    this.moreMode = state;
   }
 }
