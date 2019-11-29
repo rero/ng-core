@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Pipe, PipeTransform, Inject } from '@angular/core';
-
+import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateLanguageService } from './translate-language.service';
 
 @Pipe({
@@ -23,9 +22,18 @@ import { TranslateLanguageService } from './translate-language.service';
 })
 export class TranslateLanguagePipe implements PipeTransform {
 
-  constructor(@Inject(TranslateLanguageService) private translateService) {}
+  /**
+   * Constructor
+   * @param translateLanguage - TranslateLanguageService
+   */
+  constructor(private translateLanguage: TranslateLanguageService) { }
 
-  transform(value: any, language: string): any {
-    return this.translateService.translate(value, language);
+  /**
+   * transform language code to human language
+   * @param langCode - ISO 639-2 (3 characters)
+   * @param language - ISO 639-1 (2 characters)
+   */
+  transform(langCode: string, language?: string): string {
+    return this.translateLanguage.translate(langCode, language);
   }
 }
