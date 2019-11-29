@@ -14,29 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { BrowserModule } from '@angular/platform-browser';
-import { TestBed } from '@angular/core/testing';
-
 import { TranslateLanguagePipe } from './translate-language.pipe';
+import { TranslateLanguageService } from './translate-language.service';
+
+class TranslateLanguageMock {
+  translate(langCode: string) {
+    return langCode + '-translate';
+  }
+}
 
 describe('TranslateLanguagePipe', () => {
-  beforeEach(() => {
-    TestBed
-      .configureTestingModule({
-        imports: [
-          BrowserModule
-        ]
-      });
+  const pipe = new TranslateLanguagePipe(
+    new TranslateLanguageMock() as TranslateLanguageService
+  );
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
   });
 
-  it('should return lang text', () => {
-    const langText = 'French';
-
-    const translateLanguageServiceSpy = jasmine.createSpyObj('TranslateLanguageService', ['translate']);
-    translateLanguageServiceSpy.translate.and.returnValue(langText);
-
-    const pipe = new TranslateLanguagePipe(translateLanguageServiceSpy);
-
-    expect(pipe.transform('fr', 'en')).toBe(langText);
+  it('should transform language code to human language', () => {
+    expect(pipe.transform('fre')).toEqual('fre-translate');
   });
 });

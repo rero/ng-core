@@ -19,7 +19,7 @@ import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-tran
 
 import { RecordSearchAggregationComponent } from './aggregation.component';
 import { UpperCaseFirstPipe } from '../../../pipe/ucfirst.pipe';
-import { TranslateLanguagePipe } from '../../../translate-language/translate-language.pipe';
+import { TranslateLanguagePipe } from '../../../translate/translate-language.pipe';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;

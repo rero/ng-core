@@ -35,7 +35,7 @@ import { RecordService } from '../record.service';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { DialogService } from '../../dialog/dialog.service';
-import { TranslateLanguagePipe } from '../../translate-language/translate-language.pipe';
+import { TranslateLanguagePipe } from '../../translate/translate-language.pipe';
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;

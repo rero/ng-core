@@ -23,7 +23,6 @@ import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-tr
 import { Nl2brPipe } from './pipe/nl2br.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
-import { TranslateLanguagePipe } from './translate-language/translate-language.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DateTranslatePipe } from './translate/date-translate-pipe';
@@ -33,19 +32,20 @@ import { MenuComponent } from './widget/menu/menu.component';
 import { TranslateLoader } from './translate/translate-loader';
 import { ModalModule, BsDropdownModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
+import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 
 @NgModule({
   declarations: [
     Nl2brPipe,
     DefaultPipe,
     TruncateTextPipe,
-    TranslateLanguagePipe,
     UpperCaseFirstPipe,
     CallbackArrayFilterPipe,
     DateTranslatePipe,
     DialogComponent,
     SearchInputComponent,
-    MenuComponent
+    MenuComponent,
+    TranslateLanguagePipe
   ],
   imports: [
     CommonModule,
