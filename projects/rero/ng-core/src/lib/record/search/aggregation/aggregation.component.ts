@@ -115,6 +115,9 @@ export class RecordSearchAggregationComponent {
    * @return boolean
    */
   displayMoreAndLessLink(): boolean {
+    if (this.aggregation.bucketSize === null) {
+      return false;
+    }
     return this.aggregation.value.buckets.length > this.aggregation.bucketSize;
   }
 
