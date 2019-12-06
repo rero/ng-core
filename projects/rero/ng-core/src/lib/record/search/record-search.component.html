@@ -71,9 +71,9 @@
                         </ng-core-record-search-result>
                     </li>
                 </ul>
-                <pagination [(ngModel)]="currentPage" [totalItems]="total" [itemsPerPage]="size" [maxSize]="5"
-                    boundaryLinks=true class="justify-content-center mt-5" *ngIf="showPagination()"
-                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                <pagination [(ngModel)]="currentPage" [totalItems]="total" [itemsPerPage]="size" [maxSize]=paginationMaxSize
+                    [boundaryLinks]=paginationBoundaryLinks class="justify-content-center mt-5" *ngIf="showPagination()"
+                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&rsaquo;" lastText="&raquo;">
                 </pagination>
             </div>
         </div>
