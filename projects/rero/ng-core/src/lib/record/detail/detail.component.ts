@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Observable } from 'rxjs';
 
@@ -83,6 +83,7 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private componentFactoryResolver: ComponentFactoryResolver,
     private recordService: RecordService,
@@ -153,7 +154,7 @@ export class DetailComponent implements OnInit {
   public deleteRecord(pid: string) {
     this.recordUiService.deleteRecord(this.route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
       if (result === true) {
-        this.location.back();
+        this.router.navigate(['../..'], {relativeTo: this.route});
       }
     });
   }
