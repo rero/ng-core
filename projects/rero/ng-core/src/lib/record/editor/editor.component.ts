@@ -185,7 +185,7 @@ export class EditorComponent implements OnInit {
           this.translateService.instant('Record Updated!'),
           this.translateService.instant(this.recordType)
         );
-        this.router.navigate(['../../detail', this.pid], {relativeTo: this.route});
+        this.router.navigate(['../../detail', this.pid], {relativeTo: this.route, skipLocationChange: true});
       });
     } else {
       this.recordService.create(this.recordType, record).subscribe(res => {
@@ -193,7 +193,7 @@ export class EditorComponent implements OnInit {
           this.translateService.instant('Record Created with pid: ') + res.metadata.pid,
           this.translateService.instant(this.recordType)
         );
-        this.router.navigate(['../detail', res.metadata.pid], {relativeTo: this.route});
+        this.router.navigate(['../detail', res.metadata.pid], {relativeTo: this.route, skipLocationChange: true});
       });
     }
   }
