@@ -21,7 +21,7 @@
         <li class="nav-item" *ngFor="let type of types">
             <a href="#" class="nav-link" [class.active]="currentType === type.key"
                 (click)="changeType($event, type.key)">
-                {{ type.label }} <span class="badge badge-light">{{ type.total|default:0 }}</span>
+                {{ type.label | translate }} <span class="badge badge-light">{{ type.total|default:0 }}</span>
             </a>
         </li>
     </ul>
