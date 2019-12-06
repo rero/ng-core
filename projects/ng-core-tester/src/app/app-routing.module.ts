@@ -172,7 +172,11 @@ const routes: Routes = [
           component: DocumentComponent,
           aggregationsOrder: aggrDocumentOrder,
           aggregationsExpand: aggrDocumentExpand,
-          aggregationsBucketSize: aggrBucketSize
+          aggregationsBucketSize: aggrBucketSize,
+          pagination: {
+            boundaryLinks: true,
+            maxSize: 5
+          }
         }
       ]
     }

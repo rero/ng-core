@@ -86,7 +86,11 @@ export class RecordSearchComponent implements OnInit {
     itemHeaders?: any,
     aggregationsOrder?: Array<string>,
     aggregationsExpand?: Array<string>,
-    aggregationsBucketSize?: number
+    aggregationsBucketSize?: number,
+    pagination?: {
+      boundaryLinks?: boolean,
+      maxSize?: number
+    }
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**

@@ -127,7 +127,11 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     aggregationsOrder?: Array<string>,
     aggregationsExpand?: Array<string>,
     aggregationsBucketSize?: number,
-    showSearchInput?: boolean
+    showSearchInput?: boolean,
+    pagination?: {
+      boundaryLinks?: boolean,
+      maxSize?: number
+    }
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -181,6 +185,24 @@ export class RecordSearchComponent implements OnInit, OnChanges {
 
   get currentPage() {
     return this.page;
+  }
+
+  /**
+   * Activate the first and last button on pagnination
+   * @return boolean
+   */
+  get paginationBoundaryLinks() {
+    const paginationConfig = this.getResourceConfig('pagination', {});
+    return ('boundaryLinks' in paginationConfig) ? paginationConfig.boundaryLinks : false;
+  }
+
+  /**
+   * Number of pages showed on pagination
+   * @return number
+   */
+  get paginationMaxSize() {
+    const paginationConfig = this.getResourceConfig('pagination', {});
+    return ('maxSize' in paginationConfig) ? paginationConfig.maxSize : 5;
   }
 
   /**
@@ -522,5 +544,15 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     }
 
     return false;
+  }
+
+  /**
+   * Get Resource config
+   * @param paramName - Name of parameter
+   * @param defaultValue - Default value is returned if the parameter is not defined
+   */
+  private getResourceConfig(paramName: string, defaultValue: any) {
+    const config = this.recordUiService.getResourceConfig(this.currentType);
+    return (paramName in config) ? config[paramName] : defaultValue;
   }
 }
