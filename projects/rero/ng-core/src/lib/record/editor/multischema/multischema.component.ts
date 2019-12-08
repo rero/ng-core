@@ -15,23 +15,20 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Injectable } from '@angular/core';
-import { CoreConfigService } from '@rero/ng-core';
+import { Component } from '@angular/core';
+import { FieldType } from '@ngx-formly/core';
 
-import { environment } from '../environments/environment';
-
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'ng-core-editor-formly-multi-schema-type',
+  template: `
+    <div>
+      <legend *ngIf="to.label">{{ to.label }}</legend>
+      <p *ngIf="to.description">{{ to.description }}</p>
+      <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
+        <formly-validation-message [field]="field"></formly-validation-message>
+      </div>
+      <formly-field *ngFor="let f of field.fieldGroup" [field]="f"></formly-field>
+    </div>
+  `,
 })
-export class AppConfigService extends CoreConfigService {
-  constructor() {
-    super();
-    this.production = false;
-    this.prefixWindow = environment.prefixWindow;
-    this.apiBaseUrl = 'https://localhost:5000';
-    this.schemaFormEndpoint = '/api/schemaform';
-    this.$refPrefix = environment.$refPrefix;
-    this.languages = environment.languages;
-    this.customTranslations = environment.customTranslations;
-  }
-}
+export class MultiSchemaTypeComponent extends FieldType {}

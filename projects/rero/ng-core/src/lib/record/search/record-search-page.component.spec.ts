@@ -36,6 +36,7 @@ import { DialogComponent } from '../../dialog/dialog.component';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { DialogService } from '../../dialog/dialog.service';
 import { TranslateLanguagePipe } from '../../translate/translate-language.pipe';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -102,6 +103,7 @@ describe('RecordSearchComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
+        RouterTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),

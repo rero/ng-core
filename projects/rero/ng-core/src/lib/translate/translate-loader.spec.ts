@@ -59,14 +59,14 @@ describe('TranslateLoader', () => {
       languages: ['fr', 'en'],
       customTranslations: {
         fr: {
-          'Remove all': 'Tout supprimer',
+          'Record deleted.': 'Enregistrement effacé',
         }
       }
     };
 
     const translateLoader = new TranslateLoader(config);
     translateLoader.getTranslation('en').subscribe(translations => {
-      expect(translations['Remove all']).toBe('Remove all');
+      expect(translations['Record deleted.']).toBe('Record deleted.');
     });
   });
 });

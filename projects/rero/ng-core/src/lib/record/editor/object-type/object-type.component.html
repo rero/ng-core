@@ -1,0 +1,87 @@
+<!--
+ Invenio angular core
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- main title -->
+<ng-container *ngIf="isRoot()">
+  <legend>
+    <span [tooltip]="to.description">{{ to.label }}</span>
+  </legend>
+</ng-container>
+
+<!--  validation error message -->
+<div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
+  <formly-validation-message [field]="field"></formly-validation-message>
+</div>
+
+<!-- each object properties -->
+<ng-container *ngFor="let f of field.fieldGroup">
+  <div class="">
+    <!-- if the field is repeatable the title is rendered by the corresponding array -->
+    <ng-container *ngIf="
+      !f.hide &&
+      ((!isParrentArray() && f.type === 'object') || f.type === 'array')
+    ">
+      <!-- section header -->
+      <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
+      </ng-container>
+    </ng-container>
+
+    <!-- field + trash button-->
+    <div class="d-flex pl-2" [ngClass]="{ 'border-left': f.type === 'object' }">
+      <div class="flex-grow-1">
+        <formly-field [field]="f"></formly-field>
+      </div>
+      <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<!-- TEMPLATES -->
+<!-- dropdown menu -->
+<ng-template #menu let-f="f">
+  <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
+    <ng-container *ngIf="f.type === 'object'">
+      <ng-container *ngFor="
+          let fChildren of hiddenFieldGroup(f.fieldGroup);
+          let first = first;
+          let last = last
+        ">
+        <h6 *ngIf="first" class="dropdown-header">Add fields</h6>
+        <button class="dropdown-item" (click)="show(fChildren)" type="button">
+          {{ fChildren.templateOptions.label }}
+        </button>
+        <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
+      </ng-container>
+    </ng-container>
+
+    <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
+      Help
+    </a>
+  </ng-core-editor-dropdown-label-editor>
+</ng-template>
+
+<!-- section title -->
+<ng-template #title let-f="f">
+  <span [id]="f.id">{{ f.templateOptions.label }}</span>
+</ng-template>
+
+<!-- trash button -->
+<ng-template #hideButton let-f="f">
+  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-outline-secondary ml-1 btn-sm">
+    <i class="fa fa-trash"></i>
+  </button>
+</ng-template>

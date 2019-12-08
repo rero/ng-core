@@ -156,5 +156,13 @@
       }
     }
   },
-  "defaultProject": "@rero/ng-core"
+  "defaultProject": "@rero/ng-core",
+  "cli": {
+    "defaultCollection": "@ngx-formly/schematics"
+  },
+  "schematics": {
+    "@ngx-formly/schematics:component": {
+      "styleext": "scss"
+    }
+  }
 }

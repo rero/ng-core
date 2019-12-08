@@ -15,23 +15,15 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Injectable } from '@angular/core';
-import { CoreConfigService } from '@rero/ng-core';
+import { TestBed } from '@angular/core/testing';
 
-import { environment } from '../environments/environment';
+import { EditorService } from './editor.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AppConfigService extends CoreConfigService {
-  constructor() {
-    super();
-    this.production = false;
-    this.prefixWindow = environment.prefixWindow;
-    this.apiBaseUrl = 'https://localhost:5000';
-    this.schemaFormEndpoint = '/api/schemaform';
-    this.$refPrefix = environment.$refPrefix;
-    this.languages = environment.languages;
-    this.customTranslations = environment.customTranslations;
-  }
-}
+describe('EditorService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
+
+  it('should be created', () => {
+    const service: EditorService = TestBed.get(EditorService);
+    expect(service).toBeTruthy();
+  });
+});
