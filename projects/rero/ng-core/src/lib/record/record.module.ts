@@ -17,8 +17,12 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
-import { Bootstrap4FrameworkModule } from 'angular6-json-schema-form';
-import { TooltipModule, TypeaheadModule, PaginationModule, CollapseModule } from 'ngx-bootstrap';
+import {
+  TooltipModule,
+  TypeaheadModule,
+  PaginationModule,
+  CollapseModule
+} from 'ngx-bootstrap';
 
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchComponent } from './search/record-search.component';
@@ -30,20 +34,20 @@ import { JsonComponent } from './search/result/item/json.component';
 import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
-import { EditorComponent } from './editor/editor.component';
-import { Bootstrap4FrameworkComponent } from './editor/bootstrap4-framework/bootstrap4-framework.component';
-import { FieldsetComponent } from './editor/fieldset/fieldset.component';
-import { MefComponent } from './editor/mef/mef.component';
-import { AddReferenceComponent } from './editor/add-reference/add-reference.component';
-import { RemoteInputComponent } from './editor/remote-input/remote-input.component';
-import { RemoteSelectComponent } from './editor/remote-select/remote-select.component';
-import { RolesCheckboxesComponent } from './editor/roles-checkboxes/roles-checkboxes.component';
-import { MainFieldsManagerComponent } from './editor/main-fields-manager/main-fields-manager.component';
-import { SubmitComponent } from './editor/submit/submit.component';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { CoreModule } from '../core.module';
-
+import { EditorComponent } from './editor/editor.component';
+import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-editor.component';
+import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
+import * as messages from './editor/validation-messages';
+import { ArrayTypeComponent } from './editor/array-type/array-type.component';
+import { ObjectTypeComponent } from './editor/object-type/object-type.component';
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { SwitchComponent } from './editor/switch/switch.component';
+import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 
 @NgModule({
   declarations: [
@@ -56,30 +60,80 @@ import { CoreModule } from '../core.module';
     DetailComponent,
     RecordDetailDirective,
     DetailJsonComponent,
-    EditorComponent,
-    Bootstrap4FrameworkComponent,
-    FieldsetComponent,
-    MefComponent,
-    AddReferenceComponent,
-    RemoteInputComponent,
-    RemoteSelectComponent,
-    RolesCheckboxesComponent,
-    MainFieldsManagerComponent,
-    SubmitComponent,
     AutocompleteComponent,
-    GetRecordPipe
+    GetRecordPipe,
+    EditorComponent,
+    AddFieldEditorComponent,
+    DropdownLabelEditorComponent,
+    ArrayTypeComponent,
+    ObjectTypeComponent,
+    SwitchComponent,
+    MultiSchemaTypeComponent
   ],
   imports: [
     CoreModule,
     FormsModule,
     ReactiveFormsModule,
     RecordRoutingModule,
-    Bootstrap4FrameworkModule,
     TooltipModule.forRoot(),
     TypeaheadModule.forRoot(),
     PaginationModule.forRoot(),
     CollapseModule.forRoot(),
-    PaginationModule.forRoot()
+    PaginationModule.forRoot(),
+    FormlyModule.forRoot({
+      validationMessages: [
+        { name: 'required', message: _('This field is required') },
+        { name: 'null', message: _('should be null') },
+        { name: 'minlength', message: messages.minlengthValidationMessage },
+        { name: 'maxlength', message: messages.maxlengthValidationMessage },
+        { name: 'min', message: messages.minValidationMessage },
+        { name: 'max', message: messages.maxValidationMessage },
+        { name: 'multipleOf', message: messages.multipleOfValidationMessage },
+        {
+          name: 'exclusiveMinimum',
+          message: messages.exclusiveMinimumValidationMessage
+        },
+        {
+          name: 'exclusiveMaximum',
+          message: messages.exclusiveMaximumValidationMessage
+        },
+        { name: 'minItems', message: messages.minItemsValidationMessage },
+        { name: 'maxItems', message: messages.maxItemsValidationMessage },
+        { name: 'uniqueItems', message: _('should NOT have duplicate items') },
+        {
+          name: 'alreadyTakenMessage',
+          message: _('the value is already taken')
+        },
+        { name: 'const', message: messages.constValidationMessage }
+      ],
+      types: [
+        { name: 'string', extends: 'input' },
+        {
+          name: 'number',
+          extends: 'input',
+          defaultOptions: {
+            templateOptions: {
+              type: 'number'
+            }
+          }
+        },
+        {
+          name: 'integer',
+          extends: 'input',
+          defaultOptions: {
+            templateOptions: {
+              type: 'number'
+            }
+          }
+        },
+        { name: 'boolean', component: SwitchComponent },
+        { name: 'enum', extends: 'select' },
+        { name: 'array', component: ArrayTypeComponent },
+        { name: 'object', component: ObjectTypeComponent },
+        { name: 'multischema', component: MultiSchemaTypeComponent }
+      ]
+    }),
+    FormlyBootstrapModule
   ],
   exports: [
     RecordSearchComponent,
@@ -90,15 +144,6 @@ import { CoreModule } from '../core.module';
   entryComponents: [
     JsonComponent,
     DetailJsonComponent,
-    FieldsetComponent,
-    MefComponent,
-    Bootstrap4FrameworkComponent,
-    AddReferenceComponent,
-    RemoteInputComponent,
-    RemoteSelectComponent,
-    RolesCheckboxesComponent,
-    MainFieldsManagerComponent,
-    SubmitComponent,
     AutocompleteComponent
   ]
 })

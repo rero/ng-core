@@ -21,6 +21,9 @@ import { catchError, map, debounceTime, tap } from 'rxjs/operators';
 
 import { Record } from './record';
 import { ApiService } from '../api/api.service';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { resolveRefs } from './editor/utils';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Injectable({
   providedIn: 'root'
@@ -215,6 +218,47 @@ export class RecordService {
       map(res => res.hits.total),
       map(total => total ? { alreadyTakenMessage: value } : null),
       debounceTime(1000)
+    );
+  }
+
+  /**
+   * Check if a record is already registered with the same value
+   * @param field - FormlyFieldConfig, field to check
+   * @param recordType - string, type of record
+   * @param excludePid - string, PID to ignore (normally the current record we are checking)
+   * @param term - string, the elaticsearch term to check the uniqueness, use field.key if not given
+   * @param limitToValues - string[], limit the test to a given list of values
+   * @param filter - string, additionnal es query filters
+   */
+  public uniqueValue(field: FormlyFieldConfig, recordType: string, excludePid: string = null,
+                     term = null, limitToValues: string[] = [], filter: string = null) {
+    let key = field.key;
+    if (term != null) {
+      key = term;
+    }
+    const value = field.formControl.value;
+    const model = resolveRefs(field.model);
+    if (value == null) {
+      return of(false);
+    }
+    if (limitToValues.length > 0 && !limitToValues.some(v => v === value)) {
+      return of(true);
+    }
+    let query = `${key}:${value}`;
+    if (typeof(value) === 'string') {
+      query = `${key}:"${value}"`;
+    }
+    if (filter) {
+      const filterFn = Function('model', `return ${filter};`);
+      query = `${query} AND ` + filterFn(model);
+    }
+    if (excludePid) {
+      query += ` NOT pid:${excludePid}`;
+    }
+    return this.getRecords(recordType, query, 1, 0).pipe(
+      map(res => res.hits.total),
+      map(total => total ? { alreadyTakenMessage: value } : null),
+      debounceTime(500)
     );
   }
 

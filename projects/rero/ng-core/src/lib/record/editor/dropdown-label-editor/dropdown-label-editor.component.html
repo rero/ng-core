@@ -1,0 +1,53 @@
+<!--
+ Invenio angular core
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div *ngIf="field.templateOptions.label" class="d-block">
+  <!-- add button -->
+  <a
+    *ngIf="canAdd"
+    (click)="addClick($event)"
+    class="btn btn-link btn-sm mr-1"
+  >
+    <i class="fa fa-plus"></i>
+  </a>
+  <!-- dropdown button with legend -->
+  <div class="btn-group" dropdown>
+  <button
+    [id]="field.id"
+    dropdownToggle
+    type="button"
+    class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
+    aria-controls="dropdown-basic"
+  >
+    <span [tooltip]="field.templateOptions.description">
+      {{ field.templateOptions.label }}
+      <span *ngIf="field.templateOptions.required">*</span>
+    </span>
+    <span class="ml-2 caret"></span>
+  </button>
+  <!-- dropdown list -->
+  <div
+    id="dropdown-basic"
+    *dropdownMenu
+    class="dropdown-menu"
+    role="menu"
+    aria-labelledby="button-basic"
+  >
+    <ng-content></ng-content>
+  </div>
+  </div>
+</div>

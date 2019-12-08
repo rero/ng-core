@@ -1,0 +1,147 @@
+<!--
+ Invenio angular core
+ Copyright (C) 2019 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- array title only if the array is empty -->
+<label *ngIf="to.label && formControl && formControl.length === 0">
+  <!-- add button only if the max is not reached -->
+  <a *ngIf="canAdd()" (click)="add(0)" class="btn btn-link btn-sm">
+    <i class="fa fa-plus"></i>
+  </a>
+  <span [tooltip]="to.description">{{ to.label }}</span>
+</label>
+
+<!--  validation error message -->
+<div
+  class="alert alert-danger"
+  role="alert"
+  *ngIf="showError && formControl.errors"
+>
+  <formly-validation-message [field]="field"></formly-validation-message>
+</div>
+
+<!-- for each item -->
+
+<ng-container *ngFor="let f of field.fieldGroup; let i = index">
+  <!-- put title with menu section for item object -->
+  <div *ngIf="isChildrenObject">
+    <ng-container
+      *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f, i: i }"
+    >
+    </ng-container>
+
+    <!--  object validation error message -->
+    <div
+      class="alert alert-danger"
+      role="alert"
+      *ngIf="f.options.showError && f.formControl.errors"
+    >
+      <formly-validation-message [field]="f"></formly-validation-message>
+    </div>
+  </div>
+
+  <!-- all kind of item -->
+  <div
+    class="d-flex mb-2"
+    [ngClass]="{ 'pl-2 border-left': isChildrenObject }"
+  >
+    <!-- add button -->
+    <ng-container
+      *ngTemplateOutlet="addButton; context: { i: i }"
+    ></ng-container>
+
+    <!-- item itself -->
+    <div class="flex-grow-1">
+      <formly-field [field]="f"></formly-field>
+    </div>
+    <!-- remove button -->
+    <ng-container
+      *ngTemplateOutlet="removeButton; context: { i: i }"
+    ></ng-container>
+  </div>
+</ng-container>
+
+<!-- TEMPLATES -->
+<!-- dropdown menu -->
+<ng-template #menu let-f="f" let-i="i">
+  <ng-core-editor-dropdown-label-editor
+    [field]="f"
+    [canAdd]="canAdd()"
+    (addClicked)="add(i + 1)"
+  >
+    <ng-container *ngIf="f.type === 'object'">
+      <ng-container
+        *ngFor="
+          let fChildren of hiddenFieldGroup(f.fieldGroup);
+          let first = first;
+          let last = last
+        "
+      >
+        <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
+        <button
+          class="dropdown-item"
+          (click)="fChildren.hide = false"
+          type="button"
+        >
+          {{ fChildren.templateOptions.label }}
+        </button>
+        <div
+          *ngIf="last && f.templateOptions.helpURL"
+          class="dropdown-divider"
+        ></div>
+      </ng-container>
+    </ng-container>
+    <a
+      *ngIf="f.templateOptions.helpURL"
+      class="dropdown-item"
+      [href]="f.templateOptions.helpURL"
+      translate
+    >
+      Help
+    </a>
+  </ng-core-editor-dropdown-label-editor>
+</ng-template>
+
+<!-- section title -->
+<ng-template #title let-f="f" let-i="i">
+  <a *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link btn-sm">
+    <i class="fa fa-plus"></i>
+  </a>
+  <span [id]="f.id">{{ f.templateOptions.label }}</span>
+</ng-template>
+
+<!-- add button -->
+<ng-template #addButton let-i="i">
+  <a
+    *ngIf="!isChildrenObject && canAdd()"
+    (click)="add(i + 1)"
+    class="btn btn-link btn-sm"
+  >
+    <i class="fa fa-plus"></i>
+  </a>
+</ng-template>
+
+<!-- tash button -->
+<ng-template #removeButton let-i="i">
+  <button
+    (click)="remove(i)"
+    *ngIf="canRemove()"
+    class="btn btn-outline-secondary ml-1 btn-sm"
+    [ngClass]="{ 'mb-2': isChildrenObject }"
+  >
+    <i class="fa fa-trash"></i>
+  </button>
+</ng-template>

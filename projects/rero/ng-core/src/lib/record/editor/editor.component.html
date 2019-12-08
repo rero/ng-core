@@ -14,20 +14,66 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<header class="d-flex mb-4">
-  <h3 class="mb-0 mr-4">{{ recordType | translate }}</h3>
-  <button (click)="cancel()" class="btn btn-warning btn-sm" translate>
-    Cancel
-  </button>
-</header>
 
-<json-schema-form
-  *ngIf="schemaForm"
-  [form]="schemaForm"
-  [model]="schemaForm.data"
-  (onSubmit)="save($event)"
-  framework="custom"
-  [language]="currentLocale"
-  [options]="formOptions"
->
-</json-schema-form>
+<div *ngIf="fields" class="row">
+  <!-- add fields section -->
+  <div *ngIf="longMode" class="col-md-3 col-xl-2 bd-sidebar">
+    <ng-core-editor-add-field-editor
+      class="bd-search d-flex align-items-center"
+      [fields]="fields"
+    >
+    </ng-core-editor-add-field-editor>
+  </div>
+
+  <!-- TOC navigation -->
+  <nav
+    *ngIf="longMode"
+    class="d-none d-xl-block col-xl-2 bd-toc"
+    aria-label="Secondary navigation"
+  >
+    <label for="addField" translate>Jump to</label>
+    <ul class="section-nav">
+      <li *ngFor="let f of tocFields" class="toc-entry toc-h2">
+        <a href (click)="setFocus($event, f)">{{ f.templateOptions.label }}</a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- editor itself -->
+  <div class="col" [ngClass]="{ longMode: 'col-md-9 col-xl-8' }" role="main">
+    <form
+      class="col"
+      [formGroup]="form"
+      (ngSubmit)="submit($event)"
+      *ngIf="fields"
+    >
+      <!-- ngx-formly -->
+      <formly-form
+        [model]="model"
+        [fields]="fields"
+        [options]="options"
+        [form]="form"
+      ></formly-form>
+
+      <div class="mt-4 float-right">
+        <!-- submit button -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-sm"
+          [disabled]="!form.valid"
+        >
+          <i class="fa fa-save"></i>
+          {{ 'Save' | translate }}
+        </button>
+        <button
+          type="button"
+          (click)="cancel()"
+          class="btn btn-primary btn-sm ml-1"
+        >
+          <i class="fa fa-times"></i>
+          {{ 'Cancel' | translate }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

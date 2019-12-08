@@ -15,176 +15,238 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, Inject } from '@angular/core';
-import { WidgetLibraryService, FrameworkLibraryService, JsonPointer } from 'angular6-json-schema-form';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { JSONSchema7 } from 'json-schema';
+import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
+import { EditorService } from './editor.service';
+import { orderedJsonSchema, isEmpty, removeEmptyValues } from './utils';
 import { RecordService } from '../record.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { combineLatest, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RecordUiService } from '../record-ui.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { FieldsetComponent } from './fieldset/fieldset.component';
-import { CustomBootstrap4Framework } from './bootstrap4-framework/custombootstrap4-framework';
-import { MefComponent } from './mef/mef.component';
-import { AddReferenceComponent } from './add-reference/add-reference.component';
-import { RemoteSelectComponent } from './remote-select/remote-select.component';
-import { RolesCheckboxesComponent } from './roles-checkboxes/roles-checkboxes.component';
-import { RemoteInputComponent } from './remote-input/remote-input.component';
-import { MainFieldsManagerComponent } from './main-fields-manager/main-fields-manager.component';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { SubmitComponent } from './submit/submit.component';
-import { RecordUiService } from '../record-ui.service';
-
+import { ApiService } from '../../api/api.service';
 
 @Component({
   selector: 'ng-core-editor',
-  templateUrl: './editor.component.html'
+  templateUrl: './editor.component.html',
+  styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent implements OnInit {
-  public formOptions = {
-    returnEmptyFields: false, // Don't return values for empty input fields
-    setSchemaDefaults: true
-  };
+export class EditorComponent implements OnInit, OnDestroy {
+  // angular formGroop root
+  form: FormGroup;
 
-  public debugMode = true;
-  public schemaForm = null;
-  public recordType = undefined;
-  public pid = undefined;
-  public message = undefined;
-  public data;
-  public currentLocale = undefined;
-  public formValidationErrors: any;
+  // initial data
+  model: any = {};
+
+  // additionnal form options
+  options: FormlyFormOptions;
+
+  // form configuration
+  fields: FormlyFieldConfig[];
+
+  // list of fields to display in the TOC
+  tocFields = [];
+
+  // JSONSchema
+  schema: any;
+
+  // mode for long editor
+  longMode = false;
+
+  // current record type from the url
+  public recordType = null;
+
+  // store pid on edit mode
+  public pid = null;
+
+  // subscribers
+  private _subscribers: Subscription[] = [];
 
   /**
-   * Get validation errors for displaying in HTML
+   * Constructor
+   * @param formlyJsonschema - FormlyJsonschema, the ngx-fomly jsonschema service
    */
-  get prettyValidationErrors() {
-    if (!this.formValidationErrors) { return null; }
-    const errorArray = [];
-    for (const error of this.formValidationErrors) {
-      const message = error.message;
-      const dataPathArray = JsonPointer.parse(error.dataPath);
-      if (dataPathArray.length) {
-        let field = dataPathArray[0];
-        for (let i = 1; i < dataPathArray.length; i++) {
-          const key = dataPathArray[i];
-          field += /^\d+$/.test(key) ? `[${key}]` : `.${key}`;
-        }
-        errorArray.push(`${field}: ${message}`);
-      } else {
-        errorArray.push(message);
-      }
-    }
-    return errorArray.join('<br>');
-  }
-
   constructor(
-    @Inject(CustomBootstrap4Framework) protected bootstrap4framework,
-    protected route: ActivatedRoute,
-    protected recordService: RecordService,
-    protected recordUiService: RecordUiService,
-    protected widgetLibrary: WidgetLibraryService,
-    protected translateService: TranslateService,
-    protected location: Location,
-    protected toastrService: ToastrService,
-    protected frameworkLibrary: FrameworkLibraryService,
-    protected router: Router
+    private formlyJsonschema: FormlyJsonschema,
+    private recordService: RecordService,
+    private apiService: ApiService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private editorService: EditorService,
+    private recordUiService: RecordUiService,
+    private translateService: TranslateService,
+    private toastrService: ToastrService,
+    private location: Location
   ) {
-    // TODO: remove this bad hack when the following PR will be integrated
-    // https://github.com/hamzahamidi/Angular6-json-schema-form/pull/64
-    this.frameworkLibrary.frameworkLibrary.custom = bootstrap4framework;
-
-    this.widgetLibrary.registerWidget('fieldset', FieldsetComponent);
-    this.widgetLibrary.registerWidget('select', RemoteSelectComponent);
-    this.widgetLibrary.registerWidget('rolesCheckboxes', RolesCheckboxesComponent);
-    this.widgetLibrary.registerWidget('text', RemoteInputComponent);
-    this.widgetLibrary.registerWidget('refAuthority', MefComponent);
-    this.widgetLibrary.registerWidget('$ref', AddReferenceComponent);
-    this.widgetLibrary.registerWidget('main-fields-manager', MainFieldsManagerComponent);
-    this.widgetLibrary.registerWidget('submit', SubmitComponent);
-
-    this.currentLocale = this.translateService.currentLang;
+    this.form = new FormGroup({});
   }
 
   /**
-   * Log debug messages
-   * @param event - Event, DOM event
+   * Component initialisation
    */
-  public debug(event: Event) {
-    console.log(event);
-  }
-
-  /**
-   * Init component
-   */
-  public ngOnInit() {
-    // TODO: Check use of route.snapshot instead of observables
+  ngOnInit() {
     combineLatest(this.route.params, this.route.queryParams)
       .pipe(map(results => ({ params: results[0], query: results[1] })))
       .subscribe(results => {
         const params = results.params;
-        const query = results.query;
+        // uncomment for debug
+        // this.form.valueChanges.subscribe(v =>
+        //   console.log('model', this.model, 'v', v, 'form', this.form)
+        // );
 
         this.recordType = params.type;
         this.recordUiService.types = this.route.snapshot.data.types;
         const config = this.recordUiService.getResourceConfig(this.recordType);
-
+        if (config.editorLongMode === true) {
+          this.longMode = true;
+        }
         this.pid = params.pid;
-        if (!this.pid) {
+        // edition
+        if (this.pid) {
           this.recordService
-            .getSchemaForm(this.recordType)
-            .subscribe(schemaForm => {
-              this.schemaForm = schemaForm;
-              this.schemaForm.data = this.preprocessRecordEditor(undefined, config);
+            .getRecord(this.recordType, this.pid)
+            .subscribe(record => {
+              this.recordUiService
+                .canUpdateRecord$(record, this.recordType)
+                .subscribe(result => {
+                  if (result.can === false) {
+                    this.toastrService.error(
+                      this.translateService.instant(
+                        'You cannot update this record'
+                      ),
+                      this.translateService.instant(this.recordType)
+                    );
+                    this.location.back();
+                  }
+                });
+              this.model = this.preprocessRecord(record.metadata);
+              this.recordService
+                .getSchemaForm(this.recordType)
+                .subscribe(schemaform => {
+                  this.setSchema(schemaform.schema);
+                });
             });
         } else {
-          this.recordService.getRecord(this.recordType, this.pid).subscribe(record => {
-            this.recordUiService.types = this.route.snapshot.data.types;
-            this.recordUiService.canUpdateRecord$(record, this.recordType).subscribe(result => {
-              if (result.can === false) {
-                this.toastrService.error(
-                  this.translateService.instant('You cannot update this record'),
-                  this.translateService.instant(this.recordType)
-                );
-                this.location.back();
-              }
+          // creation
+          this.model = this.preprocessRecord(this.model);
+          this.recordService
+            .getSchemaForm(this.recordType)
+            .subscribe(schemaform => {
+              this.setSchema(schemaform.schema);
             });
-
-            this.recordService
-              .getSchemaForm(this.recordType)
-              .subscribe(schemaForm => {
-                this.schemaForm = schemaForm;
-                this.schemaForm.data = this.preprocessRecordEditor(record.metadata, config);
-              });
-          });
         }
       });
   }
 
   /**
+   * Component destruction
+   */
+  ngOnDestroy() {
+    for (const s of this._subscribers) {
+      s.unsubscribe();
+    }
+  }
+
+  /**
    * Preprocess the record before passing it to the editor
    * @param record - Record object to preprocess
-   * @param config - Object configuration for the current type
    */
-  private preprocessRecordEditor(record, config) {
+  private preprocessRecord(record) {
+    const config = this.recordUiService.getResourceConfig(this.recordType);
+
     if (config.preprocessRecordEditor) {
-      // Does not works for documents
-      if (record == null) {
-        record = {};
-      }
       return config.preprocessRecordEditor(record);
     }
     return record;
   }
 
   /**
-   * Save a record by calling the API
-   * @param record - Record to save
+   * Preprocess the record before passing it to the editor
+   * @param schema - object, JOSNSchema
    */
-  public save(record: any) {
-    if (this.pid) {
-      this.recordService.update(this.recordType, record).subscribe(res => {
+  setSchema(schema) {
+    // reorder all object properties
+    this.schema = orderedJsonSchema(schema);
+    this.options = {};
+
+    // form configuration
+    const fields = [
+      this.formlyJsonschema.toFieldConfig(this.schema, {
+        // post process JSONSChema7 to FormlyFieldConfig conversion
+        map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
+
+          /**** additionnal JSONSchema configurations *******/
+          // initial population of arrays with a minItems constraints
+          if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
+            field.defaultValue = new Array(jsonSchema.minItems);
+          }
+          const formOptions = jsonSchema.form;
+
+          if (formOptions) {
+            this.setSimpleOptions(field, formOptions);
+            this.setValidation(field, formOptions);
+            this.setRemoteSelectOptions(field, formOptions);
+          }
+
+          // show the field if the model contains a value usefull for edition
+          field.hooks = {
+            ...field.hooks,
+            onInit: f => {
+              let model = f.model;
+              // for simple object the model is the parent dict
+              if (!['object', 'multischema', 'array'].some(v => v === f.type)) {
+                model = f.model[f.key];
+              }
+              if (
+                f.templateOptions.hide === true &&
+                isEmpty(removeEmptyValues(model)) === false
+              ) {
+                // to avoid: Expression has changed after it was checked
+                // See: https://blog.angular-university.io/angular-debugging
+                setTimeout(() => {
+                  f.hide = false;
+                  this.editorService.removeHiddenField(f);
+                });
+              }
+            }
+          };
+
+          field.templateOptions.longMode = this.longMode;
+
+          // add a form-field wrapper for boolean (switch)
+          if (field.type === 'boolean') {
+            field.wrappers = [
+              ...(field.wrappers ? field.wrappers : []),
+              'form-field'
+            ];
+          }
+
+          return field;
+        }
+      })
+    ];
+    this.fields = fields;
+    if (this.longMode) {
+      this._subscribers.push(
+        this.form.statusChanges.subscribe(() => this.getTocFields())
+      );
+    }
+  }
+
+  /**
+   * Save the data on the server.
+   * @param event - object, JSON to POST on the backend
+   */
+  submit(event) {
+    const data = removeEmptyValues(this.model);
+    if (data.pid != null) {
+      this.recordService.update(this.recordType, data).subscribe((record) => {
         this.toastrService.success(
           this.translateService.instant('Record Updated!'),
           this.translateService.instant(this.recordType)
@@ -193,14 +255,37 @@ export class EditorComponent implements OnInit {
 
       });
     } else {
-      this.recordService.create(this.recordType, record).subscribe(res => {
+      this.recordService.create(this.recordType, data).subscribe(record => {
         this.toastrService.success(
-          this.translateService.instant('Record Created with pid: ') + res.metadata.pid,
+          this.translateService.instant('Record Created with pid: ') +
+            record.metadata.pid,
           this.translateService.instant(this.recordType)
         );
-        this.recordUiService.redirectAfterSave(res.metadata.pid, record, this.recordType, 'create', this.route);
+        this.recordUiService.redirectAfterSave(record.metadata.pid, record, this.recordType, 'create', this.route);
       });
     }
+  }
+
+  /**
+   * Scroll the window in to the DOM element corresponding to a given config field.
+   * @param event - click DOM event
+   * @param field - FormlyFieldConfig, the form config corresponding to the DOM element to jump to.
+   */
+  setFocus(event, field: FormlyFieldConfig) {
+    event.preventDefault();
+    this.editorService.setFocus(field, true);
+  }
+
+  /**
+   * Populate the field to add to the TOC
+   */
+  getTocFields() {
+    setTimeout(
+      () =>
+        (this.tocFields = this.fields[0].fieldGroup.filter(
+          f => f.hide !== true
+        ))
+    );
   }
 
   /**
@@ -210,4 +295,148 @@ export class EditorComponent implements OnInit {
     this.location.back();
   }
 
+  /********************* Private  ***************************************/
+
+  /**
+   * Populate a select options with a remote API call.
+   * @param field formly field config
+   * @param formOptions JSONSchema object
+   */
+  private setRemoteSelectOptions(
+    field: FormlyFieldConfig,
+    formOptions: JSONSchema7
+  ) {
+    if (formOptions.remoteOptions && formOptions.remoteOptions.type) {
+      field.type = 'select';
+      field.hooks = {
+        ...field.hooks,
+        afterContentInit: (f: FormlyFieldConfig) => {
+          const recordType = formOptions.remoteOptions.type;
+          f.templateOptions.options = this.recordService
+            .getRecords(recordType, '', 1, RecordService.MAX_REST_RESULTS_SIZE)
+            .pipe(
+              map(data =>
+                data.hits.hits.map(record => {
+                  return {
+                    label: record.metadata.name,
+                    value: this.apiService.getRefEndpoint(
+                      recordType,
+                      record.metadata.pid
+                    )
+                  };
+                }
+              )
+            )
+          );
+        }
+      };
+    }
+  }
+
+  /**
+   *
+   * @param field formly field config
+   * @param formOptions JSONSchema object
+   */
+  private setValidation(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+    if (formOptions.validation) {
+      // custom validation messages
+      const messages = formOptions.validation.messages;
+      if (messages) {
+        if (!field.validation) {
+          field.validation = {};
+        }
+        if (!field.validation.messages) {
+          field.validation.messages = {};
+        }
+        for (const key of Object.keys(messages)) {
+          field.validation.messages[key] = (error, f: FormlyFieldConfig) =>
+            `${messages[key]}`;
+        }
+      }
+      // custom validators
+      if (
+        formOptions.validation.validators &&
+        formOptions.validation.validators.valueAlreadyExists
+      ) {
+        const remoteRecordType =
+          formOptions.validation.validators.valueAlreadyExists.remoteRecordType;
+        const limitToValues =
+          formOptions.validation.validators.valueAlreadyExists.limitToValues;
+        const filter =
+          formOptions.validation.validators.valueAlreadyExists.filter;
+        const term =
+          formOptions.validation.validators.valueAlreadyExists.term;
+        field.asyncValidators = {
+          validation: [
+            (control: FormControl) => {
+              return this.recordService.uniqueValue(
+                field,
+                remoteRecordType ? remoteRecordType : this.recordType,
+                this.pid ? this.pid : null,
+                term ? term : null,
+                limitToValues ? limitToValues : [],
+                filter ? filter : null
+              );
+            }
+          ]
+        };
+      }
+    }
+  }
+
+  /**
+   * Convert JSONSchema form options to formly field options.
+   * @param field formly field config
+   * @param formOptions JSONSchema object
+   */
+  private setSimpleOptions(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+    // ngx formly standard options
+    // hide a field at startup
+    if (formOptions.hide === true) {
+      field.templateOptions.hide = true;
+      setTimeout(() => field.hide = true);
+    }
+    // wrappers
+    if (formOptions.wrappers && formOptions.wrappers.length > 0) {
+      field.wrappers = [
+        ...(field.wrappers ? field.wrappers : []),
+        ...formOptions.wrappers
+      ];
+    }
+    // custom type
+    if (formOptions.type != null) {
+      field.type = formOptions.type;
+    }
+    // put the focus in this field
+    if (formOptions.focus === true) {
+      field.focus = true;
+    }
+    // input placeholder
+    if (formOptions.placeholder) {
+      field.templateOptions.placeholder = formOptions.placeholder;
+    }
+    // select labels and values
+    if (formOptions.options) {
+      field.templateOptions.options = formOptions.options;
+    }
+    // expression properties
+    if (formOptions.expressionProperties) {
+      field.expressionProperties = formOptions.expressionProperties;
+    }
+    // hide expression
+    if (formOptions.hideExpression) {
+      field.hideExpression = formOptions.hideExpression;
+    }
+
+    // non ngx formly options
+    // custom help URL displayed  in the object dropdown
+    if (formOptions.helpURL) {
+      field.templateOptions.helpURL = formOptions.helpURL;
+    }
+    // custom field for navigation options
+    if (formOptions.navigation) {
+      field.templateOptions.navigation = formOptions.navigation;
+    }
+  }
 }
