@@ -126,7 +126,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     itemHeaders?: any,
     aggregationsOrder?: Array<string>,
     aggregationsExpand?: Array<string>,
-    aggregationsBucketSize?: number
+    aggregationsBucketSize?: number,
+    showSearchInput?: boolean
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -138,8 +139,22 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   /**
    * Display search input
    */
+  _showSearchInput = true;
   @Input()
-  showSearchInput = true;
+  set showSearchInput(value) {
+    if (value != null) {
+      this._showSearchInput = value;
+    }
+  }
+  get showSearchInput() {
+    const config = this.recordUiService.getResourceConfig(this.currentType);
+    // at the type level
+    if (config.showSearchInput != null) {
+      return config.showSearchInput;
+    }
+    // route level
+    return this._showSearchInput;
+  }
 
   /**
    * Current selected resource type
