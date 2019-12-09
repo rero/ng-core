@@ -141,7 +141,7 @@ export class EditorComponent implements OnInit {
         } else {
           this.recordService.getRecord(this.recordType, this.pid).subscribe(record => {
             this.recordUiService.types = this.route.snapshot.data.types;
-            this.recordUiService.canReadRecord$(record, this.recordType).subscribe(result => {
+            this.recordUiService.canUpdateRecord$(record, this.recordType).subscribe(result => {
               if (result.can === false) {
                 this.toastrService.error(
                   this.translateService.instant('You cannot update this record'),
