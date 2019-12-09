@@ -22,15 +22,13 @@ import { mergeMap, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecordService } from '../record.service';
 
-
 @Component({
   selector: 'ng-core-autocomplete',
   templateUrl: './autocomplete.component.html'
 })
 export class AutocompleteComponent implements OnInit {
-
   /** The current form object from the template. */
-  @ViewChild('form', {static: false}) form;
+  @ViewChild('form', { static: false }) form;
 
   /** The current selected suggestion. */
   asyncSelected = {
@@ -90,8 +88,8 @@ export class AutocompleteComponent implements OnInit {
   constructor(
     private recordService: RecordService,
     private route: ActivatedRoute,
-    private router: Router) {
-    }
+    private router: Router
+  ) {}
 
   /**
    * On init hook
@@ -101,25 +99,27 @@ export class AutocompleteComponent implements OnInit {
       // if (params.get('display_score')) {
       //   this.displayScore = params.get('display_score');
       // }
-
-      // get the query form the URL
-      const query = params.get('q');
-      if (query) {
-        this.asyncSelected = {
-          query,
-          text: query,
-          index: undefined,
-          category: undefined,
-          href: undefined
-        };
+      if (this.action === this.router.url.split('?')[0]) {
+        // get the query form the URL
+        const query = params.get('q');
+        if (query) {
+          this.asyncSelected = {
+            query,
+            text: query,
+            index: undefined,
+            category: undefined,
+            href: undefined
+          };
+        }
       }
       this.dataSource = new Observable((observer: any) => {
         // Runs on every search
         observer.next(this.asyncSelected);
-      })
-      .pipe(
-        mergeMap((asyncSelected: any) => this.getSuggestions(asyncSelected.query))
-        );
+      }).pipe(
+        mergeMap((asyncSelected: any) =>
+          this.getSuggestions(asyncSelected.query)
+        )
+      );
     });
   }
 
@@ -131,7 +131,9 @@ export class AutocompleteComponent implements OnInit {
     event.preventDefault();
     if (!this.redirect) {
       if (this.internalRouting) {
-        this.router.navigate([this.action], { queryParams: {q: this.asyncSelected.query, page: '1', size: '10'}});
+        this.router.navigate([this.action], {
+          queryParams: { q: this.asyncSelected.query, page: '1', size: '10' }
+        });
       } else {
         this.form.nativeElement.submit();
       }
@@ -152,26 +154,32 @@ export class AutocompleteComponent implements OnInit {
     this.recordTypes.forEach(recordType => {
       combineGetRecords.push(
         this.recordService.getRecords(
-          recordType.type, `${recordType.field}:${query}`, 1,
-          recordType.maxNumberOfSuggestions ? recordType.maxNumberOfSuggestions : 10, [],
-          recordType.preFilters ? recordType.preFilters : {}));
-    });
-    return combineLatest(
-      combineGetRecords
-      )
-    .pipe(
-      map(
-        (getRecordsValues: Array<any>) => {
-          // add query at the top
-          let values = [];
-          recordTypesKeys.forEach((recordType, index) => {
-            values = values.concat(
-              this.recordTypes[index].getSuggestions(
-                query, getRecordsValues[index]));
-          });
-          return values;
-        })
+          recordType.type,
+          `${recordType.field}:${query}`,
+          1,
+          recordType.maxNumberOfSuggestions
+            ? recordType.maxNumberOfSuggestions
+            : 10,
+          [],
+          recordType.preFilters ? recordType.preFilters : {}
+        )
       );
+    });
+    return combineLatest(combineGetRecords).pipe(
+      map((getRecordsValues: Array<any>) => {
+        // add query at the top
+        let values = [];
+        recordTypesKeys.forEach((recordType, index) => {
+          values = values.concat(
+            this.recordTypes[index].getSuggestions(
+              query,
+              getRecordsValues[index]
+            )
+          );
+        });
+        return values;
+      })
+    );
   }
 
   /**
