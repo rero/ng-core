@@ -1,5 +1,5 @@
 {
-  "Add": "Aggiugere",
+  "Add": "Aggiungi",
   "Back": "Ritorno",
   "Cancel": "Annulla",
   "Confirmation": "Conferma",
@@ -7,7 +7,7 @@
   "Do you really want to delete this record?": "Vuoi davvero eliminare questo record ?",
   "Edit": "Modifica",
   "Help": "Aiuto",
-  "Information": "Information",
+  "Information": "Informazione",
   "New": "Nuovo",
   "OK": "OK",
   "Record Created with pid: ": "Il record è stato creato con il identificatore: ",
@@ -15,9 +15,9 @@
   "Record deleted.": "Record eliminato.",
   "Remove": "Elimina",
   "Remove all": "Elimina tutti",
-  "Show": "Show",
-  "You cannot read this record": "You cannot read this record",
-  "You cannot update this record": "You cannot update this record",
+  "Show": "Mostra",
+  "You cannot read this record": "Non puoi leggere questo record",
+  "You cannot update this record": "Non puoi aggiornare questo record",
   "create": "crea",
   "de": "Tedesco",
   "en": "Inglese",
@@ -26,7 +26,7 @@
   "less…": "di meno…",
   "link to authority": "link verso l'autorità",
   "more…": "di più…",
-  "required fields": "required fields",
+  "required fields": "campi obbligatori",
   "results": "risultati",
   "search": "ricerca"
 }
