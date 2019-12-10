@@ -31,7 +31,8 @@
       class="form-control" [typeaheadWaitMs]="300" [typeaheadMinLength]="0" [typeaheadItemTemplate]="customItemTemplate"
       (typeaheadOnSelect)="typeaheadOnSelect($event)" typeaheadGroupField="category"
       (input)="valueChanged($event.target.value)">
-  </div>
-  <input type="hidden" name="size" value="10">
-  <input type="hidden" name="page" value="1">
+      <div class="input-group-append">
+        <span class="input-group-text"><i class="fa fa-search"></i></span>
+      </div>
+    </div>
 </form>

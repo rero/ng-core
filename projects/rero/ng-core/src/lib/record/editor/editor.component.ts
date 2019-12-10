@@ -136,7 +136,7 @@ export class EditorComponent implements OnInit {
             .getSchemaForm(this.recordType)
             .subscribe(schemaForm => {
               this.schemaForm = schemaForm;
-              this.schemaForm.data = this.preprocessRecordEditor({}, config);
+              this.schemaForm.data = this.preprocessRecordEditor(undefined, config);
             });
         } else {
           this.recordService.getRecord(this.recordType, this.pid).subscribe(record => {
@@ -169,6 +169,10 @@ export class EditorComponent implements OnInit {
    */
   private preprocessRecordEditor(record, config) {
     if (config.preprocessRecordEditor) {
+      // Does not works for documents
+      if (record == null) {
+        record = {};
+      }
       return config.preprocessRecordEditor(record);
     }
     return record;
