@@ -77,7 +77,11 @@ export class MefComponent implements OnInit, OnDestroy {
     this.jsf.initializeControl(this);
     if (this.controlValue) {
       const pid = this.controlValue.split('/').pop();
-      this.recordService.getRecord('mef', pid, 1).subscribe( authority => {
+      // TODO should use getRecord but doesn't contain sources property
+      this.recordService.getRecords('mef', `pid:${pid}`, 1, 1).pipe(
+        map(records =>
+          records.hits.hits[0]
+        )).subscribe( authority => {
         this.asyncSelected = {
           name: this.getName(authority.metadata),
           ref: this.controlValue,
