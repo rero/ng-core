@@ -32,7 +32,7 @@
     <label *ngIf="options?.title && layoutNode?.type !== 'tab'" [attr.for]="'control' + layoutNode?._id"
       [class]="options?.labelHtmlClass || ''" [class.sr-only]="options?.notitle" [innerHTML]="options?.title"></label>
     <p *ngIf="layoutNode?.type === 'submit' && jsf?.formOptions?.fieldsRequired">
-      <strong class="text-danger">*</strong> = required fields
+      <strong class="text-danger">*</strong> = {{ 'required fields'|translate }}
     </p>
     <div [class.input-group]="options?.fieldAddonLeft || options?.fieldAddonRight">
       <span *ngIf="options?.fieldAddonLeft" class="input-group-addon" [innerHTML]="options?.fieldAddonLeft"></span>
