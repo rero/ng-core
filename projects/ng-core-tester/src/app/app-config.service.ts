@@ -10,6 +10,7 @@ export class AppConfigService extends CoreConfigService {
   constructor() {
     super();
     this.production = false;
+    this.prefixWindow = environment.prefixWindow;
     this.apiBaseUrl = 'https://localhost:5000';
     this.schemaFormEndpoint = '/api/schemaform';
     this.$refPrefix = environment.$refPrefix;

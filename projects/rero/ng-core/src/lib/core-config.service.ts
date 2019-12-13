@@ -18,6 +18,7 @@ import { Injectable } from '@angular/core';
 
 export interface Config {
   production?: boolean;
+  prefixWindow?: string;
   apiBaseUrl?: string;
   apiEndpointPrefix?: string;
   $refPrefix: string;
@@ -37,6 +38,7 @@ export interface Config {
 })
 export class CoreConfigService implements Config {
   production = false;
+  prefixWindow = undefined;
   apiBaseUrl = '';
   apiEndpointPrefix = '/api';
   schemaFormEndpoint = '/api/schemaform';
