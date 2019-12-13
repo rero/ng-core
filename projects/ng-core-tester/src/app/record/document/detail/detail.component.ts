@@ -17,6 +17,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { TitleMetaService } from '@rero/ng-core';
 import { DetailRecord } from '@rero/ng-core/lib/record/detail/view/detail-record';
 
 @Component({
@@ -33,7 +34,10 @@ export class DetailComponent implements DetailRecord, OnInit {
   /** Record data */
   record: any;
 
+  constructor(private titleMetaService: TitleMetaService) { }
+
   ngOnInit(): void {
+    this.titleMetaService.setTitle('Detail of ' + this.type);
     this.record$.subscribe((record) => {
       this.record = record;
     });

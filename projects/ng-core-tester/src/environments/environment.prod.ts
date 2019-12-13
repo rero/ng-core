@@ -16,6 +16,7 @@
  */
 export const environment = {
   production: true,
+  prefixWindow: 'NG CORE TESTER',
   apiBaseUrl: 'https://localhost:5000',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en'],

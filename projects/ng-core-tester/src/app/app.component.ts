@@ -16,7 +16,7 @@
 */
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CoreConfigService } from '@rero/ng-core';
+import { CoreConfigService, TitleMetaService } from '@rero/ng-core';
 
 
 @Component({
@@ -82,7 +82,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private translateService: TranslateService,
-    private configService: CoreConfigService
+    private configService: CoreConfigService,
+    private titleMetaService: TitleMetaService
     ) {
     }
 
@@ -97,6 +98,12 @@ export class AppComponent implements OnInit {
         }
         this.languagesMenu.entries.push(data);
       }
+      // Set default title window when application start
+      const prefix = this.configService.prefixWindow;
+      if (prefix) {
+        this.titleMetaService.setPrefix(prefix);
+      }
+      this.titleMetaService.setTitle('Welcome');
     }
 
     changeLang(item) {

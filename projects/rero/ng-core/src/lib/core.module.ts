@@ -77,4 +77,4 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
   ],
   entryComponents: [DialogComponent]
 })
-export class CoreModule {}
+export class CoreModule { }

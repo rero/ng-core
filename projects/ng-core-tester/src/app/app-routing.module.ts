@@ -170,6 +170,7 @@ const routes: Routes = [
           key: 'documents',
           label: 'Documents',
           component: DocumentComponent,
+          detailComponent: DetailComponent,
           aggregationsOrder: aggrDocumentOrder,
           aggregationsExpand: aggrDocumentExpand,
           aggregationsBucketSize: aggrBucketSize,
