@@ -25,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RecordSearchResultComponent } from './record-search-result.component';
 import { JsonComponent } from './item/json.component';
 import { RecordSearchResultDirective } from './record-search-result.directive';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RecordSearchResultComponent', () => {
   let component: RecordSearchResultComponent;
@@ -38,6 +39,7 @@ describe('RecordSearchResultComponent', () => {
         RecordSearchResultComponent
       ],
       imports: [
+        RouterTestingModule,
         ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
