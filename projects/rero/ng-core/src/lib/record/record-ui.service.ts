@@ -24,6 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { DialogService } from '../dialog/dialog.service';
 import { RecordService } from './record.service';
 import { ActionStatus } from './action-status';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,9 @@ export class RecordUiService {
     private dialogService: DialogService,
     private toastService: ToastrService,
     private translate: TranslateService,
-    private recordService: RecordService
+    private recordService: RecordService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   /**
@@ -171,5 +174,31 @@ export class RecordUiService {
     }
 
     return of({ can: true, message: '' });
+  }
+
+  /**
+   * Redirects after saving a resource
+   * @param pid - string, pid of the record
+   * @param record - object, record to save
+   * @param recordType - string, Type of resource
+   * @param action - string, http action: create or update
+   */
+  redirectAfterSave(pid: string, record: any, recordType: string, action: string, route: ActivatedRoute) {
+    const config = this.getResourceConfig(recordType);
+    if (config.redirectUrl) {
+      config.redirectUrl(record).subscribe((result: string) => {
+        if (result !== null) {
+          this.router.navigate([result]);
+          return;
+        }
+      });
+    } else {
+      // Default behaviour
+      if (action === 'update') {
+        this.router.navigate(['../../detail', pid], {relativeTo: route, replaceUrl: true});
+        return;
+      }
+      this.router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
+    }
   }
 }
