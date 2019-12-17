@@ -22,6 +22,7 @@ import { ModalModule } from 'ngx-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { RecordUiService } from './record-ui.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RecordUiService', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -29,7 +30,8 @@ describe('RecordUiService', () => {
       ToastrModule.forRoot(),
       ModalModule.forRoot(),
       TranslateModule.forRoot(),
-      HttpClientModule
+      HttpClientModule,
+      RouterTestingModule
     ]
   }));
 
