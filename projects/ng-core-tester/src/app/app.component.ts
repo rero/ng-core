@@ -16,7 +16,8 @@
 */
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CoreConfigService, TitleMetaService } from '@rero/ng-core';
+import { CoreConfigService, TitleMetaService, RecordService, RecordEvent } from '@rero/ng-core';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -83,11 +84,14 @@ export class AppComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private configService: CoreConfigService,
-    private titleMetaService: TitleMetaService
+    private titleMetaService: TitleMetaService,
+    private recordService: RecordService,
+    private toastrService: ToastrService
     ) {
     }
 
     ngOnInit() {
+      this.initializeEvents();
       this.translateService.use(this.lang);
       this.languages = this.configService.languages;
       for (const lang of this.languages) {
@@ -106,11 +110,25 @@ export class AppComponent implements OnInit {
       this.titleMetaService.setTitle('Welcome');
     }
 
-    changeLang(item) {
+    changeLang(item: any) {
       this.translateService.use(item.name);
       delete(this.activeLanguagesMenuItem.active);
       item.active = true;
       this.activeLanguagesMenuItem = item;
     }
 
+    private initializeEvents() {
+      this.recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
+        const pid = recordEvent.data.record.pid;
+        this.toastrService.info(`Call Record Event on create (Record Pid: ${pid})`);
+      });
+      this.recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
+        const pid = recordEvent.data.record.pid;
+        this.toastrService.info(`Call Record Event on update (Record Pid: ${pid})`);
+      });
+      this.recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
+        const pid = recordEvent.data.pid;
+        this.toastrService.info(`Call Record Event on delete (Record Pid: ${pid})`);
+      });
+    }
   }

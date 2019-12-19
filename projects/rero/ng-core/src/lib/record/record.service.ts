@@ -16,8 +16,8 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of } from 'rxjs';
-import { catchError, map, debounceTime } from 'rxjs/operators';
+import { Observable, throwError, of, Subject } from 'rxjs';
+import { catchError, map, debounceTime, tap } from 'rxjs/operators';
 
 import { Record } from './record';
 import { ApiService } from '../api/api.service';
@@ -26,8 +26,49 @@ import { ApiService } from '../api/api.service';
   providedIn: 'root'
 })
 export class RecordService {
+
   public static readonly DEFAULT_REST_RESULTS_SIZE = 10;
   public static readonly MAX_REST_RESULTS_SIZE = 9999;
+
+  /**
+   * Event for record created
+   */
+  private onCreate: Subject<RecordEvent> = new Subject();
+
+  /**
+   * Event for record updated
+   */
+  private onUpdate: Subject<RecordEvent> = new Subject();
+
+  /**
+   * Event for record deleted
+   */
+  private onDelete: Subject<RecordEvent> = new Subject();
+
+  /**
+   * On create observable
+   * @return onCreate Subject
+   */
+  get onCreate$() {
+    return this.onCreate.asObservable();
+  }
+
+  /**
+   * On update observable
+   * @return onUpdate Subject
+   */
+  get onUpdate$() {
+    return this.onUpdate.asObservable();
+  }
+
+  /**
+   * On delete observable
+   * @return onDelete Subject
+   */
+  get onDelete$() {
+    return this.onDelete.asObservable();
+  }
+
   /**
    * Constructor
    * @param http - HttpClient
@@ -93,6 +134,7 @@ export class RecordService {
   public delete(type: string, pid: string): Observable<void> {
     return this.http.delete<void>(this.apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(
+        tap(() => this.onDelete.next(this.createEvent(type, { pid }))),
         catchError(this.handleError)
       );
   }
@@ -118,7 +160,7 @@ export class RecordService {
   public getSchemaForm(recordType: string) {
     let recType = recordType.replace(/ies$/, 'y');
     recType = recType.replace(/s$/, '');
-    const url = this.apiService.getSchemaFormEndpoint(recordType);
+    const url = this.apiService.getSchemaFormEndpoint(recordType, true);
     return this.http.get<any>(url).pipe(
       catchError(e => {
         if (e.status === 404) {
@@ -137,7 +179,10 @@ export class RecordService {
    * @param record - object, record to create
    */
   public create(recordType: string, record: object): Observable<any> {
-    return this.http.post(this.apiService.getEndpointByType(recordType, true) + '/', record);
+    return this.http.post(this.apiService.getEndpointByType(recordType, true) + '/', record)
+    .pipe(
+      tap(() => this.onCreate.next(this.createEvent(recordType, { record })))
+    );
   }
 
   /**
@@ -148,7 +193,10 @@ export class RecordService {
    */
   public update(recordType: string, record: { pid: string }) {
     const url = `${this.apiService.getEndpointByType(recordType, true)}/${record.pid}`;
-    return this.http.put(url, record);
+    return this.http.put(url, record)
+      .pipe(
+        tap(() => this.onUpdate.next(this.createEvent(recordType, { record })))
+      );
   }
 
   /**
@@ -197,4 +245,18 @@ export class RecordService {
   private createRequestHeaders(headers: any = {}) {
     return headers ? new HttpHeaders(headers) : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
+
+  /**
+   * Create a message for event
+   * @param resource - string
+   * @param data - any
+   */
+  private createEvent(resource: string, data: any) {
+    return { resource, data };
+  }
+}
+
+export interface RecordEvent {
+  resource: string;
+  data: any;
 }

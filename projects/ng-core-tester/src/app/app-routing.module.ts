@@ -18,7 +18,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, UrlSegment } from '@angular/router';
 import { of, Observable } from 'rxjs';
 
-import { DetailComponent as RecordDetailComponent, RecordSearchComponent } from '@rero/ng-core';
+import { DetailComponent as RecordDetailComponent, RecordSearchComponent, EditorComponent } from '@rero/ng-core';
 
 import { HomeComponent } from './home/home.component';
 import { DocumentComponent } from './record/document/document.component';
@@ -160,11 +160,12 @@ const routes: Routes = [
     path: 'record/search',
     children: [
       { path: ':type', component: RecordSearchComponent },
+      { path: ':type/edit/:pid', component: EditorComponent },
       { path: ':type/detail/:pid', component: RecordDetailComponent }
     ],
     data: {
       showSearchInput: true,
-      adminMode: false,
+      // adminMode: false,
       types: [
         {
           key: 'documents',
@@ -177,7 +178,10 @@ const routes: Routes = [
           pagination: {
             boundaryLinks: true,
             maxSize: 5
-          }
+          },
+          canAdd,
+          canUpdate,
+          canDelete
         }
       ]
     }
