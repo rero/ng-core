@@ -15,37 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-
-export interface Config {
-  production?: boolean;
-  prefixWindow?: string;
-  apiBaseUrl?: string;
-  apiEndpointPrefix?: string;
-  $refPrefix: string;
-  schemaFormEndpoint: string;
-  languages?: string[];
-  defaultLanguage?: string;
-  secretPassphrase: string;
-  customTranslations?: {
-      fr?: {},
-      de?: {},
-      en?: {},
-      it?: {}
-  };
-}
+import * as CryptoJS from 'crypto-js';
+import { CoreConfigService } from '../core-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CoreConfigService implements Config {
-  production = false;
-  prefixWindow = undefined;
-  apiBaseUrl = '';
-  apiEndpointPrefix = '/api';
-  schemaFormEndpoint = '/api/schemaform';
-  $refPrefix = undefined;
-  languages = ['en'];
-  defaultLanguage = 'en';
-  secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';
-  customTranslations = null;
+export class CryptoJsService {
+
+  constructor(private coreConfigService: CoreConfigService) { }
+
+  encrypt(value: string) {
+    const _key = this.secretPassphrase();
+    return CryptoJS.AES.encrypt(value, _key, { iv: _key });
+  }
+
+  decrypt(value: string) {
+    const _key = this.secretPassphrase();
+    return CryptoJS.AES.decrypt(value, _key, { iv: _key }).toString(CryptoJS.enc.Utf8);
+  }
+
+  private secretPassphrase() {
+    return CryptoJS.enc.Utf8.parse(this.coreConfigService.secretPassphrase);
+  }
 }

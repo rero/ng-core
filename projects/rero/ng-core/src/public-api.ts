@@ -38,3 +38,5 @@ export * from './lib/record/action-status';
 export * from './lib/record/autocomplete/autocomplete.component';
 export * from './lib/record/editor/bootstrap4-framework/custombootstrap4-framework';
 export * from './lib/service/title-meta.service';
+export * from './lib/service/local-storage.service';
+export * from './lib/service/crypto-js.service';
