@@ -16,7 +16,7 @@
  */
 import { TestBed } from '@angular/core/testing';
 
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService, LocalStorageEvent } from './local-storage.service';
 
 describe('LocalStorageService', () => {
 
@@ -37,7 +37,6 @@ describe('LocalStorageService', () => {
     expect(service.get('local')).toEqual(data);
     service.clear();
   });
-
 
   it('should update date on local storage data', () => {
     service.set('local', { name: 'test' });
@@ -77,5 +76,33 @@ describe('LocalStorageService', () => {
     service.set('local', { name: 'test' });
     service.clear();
     expect(service.has('local')).toBeFalsy();
+  });
+
+  it('should check if event onSet is notified', () => {
+    const data = { name: 'test' };
+    const onSetEvent = service.onSet$.subscribe((event: LocalStorageEvent) => {
+      expect(event.key).toEqual('local');
+      expect(event.data.data).toEqual(data);
+    });
+    service.set('local', data);
+    onSetEvent.unsubscribe();
+  });
+
+  it('should check if event onRemove is notified', () => {
+    const onRemoveEvent = service.onRemove$.subscribe((event: any) => {
+      expect(event).toBeNull();
+    });
+    service.set('local', {});
+    service.remove('local');
+    onRemoveEvent.unsubscribe();
+  });
+
+  it('should check if event onClear is notified', () => {
+    const onClearEvent = service.onClear$.subscribe((event: any) => {
+      expect(event).toBeNull();
+    });
+    service.set('local', {});
+    service.clear();
+    onClearEvent.unsubscribe();
   });
 });

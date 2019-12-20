@@ -26,7 +26,7 @@ export class LocalStorageService {
   /**
    * Event for set data on local storage
    */
-  private onSet: Subject<any> = new Subject();
+  private onSet: Subject<LocalStorageEvent> = new Subject();
 
   /**
    * Event for remove data on local storage
@@ -74,10 +74,11 @@ export class LocalStorageService {
    * @return LocalStorageService
    */
   set(key: string, value: any) {
+    const data = { date: new Date(), data: value };
     localStorage.setItem(key, this.cryptoService.encrypt(
-      JSON.stringify({ date: new Date(), data: value })
+      JSON.stringify(data)
     ));
-    this.onSet.next(value);
+    this.onSet.next({ key, data });
 
     return this;
   }
@@ -160,9 +161,6 @@ export class LocalStorageService {
    * @param key - string
    */
   private getItem(key: string) {
-    console.log(this.cryptoService.decrypt(
-      localStorage.getItem(key)
-    ));
     return JSON.parse(this.cryptoService.decrypt(
       localStorage.getItem(key)
     ));
@@ -175,4 +173,12 @@ export class LocalStorageService {
   private keys() {
     return Object.keys(localStorage);
   }
+}
+
+/**
+ * LocalStorageEvent interface
+ */
+export interface LocalStorageEvent {
+  key: string;
+  data: any;
 }
