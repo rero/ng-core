@@ -65,24 +65,24 @@ describe('RecordSearchComponent', () => {
         detailUrl: '/custom/url/for/detail/:type/:pid',
         types: [
           {
-            key: 'documents',
+            key: 'documents'
           },
           {
-            key: 'institutions',
+            key: 'institutions'
           }
         ],
         showSearchInput: true,
         adminMode: true
       },
-      queryParams: {
-        q: '',
-        page: 1,
-        size: 10,
-        author: ['Filippini, Massimo']
-      },
-      paramMap: convertToParamMap({ type: 'documents' }),
       params: { type: 'documents' }
     },
+    queryParamMap: of(convertToParamMap({
+      q: '',
+      page: 1,
+      size: 10,
+      author: ['Filippini, Massimo']
+    })),
+    paramMap: of(convertToParamMap({ type: 'documents' })),
     queryParams: of({})
   };
 
@@ -113,13 +113,13 @@ describe('RecordSearchComponent', () => {
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
-        { provide: DialogService, useValue: dialogServiceSpy },
+        { provide: DialogService, useValue: dialogServiceSpy }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .overrideModule(BrowserDynamicTestingModule, {
         set: {
-          entryComponents: [DialogComponent],
+          entryComponents: [DialogComponent]
         }
       })
       .compileComponents();
