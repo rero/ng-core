@@ -118,8 +118,12 @@ export class RecordSearchComponent implements OnInit {
       if (queryParams.has('q')) {
         this.q = queryParams.get('q');
       } else {
+        this.q = '';
+        this.size = 10;
+        this.page = 1;
+        this.aggFilters = [];
         // if no query params is set, put defaults in url
-        this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: [] });
+        this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: this.aggFilters });
       }
 
       if (queryParams.has('size')) {
