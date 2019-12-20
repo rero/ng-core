@@ -179,8 +179,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    */
   set currentPage(page: number) {
     this.page = +page;
-    this.getRecords(false);
-    this.emitNewParameters();
+    this.getRecords(true, false);
   }
 
   get currentPage() {
@@ -241,10 +240,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       this.loadConfigurationForType(this.currentType);
     }
 
-    // Get records
-    if (this.hasChangedParams(changes) === true) {
-      this.getRecords(false);
-    }
+    // get records and reset page only if page parameter has not changed.
+    this.getRecords(false, this.isParamChanged('page', changes) === false);
   }
 
   /**
@@ -267,8 +264,9 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       }
     }
 
-    this.getRecords();
-    this.emitNewParameters();
+    // First parameter is passed as false because we can do the search directly as
+    // changes for @Input arrays are not detected
+    this.getRecords(false);
   }
 
   /**
@@ -280,7 +278,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     event.preventDefault();
     this.size = size;
     this.getRecords();
-    this.emitNewParameters();
   }
 
   /**
@@ -290,7 +287,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   searchByQuery(event: string) {
     this.q = event;
     this.getRecords();
-    this.emitNewParameters();
   }
 
   /**
@@ -303,7 +299,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.currentType = type;
     this.aggFilters = [];
     this.getRecords();
-    this.emitNewParameters();
     this.loadConfigurationForType(type);
   }
 
@@ -336,7 +331,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
       if (result === true) {
         // refresh records
-        this.getRecords(false);
+        this.getRecords(true, false);
 
         // update main counter
         this.config.total--;
@@ -372,11 +367,18 @@ export class RecordSearchComponent implements OnInit, OnChanges {
 
   /**
    * Search for records.
-   * @param resetPage - boolean, if page needs to be resetted to 1.
+   * @param checkInRouting Check property inRouting to determine if the search has to be done
+   * @param resetPage If page needs to be resetted to 1.
    */
-  private getRecords(resetPage: boolean = true) {
+  private getRecords(checkInRouting: boolean = true, resetPage: boolean = true) {
     if (resetPage === true) {
       this.page = 1;
+    }
+
+    this.emitNewParameters();
+
+    if (checkInRouting === true && this.inRouting === true) {
+      return;
     }
 
     this.isLoading = true;
@@ -508,22 +510,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
     });
-  }
-
-  /**
-   * Check if query params or type have changed.
-   * @param simpleChanges Object containing changes
-   */
-  private hasChangedParams(simpleChanges: SimpleChanges) {
-    const params = ['currentType', 'q', 'size', 'page', 'aggFilters', 'sort'];
-
-    for (const key of params) {
-      if (this.isParamChanged(key, simpleChanges) === true) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   /**
