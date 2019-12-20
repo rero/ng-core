@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { LocalStorageService, LocalStorageEvent } from './local-storage.service';
 
@@ -38,13 +38,14 @@ describe('LocalStorageService', () => {
     service.clear();
   });
 
-  it('should update date on local storage data', () => {
+  it('should update date on local storage data', fakeAsync(() => {
     service.set('local', { name: 'test' });
     const currentDate = new Date(service.get('local', 'date'));
+    tick(10000);
     service.updateDate('local');
     expect(new Date(service.get('local', 'date')) > currentDate).toBeTruthy();
     service.clear();
-  });
+  }));
 
   it('should expired data on local storage', () => {
     service.set('local', { name: 'test' });
