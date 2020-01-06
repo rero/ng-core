@@ -16,8 +16,8 @@
  */
 
 export function extractIdOnRef(ref: string) {
-  const rx = /.*\/?(.+)$/ig;
-  return rx.exec(ref)[1];
+  const pidRegExp = new RegExp('.*/(.*)$');
+  return pidRegExp.exec(ref)[1];
 }
 
 export function cleanDictKeys(data: any) {
