@@ -167,6 +167,45 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Postprocess the record before save
+   * @param record - Record object to postprocess
+   */
+  private postprocessRecord(record: any) {
+    const config = this.recordUiService.getResourceConfig(this.recordType);
+
+    if (config.postprocessRecordEditor) {
+      return config.postprocessRecordEditor(record);
+    }
+    return record;
+  }
+
+  /**
+   * Pre Create Record
+   * @param record - Record object
+   */
+  private preCreateRecord(record: any) {
+    const config = this.recordUiService.getResourceConfig(this.recordType);
+
+    if (config.preCreateRecord) {
+      return config.preCreateRecord(record);
+    }
+    return record;
+  }
+
+  /**
+   * Pre Update Record
+   * @param record - Record object
+   */
+  private preUpdateRecord(record: any) {
+    const config = this.recordUiService.getResourceConfig(this.recordType);
+
+    if (config.preUpdateRecord) {
+      return config.preUpdateRecord(record);
+    }
+    return record;
+  }
+
+  /**
    * Preprocess the record before passing it to the editor
    * @param schema - object, JOSNSchema
    */
@@ -244,9 +283,10 @@ export class EditorComponent implements OnInit, OnDestroy {
    * @param event - object, JSON to POST on the backend
    */
   submit(event) {
-    const data = removeEmptyValues(this.model);
+    let data = removeEmptyValues(this.model);
+    data = this.postprocessRecord(data);
     if (data.pid != null) {
-      this.recordService.update(this.recordType, data).subscribe((record) => {
+      this.recordService.update(this.recordType, this.preUpdateRecord(data)).subscribe((record) => {
         this.toastrService.success(
           this.translateService.instant('Record Updated!'),
           this.translateService.instant(this.recordType)
@@ -255,7 +295,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
       });
     } else {
-      this.recordService.create(this.recordType, data).subscribe(record => {
+      this.recordService.create(this.recordType, this.preCreateRecord(data)).subscribe(record => {
         this.toastrService.success(
           this.translateService.instant('Record Created with pid: ') +
             record.metadata.pid,
