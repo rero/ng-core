@@ -57,6 +57,26 @@ const aggregations = (agg: object) => {
   return of(agg);
 };
 
+const preProcessDocument = (record: any): any => {
+  // Update data record before transmit data to the form
+  return record;
+};
+
+const postProcessDocument = (record: any): any => {
+  // Update data record before transmit to the API
+  return record;
+};
+
+const preCreateDocument = (record: any): any => {
+  // Update data record before create record
+  return record;
+};
+
+const preUpdateDocument = (record: any): any => {
+  // Update data record before update record
+  return record;
+};
+
 export function matchedUrl(url: UrlSegment[]) {
   const segments = [new UrlSegment(url[0].path, {})];
 
@@ -160,6 +180,7 @@ const routes: Routes = [
     path: 'record/search',
     children: [
       { path: ':type', component: RecordSearchComponent },
+      { path: ':type/new', component: EditorComponent },
       { path: ':type/edit/:pid', component: EditorComponent },
       { path: ':type/detail/:pid', component: RecordDetailComponent }
     ],
@@ -175,6 +196,10 @@ const routes: Routes = [
           aggregationsOrder: aggrDocumentOrder,
           aggregationsExpand: aggrDocumentExpand,
           aggregationsBucketSize: aggrBucketSize,
+          preprocessRecordEditor: preProcessDocument,
+          postprocessRecordEditor: postProcessDocument,
+          preCreateRecord: preCreateDocument,
+          preUpdateRecord: preUpdateDocument,
           pagination: {
             boundaryLinks: true,
             maxSize: 5
