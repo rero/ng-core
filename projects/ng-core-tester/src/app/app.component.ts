@@ -16,9 +16,10 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
+import { CoreConfigService, MenuItem, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
+import { AppMenuService } from './service/app-menu.service';
 
 /**
  * Main component of the application.
@@ -37,55 +38,11 @@ export class AppComponent implements OnInit {
   // If navigation is collapsed or not.
   isCollapsed = true;
 
-  // List of links in the navigation.
-  linksMenu = {
-    navCssClass: 'navbar-nav',
-    entries: [
-      {
-        name: 'Home',
-        routerLink: '/',
-        cssActiveClass: '',
-        iconCssClass: 'fa fa-home'
-      },
-      {
-        name: 'Records',
-        href: '#',
-        cssActiveClass: '',
-        entries: [
-          {
-            name: 'Global records',
-            routerLink: '/record/search/documents',
-            iconCssClass: 'fa fa-book'
-          },
-          {
-            name: 'UNISI records',
-            routerLink: '/unisi/record/search/documents'
-          },
-          {
-            name: 'Backend records',
-            routerLink: '/admin/record/search/documents'
-          },
-          {
-            name: 'Document records',
-            routerLink: '/records/documents'
-          },
-          {
-            name: 'Organisations records',
-            routerLink: '/records/organisations'
-          }
-        ]
-      }
-    ]
-  };
+  // Application menu
+  appMenu: MenuItem;
 
-  // List of languages in the navigation.
-  languagesMenu = {
-    navCssClass: 'navbar-nav',
-    entries: []
-  };
-
-  // Active language.
-  private _activeLanguagesMenuItem: any;
+  // Application language menu
+  languageMenu: MenuItem;
 
   /**
    * Constructor.
@@ -95,6 +52,7 @@ export class AppComponent implements OnInit {
    * @param _recordService Record service.
    * @param _toastrService Toast service.
    * @param _bsLocaleService Locale service for bootstrap.
+   * @param _menuService Interface menu
    */
   constructor(
     private _translateService: TranslateService,
@@ -102,7 +60,8 @@ export class AppComponent implements OnInit {
     private _titleMetaService: TitleMetaService,
     private _recordService: RecordService,
     private _toastrService: ToastrService,
-    private _bsLocaleService: BsLocaleService
+    private _bsLocaleService: BsLocaleService,
+    private _appMenuService: AppMenuService
   ) {
   }
 
@@ -116,15 +75,11 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.initializeEvents();
     this._translateService.use(this.lang);
-    this.languages = this._configService.languages;
-    for (const lang of this.languages) {
-      const data: any = { name: lang };
-      if (lang === this.lang) {
-        data.active = true;
-        this._activeLanguagesMenuItem = data;
-      }
-      this.languagesMenu.entries.push(data);
-    }
+    this.appMenu = this._appMenuService.generateApplicationMenu();
+    this.languageMenu = this._appMenuService.generateLanguageMenu(
+      this._configService.languages,
+      this.lang
+    );
     // Set default title window when application start
     const prefix = this._configService.prefixWindow;
     if (prefix) {
@@ -134,15 +89,21 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Changes the languages.
-   * @param item Menu item representing a language.
+   * Event change language
+   * @param item - MenuItem
    */
-  changeLang(item: any) {
-    this._translateService.use(item.name);
-    this._bsLocaleService.use(item.name);
-    delete (this._activeLanguagesMenuItem.active);
-    item.active = true;
-    this._activeLanguagesMenuItem = item;
+  eventChangeLang(item: MenuItem) {
+    this.languageMenu.getChildren().forEach((menu: MenuItem) => {
+      if (menu.isActive()) {
+        menu.deleteLabelAttribute('class');
+        menu.setActive(false);
+      }
+    });
+    item
+    .setLabelAttribute('class', 'font-weight-bold')
+    .setActive(true);
+    this._translateService.use(item.getName());
+    this._bsLocaleService.use(item.getName());
   }
 
   /**

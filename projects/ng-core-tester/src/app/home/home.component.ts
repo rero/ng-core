@@ -14,17 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from '@angular/core';
-import { ApiService, DialogService, RecordSearchService, TranslateLanguageService } from '@rero/ng-core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService, DialogService, MenuItem, RecordSearchService, TranslateLanguageService } from '@rero/ng-core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { DocumentComponent } from '../record/document/document.component';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { MenuService } from '../service/menu.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   // Object containing API paths.
   apiData: any;
 
@@ -61,26 +62,28 @@ export class HomeComponent {
     }
   ];
 
-  // Menu links for demo.
-  demoMenu: any = {
-    entries: [
-      {
-        routerLink: '/',
-        cssActiveClass: '',
-        iconCssClass: 'fa fa-home'
-      },
-      {
-        name: 'Sonar',
-        href: 'http://sonar.ch',
-        iconCssClass: 'fa fa-external-link'
-      }, {
-        name: 'Alert',
-        iconCssClass: 'fa fa-exclamation-triangle'
-      }, {
-        name: 'Hidden'
-      }
-    ]
-  };
+  // Menu
+  menuApplication: MenuItem;
+
+  // Menu click
+  menuClick: MenuItem;
+
+  /**
+   * Component initialization
+   *
+   * - Initializes application menu
+   */
+  ngOnInit() {
+    this.menuApplication = this._menuService.generateApplicationMenu();
+  }
+
+  /**
+   * Menu selected by user
+   * @param item - Menu Item
+   */
+  eventMenuClick(item: MenuItem) {
+    this._toastrService.success(`menu ${item.getName()} clicked`);
+  }
 
   /**
    * Show spinner for 5 seconds
@@ -113,7 +116,8 @@ export class HomeComponent {
     private _translateLanguageService: TranslateLanguageService,
     private _toastrService: ToastrService,
     private _recordSearchService: RecordSearchService,
-    private _spinner: NgxSpinnerService
+    private _spinner: NgxSpinnerService,
+    private _menuService: MenuService
   ) {
     this.apiData = {
       relative: this._apiService.getEndpointByType('documents'),

@@ -63,7 +63,7 @@
     value)</p>
 
 <h4>Menu</h4>
-<ng-core-menu [menu]="demoMenu" (clickItem)="clickLinkItemMenu($event)" [isItemMenuVisible] = "isItemMenuVisible"></ng-core-menu>
+<ng-core-menu-widget [menu]="menuApplication" (clickItem)="eventMenuClick($event)"></ng-core-menu-widget>
 
 <h4 class="mt-5">Spinner</h4>
 <button class="btn btn-primary" (click)="showSpinner()">Show spinner (for 5 seconds)</button>
