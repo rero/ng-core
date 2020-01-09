@@ -37,6 +37,7 @@ import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
+import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     TextReadMoreComponent,
     SortByKeysPipe,
     ErrorComponent,
-    FilesizePipe
+    FilesizePipe,
+    MenuWidgetComponent
   ],
   imports: [
     CommonModule,
@@ -87,7 +89,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     TextReadMoreComponent,
     ErrorComponent,
     SortByKeysPipe,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    MenuWidgetComponent
   ],
   entryComponents: [DialogComponent]
 })

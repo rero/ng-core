@@ -1,0 +1,93 @@
+<nav *ngIf="menu" class="navbar navbar-expand-lg navbar-light">
+  <div
+    id="navbarNav"
+    [ngClass]="menu.getAttribute('class', 'collapse navbar-collapse')"
+  >
+    <ul [ngClass]="menu.getAttribute('class', 'navbar-nav')">
+      <ng-container *ngFor="let item of menu.getChildren()">
+        <li
+          class="nav-item"
+          *ngIf="!item.hasChildren(); else withsubmenu"
+        >
+          <a
+            *ngIf="item.hasUri(); else linkRouterLink"
+            class="nav-link"
+            [attr.id]="item.getAttribute('id')"
+            [attr.href]="item.getUri()"
+            [attr.target]="item.getAttribute('target')"
+            (click)="doClick(item)"
+          >
+            <i *ngIf="item.hasExtra('iconClass')" [ngClass]="item.getExtra('iconClass')"></i>
+            <span *ngIf="!item.hasLabelAttribute('hideLabel')" class="ml-2">{{ item.getName() | translate }}</span>
+          </a>
+          <ng-template #linkRouterLink>
+            <a
+              *ngIf="!item.isActive(); else menuNoLink"
+              class="nav-link"
+              [attr.id]="item.getAttribute('id')"
+              [routerLink]="item.getRouterLink()"
+              (click)="doClick(item)"
+            >
+              <i *ngIf="item.hasExtra('iconClass')" [ngClass]="item.getExtra('iconClass')"></i>
+              <span *ngIf="!item.hasLabelAttribute('hideLabel')" class="ml-2">{{ item.getName() | translate }}</span>
+            </a>
+          </ng-template>
+          <ng-template #menuNoLink>
+            <i *ngIf="item.hasExtra('iconClass')" [ngClass]="item.getExtra('iconClass')"></i>
+            <span
+              *ngIf="!item.hasLabelAttribute('hideLabel')"
+              class="nav-link"
+              [ngClass]="item.getLabelAttribute('class')"
+            >
+            {{ item.getName() | translate }}</span>
+          </ng-template>
+        </li>
+        <ng-template #withsubmenu>
+        <li
+          class="nav-item"
+          [ngClass]="{ 'dropdown': item.hasChildren() }"
+          dropdown
+        >
+          <a
+            class="nav-link"
+            [ngClass]="{ 'dropdown-toggle': item.hasChildren() }"
+            [attr.id]="item.getAttribute('id')"
+            [attr.data-toggle]="item.hasChildren() ? 'dropdown' : null"
+            dropdownToggle
+          >
+            <i *ngIf="item.hasExtra('iconClass')" [ngClass]="item.getExtra('iconClass')"></i>
+            <span *ngIf="!item.hasLabelAttribute('hideLabel')" class="ml-2">{{ item.getName() | translate }}</span>
+          </a>
+          <div *dropdownMenu class="dropdown-menu" role="menu">
+            <ng-container *ngFor="let sub of item.getChildren()">
+              <a
+                *ngIf="sub.hasUri(); else subLinkRouterLink"
+                class="dropdown-item"
+                [attr.id]="sub.getAttribute('id')"
+                [attr.href]="sub.getUri()"
+                [attr.target]="sub.getAttribute('target')"
+                (click)="doClick(sub)"
+              >
+                <i *ngIf="sub.hasExtra('iconClass')" [ngClass]="sub.getExtra('iconClass')"></i>
+                <span *ngIf="!sub.hasLabelAttribute('hideLabel')" class="ml-2">{{ sub.getName() | translate }}</span>
+              </a>
+              <ng-template #subLinkRouterLink>
+                <a
+                  class="dropdown-item"
+                  [attr.id]="sub.getAttribute('id')"
+                  [attr.target]="sub.getAttribute('target')"
+                  [routerLink]="sub.getRouterLink()"
+                  (click)="doClick(sub)"
+                >
+                  <i *ngIf="sub.hasExtra('iconClass')" [ngClass]="sub.getExtra('iconClass')"></i>
+                  <span *ngIf="!sub.hasLabelAttribute('hideLabel')" class="ml-2">{{ sub.getName() | translate }}</span>
+                </a>
+              </ng-template>
+            </ng-container>
+          </div>
+        </li>
+        </ng-template>
+      </ng-container>
+    </ul>
+  </div>
+</nav>
