@@ -121,6 +121,9 @@ export class ObjectTypeComponent extends FieldType implements OnInit {
    * @returns boolean, true if the field can be hidden
    */
   canHide(field: FormlyFieldConfig) {
+    if (!this.field.templateOptions.longMode) {
+      return false;
+    }
     return (
       field.type !== 'multischema' &&
       !field.templateOptions.required &&
