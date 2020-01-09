@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { JSONSchema7 } from 'json-schema';
@@ -23,7 +23,7 @@ import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { EditorService } from './editor.service';
 import { orderedJsonSchema, isEmpty, removeEmptyValues } from './utils';
 import { RecordService } from '../record.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RecordUiService } from '../record-ui.service';
@@ -42,6 +42,7 @@ export class EditorComponent implements OnInit, OnDestroy {
   form: FormGroup;
 
   // initial data
+  @Input()
   model: any = {};
 
   // additionnal form options
@@ -76,7 +77,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     private formlyJsonschema: FormlyJsonschema,
     private recordService: RecordService,
     private apiService: ApiService,
-    private router: Router,
     private route: ActivatedRoute,
     private editorService: EditorService,
     private recordUiService: RecordUiService,
