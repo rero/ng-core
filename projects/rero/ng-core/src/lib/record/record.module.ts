@@ -139,7 +139,8 @@ import { MultiSchemaTypeComponent } from './editor/multischema/multischema.compo
     RecordSearchComponent,
     AutocompleteComponent,
     GetRecordPipe,
-    CoreModule
+    CoreModule,
+    EditorComponent
   ],
   entryComponents: [
     JsonComponent,
