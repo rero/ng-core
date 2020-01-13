@@ -478,5 +478,13 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (formOptions.navigation) {
       field.templateOptions.navigation = formOptions.navigation;
     }
+
+    // template options
+    if (formOptions.templateOptions) {
+      field.templateOptions = {
+        ...field.templateOptions,
+        ...formOptions.templateOptions
+      };
+    }
   }
 }

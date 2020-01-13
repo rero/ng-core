@@ -21,7 +21,8 @@ import {
   TooltipModule,
   TypeaheadModule,
   PaginationModule,
-  CollapseModule
+  CollapseModule,
+  BsDatepickerModule
 } from 'ngx-bootstrap';
 
 import { RecordRoutingModule } from './record-routing.module';
@@ -48,6 +49,7 @@ import { ObjectTypeComponent } from './editor/object-type/object-type.component'
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { SwitchComponent } from './editor/switch/switch.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
+import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +70,8 @@ import { MultiSchemaTypeComponent } from './editor/multischema/multischema.compo
     ArrayTypeComponent,
     ObjectTypeComponent,
     SwitchComponent,
-    MultiSchemaTypeComponent
+    MultiSchemaTypeComponent,
+    DatepickerTypeComponent
   ],
   imports: [
     CoreModule,
@@ -80,6 +83,7 @@ import { MultiSchemaTypeComponent } from './editor/multischema/multischema.compo
     PaginationModule.forRoot(),
     CollapseModule.forRoot(),
     PaginationModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
       validationMessages: [
         { name: 'required', message: _('This field is required') },
@@ -130,7 +134,8 @@ import { MultiSchemaTypeComponent } from './editor/multischema/multischema.compo
         { name: 'enum', extends: 'select' },
         { name: 'array', component: ArrayTypeComponent },
         { name: 'object', component: ObjectTypeComponent },
-        { name: 'multischema', component: MultiSchemaTypeComponent }
+        { name: 'multischema', component: MultiSchemaTypeComponent },
+        { name: 'datepicker', component: DatepickerTypeComponent }
       ]
     }),
     FormlyBootstrapModule
