@@ -105,6 +105,11 @@ export class EditorComponent implements OnInit, OnDestroy {
         const config = this.recordUiService.getResourceConfig(this.recordType);
         if (config.editorLongMode === true) {
           this.longMode = true;
+          this._subscribers.push(
+            this.editorService.hiddenFields$.subscribe(() =>
+              this.getTocFields()
+            )
+          );
         }
         this.pid = params.pid;
         // edition
@@ -219,7 +224,6 @@ export class EditorComponent implements OnInit, OnDestroy {
       this.formlyJsonschema.toFieldConfig(this.schema, {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
-
           /**** additionnal JSONSchema configurations *******/
           // initial population of arrays with a minItems constraints
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
@@ -232,29 +236,32 @@ export class EditorComponent implements OnInit, OnDestroy {
             this.setValidation(field, formOptions);
             this.setRemoteSelectOptions(field, formOptions);
           }
-
-          // show the field if the model contains a value usefull for edition
-          field.hooks = {
-            ...field.hooks,
-            onInit: f => {
-              let model = f.model;
-              // for simple object the model is the parent dict
-              if (!['object', 'multischema', 'array'].some(v => v === f.type)) {
-                model = f.model[f.key];
+          if (this.longMode === true) {
+            // show the field if the model contains a value usefull for edition
+            field.hooks = {
+              ...field.hooks,
+              onInit: f => {
+                let model = f.model;
+                // for simple object the model is the parent dict
+                if (
+                  !['object', 'multischema', 'array'].some(v => v === f.type)
+                ) {
+                  model = f.model[f.key];
+                }
+                if (
+                  f.templateOptions.hide === true &&
+                  isEmpty(removeEmptyValues(model)) === true
+                ) {
+                  // to avoid: Expression has changed after it was checked
+                  // See: https://blog.angular-university.io/angular-debugging
+                  setTimeout(() => {
+                    f.hide = true;
+                    this.editorService.addHiddenField(f);
+                  });
+                }
               }
-              if (
-                f.templateOptions.hide === true &&
-                isEmpty(removeEmptyValues(model)) === false
-              ) {
-                // to avoid: Expression has changed after it was checked
-                // See: https://blog.angular-university.io/angular-debugging
-                setTimeout(() => {
-                  f.hide = false;
-                  this.editorService.removeHiddenField(f);
-                });
-              }
-            }
-          };
+            };
+          }
 
           field.templateOptions.longMode = this.longMode;
 
@@ -271,11 +278,6 @@ export class EditorComponent implements OnInit, OnDestroy {
       })
     ];
     this.fields = fields;
-    if (this.longMode) {
-      this._subscribers.push(
-        this.form.statusChanges.subscribe(() => this.getTocFields())
-      );
-    }
   }
 
   /**
@@ -286,23 +288,38 @@ export class EditorComponent implements OnInit, OnDestroy {
     let data = removeEmptyValues(this.model);
     data = this.postprocessRecord(data);
     if (data.pid != null) {
-      this.recordService.update(this.recordType, this.preUpdateRecord(data)).subscribe((record) => {
-        this.toastrService.success(
-          this.translateService.instant('Record Updated!'),
-          this.translateService.instant(this.recordType)
-        );
-        this.recordUiService.redirectAfterSave(this.pid, record, this.recordType, 'update', this.route);
-
-      });
+      this.recordService
+        .update(this.recordType, this.preUpdateRecord(data))
+        .subscribe(record => {
+          this.toastrService.success(
+            this.translateService.instant('Record Updated!'),
+            this.translateService.instant(this.recordType)
+          );
+          this.recordUiService.redirectAfterSave(
+            this.pid,
+            record,
+            this.recordType,
+            'update',
+            this.route
+          );
+        });
     } else {
-      this.recordService.create(this.recordType, this.preCreateRecord(data)).subscribe(record => {
-        this.toastrService.success(
-          this.translateService.instant('Record Created with pid: ') +
+      this.recordService
+        .create(this.recordType, this.preCreateRecord(data))
+        .subscribe(record => {
+          this.toastrService.success(
+            this.translateService.instant('Record Created with pid: ') +
+              record.metadata.pid,
+            this.translateService.instant(this.recordType)
+          );
+          this.recordUiService.redirectAfterSave(
             record.metadata.pid,
-          this.translateService.instant(this.recordType)
-        );
-        this.recordUiService.redirectAfterSave(record.metadata.pid, record, this.recordType, 'create', this.route);
-      });
+            record,
+            this.recordType,
+            'create',
+            this.route
+          );
+        });
     }
   }
 
@@ -320,12 +337,11 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Populate the field to add to the TOC
    */
   getTocFields() {
-    setTimeout(
-      () =>
-        (this.tocFields = this.fields[0].fieldGroup.filter(
-          f => f.hide !== true
-        ))
-    );
+    setTimeout(() => {
+      if (this.fields && this.fields.length > 0) {
+        this.tocFields = this.fields[0].fieldGroup.filter(f => f.hide !== true);
+      }
+    });
   }
 
   /**
@@ -364,10 +380,9 @@ export class EditorComponent implements OnInit, OnDestroy {
                       record.metadata.pid
                     )
                   };
-                }
+                })
               )
-            )
-          );
+            );
         }
       };
     }
@@ -405,8 +420,7 @@ export class EditorComponent implements OnInit, OnDestroy {
           formOptions.validation.validators.valueAlreadyExists.limitToValues;
         const filter =
           formOptions.validation.validators.valueAlreadyExists.filter;
-        const term =
-          formOptions.validation.validators.valueAlreadyExists.term;
+        const term = formOptions.validation.validators.valueAlreadyExists.term;
         field.asyncValidators = {
           validation: [
             (control: FormControl) => {
@@ -435,7 +449,6 @@ export class EditorComponent implements OnInit, OnDestroy {
     // hide a field at startup
     if (formOptions.hide === true) {
       field.templateOptions.hide = true;
-      setTimeout(() => field.hide = true);
     }
     // wrappers
     if (formOptions.wrappers && formOptions.wrappers.length > 0) {

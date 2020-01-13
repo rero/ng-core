@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { EditorService } from '../editor.service';
 
@@ -23,7 +23,7 @@ import { EditorService } from '../editor.service';
   selector: 'ng-core-editor-formly-object-type',
   templateUrl: './object-type.component.html'
 })
-export class ObjectTypeComponent extends FieldType implements OnInit {
+export class ObjectTypeComponent extends FieldType {
   // default value
   defaultOptions = {
     defaultValue: {}
@@ -35,13 +35,6 @@ export class ObjectTypeComponent extends FieldType implements OnInit {
    */
   constructor(private editorService: EditorService) {
     super();
-  }
-
-  /***
-   * Component init
-   */
-  ngOnInit() {
-    setTimeout(() => this.addHiddenFields());
   }
 
   /**
