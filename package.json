@@ -1,6 +1,6 @@
 {
   "name": "@rero/ng-core",
-  "version": "0.0.24",
+  "version": "0.0.25",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
