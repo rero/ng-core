@@ -29,7 +29,9 @@ import { DocumentComponent } from './record/document/document.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { AppConfigService } from './app-config.service';
-import { CollapseModule, TypeaheadModule } from 'ngx-bootstrap';
+import { CollapseModule, TypeaheadModule, BsLocaleService } from 'ngx-bootstrap';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { enGbLocale, frLocale, deLocale, itLocale } from 'ngx-bootstrap/locale';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({
@@ -59,11 +61,24 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     {
       provide: CoreConfigService,
       useClass: AppConfigService
-    }
+    },
+    BsLocaleService
   ],
   bootstrap: [AppComponent],
   entryComponents: [
     DocumentComponent
   ]
 })
-export class AppModule { }
+export class AppModule {
+  availableLocales = {
+    de: deLocale,
+    en: enGbLocale,
+    fr: frLocale,
+    it: itLocale
+  };
+  constructor() {
+    Object.keys(this.availableLocales).forEach(locale => {
+      defineLocale(locale, this.availableLocales[locale]);
+    });
+  }
+}

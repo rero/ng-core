@@ -18,6 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreConfigService, TitleMetaService, RecordService, RecordEvent } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
+import { BsLocaleService } from 'ngx-bootstrap';
 
 
 @Component({
@@ -86,7 +87,8 @@ export class AppComponent implements OnInit {
     private configService: CoreConfigService,
     private titleMetaService: TitleMetaService,
     private recordService: RecordService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private bsLocaleService: BsLocaleService
     ) {
     }
 
@@ -112,6 +114,7 @@ export class AppComponent implements OnInit {
 
     changeLang(item: any) {
       this.translateService.use(item.name);
+      this.bsLocaleService.use(item.name);
       delete(this.activeLanguagesMenuItem.active);
       item.active = true;
       this.activeLanguagesMenuItem = item;

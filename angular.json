@@ -63,7 +63,8 @@
               "projects/ng-core-tester/src/assets"
             ],
             "styles": [
-              "projects/ng-core-tester/src/styles.scss"
+              "projects/ng-core-tester/src/styles.scss",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ],
             "scripts": []
           },
@@ -123,7 +124,8 @@
               "projects/ng-core-tester/src/assets"
             ],
             "styles": [
-              "projects/ng-core-tester/src/styles.scss"
+              "projects/ng-core-tester/src/styles.scss",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ],
             "scripts": []
           }
