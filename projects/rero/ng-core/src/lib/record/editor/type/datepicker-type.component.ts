@@ -14,45 +14,58 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, LOCALE_ID } from '@angular/core';
 import { FieldType } from '@ngx-formly/core';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'ng-core-editor-datepicker-type',
   template: `
-    <input *ngIf="!to.range; else datePickerRange"
-      type="text"
-      class="form-control"
-      [formControl]="formControl"
-      [formlyAttributes]="field"
-      [class.is-invalid]="showError"
-      bsDatepicker
-      [placement]="to.placement"
-      [bsConfig]="to.bsConfig"
-      [placeholder]="to.placeholder"
-      [outsideClick]="to.outsideClick"
-      [readonly]="to.readonly"
-    >
-    <ng-template #datePickerRange>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text">
+          <i class="fa fa-calendar" aria-hidden="true"></i>
+        </div>
+      </div>
       <input
         type="text"
         class="form-control"
         [formControl]="formControl"
         [formlyAttributes]="field"
         [class.is-invalid]="showError"
-        bsDaterangepicker
+        [placeholder]="to.placeholder"
+        [readonly]="to.readonly"
+
+        bsDatepicker
         [placement]="to.placement"
         [bsConfig]="to.bsConfig"
-        [placeholder]="to.placeholder"
         [outsideClick]="to.outsideClick"
-        [readonly]="to.readonly"
       >
-    </ng-template>
+    </div>
   `
 })
 export class DatepickerTypeComponent extends FieldType implements OnInit {
 
+  /**
+   * constructor
+   * @param locale - string
+   */
+  constructor(@Inject(LOCALE_ID) private locale: string) {
+    super();
+  }
+
+  /**
+   * Init
+   */
   ngOnInit() {
+    this.initConfig();
+    this.initValueChange();
+  }
+
+  /**
+   * Init Config
+   */
+  private initConfig() {
     // Default bsConfig options for DatePicker
     const bsConfig = {
       showWeekNumbers: false,
@@ -67,14 +80,36 @@ export class DatepickerTypeComponent extends FieldType implements OnInit {
     } else {
       this.field.templateOptions.bsConfig = bsConfig;
     }
-    if (!('range' in this.field.templateOptions)) {
-      this.field.templateOptions.range = false;
-    }
     if (!('placement' in this.field.templateOptions)) {
       this.field.templateOptions.placement = 'bottom';
     }
     if (!('outsideClick' in this.field.templateOptions)) {
       this.field.templateOptions.outsideClick = true;
     }
+    if (!('outputDateFormat' in this.field.templateOptions)) {
+      this.field.templateOptions.outputDateFormat = 'yyy-MM-dd';
+    }
+  }
+
+  /**
+   * Init value change on field
+   */
+  private initValueChange() {
+    this.formControl.valueChanges.subscribe(isoDate => {
+      let patchDate: any;
+      try {
+        const date = new Date(isoDate);
+        patchDate = formatDate(
+          date,
+          this.field.templateOptions.outputDateFormat,
+          this.locale
+        );
+      } catch {
+        patchDate = undefined;
+      }
+      if (this.formControl.value !== patchDate) {
+        this.formControl.patchValue(patchDate);
+      }
+    });
   }
 }
