@@ -410,31 +410,47 @@ export class EditorComponent implements OnInit, OnDestroy {
         }
       }
       // custom validators
-      if (
-        formOptions.validation.validators &&
-        formOptions.validation.validators.valueAlreadyExists
-      ) {
-        const remoteRecordType =
+      if (formOptions.validation.validators) {
+        // asyncValidators: valueAlreadyExists
+        if (formOptions.validation.validators.valueAlreadyExists) {
+          const remoteRecordType =
           formOptions.validation.validators.valueAlreadyExists.remoteRecordType;
-        const limitToValues =
-          formOptions.validation.validators.valueAlreadyExists.limitToValues;
-        const filter =
-          formOptions.validation.validators.valueAlreadyExists.filter;
-        const term = formOptions.validation.validators.valueAlreadyExists.term;
-        field.asyncValidators = {
-          validation: [
-            (control: FormControl) => {
-              return this.recordService.uniqueValue(
-                field,
-                remoteRecordType ? remoteRecordType : this.recordType,
-                this.pid ? this.pid : null,
-                term ? term : null,
-                limitToValues ? limitToValues : [],
-                filter ? filter : null
-              );
-            }
-          ]
-        };
+          const limitToValues =
+            formOptions.validation.validators.valueAlreadyExists.limitToValues;
+          const filter =
+            formOptions.validation.validators.valueAlreadyExists.filter;
+          const term = formOptions.validation.validators.valueAlreadyExists.term;
+          field.asyncValidators = {
+            validation: [
+              (control: FormControl) => {
+                return this.recordService.uniqueValue(
+                  field,
+                  remoteRecordType ? remoteRecordType : this.recordType,
+                  this.pid ? this.pid : null,
+                  term ? term : null,
+                  limitToValues ? limitToValues : [],
+                  filter ? filter : null
+                );
+              }
+            ]
+          };
+          delete formOptions.validation.validators.valueAlreadyExists;
+        }
+        // validators: add validator with expressions
+        const validatorsKey = Object.keys(formOptions.validation.validators);
+        validatorsKey.map(validatorKey => {
+          const validator = formOptions.validation.validators[validatorKey];
+          if ('expression' in validator && 'message' in validator) {
+            const expression = validator.expression;
+            const expressionFn = Function('formControl', `return ${expression};`);
+            const validatorExpression = {
+              expression: (fc: FormControl) => expressionFn(fc),
+              message: validator.message
+            };
+            field.validators = field.validators !== undefined ? field.validators : {};
+            field.validators[validatorKey] = validatorExpression;
+          }
+        });
       }
     }
   }
