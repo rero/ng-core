@@ -167,7 +167,7 @@ The lighter choice is to use the npm link command. It creates a symbolic link in
 To do this, build the library and create the global symlink:
 ```
 $ cd /path/to/ng-core/project
-$ npm build @rero/ng-core
+$ ng build @rero/ng-core
 $ cd dist/rero/ng-core
 $ npm link
 ```
@@ -190,7 +190,7 @@ The steps to do this are the following:
 
 ```
 $ cd /path/to/ng-core/project
-$ npm build @rero/ng-core
+$ ng build @rero/ng-core
 $ cd dist/rero/ng-core
 $ npm pack
 ```
