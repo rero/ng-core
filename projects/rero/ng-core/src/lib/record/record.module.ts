@@ -50,6 +50,7 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { SwitchComponent } from './editor/switch/switch.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
+import {ToggleWrapperComponent} from './editor/toggle-wrapper/toggle-wrappers.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { DatepickerTypeComponent } from './editor/type/datepicker-type.component
     ObjectTypeComponent,
     SwitchComponent,
     MultiSchemaTypeComponent,
-    DatepickerTypeComponent
+    DatepickerTypeComponent,
+    ToggleWrapperComponent
   ],
   imports: [
     CoreModule,
@@ -136,6 +138,9 @@ import { DatepickerTypeComponent } from './editor/type/datepicker-type.component
         { name: 'object', component: ObjectTypeComponent },
         { name: 'multischema', component: MultiSchemaTypeComponent },
         { name: 'datepicker', component: DatepickerTypeComponent }
+      ],
+      wrappers: [
+        { name: 'toggle-switch', component: ToggleWrapperComponent }
       ]
     }),
     FormlyBootstrapModule

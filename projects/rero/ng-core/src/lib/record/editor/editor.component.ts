@@ -368,13 +368,16 @@ export class EditorComponent implements OnInit, OnDestroy {
         ...field.hooks,
         afterContentInit: (f: FormlyFieldConfig) => {
           const recordType = formOptions.remoteOptions.type;
+          const query = formOptions.remoteOptions.query ? formOptions.remoteOptions.query : '';
           f.templateOptions.options = this.recordService
-            .getRecords(recordType, '', 1, RecordService.MAX_REST_RESULTS_SIZE)
+            .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
             .pipe(
               map(data =>
                 data.hits.hits.map(record => {
                   return {
-                    label: record.metadata.name,
+                    label: formOptions.remoteOptions.labelField && formOptions.remoteOptions.labelField in record.metadata
+                      ? record.metadata[formOptions.remoteOptions.labelField]
+                      : record.metadata.name,
                     value: this.apiService.getRefEndpoint(
                       recordType,
                       record.metadata.pid
