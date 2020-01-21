@@ -331,7 +331,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
       if (result === true) {
         // refresh records
-        this.getRecords(true, false);
+        this.getRecords(false, false);
 
         // update main counter
         this.config.total--;
