@@ -14,19 +14,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'ng-core-search-input',
   templateUrl: './search-input.component.html'
 })
 export class SearchInputComponent {
-  @Input()
-  displayLabel = true;
+  /** The current search input object from the template. */
+  @ViewChild('searchinput', { static: false }) input: any;
 
-  @Input() placeholder = 'search';
+  /** Search output event emitter */
   @Output() search = new EventEmitter<string>();
+
+  /** Display label */
+  @Input() displayLabel = true;
+
+  /** Placeholder */
+  @Input() placeholder = 'search';
+
+  /** Value to search */
   @Input() searchText = '';
+
+  /** Set the focus on the input element */
+  @Input() set focus(value: boolean) {
+    if (value === true) {
+      setTimeout(() => this.input.nativeElement.focus());
+    }
+  }
 
   doSearch(searchText: string) {
     this.search.emit(searchText);
