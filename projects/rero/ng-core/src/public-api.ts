@@ -26,6 +26,8 @@ export * from './lib/record/search/result/item/result-item';
 export * from './lib/record/record.module';
 export * from './lib/record/search/record-search-page.component';
 export * from './lib/record/detail/detail.component';
+export * from './lib/route/route-interface';
+export * from './lib/route/route-collection.service';
 export * from './lib/utils/utils';
 export * from './lib/validator/unique.validator';
 export * from './lib/validator/time.validator';
