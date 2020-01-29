@@ -15,15 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, UrlSegment } from '@angular/router';
-import { of, Observable } from 'rxjs';
-
-import { DetailComponent as RecordDetailComponent, RecordSearchComponent, EditorComponent } from '@rero/ng-core';
-
-import { HomeComponent } from './home/home.component';
-import { DocumentComponent } from './record/document/document.component';
-import { DetailComponent } from './record/document/detail/detail.component';
+import { RouterModule, Routes, UrlSegment } from '@angular/router';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { DetailComponent as RecordDetailComponent, EditorComponent, RecordSearchComponent } from '@rero/ng-core';
+import { JSONSchema7 } from 'json-schema';
 import { ActionStatus } from 'projects/rero/ng-core/src/public-api';
+import { Observable, of } from 'rxjs';
+import { HomeComponent } from './home/home.component';
+import { DetailComponent } from './record/document/detail/detail.component';
+import { DocumentComponent } from './record/document/document.component';
 
 const canAdd = (record: any): Observable<ActionStatus> => {
   return of({
@@ -51,6 +51,14 @@ const canRead = (record: any): Observable<ActionStatus> => {
     can: Math.random() >= 0.5,
     message: ''
   });
+};
+
+const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
+  // Populates each select with custom options
+  if (field.type === 'enum') {
+    field.templateOptions.options = [ { label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' } ];
+  }
+  return field;
 };
 
 const aggregations = (agg: object) => {
@@ -226,6 +234,7 @@ const routes: Routes = [
           canDelete,
           canRead,
           aggregations,
+          formFieldMap,
           listHeaders: {
             'Content-Type': 'application/rero+json'
           },

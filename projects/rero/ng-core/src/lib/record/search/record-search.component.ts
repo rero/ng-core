@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { of, Observable } from 'rxjs';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { JSONSchema7 } from 'json-schema';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-import { RecordService } from '../record.service';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
+import { RecordService } from '../record.service';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -131,7 +132,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     pagination?: {
       boundaryLinks?: boolean,
       maxSize?: number
-    }
+    },
+    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**

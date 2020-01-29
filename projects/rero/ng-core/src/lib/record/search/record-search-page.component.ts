@@ -16,6 +16,8 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { JSONSchema7 } from 'json-schema';
 import { combineLatest } from 'rxjs';
 
 @Component({
@@ -90,7 +92,8 @@ export class RecordSearchComponent implements OnInit {
     pagination?: {
       boundaryLinks?: boolean,
       maxSize?: number
-    }
+    },
+    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**

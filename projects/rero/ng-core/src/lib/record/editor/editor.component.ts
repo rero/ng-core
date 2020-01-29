@@ -69,6 +69,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   // subscribers
   private _subscribers: Subscription[] = [];
 
+  // Config for resource
+  private _resourceConfig: any;
+
   /**
    * Constructor
    * @param formlyJsonschema - FormlyJsonschema, the ngx-fomly jsonschema service
@@ -102,8 +105,8 @@ export class EditorComponent implements OnInit, OnDestroy {
 
         this.recordType = params.type;
         this.recordUiService.types = this.route.snapshot.data.types;
-        const config = this.recordUiService.getResourceConfig(this.recordType);
-        if (config.editorLongMode === true) {
+        this._resourceConfig = this.recordUiService.getResourceConfig(this.recordType);
+        if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
           this._subscribers.push(
             this.editorService.hiddenFields$.subscribe(() =>
@@ -271,6 +274,10 @@ export class EditorComponent implements OnInit, OnDestroy {
               ...(field.wrappers ? field.wrappers : []),
               'form-field'
             ];
+          }
+
+          if (this._resourceConfig.formFieldMap) {
+            return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
 
           return field;
