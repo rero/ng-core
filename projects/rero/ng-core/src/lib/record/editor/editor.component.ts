@@ -69,6 +69,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   // subscribers
   private _subscribers: Subscription[] = [];
 
+  // Config for resource
+  private _resourceConfig: any;
+
   /**
    * Constructor
    * @param formlyJsonschema - FormlyJsonschema, the ngx-fomly jsonschema service
@@ -102,8 +105,8 @@ export class EditorComponent implements OnInit, OnDestroy {
 
         this.recordType = params.type;
         this.recordUiService.types = this.route.snapshot.data.types;
-        const config = this.recordUiService.getResourceConfig(this.recordType);
-        if (config.editorLongMode === true) {
+        this._resourceConfig = this.recordUiService.getResourceConfig(this.recordType);
+        if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
           this._subscribers.push(
             this.editorService.hiddenFields$.subscribe(() =>
@@ -235,6 +238,7 @@ export class EditorComponent implements OnInit, OnDestroy {
             this.setSimpleOptions(field, formOptions);
             this.setValidation(field, formOptions);
             this.setRemoteSelectOptions(field, formOptions);
+            this.setCustomSelectOptions(field, formOptions);
           }
           if (this.longMode === true) {
             // show the field if the model contains a value usefull for edition
@@ -388,6 +392,30 @@ export class EditorComponent implements OnInit, OnDestroy {
             );
         }
       };
+    }
+  }
+
+  /**
+   * Populate a select options with a custom logic provided in route configuration.
+   * @param field formly field config
+   * @param formOptions JSONSchema object
+   */
+  private setCustomSelectOptions(
+    field: FormlyFieldConfig,
+    formOptions: JSONSchema7
+  ) {
+    if (formOptions.type && formOptions.type === 'custom-select') {
+      if (this._resourceConfig.form && this._resourceConfig.form[formOptions.field]) {
+        field.type = 'select';
+        field.hooks = {
+          ...field.hooks,
+          afterContentInit: (f: FormlyFieldConfig) => {
+            this._resourceConfig.form[formOptions.field]().subscribe((values: Array<{ label: string, value: string }>) => {
+              f.templateOptions.options = values;
+            });
+          }
+        };
+      }
     }
   }
 

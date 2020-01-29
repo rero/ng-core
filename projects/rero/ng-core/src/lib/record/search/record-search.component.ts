@@ -131,7 +131,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     pagination?: {
       boundaryLinks?: boolean,
       maxSize?: number
-    }
+    },
+    form?: object
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**

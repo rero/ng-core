@@ -53,6 +53,10 @@ const canRead = (record: any): Observable<ActionStatus> => {
   });
 };
 
+const customSelectForType = (): Observable<Array<{ label: string, value: string }>> => {
+  return of([ { label: 'Custom type for document 1', value: 'type-1' }, { label: 'Custom type for document 2', value: 'type-2' } ]);
+};
+
 const aggregations = (agg: object) => {
   return of(agg);
 };
@@ -231,6 +235,9 @@ const routes: Routes = [
           },
           itemHeaders: {
             'Content-Type': 'application/rero+json'
+          },
+          form: {
+            type: customSelectForType
           }
         },
         {

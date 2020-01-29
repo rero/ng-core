@@ -137,7 +137,8 @@ import {ToggleWrapperComponent} from './editor/toggle-wrapper/toggle-wrappers.co
         { name: 'array', component: ArrayTypeComponent },
         { name: 'object', component: ObjectTypeComponent },
         { name: 'multischema', component: MultiSchemaTypeComponent },
-        { name: 'datepicker', component: DatepickerTypeComponent }
+        { name: 'datepicker', component: DatepickerTypeComponent },
+        { name: 'custom-select', extends: 'select' }
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent }

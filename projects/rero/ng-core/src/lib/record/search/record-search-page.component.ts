@@ -90,7 +90,8 @@ export class RecordSearchComponent implements OnInit {
     pagination?: {
       boundaryLinks?: boolean,
       maxSize?: number
-    }
+    },
+    form?: object
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
