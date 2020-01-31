@@ -55,10 +55,17 @@ const canRead = (record: any): Observable<ActionStatus> => {
 };
 
 const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
-  // Populates each select with custom options
-  if (field.type === 'enum') {
-    field.templateOptions.options = [ { label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' } ];
+  // Populates "type" field with custom options
+  const formOptions = jsonSchema.form;
+  if (formOptions && formOptions.field === 'type') {
+    field.type = 'select';
+    field.templateOptions.options = [
+      { label: 'Type 1', value: 'type 1' },
+      { label: 'Type 2', value: 'type 2' }
+    ];
+    field.defaultValue = 'type 2';
   }
+
   return field;
 };
 

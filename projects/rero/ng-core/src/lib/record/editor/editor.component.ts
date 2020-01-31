@@ -268,16 +268,16 @@ export class EditorComponent implements OnInit, OnDestroy {
 
           field.templateOptions.longMode = this.longMode;
 
+          if (this._resourceConfig.formFieldMap) {
+            return this._resourceConfig.formFieldMap(field, jsonSchema);
+          }
+
           // add a form-field wrapper for boolean (switch)
           if (field.type === 'boolean') {
             field.wrappers = [
               ...(field.wrappers ? field.wrappers : []),
               'form-field'
             ];
-          }
-
-          if (this._resourceConfig.formFieldMap) {
-            return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
 
           return field;
