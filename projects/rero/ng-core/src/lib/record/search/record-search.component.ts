@@ -22,6 +22,7 @@ import { map } from 'rxjs/operators';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
+import { BriefQueryOptionsInterface } from './briefQueryOptionsInterface';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -133,7 +134,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       boundaryLinks?: boolean,
       maxSize?: number
     },
-    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
+    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig,
+    briefQuery?: (recordService: RecordService, level: string, options: BriefQueryOptionsInterface) => Observable<any>
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -223,10 +225,28 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   ngOnInit() {
     // Load totals for each resource type
     for (const type of this.types) {
-      this.recordService.getRecords(
-        type.key, '', 1, 1, [],
-        this.config.preFilters || {},
-        this.config.listHeaders || null).subscribe(records => {
+      let recordServiceGetRecords$: Observable<any>;
+      if (this.config.briefQuery) {
+        const options: BriefQueryOptionsInterface = {
+          type: type.key,
+          q: '',
+          page: 1,
+          size: 1,
+          aggFilters: [],
+          preFilters: this.config.preFilters || {},
+          listHeaders: this.config.listHeaders || null,
+          sort: null
+        };
+        recordServiceGetRecords$ = this.config.briefQuery(
+          this.recordService, 'init', options);
+      } else {
+        recordServiceGetRecords$ = this.recordService.getRecords(
+          type.key, '', 1, 1, [],
+          this.config.preFilters || {},
+          this.config.listHeaders || null);
+      }
+
+      recordServiceGetRecords$.subscribe(records => {
         type.total = records.hits.total;
       });
     }
@@ -385,16 +405,35 @@ export class RecordSearchComponent implements OnInit, OnChanges {
 
     this.isLoading = true;
 
-    this.recordService.getRecords(
-      this.currentType,
-      this.q,
-      this.page,
-      this.size,
-      this.aggFilters,
-      this.config.preFilters || {},
-      this.config.listHeaders || null,
-      this.sort
-    ).subscribe(
+    const options: BriefQueryOptionsInterface = {
+      type: this.currentType,
+      q: this.q,
+      page: this.page,
+      size: this.size,
+      aggFilters: this.aggFilters,
+      preFilters: this.config.preFilters || {},
+      listHeaders: this.config.listHeaders || null,
+      sort: this.sort
+    };
+
+    let recordServiceGetRecords$: Observable<any>;
+    if (this.config.briefQuery) {
+      recordServiceGetRecords$ = this.config.briefQuery(
+        this.recordService, 'getRecords', options);
+    } else {
+      recordServiceGetRecords$ = this.recordService.getRecords(
+        this.currentType,
+        this.q,
+        this.page,
+        this.size,
+        this.aggFilters,
+        this.config.preFilters || {},
+        this.config.listHeaders || null,
+        this.sort
+      );
+    }
+
+    recordServiceGetRecords$.subscribe(
       records => {
         this.records = records.hits.hits;
         this.total = records.hits.total;

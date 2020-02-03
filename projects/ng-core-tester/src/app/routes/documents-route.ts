@@ -20,13 +20,15 @@ import {
   RouteInterface,
   DetailComponent as RecordDetailComponent,
   RecordSearchComponent,
-  EditorComponent
+  EditorComponent,
+  RecordService
 } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { Observable, of } from 'rxjs';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { JSONSchema7 } from 'json-schema';
+import { BriefQueryOptionsInterface } from '@rero/ng-core/lib/record/search/briefQueryOptionsInterface';
 
 export class DocumentsRoute implements RouteInterface {
 
@@ -110,6 +112,19 @@ export class DocumentsRoute implements RouteInterface {
                 can: Math.random() >= 0.5,
                 message: ''
               });
+            },
+            briefQuery: (recordService: RecordService, level: string, options: BriefQueryOptionsInterface): Observable<any> => {
+              // Customize query for your brief view
+              return recordService.getRecords(
+                options.type,
+                options.q,
+                options.page,
+                options.size,
+                options.aggFilters,
+                options.preFilters,
+                options.listHeaders,
+                level === 'init' ? null : options.sort
+                );
             }
           }
         ]
