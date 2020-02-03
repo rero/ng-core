@@ -39,7 +39,7 @@
           <i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i>
           {{ item.name|translate }}
         </a>
-        <div *dropdownMenu class="dropdown-menu" role="menu">
+        <div *dropdownMenu class="dropdown-menu" role="menu" [ngClass]="menu.hasOwnProperty('dropdownMenuCssClass') ? menu.dropdownMenuCssClass : ''">
           <ng-container *ngFor="let subItem of item.entries | callbackArrayFilter: isItemMenuVisible" [ngSwitch]="itemType(subItem)">
             <a *ngSwitchCase="'routerLink'" [routerLink]="subItem.routerLink"
             [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
