@@ -37,7 +37,7 @@
     <li *ngFor="let field of getEssentials() | async">
       <button
         (click)="showSelectedField(field.field)"
-        class="btn btn-outline-secondary w-100 mb-1 btn-sm"
+        class="btn btn-outline-secondary w-100 mb-1 btn-sm overflow-hidden"
       >
         {{ field.field.templateOptions.label }}
       </button>
