@@ -43,7 +43,18 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   // initial data
   @Input()
-  model: any = {};
+  set model(value) {
+    this._model = value;
+  }
+  get model() {
+    // the parent dont know that we are editing a record
+    if (this.pid != null && this._model.pid == null) {
+      this._model.pid = this.pid;
+    }
+    // preprocess the model before sending to formly
+    return this.preprocessRecord(this._model);
+  }
+  private _model: any = {};
 
   // additionnal form options
   options: FormlyFormOptions;
@@ -115,6 +126,11 @@ export class EditorComponent implements OnInit, OnDestroy {
           );
         }
         this.pid = params.pid;
+        this.recordService
+          .getSchemaForm(this.recordType)
+          .subscribe(schemaform => {
+            this.setSchema(schemaform.schema);
+          });
         // edition
         if (this.pid) {
           this.recordService
@@ -131,22 +147,10 @@ export class EditorComponent implements OnInit, OnDestroy {
                       this.translateService.instant(this.recordType)
                     );
                     this.location.back();
+                  } else {
+                    this._model = record.metadata;
                   }
                 });
-              this.model = this.preprocessRecord(record.metadata);
-              this.recordService
-                .getSchemaForm(this.recordType)
-                .subscribe(schemaform => {
-                  this.setSchema(schemaform.schema);
-                });
-            });
-        } else {
-          // creation
-          this.model = this.preprocessRecord(this.model);
-          this.recordService
-            .getSchemaForm(this.recordType)
-            .subscribe(schemaform => {
-              this.setSchema(schemaform.schema);
             });
         }
       });
@@ -243,25 +247,8 @@ export class EditorComponent implements OnInit, OnDestroy {
             // show the field if the model contains a value usefull for edition
             field.hooks = {
               ...field.hooks,
-              onInit: f => {
-                let model = f.model;
-                // for simple object the model is the parent dict
-                if (
-                  !['object', 'multischema', 'array'].some(v => v === f.type)
-                ) {
-                  model = f.model[f.key];
-                }
-                if (
-                  f.templateOptions.hide === true &&
-                  isEmpty(removeEmptyValues(model)) === true
-                ) {
-                  // to avoid: Expression has changed after it was checked
-                  // See: https://blog.angular-university.io/angular-debugging
-                  setTimeout(() => {
-                    f.hide = true;
-                    this.editorService.addHiddenField(f);
-                  });
-                }
+              onPopulate: (f) => {
+                this.hideShowEmptyField(f);
               }
             };
           }
@@ -285,6 +272,34 @@ export class EditorComponent implements OnInit, OnDestroy {
       })
     ];
     this.fields = fields;
+  }
+
+  /**
+   * Hide of show the field depending on the model value.
+   * @param field formly field config
+   */
+  private hideShowEmptyField(field: FormlyFieldConfig) {
+    let model = field.model;
+    // for simple object the model is the parent dict
+    if (
+      !['object', 'multischema', 'array'].some(f => f === field.type)
+    ) {
+      model = field.model[field.key];
+    }
+    model = removeEmptyValues(model);
+    const modelEmpty = isEmpty(model);
+    if (!modelEmpty && (field.hide !== false)) {
+      setTimeout(() => {
+        field.hide = false;
+        this.editorService.removeHiddenField(field);
+      });
+    }
+    if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
+      setTimeout(() => {
+        field.hide = true;
+        this.editorService.addHiddenField(field);
+      });
+    }
   }
 
   /**
@@ -316,7 +331,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         .subscribe(record => {
           this.toastrService.success(
             this.translateService.instant('Record Created with pid: ') +
-              record.metadata.pid,
+            record.metadata.pid,
             this.translateService.instant(this.recordType)
           );
           this.recordUiService.redirectAfterSave(
@@ -424,7 +439,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         // asyncValidators: valueAlreadyExists
         if (formOptions.validation.validators.valueAlreadyExists) {
           const remoteRecordType =
-          formOptions.validation.validators.valueAlreadyExists.remoteRecordType;
+            formOptions.validation.validators.valueAlreadyExists.remoteRecordType;
           const limitToValues =
             formOptions.validation.validators.valueAlreadyExists.limitToValues;
           const filter =

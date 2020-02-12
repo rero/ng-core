@@ -51,6 +51,8 @@ import { SwitchComponent } from './editor/switch/switch.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import {ToggleWrapperComponent} from './editor/toggle-wrapper/toggle-wrappers.component';
+import { hooksFormlyExtension } from './editor/extensions';
+
 
 @NgModule({
   declarations: [
@@ -87,6 +89,7 @@ import {ToggleWrapperComponent} from './editor/toggle-wrapper/toggle-wrappers.co
     PaginationModule.forRoot(),
     BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
+      extensions: [{ name: 'hooks', extension: hooksFormlyExtension }],
       validationMessages: [
         { name: 'required', message: _('This field is required') },
         { name: 'null', message: _('should be null') },

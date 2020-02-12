@@ -60,12 +60,23 @@ export class EditorService {
   }
 
   /**
+   * Check if the field is a candidate for the field navigation.
+   * @param field - FormlyFieldConfig, form config to be added
+   * @returns boolean, true if the field is at the root JSONSchema.
+   */
+  isFieldRoot(field: FormlyFieldConfig) {
+    return field.parent.parent.parent === undefined;
+  }
+
+  /**
    * Add a field to the hidden list
    * @param field - FormlyFieldConfig, form config to be added
    */
   addHiddenField(field: FormlyFieldConfig) {
-    this._hiddenFields.push(field);
-    this._hiddenFieldsSubject.next(this._hiddenFields);
+    if (!this._hiddenFields.some(f => f === field) && this.isFieldRoot(field)) {
+      this._hiddenFields.push(field);
+      this._hiddenFieldsSubject.next(this._hiddenFields);
+    }
   }
 
   /**
@@ -73,7 +84,9 @@ export class EditorService {
    * @param field - FormlyFieldConfig, form config to be removed
    */
   removeHiddenField(field: FormlyFieldConfig) {
-    this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
-    this._hiddenFieldsSubject.next(this._hiddenFields);
+    if (this._hiddenFields.some(f => f === field) && this.isFieldRoot(field)) {
+      this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
+      this._hiddenFieldsSubject.next(this._hiddenFields);
+    }
   }
 }
