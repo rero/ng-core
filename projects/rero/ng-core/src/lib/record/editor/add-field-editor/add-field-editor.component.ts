@@ -89,10 +89,6 @@ export class AddFieldEditorComponent implements OnInit {
     // show the field in the form
     field.hide = false;
 
-    // TODO: remove this workaround when the following issue will be solved
-    // https://github.com/ngx-formly/ngx-formly/issues/198
-    field.formControl.enable();
-
     // reset the input value
     this.value = undefined;
     // remove the the element from the list of hidden fields
