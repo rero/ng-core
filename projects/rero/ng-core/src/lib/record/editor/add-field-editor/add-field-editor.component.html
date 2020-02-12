@@ -16,8 +16,8 @@
 -->
 
 <!-- from ngx-boostrap -->
-<div class="w-100">
-  <div *ngIf="typeaheadFields$ | async as typeaheadFields" class="form-group">
+<div class="w-100" *ngIf="typeaheadFields$ | async as typeaheadFields">
+  <div  class="form-group">
     <label for="addField" translate>Add field</label>
     <input
       id="#addField"
@@ -34,8 +34,8 @@
     </small>
   </div>
   <ul class="list-unstyled">
-    <li *ngFor="let field of getEssentials() | async">
-      <button
+    <li *ngFor="let field of typeaheadFields">
+      <button *ngIf="isFieldEssential(field.field)"
         (click)="showSelectedField(field.field)"
         class="btn btn-outline-secondary w-100 mb-1 btn-sm overflow-hidden"
       >

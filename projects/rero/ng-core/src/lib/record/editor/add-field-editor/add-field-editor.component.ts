@@ -105,16 +105,11 @@ export class AddFieldEditorComponent implements OnInit {
   }
 
   /**
-   * Get all essential fields to add as nav shortcut.
-   * @returns - FormlyFieldConfigSelection[], the filtered selection values
+   * Filter fields to display only essential ones
+   * @param field - field to check
    */
-  getEssentials(): Observable<FormlyFieldConfigSelection[]> {
-    return this.typeaheadFields$.pipe(
-      map((fields: FormlyFieldConfigSelection[]) => fields.filter(
-        f =>
-          f.field.templateOptions.navigation &&
-          f.field.templateOptions.navigation.essential === true
-      ))
-    );
+  isFieldEssential(field: FormlyFieldConfig) {
+    return field.templateOptions.navigation &&
+      field.templateOptions.navigation.essential === true;
   }
 }
