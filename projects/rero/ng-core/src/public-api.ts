@@ -48,3 +48,4 @@ export * from './lib/pipe/get-record.pipe';
 export * from './lib/pipe/nl2br.pipe';
 export * from './lib/pipe/truncate-text.pipe';
 export * from './lib/pipe/ucfirst.pipe';
+export * from './lib/record/editor/extensions';
