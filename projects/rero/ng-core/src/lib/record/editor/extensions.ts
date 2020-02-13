@@ -18,6 +18,13 @@
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 
 
+export function onPopulateHook(field: FormlyFieldConfig) {
+  if (field.hooks && field.hooks.onPopulate) {
+    field.hooks.onPopulate(field);
+  }
+}
+
+
 export const hooksFormlyExtension: FormlyExtension = {
 
   /**
@@ -27,9 +34,5 @@ export const hooksFormlyExtension: FormlyExtension = {
    * See: https://github.com/ngx-formly/ngx-formly/issues/1109 for more detail.
    * @param field formly field config
    */
-  onPopulate(field: FormlyFieldConfig) {
-    if (field.hooks && field.hooks.onPopulate) {
-      field.hooks.onPopulate(field);
-    }
-  }
+  onPopulate: onPopulateHook
 };
