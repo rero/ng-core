@@ -84,6 +84,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     canUpdate?: any,
     canDelete?: any,
     canRead?: any,
+    permissions?: any,
     aggregations?: any,
     listHeaders?: any,
     itemHeaders?: any,

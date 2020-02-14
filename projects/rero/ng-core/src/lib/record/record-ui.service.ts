@@ -149,6 +149,13 @@ export class RecordUiService {
   canUpdateRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
 
+    if (config.permissions) {
+      const permissions = config.permissions(record);
+      if ('canUpdate' in permissions) {
+        return permissions.canUpdate;
+      }
+    }
+
     if (config.canUpdate) {
       return config.canUpdate(record).pipe(first());
     }
@@ -165,6 +172,13 @@ export class RecordUiService {
   canDeleteRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
 
+    if (config.permissions) {
+      const permissions = config.permissions(record);
+      if ('canDelete' in permissions) {
+        return permissions.canDelete;
+      }
+    }
+
     if (config.canDelete) {
       return config.canDelete(record).pipe(first());
     }
@@ -180,6 +194,13 @@ export class RecordUiService {
    */
   canReadRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
+
+    if (config.permissions) {
+      const permissions = config.permissions(record);
+      if ('canRead' in permissions) {
+        return permissions.canRead;
+      }
+    }
 
     if (config.canRead) {
       return config.canRead(record).pipe(first());

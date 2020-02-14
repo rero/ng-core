@@ -24,6 +24,7 @@ import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { RouteService } from './routes/route.service';
+import { RecordDetailDirective } from '@rero/ng-core/lib/record/detail/detail.directive';
 
 /**
  * Disallows access to admin functionalities.
@@ -89,9 +90,29 @@ const canRead = (record: any): Observable<ActionStatus> => {
   });
 };
 
-/**
- * Custom configuration for form editor.
- */
+// Permissions override simple canRead, canUpdate and canDelete if defined
+const permissions = (record: any) => {
+  const perms = record.metadata.permissions;
+  perms.read = true;
+  perms.update = true;
+  perms.delete = false;
+
+  return {
+    canRead: of({
+        can: perms.read,
+        message: ''
+    }),
+    canUpdate: of({
+        can: perms.update,
+        message: ''
+    }),
+    canDelete: of({
+        can: perms.delete,
+        message: ''
+    })
+  };
+};
+
 const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
   // Populates "type" field with custom options
   const formOptions = jsonSchema.form;
@@ -224,6 +245,7 @@ const routes: Routes = [
           canUpdate,
           canDelete,
           canRead,
+          permissions,
           aggregations,
           adminMode: adminModeCan,
           aggregationsBucketSize: 8,
