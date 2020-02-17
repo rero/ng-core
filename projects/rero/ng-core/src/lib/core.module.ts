@@ -33,6 +33,7 @@ import { TranslateLoader } from './translate/translate-loader';
 import { ModalModule, BsDropdownModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
+import { TextReadMoreComponent } from './text-read-more/text-read-more.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
     DialogComponent,
     SearchInputComponent,
     MenuComponent,
-    TranslateLanguagePipe
+    TranslateLanguagePipe,
+    TextReadMoreComponent
   ],
   imports: [
     CommonModule,
@@ -73,7 +75,8 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
     DateTranslatePipe,
     DialogComponent,
     SearchInputComponent,
-    MenuComponent
+    MenuComponent,
+    TextReadMoreComponent
   ],
   entryComponents: [DialogComponent]
 })

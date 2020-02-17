@@ -1,0 +1,3 @@
+<a class="pl-2" href="#" *ngIf="isLimitReached && limit<0" (click)="toggleText($event)">{{ linkLabel }}</a>
+<div class="d-inline" [innerHTML]="textToDisplay | nl2br"></div>
+<a class="pl-2" href="#" *ngIf="isLimitReached && limit>=0" (click)="toggleText($event)">{{ linkLabel }}</a>
