@@ -49,3 +49,4 @@ export * from './lib/pipe/nl2br.pipe';
 export * from './lib/pipe/truncate-text.pipe';
 export * from './lib/pipe/ucfirst.pipe';
 export * from './lib/record/editor/extensions';
+export * from './lib/text-read-more/text-read-more.component';
