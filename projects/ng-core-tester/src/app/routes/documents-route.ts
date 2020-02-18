@@ -48,7 +48,6 @@ export class DocumentsRoute implements RouteInterface {
       ],
       data: {
         showSearchInput: true,
-        // adminMode: false,
         types: [
           {
             key: 'documents',

@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div class="float-right ml-5 mb-2" *ngIf="adminMode">
+<div class="float-right ml-5 mb-2" *ngIf="adminMode.can">
     <a href class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
         *ngIf="inRouting && updateStatus && updateStatus.can">
         <i class="fa fa-pencil"></i>

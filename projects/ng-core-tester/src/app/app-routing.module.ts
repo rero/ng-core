@@ -17,14 +17,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, UrlSegment } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { Observable, of } from 'rxjs';
+import { ActionStatus } from '@rero/ng-core';
 import { JSONSchema7 } from 'json-schema';
-
+import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { ActionStatus } from 'projects/rero/ng-core/src/public-api';
 import { RouteService } from './routes/route.service';
+
+
+const adminModeCanNot = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
+
+const adminModeCan = (): Observable<ActionStatus> => {
+  return of({
+    can: true,
+    message: ''
+  });
+};
 
 const canAdd = (record: any): Observable<ActionStatus> => {
   return of({
@@ -106,7 +120,7 @@ const routes: Routes = [
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
-      adminMode: false,
+      adminMode: adminModeCanNot,
       types: [
         {
           key: 'documents',
@@ -121,7 +135,7 @@ const routes: Routes = [
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
-      adminMode: false,
+      adminMode: adminModeCanNot,
       types: [
         {
           key: 'institutions',
@@ -135,7 +149,7 @@ const routes: Routes = [
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
-      adminMode: false,
+      adminMode: adminModeCanNot,
       types: [
         {
           key: 'documents',
@@ -163,6 +177,7 @@ const routes: Routes = [
           canDelete,
           canRead,
           aggregations,
+          adminMode: adminModeCan,
           formFieldMap,
           listHeaders: {
             'Content-Type': 'application/rero+json'

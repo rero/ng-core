@@ -14,20 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, Input, ViewChild, ComponentFactoryResolver } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Observable } from 'rxjs';
-
+import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-
-import { RecordDetailDirective } from './detail.directive';
-import { JsonComponent } from './view/json.component';
-import { RecordService } from '../record.service';
+import { Observable } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
-import { TranslateService } from '@ngx-translate/core';
+import { RecordService } from '../record.service';
+import { RecordDetailDirective } from './detail.directive';
+import { JsonComponent } from './view/json.component';
+
 
 @Component({
   selector: 'ng-core-record-detail',
@@ -68,7 +66,10 @@ export class DetailComponent implements OnInit {
   /**
    * Admin mode for CRUD operations
    */
-  adminMode = true;
+  adminMode: ActionStatus = {
+    can: true,
+    message: ''
+  };
 
   /**
    * View component for displaying record
@@ -127,8 +128,8 @@ export class DetailComponent implements OnInit {
           this.updateStatus = result;
         });
 
-        if (this.route.snapshot.data.adminMode != null) {
-          this.adminMode = this.route.snapshot.data.adminMode;
+        if (this.route.snapshot.data.adminMode) {
+          this.route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
         }
       },
       (error) => {

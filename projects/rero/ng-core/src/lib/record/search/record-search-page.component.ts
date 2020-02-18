@@ -19,6 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { JSONSchema7 } from 'json-schema';
 import { combineLatest } from 'rxjs';
+import { ActionStatus } from '../action-status';
 
 @Component({
   selector: 'ng-core-record-search-page',
@@ -49,7 +50,10 @@ export class RecordSearchComponent implements OnInit {
   /**
    * Admin mode (edit, remove, add, ...)
    */
-  adminMode = true;
+  adminMode: ActionStatus = {
+    can: true,
+    message: ''
+  };
 
   /**
    * Define the current record's page
@@ -166,8 +170,8 @@ export class RecordSearchComponent implements OnInit {
       this.showSearchInput = data.showSearchInput;
     }
 
-    if (data.adminMode != null) {
-      this.adminMode = data.adminMode;
+    if (data.adminMode) {
+      data.adminMode().subscribe((as: ActionStatus) => this.adminMode = as);
     }
 
     if (data.detailUrl) {

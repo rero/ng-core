@@ -101,7 +101,10 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * Admin mode (edit, remove, add, ...)
    */
   @Input()
-  adminMode = true;
+  adminMode: ActionStatus = {
+    can: true,
+    message: ''
+  };
 
   /**
    * Component is integrated in angular routing

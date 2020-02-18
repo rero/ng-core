@@ -70,7 +70,10 @@ export class RecordSearchResultComponent implements OnInit {
    * Admin mode (edit, remove, add, ...)
    */
   @Input()
-  adminMode = false;
+  adminMode: ActionStatus = {
+    can: false,
+    message: ''
+  };
 
   /**
    * Record can be updated

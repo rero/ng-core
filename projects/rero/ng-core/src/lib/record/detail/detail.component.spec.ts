@@ -15,20 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of, throwError } from 'rxjs';
-
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { ActionStatus } from '@rero/ng-core/public-api';
 import { ModalModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
-
-import { DetailComponent } from './detail.component';
+import { Observable, of, throwError } from 'rxjs';
 import { RecordService } from '../record.service';
-import { JsonComponent } from './view/json.component';
+import { DetailComponent } from './detail.component';
 import { RecordDetailDirective } from './detail.directive';
+import { JsonComponent } from './view/json.component';
+
+
+const adminMode = (): Observable<ActionStatus> => {
+  return of({
+    can: true,
+    message: ''
+  });
+};
 
 describe('RecordDetailComponent', () => {
   let component: DetailComponent;
@@ -49,7 +56,7 @@ describe('RecordDetailComponent', () => {
           }
         ],
         showSearchInput: true,
-        adminMode: true
+        adminMode
       }
     }
   };

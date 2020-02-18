@@ -15,28 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { of } from 'rxjs';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
-import { PaginationModule, ModalModule } from 'ngx-bootstrap';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { ModalModule, PaginationModule } from 'ngx-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
-
-import { RecordSearchComponent } from './record-search-page.component';
+import { Observable, of } from 'rxjs';
+import { DialogComponent } from '../../dialog/dialog.component';
+import { DialogService } from '../../dialog/dialog.service';
 import { DefaultPipe } from '../../pipe/default.pipe';
+import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { UpperCaseFirstPipe } from '../../pipe/ucfirst.pipe';
 import { SearchInputComponent } from '../../search-input/search-input.component';
-import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
-import { RecordSearchResultComponent } from './result/record-search-result.component';
-import { RecordService } from '../record.service';
-import { DialogComponent } from '../../dialog/dialog.component';
-import { Nl2brPipe } from '../../pipe/nl2br.pipe';
-import { DialogService } from '../../dialog/dialog.service';
 import { TranslateLanguagePipe } from '../../translate/translate-language.pipe';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActionStatus } from '../action-status';
+import { RecordService } from '../record.service';
+import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
+import { RecordSearchComponent } from './record-search-page.component';
+import { RecordSearchResultComponent } from './result/record-search-result.component';
+
+
+const adminMode = (): Observable<ActionStatus> => {
+  return of({
+    can: true,
+    message: ''
+  });
+};
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -73,7 +81,7 @@ describe('RecordSearchComponent', () => {
           }
         ],
         showSearchInput: true,
-        adminMode: true
+        adminMode
       },
       params: { type: 'documents' }
     },
