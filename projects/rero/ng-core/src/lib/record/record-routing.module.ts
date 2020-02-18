@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-
-import { RecordSearchComponent } from './search/record-search-page.component';
-import { EditorComponent } from './editor/editor.component';
+import { RouterModule, Routes } from '@angular/router';
 import { DetailComponent } from './detail/detail.component';
+import { EditorComponent } from './editor/editor.component';
+import { RecordSearchComponent } from './search/record-search-page.component';
+
 
 const routes: Routes = [
   { path: ':type', component: RecordSearchComponent },

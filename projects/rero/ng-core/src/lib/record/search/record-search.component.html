@@ -47,7 +47,7 @@
         <strong>{{ total }} {{ 'results' | translate }}</strong>
       </div>
       <div class="col ml-auto text-right">
-        <a class="btn btn-primary" routerLink="new" *ngIf="adminMode && addStatus.can">
+        <a class="btn btn-primary" routerLink="new" *ngIf="adminMode.can && addStatus.can">
           <i class="fa fa-plus mr-0 mr-sm-1"></i>
           <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
         </a>

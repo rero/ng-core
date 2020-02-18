@@ -15,8 +15,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { RouteInterface } from '@rero/ng-core';
+import { RouteInterface, ActionStatus } from '@rero/ng-core';
 import { DocumentComponent } from '../record/document/document.component';
+import { Observable, of } from 'rxjs';
+
+const adminMode = (): Observable<ActionStatus> => {
+  return of({
+    can: false,
+    message: ''
+  });
+};
 
 export class DocumentsHevsRoute implements RouteInterface {
 
@@ -33,7 +41,7 @@ export class DocumentsHevsRoute implements RouteInterface {
       loadChildren: () => import('../record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
       data: {
         showSearchInput: true,
-        adminMode: false,
+        adminMode,
         types: [
           {
             key: 'documents',
