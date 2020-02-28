@@ -330,8 +330,7 @@ export class EditorComponent implements OnInit, OnDestroy {
         .create(this.recordType, this.preCreateRecord(data))
         .subscribe(record => {
           this.toastrService.success(
-            this.translateService.instant('Record Created with pid: ') +
-            record.metadata.pid,
+            this.translateService.instant('Resource created'),
             this.translateService.instant(this.recordType)
           );
           this.recordUiService.redirectAfterSave(
