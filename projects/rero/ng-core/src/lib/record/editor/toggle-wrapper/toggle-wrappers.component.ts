@@ -27,7 +27,14 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
     if (this.to['toggle-switch']) {
       this.tsOptions = {...this.tsOptions, ...this.to['toggle-switch']};
     }
-    this.tsOptions.enabled = !isEmpty(removeEmptyValues(this.model));
+    /* When wrapper is initialize, we should enable the toggle if the model already contains some data.
+     * But, on init, the model isn't yet populated with data ; so we can't just check the model.
+     * The least worst solution is to subscribe to `valueChanges` observable and check the model when we receive a response
+     * Note: for a 'CustomField', it's better to implement `FormlyExtension` and use the `onPopulate` method
+     */
+    this.formControl.valueChanges.subscribe(
+      () => this.tsOptions.enabled = !isEmpty(removeEmptyValues(this.model))
+    );
   }
 
   toggle(event: any) {
