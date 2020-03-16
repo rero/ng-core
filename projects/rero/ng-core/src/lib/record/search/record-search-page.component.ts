@@ -142,18 +142,15 @@ export class RecordSearchComponent implements OnInit {
       }
 
       // loop over all aggregation filters
+      const aggFilters = [];
       queryParams.keys.forEach((key: string) => {
         if (['q', 'page', 'size', 'sort'].includes(key) === false) {
           const values = queryParams.getAll(key);
-          const index = this.aggFilters.findIndex(item => item.key === key);
-
-          if (index !== -1) {
-            this.aggFilters[index] = { key, values };
-          } else {
-            this.aggFilters.push({ key, values });
-          }
+          aggFilters.push({ key, values });
         }
       });
+      this.aggFilters = aggFilters;
+      console.log('combine', this.aggFilters);
     });
 
     // Store configuration data
@@ -180,6 +177,7 @@ export class RecordSearchComponent implements OnInit {
    * @param parameters Parameters to put in url or query string
    */
   updateUrl(parameters: any) {
+    console.log('update url', parameters);
     const queryParams: any = {
       q: parameters.q,
       page: parameters.page,

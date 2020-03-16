@@ -28,11 +28,8 @@ export class RecordSearchAggregationComponent {
   @Input()
   public aggregation: { key: string, bucketSize: any, value: { buckets: {}[] } };
 
-  /**
-   * Selected value for filter
-   */
   @Input()
-  public selectedValues: string[] = [];
+  public aggregationFilters = [];
 
   /**
    * Show or hide filter items
@@ -47,86 +44,16 @@ export class RecordSearchAggregationComponent {
   public updateAggregationFilter = new EventEmitter<{ term: string, values: string[] }>();
 
   /**
-   * More and less on aggregation content (facet)
-   */
-  moreMode = true;
-
-  /**
-   * Constructor
-   * @param translate TranslateService
-   */
-  constructor(private translate: TranslateService) {}
-
-  /**
-   * Interface language
-   */
-  get language() {
-    return this.translate.currentLang;
-  }
-
-  /**
-   * Check if a value is already registered in filters.
-   * @param value - string, filter value
-   */
-  isSelected(value: string) {
-    return this.selectedValues.includes(value);
-  }
-
-  /**
-   * Update selected values with given value and emit event to parent
-   * @param value - string, filter value
-   */
-  updateFilter(value: string) {
-    if (this.isSelected(value)) {
-      this.selectedValues = this.selectedValues.filter(selectedValue => selectedValue !== value);
-    } else {
-      this.selectedValues.push(value);
-    }
-
-    this.updateAggregationFilter.emit({ term: this.aggregation.key, values: this.selectedValues });
-  }
-
-  /**
-   * Return bucket size
-   */
-  get bucketSize() {
-    const aggregationBucketSize = this.aggregation.value.buckets.length;
-    if (this.aggregation.bucketSize === null) {
-      return aggregationBucketSize;
-    } else {
-      if (this.moreMode) {
-        return this.aggregation.bucketSize;
-      } else {
-        return aggregationBucketSize;
-      }
-    }
-  }
-
-  /**
    * Show filter values
    * @return boolean
    */
   showAggregation() {
-    return this.expand || this.selectedValues.length > 0;
+    // return this.expand || this.selectedValues.length > 0;
+    return this.expand;
   }
 
-  /**
-   * Display more or less link
-   * @return boolean
-   */
-  displayMoreAndLessLink(): boolean {
-    if (this.aggregation.bucketSize === null) {
-      return false;
-    }
-    return this.aggregation.value.buckets.length > this.aggregation.bucketSize;
-  }
-
-  /**
-   * Set More mode
-   * @param state - boolean
-   * @return void
-   */
-  setMoreMode(state: boolean) {
-    this.moreMode = state;
+  /** Emit aggregation filter update to parent component */
+  emitAggregationFilterUpdate(event: { term: string, values: string[] }) {
+    this.updateAggregationFilter.emit({ term: event.term, values: event.values });
   }
 }

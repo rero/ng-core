@@ -219,17 +219,6 @@ describe('RecordSearchComponent', () => {
     expect(component.aggFilters.length).toBe(0);
   });
 
-  it('should return selected values for current filter', () => {
-    component.aggFilters = [];
-    let selectedValues = component.getFilterSelectedValues('author');
-    expect(selectedValues.length).toBe(0);
-
-    component.aggFilters.push({ key: 'author', values: ['Filippini, Massimo'] });
-    selectedValues = component.getFilterSelectedValues('author');
-    expect(selectedValues.length).toBe(1);
-    expect(selectedValues[0]).toBe('Filippini, Massimo');
-  });
-
   it('should set current page for pagination', () => {
     component.currentPage = 2;
     expect(component.currentPage).toBe(2);

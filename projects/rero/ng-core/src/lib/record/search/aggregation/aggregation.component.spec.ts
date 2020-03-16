@@ -20,6 +20,7 @@ import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-tran
 import { RecordSearchAggregationComponent } from './aggregation.component';
 import { UpperCaseFirstPipe } from '../../../pipe/ucfirst.pipe';
 import { TranslateLanguagePipe } from '../../../translate/translate-language.pipe';
+import { BucketsComponent } from './buckets/buckets.component';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
@@ -30,7 +31,8 @@ describe('RecordSearchAggregationComponent', () => {
       declarations: [
         RecordSearchAggregationComponent,
         UpperCaseFirstPipe,
-        TranslateLanguagePipe
+        TranslateLanguagePipe,
+        BucketsComponent
       ],
       imports: [
         TranslateModule.forRoot({
@@ -60,7 +62,6 @@ describe('RecordSearchAggregationComponent', () => {
         ]
       }
     };
-    component.selectedValues = ['Filippini, Massimo'];
     fixture.detectChanges();
   });
 
@@ -68,44 +69,10 @@ describe('RecordSearchAggregationComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return true if value is selected', () => {
-    expect(component.isSelected('Filippini, Massimo')).toBe(true);
-  });
+  // it('should show aggregation filter', () => {
+  //   expect(component.showAggregation()).toBe(true);
 
-  it('should show aggregation filter', () => {
-    expect(component.showAggregation()).toBe(true);
-
-    component.expand = false;
-    expect(component.showAggregation()).toBe(true);
-  });
-
-  it('should add value to selected filters', () => {
-    component.updateFilter('Botturi, Luca');
-    expect(component.selectedValues.includes('Botturi, Luca')).toBe(true);
-  });
-
-  it('should remove value from selected filters', () => {
-    component.updateFilter('Filippini, Massimo');
-    expect(component.selectedValues.includes('Filippini, Massimo')).toBe(false);
-  });
-
-  it('should return a correct bucket size', () => {
-    component.aggregation.bucketSize = null;
-    expect(component.bucketSize).toBe(2);
-
-    component.aggregation.bucketSize = 1;
-    expect(component.bucketSize).toBe(1);
-
-    component.moreMode = false;
-    component.aggregation.bucketSize = 1;
-    expect(component.bucketSize).toBe(2);
-  });
-
-  it('should display link', () => {
-    component.aggregation.bucketSize = 1;
-    expect(component.displayMoreAndLessLink).toBeTruthy();
-
-    component.aggregation.bucketSize = 5;
-    expect(component.displayMoreAndLessLink).toBeTruthy();
-  });
+  //   component.expand = false;
+  //   expect(component.showAggregation()).toBe(true);
+  // });
 });

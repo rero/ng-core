@@ -22,6 +22,7 @@ import { map } from 'rxjs/operators';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
+import { RecordSearchService, AggregationsFilter } from './record-search.service';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -214,13 +215,19 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    */
   constructor(
     private recordService: RecordService,
-    private recordUiService: RecordUiService
+    private recordUiService: RecordUiService,
+    private _recordSearchService: RecordSearchService
   ) { }
 
   /**
    * Component initialisation.
    */
   ngOnInit() {
+    this._recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
+      console.log('init', aggregationsFilters);
+      this.aggFilters = aggregationsFilters;
+      this.getRecords();
+    });
     // Load totals for each resource type
     for (const type of this.types) {
       this.recordService.getRecords(
@@ -235,6 +242,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // store types in record service for next processings.
     // TODO: Try to set types directly in RecordUiService using route events.
+    console.log(changes);
     this.recordUiService.types = this.types;
 
     // load configuration corresponding to current type
@@ -242,34 +250,39 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       this.loadConfigurationForType(this.currentType);
     }
 
+    if (changes.aggFilters) {
+      this._recordSearchService.setAggregationsFilters(changes.aggFilters.currentValue);
+    }
     // get records and reset page only if page parameter has not changed.
-    this.getRecords(false, this.isParamChanged('page', changes) === false);
+    this.getRecords(false, this.isParamChanged('page', changes) === false, false);
   }
 
   /**
    * Store or remove facet filter.
    * @param event - object, containing term and selected values
    */
-  updateAggregationFilter(event: { term: string, values: string[] }) {
-    const term = event.term;
-    const values = event.values;
-    const index = this.aggFilters.findIndex(item => item.key === term);
+  // updateAggregationFilter(event: { term: string, values: string[] }) {
+  //   const term = event.term;
+  //   const values = event.values;
+  //   const index = this.aggFilters.findIndex(item => item.key === term);
 
-    // no more items selected, remove filter
-    if (values.length === 0) {
-      this.aggFilters.splice(index, 1);
-    } else {
-      if (index !== -1) {
-        this.aggFilters[index] = { key: term, values };
-      } else {
-        this.aggFilters.push({ key: term, values });
-      }
-    }
+  //   if (values.length === 0) {
+  //     // no more items selected, remove filter
+  //     this.aggFilters.splice(index, 1);
+  //   } else {
+  //     if (index !== -1) {
+  //       // update existing filter
+  //       this.aggFilters[index] = { key: term, values };
+  //     } else {
+  //       // add new filter
+  //       this.aggFilters.push({ key: term, values });
+  //     }
+  //   }
 
-    // First parameter is passed as false because we can do the search directly as
-    // changes for @Input arrays are not detected
-    this.getRecords(false);
-  }
+  //   // First parameter is passed as false because we can do the search directly as
+  //   // changes for @Input arrays are not detected
+  //   this.getRecords(false);
+  // }
 
   /**
    * Change number of items per page value.
@@ -299,23 +312,9 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   changeType(event: Event, type: string) {
     event.preventDefault();
     this.currentType = type;
-    this.aggFilters = [];
+    // this.aggFilters = [];
     this.getRecords();
-    this.loadConfigurationForType(type);
-  }
-
-  /**
-   * Get current selected values for filter
-   * @param term - string, aggregation filter key
-   */
-  getFilterSelectedValues(term: string) {
-    const index = this.aggFilters.findIndex(item => item.key === term);
-
-    if (index !== -1) {
-      return this.aggFilters[index].values;
-    }
-
-    return [];
+    // this.loadConfigurationForType(type);
   }
 
   /**
@@ -333,7 +332,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
       if (result === true) {
         // refresh records
-        this.getRecords(false, false);
+        this.getRecords(false, false, false);
 
         // update main counter
         this.config.total--;
@@ -372,12 +371,14 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * @param checkInRouting Check property inRouting to determine if the search has to be done
    * @param resetPage If page needs to be resetted to 1.
    */
-  private getRecords(checkInRouting: boolean = true, resetPage: boolean = true) {
+  private getRecords(checkInRouting: boolean = true, resetPage: boolean = true, emitParameters: boolean = true) {
     if (resetPage === true) {
       this.page = 1;
     }
 
-    this.emitNewParameters();
+    if (emitParameters) {
+      this.emitNewParameters();
+    }
 
     if (checkInRouting === true && this.inRouting === true) {
       return;
@@ -415,11 +416,12 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * @param aggr - Aggregations dictonary
    */
   aggregationsOrder(aggr: any) {
+    // TODO: replace 'value' by buckets directly and merge and rename aggregationOrders and aggregationsFilters
+    // to postProcessAggregations in route configuration
     const aggregations = [];
-    const config = this.recordUiService.getResourceConfig(this.currentType);
-    const bucketSize = ('aggregationsBucketSize' in config) ? config.aggregationsBucketSize : null;
-    if ('aggregationsOrder' in config) {
-      config.aggregationsOrder.forEach((key: string) => {
+    const bucketSize = ('aggregationsBucketSize' in this.config) ? this.config.aggregationsBucketSize : null;
+    if ('aggregationsOrder' in this.config) {
+      this.config.aggregationsOrder.forEach((key: string) => {
         if (key in aggr) {
           aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets }});
         }
@@ -433,10 +435,11 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Aggregations filters (facets)
+   * Filter the aggregations with given configuration function.
+   * If no configuration is given, return the original aggregations.
    * @param records - Result records
    */
-  aggregationsFilters(aggregations: object) {
+  aggregationsFilters(aggregations: object): Observable<any> {
     if (this.config.aggregations) {
       return this.config.aggregations(aggregations);
     } else {
@@ -493,6 +496,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * Emit new parameters when a change appends.
    */
   private emitNewParameters() {
+    console.log('emit');
     this.parametersChanged.emit({
       q: this.q,
       page: this.page,
@@ -501,6 +505,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       aggFilters: this.aggFilters,
       sort: this.sort
     });
+    // this.aggFilters = [];
   }
 
   /**
