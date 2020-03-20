@@ -6,11 +6,13 @@ import { isEmpty, removeEmptyValues } from '../utils';
   selector: 'ng-core-editor-formly-toggle-wrapper',
   template: `
     <div class='toggle-wrapper'>
-      <div class="custom-control custom-switch">
-        <input class="custom-control-input" type="checkbox" id="toggle-switch" (change)="toggle($event)" [checked]="tsOptions.enabled">
-        <label class="custom-control-label" for="toggle-switch">{{ tsOptions.label }}</label>
+      <div class='form-group'>
+        <div class="custom-control custom-switch">
+          <input class="custom-control-input" type="checkbox" id="toggle-switch" (change)="toggle($event)" [checked]="tsOptions.enabled">
+          <label class="custom-control-label" for="toggle-switch">{{ tsOptions.label }}</label>
+        </div>
+        <small class="form-text text-muted" *ngIf="tsOptions.description">{{ tsOptions.description }}</small>
       </div>
-      <small class="form-text text-muted" *ngIf="tsOptions.description">{{ tsOptions.description }}</small>
       <ng-container *ngIf="tsOptions.enabled" #fieldComponent></ng-container>
     </div>
   `
@@ -33,14 +35,20 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
      * Note: for a 'CustomField', it's better to implement `FormlyExtension` and use the `onPopulate` method
      */
     this.formControl.valueChanges.subscribe(
-      () => this.tsOptions.enabled = !isEmpty(removeEmptyValues(this.model))
+      (newValue) => {
+        this.tsOptions.enabled = !isEmpty(removeEmptyValues(newValue));
+      }
     );
   }
 
   toggle(event: any) {
-    this.tsOptions.enabled = !this.tsOptions.enabled;
-    if (this.tsOptions.enabled === false) {
+    if (this.tsOptions.enabled === true) {
+      // toggle switch will became 'false', so just reset the field.
+      // Reseting the filed will change its value and so the `valueChanges` Observer will be called. The toggle `enabled` value will
+      // be update (to false) by this method.
       this.field.formControl.reset();  // reset all children fields
+    } else {
+      this.tsOptions.enabled = true;
     }
   }
 
