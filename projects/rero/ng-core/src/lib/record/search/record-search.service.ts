@@ -11,20 +11,25 @@ export interface AggregationsFilter {
   providedIn: 'root'
 })
 export class RecordSearchService {
+  private _aggregationsFilters: Array<AggregationsFilter> = [];
 
   /** Aggregations filters */
-  private _aggregationsFilters: BehaviorSubject<Array<AggregationsFilter>>;
+  private _aggregationsFiltersSubject: BehaviorSubject<Array<AggregationsFilter>>;
 
   constructor() {
-    this._aggregationsFilters = new BehaviorSubject([]);
-   }
-
-  get aggregationsFilters(): Observable<Array<AggregationsFilter>> {
-    return this._aggregationsFilters.asObservable();
+    this._aggregationsFiltersSubject = new BehaviorSubject([]);
   }
 
-  setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>) {
-    this._aggregationsFilters.next([...aggregationsFilters]);
+  get aggregationsFilters(): Observable<Array<AggregationsFilter>> {
+    return this._aggregationsFiltersSubject.asObservable();
+  }
+
+  setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>, forceChange = false) {
+    if (forceChange === true || JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters)) {
+      console.log('agg filters changed', aggregationsFilters, this._aggregationsFilters);
+      this._aggregationsFilters = aggregationsFilters;
+      this._aggregationsFiltersSubject.next(this._aggregationsFilters);
+    }
   }
 
   /**
@@ -33,23 +38,21 @@ export class RecordSearchService {
    * @param values Selected values
    */
   updateAggregationFilter(term: string, values: string[]) {
-    console.log('service', values);
-    this.aggregationsFilters.pipe(first()).subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
-      const index = aggregationsFilters.findIndex(item => item.key === term);
-      if (values.length === 0) {
-        // no more items selected, remove filter
-        aggregationsFilters.splice(index, 1);
+    const index = this._aggregationsFilters.findIndex(item => item.key === term);
+
+    if (values.length === 0) {
+      // no more items selected, remove filter
+      this._aggregationsFilters.splice(index, 1);
+    } else {
+      if (index !== -1) {
+        // update existing filter
+        this._aggregationsFilters[index] = { key: term, values };
       } else {
-        if (index !== -1) {
-          // update existing filter
-          aggregationsFilters[index] = { key: term, values };
-        } else {
-          // add new filter
-          aggregationsFilters.push({ key: term, values });
-        }
+        // add new filter
+        this._aggregationsFilters.push({ key: term, values });
       }
-      this._aggregationsFilters.next([...aggregationsFilters]);
-    });
+    }
+    this._aggregationsFiltersSubject.next(this._aggregationsFilters);
   }
 
   /**
@@ -57,7 +60,7 @@ export class RecordSearchService {
    * @param term Aggregation key
    */
   getAggregationSelectedValues(term: string): Observable<Array<string>> {
-    return this.aggregationsFilters.pipe(
+    return this._aggregationsFiltersSubject.pipe(
       first(),
       map((aggregationsFilters: Array<AggregationsFilter>) => {
         const index = aggregationsFilters.findIndex(item => item.key === term);

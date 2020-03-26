@@ -126,7 +126,7 @@ export class RecordSearchComponent implements OnInit {
         this.page = 1;
         this.aggFilters = [];
         // if no query params is set, put defaults in url
-        this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: this.aggFilters });
+        // this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: this.aggFilters });
       }
 
       if (queryParams.has('size')) {
@@ -150,7 +150,6 @@ export class RecordSearchComponent implements OnInit {
         }
       });
       this.aggFilters = aggFilters;
-      console.log('combine', this.aggFilters);
     });
 
     // Store configuration data
@@ -177,7 +176,6 @@ export class RecordSearchComponent implements OnInit {
    * @param parameters Parameters to put in url or query string
    */
   updateUrl(parameters: any) {
-    console.log('update url', parameters);
     const queryParams: any = {
       q: parameters.q,
       page: parameters.page,
@@ -191,7 +189,7 @@ export class RecordSearchComponent implements OnInit {
       // detect the changes. It's certainly a bug in angular.
       queryParams[filter.key] = [];
       for (const value of filter.values) {
-        queryParams[filter.key].unshift(value);
+        queryParams[filter.key].push(value);
       }
     }
 

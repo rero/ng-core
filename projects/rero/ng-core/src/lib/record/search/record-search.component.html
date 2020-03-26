@@ -95,7 +95,6 @@
               [type]="currentType"
               [itemViewComponent]="getResultItemComponentView()"
               [canUpdate$]="canUpdateRecord$(record)"
-              [inRouting]="inRouting"
               [canDelete$]="canDeleteRecord$(record)"
               [detailUrl$]="resolveDetailUrl(record)"
               (deletedRecord)="deleteRecord($event)"

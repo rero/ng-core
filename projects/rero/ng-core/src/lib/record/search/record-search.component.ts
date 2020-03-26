@@ -43,7 +43,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   /**
    * Facets retreived from request result
    */
-  aggregations: Array<{key: string, bucketSize: any, value: {buckets: []}}>;
+  aggregations: Array<{ key: string, bucketSize: any, value: { buckets: [] } }>;
 
   /**
    * Search is processing
@@ -107,8 +107,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   /**
    * Component is integrated in angular routing
    */
-  @Input()
-  inRouting = false;
+  // @Input()
+  // inRouting = false;
 
   /**
    * Types of resources available
@@ -167,7 +167,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * Current selected resource type
    */
   @Input()
-  currentType = 'documents';
+  currentType: string = null;
 
   /**
    * Output current state when parameters change.
@@ -182,7 +182,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    */
   set currentPage(page: number) {
     this.page = +page;
-    this.getRecords(true, false);
+    this._getRecords(false);
   }
 
   get currentPage() {
@@ -223,66 +223,59 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * Component initialisation.
    */
   ngOnInit() {
-    this._recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
-      console.log('init', aggregationsFilters);
-      this.aggFilters = aggregationsFilters;
-      this.getRecords();
-    });
+    // Subscribe on aggregation filters changes and do search.
+    // this._recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
+    //   this.aggFilters = aggregationsFilters;
+    //   this._getRecords(false);
+    // });
+
     // Load totals for each resource type
     for (const type of this.types) {
       this.recordService.getRecords(
         type.key, '', 1, 1, [],
         this.config.preFilters || {},
         this.config.listHeaders || null).subscribe(records => {
-        type.total = records.hits.total;
-      });
+          type.total = records.hits.total;
+        });
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // store types in record service for next processings.
-    // TODO: Try to set types directly in RecordUiService using route events.
-    console.log(changes);
-    this.recordUiService.types = this.types;
+    console.log(changes, this);
 
-    // load configuration corresponding to current type
-    if (this.isParamChanged('currentType', changes) === true) {
+    if (changes.aggFilters && changes.aggFilters.firstChange) {
+      // store types in record service for next processings.
+      // TODO: Try to set types directly in RecordUiService using route events.
+      this.recordUiService.types = this.types;
       this.loadConfigurationForType(this.currentType);
+      this._getRecords(false);
+      return;
     }
 
-    if (changes.aggFilters) {
-      this._recordSearchService.setAggregationsFilters(changes.aggFilters.currentValue);
+    if (changes.currentType && changes.currentType.currentValue !== this.currentType) {
+      console.log(changes);
+      this.loadConfigurationForType(this.currentType);
+      this.aggFilters = [];
+      this._recordSearchService.setAggregationsFilters(this.aggFilters);
+      this._getRecords(changes.page && changes.page.currentValue !== this.page);
     }
-    // get records and reset page only if page parameter has not changed.
-    this.getRecords(false, this.isParamChanged('page', changes) === false, false);
+
+    // if (changes.aggFilters) {
+    //   this._recordSearchService.setAggregationsFilters(changes.aggFilters.currentValue);
+    // }
+
+    const params = ['q', 'page', 'size', 'sort'];
+    let changed = false;
+    params.forEach((param) => {
+      if (changes[param] && changes[param].currentValue !== this[param]) {
+        changed = true;
+      }
+    });
+
+    if (changed) {
+      this._getRecords(changes.page && changes.page.currentValue !== this.page);
+    }
   }
-
-  /**
-   * Store or remove facet filter.
-   * @param event - object, containing term and selected values
-   */
-  // updateAggregationFilter(event: { term: string, values: string[] }) {
-  //   const term = event.term;
-  //   const values = event.values;
-  //   const index = this.aggFilters.findIndex(item => item.key === term);
-
-  //   if (values.length === 0) {
-  //     // no more items selected, remove filter
-  //     this.aggFilters.splice(index, 1);
-  //   } else {
-  //     if (index !== -1) {
-  //       // update existing filter
-  //       this.aggFilters[index] = { key: term, values };
-  //     } else {
-  //       // add new filter
-  //       this.aggFilters.push({ key: term, values });
-  //     }
-  //   }
-
-  //   // First parameter is passed as false because we can do the search directly as
-  //   // changes for @Input arrays are not detected
-  //   this.getRecords(false);
-  // }
 
   /**
    * Change number of items per page value.
@@ -292,7 +285,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   changeSize(event: Event, size: number) {
     event.preventDefault();
     this.size = size;
-    this.getRecords();
+    this._getRecords();
   }
 
   /**
@@ -301,7 +294,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    */
   searchByQuery(event: string) {
     this.q = event;
-    this.getRecords();
+    this._getRecords();
   }
 
   /**
@@ -312,9 +305,9 @@ export class RecordSearchComponent implements OnInit, OnChanges {
   changeType(event: Event, type: string) {
     event.preventDefault();
     this.currentType = type;
-    // this.aggFilters = [];
-    this.getRecords();
-    // this.loadConfigurationForType(type);
+    this.aggFilters = [];
+    this._recordSearchService.setAggregationsFilters(this.aggFilters);
+    this._getRecords();
   }
 
   /**
@@ -332,7 +325,7 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     this.recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
       if (result === true) {
         // refresh records
-        this.getRecords(false, false, false);
+        this._getRecords(true, false);
 
         // update main counter
         this.config.total--;
@@ -368,20 +361,12 @@ export class RecordSearchComponent implements OnInit, OnChanges {
 
   /**
    * Search for records.
-   * @param checkInRouting Check property inRouting to determine if the search has to be done
    * @param resetPage If page needs to be resetted to 1.
+   * @param emitParameters If parameters have to be emitted in parents.
    */
-  private getRecords(checkInRouting: boolean = true, resetPage: boolean = true, emitParameters: boolean = true) {
+  private _getRecords(resetPage: boolean = true, emitParameters: boolean = true) {
     if (resetPage === true) {
       this.page = 1;
-    }
-
-    if (emitParameters) {
-      this.emitNewParameters();
-    }
-
-    if (checkInRouting === true && this.inRouting === true) {
-      return;
     }
 
     this.isLoading = true;
@@ -402,7 +387,12 @@ export class RecordSearchComponent implements OnInit, OnChanges {
         this.aggregationsFilters(records.aggregations).subscribe((aggr: any) => {
           this.aggregations = this.aggregationsOrder(aggr);
         });
+
         this.isLoading = false;
+
+        if (emitParameters) {
+          this.emitNewParameters();
+        }
       },
       (error) => {
         this.error = error;
@@ -423,12 +413,12 @@ export class RecordSearchComponent implements OnInit, OnChanges {
     if ('aggregationsOrder' in this.config) {
       this.config.aggregationsOrder.forEach((key: string) => {
         if (key in aggr) {
-          aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets }});
+          aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets } });
         }
       });
     } else {
       Object.keys(aggr).forEach((key: string) => {
-        aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets }});
+        aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets } });
       });
     }
     return aggregations;
@@ -466,7 +456,8 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * @param record - Generate detail URL for this record.
    */
   resolveDetailUrl(record: any): Observable<any> {
-    if (this.inRouting === false && !this.detailUrl) {
+    // if (this.inRouting === false && !this.detailUrl) {
+    if (!this.detailUrl) {
       return of(null);
     }
 
@@ -496,7 +487,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
    * Emit new parameters when a change appends.
    */
   private emitNewParameters() {
-    console.log('emit');
     this.parametersChanged.emit({
       q: this.q,
       page: this.page,
@@ -505,7 +495,6 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       aggFilters: this.aggFilters,
       sort: this.sort
     });
-    // this.aggFilters = [];
   }
 
   /**

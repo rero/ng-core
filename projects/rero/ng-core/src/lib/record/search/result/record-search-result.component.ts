@@ -91,12 +91,6 @@ export class RecordSearchResultComponent implements OnInit {
   aggregations: Array<object>;
 
   /**
-   * Indicates if the component is included in angular routes
-   */
-  @Input()
-  inRouting = false;
-
-  /**
    * Observable emitting current value of record URL.
    */
   @Input()

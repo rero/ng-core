@@ -89,7 +89,7 @@ export class BucketsComponent implements OnInit{
     } else {
       this.selectedValues.push(value);
     }
-    console.log('buckets', this.selectedValues);
+    this.selectedValues = this.selectedValues.sort();
     this._recordSearchService.updateAggregationFilter(this.bucketKey, this.selectedValues);
   }
 

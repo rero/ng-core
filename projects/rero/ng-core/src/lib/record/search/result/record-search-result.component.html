@@ -17,7 +17,7 @@
 
 <div class="float-right ml-5 mb-2" *ngIf="adminMode">
     <a href class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
-        *ngIf="inRouting && updateStatus && updateStatus.can">
+        *ngIf="updateStatus && updateStatus.can">
         <i class="fa fa-pencil"></i>
     </a>
     <span class="ml-2" *ngIf="deleteStatus">
