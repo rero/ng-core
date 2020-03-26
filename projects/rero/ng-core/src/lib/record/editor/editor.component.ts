@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { JSONSchema7 } from 'json-schema';
@@ -40,6 +40,8 @@ import { ApiService } from '../../api/api.service';
 export class EditorComponent implements OnInit, OnDestroy {
   // angular formGroop root
   form: FormGroup;
+
+  @Output() modelChange = new EventEmitter<any>();
 
   // initial data
   @Input()
@@ -149,6 +151,7 @@ export class EditorComponent implements OnInit, OnDestroy {
                     this.location.back();
                   } else {
                     this._model = record.metadata;
+                    this.modelChange.emit(this._model);
                   }
                 });
             });
@@ -163,6 +166,11 @@ export class EditorComponent implements OnInit, OnDestroy {
     for (const s of this._subscribers) {
       s.unsubscribe();
     }
+  }
+
+
+  modelChanged(modelValue) {
+    this.modelChange.emit(modelValue);
   }
 
   /**
