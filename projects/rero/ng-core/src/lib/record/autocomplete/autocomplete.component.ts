@@ -145,6 +145,7 @@ export class AutocompleteComponent implements OnInit {
    * @param query - string, search query string
    */
   getSuggestions(query: string): Observable<any> {
+    query = query.replace(/[:\-\[\]()/"]/g, ' ');
     // patch non working typeaheadMinLength properties
     if (query.length < this.typeaheadMinLength) {
       return of(undefined);
