@@ -252,8 +252,11 @@ export class RecordSearchComponent implements OnInit, OnChanges {
       return;
     }
 
+    if (changes.page) {
+      console.log('Page', changes.page, this.page);
+    }
+
     if (changes.currentType && changes.currentType.currentValue !== this.currentType) {
-      console.log(changes);
       this.loadConfigurationForType(this.currentType);
       this.aggFilters = [];
       this._recordSearchService.setAggregationsFilters(this.aggFilters);
