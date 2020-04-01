@@ -43,7 +43,14 @@ export class SearchInputComponent {
     }
   }
 
+  /** Remove trailing and leading spaces if true */
+  @Input() trimQueryString = true;
+
   doSearch(searchText: string) {
-    this.search.emit(searchText);
+    if (this.trimQueryString) {
+      this.search.emit(searchText.trim());
+    } else {
+      this.search.emit(searchText);
+    }
   }
 }
