@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'ng-core-record-search-aggregation',
@@ -26,107 +25,39 @@ export class RecordSearchAggregationComponent {
    * Aggregation data
    */
   @Input()
-  public aggregation: { key: string, bucketSize: any, value: { buckets: {}[] } };
+  aggregation: { key: string, bucketSize: any, value: { buckets: Array<any> } };
 
   /**
-   * Selected value for filter
+   * Current selected values
    */
   @Input()
-  public selectedValues: string[] = [];
+  aggregationsFilters = [];
 
   /**
-   * Show or hide filter items
+   * If true, by default buckets are displayed.
    */
   @Input()
-  public expand = true;
+  expand = true;
 
   /**
-   * Emit event to parent when a value is clicked
+   * Returns aggregations filters corresponding to the aggregation key.
+   * @return List of aggregation filters
    */
-  @Output()
-  public updateAggregationFilter = new EventEmitter<{ term: string, values: string[] }>();
+  get aggregationFilters(): Array<string> {
+    const aggregationFilters = this.aggregationsFilters.find((item: any) => item.key === this.aggregation.key);
 
-  /**
-   * More and less on aggregation content (facet)
-   */
-  moreMode = true;
-
-  /**
-   * Constructor
-   * @param translate TranslateService
-   */
-  constructor(private translate: TranslateService) {}
-
-  /**
-   * Interface language
-   */
-  get language() {
-    return this.translate.currentLang;
-  }
-
-  /**
-   * Check if a value is already registered in filters.
-   * @param value - string, filter value
-   */
-  isSelected(value: string) {
-    return this.selectedValues.includes(value);
-  }
-
-  /**
-   * Update selected values with given value and emit event to parent
-   * @param value - string, filter value
-   */
-  updateFilter(value: string) {
-    if (this.isSelected(value)) {
-      this.selectedValues = this.selectedValues.filter(selectedValue => selectedValue !== value);
-    } else {
-      this.selectedValues.push(value);
+    if (aggregationFilters === undefined) {
+      return [];
     }
 
-    this.updateAggregationFilter.emit({ term: this.aggregation.key, values: this.selectedValues });
+    return aggregationFilters.values;
   }
 
   /**
-   * Return bucket size
+   * Display buckets for the aggregation or not.
+   * @return Boolean
    */
-  get bucketSize() {
-    const aggregationBucketSize = this.aggregation.value.buckets.length;
-    if (this.aggregation.bucketSize === null) {
-      return aggregationBucketSize;
-    } else {
-      if (this.moreMode) {
-        return this.aggregation.bucketSize;
-      } else {
-        return aggregationBucketSize;
-      }
-    }
-  }
-
-  /**
-   * Show filter values
-   * @return boolean
-   */
-  showAggregation() {
-    return this.expand || this.selectedValues.length > 0;
-  }
-
-  /**
-   * Display more or less link
-   * @return boolean
-   */
-  displayMoreAndLessLink(): boolean {
-    if (this.aggregation.bucketSize === null) {
-      return false;
-    }
-    return this.aggregation.value.buckets.length > this.aggregation.bucketSize;
-  }
-
-  /**
-   * Set More mode
-   * @param state - boolean
-   * @return void
-   */
-  setMoreMode(state: boolean) {
-    this.moreMode = state;
+  showAggregation(): boolean {
+    return this.expand || this.aggregationFilters.length > 0;
   }
 }

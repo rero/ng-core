@@ -14,24 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { JSONSchema7 } from 'json-schema';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
+import { RecordSearchService } from './record-search.service';
 
 @Component({
   selector: 'ng-core-record-search-page',
-  templateUrl: './record-search-page.component.html',
-  styles: []
+  templateUrl: './record-search-page.component.html'
 })
-export class RecordSearchComponent implements OnInit {
-  /**
-   * Current filters applied
-   */
-  aggFilters = [];
-
+export class RecordSearchComponent implements OnInit, OnDestroy {
   /**
    * Current selected resource type
    */
@@ -71,7 +66,9 @@ export class RecordSearchComponent implements OnInit {
   q = '';
 
   /**
-   * Define the sort order
+   * Define the sort order of resulting records. It takes a string value
+   * representing the property which is used to sort the records.
+   * If a minus is put before the value, the sort is reversed.
    */
   sort: string = null;
 
@@ -101,64 +98,66 @@ export class RecordSearchComponent implements OnInit {
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
+   * Subscription to route parameters observables
+   */
+  private _routeParametersSubscription: Subscription;
+
+  /**
    * Constructor
-   * @param dialogService - Modal component
-   * @param recordService - Service for managing records
-   * @param toastService - Toast message
    * @param route - Angular current route
    * @param router - Angular router
    */
   constructor(
     private route: ActivatedRoute,
-    protected router: Router
+    protected router: Router,
+    private _recordSearchService: RecordSearchService
   ) { }
 
   /**
    * Component initialisation.
+   *
+   * Subscribes to changes of route parameters and query parameters for
+   * updating the search parameters and sending them to child component
+   * (RecordSearchComponent).
    */
   ngOnInit() {
-    combineLatest(this.route.paramMap, this.route.queryParamMap).subscribe(([paramMap, queryParams]) => {
-      // store current type of resource
-      this.currentType = paramMap.get('type');
+    this._routeParametersSubscription = combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
+      ([paramMap, queryParams]) => {
+        // store current type of resource
+        this.currentType = paramMap.get('type');
 
-      // store query parameters
-      if (queryParams.has('q')) {
-        this.q = queryParams.get('q');
-      } else {
-        this.q = '';
-        this.size = 10;
-        this.page = 1;
-        this.aggFilters = [];
-        // if no query params is set, put defaults in url
-        this.updateUrl({ currentType: this.currentType, q: this.q, size: this.size, page: this.page, aggFilters: this.aggFilters });
-      }
-
-      if (queryParams.has('size')) {
-        this.size = +queryParams.get('size');
-      }
-
-      if (queryParams.has('page')) {
-        this.page = +queryParams.get('page');
-      }
-
-      if (queryParams.has('sort')) {
+        // Stores query parameters
+        this.q = queryParams.get('q') || '';
+        this.size = queryParams.get('size') ? +queryParams.get('size') : 10;
+        this.page = queryParams.get('page') ? +queryParams.get('page') : 1;
         this.sort = queryParams.get('sort');
-      }
 
-      // loop over all aggregation filters
-      queryParams.keys.forEach((key: string) => {
-        if (['q', 'page', 'size', 'sort'].includes(key) === false) {
-          const values = queryParams.getAll(key);
-          const index = this.aggFilters.findIndex(item => item.key === key);
-
-          if (index !== -1) {
-            this.aggFilters[index] = { key, values };
-          } else {
-            this.aggFilters.push({ key, values });
+        // loops over all aggregations filters and stores them.
+        const aggregationsFilters = [];
+        queryParams.keys.forEach((key: string) => {
+          if (['q', 'page', 'size', 'sort'].includes(key) === false) {
+            const values = queryParams.getAll(key);
+            aggregationsFilters.push({ key, values });
           }
+        });
+
+        // No default parameters found, we update the url to put them
+        if (queryParams.has('q') === false || queryParams.has('size') === false || queryParams.has('page') === false) {
+          this.updateUrl({
+            currentType: this.currentType,
+            q: this.q,
+            size: this.size,
+            page: this.page,
+            sort: this.sort,
+            aggregationsFilters
+          });
+
+          return;
         }
-      });
-    });
+
+        this._recordSearchService.setAggregationsFilters(aggregationsFilters);
+      }
+    );
 
     // Store configuration data
     const data = this.route.snapshot.data;
@@ -180,6 +179,15 @@ export class RecordSearchComponent implements OnInit {
   }
 
   /**
+   * Component destruction.
+   *
+   * Unsubscribes from the observables of the route parameters.
+   */
+  ngOnDestroy() {
+    this._routeParametersSubscription.unsubscribe();
+  }
+
+  /**
    * Update URL accordingly to parameters given.
    * @param parameters Parameters to put in url or query string
    */
@@ -191,7 +199,7 @@ export class RecordSearchComponent implements OnInit {
       sort: parameters.sort
     };
 
-    for (const filter of parameters.aggFilters) {
+    for (const filter of parameters.aggregationsFilters) {
       // We need to loop over each value and insert it on beginning of the array
       // instead of assign values directly. Otherwise, angular router doesn't
       // detect the changes. It's certainly a bug in angular.

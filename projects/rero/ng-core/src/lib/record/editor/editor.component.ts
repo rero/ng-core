@@ -107,7 +107,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
-    combineLatest(this.route.params, this.route.queryParams)
+    combineLatest([this.route.params, this.route.queryParams])
       .pipe(map(results => ({ params: results[0], query: results[1] })))
       .subscribe(results => {
         const params = results.params;

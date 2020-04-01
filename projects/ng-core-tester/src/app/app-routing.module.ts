@@ -178,6 +178,8 @@ const routes: Routes = [
           canRead,
           aggregations,
           adminMode: adminModeCan,
+          aggregationsBucketSize: 8,
+          aggregationsExpand: ['language'],
           formFieldMap,
           listHeaders: {
             'Content-Type': 'application/rero+json'

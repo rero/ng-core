@@ -88,7 +88,7 @@ export class RecordService {
    * @param query - string, keyword to search for
    * @param page - number, return records corresponding to this page
    * @param itemsPerPage - number, number of records to return
-   * @param aggFilters - number, option list of filters
+   * @param aggregationsFilters - number, option list of filters
    * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')
    */
   public getRecords(
@@ -96,7 +96,7 @@ export class RecordService {
     query: string = '',
     page = 1,
     itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
-    aggFilters: any[] = [],
+    aggregationsFilters: any[] = [],
     preFilters: object = {},
     headers: any = null,
     sort: string = null
@@ -110,7 +110,7 @@ export class RecordService {
       httpParams = httpParams.append('sort', sort);
     }
 
-    aggFilters.forEach((filter) => {
+    aggregationsFilters.forEach((filter) => {
       filter.values.forEach((value: string) => {
         httpParams = httpParams.append(filter.key, value);
       });

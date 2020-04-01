@@ -22,6 +22,7 @@ export * from './lib/dialog/dialog.service';
 export * from './lib/api/api.service';
 export * from './lib/record/record.service';
 export * from './lib/record/record-ui.service';
+export * from './lib/record/search/record-search.service';
 export * from './lib/record/search/result/item/result-item';
 export * from './lib/record/record.module';
 export * from './lib/record/search/record-search-page.component';

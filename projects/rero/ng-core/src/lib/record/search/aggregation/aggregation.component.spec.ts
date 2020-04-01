@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
-
-import { RecordSearchAggregationComponent } from './aggregation.component';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { UpperCaseFirstPipe } from '../../../pipe/ucfirst.pipe';
 import { TranslateLanguagePipe } from '../../../translate/translate-language.pipe';
+import { RecordSearchService } from '../record-search.service';
+import { RecordSearchAggregationComponent } from './aggregation.component';
+import { BucketsComponent } from './buckets/buckets.component';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
@@ -30,13 +31,15 @@ describe('RecordSearchAggregationComponent', () => {
       declarations: [
         RecordSearchAggregationComponent,
         UpperCaseFirstPipe,
-        TranslateLanguagePipe
+        TranslateLanguagePipe,
+        BucketsComponent
       ],
       imports: [
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
-      ]
+      ],
+      providers: [RecordSearchService]
     })
       .compileComponents();
   }));
@@ -60,52 +63,10 @@ describe('RecordSearchAggregationComponent', () => {
         ]
       }
     };
-    component.selectedValues = ['Filippini, Massimo'];
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should return true if value is selected', () => {
-    expect(component.isSelected('Filippini, Massimo')).toBe(true);
-  });
-
-  it('should show aggregation filter', () => {
-    expect(component.showAggregation()).toBe(true);
-
-    component.expand = false;
-    expect(component.showAggregation()).toBe(true);
-  });
-
-  it('should add value to selected filters', () => {
-    component.updateFilter('Botturi, Luca');
-    expect(component.selectedValues.includes('Botturi, Luca')).toBe(true);
-  });
-
-  it('should remove value from selected filters', () => {
-    component.updateFilter('Filippini, Massimo');
-    expect(component.selectedValues.includes('Filippini, Massimo')).toBe(false);
-  });
-
-  it('should return a correct bucket size', () => {
-    component.aggregation.bucketSize = null;
-    expect(component.bucketSize).toBe(2);
-
-    component.aggregation.bucketSize = 1;
-    expect(component.bucketSize).toBe(1);
-
-    component.moreMode = false;
-    component.aggregation.bucketSize = 1;
-    expect(component.bucketSize).toBe(2);
-  });
-
-  it('should display link', () => {
-    component.aggregation.bucketSize = 1;
-    expect(component.displayMoreAndLessLink).toBeTruthy();
-
-    component.aggregation.bucketSize = 5;
-    expect(component.displayMoreAndLessLink).toBeTruthy();
   });
 });

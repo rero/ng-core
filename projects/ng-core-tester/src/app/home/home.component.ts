@@ -16,10 +16,9 @@
 */
 
 import { Component } from '@angular/core';
-
-import { DialogService, ApiService, TranslateLanguageService } from '@rero/ng-core';
-import { DocumentComponent } from '../record/document/document.component';
+import { ApiService, DialogService, RecordSearchService, TranslateLanguageService } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
+import { DocumentComponent } from '../record/document/document.component';
 
 @Component({
   selector: 'app-home',
@@ -65,7 +64,8 @@ export class HomeComponent {
     private dialogService: DialogService,
     private apiService: ApiService,
     private translateLanguageService: TranslateLanguageService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private _recordSearchService: RecordSearchService
   ) {
     this.apiData = {
       relative: this.apiService.getEndpointByType('documents'),
@@ -73,6 +73,9 @@ export class HomeComponent {
     };
 
     this.testLanguageTranslation = this.translateLanguageService.translate('fr', 'fr');
+
+    // Initializes aggregations filters to launch the first search.
+    this._recordSearchService.setAggregationsFilters([]);
   }
 
   showDialog() {
