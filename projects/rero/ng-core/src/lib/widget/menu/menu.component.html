@@ -20,7 +20,7 @@
     [routerLinkActive]="item.hasOwnProperty('cssActiveClass') ? item.cssActiveClass : 'active'"
     [ngClass]="itemClass(item)"
     [ngSwitch]="itemType(item)">
-      <a *ngSwitchCase="'routerLink'" [routerLink]="item.routerLink"
+      <a *ngSwitchCase="'routerLink'" [routerLink]="item.routerLink" [queryParams]="item.queryParams ? item.queryParams : {}"
       [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'nav-link'"
       ><i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i> {{ item.name|translate }}</a>
 
@@ -41,7 +41,7 @@
         </a>
         <div *dropdownMenu class="dropdown-menu" role="menu" [ngClass]="menu.hasOwnProperty('dropdownMenuCssClass') ? menu.dropdownMenuCssClass : ''">
           <ng-container *ngFor="let subItem of item.entries | callbackArrayFilter: isItemMenuVisible" [ngSwitch]="itemType(subItem)">
-            <a *ngSwitchCase="'routerLink'" [routerLink]="subItem.routerLink"
+            <a *ngSwitchCase="'routerLink'" [routerLink]="subItem.routerLink" [queryParams]="subItem.queryParams ? subItem.queryParams : {}"
             [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
             ><i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i> {{ subItem.name|translate }}</a>
 

@@ -80,9 +80,8 @@
         <div *ngFor="let item of aggregations">
           <ng-core-record-search-aggregation
             [aggregation]="item"
-            [selectedValues]="getFilterSelectedValues(item.key)"
+            [aggregationsFilters]="aggregationsFilters"
             [expand]="expandFacet(item.key)"
-            (updateAggregationFilter)="updateAggregationFilter($event)"
           >
           </ng-core-record-search-aggregation>
         </div>
@@ -96,9 +95,8 @@
               [type]="currentType"
               [itemViewComponent]="getResultItemComponentView()"
               [canUpdate$]="canUpdateRecord$(record)"
-              [inRouting]="inRouting"
               [canDelete$]="canDeleteRecord$(record)"
-              [detailUrl$]="resolveDetailUrl(record)"
+              [detailUrl$]="resolveDetailUrl$(record)"
               (deletedRecord)="deleteRecord($event)"
             >
             </ng-core-record-search-result>
@@ -111,7 +109,7 @@
           [maxSize]="paginationMaxSize"
           [boundaryLinks]="paginationBoundaryLinks"
           class="justify-content-center mt-5"
-          *ngIf="showPagination()"
+          *ngIf="showPagination"
           previousText="&lsaquo;"
           nextText="&rsaquo;"
           firstText="&laquo;"

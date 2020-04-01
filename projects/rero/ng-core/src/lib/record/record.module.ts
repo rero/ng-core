@@ -52,6 +52,7 @@ import { MultiSchemaTypeComponent } from './editor/multischema/multischema.compo
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import {ToggleWrapperComponent} from './editor/toggle-wrapper/toggle-wrappers.component';
 import { hooksFormlyExtension } from './editor/extensions';
+import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 
 
 @NgModule({
@@ -75,7 +76,8 @@ import { hooksFormlyExtension } from './editor/extensions';
     SwitchComponent,
     MultiSchemaTypeComponent,
     DatepickerTypeComponent,
-    ToggleWrapperComponent
+    ToggleWrapperComponent,
+    BucketsComponent
   ],
   imports: [
     CoreModule,

@@ -36,6 +36,7 @@ import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
 import { RecordSearchComponent } from './record-search.component';
+import { RecordSearchService } from './record-search.service';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
 
 
@@ -45,6 +46,7 @@ const adminMode = (): Observable<ActionStatus> => {
     message: ''
   });
 };
+
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -160,6 +162,7 @@ describe('RecordSearchComponent', () => {
         ToastrModule.forRoot()
       ],
       providers: [
+        RecordSearchService,
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: RecordUiService, useValue: recordUiServiceSpy },
         { provide: Router, useValue: routerSpy },
@@ -179,8 +182,9 @@ describe('RecordSearchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecordSearchComponent);
     component = fixture.componentInstance;
+    component.aggregationsFilters = [];
     /* tslint:disable:no-string-literal */
-    component['config'] = {
+    component['_config'] = {
       preFilters: {}
     };
     fixture.detectChanges();
@@ -192,20 +196,6 @@ describe('RecordSearchComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should update aggregation filters', () => {
-    component.aggFilters = [];
-    // add one filter
-    expect(component.aggFilters.length).toBe(0);
-    component.updateAggregationFilter({ term: 'author', values: ['Filippini, Massimo'] });
-    expect(component.aggFilters.length).toBe(1);
-
-    // add several filters
-    component.updateAggregationFilter({ term: 'author', values: ['Filippini, Massimo', 'Botturi, Luca'] });
-    const index = component.aggFilters.findIndex(item => item.key === 'author');
-    expect(index).toEqual(0);
-    expect(component.aggFilters[index].values.length).toBe(2);
   });
 
   it('should change size', () => {
@@ -221,21 +211,9 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should change type', () => {
-    expect(component.currentType).toBe('documents');
     component.changeType(new Event('click'), 'institutions');
     expect(component.currentType).toBe('institutions');
-    expect(component.aggFilters.length).toBe(0);
-  });
-
-  it('should return selected values for current filter', () => {
-    component.aggFilters = [];
-    let selectedValues = component.getFilterSelectedValues('author');
-    expect(selectedValues.length).toBe(0);
-
-    component.aggFilters.push({ key: 'author', values: ['Filippini, Massimo'] });
-    selectedValues = component.getFilterSelectedValues('author');
-    expect(selectedValues.length).toBe(1);
-    expect(selectedValues[0]).toBe('Filippini, Massimo');
+    expect(component.aggregationsFilters.length).toBe(0);
   });
 
   it('should set current page for pagination', () => {
@@ -258,12 +236,12 @@ describe('RecordSearchComponent', () => {
     dialogServiceSpy.show.and.returnValue(of(true));
 
     /* tslint:disable:no-string-literal */
-    component['config'].total = 2;
+    component['_config'].total = 2;
 
-    expect(component['config'].total).toBe(2);
+    expect(component['_config'].total).toBe(2);
     component.deleteRecord('1');
     tick(10000); // wait for refreshing records
-    expect(component['config'].total).toBe(1);
+    expect(component['_config'].total).toBe(1);
   }));
 
   it('should have permission to update record', () => {
@@ -290,33 +268,18 @@ describe('RecordSearchComponent', () => {
     });
   });
 
-  it('should configure component without routing', () => {
-    component.inRouting = false;
-    TestBed.get(ActivatedRoute).snapshot.data = {};
-
-    component.ngOnInit();
-
-    expect(component.inRouting).toBe(false);
-  });
-
   it('should resolve detail url', async(() => {
-    component.inRouting = true;
+    component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 
-    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ metadata: { pid: 100 } }).subscribe((result: any) => {
       expect(result.link).toBe('/custom/url/for/detail/documents/100');
     });
 
     component.detailUrl = null;
 
-    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ metadata: { pid: 100 } }).subscribe((result: any) => {
       expect(result.link).toBe('detail/100');
-    });
-
-    component.inRouting = false;
-
-    component.resolveDetailUrl({ metadata: { pid: 100 } }).subscribe((result: any) => {
-      expect(result).toBe(null);
     });
   }));
 
@@ -332,12 +295,13 @@ describe('RecordSearchComponent', () => {
       { key: 'language', bucketSize: null, value: { buckets: [] }},
       { key: 'author', bucketSize: null, value: { buckets: [] }},
     ];
-    recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents', aggregationsOrder: ['language', 'author'] });
+    component['_config'] = { key: 'documents', aggregationsOrder: ['language', 'author'] };
     expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);
   }));
 
   it('should expand aggregation', async(() => {
-    recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents', aggregationsExpand: ['language'] });
+    // recordUiServiceSpy.getResourceConfig.and.returnValue();
+    component['_config'] = { key: 'documents', aggregationsExpand: ['language'] };
     expect(component.expandFacet('language')).toBeTruthy();
     expect(component.expandFacet('author')).toBeFalsy();
   }));
