@@ -23,16 +23,41 @@ import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
   templateUrl: 'array-type.component.html'
 })
 export class ArrayTypeComponent extends FieldArrayType implements OnInit {
-  /**
-   * Are the children of type object?
-   */
+  /** True if children are of type object */
   isChildrenObject = false;
+
+  /** True if the children are of type array */
+  isChildrenArray = false;
 
   /**
    * Component initialization
    */
   ngOnInit() {
     this.isChildrenObject = this.field.fieldArray.type === 'object';
+    this.isChildrenArray = this.field.fieldArray.type === 'array';
+
+    // reset the number of elements in the array when the array id hidden
+    this.field.options.fieldChanges.subscribe(changes => {
+      const minItems = this.field.templateOptions.minItems ? this.field.templateOptions.minItems : 0;
+      if (
+        // hide property has changed
+        changes.type === 'hidden'
+        // transition from visible to hide
+        && (changes.value === true)
+        // the changes concern the current field
+        && (this.field.id === changes.field.id)
+      ) {
+        // number of elements to remove
+        const numberOfItemsToRemove = this.field.fieldGroup.length - minItems;
+        // remove the extra elements
+        // force removing the elements in the next event loop else this cause errors when removing multiple values
+        setTimeout(() => {
+          for (let i = 0; i < numberOfItemsToRemove; i++) {
+            this.remove(0);
+          }
+        });
+      }
+    });
   }
 
   /**
