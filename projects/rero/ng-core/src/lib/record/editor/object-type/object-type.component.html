@@ -76,7 +76,10 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <span [id]="f.id">{{ f.templateOptions.label }}</span>
+  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id">
+    {{ f.templateOptions.label }}
+    <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
+  </label>
 </ng-template>
 
 <!-- trash button -->
