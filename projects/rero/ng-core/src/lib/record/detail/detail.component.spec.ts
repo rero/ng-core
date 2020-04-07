@@ -183,8 +183,6 @@ describe('RecordDetailComponent', () => {
         detailComponent: JsonComponent
       }
     ];
-
-    component.viewComponent = JsonComponent;
-    component['loadRecordView']();
+    expect(component.recordDetail).toBeDefined();
   });
 });

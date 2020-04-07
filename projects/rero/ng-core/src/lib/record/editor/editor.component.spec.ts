@@ -16,18 +16,15 @@
 */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { EditorComponent } from './editor.component';
-import { FormlyModule } from '@ngx-formly/core';
-import { AddFieldEditorComponent } from './add-field-editor/add-field-editor.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TypeaheadModule, ModalModule } from 'ngx-bootstrap';
-import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ToastrModule } from 'ngx-toastr';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { RecordUiService } from '../record-ui.service';
+import { RecordModule } from '../record.module';
+import { RecordService } from '../record.service';
+import { EditorComponent } from './editor.component';
+
 
 const recordUiServiceSpy = jasmine.createSpyObj('RecordUiService', [
   'getResourceConfig',
@@ -49,6 +46,32 @@ recordUiServiceSpy.types = [
   }
 ];
 
+const route = {
+  params: of({ type: 'documents' }),
+  snapshot: {
+    params: { type: 'documents' },
+    data: {
+      types: [
+        {
+          key: 'documents',
+        }
+      ],
+      showSearchInput: true,
+      adminMode: true
+    }
+  },
+  queryParams: of({})
+};
+
+const recordService = jasmine.createSpyObj('RecordService', ['getSchemaForm']);
+recordService.getSchemaForm.and.returnValue(of({
+  schema: {
+    type: 'object',
+    additionalProperties: true,
+    properties: {}
+  }
+}));
+
 describe('EditorComponent', () => {
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
@@ -56,18 +79,16 @@ describe('EditorComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        FormsModule,
-        TypeaheadModule.forRoot(),
-        ReactiveFormsModule,
-        ModalModule.forRoot(),
-        ToastrModule.forRoot(),
-        TranslateModule.forRoot(),
-        HttpClientModule,
+        RecordModule,
         RouterTestingModule,
-        { provide: RecordUiService, useValue: recordUiServiceSpy },
-        FormlyModule.forRoot()
+        TranslateModule.forRoot()
       ],
-      declarations: [ AddFieldEditorComponent, EditorComponent ]
+      providers: [
+        TranslateService,
+        { provide: RecordService, useValue: recordService },
+        { provide: RecordUiService, useValue: recordUiServiceSpy },
+        { provide: ActivatedRoute, useValue: route }
+      ]
     })
     .compileComponents();
   }));
@@ -78,8 +99,7 @@ describe('EditorComponent', () => {
     fixture.detectChanges();
   });
 
-  // TODO: enable tests
-  // it('should create', () => {
-  //   expect(component).toBeTruthy();
-  // });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

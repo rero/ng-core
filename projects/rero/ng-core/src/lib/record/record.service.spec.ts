@@ -108,17 +108,8 @@ describe('RecordService', () => {
     });
 
     req.error(mockError);
-  });
 
-  it('should delete record', () => {
-    const pid = '1';
-
-    service.delete('documents', pid).subscribe();
-
-    const req = httpMock.expectOne(request => {
-      return request.method === 'DELETE' && request.url === url + '/' + pid;
-    });
-    req.flush({});
+    httpMock.verify();
   });
 
   it('should get a record detail', () => {
@@ -138,5 +129,6 @@ describe('RecordService', () => {
     });
 
     req.flush(expectedData);
+    httpMock.verify();
   });
 });
