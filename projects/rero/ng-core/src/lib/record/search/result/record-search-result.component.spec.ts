@@ -70,6 +70,7 @@ describe('RecordSearchResultComponent', () => {
   it('should have a custom component view', () => {
     component.itemViewComponent = JsonComponent;
     component.loadItemView();
+    expect(component.searchResultItem).toBeDefined();
   });
 
   it('should delete record', () => {

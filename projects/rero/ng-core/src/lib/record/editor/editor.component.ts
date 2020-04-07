@@ -108,9 +108,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     combineLatest([this.route.params, this.route.queryParams])
-      .pipe(map(results => ({ params: results[0], query: results[1] })))
-      .subscribe(results => {
-        const params = results.params;
+      .subscribe(([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
         //   console.log('model', this.model, 'v', v, 'form', this.form)
@@ -227,7 +225,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
   /**
    * Preprocess the record before passing it to the editor
-   * @param schema - object, JOSNSchema
+   * @param schema - object, JOSNSchemag
    */
   setSchema(schema) {
     // reorder all object properties
