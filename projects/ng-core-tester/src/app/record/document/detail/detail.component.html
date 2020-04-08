@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <ng-container *ngIf="record">
-    <h1>{{ record.metadata.title }}</h1>
+    <h1>{{ record.metadata.title[0].mainTitle[0].value }}</h1>
     <p>
         <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
     </p>
