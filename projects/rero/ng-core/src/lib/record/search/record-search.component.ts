@@ -154,7 +154,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Store configuration for type
    */
-  private _config: any;
+  private _config: any = null;
 
   /**
    * Subscription to aggregationsFilters observable
@@ -252,8 +252,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         this.recordUiService.types = this.types;
       }
 
-      // Load configuration for changed type
-      this.loadConfigurationForType(this.currentType);
+      // if the "type" property is changed in input, but the change is not
+      // triggered by clicking on a tab (which already load configuration),
+      // we reload configuration.
+      // If no configuration is loaded, we load it, too.
+      if (this._config === null || changes.currentType.currentValue !== this._config.key) {
+        this.loadConfigurationForType(this.currentType);
+      }
     }
 
     // If it's the first change, we don't do a search, it's delegated to the
@@ -364,7 +369,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   changeType(event: Event, type: string) {
     event.preventDefault();
+
+    // if records are loading, we prevent to change the type of the resource.
+    if (this.isLoading === true) {
+      return;
+    }
+
     this.currentType = type;
+    this.loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
     this._getRecords();
     this._recordSearchService.setAggregationsFilters([]);

@@ -18,7 +18,6 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouteCollectionService } from '@rero/ng-core';
 import { DocumentsRoute } from './documents-route';
-import { DocumentsHevsRoute } from './documents-hevs-route';
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +40,7 @@ export class RouteService {
    */
   initializeRoutes() {
     this.routeCollectionService
-      .addRoute(new DocumentsRoute())
-      .addRoute(new DocumentsHevsRoute());
+      .addRoute(new DocumentsRoute());
 
     this.routeCollectionService.getRoutes().map((route: any) => {
       this.router.config.push(route);

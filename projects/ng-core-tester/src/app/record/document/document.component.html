@@ -17,16 +17,16 @@
 <h5>
     <ng-container *ngIf="detailUrl; else titleWithoutLink">
         <a [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
-            {{ record.metadata.title }}
+            {{ record.metadata.title[0].mainTitle[0].value }}
         </a>
         <ng-template #hrefLink>
             <a [href]="detailUrl.link">
-                {{ record.metadata.title }}
+              {{ record.metadata.title[0].mainTitle[0].value }}
             </a>
         </ng-template>
     </ng-container>
     <ng-template #titleWithoutLink>
-        {{ record.metadata.title }}
+      {{ record.metadata.title[0].mainTitle[0].value }}
     </ng-template>
 </h5>
 <p>

@@ -51,12 +51,8 @@ export class AppComponent implements OnInit {
             iconCssClass: 'fa fa-book'
           },
           {
-            name: 'USI records',
-            routerLink: '/usi/record/search/documents'
-          },
-          {
-            name: 'HEVS records',
-            routerLink: '/hevs/record/search/documents'
+            name: 'UNISI records',
+            routerLink: '/unisi/record/search/documents'
           },
           {
             name: 'Backend records',

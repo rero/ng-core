@@ -145,7 +145,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'usi/record/search',
+    path: 'unisi/record/search',
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
@@ -156,7 +156,7 @@ const routes: Routes = [
           label: 'Documents',
           component: DocumentComponent,
           preFilters: {
-            institution: 'usi'
+            institution: 'unisi'
           }
         }
       ]
