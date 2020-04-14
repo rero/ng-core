@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-
+import { Subscription } from 'rxjs';
+import { SelectOption } from '../record/editor/interfaces';
 // TODO: Search for a better solution for dynamic file loading
 import de from './languages/de.json';
 import en from './languages/en.json';
@@ -26,18 +27,44 @@ import it from './languages/it.json';
 @Injectable({
   providedIn: 'root'
 })
-export class TranslateLanguageService {
+export class TranslateLanguageService implements OnDestroy {
+  // List of preferred languages
+  static PREFERRED_LANGUAGES = ['eng', 'fre', 'ger', 'ita'];
 
-  /**
-   * Available languages (import)
-   */
+  // Available languages (import)
   private availableLanguages = { de, en, fr, it };
 
+  // List of options for populating the select box. The options are stored to
+  // avoid a repetitive treatment, as the language select box may appear several
+  // times in the application.
+  private _selectOptions: Array<SelectOption> = null;
+
+  // Subscription to language changes
+  private _changeLanguageSubscription: Subscription = null;
+
   /**
-   * Constructor
+   * Constructor.
+   *
+   * Subscribes to language changes and resets the stored options after a
+   * change.
+   *
    * @param translateService - TranslateService
    */
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslateService) {
+    // When language is changed, we reset the stored select options.
+    this._changeLanguageSubscription = this.translateService.onLangChange.subscribe(() => {
+      this._selectOptions = null;
+    });
+  }
+
+  /**
+   * Service destruction
+   *
+   * Unsubscribe from language changes.
+   */
+  ngOnDestroy() {
+    this._changeLanguageSubscription.unsubscribe();
+  }
 
   /**
    * @param langCode - ISO 639-2 (2 characters)
@@ -55,5 +82,33 @@ export class TranslateLanguageService {
     }
 
     return this.availableLanguages[lang][langCode];
+  }
+
+  /**
+   * Return select options with the translated language value as label.
+   * @param values Language codes values
+   * @return List of options
+   */
+  getSelectOptions(values: Array<string>): Array<SelectOption> {
+    if (this._selectOptions !== null) {
+      return this._selectOptions;
+    }
+
+    const options: Array<SelectOption> = values.map((item) => {
+      return { label: this.translate(item), value: item, group: '------------' };
+    });
+
+    this._selectOptions = options.sort((a: SelectOption, b: SelectOption) => {
+      return a.label.localeCompare(b.label);
+    });
+
+    TranslateLanguageService.PREFERRED_LANGUAGES.reverse().forEach((lang: string) => {
+      this._selectOptions.unshift({
+        label: this.translate(lang),
+        value: lang
+      });
+    });
+
+    return this._selectOptions;
   }
 }
