@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed } from '@angular/core/testing';
-
-import { TranslateLanguageService } from './translate-language.service';
 import { TranslateService } from '@ngx-translate/core';
+import { of } from 'rxjs';
+import { TranslateLanguageService } from './translate-language.service';
 
 describe('TranslateLanguageService', () => {
 
-  const translateServiceSpy = jasmine.createSpyObj('TranslateService', ['currentLang']);
+  const translateServiceSpy = jasmine.createSpyObj('TranslateService', ['currentLang', 'onLangChange']);
   translateServiceSpy.currentLang = 'fr';
+  translateServiceSpy.onLangChange = of(null);
 
   let service: TranslateLanguageService;
 

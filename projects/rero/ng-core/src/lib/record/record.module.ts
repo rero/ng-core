@@ -155,7 +155,9 @@ import { BucketsComponent } from './search/aggregation/buckets/buckets.component
     AutocompleteComponent,
     GetRecordPipe,
     CoreModule,
-    EditorComponent
+    EditorComponent,
+    FormlyModule,
+    FormlyBootstrapModule
   ],
   entryComponents: [
     JsonComponent,
