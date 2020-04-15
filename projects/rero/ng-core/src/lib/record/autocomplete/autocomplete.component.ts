@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { TypeaheadMatch } from 'ngx-bootstrap';
-import { Observable, of, combineLatest } from 'rxjs';
-import { mergeMap, map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TypeaheadMatch } from 'ngx-bootstrap';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, mergeMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 
 @Component({

@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,7 +38,6 @@ import { RecordSearchAggregationComponent } from './aggregation/aggregation.comp
 import { RecordSearchComponent } from './record-search.component';
 import { RecordSearchService } from './record-search.service';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
-
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({

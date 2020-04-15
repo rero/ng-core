@@ -1,30 +1,28 @@
 /*
-* Invenio angular core
-* Copyright (C) 2019 RERO
-*
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU Affero General Public License as published by
-* the Free Software Foundation, version 3 of the License.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU Affero General Public License for more details.
-*
-* You should have received a copy of the GNU Affero General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * RERO angular core
+ * Copyright (C) 2020 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { CoreConfigService, TitleMetaService, RecordService, RecordEvent } from '@rero/ng-core';
-import { ToastrService } from 'ngx-toastr';
+import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
   lang: string = document.documentElement.lang;

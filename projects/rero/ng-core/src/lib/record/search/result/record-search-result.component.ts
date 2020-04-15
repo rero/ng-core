@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,14 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, ComponentFactoryResolver, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { RecordSearchResultDirective } from './record-search-result.directive';
-import { JsonComponent } from './item/json.component';
 import { ActionStatus } from '../../action-status';
-import { ResultItem } from './item/result-item';
 import { RecordUiService } from '../../record-ui.service';
+import { JsonComponent } from './item/json.component';
+import { ResultItem } from './item/result-item';
+import { RecordSearchResultDirective } from './record-search-result.directive';
 
 @Component({
   selector: 'ng-core-record-search-result',

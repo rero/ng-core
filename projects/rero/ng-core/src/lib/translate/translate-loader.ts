@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Inject } from '@angular/core';
 import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
-
-import fr from './i18n/fr.json';
+import { CoreConfigService } from '../core-config.service.js';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
+import fr from './i18n/fr.json';
 import it from './i18n/it.json';
-import { CoreConfigService } from '../core-config.service.js';
-import { Inject } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.

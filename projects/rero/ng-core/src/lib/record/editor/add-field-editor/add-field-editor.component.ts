@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
-import { EditorService } from '../editor.service';
-import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EditorService } from '../editor.service';
 
 /**
  * Type a head selection type

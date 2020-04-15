@@ -1,6 +1,6 @@
 
 /*
- * Invenio angular core
+ * RERO angular core
  * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,18 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   ActionStatus,
-  RouteInterface,
   DetailComponent as RecordDetailComponent,
+  EditorComponent,
   RecordSearchComponent,
-  EditorComponent
+  RouteInterface,
 } from '@rero/ng-core';
-import { DocumentComponent } from '../record/document/document.component';
-import { DetailComponent } from '../record/document/detail/detail.component';
-import { Observable, of } from 'rxjs';
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import { JSONSchema7 } from 'json-schema';
+import { Observable, of } from 'rxjs';
+import { DetailComponent } from '../record/document/detail/detail.component';
+import { DocumentComponent } from '../record/document/document.component';
 
 export class DocumentsRoute implements RouteInterface {
 

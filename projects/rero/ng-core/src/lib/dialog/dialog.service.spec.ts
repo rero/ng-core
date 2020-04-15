@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,12 @@
  */
 import { TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { ModalModule, BsModalService } from 'ngx-bootstrap';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader } from '@ngx-translate/core';
-
-import { DialogService } from './dialog.service';
-import { DialogComponent } from './dialog.component';
-import { Nl2brPipe } from '../pipe/nl2br.pipe';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { BsModalService, ModalModule } from 'ngx-bootstrap';
 import { CoreConfigService } from '../core-config.service';
+import { Nl2brPipe } from '../pipe/nl2br.pipe';
+import { DialogComponent } from './dialog.component';
+import { DialogService } from './dialog.service';
 
 let service: DialogService;
 let bsModalService: BsModalService;

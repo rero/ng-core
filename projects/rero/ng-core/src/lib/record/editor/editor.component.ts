@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,23 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { JSONSchema7 } from 'json-schema';
-import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
-import { EditorService } from './editor.service';
-import { orderedJsonSchema, isEmpty, removeEmptyValues } from './utils';
-import { RecordService } from '../record.service';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
+import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
+import { TranslateService } from '@ngx-translate/core';
+import { JSONSchema7 } from 'json-schema';
+import { ToastrService } from 'ngx-toastr';
 import { combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RecordUiService } from '../record-ui.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
-import { Location } from '@angular/common';
 import { ApiService } from '../../api/api.service';
+import { RecordUiService } from '../record-ui.service';
+import { RecordService } from '../record.service';
+import { EditorService } from './editor.service';
+import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
 
 @Component({
   selector: 'ng-core-editor',

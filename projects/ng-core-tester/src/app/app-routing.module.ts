@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,6 @@ import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { RouteService } from './routes/route.service';
-
 
 const adminModeCanNot = (): Observable<ActionStatus> => {
   return of({
