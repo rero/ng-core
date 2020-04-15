@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateLoader, TranslateFakeLoader, TranslateService } from '@ngx-translate/core';
-
-import { DialogComponent } from './dialog.component';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { BsModalRef, ModalModule } from 'ngx-bootstrap';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
-import { ModalModule, BsModalRef } from 'ngx-bootstrap';
+import { DialogComponent } from './dialog.component';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;

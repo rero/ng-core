@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,16 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-import { map, mergeMap, delay, first } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
-
-import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
+import { ToastrService } from 'ngx-toastr';
+import { Observable, of } from 'rxjs';
+import { delay, first, map, mergeMap } from 'rxjs/operators';
 import { DialogService } from '../dialog/dialog.service';
-import { RecordService } from './record.service';
 import { ActionStatus } from './action-status';
-import { Router, ActivatedRoute } from '@angular/router';
+import { RecordService } from './record.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
-import { RecordService } from '../record/record.service';
 import { map } from 'rxjs/operators';
+import { RecordService } from '../record/record.service';
 import { extractIdOnRef } from '../utils/utils';
 
 @Pipe({

@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,7 +28,6 @@ import { RecordService } from '../record.service';
 import { DetailComponent } from './detail.component';
 import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
-
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({

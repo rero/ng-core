@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,16 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, of, Subject } from 'rxjs';
-import { catchError, map, debounceTime, tap } from 'rxjs/operators';
-
-import { Record } from './record';
-import { ApiService } from '../api/api.service';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { Observable, of, Subject, throwError } from 'rxjs';
+import { catchError, debounceTime, map, tap } from 'rxjs/operators';
+import { ApiService } from '../api/api.service';
 import { resolveRefs } from './editor/utils';
-import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { Record } from './record';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,8 +17,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
 import { TranslateLanguageService } from '../../../../translate/translate-language.service';
+import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
 
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',

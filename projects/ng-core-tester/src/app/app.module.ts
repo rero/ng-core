@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,24 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
-
-import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
-import { RecordModule, TranslateLoader } from '@rero/ng-core';
-import { CoreConfigService } from '@rero/ng-core';
-
+import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core';
+import { BsLocaleService, CollapseModule, TypeaheadModule } from 'ngx-bootstrap';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
+import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { DocumentComponent } from './record/document/document.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
-import { AppConfigService } from './app-config.service';
-import { CollapseModule, TypeaheadModule, BsLocaleService } from 'ngx-bootstrap';
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { enGbLocale, frLocale, deLocale, itLocale } from 'ngx-bootstrap/locale';
+import { DocumentComponent } from './record/document/document.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({

@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2019 RERO
+ * RERO angular core
+ * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,26 +14,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-import { TranslateModule, TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
-
-import { Nl2brPipe } from './pipe/nl2br.pipe';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
+import { DialogComponent } from './dialog/dialog.component';
+import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
+import { Nl2brPipe } from './pipe/nl2br.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
-import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
-import { DateTranslatePipe } from './translate/date-translate-pipe';
-import { DialogComponent } from './dialog/dialog.component';
 import { SearchInputComponent } from './search-input/search-input.component';
-import { MenuComponent } from './widget/menu/menu.component';
-import { TranslateLoader } from './translate/translate-loader';
-import { ModalModule, BsDropdownModule } from 'ngx-bootstrap';
-import { ToastrModule } from 'ngx-toastr';
-import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TextReadMoreComponent } from './text-read-more/text-read-more.component';
+import { DateTranslatePipe } from './translate/date-translate-pipe';
+import { TranslateLanguagePipe } from './translate/translate-language.pipe';
+import { TranslateLoader } from './translate/translate-loader';
+import { MenuComponent } from './widget/menu/menu.component';
 
 @NgModule({
   declarations: [
