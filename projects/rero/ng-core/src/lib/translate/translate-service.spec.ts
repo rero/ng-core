@@ -16,6 +16,8 @@
  */
 import { CoreConfigService } from '../core-config.service';
 import { TranslateService } from './translate-service';
+import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
+import { BsLocaleService } from 'ngx-bootstrap';
 
 class TranslateServiceMock {
   private language;
@@ -45,9 +47,9 @@ let appTranslateService;
 describe('AppTranslateService', () => {
   beforeEach(() => {
     appTranslateService = new TranslateService(
-      new TranslateServiceMock(),
+      new TranslateServiceMock() as unknown as NgxTranslateService,
       new CoreConfigService(),
-      new BsLocaleServiceMock()
+      new BsLocaleServiceMock() as unknown as BsLocaleService
     );
   });
   it('should create an instance', () => {

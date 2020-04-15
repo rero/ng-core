@@ -17,6 +17,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
 
+/**
+ * Component for displaying array fields in editor.
+ */
 @Component({
   selector: 'ng-core-editor-formly-array-type',
   templateUrl: 'array-type.component.html'

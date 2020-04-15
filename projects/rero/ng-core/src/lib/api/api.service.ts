@@ -26,35 +26,32 @@ import { CoreConfigService } from '../core-config.service';
   }
 )
 export class ApiService {
-  /**
-   * API base URL.
-   *
-   * Ex: https://localhost:5000
-   */
-  public baseUrl = '';
+  // API base URL. Ex: https://localhost:5000.
+  baseUrl = '';
+
+  // API prefix. Ex: /api
+  endpointPrefix = '/';
 
   /**
-   * API prefix
+   * Constructor.
    *
-   * Ex: /api
+   * Initializes base URL and endpoint API prefix.
+   *
+   * @param _configService Configuration service.
    */
-  public endpointPrefix = '/';
-
-  /**
-   * Constructor
-   * @param config - Config, global configuration
-   */
-  constructor(private configService: CoreConfigService) {
-    this.baseUrl = this.configService.apiBaseUrl;
-    this.endpointPrefix = this.configService.apiEndpointPrefix;
+  constructor(private _configService: CoreConfigService) {
+    this.baseUrl = this._configService.apiBaseUrl;
+    this.endpointPrefix = this._configService.apiEndpointPrefix;
   }
 
   /**
-   * Return invenio API Endpoint corresponding to type.
-   * @param type - string, type of the resource
-   * @param absolute - boolean, if absolute or relative url must be returned.
+   * Returns invenio API Endpoint corresponding to type.
+   *
+   * @param type Type of the resource.
+   * @param absolute If absolute or relative url must be returned.
+   * @return Endpoint as string.
    */
-  public getEndpointByType(type: string, absolute: boolean = false) {
+  getEndpointByType(type: string, absolute: boolean = false): string {
     let endpoint = this.endpointPrefix + '/' + type;
 
     if (absolute === true) {
@@ -65,27 +62,30 @@ export class ApiService {
   }
 
   /**
-   * Returne $ref endpoint to resource
-   * @param type - string, type of resource
-   * @param id - string id of the record
+   * Returns $ref endpoint to resource.
+   *
+   * @param type Type of resource.
+   * @param id Id of the record.
+   * @return Ref endpoint as string.
    */
-  getRefEndpoint(type: string, id: string) {
-    return `${this.configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
+  getRefEndpoint(type: string, id: string): string {
+    return `${this._configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
   }
 
   /**
-   * Return invenio API FormOption Endpoint corresponding to type.
-   * @param type - string, type of the resource
-   * @param absolute - boolean, if absolute or relative url must be returned.
+   * Returns invenio API FormOption Endpoint corresponding to type.
+   *
+   * @param type Type of the resource
+   * @param absolute If absolute or relative url must be returned.
+   * @return Schema form endpoint.
    */
-  public getSchemaFormEndpoint(type: string, absolute: boolean = false) {
-    let endpoint = this.configService.schemaFormEndpoint + '/' + type;
+  getSchemaFormEndpoint(type: string, absolute: boolean = false): string {
+    let endpoint = this._configService.schemaFormEndpoint + '/' + type;
 
     if (absolute === true) {
       endpoint = this.baseUrl + endpoint;
     }
 
     return endpoint;
-
   }
 }

@@ -17,24 +17,33 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
+/**
+ * Component showing the search bar for searching records.
+ */
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html'
 })
 export class SearchBarComponent implements OnInit {
-
+  // Code of the organisation.
   @Input() viewcode: string;
+
+  // Size.
   @Input() size: string = undefined;
+
+  // Suggestions max length.
   @Input() maxLengthSuggestion = 100;
 
-
-  get action() {
-    return `/records/documents`;
-  }
-
+  // List of resource type
   recordTypes = [];
 
-  static getPersonName(metadata) {
+  /**
+   * Returns person name for given metadata.
+   *
+   * @param metadata Metadata.
+   * @return Person name.
+   */
+  static getPersonName(metadata: string) {
     for (const source of ['rero', 'bnf', 'gnd']) {
       if (metadata[source] && metadata[source].preferred_name_for_person) {
         return metadata[source].preferred_name_for_person;
@@ -42,34 +51,59 @@ export class SearchBarComponent implements OnInit {
     }
   }
 
-  constructor(private translateService: TranslateService) {
-   }
+  /**
+   * Constructor.
+   *
+   * @param _translateService Translate service.
+   */
+  constructor(private _translateService: TranslateService) { }
 
+  /**
+   * Component initialization.
+   *
+   * Initializes record types.
+   */
   ngOnInit() {
     this.recordTypes = [{
       type: 'documents',
       field: 'title',
-      getSuggestions: (query, persons) => this.getDocumentsSuggestions(query, persons),
-      preFilters: this.viewcode ? {view: this.viewcode} : {}
+      getSuggestions: (query: string, persons: any) => this.getDocumentsSuggestions(query, persons),
+      preFilters: this.viewcode ? { view: this.viewcode } : {}
     }, {
       type: 'institutions',
       field: 'name',
-      getSuggestions: (query, persons) => this.getInstitutionsSuggestions(query, persons),
+      getSuggestions: (query: string, persons: any) => this.getInstitutionsSuggestions(query, persons),
       component: this,
-      preFilters: this.viewcode ? {view: this.viewcode} : {}
+      preFilters: this.viewcode ? { view: this.viewcode } : {}
     }];
   }
 
-  getInstitutionsSuggestions(query, institutions) {
+  /**
+   * Link to record search.
+   *
+   * @return Link to record search.
+   */
+  get action(): string {
+    return `/records/documents`;
+  }
+
+  /**
+   * Return a list of suggestions for organisations.
+   *
+   * @param query String query.
+   * @param institutions List of institutions.
+   * @return List of suggestions.
+   */
+  getInstitutionsSuggestions(query: string, institutions: any): Array<any> {
     const values = [];
-    institutions.hits.hits.map(hit => {
+    institutions.hits.hits.map((hit: any) => {
       let text = hit.metadata.name;
       text = text.replace(new RegExp(query, 'gi'), `<b>${query}</b>`);
       values.push({
         text,
         query: '',
         index: 'institutions',
-        category: this.translateService.instant('direct links'),
+        category: this._translateService.instant('direct links'),
         href: `/records/institutions/detail/${hit.metadata.pid}`,
         iconCssClass: 'fa fa-bank'
       });
@@ -77,9 +111,16 @@ export class SearchBarComponent implements OnInit {
     return values;
   }
 
-  getDocumentsSuggestions(query, documents) {
+  /**
+   * Return a list of suggestions for documents.
+   *
+   * @param query String query.
+   * @param institutions List of documents.
+   * @return List of suggestions.
+   */
+  getDocumentsSuggestions(query: string, documents: any): Array<any> {
     const values = [];
-    documents.hits.hits.map(hit => {
+    documents.hits.hits.map((hit: any) => {
       let text = hit.metadata.title;
       let truncate = false;
       if (text.length > this.maxLengthSuggestion) {
@@ -94,7 +135,7 @@ export class SearchBarComponent implements OnInit {
         text,
         query: hit.metadata.title.replace(/[:\-\[\]()/"]/g, ' ').replace(/\s\s+/g, ' '),
         index: 'documents',
-        category: this.translateService.instant('documents')
+        category: this._translateService.instant('documents')
         // href: `/${this.viewcode}/documents/${hit.metadata.pid}`
       });
     });

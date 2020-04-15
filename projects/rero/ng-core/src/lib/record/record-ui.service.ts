@@ -31,13 +31,21 @@ export class RecordUiService {
   /** Configuration for all resources. */
   types = [];
 
+  /**
+   * Constructor.
+   *
+   * @param _dialogService Dialog service.
+   * @param _toastService Toast service.
+   * @param _translateService Translate service.
+   * @param _recordService Record service.
+   * @param _router Router.
+   */
   constructor(
-    private dialogService: DialogService,
-    private toastService: ToastrService,
-    private translate: TranslateService,
-    private recordService: RecordService,
-    private router: Router,
-    private route: ActivatedRoute
+    private _dialogService: DialogService,
+    private _toastService: ToastrService,
+    private _translateService: TranslateService,
+    private _recordService: RecordService,
+    private _router: Router
   ) { }
 
   /**
@@ -47,14 +55,14 @@ export class RecordUiService {
    * @returns Observable resolving as a boolean
    */
   deleteRecord(type: string, pid: string): Observable<boolean> {
-    const observable = this.dialogService.show({
+    const observable = this._dialogService.show({
       ignoreBackdropClick: true,
       initialState: {
-        title: this.translate.instant('Confirmation'),
-        body: this.translate.instant('Do you really want to delete this record?'),
+        title: this._translateService.instant('Confirmation'),
+        body: this._translateService.instant('Do you really want to delete this record?'),
         confirmButton: true,
-        confirmTitleButton: this.translate.instant('Delete'),
-        cancelTitleButton: this.translate.instant('Cancel')
+        confirmTitleButton: this._translateService.instant('Delete'),
+        cancelTitleButton: this._translateService.instant('Cancel')
       }
     }).pipe(
       // return a new observable depending on confirm dialog result.
@@ -63,9 +71,9 @@ export class RecordUiService {
           return of(false);
         }
 
-        return this.recordService.delete(type, pid).pipe(
+        return this._recordService.delete(type, pid).pipe(
           map(() => {
-            this.toastService.success(this.translate.instant('Record deleted.'));
+            this._toastService.success(this._translateService.instant('Record deleted.'));
             return true;
           }),
           // delay before doing anything else, otherwise records may be not refreshed.
@@ -82,12 +90,12 @@ export class RecordUiService {
    * @param message Message to display
    */
   showDeleteMessage(message: string) {
-    this.dialogService.show({
+    this._dialogService.show({
       initialState: {
-        title: this.translate.instant('Information'),
+        title: this._translateService.instant('Information'),
         body: message,
         confirmButton: false,
-        cancelTitleButton: this.translate.instant('OK')
+        cancelTitleButton: this._translateService.instant('OK')
       }
     }).subscribe();
   }
@@ -186,17 +194,17 @@ export class RecordUiService {
     if (config.redirectUrl) {
       config.redirectUrl(record).subscribe((result: string) => {
         if (result !== null) {
-          this.router.navigate([result]);
+          this._router.navigate([result]);
           return;
         }
       });
     } else {
       // Default behaviour
       if (action === 'update') {
-        this.router.navigate(['../../detail', pid], {relativeTo: route, replaceUrl: true});
+        this._router.navigate(['../../detail', pid], {relativeTo: route, replaceUrl: true});
         return;
       }
-      this.router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
+      this._router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
     }
   }
 }

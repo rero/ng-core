@@ -18,43 +18,31 @@ import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subject } from 'rxjs';
 
+/**
+ * Show dialog modal
+ */
 @Component({
   selector: 'ng-core-dialog',
   templateUrl: './dialog.component.html'
 })
-/**
- * Show dialog modal
- */
 export class DialogComponent implements OnInit {
-  /**
-   * Title of the modal.
-   */
-  public title: string;
+  // Title of the modal.
+  title: string;
 
-  /**
-   * Content of the modal, can be html.
-   */
-  public body: string;
+  // Content of the modal, can be html.
+  body: string;
 
-  /**
-   * Show button to confirm action.
-   */
-  public confirmButton = true;
+  // Show button to confirm action.
+  confirmButton = true;
 
-  /**
-   * Label of cancel button
-   */
-  public cancelTitleButton: string;
+  // Label of cancel button.
+  cancelTitleButton: string;
 
-  /**
-   * Label of confirmation button
-   */
-  public confirmTitleButton: string;
+  // Label of confirmation button.
+  confirmTitleButton: string;
 
-  /**
-   * Event triggered when modal is closed.
-   */
-  public onClose: Subject<boolean>;
+  // Event triggered when modal is closed.
+  onClose: Subject<boolean>;
 
   /**
    * Constructor
@@ -64,6 +52,8 @@ export class DialogComponent implements OnInit {
 
   /**
    * Component init
+   *
+   * Initializes subject when the dialog is closed.
    */
   ngOnInit() {
     this.onClose = new Subject();
@@ -72,7 +62,7 @@ export class DialogComponent implements OnInit {
   /**
    * Confirm action.
    */
-  confirm(): void {
+  confirm() {
     this.onClose.next(true);
     this._bsModalRef.hide();
   }
@@ -80,7 +70,7 @@ export class DialogComponent implements OnInit {
   /**
    * Cancel action
    */
-  decline(): void {
+  decline() {
     this.onClose.next(false);
     this._bsModalRef.hide();
   }

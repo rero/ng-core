@@ -18,6 +18,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RecordModule } from '@rero/ng-core';
 
+/**
+ * Module used to wrap record module of ng-core for using it in routes lazy
+ * loading.
+ */
 @NgModule({
   declarations: [],
   imports: [

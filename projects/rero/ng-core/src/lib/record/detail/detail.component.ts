@@ -79,17 +79,18 @@ export class DetailComponent implements OnInit {
   /**
    * Directive for displaying record
    */
-  @ViewChild(RecordDetailDirective, { static: true }) recordDetail: RecordDetailDirective;
+  @ViewChild(RecordDetailDirective, { static: true })
+  recordDetail: RecordDetailDirective;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private location: Location,
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private recordService: RecordService,
-    private recordUiService: RecordUiService,
-    private toastrService: ToastrService,
-    private translate: TranslateService
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _location: Location,
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    private _recordService: RecordService,
+    private _recordUiService: RecordUiService,
+    private _toastrService: ToastrService,
+    private _translate: TranslateService
   ) { }
 
   /**
@@ -98,37 +99,37 @@ export class DetailComponent implements OnInit {
   ngOnInit() {
     this.loadViewComponentRef();
 
-    const pid = this.route.snapshot.paramMap.get('pid');
-    const type = this.route.snapshot.paramMap.get('type');
+    const pid = this._route.snapshot.paramMap.get('pid');
+    const type = this._route.snapshot.paramMap.get('type');
 
-    this.recordUiService.types = this.route.snapshot.data.types;
-    const config = this.recordUiService.getResourceConfig(type);
+    this._recordUiService.types = this._route.snapshot.data.types;
+    const config = this._recordUiService.getResourceConfig(type);
 
-    this.record$ = this.recordService.getRecord(type, pid, 1, config.itemHeaders || null);
+    this.record$ = this._recordService.getRecord(type, pid, 1, config.itemHeaders || null);
     this.record$.subscribe(
       (record) => {
         this.record = record;
 
-        this.recordUiService.canReadRecord$(this.record, type).subscribe(result => {
+        this._recordUiService.canReadRecord$(this.record, type).subscribe(result => {
           if (result.can === false) {
-            this.toastrService.error(
-              this.translate.instant('You cannot read this record'),
-              this.translate.instant(type)
+            this._toastrService.error(
+              this._translate.instant('You cannot read this record'),
+              this._translate.instant(type)
             );
-            this.location.back();
+            this._location.back();
           }
         });
 
-        this.recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
+        this._recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
           this.deleteStatus = result;
         });
 
-        this.recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
+        this._recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
           this.updateStatus = result;
         });
 
-        if (this.route.snapshot.data.adminMode) {
-          this.route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
+        if (this._route.snapshot.data.adminMode) {
+          this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
         }
       },
       (error) => {
@@ -142,8 +143,8 @@ export class DetailComponent implements OnInit {
   /**
    * Go back to previous page
    */
-  public goBack() {
-    this.location.back();
+  goBack() {
+    this._location.back();
   }
 
   /**
@@ -151,10 +152,10 @@ export class DetailComponent implements OnInit {
    * @param event - DOM event
    * @param pid - string, PID to remove
    */
-  public deleteRecord(pid: string) {
-    this.recordUiService.deleteRecord(this.route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
+  deleteRecord(pid: string) {
+    this._recordUiService.deleteRecord(this._route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
       if (result === true) {
-        this.router.navigate(['../..'], {relativeTo: this.route});
+        this._router.navigate(['../..'], {relativeTo: this._route});
       }
     });
   }
@@ -164,34 +165,34 @@ export class DetailComponent implements OnInit {
    * @param event - DOM event
    * @param message - message to display into modal
    */
-  public showDeleteMessage(message: string) {
-    this.recordUiService.showDeleteMessage(message);
+  showDeleteMessage(message: string) {
+    this._recordUiService.showDeleteMessage(message);
   }
 
   /**
    * Dynamically load component depending on selected resource type.
    */
   private loadRecordView() {
-    const componentFactory = this.componentFactoryResolver
+    const componentFactory = this._componentFactoryResolver
       .resolveComponentFactory(this.viewComponent ? this.viewComponent : JsonComponent);
     const viewContainerRef = this.recordDetail.viewContainerRef;
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as JsonComponent).record$ = this.record$;
-    (componentRef.instance as JsonComponent).type = this.route.snapshot.paramMap.get('type');
+    (componentRef.instance as JsonComponent).type = this._route.snapshot.paramMap.get('type');
   }
 
   /**
    * Load component view corresponding to type
    */
   private loadViewComponentRef() {
-    if (!this.route.snapshot.data.types || this.route.snapshot.data.types.length === 0) {
+    if (!this._route.snapshot.data.types || this._route.snapshot.data.types.length === 0) {
       throw new Error('Configuration types not passed to component');
     }
 
-    const type = this.route.snapshot.paramMap.get('type');
-    const types = this.route.snapshot.data.types;
+    const type = this._route.snapshot.paramMap.get('type');
+    const types = this._route.snapshot.data.types;
 
     const index = types.findIndex((item: any) => item.key === type);
 

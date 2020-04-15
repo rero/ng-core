@@ -27,42 +27,43 @@ import it from './i18n/it.json';
  * Loader for translations used in ngx-translate library.
  */
 export class TranslateLoader implements BaseTranslateLoader {
-    /**
-     * Store translations in available languages.
-     */
-    public translations: object = { fr, de, en, it };
+  /**
+   * Store translations in available languages.
+   */
+  translations: object = { fr, de, en, it };
 
-    /**
-     * Constructor
-     * @param config - ConfigService, invenio core configuration
-     */
-    constructor(@Inject(CoreConfigService) private configService) {
-        this.loadCustomTranslations();
+  /**
+   * Constructor.
+   *
+   * @param _coreConfigService Configuration service.
+   */
+  constructor(@Inject(CoreConfigService) private _coreConfigService: CoreConfigService) {
+    this.loadCustomTranslations();
+  }
+
+  /**
+   * Load custom translations
+   */
+  private loadCustomTranslations() {
+    if (!this._coreConfigService.customTranslations) {
+      return;
     }
 
-    /**
-     * Load custom translations
-     */
-    private loadCustomTranslations() {
-        if (!this.configService.customTranslations) {
-            return;
-        }
-
-        for (const lang of this.configService.languages) {
-            if (this.translations[lang] && this.configService.customTranslations[lang]) {
-                this.translations[lang] = { ...this.translations[lang], ...this.configService.customTranslations[lang] };
-            }
-        }
+    for (const lang of this._coreConfigService.languages) {
+      if (this.translations[lang] && this._coreConfigService.customTranslations[lang]) {
+        this.translations[lang] = { ...this.translations[lang], ...this._coreConfigService.customTranslations[lang] };
+      }
     }
+  }
 
-    /**
-     * Return observable used by ngx-translate to get translations.
-     * @param lang - string, language to rerieve translations from.
-     */
-    getTranslation(lang: string): Observable<any> {
-        if (!this.translations[lang]) {
-            throw new Error(`Translations not found for lang "${lang}"`);
-        }
-        return of(this.translations[lang]);
+  /**
+   * Return observable used by ngx-translate to get translations.
+   * @param lang - string, language to rerieve translations from.
+   */
+  getTranslation(lang: string): Observable<any> {
+    if (!this.translations[lang]) {
+      throw new Error(`Translations not found for lang "${lang}"`);
     }
+    return of(this.translations[lang]);
+  }
 }

@@ -31,24 +31,31 @@ import { SelectOption } from '../record/editor/interfaces';
 })
 export class TranslateService {
   languages = {
-    de: { ngx: deLocale,    angular: localeDe },
-    en: { ngx: enGbLocale,  angular: localeEn },
-    fr: { ngx: frLocale,    angular: localeFr },
-    it: { ngx: itLocale,    angular: localeIt }
+    de: { ngx: deLocale, angular: localeDe },
+    en: { ngx: enGbLocale, angular: localeEn },
+    fr: { ngx: frLocale, angular: localeFr },
+    it: { ngx: itLocale, angular: localeIt }
   };
 
+  /**
+   * Constructor.
+   *
+   * @param _translateService Translate service.
+   * @param _coreConfigService Configuration service.
+   * @param _bsLocaleService Bootstrap locale service.
+   */
   constructor(
-    @Inject(NgxTranslateService) private translateService,
-    @Inject(CoreConfigService) private coreConfigService,
-    @Inject(BsLocaleService) private bsLocaleService
+    @Inject(NgxTranslateService) private _translateService: NgxTranslateService,
+    @Inject(CoreConfigService) private _coreConfigService: CoreConfigService,
+    @Inject(BsLocaleService) private _bsLocaleService: BsLocaleService
   ) {
     this.init();
   }
 
   setLanguage(language: string) {
-    this.translateService.use(language);
+    this._translateService.use(language);
     moment.locale(language);
-    this.bsLocaleService.use(language);
+    this._bsLocaleService.use(language);
     return this;
   }
 
@@ -60,17 +67,17 @@ export class TranslateService {
    * @return Translated value as string.
    */
   translate(key: string | Array<string>, interpolateParams: any = null): string {
-    return this.translateService.instant(key, interpolateParams);
+    return this._translateService.instant(key, interpolateParams);
   }
 
   getBrowserLang() {
-    return this.translateService.getBrowserLang();
+    return this._translateService.getBrowserLang();
   }
 
   get currentLanguage(): string {
-    return this.translateService.currentLang
-           || this.coreConfigService.defaultLanguage
-           || 'en';
+    return this._translateService.currentLang
+      || this._coreConfigService.defaultLanguage
+      || 'en';
   }
 
   /**
@@ -83,7 +90,7 @@ export class TranslateService {
   getSelectOptions(values: Array<string>, prefix: string = null, sort = true): Array<SelectOption> {
     const options = values.map((value: string) => {
       return {
-        label: this.translateService.instant((prefix || '') + value),
+        label: this._translateService.instant((prefix || '') + value),
         value
       };
     });
@@ -102,9 +109,9 @@ export class TranslateService {
       defineLocale(key, value.ngx);
       registerLocaleData(value.angular, key);
     }
-    const languages: Array<string> = this.coreConfigService.languages;
-    this.translateService.addLangs(languages);
-    this.translateService.setDefaultLang(this.coreConfigService.defaultLanguage);
-    this.setLanguage(this.coreConfigService.defaultLanguage);
+    const languages: Array<string> = this._coreConfigService.languages;
+    this._translateService.addLangs(languages);
+    this._translateService.setDefaultLang(this._coreConfigService.defaultLanguage);
+    this.setLanguage(this._coreConfigService.defaultLanguage);
   }
 }

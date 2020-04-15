@@ -23,7 +23,7 @@ import { extractIdOnRef } from '../../utils/utils';
  * @param schema - object, the JSONSchema
  * @returns object, a fresh copy of the ordred JSONSchema
  */
-export function orderedJsonSchema(schema) {
+export function orderedJsonSchema(schema: any) {
   if (schema.properties) {
     if (schema.propertiesOrder) {
       // copy the data
@@ -72,7 +72,7 @@ export function orderedJsonSchema(schema) {
  * @param data - object, the data to be cleaned
  * @returns object, a fresh copy of the data with replacements
  */
-export function resolveRefs(data) {
+export function resolveRefs(data: any) {
   // array?
   if (data instanceof Array) {
     for (const d of data) {
@@ -103,7 +103,7 @@ export function resolveRefs(data) {
  * @param value - any, the value to check
  * @returns boolean, true if the value is empty
  */
-export function isEmpty(value) {
+export function isEmpty(value: any) {
   return (
     // null or undefined
     value == null ||
@@ -119,7 +119,7 @@ export function isEmpty(value) {
  * @param data - object, the data to be cleaned
  * @returns object, a fresh copy of the clean data
  */
-export function removeEmptyValues(data) {
+export function removeEmptyValues(data: any) {
   // array?
   if (data instanceof Array) {
     // new array with non empty values

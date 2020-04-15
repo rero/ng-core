@@ -26,10 +26,42 @@ import { RecordService } from '../record.service';
   templateUrl: './autocomplete.component.html'
 })
 export class AutocompleteComponent implements OnInit {
-  /** The current form object from the template. */
-  @ViewChild('form', { static: false }) form;
+  // The submit button css class.
+  @Input()
+  buttonCssClass = 'btn btn-light';
 
-  /** The current selected suggestion. */
+  // The form action i.e. '/search'
+  @Input()
+  action: string;
+
+  // The autocomplete record type configuration.
+  @Input()
+  recordTypes: Array<any> = [];
+
+  // The search input field size: small or large
+  @Input()
+  size: string;
+
+  // The search input field placeholder.
+  @Input()
+  placeholder: string;
+
+  // The routing mode, angular for internal or href for external.
+  @Input()
+  internalRouting = true;
+
+  // The minimal number of characters that needs to be entered before typeahead kicks-in.
+  @Input()
+  typeaheadMinLength = 3;
+
+  // The minimal wait time after last character typed before typeahead kicks-in.
+  @Input()
+  typeaheadWaitMs = 300;
+
+  // The maximum length of options items list. The default value is 20.
+  @Input() typeaheadOptionsLimit = 10;
+
+  // The current selected suggestion.
   asyncSelected = {
     text: undefined,
     query: undefined,
@@ -38,67 +70,38 @@ export class AutocompleteComponent implements OnInit {
     href: undefined
   };
 
-  /** The submit button css class. */
-  @Input() buttonCssClass = 'btn btn-light';
-
-  /** The remote suggestions loading status. */
+  // The remote suggestions loading status.
   typeaheadLoading: boolean;
 
-  /** The remote suggestions list. */
+  // The remote suggestions list.
   dataSource: Observable<any>;
 
-  /** The form action i.e. '/search' */
-  @Input() action: string;
-
-  /** The autocomplete record type configuration. */
-  @Input()
-  recordTypes: Array<any> = [];
-
-  /** The search input field size: small or large */
-  @Input() size: string;
-
-  /** The search input field placeholder. */
-  @Input() placeholder: string;
-
-  /** The routing mode, angular for internal or href for external. */
-  @Input() internalRouting = true;
-
-  // debug information
-  // @Input() displayScore = undefined;
-
-  /** The minimal number of characters that needs to be entered before typeahead kicks-in. */
-  @Input() typeaheadMinLength = 3;
-
-  /** The minimal wait time after last character typed before typeahead kicks-in. */
-  @Input() typeaheadWaitMs = 300;
-
-  /** The maximum length of options items list. The default value is 20. */
-  @Input() typeaheadOptionsLimit = 10;
-
   // store a current URL redirection
-  private redirect = false;
+  private _redirect = false;
+
+  // The current form object from the template.
+  @ViewChild('form', { static: false })
+  form: any;
 
   /**
-   * Constructor
-   * @param recordService - REST API record service
-   * @param route - Angular current route
-   * @param router - Angular router for navigation
+   * Constructor.
+   *
+   * @param _recordService - REST API record service
+   * @param _route - Angular current route
+   * @param _router - Angular router for navigation
    */
   constructor(
-    private recordService: RecordService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private _recordService: RecordService,
+    private _route: ActivatedRoute,
+    private _router: Router
+  ) { }
 
   /**
    * On init hook
    */
   ngOnInit() {
-    this.route.queryParamMap.subscribe((params: any) => {
-      // if (params.get('display_score')) {
-      //   this.displayScore = params.get('display_score');
-      // }
-      if (this.action === this.router.url.split('?')[0]) {
+    this._route.queryParamMap.subscribe((params: any) => {
+      if (this.action === this._router.url.split('?')[0]) {
         // get the query form the URL
         const query = params.get('q');
         if (query) {
@@ -126,11 +129,11 @@ export class AutocompleteComponent implements OnInit {
    * Apply search action
    * @param event - Event, DOM event
    */
-  doSearch(event) {
+  doSearch(event: any) {
     event.preventDefault();
-    if (!this.redirect) {
+    if (!this._redirect) {
       if (this.internalRouting) {
-        this.router.navigate([this.action], {
+        this._router.navigate([this.action], {
           queryParams: { q: this.asyncSelected.query, page: '1', size: '10' }
         });
       } else {
@@ -152,7 +155,7 @@ export class AutocompleteComponent implements OnInit {
     const recordTypesKeys = this.recordTypes.map(recordType => recordType.type);
     this.recordTypes.forEach(recordType => {
       combineGetRecords.push(
-        this.recordService.getRecords(
+        this._recordService.getRecords(
           recordType.type,
           `${recordType.field}:${query}`,
           1,
@@ -196,11 +199,11 @@ export class AutocompleteComponent implements OnInit {
   typeaheadOnSelect(e: TypeaheadMatch): void {
     if (e.item.href) {
       if (this.internalRouting) {
-        this.router.navigate([e.item.href]);
+        this._router.navigate([e.item.href]);
       } else {
         window.location.href = e.item.href;
       }
-      this.redirect = true;
+      this._redirect = true;
     }
   }
 }

@@ -21,16 +21,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './menu.component.html'
 })
 export class MenuComponent {
+  @Input()
+  menu: any;
 
   @Input()
-  menu;
+  isItemMenuVisible: (menuItem: any) => true;
 
-  @Input()
-  isItemMenuVisible: (menuItem) => true;
+  @Output()
+  clickItem = new EventEmitter<object>();
 
-  @Output() clickItem = new EventEmitter<object>();
-
-  itemType(item) {
+  itemType(item: any) {
     if (item.routerLink) {
       return 'routerLink';
     }
@@ -40,7 +40,7 @@ export class MenuComponent {
     return 'action';
   }
 
-  itemClass(item) {
+  itemClass(item: any) {
     const itemClasses = [
       this.menu.hasOwnProperty('itemCssClass') ? this.menu.itemCssClass : 'nav-item'
     ];
@@ -50,7 +50,7 @@ export class MenuComponent {
     return itemClasses.join(' ');
   }
 
-  doClickItem(event, item) {
+  doClickItem(event: any, item: any) {
     event.preventDefault();
     this.clickItem.emit(item);
   }

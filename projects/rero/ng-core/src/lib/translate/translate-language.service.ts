@@ -32,7 +32,7 @@ export class TranslateLanguageService implements OnDestroy {
   static PREFERRED_LANGUAGES = ['eng', 'fre', 'ger', 'ita'];
 
   // Available languages (import)
-  private availableLanguages = { de, en, fr, it };
+  private _availableLanguages = { de, en, fr, it };
 
   // List of options for populating the select box. The options are stored to
   // avoid a repetitive treatment, as the language select box may appear several
@@ -48,11 +48,11 @@ export class TranslateLanguageService implements OnDestroy {
    * Subscribes to language changes and resets the stored options after a
    * change.
    *
-   * @param translateService - TranslateService
+   * @param _translateService - TranslateService
    */
-  constructor(private translateService: TranslateService) {
+  constructor(private _translateService: TranslateService) {
     // When language is changed, we reset the stored select options.
-    this._changeLanguageSubscription = this.translateService.onLangChange.subscribe(() => {
+    this._changeLanguageSubscription = this._translateService.onLangChange.subscribe(() => {
       this._selectOptions = null;
     });
   }
@@ -72,16 +72,16 @@ export class TranslateLanguageService implements OnDestroy {
    * @return human language - string
    */
   translate(langCode: string, language?: string) {
-    const lang = language ? language : this.translateService.currentLang;
-    if (!(lang in this.availableLanguages)) {
+    const lang = language ? language : this._translateService.currentLang;
+    if (!(lang in this._availableLanguages)) {
       return langCode;
     }
 
-    if (!(langCode in this.availableLanguages[lang])) {
+    if (!(langCode in this._availableLanguages[lang])) {
       return langCode;
     }
 
-    return this.availableLanguages[lang][langCode];
+    return this._availableLanguages[lang][langCode];
   }
 
   /**

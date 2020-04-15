@@ -17,6 +17,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
+/**
+ * Component for displaying a label with dropdown in editor.
+ */
 @Component({
   selector: 'ng-core-editor-dropdown-label-editor',
   templateUrl: './dropdown-label-editor.component.html'
@@ -37,7 +40,7 @@ export class DropdownLabelEditorComponent {
    * Emit a new Ouput event when the add button is clicked
    * @param event - Event, the click event.
    */
-  addClick(event) {
+  addClick(event: any) {
     this.addClicked.emit(event);
   }
 }

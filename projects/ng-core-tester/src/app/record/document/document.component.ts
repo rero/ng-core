@@ -17,31 +17,38 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ResultItem, TitleMetaService } from '@rero/ng-core';
 
+/**
+ * Component for displaying a document brief view.
+ */
 @Component({
   templateUrl: './document.component.html'
 })
-
 export class DocumentComponent implements OnInit, ResultItem {
-
+  // Record data.
   @Input()
   record: any;
 
+  // Type of resource.
   @Input()
   type: string;
 
+  // Object containing link to detail.
   @Input()
   detailUrl: { link: string, external: boolean };
 
   /**
    * Constructor
-   * @param titleMetaService - TitleMetaService
+   *
+   * @param _titleMetaService TitleMetaService
    */
-  constructor(private titleMetaService: TitleMetaService) { }
+  constructor(private _titleMetaService: TitleMetaService) { }
 
   /**
-   * On Init
+   * Component initialization.
+   *
+   * Set meta title.
    */
-  ngOnInit(): void {
-    this.titleMetaService.setTitle(this.type);
+  ngOnInit() {
+    this._titleMetaService.setTitle(this.type);
   }
 }

@@ -18,6 +18,9 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DetailRecord } from './detail-record';
 
+/**
+ * Component to display a record by dumping its data to JSON.
+ */
 @Component({
   template: `
     <ng-container *ngIf="record">
@@ -27,21 +30,20 @@ import { DetailRecord } from './detail-record';
   `
 })
 export class JsonComponent implements DetailRecord, OnInit {
-  /**
-   * Observable resolving record data
-   */
+  // Observable resolving record data
   record$: Observable<any>;
 
-  /**
-   * Resource type
-   */
+  // Resource type
   type: string;
 
-  /**
-   * Record data
-   */
+  // Record data
   record: any;
 
+  /**
+   * Component initialization.
+   *
+   * Subscribes to observable for getting the record.
+   */
   ngOnInit(): void {
     this.record$.subscribe((record) => {
       this.record = record;

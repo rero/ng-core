@@ -16,35 +16,45 @@
  */
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
+/**
+ * Component for displaying a search input.
+ */
 @Component({
   selector: 'ng-core-search-input',
   templateUrl: './search-input.component.html'
 })
 export class SearchInputComponent {
-  /** The current search input object from the template. */
-  @ViewChild('searchinput', { static: false }) input: any;
-
-  /** Search output event emitter */
-  @Output() search = new EventEmitter<string>();
-
   /** Display label */
-  @Input() displayLabel = true;
+  @Input()
+  displayLabel = true;
 
   /** Placeholder */
-  @Input() placeholder = 'search';
+  @Input()
+  placeholder = 'search';
 
   /** Value to search */
-  @Input() searchText = '';
+  @Input()
+  searchText = '';
+
+  /** Remove trailing and leading spaces if true */
+  @Input()
+  trimQueryString = true;
+
+  /** The current search input object from the template. */
+  @ViewChild('searchinput', { static: false })
+  input: any;
+
+  /** Search output event emitter */
+  @Output()
+  search = new EventEmitter<string>();
 
   /** Set the focus on the input element */
-  @Input() set focus(value: boolean) {
+  @Input()
+  set focus(value: boolean) {
     if (value === true) {
       setTimeout(() => this.input.nativeElement.focus());
     }
   }
-
-  /** Remove trailing and leading spaces if true */
-  @Input() trimQueryString = true;
 
   doSearch(searchText: string) {
     if (this.trimQueryString) {

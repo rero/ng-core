@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed } from '@angular/core/testing';
+import { CoreConfigService } from '../core-config.service';
 import { TranslateLoader } from './translate-loader';
 
 describe('TranslateLoader', () => {
@@ -23,7 +24,7 @@ describe('TranslateLoader', () => {
   });
 
   it('should be created', () => {
-    const translateLoader = new TranslateLoader({});
+    const translateLoader = new TranslateLoader(new CoreConfigService());
     expect(translateLoader).toBeTruthy();
 
   });
@@ -38,7 +39,7 @@ describe('TranslateLoader', () => {
       }
     };
 
-    const translateLoader = new TranslateLoader(config);
+    const translateLoader = new TranslateLoader(config as CoreConfigService);
     translateLoader.getTranslation('fr').subscribe(translations => {
       expect(translations['your query']).toBe(config.customTranslations.fr['your query']);
     });
@@ -49,7 +50,7 @@ describe('TranslateLoader', () => {
       languages: ['fr']
     };
 
-    const translateLoader = new TranslateLoader(config);
+    const translateLoader = new TranslateLoader(config as CoreConfigService);
     expect(() => translateLoader.getTranslation('pt')).toThrowError('Translations not found for lang "pt"');
   });
 
@@ -63,7 +64,7 @@ describe('TranslateLoader', () => {
       }
     };
 
-    const translateLoader = new TranslateLoader(config);
+    const translateLoader = new TranslateLoader(config as CoreConfigService);
     translateLoader.getTranslation('en').subscribe(translations => {
       expect(translations['Record deleted.']).toBe('Record deleted.');
     });

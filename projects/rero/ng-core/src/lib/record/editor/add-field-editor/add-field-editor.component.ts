@@ -49,10 +49,10 @@ export class AddFieldEditorComponent implements OnInit {
 
   /***
    * Constructor
-   * @param editorService - EditorService, that keep the list of hidden fields
+   * @param _editorService - EditorService, that keep the list of hidden fields
    */
   constructor(
-    private editorService: EditorService
+    private _editorService: EditorService
   ) {}
 
   /***
@@ -60,8 +60,8 @@ export class AddFieldEditorComponent implements OnInit {
    */
   ngOnInit() {
     // avoid duplicate when switching between page
-    this.editorService.clearHiddenFields();
-    this.typeaheadFields$ = this.editorService.hiddenFields$.pipe(
+    this._editorService.clearHiddenFields();
+    this.typeaheadFields$ = this._editorService.hiddenFields$.pipe(
       map( (fields: FormlyFieldConfig[]) => {
         const value = fields.map(field => {
           return {name: field.templateOptions.label, field};
@@ -84,19 +84,19 @@ export class AddFieldEditorComponent implements OnInit {
    * Shows the selected field when it is selected
    * @param match - TyepeaheadMath, the selected element
    */
-  showSelectedField(field) {
+  showSelectedField(field: any) {
     // show the field in the form
     field.hide = false;
 
     // reset the input value
     this.value = undefined;
     // remove the the element from the list of hidden fields
-    this.editorService.removeHiddenField(field);
+    this._editorService.removeHiddenField(field);
     // scroll at the right position
     // to avoid: Expression has changed after it was checked
     // See: https://blog.angular-university.io/angular-debugging/
     // wait that the component is present in the DOM
-    setTimeout(() => this.editorService.setFocus(field, true));
+    setTimeout(() => this._editorService.setFocus(field, true));
   }
 
   /**

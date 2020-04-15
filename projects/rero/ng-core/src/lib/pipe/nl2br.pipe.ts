@@ -17,16 +17,29 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+/**
+ * Pipe for converting carriage returns to <br> html entities.
+ */
 @Pipe({ name: 'nl2br' })
 export class Nl2brPipe implements PipeTransform {
+  /**
+   * Constructor.
+   *
+   * @param _sanitizer Dom sanitizer.
+   */
+  constructor(private _sanitizer: DomSanitizer) { }
 
-  public constructor(public sanitizer: DomSanitizer) { }
-
+  /**
+   * Returns transformed value containing <br> entities.
+   *
+   * @param value Value to transform.
+   * @return Transformed value.
+   */
   transform(value: string): any {
     if (!value) {
-      return this.sanitizer.bypassSecurityTrustHtml('');
+      return this._sanitizer.bypassSecurityTrustHtml('');
     }
-    return this.sanitizer.bypassSecurityTrustHtml(
+    return this._sanitizer.bypassSecurityTrustHtml(
       value.replace(/\r\n?|\n/g, '<br>\n')
     );
   }

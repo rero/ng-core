@@ -25,6 +25,9 @@ import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { RouteService } from './routes/route.service';
 
+/**
+ * Disallows access to admin functionalities.
+ */
 const adminModeCanNot = (): Observable<ActionStatus> => {
   return of({
     can: false,
@@ -32,6 +35,9 @@ const adminModeCanNot = (): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Allows access to admin functionalities.
+ */
 const adminModeCan = (): Observable<ActionStatus> => {
   return of({
     can: true,
@@ -39,6 +45,9 @@ const adminModeCan = (): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Whether user can add a record.
+ */
 const canAdd = (record: any): Observable<ActionStatus> => {
   return of({
     can: Math.random() >= 0.5,
@@ -46,6 +55,9 @@ const canAdd = (record: any): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Whether user can update a record.
+ */
 const canUpdate = (record: any): Observable<ActionStatus> => {
   return of({
     can: Math.random() >= 0.5,
@@ -53,6 +65,9 @@ const canUpdate = (record: any): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Whether user can delete a record.
+ */
 const canDelete = (record: any): Observable<ActionStatus> => {
   return of({
     can: Math.random() >= 0.5,
@@ -60,6 +75,9 @@ const canDelete = (record: any): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Whether user can read a record.
+ */
 const canRead = (record: any): Observable<ActionStatus> => {
   return of({
     can: Math.random() >= 0.5,
@@ -67,6 +85,9 @@ const canRead = (record: any): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Custom configuration for form editor.
+ */
 const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
   // Populates "type" field with custom options
   const formOptions = jsonSchema.form;
@@ -82,10 +103,19 @@ const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): Formly
   return field;
 };
 
+/**
+ * Custom treatment for aggregations.
+ */
 const aggregations = (agg: object) => {
   return of(agg);
 };
 
+/**
+ * Returned matched URL.
+ *
+ * @param url List of URL segments.
+ * @return Object representing the matched URL.
+ */
 export function matchedUrl(url: UrlSegment[]) {
   const segments = [new UrlSegment(url[0].path, {})];
 
@@ -95,6 +125,12 @@ export function matchedUrl(url: UrlSegment[]) {
   };
 }
 
+/**
+ * URL matchs document resource.
+ *
+ * @param url List of URL segments.
+ * @return Object representing the matched URL.
+ */
 export function documentsMatcher(url: Array<UrlSegment>) {
   if (url[0].path === 'records' && url[1].path === 'documents') {
     return matchedUrl(url);
@@ -102,6 +138,12 @@ export function documentsMatcher(url: Array<UrlSegment>) {
   return null;
 }
 
+/**
+ * URL matchs organisation resource.
+ *
+ * @param url List of URL segments.
+ * @return Object representing the matched URL.
+ */
 export function institutionsMatcher(url: Array<UrlSegment>) {
   if (url[0].path === 'records' && url[1].path === 'institutions') {
     return matchedUrl(url);
@@ -109,6 +151,9 @@ export function institutionsMatcher(url: Array<UrlSegment>) {
   return null;
 }
 
+/**
+ * List of routes for application.
+ */
 const routes: Routes = [
   {
     path: '',
@@ -196,12 +241,22 @@ const routes: Routes = [
   }
 ];
 
+/**
+ * Routing module for application.
+ */
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
-  constructor(private routeService: RouteService) {
-    this.routeService.initializeRoutes();
+  /**
+   * Constructor
+   *
+   * Intializes routes.
+   *
+   * @param _routeService Route service
+   */
+  constructor(private _routeService: RouteService) {
+    this._routeService.initializeRoutes();
   }
 }

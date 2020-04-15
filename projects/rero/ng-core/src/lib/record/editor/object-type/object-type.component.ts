@@ -18,6 +18,9 @@ import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { EditorService } from '../editor.service';
 
+/**
+ * Component for displaying an object in editor.
+ */
 @Component({
   selector: 'ng-core-editor-formly-object-type',
   templateUrl: './object-type.component.html'
@@ -32,7 +35,7 @@ export class ObjectTypeComponent extends FieldType {
    * Constructor
    * @param editorService - EditorService, that keep the list of hidden fields
    */
-  constructor(private editorService: EditorService) {
+  constructor(private _editorService: EditorService) {
     super();
   }
 
@@ -45,7 +48,7 @@ export class ObjectTypeComponent extends FieldType {
     }
     for (const f of this.field.fieldGroup) {
       if (f.hide) {
-        this.editorService.addHiddenField(f);
+        this._editorService.addHiddenField(f);
       }
     }
   }
@@ -67,8 +70,8 @@ export class ObjectTypeComponent extends FieldType {
    * @param fieldGroup - FormlyFieldConfig[], the fieldGroup to filter
    * @returns FormlyFieldConfig[], the filtered list
    */
-  hiddenFieldGroup(fieldGroup) {
-    return fieldGroup.filter(f => f.hide && f.hideExpression == null);
+  hiddenFieldGroup(fieldGroup: any) {
+    return fieldGroup.filter((f: any) => f.hide && f.hideExpression == null);
   }
 
   /**
@@ -95,7 +98,7 @@ export class ObjectTypeComponent extends FieldType {
     field.formControl.reset();
     field.hide = true;
     if (this.isRoot()) {
-      this.editorService.addHiddenField(field);
+      this._editorService.addHiddenField(field);
     }
   }
 

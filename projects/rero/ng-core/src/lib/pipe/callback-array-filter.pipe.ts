@@ -16,16 +16,24 @@
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe for applying a callback function to filter array items.
+ */
 @Pipe({
   name: 'callbackArrayFilter'
 })
 export class CallbackArrayFilterPipe implements PipeTransform {
-
-  transform(items: any[], callback: (item: any) => boolean): any {
+  /**
+   * Filter array items with the given callback function.
+   *
+   * @param items List of items.
+   * @param callback Callback function to apply.
+   * @return List of filtered values.
+   */
+  transform(items: any[], callback: (item: any) => boolean): Array<any> {
     if (!items || !callback) {
       return items;
     }
     return items.filter(item => callback(item));
   }
-
 }

@@ -17,6 +17,9 @@
 import { Component } from '@angular/core';
 import { FieldType } from '@ngx-formly/core';
 
+/**
+ * Component for displaying a switcher in editor.
+ */
 @Component({
   selector: 'ng-core-editor-formly-field-switch',
   template: `

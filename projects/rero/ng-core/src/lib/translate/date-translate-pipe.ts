@@ -23,15 +23,19 @@ import { TranslateService } from '@ngx-translate/core';
   pure: false // required to update the value when the promise is resolved
 })
 export class DateTranslatePipe extends DatePipe implements PipeTransform {
-
-  constructor(@Inject(TranslateService) private translateService) {
-    super(translateService.currentLang);
+  /**
+   * Constructor.
+   *
+   * @param _translateService Translate service.
+   */
+  constructor(@Inject(TranslateService) private _translateService: TranslateService) {
+    super(_translateService.currentLang);
   }
 
   transform(value: any, format = 'mediumDate', timezone?: string, locale?: string): string {
-    let tlocale = (locale) ? locale : this.translateService.currentLang;
-    this.translateService.onLangChange.subscribe(() => {
-      tlocale = (locale) ? locale : this.translateService.currentLang;
+    let tlocale = (locale) ? locale : this._translateService.currentLang;
+    this._translateService.onLangChange.subscribe(() => {
+      tlocale = (locale) ? locale : this._translateService.currentLang;
       return super.transform(value, format, timezone, tlocale);
     });
 

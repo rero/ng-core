@@ -16,6 +16,7 @@
  */
 import { EventEmitter } from '@angular/core';
 import { DateTranslatePipe } from './date-translate-pipe';
+import { TranslateService } from '@ngx-translate/core';
 
 let dateTranslateService: DateTranslatePipe;
 
@@ -36,7 +37,7 @@ class TranslateServiceMock {
 describe('DateTranslatePipePipe', () => {
   beforeEach(() => {
     dateTranslateService = new DateTranslatePipe(
-      new TranslateServiceMock()
+      new TranslateServiceMock() as unknown as TranslateService
     );
   });
 

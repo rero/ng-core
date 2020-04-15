@@ -62,9 +62,10 @@ export class BucketsComponent implements OnInit, OnDestroy {
    * Constructor
    * @param translate Translate service
    * @param _recordSearchService Record search service
+   * @param _translateLanguage TranslateLanguageService
    */
   constructor(
-    private translate: TranslateService,
+    private _translateService: TranslateService,
     private _recordSearchService: RecordSearchService,
     private _translateLanguage: TranslateLanguageService
   ) { }
@@ -109,7 +110,7 @@ export class BucketsComponent implements OnInit, OnDestroy {
    * @return Current language
    */
   get language(): string {
-    return this.translate.currentLang;
+    return this._translateService.currentLang;
   }
 
   /**
@@ -207,6 +208,6 @@ export class BucketsComponent implements OnInit, OnDestroy {
     }
 
     // Simply translate the bucket key.
-    return this.translate.instant(bucket.key);
+    return this._translateService.instant(bucket.key);
   }
 }

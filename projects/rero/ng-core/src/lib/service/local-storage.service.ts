@@ -18,32 +18,34 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CryptoJsService } from './crypto-js.service';
 
+/**
+ * Service for managing data saved into local storage.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class LocalStorageService {
-
   /**
    * Event for set data on local storage
    */
-  private onSet: Subject<LocalStorageEvent> = new Subject();
+  private _onSet: Subject<LocalStorageEvent> = new Subject();
 
   /**
    * Event for remove data on local storage
    */
-  private onRemove: Subject<any> = new Subject();
+  private _onRemove: Subject<any> = new Subject();
 
   /**
    * Event for clear on local storage
    */
-  private onClear: Subject<any> = new Subject();
+  private _onClear: Subject<any> = new Subject();
 
   /**
    * On set observable
    * @return onSet subject observable
    */
   get onSet$() {
-    return this.onSet.asObservable();
+    return this._onSet.asObservable();
   }
 
   /**
@@ -51,7 +53,7 @@ export class LocalStorageService {
    * @return onRemove subject observable
    */
   get onRemove$() {
-    return this.onRemove.asObservable();
+    return this._onRemove.asObservable();
   }
 
   /**
@@ -59,13 +61,15 @@ export class LocalStorageService {
    * @return onClear subject observable
    */
   get onClear$() {
-    return this.onClear.asObservable();
+    return this._onClear.asObservable();
   }
 
   /**
-   * Constructor
+   * Constructor.
+   *
+   * @param _cryptoService Crypto service.
    */
-  constructor(private cryptoService: CryptoJsService) {}
+  constructor(private _cryptoService: CryptoJsService) {}
 
   /**
    * Set a new key on LocalStorage
@@ -75,10 +79,10 @@ export class LocalStorageService {
    */
   set(key: string, value: any) {
     const data = { date: new Date(), data: value };
-    localStorage.setItem(key, this.cryptoService.encrypt(
+    localStorage.setItem(key, this._cryptoService.encrypt(
       JSON.stringify(data)
     ));
-    this.onSet.next({ key, data });
+    this._onSet.next({ key, data });
 
     return this;
   }
@@ -91,7 +95,7 @@ export class LocalStorageService {
   updateDate(key: string) {
     const local = this.getItem(key);
     local.date = new Date();
-    localStorage.setItem(key, this.cryptoService.encrypt(
+    localStorage.setItem(key, this._cryptoService.encrypt(
       JSON.stringify(local)
     ));
 
@@ -131,7 +135,7 @@ export class LocalStorageService {
    */
   remove(key: string) {
     localStorage.removeItem(key);
-    this.onRemove.next(null);
+    this._onRemove.next(null);
 
     return this;
   }
@@ -142,7 +146,7 @@ export class LocalStorageService {
    */
   clear() {
     localStorage.clear();
-    this.onClear.next(null);
+    this._onClear.next(null);
 
     return this;
   }
@@ -161,7 +165,7 @@ export class LocalStorageService {
    * @param key - string
    */
   private getItem(key: string) {
-    return JSON.parse(this.cryptoService.decrypt(
+    return JSON.parse(this._cryptoService.decrypt(
       localStorage.getItem(key)
     ));
   }

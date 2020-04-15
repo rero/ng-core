@@ -16,11 +16,21 @@
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe for truncating text.
+ */
 @Pipe({
   name: 'truncateText'
 })
 export class TruncateTextPipe implements PipeTransform {
-
+  /**
+   * Truncate text.
+   *
+   * @param value Text to truncate.
+   * @param limit Limit after which the text is truncated.
+   * @param trail Trailing chars
+   * @return Truncated string
+   */
   transform(value: string, limit: number = 40, trail: string = '…'): string {
     let result = value || '';
 

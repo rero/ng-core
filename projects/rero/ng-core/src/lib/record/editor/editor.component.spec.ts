@@ -55,7 +55,7 @@ const route = {
         }
       ],
       showSearchInput: true,
-      adminMode: true
+      adminMode: of({ message: '', can: true })
     }
   },
   queryParams: of({})

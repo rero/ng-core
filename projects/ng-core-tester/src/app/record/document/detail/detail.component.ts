@@ -19,24 +19,39 @@ import { TitleMetaService } from '@rero/ng-core';
 import { DetailRecord } from '@rero/ng-core/lib/record/detail/view/detail-record';
 import { Observable } from 'rxjs';
 
+/**
+ * Component for displaying the detail of a document.
+ */
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html'
 })
 export class DetailComponent implements DetailRecord, OnInit {
-  /** Observable resolving record data */
+  // Observable resolving record data
   record$: Observable<any>;
 
-  /** Resource type */
+  // Resource type
   type: string;
 
-  /** Record data */
+  // Record data
   record: any;
 
-  constructor(private titleMetaService: TitleMetaService) { }
+  /**
+   * Constructor
+   *
+   * @param _titleMetaService Title meta service.
+   */
+  constructor(private _titleMetaService: TitleMetaService) { }
 
+  /**
+   * Component initialization.
+   *
+   * Set meta title.
+   * Subscribe to record observable.
+   */
   ngOnInit(): void {
-    this.titleMetaService.setTitle('Detail of ' + this.type);
+    this._titleMetaService.setTitle('Detail of ' + this.type);
+
     this.record$.subscribe((record) => {
       this.record = record;
     });

@@ -18,6 +18,9 @@ import { formatDate } from '@angular/common';
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FieldType } from '@ngx-formly/core';
 
+/**
+ * Component for displaying a datepicker field in editor.
+ */
 @Component({
   selector: 'ng-core-editor-datepicker-type',
   template: `
@@ -45,12 +48,11 @@ import { FieldType } from '@ngx-formly/core';
   `
 })
 export class DatepickerTypeComponent extends FieldType implements OnInit {
-
   /**
    * constructor
-   * @param locale - string
+   * @param _locale - string
    */
-  constructor(@Inject(LOCALE_ID) private locale: string) {
+  constructor(@Inject(LOCALE_ID) private _locale: string) {
     super();
   }
 
@@ -102,7 +104,7 @@ export class DatepickerTypeComponent extends FieldType implements OnInit {
         patchDate = formatDate(
           date,
           this.field.templateOptions.outputDateFormat,
-          this.locale
+          this._locale
         );
       } catch {
         patchDate = undefined;

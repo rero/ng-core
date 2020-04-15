@@ -23,10 +23,11 @@ import { TranslateLanguageService } from './translate-language.service';
 export class TranslateLanguagePipe implements PipeTransform {
 
   /**
-   * Constructor
-   * @param translateLanguage - TranslateLanguageService
+   * Constructor.
+   *
+   * @param _translateLanguage TranslateLanguageService
    */
-  constructor(private translateLanguage: TranslateLanguageService) { }
+  constructor(private _translateLanguage: TranslateLanguageService) { }
 
   /**
    * transform language code to human language
@@ -34,6 +35,6 @@ export class TranslateLanguagePipe implements PipeTransform {
    * @param language - ISO 639-1 (2 characters)
    */
   transform(langCode: string, language?: string): string {
-    return this.translateLanguage.translate(langCode, language);
+    return this._translateLanguage.translate(langCode, language);
   }
 }

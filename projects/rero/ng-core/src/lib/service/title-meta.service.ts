@@ -18,11 +18,14 @@ import { Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
+/**
+ * Service for managin HTML meta and title.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class TitleMetaService {
-
+  // Prefix.
   private _prefix = null;
 
   /**
@@ -32,9 +35,9 @@ export class TitleMetaService {
    * @param translateService - TranslateService
    */
   constructor(
-    private titleService: Title,
-    private metaService: Meta,
-    private translateService: TranslateService
+    private _titleService: Title,
+    private _metaService: Meta,
+    private _translateService: TranslateService
   ) { }
 
   /**
@@ -43,7 +46,7 @@ export class TitleMetaService {
    * @return this
    */
   setPrefix(prefix?: string) {
-    this._prefix = this.translateService.instant(prefix);
+    this._prefix = this._translateService.instant(prefix);
 
     return this;
   }
@@ -58,8 +61,8 @@ export class TitleMetaService {
     if (this._prefix !== null) {
       pageTitle += this._prefix + ': ';
     }
-    pageTitle += this.translateService.instant(title);
-    this.titleService.setTitle(pageTitle);
+    pageTitle += this._translateService.instant(title);
+    this._titleService.setTitle(pageTitle);
 
     return this;
   }
@@ -69,7 +72,7 @@ export class TitleMetaService {
    * @return string
    */
   getTitle() {
-    return this.titleService.getTitle();
+    return this._titleService.getTitle();
   }
 
   /**
@@ -79,7 +82,7 @@ export class TitleMetaService {
    * @return this
    */
   setMeta(name: string, content: string) {
-    this.metaService.updateTag({name, content});
+    this._metaService.updateTag({name, content});
 
     return this;
   }
@@ -90,6 +93,6 @@ export class TitleMetaService {
    * @return string
    */
   getMeta(name: string) {
-    return this.metaService.getTag(name);
+    return this._metaService.getTag(name);
   }
 }

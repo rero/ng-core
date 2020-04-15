@@ -20,16 +20,25 @@ import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from 
 import { BsLocaleService } from 'ngx-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
+/**
+ * Main component of the application.
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
+  // Current lang of the application
   lang: string = document.documentElement.lang;
+
+  // Available languages
   languages: string[];
+
+  // If navigation is collapsed or not.
   isCollapsed = true;
 
-  public linksMenu = {
+  // List of links in the navigation.
+  linksMenu = {
     navCssClass: 'navbar-nav',
     entries: [
       {
@@ -69,63 +78,88 @@ export class AppComponent implements OnInit {
     ]
   };
 
+  // List of languages in the navigation.
   languagesMenu = {
     navCssClass: 'navbar-nav',
     entries: []
   };
 
-  private activeLanguagesMenuItem;
+  // Active language.
+  private _activeLanguagesMenuItem: any;
 
+  /**
+   * Constructor.
+   * @param _translateService Translate service.
+   * @param _configService Configuration service.
+   * @param _titleMetaService Meta service.
+   * @param _recordService Record service.
+   * @param _toastrService Toast service.
+   * @param _bsLocaleService Locale service for bootstrap.
+   */
   constructor(
-    private translateService: TranslateService,
-    private configService: CoreConfigService,
-    private titleMetaService: TitleMetaService,
-    private recordService: RecordService,
-    private toastrService: ToastrService,
-    private bsLocaleService: BsLocaleService
-    ) {
-    }
-
-    ngOnInit() {
-      this.initializeEvents();
-      this.translateService.use(this.lang);
-      this.languages = this.configService.languages;
-      for (const lang of this.languages) {
-        const data: any = {name: lang};
-        if (lang === this.lang) {
-          data.active = true;
-          this.activeLanguagesMenuItem = data;
-        }
-        this.languagesMenu.entries.push(data);
-      }
-      // Set default title window when application start
-      const prefix = this.configService.prefixWindow;
-      if (prefix) {
-        this.titleMetaService.setPrefix(prefix);
-      }
-      this.titleMetaService.setTitle('Welcome');
-    }
-
-    changeLang(item: any) {
-      this.translateService.use(item.name);
-      this.bsLocaleService.use(item.name);
-      delete(this.activeLanguagesMenuItem.active);
-      item.active = true;
-      this.activeLanguagesMenuItem = item;
-    }
-
-    private initializeEvents() {
-      this.recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
-        const pid = recordEvent.data.record.pid;
-        this.toastrService.info(`Call Record Event on create (Record Pid: ${pid})`);
-      });
-      this.recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
-        const pid = recordEvent.data.record.pid;
-        this.toastrService.info(`Call Record Event on update (Record Pid: ${pid})`);
-      });
-      this.recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
-        const pid = recordEvent.data.pid;
-        this.toastrService.info(`Call Record Event on delete (Record Pid: ${pid})`);
-      });
-    }
+    private _translateService: TranslateService,
+    private _configService: CoreConfigService,
+    private _titleMetaService: TitleMetaService,
+    private _recordService: RecordService,
+    private _toastrService: ToastrService,
+    private _bsLocaleService: BsLocaleService
+  ) {
   }
+
+  /**
+   * Component initialization.
+   *
+   * - Initializes listener to record changes.
+   * - Initializes languages and current language.
+   * - Sets title metadata.
+   */
+  ngOnInit() {
+    this.initializeEvents();
+    this._translateService.use(this.lang);
+    this.languages = this._configService.languages;
+    for (const lang of this.languages) {
+      const data: any = { name: lang };
+      if (lang === this.lang) {
+        data.active = true;
+        this._activeLanguagesMenuItem = data;
+      }
+      this.languagesMenu.entries.push(data);
+    }
+    // Set default title window when application start
+    const prefix = this._configService.prefixWindow;
+    if (prefix) {
+      this._titleMetaService.setPrefix(prefix);
+    }
+    this._titleMetaService.setTitle('Welcome');
+  }
+
+  /**
+   * Changes the languages.
+   * @param item Menu item representing a language.
+   */
+  changeLang(item: any) {
+    this._translateService.use(item.name);
+    this._bsLocaleService.use(item.name);
+    delete (this._activeLanguagesMenuItem.active);
+    item.active = true;
+    this._activeLanguagesMenuItem = item;
+  }
+
+  /**
+   * Initializes listening of events when a record is changed.
+   */
+  private initializeEvents() {
+    this._recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
+      const pid = recordEvent.data.record.pid;
+      this._toastrService.info(`Call Record Event on create (Record Pid: ${pid})`);
+    });
+    this._recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
+      const pid = recordEvent.data.record.pid;
+      this._toastrService.info(`Call Record Event on update (Record Pid: ${pid})`);
+    });
+    this._recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
+      const pid = recordEvent.data.pid;
+      this._toastrService.info(`Call Record Event on delete (Record Pid: ${pid})`);
+    });
+  }
+}
