@@ -24,10 +24,14 @@ import { DocumentComponent } from '../record/document/document.component';
   templateUrl: './home.component.html'
 })
 export class HomeComponent {
-  title = 'app-ng-core';
-  apiData: object;
+  // Object containing API paths.
+  apiData: any;
+
+  // Contains the full translated language of a language code.
   testLanguageTranslation: string;
-  recordConfig: object[] = [
+
+  // Configuration for resources.
+  recordConfig: Array<any> = [
     {
       key: 'documents',
       label: 'Documents',
@@ -39,7 +43,8 @@ export class HomeComponent {
     }
   ];
 
-  demoMenu = {
+  // Menu links for demo.
+  demoMenu: any = {
     entries: [
       {
         routerLink: '/',
@@ -59,24 +64,40 @@ export class HomeComponent {
     ]
   };
 
+  /**
+   * Constructor.
+   *
+   * - Initializes API object paths.
+   * - Stores translated language.
+   * - Empties aggregations filters.
+   *
+   * @param _dialogService Dialog service.
+   * @param _apiService API service.
+   * @param _translateLanguageService Translate language service.
+   * @param _toastrService Toastr service.
+   * @param _recordSearchService Record search service.
+   */
   constructor(
-    private dialogService: DialogService,
-    private apiService: ApiService,
-    private translateLanguageService: TranslateLanguageService,
-    private toastrService: ToastrService,
+    private _dialogService: DialogService,
+    private _apiService: ApiService,
+    private _translateLanguageService: TranslateLanguageService,
+    private _toastrService: ToastrService,
     private _recordSearchService: RecordSearchService
   ) {
     this.apiData = {
-      relative: this.apiService.getEndpointByType('documents'),
-      absolute: this.apiService.getEndpointByType('documents', true),
+      relative: this._apiService.getEndpointByType('documents'),
+      absolute: this._apiService.getEndpointByType('documents', true),
     };
 
-    this.testLanguageTranslation = this.translateLanguageService.translate('fr', 'fr');
+    this.testLanguageTranslation = this._translateLanguageService.translate('fr', 'fr');
 
     // Initializes aggregations filters to launch the first search.
     this._recordSearchService.setAggregationsFilters([]);
   }
 
+  /**
+   * Show a confirmation dialog box.
+   */
   showDialog() {
     const config = {
       ignoreBackdropClick: true,
@@ -87,42 +108,61 @@ export class HomeComponent {
       }
     };
 
-    this.dialogService.show(config).subscribe((confirm: boolean) => {
+    this._dialogService.show(config).subscribe((confirm: boolean) => {
       if (confirm) {
         console.log('Confirmed !');
       }
     });
   }
 
+  /**
+   * Simulates a search by only log infos.
+   *
+   * @param searchText String to search.
+   */
   doSearch(searchText: string) {
     console.log(`You search for: ${searchText}`);
   }
 
+  /**
+   * Shows an alert message with toastr.
+   */
   addAlert() {
     const type = (document.getElementById('alert-type')) as HTMLSelectElement;
     const message = (document.getElementById('alert-message')) as HTMLInputElement;
     switch (type.value) {
       // Checkbox controls
       case 'success':
-        this.toastrService.success(message.value);
+        this._toastrService.success(message.value);
         break;
       case 'info':
-        this.toastrService.info(message.value);
+        this._toastrService.info(message.value);
         break;
       case 'warning':
-        this.toastrService.warning(message.value);
+        this._toastrService.warning(message.value);
         break;
       case 'danger':
-        this.toastrService.error(message.value);
+        this._toastrService.error(message.value);
         break;
     }
   }
 
-  clickLinkItemMenu(item) {
-    this.toastrService.success(`menu ${item.name} clicked`);
+  /**
+   * Show a message when item menu is clicked.
+   *
+   * @param item Menu item.
+   */
+  clickLinkItemMenu(item: any) {
+    this._toastrService.success(`menu ${item.name} clicked`);
   }
 
-  isItemMenuVisible(itemMenu) {
+  /**
+   * Whether a menu item is visible or not.
+   *
+   * @param itemMenu Menu item.
+   * @return True if the menu is visible.
+   */
+  isItemMenuVisible(itemMenu: any) {
     if (itemMenu.name === 'Hidden') {
       return false;
     }

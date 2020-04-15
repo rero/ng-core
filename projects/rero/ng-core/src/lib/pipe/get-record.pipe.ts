@@ -19,13 +19,29 @@ import { map } from 'rxjs/operators';
 import { RecordService } from '../record/record.service';
 import { extractIdOnRef } from '../utils/utils';
 
+/**
+ * Get a record by its PID.
+ */
 @Pipe({
   name: 'getRecord'
 })
 export class GetRecordPipe implements PipeTransform {
+  /**
+   * Constructor.
+   *
+   * @param _recordService Record service.
+   */
+  constructor(private _recordService: RecordService) { }
 
-  constructor(private recordService: RecordService) {}
-
+  /**
+   * Return record data corresponding to PID.
+   *
+   * @param pid Record PID.
+   * @param type Type of the resource.
+   * @param returnType Type of data to return.
+   * @param field Field to return.
+   * @return Record or field record corresponding to PID.
+   */
   transform(pid: any, type: string, returnType = 'object', field?: string): any {
     // process $ref entrypoint
     if (pid.startsWith('http')) {
@@ -36,7 +52,7 @@ export class GetRecordPipe implements PipeTransform {
       returnType = 'field';
     }
 
-    return this.recordService.getRecord(type, pid, 1).pipe(map(data => {
+    return this._recordService.getRecord(type, pid, 1).pipe(map(data => {
       if (!data) {
         return null;
       }

@@ -18,15 +18,26 @@ import { Injectable } from '@angular/core';
 import { BsModalService } from 'ngx-bootstrap';
 import { DialogComponent } from './dialog.component';
 
+/**
+ * Service for displaying a dialog box.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class DialogService {
+  /**
+   *
+   * @param _modalService Bootstrap modal service.
+   */
+  constructor(private _modalService: BsModalService) { }
 
-  constructor(private modalService: BsModalService) { }
-
-  public show(config: any) {
-    const bsModalRef = this.modalService.show(DialogComponent, config);
+  /**
+   * Show the dialog box configured by the given config.
+   *
+   * @param config Configuration object.
+   */
+  show(config: any) {
+    const bsModalRef = this._modalService.show(DialogComponent, config);
     return bsModalRef.content.onClose;
   }
 }

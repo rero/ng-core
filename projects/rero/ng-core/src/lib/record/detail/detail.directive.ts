@@ -16,6 +16,9 @@
  */
 import { Directive, Input, ViewContainerRef } from '@angular/core';
 
+/**
+ * Directive for displaying a record detail.
+ */
 @Directive({
     selector: '[ngCoreRecordDetail]',
 })
@@ -32,5 +35,17 @@ export class RecordDetailDirective {
     @Input()
     type: string;
 
-    constructor(public viewContainerRef: ViewContainerRef) { }
+    /**
+     * Constructor.
+     *
+     * @param _viewContainerRef View container reference
+     */
+    constructor(private _viewContainerRef: ViewContainerRef) { }
+
+    /**
+     * Returns view container reference.
+     */
+    get viewContainerRef(): ViewContainerRef {
+      return this._viewContainerRef;
+    }
 }

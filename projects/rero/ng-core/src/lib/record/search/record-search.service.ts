@@ -19,11 +19,17 @@ import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 
+/**
+ * Interface representing aggregations filters
+ */
 export interface AggregationsFilter {
   key: string;
   values: Array<any>;
 }
 
+/**
+ * Service for managing records search.
+ */
 @Injectable(
   {
     providedIn: 'root'

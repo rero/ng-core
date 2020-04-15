@@ -109,11 +109,14 @@ export class RecordSearchResultComponent implements OnInit {
   @ViewChild(RecordSearchResultDirective, { static: true }) searchResultItem: RecordSearchResultDirective;
 
   /**
-   * Constructor
+   * Constructor.
+   *
+   * @param _componentFactoryResolver Component factory resolver.
+   * @param _recordUiService Record UI service.
    */
   constructor(
-    private componentFactoryResolver: ComponentFactoryResolver,
-    private recordUiService: RecordUiService
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    private _recordUiService: RecordUiService
   ) {
     this.currentUrl = window.location.href;
   }
@@ -146,8 +149,8 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Dynamically load component depending on selected resource type.
    */
-  public loadItemView() {
-    const componentFactory = this.componentFactoryResolver
+  loadItemView() {
+    const componentFactory = this._componentFactoryResolver
       .resolveComponentFactory(this.itemViewComponent ? this.itemViewComponent : JsonComponent);
     const viewContainerRef = this.searchResultItem.viewContainerRef;
     viewContainerRef.clear();
@@ -163,7 +166,7 @@ export class RecordSearchResultComponent implements OnInit {
    * @param event - Event, dom event fired
    * @param pid - string, pid to delete
    */
-  public deleteRecord(pid: string) {
+  deleteRecord(pid: string) {
     return this.deletedRecord.emit(pid);
   }
 
@@ -172,7 +175,7 @@ export class RecordSearchResultComponent implements OnInit {
    * @param event - Event
    * @param message - string, message to display
    */
-  public showDeleteMessage(message: string) {
-    this.recordUiService.showDeleteMessage(message);
+  showDeleteMessage(message: string) {
+    this._recordUiService.showDeleteMessage(message);
   }
 }

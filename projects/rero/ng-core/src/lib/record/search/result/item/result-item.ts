@@ -14,8 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * Interface representing a result item in search.
+ */
 export interface ResultItem {
-    record: any;
-    type: string;
-    detailUrl: { link: string, external: boolean };
+  // Record data.
+  record: any;
+
+  // Type of resource.
+  type: string;
+
+  // Object containing info about the link to detail.
+  detailUrl: { link: string, external: boolean };
 }

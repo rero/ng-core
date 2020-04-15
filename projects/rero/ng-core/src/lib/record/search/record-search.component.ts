@@ -167,14 +167,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   @Output() parametersChanged = new EventEmitter<any>();
 
   /**
-   * Constructor
-   * @param dialogService - Modal component
-   * @param recordService - Service for managing records
-   * @param toastService - Toast message
+   * Constructor.
+   *
+   * @param _recordService Record service.
+   * @param _recordUiService Record UI service.
+   * @param _recordSearchService Record search service.
    */
   constructor(
-    private recordService: RecordService,
-    private recordUiService: RecordUiService,
+    private _recordService: RecordService,
+    private _recordUiService: RecordUiService,
     private _recordSearchService: RecordSearchService
   ) { }
 
@@ -211,7 +212,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // Load totals for each resource type
     for (const type of this.types) {
-      this.recordService.getRecords(
+      this._recordService.getRecords(
         type.key, '', 1, 1, [],
         this._config.preFilters || {},
         this._config.listHeaders || null).subscribe(records => {
@@ -249,7 +250,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.currentType) {
       if (changes.currentType.firstChange) {
         // Load all configuration types, only during the first change
-        this.recordUiService.types = this.types;
+        this._recordUiService.types = this.types;
       }
 
       // if the "type" property is changed in input, but the change is not
@@ -387,7 +388,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param pid - string, PID to delete
    */
   deleteRecord(pid: string) {
-    this.recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
+    this._recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
       if (result === true) {
         // refresh records
         this._getRecords(true, false);
@@ -452,7 +453,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable
    */
   canUpdateRecord$(record: object): Observable<ActionStatus> {
-    return this.recordUiService.canUpdateRecord$(record, this.currentType);
+    return this._recordUiService.canUpdateRecord$(record, this.currentType);
   }
 
   /**
@@ -461,7 +462,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable
    */
   canDeleteRecord$(record: object): Observable<ActionStatus> {
-    return this.recordUiService.canDeleteRecord$(record, this.currentType);
+    return this._recordUiService.canDeleteRecord$(record, this.currentType);
   }
 
   /**
@@ -496,7 +497,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       return of(url);
     }
 
-    return this.recordUiService.canReadRecord$(record, this.currentType).pipe(
+    return this._recordUiService.canReadRecord$(record, this.currentType).pipe(
       map((status: ActionStatus) => {
         if (status.can === false) {
           return null;
@@ -521,7 +522,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     this.isLoading = true;
 
-    this.recordService.getRecords(
+    this._recordService.getRecords(
       this.currentType,
       this.q,
       this.page,
@@ -571,8 +572,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param type Type of resource
    */
   private loadConfigurationForType(type: string) {
-    this._config = this.recordUiService.getResourceConfig(type);
-    this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
+    this._config = this._recordUiService.getResourceConfig(type);
+    this._recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
     });
   }

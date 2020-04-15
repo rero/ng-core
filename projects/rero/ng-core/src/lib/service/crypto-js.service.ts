@@ -22,8 +22,12 @@ import { CoreConfigService } from '../core-config.service';
   providedIn: 'root'
 })
 export class CryptoJsService {
-
-  constructor(private coreConfigService: CoreConfigService) { }
+  /**
+   * Constructor.
+   *
+   * @param _coreConfigService Configuration service.
+   */
+  constructor(private _coreConfigService: CoreConfigService) { }
 
   encrypt(value: string) {
     const _key = this.secretPassphrase();
@@ -36,6 +40,6 @@ export class CryptoJsService {
   }
 
   private secretPassphrase() {
-    return CryptoJS.enc.Utf8.parse(this.coreConfigService.secretPassphrase);
+    return CryptoJS.enc.Utf8.parse(this._coreConfigService.secretPassphrase);
   }
 }

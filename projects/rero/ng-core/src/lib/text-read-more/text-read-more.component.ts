@@ -16,31 +16,41 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 
+/**
+ * Component for displaying a "read more" link after a text.
+ */
 @Component({
   selector: 'ng-core-text-read-more',
   templateUrl: './text-read-more.component.html'
 })
 export class TextReadMoreComponent implements OnInit {
-
   /** Initial text  */
   @Input() text: string;
+
   /** Number of parts to display (depending of the unit)  */
   @Input() limit = 50;
+
   /** "Show more" label to display */
   @Input() showMoreLabel = 'Show more';
+
   /** "Show less" label to display  */
   @Input() showLessLabel = 'Show less';
+
   /** Splitting unit [ word | character] */
   @Input() unit = 'word';
+
   /** trailing string */
   @Input() trailing = '…';
 
   /** The text that will be display */
   textToDisplay: string;
+
   /** boolean to know if initial text is expanded  */
   isExpanded = false;
+
   /** boolean to know if limit is reached */
   isLimitReached = true;
+
   /** The truncated text  */
   private _sTruncateText: string;
 

@@ -19,31 +19,33 @@ import { Router } from '@angular/router';
 import { RouteCollectionService } from '@rero/ng-core';
 import { DocumentsRoute } from './documents-route';
 
+/**
+ * Service for managing routes.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class RouteService {
-
   /**
-   * Constructor
-   * @param routeCollectionService - RouteCollectionService
-   * @param router - Router
-   * @param routeToolService - RouteToolService
+   * Constructor.
+   *
+   * @param _routeCollectionService RouteCollectionService.
+   * @param _router Router.
    */
   constructor(
-    private routeCollectionService: RouteCollectionService,
-    private router: Router
+    private _routeCollectionService: RouteCollectionService,
+    private _router: Router
   ) { }
 
   /**
-   * Initialize routes
+   * Initialize routes.
    */
   initializeRoutes() {
-    this.routeCollectionService
+    this._routeCollectionService
       .addRoute(new DocumentsRoute());
 
-    this.routeCollectionService.getRoutes().map((route: any) => {
-      this.router.config.push(route);
+    this._routeCollectionService.getRoutes().map((route: any) => {
+      this._router.config.push(route);
     });
   }
 }

@@ -73,10 +73,10 @@ export class EditorComponent implements OnInit, OnDestroy {
   longMode = false;
 
   // current record type from the url
-  public recordType = null;
+  recordType = null;
 
   // store pid on edit mode
-  public pid = null;
+  pid = null;
 
   // subscribers
   private _subscribers: Subscription[] = [];
@@ -85,19 +85,27 @@ export class EditorComponent implements OnInit, OnDestroy {
   private _resourceConfig: any;
 
   /**
-   * Constructor
-   * @param formlyJsonschema - FormlyJsonschema, the ngx-fomly jsonschema service
+   * Constructor.
+   * @param _formlyJsonschema Formly JSON schema.
+   * @param _recordService Record service.
+   * @param _apiService API service.
+   * @param _route Route.
+   * @param _editorService Editor service.
+   * @param _recordUiService Record UI service.
+   * @param _translateService Translate service.
+   * @param _toastrService Toast service.
+   * @param _location Location.
    */
   constructor(
-    private formlyJsonschema: FormlyJsonschema,
-    private recordService: RecordService,
-    private apiService: ApiService,
-    private route: ActivatedRoute,
-    private editorService: EditorService,
-    private recordUiService: RecordUiService,
-    private translateService: TranslateService,
-    private toastrService: ToastrService,
-    private location: Location
+    private _formlyJsonschema: FormlyJsonschema,
+    private _recordService: RecordService,
+    private _apiService: ApiService,
+    private _route: ActivatedRoute,
+    private _editorService: EditorService,
+    private _recordUiService: RecordUiService,
+    private _translateService: TranslateService,
+    private _toastrService: ToastrService,
+    private _location: Location
   ) {
     this.form = new FormGroup({});
   }
@@ -106,7 +114,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
-    combineLatest([this.route.params, this.route.queryParams])
+    combineLatest([this._route.params, this._route.queryParams])
       .subscribe(([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
@@ -114,38 +122,38 @@ export class EditorComponent implements OnInit, OnDestroy {
         // );
 
         this.recordType = params.type;
-        this.recordUiService.types = this.route.snapshot.data.types;
-        this._resourceConfig = this.recordUiService.getResourceConfig(this.recordType);
+        this._recordUiService.types = this._route.snapshot.data.types;
+        this._resourceConfig = this._recordUiService.getResourceConfig(this.recordType);
         if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
           this._subscribers.push(
-            this.editorService.hiddenFields$.subscribe(() =>
+            this._editorService.hiddenFields$.subscribe(() =>
               this.getTocFields()
             )
           );
         }
         this.pid = params.pid;
-        this.recordService
+        this._recordService
           .getSchemaForm(this.recordType)
           .subscribe(schemaform => {
             this.setSchema(schemaform.schema);
           });
         // edition
         if (this.pid) {
-          this.recordService
+          this._recordService
             .getRecord(this.recordType, this.pid)
             .subscribe(record => {
-              this.recordUiService
+              this._recordUiService
                 .canUpdateRecord$(record, this.recordType)
                 .subscribe(result => {
                   if (result.can === false) {
-                    this.toastrService.error(
-                      this.translateService.instant(
+                    this._toastrService.error(
+                      this._translateService.instant(
                         'You cannot update this record'
                       ),
-                      this.translateService.instant(this.recordType)
+                      this._translateService.instant(this.recordType)
                     );
-                    this.location.back();
+                    this._location.back();
                   } else {
                     this._model = record.metadata;
                     this.modelChange.emit(this._model);
@@ -165,8 +173,12 @@ export class EditorComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  modelChanged(modelValue) {
+  /**
+   * Emit value when model is changed.
+   *
+   * @param modelValue Model.
+   */
+  modelChanged(modelValue: any) {
     this.modelChange.emit(modelValue);
   }
 
@@ -174,8 +186,8 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Preprocess the record before passing it to the editor
    * @param record - Record object to preprocess
    */
-  private preprocessRecord(record) {
-    const config = this.recordUiService.getResourceConfig(this.recordType);
+  private preprocessRecord(record: any) {
+    const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preprocessRecordEditor) {
       return config.preprocessRecordEditor(record);
@@ -188,7 +200,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    * @param record - Record object to postprocess
    */
   private postprocessRecord(record: any) {
-    const config = this.recordUiService.getResourceConfig(this.recordType);
+    const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.postprocessRecordEditor) {
       return config.postprocessRecordEditor(record);
@@ -201,7 +213,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    * @param record - Record object
    */
   private preCreateRecord(record: any) {
-    const config = this.recordUiService.getResourceConfig(this.recordType);
+    const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preCreateRecord) {
       return config.preCreateRecord(record);
@@ -214,7 +226,7 @@ export class EditorComponent implements OnInit, OnDestroy {
    * @param record - Record object
    */
   private preUpdateRecord(record: any) {
-    const config = this.recordUiService.getResourceConfig(this.recordType);
+    const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preUpdateRecord) {
       return config.preUpdateRecord(record);
@@ -226,14 +238,14 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Preprocess the record before passing it to the editor
    * @param schema - object, JOSNSchemag
    */
-  setSchema(schema) {
+  setSchema(schema: any) {
     // reorder all object properties
     this.schema = orderedJsonSchema(schema);
     this.options = {};
 
     // form configuration
     const fields = [
-      this.formlyJsonschema.toFieldConfig(this.schema, {
+      this._formlyJsonschema.toFieldConfig(this.schema, {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
           /**** additionnal JSONSchema configurations *******/
@@ -252,7 +264,7 @@ export class EditorComponent implements OnInit, OnDestroy {
             // show the field if the model contains a value usefull for edition
             field.hooks = {
               ...field.hooks,
-              onPopulate: (f) => {
+              onPopulate: (f: any) => {
                 this.hideShowEmptyField(f);
               }
             };
@@ -296,13 +308,13 @@ export class EditorComponent implements OnInit, OnDestroy {
     if (!modelEmpty && (field.hide !== false)) {
       setTimeout(() => {
         field.hide = false;
-        this.editorService.removeHiddenField(field);
+        this._editorService.removeHiddenField(field);
       });
     }
     if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
       setTimeout(() => {
         field.hide = true;
-        this.editorService.addHiddenField(field);
+        this._editorService.addHiddenField(field);
       });
     }
   }
@@ -315,35 +327,35 @@ export class EditorComponent implements OnInit, OnDestroy {
     let data = removeEmptyValues(this.model);
     data = this.postprocessRecord(data);
     if (data.pid != null) {
-      this.recordService
+      this._recordService
         .update(this.recordType, this.preUpdateRecord(data))
         .subscribe(record => {
-          this.toastrService.success(
-            this.translateService.instant('Record Updated!'),
-            this.translateService.instant(this.recordType)
+          this._toastrService.success(
+            this._translateService.instant('Record Updated!'),
+            this._translateService.instant(this.recordType)
           );
-          this.recordUiService.redirectAfterSave(
+          this._recordUiService.redirectAfterSave(
             this.pid,
             record,
             this.recordType,
             'update',
-            this.route
+            this._route
           );
         });
     } else {
-      this.recordService
+      this._recordService
         .create(this.recordType, this.preCreateRecord(data))
         .subscribe(record => {
-          this.toastrService.success(
-            this.translateService.instant('Resource created'),
-            this.translateService.instant(this.recordType)
+          this._toastrService.success(
+            this._translateService.instant('Resource created'),
+            this._translateService.instant(this.recordType)
           );
-          this.recordUiService.redirectAfterSave(
+          this._recordUiService.redirectAfterSave(
             record.metadata.pid,
             record,
             this.recordType,
             'create',
-            this.route
+            this._route
           );
         });
     }
@@ -354,9 +366,9 @@ export class EditorComponent implements OnInit, OnDestroy {
    * @param event - click DOM event
    * @param field - FormlyFieldConfig, the form config corresponding to the DOM element to jump to.
    */
-  setFocus(event, field: FormlyFieldConfig) {
+  setFocus(event: any, field: FormlyFieldConfig) {
     event.preventDefault();
-    this.editorService.setFocus(field, true);
+    this._editorService.setFocus(field, true);
   }
 
   /**
@@ -373,8 +385,8 @@ export class EditorComponent implements OnInit, OnDestroy {
   /**
    * Cancel editing and back to previous page
    */
-  public cancel() {
-    this.location.back();
+  cancel() {
+    this._location.back();
   }
 
   /********************* Private  ***************************************/
@@ -395,16 +407,16 @@ export class EditorComponent implements OnInit, OnDestroy {
         afterContentInit: (f: FormlyFieldConfig) => {
           const recordType = formOptions.remoteOptions.type;
           const query = formOptions.remoteOptions.query ? formOptions.remoteOptions.query : '';
-          f.templateOptions.options = this.recordService
+          f.templateOptions.options = this._recordService
             .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
             .pipe(
               map(data =>
-                data.hits.hits.map(record => {
+                data.hits.hits.map((record: any) => {
                   return {
                     label: formOptions.remoteOptions.labelField && formOptions.remoteOptions.labelField in record.metadata
                       ? record.metadata[formOptions.remoteOptions.labelField]
                       : record.metadata.name,
-                    value: this.apiService.getRefEndpoint(
+                    value: this._apiService.getRefEndpoint(
                       recordType,
                       record.metadata.pid
                     )
@@ -452,7 +464,7 @@ export class EditorComponent implements OnInit, OnDestroy {
           field.asyncValidators = {
             validation: [
               (control: FormControl) => {
-                return this.recordService.uniqueValue(
+                return this._recordService.uniqueValue(
                   field,
                   remoteRecordType ? remoteRecordType : this.recordType,
                   this.pid ? this.pid : null,

@@ -20,14 +20,20 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Uppercase the first letter of the string.
  */
 @Pipe({
-    name: 'ucfirst'
+  name: 'ucfirst'
 })
 export class UpperCaseFirstPipe implements PipeTransform {
-    transform(value: string): string {
-        if (value === null) {
-            return value;
-        }
-
-        return value.charAt(0).toUpperCase() + value.slice(1);
+  /**
+   * Uppercase the first letter of the given value.
+   *
+   * @param value Value to transform.
+   * @return Transformed value.
+   */
+  transform(value: string): string {
+    if (value === null) {
+      return value;
     }
+
+    return value.charAt(0).toUpperCase() + value.slice(1);
+  }
 }

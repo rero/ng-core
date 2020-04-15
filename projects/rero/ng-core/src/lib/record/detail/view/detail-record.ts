@@ -16,10 +16,13 @@
  */
 import { Observable } from 'rxjs';
 
+/**
+ * Interface represneting a record detail.
+ */
 export interface DetailRecord {
-    /** Observable resolving record data */
+    // Observable resolving record data
     record$: Observable<any>;
 
-    /** Resource type */
+    // Resource type
     type: string;
 }

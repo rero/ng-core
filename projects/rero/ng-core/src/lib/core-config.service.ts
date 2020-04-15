@@ -16,6 +16,9 @@
  */
 import { Injectable } from '@angular/core';
 
+/**
+ * Interface for configuration.
+ */
 export interface Config {
   production?: boolean;
   prefixWindow?: string;
@@ -34,6 +37,9 @@ export interface Config {
   };
 }
 
+/**
+ * Service for managing configuration of the application.
+ */
 @Injectable({
   providedIn: 'root'
 })

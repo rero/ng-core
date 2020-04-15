@@ -18,10 +18,16 @@ import { Injectable } from '@angular/core';
 import { CoreConfigService } from '@rero/ng-core';
 import { environment } from '../environments/environment';
 
+/**
+ * Service for configuring the application.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AppConfigService extends CoreConfigService {
+  /**
+   * Constructor.
+   */
   constructor() {
     super();
     this.production = false;

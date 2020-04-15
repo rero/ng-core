@@ -17,6 +17,9 @@
 import { Component, Input } from '@angular/core';
 import { ResultItem } from './result-item';
 
+/**
+ * Component for displaying record as JSON in brief views.
+ */
 @Component({
   template: `
     {{ record|json }}
@@ -33,12 +36,15 @@ import { ResultItem } from './result-item';
   `
 })
 export class JsonComponent implements ResultItem {
+  // Record data.
   @Input()
-  record: object;
+  record: any;
 
+  // Type of resource.
   @Input()
   type: string;
 
+  // Info for detail URL link.
   @Input()
   detailUrl: { link: string, external: boolean };
 }

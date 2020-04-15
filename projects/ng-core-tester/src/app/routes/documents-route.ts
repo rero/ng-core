@@ -28,14 +28,17 @@ import { Observable, of } from 'rxjs';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';
 
+/**
+ * Routes for document resources
+ */
 export class DocumentsRoute implements RouteInterface {
-
-  /** Route name */
+  // Route name
   readonly name = 'documents';
 
   /**
-   * Get Configuration
-   * @return Object
+   * Get Configuration.
+   *
+   * @return Configuration object.
    */
   getConfiguration() {
     return {
@@ -88,7 +91,7 @@ export class DocumentsRoute implements RouteInterface {
             formFieldMap: (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
               // Populates each select with custom options
               if (field.type === 'enum') {
-                field.templateOptions.options = [ { label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' } ];
+                field.templateOptions.options = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
               }
               return field;
             },

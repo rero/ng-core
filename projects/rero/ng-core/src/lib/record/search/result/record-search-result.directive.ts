@@ -16,9 +16,24 @@
  */
 import { Directive, ViewContainerRef } from '@angular/core';
 
+/**
+ * Directive for displaying record search result.
+ */
 @Directive({
-    selector: '[ngCoreRecordSearchResult]',
+  selector: '[ngCoreRecordSearchResult]',
 })
 export class RecordSearchResultDirective {
-    constructor(public viewContainerRef: ViewContainerRef) { }
+  /**
+   * Constructor.
+   *
+   * @param _viewContainerRef View container reference.
+   */
+  constructor(private _viewContainerRef: ViewContainerRef) { }
+
+  /**
+   * Returns view container reference.
+   */
+  get viewContainerRef(): ViewContainerRef {
+    return this._viewContainerRef;
+  }
 }

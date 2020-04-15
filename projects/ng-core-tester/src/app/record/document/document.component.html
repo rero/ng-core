@@ -15,21 +15,21 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <h5>
-    <ng-container *ngIf="detailUrl; else titleWithoutLink">
-        <a [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
-            {{ record.metadata.title[0].mainTitle[0].value }}
-        </a>
-        <ng-template #hrefLink>
-            <a [href]="detailUrl.link">
-              {{ record.metadata.title[0].mainTitle[0].value }}
-            </a>
-        </ng-template>
-    </ng-container>
-    <ng-template #titleWithoutLink>
+  <ng-container *ngIf="detailUrl; else titleWithoutLink">
+    <a [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
       {{ record.metadata.title[0].mainTitle[0].value }}
+    </a>
+    <ng-template #hrefLink>
+      <a [href]="detailUrl.link">
+        {{ record.metadata.title[0].mainTitle[0].value }}
+      </a>
     </ng-template>
+  </ng-container>
+  <ng-template #titleWithoutLink>
+    {{ record.metadata.title[0].mainTitle[0].value }}
+  </ng-template>
 </h5>
 <p>
-    <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+  <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
 </p>
 <div *ngIf="record.metadata.abstracts">{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>

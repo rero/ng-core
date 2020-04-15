@@ -16,8 +16,18 @@
  */
 import { Pipe, PipeTransform } from '@angular/core';
 
+/**
+ * Pipe for returning a default value if the given value is null or undefined.
+ */
 @Pipe({name: 'default', pure: true})
 export class DefaultPipe implements PipeTransform {
+  /**
+   * Returns a default value.
+   *
+   * @param value Value to check.
+   * @param defaultValue Value to return if value is null.
+   * @return Value or default value.
+   */
   transform(value: any, defaultValue: any): any {
     return value || defaultValue;
   }

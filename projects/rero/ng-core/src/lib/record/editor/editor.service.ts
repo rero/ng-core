@@ -18,6 +18,9 @@ import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
+/**
+ * Service for managing the editor.
+ */
 @Injectable({
   providedIn: 'root'
 })

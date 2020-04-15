@@ -24,12 +24,11 @@ import { resolveRefs } from './editor/utils';
 import { Record } from './record';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RecordService {
-
-  public static readonly DEFAULT_REST_RESULTS_SIZE = 10;
-  public static readonly MAX_REST_RESULTS_SIZE = 9999;
+  static readonly DEFAULT_REST_RESULTS_SIZE = 10;
+  static readonly MAX_REST_RESULTS_SIZE = 9999;
 
   /**
    * Event for record created
@@ -72,13 +71,10 @@ export class RecordService {
 
   /**
    * Constructor
-   * @param http - HttpClient
-   * @param apiService - ApiService
+   * @param _http HttpClient
+   * @param _apiService ApiService
    */
-  constructor(
-    private http: HttpClient,
-    private apiService: ApiService
-  ) { }
+  constructor(private _http: HttpClient, private _apiService: ApiService) { }
 
   /**
    * Get records filtered by given parameters.
@@ -89,7 +85,7 @@ export class RecordService {
    * @param aggregationsFilters - number, option list of filters
    * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')
    */
-  public getRecords(
+  getRecords(
     type: string,
     query: string = '',
     page = 1,
@@ -118,13 +114,12 @@ export class RecordService {
       httpParams = httpParams.append(key, preFilters[key]);
     }
 
-    return this.http.get<Record>(this.apiService.getEndpointByType(type, true) + '/', {
-      params: httpParams,
-      headers: this.createRequestHeaders(headers)
-    })
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this._http
+      .get<Record>(this._apiService.getEndpointByType(type, true) + '/', {
+        params: httpParams,
+        headers: this.createRequestHeaders(headers),
+      })
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -132,8 +127,9 @@ export class RecordService {
    * @param type - string, type of record
    * @param pid - string, PID to remove
    */
-  public delete(type: string, pid: string): Observable<void> {
-    return this.http.delete<void>(this.apiService.getEndpointByType(type, true) + '/' + pid)
+  delete(type: string, pid: string): Observable<void> {
+    return this._http
+      .delete<void>(this._apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(
         tap(() => this.onDelete.next(this.createEvent(type, { pid }))),
         catchError(this.handleError)
@@ -145,30 +141,40 @@ export class RecordService {
    * @param type - string, type of resource
    * @param pid - string, record PID
    */
-  public getRecord(type: string, pid: string, resolve = 0, headers: any = {}): Observable<any> {
-    return this.http.get<Record>(`${this.apiService.getEndpointByType(type, true)}/${pid}?resolve=${resolve}`, {
-      headers: this.createRequestHeaders(headers)
-    })
-      .pipe(
-        catchError(this.handleError)
-      );
+  getRecord(
+    type: string,
+    pid: string,
+    resolve = 0,
+    headers: any = {}
+  ): Observable<any> {
+    return this._http
+      .get<Record>(
+        `${this._apiService.getEndpointByType(
+          type,
+          true
+        )}/${pid}?resolve=${resolve}`,
+        {
+          headers: this.createRequestHeaders(headers),
+        }
+      )
+      .pipe(catchError(this.handleError));
   }
 
   /**
    * Return the schema form to generate the form based on the resource given.
    * @param recordType - string, type of the resource
    */
-  public getSchemaForm(recordType: string) {
+  getSchemaForm(recordType: string) {
     let recType = recordType.replace(/ies$/, 'y');
     recType = recType.replace(/s$/, '');
-    const url = this.apiService.getSchemaFormEndpoint(recordType, true);
-    return this.http.get<any>(url).pipe(
-      catchError(e => {
+    const url = this._apiService.getSchemaFormEndpoint(recordType, true);
+    return this._http.get<any>(url).pipe(
+      catchError((e) => {
         if (e.status === 404) {
           return of(null);
         }
       }),
-      map(data => {
+      map((data) => {
         return data;
       })
     );
@@ -179,11 +185,12 @@ export class RecordService {
    * @param recordType - string, type of resource
    * @param record - object, record to create
    */
-  public create(recordType: string, record: object): Observable<any> {
-    return this.http.post(this.apiService.getEndpointByType(recordType, true) + '/', record)
-    .pipe(
-      tap(() => this.onCreate.next(this.createEvent(recordType, { record })))
-    );
+  create(recordType: string, record: object): Observable<any> {
+    return this._http
+      .post(this._apiService.getEndpointByType(recordType, true) + '/', record)
+      .pipe(
+        tap(() => this.onCreate.next(this.createEvent(recordType, { record })))
+      );
   }
 
   /**
@@ -192,9 +199,12 @@ export class RecordService {
    * @param record - object, record to create
    * @param pid - string, record PID
    */
-  public update(recordType: string, record: { pid: string }) {
-    const url = `${this.apiService.getEndpointByType(recordType, true)}/${record.pid}`;
-    return this.http.put(url, record)
+  update(recordType: string, record: { pid: string }) {
+    const url = `${this._apiService.getEndpointByType(recordType, true)}/${
+      record.pid
+      }`;
+    return this._http
+      .put(url, record)
       .pipe(
         tap(() => this.onUpdate.next(this.createEvent(recordType, { record })))
       );
@@ -207,14 +217,19 @@ export class RecordService {
    * @param value - string, value to check
    * @param excludePid - string, PID to ignore (normally the current record we are checking)
    */
-  public valueAlreadyExists(recordType: string, field: string, value: string, excludePid: string) {
+  valueAlreadyExists(
+    recordType: string,
+    field: string,
+    value: string,
+    excludePid: string
+  ) {
     let query = `${field}:"${value}"`;
     if (excludePid) {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 0).pipe(
-      map(res => res.hits.total),
-      map(total => total ? { alreadyTakenMessage: value } : null),
+      map((res) => res.hits.total),
+      map((total) => (total ? { alreadyTakenMessage: value } : null)),
       debounceTime(1000)
     );
   }
@@ -228,8 +243,14 @@ export class RecordService {
    * @param limitToValues - string[], limit the test to a given list of values
    * @param filter - string, additionnal es query filters
    */
-  public uniqueValue(field: FormlyFieldConfig, recordType: string, excludePid: string = null,
-                     term = null, limitToValues: string[] = [], filter: string = null) {
+  uniqueValue(
+    field: FormlyFieldConfig,
+    recordType: string,
+    excludePid: string = null,
+    term = null,
+    limitToValues: string[] = [],
+    filter: string = null
+  ) {
     let key = field.key;
     if (term != null) {
       key = term;
@@ -239,11 +260,11 @@ export class RecordService {
     if (value == null) {
       return of(false);
     }
-    if (limitToValues.length > 0 && !limitToValues.some(v => v === value)) {
+    if (limitToValues.length > 0 && !limitToValues.some((v) => v === value)) {
       return of(true);
     }
     let query = `${key}:${value}`;
-    if (typeof(value) === 'string') {
+    if (typeof value === 'string') {
       query = `${key}:"${value}"`;
     }
     if (filter) {
@@ -254,8 +275,8 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 0).pipe(
-      map(res => res.hits.total),
-      map(total => total ? { alreadyTakenMessage: value } : null),
+      map((res) => res.hits.total),
+      map((total) => (total ? { alreadyTakenMessage: value } : null)),
       debounceTime(500)
     );
   }
@@ -272,12 +293,11 @@ export class RecordService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       console.error(
-        `Backend returned code ${error.status}, ` +
-        `body was: ${error.error}`);
+        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+      );
     }
     // return an observable with a user-facing error message
-    return throwError(
-      'Something bad happened; please try again later.');
+    return throwError('Something bad happened; please try again later.');
   }
 
   /**
@@ -285,7 +305,9 @@ export class RecordService {
    * @param headers Object containing http headers to send to request.
    */
   private createRequestHeaders(headers: any = {}) {
-    return headers ? new HttpHeaders(headers) : new HttpHeaders({ 'Content-Type': 'application/json' });
+    return headers
+      ? new HttpHeaders(headers)
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
   /**

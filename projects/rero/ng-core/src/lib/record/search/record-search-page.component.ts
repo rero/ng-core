@@ -103,13 +103,15 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
   private _routeParametersSubscription: Subscription;
 
   /**
-   * Constructor
-   * @param route - Angular current route
-   * @param router - Angular router
+   * Constructor.
+   *
+   * @param _route Angular current route.
+   * @param _router Angular router.
+   * @param _recordSearchService Record search service.
    */
   constructor(
-    private route: ActivatedRoute,
-    protected router: Router,
+    private _route: ActivatedRoute,
+    private _router: Router,
     private _recordSearchService: RecordSearchService
   ) { }
 
@@ -121,7 +123,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
    * (RecordSearchComponent).
    */
   ngOnInit() {
-    this._routeParametersSubscription = combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
+    this._routeParametersSubscription = combineLatest([this._route.paramMap, this._route.queryParamMap]).subscribe(
       ([paramMap, queryParams]) => {
         // store current type of resource
         this.currentType = paramMap.get('type');
@@ -160,7 +162,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
     );
 
     // Store configuration data
-    const data = this.route.snapshot.data;
+    const data = this._route.snapshot.data;
     if (data.types) {
       this.types = data.types;
     }
@@ -209,7 +211,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.router.navigate([this.getCurrentUrl(parameters.currentType)], { queryParams, relativeTo: this.route });
+    this._router.navigate([this.getCurrentUrl(parameters.currentType)], { queryParams, relativeTo: this._route });
   }
 
   /**
@@ -218,7 +220,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
    * @returns Updated url without query string
    */
   private getCurrentUrl(type: string): string {
-    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments.map(it => it.path);
+    const segments = this._router.parseUrl(this._router.url).root.children.primary.segments.map(it => it.path);
     segments[segments.length - 1] = type;
 
     return '/' + segments.join('/');
