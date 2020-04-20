@@ -23,8 +23,9 @@
     </label>
     <ng-container *ngIf="isSelected(bucket.key)">
       <ng-core-record-search-aggregation-buckets
-      *ngFor="let aggregation of bucketChildren(bucket)"
+      *ngFor="let aggregation of bucketChildren[bucket.key]"
       [buckets]="aggregation.buckets"
+      [size]="aggregation.bucketSize"
       [aggregationKey]="aggregation.key"
       ></ng-core-record-search-aggregation-buckets>
     </ng-container>

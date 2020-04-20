@@ -61,6 +61,9 @@ export class AutocompleteComponent implements OnInit {
   // The maximum length of options items list. The default value is 20.
   @Input() typeaheadOptionsLimit = 10;
 
+  // Additional query parameters
+  @Input() extraQueryParams = { page: '1', size: '10' };
+
   // The current selected suggestion.
   asyncSelected = {
     text: undefined,
@@ -134,7 +137,10 @@ export class AutocompleteComponent implements OnInit {
     if (!this._redirect) {
       if (this.internalRouting) {
         this._router.navigate([this.action], {
-          queryParams: { q: this.asyncSelected.query, page: '1', size: '10' }
+          queryParams: {
+            ...this.extraQueryParams,
+            q: this.asyncSelected.query
+          }
         });
       } else {
         this.form.nativeElement.submit();

@@ -41,8 +41,9 @@
   (typeaheadOnSelect)="typeaheadOnSelect($event)"
   [typeaheadIsFirstItemActive]="false"
   >
-  <input type="hidden" name="size" value="10">
-  <input type="hidden" name="page" value="1">
+  <input type="hidden" *ngFor="let queryParam of extraQueryParams | keyvalue"
+    [name]="queryParam.key"
+    [value]="queryParam.value">
   <div class="input-group-append">
     <button type="submit" (click)="doSearch($event)" [ngClass]="buttonCssClass">
       <i *ngIf="!typeaheadLoading" class="fa fa-search"></i>
