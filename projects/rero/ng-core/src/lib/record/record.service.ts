@@ -274,7 +274,7 @@ export class RecordService {
     if (excludePid) {
       query += ` NOT pid:${excludePid}`;
     }
-    return this.getRecords(recordType, query, 1, 0).pipe(
+    return this.getRecords(recordType, query, 1, 1).pipe(
       map((res) => res.hits.total),
       map((total) => (total ? { alreadyTakenMessage: value } : null)),
       debounceTime(500)
