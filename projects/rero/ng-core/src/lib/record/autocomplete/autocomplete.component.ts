@@ -18,7 +18,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 
 @Component({
@@ -121,7 +121,7 @@ export class AutocompleteComponent implements OnInit {
         // Runs on every search
         observer.next(this.asyncSelected);
       }).pipe(
-        mergeMap((asyncSelected: any) =>
+        switchMap((asyncSelected: any) =>
           this.getSuggestions(asyncSelected.query)
         )
       );
@@ -132,8 +132,10 @@ export class AutocompleteComponent implements OnInit {
    * Apply search action
    * @param event - Event, DOM event
    */
-  doSearch(event: any) {
-    event.preventDefault();
+  doSearch(event: any = null) {
+    if (event != null) {
+      event.preventDefault();
+    }
     if (!this._redirect) {
       if (this.internalRouting) {
         this._router.navigate([this.action], {
@@ -155,7 +157,7 @@ export class AutocompleteComponent implements OnInit {
   getSuggestions(query: string): Observable<any> {
     // patch non working typeaheadMinLength properties
     if (query.length < this.typeaheadMinLength) {
-      return of(undefined);
+      return of([]);
     }
     const combineGetRecords = [];
     const recordTypesKeys = this.recordTypes.map(recordType => recordType.type);
@@ -210,6 +212,8 @@ export class AutocompleteComponent implements OnInit {
         window.location.href = e.item.href;
       }
       this._redirect = true;
+    } else {
+      this.doSearch();
     }
   }
 }

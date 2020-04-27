@@ -34,7 +34,7 @@
     "handlebars": "^4.7.3",
     "lodash-es": "4.17.14",
     "moment": "^2.24.0",
-    "ngx-bootstrap": "~5.3.2",
+    "ngx-bootstrap": "~5.5.0",
     "ngx-toastr": "^10.2.0",
     "rxjs": "^6.5.4",
     "tslib": "^1.9.0",
