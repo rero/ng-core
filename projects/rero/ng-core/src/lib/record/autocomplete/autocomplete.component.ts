@@ -16,7 +16,7 @@
  */
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TypeaheadMatch } from 'ngx-bootstrap';
+import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { combineLatest, Observable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
@@ -58,7 +58,7 @@ export class AutocompleteComponent implements OnInit {
   @Input()
   typeaheadWaitMs = 300;
 
-  // The maximum length of options items list. The default value is 20.
+  // The maximum length of the total number of suggestions in the list. The default value is 10.
   @Input() typeaheadOptionsLimit = 10;
 
   // Additional query parameters
@@ -78,9 +78,6 @@ export class AutocompleteComponent implements OnInit {
 
   // The remote suggestions list.
   dataSource: Observable<any>;
-
-  // store a current URL redirection
-  private _redirect = false;
 
   // The current form object from the template.
   @ViewChild('form', { static: false })
@@ -136,17 +133,15 @@ export class AutocompleteComponent implements OnInit {
     if (event != null) {
       event.preventDefault();
     }
-    if (!this._redirect) {
-      if (this.internalRouting) {
-        this._router.navigate([this.action], {
-          queryParams: {
-            ...this.extraQueryParams,
-            q: this.asyncSelected.query
-          }
-        });
-      } else {
-        this.form.nativeElement.submit();
-      }
+    if (this.internalRouting) {
+      this._router.navigate([this.action], {
+        queryParams: {
+          ...this.extraQueryParams,
+          q: this.asyncSelected.query
+        }
+      });
+    } else {
+      this.form.nativeElement.submit();
     }
   }
 
@@ -211,7 +206,6 @@ export class AutocompleteComponent implements OnInit {
       } else {
         window.location.href = e.item.href;
       }
-      this._redirect = true;
     } else {
       this.doSearch();
     }

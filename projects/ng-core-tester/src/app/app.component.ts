@@ -17,7 +17,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
-import { BsLocaleService } from 'ngx-bootstrap';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
 
 /**
