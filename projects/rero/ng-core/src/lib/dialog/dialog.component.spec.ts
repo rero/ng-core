@@ -16,7 +16,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BsModalRef, ModalModule } from 'ngx-bootstrap';
+import { BsModalRef, ModalModule } from 'ngx-bootstrap/modal';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
 import { DialogComponent } from './dialog.component';
 

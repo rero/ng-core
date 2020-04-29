@@ -17,7 +17,7 @@
 import { TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { BsModalService, ModalModule } from 'ngx-bootstrap';
+import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { CoreConfigService } from '../core-config.service';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
 import { DialogComponent } from './dialog.component';

@@ -22,7 +22,9 @@ import localeIt from '@angular/common/locales/it';
 import { Inject, Injectable } from '@angular/core';
 import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
 import moment from 'moment';
-import { BsLocaleService, defineLocale, deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
 import { CoreConfigService } from '../core-config.service';
 import { SelectOption } from '../record/editor/interfaces';
 

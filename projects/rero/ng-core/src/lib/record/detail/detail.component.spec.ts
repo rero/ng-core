@@ -21,7 +21,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ActionStatus } from '@rero/ng-core/public-api';
-import { ModalModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { Observable, of, throwError } from 'rxjs';
 import { RecordService } from '../record.service';
@@ -44,6 +44,9 @@ describe('RecordDetailComponent', () => {
   const loc = jasmine.createSpyObj('Location', ['back']);
 
   const route = {
+    paramMap: of(convertToParamMap({
+      type: 'documents', pid: '1'
+    })),
     snapshot: {
       paramMap: convertToParamMap({
         type: 'documents', pid: '1'

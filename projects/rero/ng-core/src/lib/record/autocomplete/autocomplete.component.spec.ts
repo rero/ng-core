@@ -19,7 +19,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { TypeaheadModule } from 'ngx-bootstrap';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CoreModule } from '../../core.module';
 import { AutocompleteComponent } from './autocomplete.component';
 

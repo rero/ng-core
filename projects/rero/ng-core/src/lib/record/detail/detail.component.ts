@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -30,7 +30,7 @@ import { JsonComponent } from './view/json.component';
   selector: 'ng-core-record-detail',
   templateUrl: './detail.component.html'
 })
-export class DetailComponent implements OnInit {
+export class DetailComponent implements OnInit, OnDestroy {
   /**
    * Object for checking record deletion permission.
    */
@@ -77,6 +77,11 @@ export class DetailComponent implements OnInit {
   viewComponent: any = null;
 
   /**
+   * Subscription to route parameters observables
+   */
+  private _routeParametersSubscription: Subscription;
+
+  /**
    * Directive for displaying record
    */
   @ViewChild(RecordDetailDirective, { static: true })
@@ -97,47 +102,58 @@ export class DetailComponent implements OnInit {
    * On init hook
    */
   ngOnInit() {
-    this.loadViewComponentRef();
+    this._routeParametersSubscription = this._route.paramMap.subscribe(() => {
+      this.loadViewComponentRef();
 
-    const pid = this._route.snapshot.paramMap.get('pid');
-    const type = this._route.snapshot.paramMap.get('type');
+      const pid = this._route.snapshot.paramMap.get('pid');
+      const type = this._route.snapshot.paramMap.get('type');
 
-    this._recordUiService.types = this._route.snapshot.data.types;
-    const config = this._recordUiService.getResourceConfig(type);
+      this._recordUiService.types = this._route.snapshot.data.types;
+      const config = this._recordUiService.getResourceConfig(type);
 
-    this.record$ = this._recordService.getRecord(type, pid, 1, config.itemHeaders || null);
-    this.record$.subscribe(
-      (record) => {
-        this.record = record;
+      this.record$ = this._recordService.getRecord(type, pid, 1, config.itemHeaders || null);
+      this.record$.subscribe(
+        (record) => {
+          this.record = record;
 
-        this._recordUiService.canReadRecord$(this.record, type).subscribe(result => {
-          if (result.can === false) {
-            this._toastrService.error(
-              this._translate.instant('You cannot read this record'),
-              this._translate.instant(type)
-            );
-            this._location.back();
+          this._recordUiService.canReadRecord$(this.record, type).subscribe(result => {
+            if (result.can === false) {
+              this._toastrService.error(
+                this._translate.instant('You cannot read this record'),
+                this._translate.instant(type)
+              );
+              this._location.back();
+            }
+          });
+
+          this._recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
+            this.deleteStatus = result;
+          });
+
+          this._recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
+            this.updateStatus = result;
+          });
+
+          if (this._route.snapshot.data.adminMode) {
+            this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
           }
-        });
-
-        this._recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
-          this.deleteStatus = result;
-        });
-
-        this._recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
-          this.updateStatus = result;
-        });
-
-        if (this._route.snapshot.data.adminMode) {
-          this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
+        },
+        (error) => {
+          this.error = error;
         }
-      },
-      (error) => {
-        this.error = error;
-      }
-    );
+      );
 
-    this.loadRecordView();
+      this.loadRecordView();
+    });
+  }
+
+  /**
+   * Component destruction.
+   *
+   * Unsubscribes from the observables of the route parameters.
+   */
+  ngOnDestroy() {
+    this._routeParametersSubscription.unsubscribe();
   }
 
   /**
@@ -155,7 +171,7 @@ export class DetailComponent implements OnInit {
   deleteRecord(pid: string) {
     this._recordUiService.deleteRecord(this._route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
       if (result === true) {
-        this._router.navigate(['../..'], {relativeTo: this._route});
+        this._router.navigate(['../..'], { relativeTo: this._route });
       }
     });
   }

@@ -17,7 +17,7 @@
 import { CoreConfigService } from '../core-config.service';
 import { TranslateService } from './translate-service';
 import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
-import { BsLocaleService } from 'ngx-bootstrap';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 
 class TranslateServiceMock {
   private language;

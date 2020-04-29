@@ -16,7 +16,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TypeaheadModule } from 'ngx-bootstrap';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AddFieldEditorComponent } from './add-field-editor.component';
 
 describe('AddFieldEditorComponent', () => {

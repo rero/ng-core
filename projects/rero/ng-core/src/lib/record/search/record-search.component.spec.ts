@@ -21,7 +21,8 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ModalModule, PaginationModule } from 'ngx-bootstrap';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';

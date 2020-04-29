@@ -20,7 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutocompleteComponent, CoreModule } from '@rero/ng-core';
-import { TypeaheadModule } from 'ngx-bootstrap';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { SearchBarComponent } from './search-bar.component';
 
 describe('SearchBarComponent', () => {
