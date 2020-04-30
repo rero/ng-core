@@ -22,13 +22,13 @@
         {{ 'Edit' | translate }}
     </a>
     <ng-container *ngIf="deleteStatus">
-        <button class="btn btn-sm btn-primary ml-1" [title]="'Delete'|translate"
+        <button class="btn btn-sm btn-outline-danger ml-1" [title]="'Delete'|translate"
             (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
             <i class="fa fa-trash"></i>
             {{ 'Delete' | translate }}
         </button>
         <ng-template #deleteMessageLink>
-            <button class="btn btn-sm btn-dark ml-1" [title]="'Delete'|translate"
+            <button class="btn btn-sm btn-outline-danger ml-1 disabled" [title]="'Delete'|translate"
                 (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
                 <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
             </button>
