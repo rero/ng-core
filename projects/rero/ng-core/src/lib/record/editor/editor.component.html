@@ -58,20 +58,20 @@
       <div class="mt-4 float-right">
         <!-- submit button -->
         <button
+          type="button"
+          (click)="cancel()"
+          class="btn btn-outline-danger btn-sm mr-1"
+        >
+          <i class="fa fa-times"></i>
+          {{ 'Cancel' | translate }}
+        </button>
+        <button
           type="submit"
           class="btn btn-primary btn-sm"
           [disabled]="!form.valid"
         >
           <i class="fa fa-save"></i>
           {{ 'Save' | translate }}
-        </button>
-        <button
-          type="button"
-          (click)="cancel()"
-          class="btn btn-primary btn-sm ml-1"
-        >
-          <i class="fa fa-times"></i>
-          {{ 'Cancel' | translate }}
         </button>
       </div>
     </form>
