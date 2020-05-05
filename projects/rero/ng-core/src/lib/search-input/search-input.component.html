@@ -16,8 +16,7 @@
 -->
 <label for="search" class="font-weight-bold" *ngIf="displayLabel">{{ placeholder }}</label>
 <div class="input-group px-0">
-  <!-- TODO: remove autofocus -->
-  <input #searchinput autofocus type="text" id="search" class="form-control"
+  <input #searchinput type="text" id="search" class="form-control"
     [attr.placeholder]="!displayLabel && placeholder ? placeholder : null" attr.aria-label="{{ placeholder }}"
     [value]="searchText" (keyup.enter)="doSearch(searchinput.value)">
   <div class="input-group-append">
