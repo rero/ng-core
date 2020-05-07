@@ -15,8 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 export function extractIdOnRef(ref: string) {
-  const pidRegExp = new RegExp('.*/(.*)$');
-  return pidRegExp.exec(ref)[1];
+  if (ref != null) {
+    const pidRegExp = new RegExp('.*/(.*)$');
+    return pidRegExp.exec(ref)[1];
+  }
+  return null;
 }
 
 export function cleanDictKeys(data: any) {
