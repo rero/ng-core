@@ -19,8 +19,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule } from '@ngx-formly/core';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
@@ -35,6 +35,7 @@ import { ArrayTypeComponent } from './editor/array-type/array-type.component';
 import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
 import { hooksFormlyExtension } from './editor/extensions';
+import { HorizontalWrapperComponent } from './editor/horizontal-wrapper/horizontal-wrapper.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/object-type/object-type.component';
 import { SwitchComponent } from './editor/switch/switch.component';
@@ -72,7 +73,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     MultiSchemaTypeComponent,
     DatepickerTypeComponent,
     ToggleWrapperComponent,
-    BucketsComponent
+    BucketsComponent,
+    HorizontalWrapperComponent
   ],
   imports: [
     CoreModule,
@@ -140,7 +142,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'datepicker', component: DatepickerTypeComponent }
       ],
       wrappers: [
-        { name: 'toggle-switch', component: ToggleWrapperComponent }
+        { name: 'toggle-switch', component: ToggleWrapperComponent },
+        { name: 'form-field-horizontal', component: HorizontalWrapperComponent }
       ]
     }),
     FormlyBootstrapModule

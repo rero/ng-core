@@ -84,6 +84,9 @@ export class EditorComponent implements OnInit, OnDestroy {
   // Config for resource
   private _resourceConfig: any;
 
+  // Types to apply horizontal wrapper on
+  private _horizontalWrapperTypes = ['enum', 'string', 'remoteautocomplete', 'integer'];
+
   /**
    * Constructor.
    * @param _formlyJsonschema Formly JSON schema.
@@ -284,6 +287,13 @@ export class EditorComponent implements OnInit, OnDestroy {
             ];
           }
 
+          // Add an horizontal wrapper
+          if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
+            field.wrappers = [
+              ...(field.wrappers ? field.wrappers : []),
+              'form-field-horizontal'
+            ];
+          }
           return field;
         }
       })

@@ -15,29 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { FieldWrapper } from '@ngx-formly/core';
 
-/**
- * Component for displaying a switcher in editor.
- */
 @Component({
-  selector: 'ng-core-editor-formly-field-switch',
+  selector: 'ng-core-horizontal-wrapper',
   template: `
-    <div class="custom-control custom-switch">
-      <input class="custom-control-input" type="checkbox"
-        [class.is-invalid]="showError"
-        [indeterminate]="to.indeterminate && formControl.value === null"
-        [formControl]="formControl"
-        [formlyAttributes]="field">
-      <label class="custom-control-label" [for]="id" [tooltip]="to.description">{{ to.label }}</label>
+    <div class="form-group">
+      <div class="row">
+        <label [attr.for]="id" class="col-sm-2 col-form-label" *ngIf="to.label" [tooltip]="to.description">
+          {{ to.label }}
+          <ng-container *ngIf="to.required && to.hideRequiredMarker !== true">*</ng-container>
+        </label>
+        <div class="col-sm-10">
+          <ng-template #fieldComponent></ng-template>
+        </div>
+      </div>
+      <div *ngIf="showError" class="row invalid-feedback d-block">
+        <formly-validation-message [field]="field"></formly-validation-message>
+      </div>
     </div>
   `,
 })
-export class SwitchComponent extends FieldType {
-  defaultOptions = {
-    templateOptions: {
-      indeterminate: true,
-      hideLabel: true,
-    },
-  };
+export class HorizontalWrapperComponent extends FieldWrapper {
+
 }
