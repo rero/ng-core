@@ -75,7 +75,7 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id">
+  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
     {{ f.templateOptions.label }}
     <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
   </label>
