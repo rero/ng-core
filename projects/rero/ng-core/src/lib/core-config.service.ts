@@ -29,12 +29,7 @@ export interface Config {
   languages?: string[];
   defaultLanguage?: string;
   secretPassphrase: string;
-  customTranslations?: {
-      fr?: {},
-      de?: {},
-      en?: {},
-      it?: {}
-  };
+  translationsURLs?: Array<any>;
 }
 
 /**
@@ -53,5 +48,5 @@ export class CoreConfigService implements Config {
   languages = ['en'];
   defaultLanguage = 'en';
   secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';
-  customTranslations = null;
+  translationsURLs = [];
 }
