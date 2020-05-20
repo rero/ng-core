@@ -36,6 +36,6 @@ export class AppConfigService extends CoreConfigService {
     this.schemaFormEndpoint = '/api/schemaform';
     this.$refPrefix = environment.$refPrefix;
     this.languages = environment.languages;
-    this.customTranslations = environment.customTranslations;
+    this.translationsURLs = environment.translationsURLs;
   }
 }

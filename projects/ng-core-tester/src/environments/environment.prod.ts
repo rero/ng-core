@@ -20,9 +20,7 @@ export const environment = {
   apiBaseUrl: 'https://localhost:5000',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en'],
-  customTranslations: {
-    fr: {
-      search: 'Rechercher une ressource'
-    }
-  }
+  translationsURLs: [
+    '/assets/i18n/${lang}.json'
+  ]
 };

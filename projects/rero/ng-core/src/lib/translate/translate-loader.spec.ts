@@ -17,56 +17,93 @@
 import { TestBed } from '@angular/core/testing';
 import { CoreConfigService } from '../core-config.service';
 import { TranslateLoader } from './translate-loader';
+import { HttpClient } from '@angular/common/http';
+import { TranslateModule, TranslateService, TranslateLoader as NgxTranslateLoader } from '@ngx-translate/core';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('TranslateLoader', () => {
+  let translate: TranslateService;
+  let http: HttpTestingController;
+  let config = {};
+
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-  });
-
-  it('should be created', () => {
-    const translateLoader = new TranslateLoader(new CoreConfigService());
-    expect(translateLoader).toBeTruthy();
-
-  });
-
-  it('should override translation', () => {
-    const config = {
+    config = {
       languages: ['fr'],
-      customTranslations: {
-        fr: {
-          'your query': 'Traduction surchargée',
-        }
-      }
+      translationsURLs: [
+        '/assets/i18n/${lang}.json'
+      ]
     };
+    TestBed.configureTestingModule({
+      imports: [
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: {
+            provide: NgxTranslateLoader,
+            useFactory: (httpClient: HttpClient) => new TranslateLoader(config as CoreConfigService, httpClient),
+            deps: [HttpClient]
+          }
+        })
+      ],
+      providers: [TranslateService]
+    });
+    translate = TestBed.get(TranslateService);
+    http = TestBed.get(HttpTestingController);
+  });
 
-    const translateLoader = new TranslateLoader(config as CoreConfigService);
-    translateLoader.getTranslation('fr').subscribe(translations => {
-      expect(translations['your query']).toBe(config.customTranslations.fr['your query']);
+  afterEach(() => {
+    translate = undefined;
+    http = undefined;
+  });
+
+  it('should be able to provide TranslateLoader', () => {
+    expect(TranslateLoader).toBeDefined();
+    expect(translate.currentLoader).toBeDefined();
+    expect(translate.currentLoader instanceof TranslateLoader).toBeTruthy();
+  });
+
+  it('should be able to get translations', () => {
+    translate.use('en');
+
+    // mock response after the xhr request, otherwise it will be undefined
+    http.expectOne('/assets/i18n/en.json').flush({
+      TEST: 'This is a test',
+      TEST2: 'This is another test'
+    });
+
+    // this will request the translation from the backend because we use a static files loader for TranslateService
+    translate.get('TEST').subscribe((res: string) => {
+      expect(res).toEqual('This is a test');
+    });
+
+    // this will request the translation from downloaded translations without making a request to the backend
+    translate.get('TEST2').subscribe((res: string) => {
+      expect(res).toEqual('This is another test');
     });
   });
 
-  it('should throw an error because translations for language not found', () => {
-    const config = {
-      languages: ['fr']
-    };
+  it('should be able to get translations in french', () => {
+    translate.use('fr');
 
-    const translateLoader = new TranslateLoader(config as CoreConfigService);
-    expect(() => translateLoader.getTranslation('pt')).toThrowError('Translations not found for lang "pt"');
-  });
+    // mock response after the xhr request, otherwise it will be undefined
+    http.expectOne('/assets/i18n/fr.json').flush({
+      search: 'Recherche avancée',
+      'does not exists': 'Existe pas'
+    });
 
-  it('should not find custom translation for "en" language', () => {
-    const config = {
-      languages: ['fr', 'en'],
-      customTranslations: {
-        fr: {
-          'Record deleted.': 'Enregistrement effacé',
-        }
-      }
-    };
+    // ng-core translations
+    translate.get('Help').subscribe((res: string) => {
+      expect(res).toEqual('Aide');
+    });
 
-    const translateLoader = new TranslateLoader(config as CoreConfigService);
-    translateLoader.getTranslation('en').subscribe(translations => {
-      expect(translations['Record deleted.']).toBe('Record deleted.');
+    // override translation
+    translate.get('search').subscribe((res: string) => {
+      expect(res).toEqual('Recherche avancée');
+    });
+
+    // new translations
+    translate.get('does not exists').subscribe((res: string) => {
+      expect(res).toEqual('Existe pas');
     });
   });
+
 });
