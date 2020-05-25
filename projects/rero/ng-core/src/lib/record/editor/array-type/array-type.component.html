@@ -17,10 +17,10 @@
 <!-- array title only if the array is empty -->
 <label *ngIf="to.label && to.hideLabel !== true && formControl && formControl.length === 0" [attr.for]="id" [tooltip]="to.description">
   <!-- add button only if the max is not reached -->
+  <span [tooltip]="to.description">{{ to.label }}</span>
   <a *ngIf="canAdd()" (click)="add(0)" class="btn btn-link btn-sm">
     <i class="fa fa-plus"></i>
   </a>
-  <span [tooltip]="to.description">{{ to.label }}</span>
   <span *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
 </label>
 
@@ -30,13 +30,11 @@
 </div>
 
 <!-- for each item -->
-
 <ng-container *ngFor="let f of field.fieldGroup; let i = index">
   <!-- put title with menu section for item object -->
-  <div *ngIf="isChildrenObject">
+  <div *ngIf="isChildrenObject" class="header ml-4">
     <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f, i: i }">
     </ng-container>
-
     <!--  object validation error message -->
     <div class="alert alert-danger" role="alert" *ngIf="f.options.showError && f.formControl.errors">
       <formly-validation-message [field]="f"></formly-validation-message>
@@ -44,65 +42,77 @@
   </div>
 
   <!-- all kind of item -->
-  <div class="d-flex mb-2" [ngClass]="{ 'pl-2 border-left': isChildrenObject }">
-    <!-- add button -->
-    <ng-container *ngTemplateOutlet="addButton; context: { i: i }"></ng-container>
+  <div class="row mb-2 content ml-4" [ngClass]="{ 'pl-2 border-left': isChildrenObject }"
+  (mouseenter)="show = true"
+  (mouseleave)="show = false">
     <!-- item itself -->
-    <div class="flex-grow-1">
+    <div class="col-auto"
+    [ngClass]="{'col-lg-11': f.type === 'textarea' || f.type === 'string' || f.type === 'object' || f.type === 'array'}">
       <!-- add label for array of arrays -->
       <span *ngIf="isChildrenArray">{{f.templateOptions.label}}</span>
       <formly-field [field]="f"></formly-field>
     </div>
-    <!-- remove button -->
-    <ng-container *ngTemplateOutlet="removeButton; context: { i: i }"></ng-container>
+    <div class="col" *ngIf="show && !isChildrenObject">
+      <button *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-outline-secondary btn-sm mr-1">
+        <i class="fa fa-clone"></i>
+      </button>
+      <button (click)="remove(i)" *ngIf="canRemove()" class="btn btn-outline-secondary btn-sm">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
   </div>
 </ng-container>
 
 <!-- TEMPLATES -->
 <!-- dropdown menu -->
 <ng-template #menu let-f="f" let-i="i">
-  <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="canAdd()" (addClicked)="add(i + 1)">
-    <ng-container *ngIf="f.type === 'object'">
-      <ng-container *ngFor="
-          let fChildren of hiddenFieldGroup(f.fieldGroup);
-          let first = first;
-          let last = last
-        ">
-        <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
-        <button class="dropdown-item" (click)="fChildren.hide = false" type="button">
-          {{ fChildren.templateOptions.label }}
-        </button>
-        <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
+  <ng-core-editor-dropdown-label-editor [field]="f">
+    <ng-container dropdown-list>
+      <ng-container *ngIf="f.type === 'object'">
+        <ng-container *ngFor="
+            let fChildren of hiddenFieldGroup(f.fieldGroup);
+            let first = first;
+            let last = last
+          ">
+          <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
+          <button class="dropdown-item" (click)="fChildren.hide = false" type="button">
+            {{ fChildren.templateOptions.label }}
+          </button>
+          <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
+        </ng-container>
       </ng-container>
+      <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
+        Help
+      </a>
     </ng-container>
-    <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
-      Help
-    </a>
+    <ng-container buttons>
+      <button *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link text-secondary btn-sm ml-2">
+        <i class="fa fa-clone"></i>
+      </button>
+      <button (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm">
+        <i class="fa fa-trash"></i>
+      </button>
+    </ng-container>
   </ng-core-editor-dropdown-label-editor>
 </ng-template>
 
 <!-- section title -->
 <ng-template #title let-f="f" let-i="i">
-  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
-    <a *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link btn-sm">
-      <i class="fa fa-plus"></i>
-    </a>
+  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true"
+  [attr.for]="f.id"
+  [tooltip]="f.templateOptions.description"
+  (mouseenter)="show = true"
+  (mouseleave)="show = false">
     {{ f.templateOptions.label }}
     <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
+    <!-- add and remove buttons -->
+    <ng-container *ngIf="show">
+      <a *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link text-secondary btn-sm">
+        <i class="fa fa-clone"></i>
+      </a>
+      <a (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm">
+        <i class="fa fa-trash"></i>
+      </a>
+    </ng-container>
   </label>
-</ng-template>
-
-<!-- add button -->
-<ng-template #addButton let-i="i">
-  <a *ngIf="!isChildrenObject && canAdd()" (click)="add(i + 1)" class="btn btn-link btn-sm">
-    <i class="fa fa-plus"></i>
-  </a>
-</ng-template>
-
-<!-- tash button -->
-<ng-template #removeButton let-i="i">
-  <button (click)="remove(i)" *ngIf="canRemove()" class="btn btn-outline-secondary ml-1 btn-sm"
-    [ngClass]="{ 'mb-2': isChildrenObject }">
-    <i class="fa fa-trash"></i>
-  </button>
 </ng-template>

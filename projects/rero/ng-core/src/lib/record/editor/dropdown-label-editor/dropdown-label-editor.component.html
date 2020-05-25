@@ -14,39 +14,34 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div *ngIf="field.templateOptions.label" class="d-block">
-  <!-- add button -->
-  <a
-    *ngIf="canAdd"
-    (click)="addClick($event)"
-    class="btn btn-link btn-sm mr-1"
-  >
-    <i class="fa fa-plus"></i>
-  </a>
+<div *ngIf="field.templateOptions.label" class="d-block"
+  (mouseenter)="show = true"
+  (mouseleave)="show = false">
+  <span [tooltip]="field.templateOptions.description">
+    {{ field.templateOptions.label }}
+    <span *ngIf="field.templateOptions.required">*</span>
+  </span>
   <!-- dropdown button with legend -->
-  <div class="btn-group" dropdown>
-  <button
-    [id]="field.id"
-    dropdownToggle
-    type="button"
-    class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
-    aria-controls="dropdown-basic"
-  >
-    <span [tooltip]="field.templateOptions.description">
-      {{ field.templateOptions.label }}
-      <span *ngIf="field.templateOptions.required">*</span>
-    </span>
-    <span class="ml-2 caret"></span>
-  </button>
-  <!-- dropdown list -->
-  <div
-    id="dropdown-basic"
-    *dropdownMenu
-    class="dropdown-menu"
-    role="menu"
-    aria-labelledby="button-basic"
-  >
-    <ng-content></ng-content>
-  </div>
+  <div *ngIf="show" class="btn-group" dropdown>
+    <!-- add subfield button -->
+    <button
+      [id]="field.id"
+      dropdownToggle
+      type="button"
+      class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
+      aria-controls="dropdown-basic">
+      <i class="ml-2 caret"></i>
+    </button>
+    <!-- dropdown list -->
+    <div
+      id="dropdown-basic"
+      *dropdownMenu
+      class="dropdown-menu"
+      role="menu"
+      aria-labelledby="button-basic">
+      <ng-content select="[dropdown-list]"></ng-content>
+    </div>
+    <!-- clone button -->
+    <ng-content select="[buttons]"></ng-content>
   </div>
 </div>

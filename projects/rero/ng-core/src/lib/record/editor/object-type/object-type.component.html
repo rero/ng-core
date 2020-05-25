@@ -27,27 +27,28 @@
 </div>
 
 <!-- each object properties -->
-<ng-container *ngFor="let f of field.fieldGroup">
-  <div class="">
-    <!-- if the field is repeatable the title is rendered by the corresponding array -->
-    <ng-container *ngIf="
-      !f.hide &&
-      ((!isParrentArray() && f.type === 'object') || f.type === 'array')
-    ">
-      <!-- section header -->
-      <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
+<div class="{{ getCssClass() }}">
+  <ng-container *ngFor="let f of field.fieldGroup">
+    <div class="{{ getCssClass(f) }}" *ngIf="!f.hide">
+      <!-- if the field is repeatable the title is rendered by the corresponding array -->
+      <ng-container *ngIf="((!isParrentArray() && f.type === 'object') || f.type === 'array')">
+        <!-- section header -->
+        <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
+        </ng-container>
       </ng-container>
-    </ng-container>
-
-    <!-- field + trash button-->
-    <div class="d-flex pl-2" [ngClass]="{ 'border-left': f.type === 'object' }">
-      <div class="flex-grow-1">
-        <formly-field [field]="f"></formly-field>
+      <!-- field -->
+      <div class="d-flex pl-2 content ml-2" [ngClass]="{ 'border-left': f.type === 'object', 'ml-4' : isParrentArray() }"
+      (mouseenter)="isShown = true" (mouseleave)="isShown = false">
+        <div class="flex-grow-1">
+          <formly-field [field]="f"></formly-field>
+        </div>
+        <ng-container *ngIf="f.type !== 'array' && isShown">
+          <ng-container *ngTemplateOutlet="hideButtonOutline; context: { f: f }"></ng-container>
+        </ng-container>
       </div>
-      <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+</div>
 
 <!-- TEMPLATES -->
 <!-- dropdown menu -->
@@ -59,7 +60,7 @@
           let first = first;
           let last = last
         ">
-        <h6 *ngIf="first" class="dropdown-header">Add fields</h6>
+        <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
         <button class="dropdown-item" (click)="show(fChildren)" type="button">
           {{ fChildren.templateOptions.label }}
         </button>
@@ -75,15 +76,25 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
-    {{ f.templateOptions.label }}
-    <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
-  </label>
+  <div class="header" (mouseenter)="isShown = true" (mouseleave)="isShown = false">
+    <label class="ml-3" *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
+      {{ f.templateOptions.label }}
+      <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
+    </label>
+    <ng-container *ngIf="isShown">
+      <ng-container *ngTemplateOutlet="hideButtonLink; context: { f: f }"></ng-container>
+    </ng-container>
+  </div>
 </ng-template>
 
 <!-- trash button -->
-<ng-template #hideButton let-f="f">
-  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-outline-secondary ml-1 btn-sm">
+<ng-template #hideButtonLink let-f="f">
+  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-link text-secondary mb-1 btn-sm">
+    <i class="fa fa-trash"></i>
+  </button>
+</ng-template>
+<ng-template #hideButtonOutline let-f="f">
+  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-outline-secondary mb-1 btn-sm">
     <i class="fa fa-trash"></i>
   </button>
 </ng-template>

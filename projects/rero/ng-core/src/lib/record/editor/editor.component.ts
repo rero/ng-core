@@ -72,7 +72,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _resourceConfig: any;
 
   // Types to apply horizontal wrapper on
-  private _horizontalWrapperTypes = ['enum', 'string', 'remoteautocomplete', 'integer'];
+  private _horizontalWrapperTypes = ['enum', 'string', 'remoteautocomplete', 'integer', 'textarea'];
 
   /**
    * Constructor.

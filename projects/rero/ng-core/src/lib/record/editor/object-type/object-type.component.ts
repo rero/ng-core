@@ -31,6 +31,9 @@ export class ObjectTypeComponent extends FieldType {
     defaultValue: {}
   };
 
+  /** Show or hide button */
+  isShown = false;
+
   /**
    * Constructor
    * @param editorService - EditorService, that keep the list of hidden fields
@@ -125,5 +128,18 @@ export class ObjectTypeComponent extends FieldType {
       !field.hide &&
       field.hideExpression == null
     );
+  }
+
+  /**
+   * Get css class declared in template options
+   *
+   * @param field field to apply css class to
+   * @return css class to apply
+   */
+  getCssClass(field: FormlyFieldConfig = null): string {
+    if (field !== null) {
+      return field.templateOptions.cssClass;
+    }
+    return this.to.cssClass;
   }
 }

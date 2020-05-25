@@ -25,6 +25,9 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
   templateUrl: './dropdown-label-editor.component.html'
 })
 export class DropdownLabelEditorComponent {
+  /** Show or hide buttons */
+  show = false;
+
   // current form field configuration
   @Input()
   field: FormlyFieldConfig;
