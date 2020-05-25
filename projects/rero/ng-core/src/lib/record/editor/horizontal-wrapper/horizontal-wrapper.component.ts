@@ -22,16 +22,16 @@ import { FieldWrapper } from '@ngx-formly/core';
   template: `
     <div class="form-group">
       <div class="row">
-        <label [attr.for]="id" class="col-sm-2 col-form-label" *ngIf="to.label" [tooltip]="to.description">
+        <label [attr.for]="id" class="col-sm-auto col-form-label" *ngIf="to.label" [tooltip]="to.description">
           {{ to.label }}
           <ng-container *ngIf="to.required && to.hideRequiredMarker !== true">*</ng-container>
         </label>
-        <div class="col-sm-10">
+        <div class="col">
           <ng-template #fieldComponent></ng-template>
+          <div *ngIf="showError" class="invalid-feedback d-block">
+            <formly-validation-message [field]="field"></formly-validation-message>
+          </div>
         </div>
-      </div>
-      <div *ngIf="showError" class="row invalid-feedback d-block">
-        <formly-validation-message [field]="field"></formly-validation-message>
       </div>
     </div>
   `,
