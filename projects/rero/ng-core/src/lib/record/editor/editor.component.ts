@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -36,26 +36,13 @@ import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
-export class EditorComponent implements OnInit, OnDestroy {
-  // angular formGroop root
+export class EditorComponent implements OnInit, OnChanges, OnDestroy {
+  // angular formGroup root
   form: FormGroup;
 
   @Output() modelChange = new EventEmitter<any>();
 
-  // initial data
-  @Input()
-  set model(value) {
-    this._model = value;
-  }
-  get model() {
-    // the parent dont know that we are editing a record
-    if (this.pid != null && this._model.pid == null) {
-      this._model.pid = this.pid;
-    }
-    // preprocess the model before sending to formly
-    return this.preprocessRecord(this._model);
-  }
-  private _model: any = {};
+  @Input() model: any = null;
 
   // additionnal form options
   options: FormlyFormOptions;
@@ -111,6 +98,17 @@ export class EditorComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Component has changed
+   * Called before ngOnInit() and whenever one of the input properties change.
+   * @param changes: the changed properties
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.model) { // Model has changed
+      this._setModel(changes.model.currentValue);
+    }
+  }
+
+  /**
    * Component initialisation
    */
   ngOnInit() {
@@ -155,11 +153,12 @@ export class EditorComponent implements OnInit, OnDestroy {
                     );
                     this._location.back();
                   } else {
-                    this._model = record.metadata;
-                    this.modelChange.emit(this._model);
+                    this._setModel(record.metadata);
                   }
                 });
             });
+        } else {
+          this._setModel({});
         }
       });
   }
@@ -168,8 +167,22 @@ export class EditorComponent implements OnInit, OnDestroy {
    * Component destruction
    */
   ngOnDestroy() {
-    for (const s of this._subscribers) {
-      s.unsubscribe();
+    this._subscribers.forEach(s => s.unsubscribe());
+  }
+
+  /**
+   * Set the model
+   * @param model: The data to use as new model
+   */
+  private _setModel(model: any): void {
+    if (this._resourceConfig != null) {
+      // the parent dont know that we are editing a record
+      if (this.pid != null && (this.model == null || this.model.pid == null)) {
+        model.pid = this.pid;
+      }
+      // preprocess the model before sending to formly
+      this.model = this.preprocessRecord(model);
+      this.modelChange.emit(this.model);
     }
   }
 
