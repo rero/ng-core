@@ -67,7 +67,7 @@ export class TranslateLanguageService implements OnDestroy {
   }
 
   /**
-   * @param langCode - ISO 639-2 (2 characters)
+   * @param langCode - ISO 639-2 (3 characters)
    * @param language - ISO 639-1 (2 characters)
    * @return human language - string
    */

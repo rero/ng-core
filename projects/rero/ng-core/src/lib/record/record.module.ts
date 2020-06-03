@@ -16,11 +16,11 @@
  */
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { FormlyModule } from '@ngx-formly/core';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
@@ -34,13 +34,12 @@ import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-edi
 import { ArrayTypeComponent } from './editor/array-type/array-type.component';
 import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
-import { hooksFormlyExtension } from './editor/extensions';
+import { hooksFormlyExtension, registerTranslateExtension } from './editor/extensions';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/object-type/object-type.component';
 import { SwitchComponent } from './editor/switch/switch.component';
 import { ToggleWrapperComponent } from './editor/toggle-wrapper/toggle-wrappers.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
-import * as messages from './editor/validation-messages';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
@@ -87,31 +86,6 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
       extensions: [{ name: 'hooks', extension: hooksFormlyExtension }],
-      validationMessages: [
-        { name: 'required', message: _('This field is required') },
-        { name: 'null', message: _('should be null') },
-        { name: 'minlength', message: messages.minlengthValidationMessage },
-        { name: 'maxlength', message: messages.maxlengthValidationMessage },
-        { name: 'min', message: messages.minValidationMessage },
-        { name: 'max', message: messages.maxValidationMessage },
-        { name: 'multipleOf', message: messages.multipleOfValidationMessage },
-        {
-          name: 'exclusiveMinimum',
-          message: messages.exclusiveMinimumValidationMessage
-        },
-        {
-          name: 'exclusiveMaximum',
-          message: messages.exclusiveMaximumValidationMessage
-        },
-        { name: 'minItems', message: messages.minItemsValidationMessage },
-        { name: 'maxItems', message: messages.maxItemsValidationMessage },
-        { name: 'uniqueItems', message: _('should NOT have duplicate items') },
-        {
-          name: 'alreadyTakenMessage',
-          message: _('the value is already taken')
-        },
-        { name: 'const', message: messages.constValidationMessage }
-      ],
       types: [
         { name: 'string', extends: 'input' },
         {
@@ -158,6 +132,9 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     JsonComponent,
     DetailJsonComponent,
     AutocompleteComponent
+  ],
+  providers: [
+    { provide: FORMLY_CONFIG, multi: true, useFactory: registerTranslateExtension, deps: [TranslateService] },
   ]
 })
 export class RecordModule {}

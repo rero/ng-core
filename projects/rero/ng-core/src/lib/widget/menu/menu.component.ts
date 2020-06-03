@@ -37,6 +37,9 @@ export class MenuComponent {
     if (item.href) {
       return 'href';
     }
+    if (item.name == null) {
+      return 'divider';
+    }
     return 'action';
   }
 

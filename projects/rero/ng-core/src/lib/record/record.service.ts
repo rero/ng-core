@@ -229,7 +229,7 @@ export class RecordService {
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
       map((res) => res.hits.total),
-      map((total) => (total ? { alreadyTakenMessage: value } : null)),
+      map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(1000)
     );
   }
@@ -276,7 +276,7 @@ export class RecordService {
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
       map((res) => res.hits.total),
-      map((total) => (total ? { alreadyTakenMessage: value } : null)),
+      map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(500)
     );
   }

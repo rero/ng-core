@@ -98,6 +98,10 @@ import { CustomTranslateLoader } from 'translate-loader';
 
 ## How to use
 
+### Requirements
+
+* node version 11 or bigger
+
 ### Installation
 
 To install this library, simply do: 
