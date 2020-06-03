@@ -49,6 +49,8 @@
             [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
             ><i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i> {{ subItem.name|translate }}</a>
 
+            <div *ngSwitchCase="'divider'" class="dropdown-divider"></div>
+
             <a *ngSwitchDefault href="#"
             [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
             (click)="doClickItem($event, subItem)"

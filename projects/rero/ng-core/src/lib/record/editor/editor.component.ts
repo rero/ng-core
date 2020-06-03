@@ -459,8 +459,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           field.validation.messages = {};
         }
         for (const key of Object.keys(messages)) {
-          field.validation.messages[key] = (error, f: FormlyFieldConfig) =>
-            `${messages[key]}`;
+          const msg = messages[key];
+          // add support of key with or without Message suffix (required == requiredMessage),
+          // this is usefull for backend translation extraction
+          field.validation.messages[key.replace(/Message$/, '')] = (error, f: FormlyFieldConfig) =>
+            // translate the validation messages coming from the JSONSchema
+            // TODO: need to remove `as any` once it is fixed in ngx-formly v.5.7.2
+            this._translateService.stream(msg) as any;
         }
       }
       // custom validators
@@ -499,7 +504,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             const expressionFn = Function('formControl', `return ${expression};`);
             const validatorExpression = {
               expression: (fc: FormControl) => expressionFn(fc),
-              message: validator.message
+              // translate the validation message coming form the JSONSchema
+              message: this._translateService.stream(validator.message)
             };
             field.validators = field.validators !== undefined ? field.validators : {};
             field.validators[validatorKey] = validatorExpression;

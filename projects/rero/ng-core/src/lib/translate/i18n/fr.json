@@ -29,7 +29,17 @@
   "more…": "plus…",
   "results": "résultats",
   "search": "rechercher",
+  "should NOT be longer than {{maxLength}} characters": "Ne doit pas être plus long que {{maxLength}} caractères",
+  "should NOT be shorter than {{minLength}} characters": "Ne doit pas être plus court que {{minLength}} caractères",
   "should NOT have duplicate items": "Deux éléments identiques ne sont pas permis",
+  "should NOT have fewer than {{minItems}} items": "Un nombre d'exemplaires plus petit que {{minItems}} n'est pas possible",
+  "should NOT have more than {{maxItems}} items": "Un nombre d'exemplaires plus grand que {{maxItems}} n'est pas possible",
+  "should be <  {{step}}": "Doit être plus petite que  {{step}}",
+  "should be <=  {{max}}": "Doit être plus petit ou égal à  {{max}}",
+  "should be >  {{step}}": "Doit être plus grand que  {{step}}",
+  "should be >=  {{min}}": "Doit être plus grand ou égal à  {{min}}",
+  "should be equal to constant \"{{const}}\"": "Doit être égal à la constante \"{{const}}\"",
+  "should be multiple of ${{step}}": "Doit être un multiple de ${{step}}",
   "should be null": "doit être vide",
   "the value is already taken": "cette valeur est déjà utilisée"
 }
