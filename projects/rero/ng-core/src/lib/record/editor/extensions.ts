@@ -122,6 +122,10 @@ export function registerTranslateExtension(translate: TranslateService) {
         message: () => translate.stream(_('should NOT have duplicate items'))
       },
       {
+        name: 'uniqueValueKeysInObject',
+        message: () => translate.stream(_('should NOT have duplicate items'))
+      },
+      {
         name: 'alreadyTaken',
         message: () => translate.stream(_('the value is already taken'))
       },

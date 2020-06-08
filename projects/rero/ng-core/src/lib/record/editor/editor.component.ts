@@ -505,6 +505,31 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           };
           delete formOptions.validation.validators.valueAlreadyExists;
         }
+        // asyncValidators: valueKeysInObject
+        //  This validator is similar to uniqueValidator but only check on some specific fields of array items.
+        if (formOptions.validation.validators.uniqueValueKeysInObject) {
+          field.validators = {
+            uniqueValueKeysInObject: {
+              expression: (control: FormControl) => {
+                // if value isn't an array or array contains less than 2 elements, no need to check
+                if (!(control.value instanceof Array) || control.value.length < 2) {
+                  return true;
+                }
+                const keysToKeep = formOptions.validation.validators.uniqueValueKeysInObject.keys;
+                const uniqueItems = Array.from(
+                   new Set(control.value.map((v: any) => {
+                     const keys = keysToKeep.reduce((acc, elt) => {
+                       acc[elt] = v[elt];
+                       return acc;
+                     }, {});
+                     return JSON.stringify(keys);
+                   })),
+                );
+                return uniqueItems.length === control.value.length;
+              }
+            }
+          };
+        }
         // validators: add validator with expressions
         const validatorsKey = Object.keys(formOptions.validation.validators);
         validatorsKey.map(validatorKey => {
