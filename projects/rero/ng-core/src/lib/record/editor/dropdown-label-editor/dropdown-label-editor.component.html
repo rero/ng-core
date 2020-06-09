@@ -14,15 +14,13 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div *ngIf="field.templateOptions.label" class="d-block"
-  (mouseenter)="show = true"
-  (mouseleave)="show = false">
+<div *ngIf="field.templateOptions.label" class="d-block">
   <span [tooltip]="field.templateOptions.description">
     {{ field.templateOptions.label }}
     <span *ngIf="field.templateOptions.required">*</span>
   </span>
   <!-- dropdown button with legend -->
-  <div *ngIf="show" class="btn-group" dropdown>
+  <div class="btn-group" dropdown>
     <!-- add subfield button -->
     <button
       [id]="field.id"

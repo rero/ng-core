@@ -31,9 +31,6 @@ export class ObjectTypeComponent extends FieldType {
     defaultValue: {}
   };
 
-  /** Show or hide button */
-  isShown = false;
-
   /**
    * Constructor
    * @param editorService - EditorService, that keep the list of hidden fields

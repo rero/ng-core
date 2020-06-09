@@ -37,13 +37,12 @@
         </ng-container>
       </ng-container>
       <!-- field -->
-      <div class="d-flex pl-2 content ml-2" [ngClass]="{ 'border-left': f.type === 'object', 'ml-4' : isParrentArray() }"
-      (mouseenter)="isShown = true" (mouseleave)="isShown = false">
+      <div class="d-flex content ml-4 mb-1">
         <div class="flex-grow-1">
           <formly-field [field]="f"></formly-field>
         </div>
-        <ng-container *ngIf="f.type !== 'array' && isShown">
-          <ng-container *ngTemplateOutlet="hideButtonOutline; context: { f: f }"></ng-container>
+        <ng-container *ngIf="f.type !== 'array'">
+          <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
         </ng-container>
       </div>
     </div>
@@ -76,25 +75,18 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <div class="header" (mouseenter)="isShown = true" (mouseleave)="isShown = false">
-    <label class="ml-3" *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
+  <div class="header ml-4">
+    <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
       {{ f.templateOptions.label }}
       <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
+      <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
     </label>
-    <ng-container *ngIf="isShown">
-      <ng-container *ngTemplateOutlet="hideButtonLink; context: { f: f }"></ng-container>
-    </ng-container>
   </div>
 </ng-template>
 
 <!-- trash button -->
-<ng-template #hideButtonLink let-f="f">
-  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-link text-secondary mb-1 btn-sm">
-    <i class="fa fa-trash"></i>
-  </button>
-</ng-template>
-<ng-template #hideButtonOutline let-f="f">
-  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-outline-secondary mb-1 btn-sm">
+<ng-template #hideButton let-f="f">
+  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-link text-secondary btn-sm">
     <i class="fa fa-trash"></i>
   </button>
 </ng-template>

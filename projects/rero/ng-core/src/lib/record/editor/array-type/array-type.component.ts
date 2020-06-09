@@ -31,9 +31,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
   /** True if the children are of type array */
   isChildrenArray = false;
 
-  /** Show or hide button */
-  show = false;
-
   /**
    * Component initialization
    */
@@ -96,7 +93,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
   remove(i: number) {
 
     super.remove(i);
-    this.show = false;
   }
 
   /**
@@ -107,7 +103,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
     // TODO: focus in the first input child
     super.add(i, initialModel);
     this.setFocusInChildren(this.field.fieldGroup[i]);
-    this.show = false;
   }
 
   /**

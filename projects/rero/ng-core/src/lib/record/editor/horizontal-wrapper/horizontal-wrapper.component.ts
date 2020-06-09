@@ -20,13 +20,13 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-horizontal-wrapper',
   template: `
-    <div class="form-group">
-      <div class="row">
-        <label [attr.for]="id" class="col-sm-auto col-form-label" *ngIf="to.label" [tooltip]="to.description">
+    <div class="form-group m-0">
+      <div class="d-flex">
+        <label [attr.for]="id" class="text-nowrap mr-2 col-form-label-1" *ngIf="to.label" [tooltip]="to.description">
           {{ to.label }}
           <ng-container *ngIf="to.required && to.hideRequiredMarker !== true">*</ng-container>
         </label>
-        <div class="col">
+        <div class="flex-grow-1">
           <ng-template #fieldComponent></ng-template>
           <div *ngIf="showError" class="invalid-feedback d-block">
             <formly-validation-message [field]="field"></formly-validation-message>
