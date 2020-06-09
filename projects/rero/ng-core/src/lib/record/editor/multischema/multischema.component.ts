@@ -20,7 +20,7 @@ import { FieldType } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-editor-formly-multi-schema-type',
   template: `
-    <div>
+    <div class="blah">
       <legend *ngIf="to.label" [tooltip]="to.description">{{ to.label }} </legend>
       <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
         <formly-validation-message [field]="field"></formly-validation-message>
