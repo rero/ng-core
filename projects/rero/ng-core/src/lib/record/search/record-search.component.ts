@@ -423,12 +423,24 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if ('aggregationsOrder' in this._config) {
       this._config.aggregationsOrder.forEach((key: string) => {
         if (key in aggr) {
-          aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets } });
+          aggregations.push({
+            key,
+            bucketSize,
+            value: { buckets: aggr[key].buckets },
+            type: aggr[key].type || 'terms',
+            config: aggr[key].config || null
+          });
         }
       });
     } else {
       Object.keys(aggr).forEach((key: string) => {
-        aggregations.push({ key, bucketSize, value: { buckets: aggr[key].buckets } });
+        aggregations.push({
+          key,
+          bucketSize,
+          value: { buckets: aggr[key].buckets },
+          type: aggr[key].type || 'terms',
+          config: aggr[key].config || null
+        });
       });
     }
     return aggregations;

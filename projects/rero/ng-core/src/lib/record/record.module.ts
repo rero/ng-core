@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxBootstrapSliderModule } from 'ngx-bootstrap-slider';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -44,6 +45,7 @@ import { DatepickerTypeComponent } from './editor/type/datepicker-type.component
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
+import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
 import { RecordSearchComponent as RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
@@ -73,7 +75,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     DatepickerTypeComponent,
     ToggleWrapperComponent,
     BucketsComponent,
-    HorizontalWrapperComponent
+    HorizontalWrapperComponent,
+    AggregationSliderComponent
   ],
   imports: [
     CoreModule,
@@ -120,7 +123,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'form-field-horizontal', component: HorizontalWrapperComponent }
       ]
     }),
-    FormlyBootstrapModule
+    FormlyBootstrapModule,
+    NgxBootstrapSliderModule
   ],
   exports: [
     RecordSearchComponent,

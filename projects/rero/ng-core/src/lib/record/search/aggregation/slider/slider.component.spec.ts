@@ -14,52 +14,35 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { RecordModule } from '../../record.module';
-import { RecordSearchService } from '../record-search.service';
-import { RecordSearchAggregationComponent } from './aggregation.component';
+import { RecordModule } from '../../../record.module';
+import { AggregationSliderComponent } from './slider.component';
 
-describe('RecordSearchAggregationComponent', () => {
-  let component: RecordSearchAggregationComponent;
-  let fixture: ComponentFixture<RecordSearchAggregationComponent>;
+describe('AggregationSliderComponent', () => {
+  let component: AggregationSliderComponent;
+  let fixture: ComponentFixture<AggregationSliderComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RecordModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
-      ],
-      providers: [RecordSearchService]
+      ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordSearchAggregationComponent);
+    fixture = TestBed.createComponent(AggregationSliderComponent);
     component = fixture.componentInstance;
-    component.aggregation = {
-      key: 'author',
-      bucketSize: 2,
-      value: {
-        buckets: [
-          {
-            doc_count: 30,
-            key: 'Filippini, Massimo'
-          },
-          {
-            doc_count: 9,
-            key: 'Botturi, Luca'
-          }
-        ]
-      },
-      type: 'terms',
-      config: {}
-    };
     fixture.detectChanges();
   });
 
