@@ -21,8 +21,8 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { ToastrModule } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
@@ -286,14 +286,14 @@ describe('RecordSearchComponent', () => {
   it('should reorder aggregations', async(() => {
     component.currentType = 'documents';
     const result = [
-      { key: 'author', bucketSize: null, value: { buckets: [] }},
-      { key: 'language', bucketSize: null, value: { buckets: [] }},
+      { key: 'author', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'language', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
     ];
     expect(component.aggregationsOrder(aggregations)).toEqual(result);
 
     const resultOrder = [
-      { key: 'language', bucketSize: null, value: { buckets: [] }},
-      { key: 'author', bucketSize: null, value: { buckets: [] }},
+      { key: 'language', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'author', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
     ];
     component['_config'] = { key: 'documents', aggregationsOrder: ['language', 'author'] };
     expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);

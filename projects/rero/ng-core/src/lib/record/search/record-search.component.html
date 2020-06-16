@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-3" *ngIf="total && aggregations && aggregations.length">
+      <div class="col-sm-3" *ngIf="aggregations && aggregations.length">
         <div *ngFor="let item of aggregations">
           <ng-core-record-search-aggregation
             [aggregation]="item"
