@@ -24,7 +24,7 @@
       </a>
       <ng-container *ngIf="deleteStatus">
           <button class="btn btn-sm btn-outline-danger ml-1" [title]="'Delete'|translate"
-              (click)="deleteRecord(record.metadata.pid)" *ngIf="deleteStatus.can; else deleteMessageLink">
+              (click)="deleteRecord(record)" *ngIf="deleteStatus.can; else deleteMessageLink">
               <i class="fa fa-trash"></i>
               {{ 'Delete' | translate }}
           </button>

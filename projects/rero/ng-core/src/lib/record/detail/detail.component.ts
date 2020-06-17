@@ -19,7 +19,7 @@ import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild, OnDestro
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, pipe } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -82,6 +82,16 @@ export class DetailComponent implements OnInit, OnDestroy {
   private _routeParametersSubscription: Subscription;
 
   /**
+   * Object type route config
+   */
+  private _config: any = null;
+
+  /**
+   * Object type
+   */
+  private _type: string;
+
+  /**
    * Directive for displaying record
    */
   @ViewChild(RecordDetailDirective, { static: true })
@@ -106,31 +116,31 @@ export class DetailComponent implements OnInit, OnDestroy {
       this.loadViewComponentRef();
 
       const pid = this._route.snapshot.paramMap.get('pid');
-      const type = this._route.snapshot.paramMap.get('type');
+      this._type = this._route.snapshot.paramMap.get('type');
 
       this._recordUiService.types = this._route.snapshot.data.types;
-      const config = this._recordUiService.getResourceConfig(type);
+      this._config = this._recordUiService.getResourceConfig(this._type);
 
-      this.record$ = this._recordService.getRecord(type, pid, 1, config.itemHeaders || null);
+      this.record$ = this._recordService.getRecord(this._type, pid, 1, this._config.itemHeaders || null);
       this.record$.subscribe(
         (record) => {
           this.record = record;
 
-          this._recordUiService.canReadRecord$(this.record, type).subscribe(result => {
+          this._recordUiService.canReadRecord$(this.record, this._type).subscribe(result => {
             if (result.can === false) {
               this._toastrService.error(
                 this._translate.instant('You cannot read this record'),
-                this._translate.instant(type)
+                this._translate.instant(this._type)
               );
               this._location.back();
             }
           });
 
-          this._recordUiService.canDeleteRecord$(this.record, type).subscribe(result => {
+          this._recordUiService.canDeleteRecord$(this.record, this._type).subscribe(result => {
             this.deleteStatus = result;
           });
 
-          this._recordUiService.canUpdateRecord$(this.record, type).subscribe(result => {
+          this._recordUiService.canUpdateRecord$(this.record, this._type).subscribe(result => {
             this.updateStatus = result;
           });
 
@@ -166,13 +176,24 @@ export class DetailComponent implements OnInit, OnDestroy {
   /**
    * Delete the record and go back to previous page.
    * @param event - DOM event
-   * @param pid - string, PID to remove
+   * @param element - string (PID to remove) or object
    */
-  deleteRecord(pid: string) {
-    this._recordUiService.deleteRecord(this._route.snapshot.paramMap.get('type'), pid).subscribe((result: any) => {
+  deleteRecord(element: any) {
+    const pid = typeof element === 'object' ? element.metadata.pid : element;
+    return this._recordUiService.deleteRecord(this._type, pid).subscribe((result: any) => {
+      let redirectUrl = '../..';
+      const navigateOptions = { relativeTo: this._route };
       if (result === true) {
-        this._router.navigate(['../..'], { relativeTo: this._route });
+        if (typeof element === 'object' && this._config.redirectUrl) {
+          this._config.redirectUrl(element).subscribe((redirect: string) => {
+            if (redirect !== null) {
+              redirectUrl = redirect;
+            }
+            this._router.navigate([redirectUrl], navigateOptions);
+          });
+        }
       }
+      this._router.navigate([redirectUrl], navigateOptions);
     });
   }
 
