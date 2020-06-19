@@ -41,20 +41,51 @@
         </a>
         <div *dropdownMenu class="dropdown-menu" role="menu" [ngClass]="menu.hasOwnProperty('dropdownMenuCssClass') ? menu.dropdownMenuCssClass : ''">
           <ng-container *ngFor="let subItem of item.entries | callbackArrayFilter: isItemMenuVisible" [ngSwitch]="itemType(subItem)">
-            <a *ngSwitchCase="'routerLink'" [routerLink]="subItem.routerLink" [queryParams]="subItem.queryParams ? subItem.queryParams : {}"
-            [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
-            ><i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i> {{ subItem.name|translate }}</a>
+            <a *ngSwitchCase="'routerLink'"
+               [routerLink]="subItem.routerLink" [queryParams]="subItem.queryParams ? subItem.queryParams : {}"
+               [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
+            >
+              <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
+                {{ subItem.prefix|translate }}
+              </span>
+              <i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i>
+              {{ subItem.name|translate }}
+              <span *ngIf="subItem.suffix" class="pl-2 text-info small font-weight-bold">
+                {{ subItem.suffix|translate }}
+              </span>
+            </a>
 
-            <a *ngSwitchCase="'href'" [href]="subItem.href"
-            [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
-            ><i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i> {{ subItem.name|translate }}</a>
+            <a *ngSwitchCase="'href'"
+               [href]="subItem.href"
+               [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
+            >
+              <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
+                {{ subItem.prefix|translate }}
+              </span>
+              <i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i>
+              {{ subItem.name|translate }}
+              <span *ngIf="subItem.suffix" class="pl-2 text-info small font-weight-bold">
+                {{ subItem.suffix|translate }}
+              </span>
+            </a>
 
             <div *ngSwitchCase="'divider'" class="dropdown-divider"></div>
 
-            <a *ngSwitchDefault href="#"
-            [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
-            (click)="doClickItem($event, subItem)"
-            ><i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i> {{subItem.name|translate }}</a>
+            <a *ngSwitchDefault
+               href="#"
+               [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
+               class="clearfix"
+               (click)="doClickItem($event, subItem)"
+            >
+              <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
+                {{ subItem.prefix|translate }}
+              </span>
+              <i *ngIf="subItem.iconCssClass" [ngClass]="subItem.iconCssClass" aria-hidden="true"></i>
+              {{subItem.name|translate }}
+              <span *ngIf="subItem.suffix" class="pl-2 text-info small font-weight-bold">
+                {{ subItem.suffix|translate }}
+              </span>
+            </a>
           </ng-container>
         </div>
       </li>
