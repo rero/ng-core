@@ -42,7 +42,7 @@ export class GetRecordPipe implements PipeTransform {
    * @param field Field to return.
    * @return Record or field record corresponding to PID.
    */
-  transform(pid: any, type: string, returnType = 'object', field?: string): any {
+  transform(pid: any, type: string, returnType = 'object', field?: string, headers?: object): any {
     // process $ref entrypoint
     if (pid.startsWith('http')) {
       pid = extractIdOnRef(pid);
@@ -52,7 +52,7 @@ export class GetRecordPipe implements PipeTransform {
       returnType = 'field';
     }
 
-    return this._recordService.getRecord(type, pid, 1).pipe(map(data => {
+    return this._recordService.getRecord(type, pid, 1, headers).pipe(map(data => {
       if (!data) {
         return null;
       }
