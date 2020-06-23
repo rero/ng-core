@@ -28,7 +28,6 @@
   "it": "Italiano",
   "less…": "di meno…",
   "more…": "di più…",
-  "results": "risultati",
   "search": "ricerca",
   "should NOT be longer than {{maxLength}} characters": "should NOT be longer than {{maxLength}} characters",
   "should NOT be shorter than {{minLength}} characters": "should NOT be shorter than {{minLength}} characters",
@@ -42,5 +41,6 @@
   "should be equal to constant \"{{const}}\"": "should be equal to constant \"{{const}}\"",
   "should be multiple of ${{step}}": "should be multiple of ${{step}}",
   "should be null": "deve essere vuoto",
-  "the value is already taken": "il valore è già utilizzato"
+  "the value is already taken": "il valore è già utilizzato",
+  "{{ total }} results": "{{ total }} results"
 }

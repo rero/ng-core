@@ -16,6 +16,7 @@
  */
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 } from 'json-schema';
 import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -108,19 +109,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   aggregationsFilters: Array<AggregationsFilter> = null;
 
   /**
-   * Contain result data
+   * Contain result row data
    */
-  records: object[] = [];
+  hits: any = [];
 
   /**
    * Facets retreived from request result
    */
   aggregations: Array<{ key: string, bucketSize: any, value: { buckets: [] } }>;
-
-  /**
-   * Total of records corresponding to request
-   */
-  total = 0;
 
   /**
    * Search is processing
@@ -152,6 +148,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   private _showSearchInput = true;
 
   /**
+   * Define if title have to be displayed or not.
+   */
+  private _showLabel = true;
+
+  /**
    * Store configuration for type
    */
   private _config: any = null;
@@ -172,11 +173,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param _recordService Record service.
    * @param _recordUiService Record UI service.
    * @param _recordSearchService Record search service.
+   * @param _translateService Translate service.
    */
   constructor(
     private _recordService: RecordService,
     private _recordUiService: RecordUiService,
-    private _recordSearchService: RecordSearchService
+    private _recordSearchService: RecordSearchService,
+    private _translateService: TranslateService
   ) { }
 
   /**
@@ -303,6 +306,36 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Contain result data
+   *
+   * @return list of metadata results.
+   */
+  get records(): Array<any> {
+    return this.hits && this.hits.hits ? this.hits.hits : [];
+  }
+
+  /**
+   * Total of records corresponding to request
+   *
+   * @return integer representing the number of results.
+   */
+  get total(): number {
+    return this.hits && this.hits.total ? this.hits.total : 0;
+  }
+
+  /**
+   * Get the text for displaying results text.
+   *
+   * @return An observable emitting the text.
+   */
+  get resultsText$(): Observable<string> {
+    if (this._config.resultsText) {
+      return this._config.resultsText(this.hits);
+    }
+    return this._translateService.stream('{{ total }} results', {total: this.total});
+  }
+
+  /**
    * Get showSearchInput value, given either by config or by local value.
    */
   get showSearchInput(): boolean {
@@ -320,6 +353,24 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   set showSearchInput(showSearchInput: boolean) {
     this._showSearchInput = showSearchInput;
+  }
+
+  /**
+   * Get showLabel value, given either by config or by local value.
+   */
+  get showLabel() {
+    if (this._config.showLabel != null) {
+      return this._config.showLabel;
+    }
+    return this._showLabel;
+  }
+
+  /**
+   * Set showLabel
+   */
+  @Input()
+  set showLabel(showLabel: boolean) {
+    this._showLabel = showLabel;
   }
 
   /**
@@ -545,8 +596,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this.sort
     ).subscribe(
       records => {
-        this.records = records.hits.hits;
-        this.total = records.hits.total;
+        this.hits = records.hits;
         this.aggregations$(records.aggregations).subscribe((aggr: any) => {
           this.aggregations = this.aggregationsOrder(aggr);
         });
