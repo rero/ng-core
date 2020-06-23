@@ -32,6 +32,9 @@
     </li>
   </ul>
   <div *ngIf="!isLoading; else loading" class="main-content">
+    <h5 *ngIf="types.length == 1 && showLabel">
+      {{ types[0].label | translate }}
+    </h5>
     <div class="row align-items-center my-3">
       <div class="col-sm-3 mb-3 mb-sm-0" *ngIf="showSearchInput">
         <ng-core-search-input
@@ -43,8 +46,8 @@
         >
         </ng-core-search-input>
       </div>
-      <div class="col-6 col-sm-3">
-        <strong>{{ total }} {{ 'results' | translate }}</strong>
+      <div *ngIf="resultsText$ | async as resultsText" class="col-6 col-sm-3">
+        <strong>{{ resultsText }}</strong>
       </div>
       <div class="col ml-auto text-right">
         <a class="btn btn-primary" routerLink="new" *ngIf="adminMode.can && addStatus.can">
