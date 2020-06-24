@@ -15,10 +15,13 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <mv-slider [(value)]="range" [min]="min" [max]="max" [range]="true" [step]="step"></mv-slider>
-<div class="flex-row d-flex justify-content-center mt-2">
-  <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[0]" #ctrl="ngModel">
-  <span class="mx-3">-</span>
-  <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[1]" #ctrl="ngModel">
+<div class="row mt-3">
+  <div class="col-12 col-sm-6">
+    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[0]" #ctrl="ngModel">
+  </div>
+  <div class="col-12 col-sm-6">
+    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[1]" #ctrl="ngModel">
+  </div>
 </div>
 <div class="text-center mt-2">
   <small>
