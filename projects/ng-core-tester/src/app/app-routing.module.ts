@@ -50,7 +50,8 @@ const adminModeCan = (): Observable<ActionStatus> => {
  */
 const canAdd = (record: any): Observable<ActionStatus> => {
   return of({
-    can: Math.random() >= 0.5,
+    // can: Math.random() >= 0.5,
+    can: true,
     message: ''
   });
 };
@@ -60,7 +61,8 @@ const canAdd = (record: any): Observable<ActionStatus> => {
  */
 const canUpdate = (record: any): Observable<ActionStatus> => {
   return of({
-    can: Math.random() >= 0.5,
+    // can: Math.random() >= 0.5,
+    can: true,
     message: ''
   });
 };
@@ -70,7 +72,8 @@ const canUpdate = (record: any): Observable<ActionStatus> => {
  */
 const canDelete = (record: any): Observable<ActionStatus> => {
   return of({
-    can: Math.random() >= 0.5,
+    // can: Math.random() >= 0.5,
+    can: true,
     message: `You <strong>cannot</strong> delete this record #${record.id} !`
   });
 };
@@ -80,7 +83,8 @@ const canDelete = (record: any): Observable<ActionStatus> => {
  */
 const canRead = (record: any): Observable<ActionStatus> => {
   return of({
-    can: Math.random() >= 0.5,
+    // can: Math.random() >= 0.5,
+    can: true,
     message: ''
   });
 };
@@ -144,8 +148,8 @@ export function documentsMatcher(url: Array<UrlSegment>) {
  * @param url List of URL segments.
  * @return Object representing the matched URL.
  */
-export function institutionsMatcher(url: Array<UrlSegment>) {
-  if (url[0].path === 'records' && url[1].path === 'institutions') {
+export function organisationsMatcher(url: Array<UrlSegment>) {
+  if (url[0].path === 'records' && url[1].path === 'organisations') {
     return matchedUrl(url);
   }
   return null;
@@ -175,15 +179,15 @@ const routes: Routes = [
     }
   },
   {
-    matcher: institutionsMatcher,
+    matcher: organisationsMatcher,
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
       showSearchInput: true,
       adminMode: adminModeCanNot,
       types: [
         {
-          key: 'institutions',
-          label: 'Institutions'
+          key: 'organisations',
+          label: 'Organisations'
         }
       ]
     }
@@ -200,7 +204,7 @@ const routes: Routes = [
           label: 'Documents',
           component: DocumentComponent,
           preFilters: {
-            institution: 'unisi'
+            organisation: 'unisi'
           }
         }
       ]
@@ -233,7 +237,7 @@ const routes: Routes = [
           }
         },
         {
-          key: 'institutions',
+          key: 'organisations',
           label: 'Organisations'
         }
       ]

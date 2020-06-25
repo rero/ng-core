@@ -70,9 +70,9 @@ export class SearchBarComponent implements OnInit {
       getSuggestions: (query: string, persons: any) => this.getDocumentsSuggestions(query, persons),
       preFilters: this.viewcode ? { view: this.viewcode } : {}
     }, {
-      type: 'institutions',
+      type: 'organisations',
       field: 'name',
-      getSuggestions: (query: string, persons: any) => this.getInstitutionsSuggestions(query, persons),
+      getSuggestions: (query: string, persons: any) => this.getOrganisationsSuggestions(query, persons),
       component: this,
       preFilters: this.viewcode ? { view: this.viewcode } : {}
     }];
@@ -91,20 +91,20 @@ export class SearchBarComponent implements OnInit {
    * Return a list of suggestions for organisations.
    *
    * @param query String query.
-   * @param institutions List of institutions.
+   * @param organisations List of organisations.
    * @return List of suggestions.
    */
-  getInstitutionsSuggestions(query: string, institutions: any): Array<any> {
+  getOrganisationsSuggestions(query: string, organisations: any): Array<any> {
     const values = [];
-    institutions.hits.hits.map((hit: any) => {
+    organisations.hits.hits.map((hit: any) => {
       let text = hit.metadata.name;
       text = text.replace(new RegExp(query, 'gi'), `<b>${query}</b>`);
       values.push({
         text,
         query: '',
-        index: 'institutions',
+        index: 'organisations',
         category: this._translateService.instant('direct links'),
-        href: `/records/institutions/detail/${hit.metadata.pid}`,
+        href: `/records/organisations/detail/${hit.metadata.pid}`,
         iconCssClass: 'fa fa-bank'
       });
     });
@@ -115,7 +115,7 @@ export class SearchBarComponent implements OnInit {
    * Return a list of suggestions for documents.
    *
    * @param query String query.
-   * @param institutions List of documents.
+   * @param documents List of documents.
    * @return List of suggestions.
    */
   getDocumentsSuggestions(query: string, documents: any): Array<any> {

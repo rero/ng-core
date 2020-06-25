@@ -22,7 +22,7 @@
 export const environment = {
   production: false,
   prefixWindow: 'NG CORE TESTER',
-  apiBaseUrl: 'https://localhost:5000',
+  apiBaseUrl: 'https://l985g.mocklab.io',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en'],
   translationsURLs: [
