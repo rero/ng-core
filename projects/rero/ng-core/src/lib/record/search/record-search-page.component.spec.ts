@@ -77,7 +77,7 @@ describe('RecordSearchComponent', () => {
             key: 'documents'
           },
           {
-            key: 'institutions'
+            key: 'organisations'
           }
         ],
         showSearchInput: true,

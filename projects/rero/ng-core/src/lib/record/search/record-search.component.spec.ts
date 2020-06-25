@@ -100,7 +100,7 @@ describe('RecordSearchComponent', () => {
       key: 'documents',
     },
     {
-      key: 'institutions',
+      key: 'organisations',
     }
   ];
 
@@ -116,7 +116,7 @@ describe('RecordSearchComponent', () => {
             key: 'documents',
           },
           {
-            key: 'institutions',
+            key: 'organisations',
           }
         ],
         showSearchInput: true,
@@ -211,8 +211,8 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should change type', () => {
-    component.changeType(new Event('click'), 'institutions');
-    expect(component.currentType).toBe('institutions');
+    component.changeType(new Event('click'), 'organisations');
+    expect(component.currentType).toBe('organisations');
     expect(component.aggregationsFilters.length).toBe(0);
   });
 

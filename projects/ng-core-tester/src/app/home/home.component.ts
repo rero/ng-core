@@ -38,7 +38,7 @@ export class HomeComponent {
       component: DocumentComponent
     },
     {
-      key: 'institutions',
+      key: 'organisations',
       label: 'Organisations'
     }
   ];

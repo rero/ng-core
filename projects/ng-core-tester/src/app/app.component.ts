@@ -70,8 +70,8 @@ export class AppComponent implements OnInit {
             routerLink: '/records/documents'
           },
           {
-            name: 'Organizations records',
-            routerLink: '/records/institutions'
+            name: 'Organisations records',
+            routerLink: '/records/organisations'
           }
         ]
       }
