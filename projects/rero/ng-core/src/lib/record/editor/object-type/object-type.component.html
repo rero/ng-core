@@ -29,7 +29,7 @@
 <!-- each object properties -->
 <div class="{{ getCssClass() }}">
   <ng-container *ngFor="let f of field.fieldGroup">
-    <div class="{{ getCssClass(f) }}" *ngIf="!f.hide">
+    <div class="{{ getCssClass(f) }}" *ngIf="!f.hide" [id]="f.id">
       <!-- if the field is repeatable the title is rendered by the corresponding array -->
       <ng-container *ngIf="((!isParrentArray() && f.type === 'object') || f.type === 'array')">
         <!-- section header -->
