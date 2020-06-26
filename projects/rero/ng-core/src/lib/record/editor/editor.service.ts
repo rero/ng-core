@@ -37,19 +37,26 @@ export class EditorService {
   }
 
   /**
-   * Set focus in the first field candidate
+   * Scroll to a field or fieldGroup and set focus in the first field candidate.
+   * @param field: the field or fieldGroup where to search about field candidate.
+   * @param scroll: is the screen should scroll to the field.
    */
   setFocus(field: FormlyFieldConfig, scroll: boolean = false) {
-
-    if (field.fieldGroup && field.fieldGroup.length > 0) {
-      return this.setFocus(field.fieldGroup[0], scroll);
-    }
-    // this.setFocus(f, scroll);
-    field.focus = true;
-    if (scroll === true) {
+    if (scroll === true && field.id)  {
       const el = document.getElementById(field.id);
-      el.scrollIntoView({ behavior: 'smooth' });
+      if (el != null) {
+        // TODO : investigate why sometimes(often) the scroll isn't smooth...
+        el.scrollIntoView({ behavior: 'smooth' });
+        scroll = false;
+      }
     }
+    if (field.fieldGroup && field.fieldGroup.length > 0) {
+      const visibleFields = field.fieldGroup.filter(f => !f.hide);
+      if (visibleFields.length > 0) {
+        return this.setFocus(visibleFields[0], scroll);
+      }
+    }
+    field.focus = true;
     return true;
   }
 
