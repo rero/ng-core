@@ -42,6 +42,7 @@ import { ObjectTypeComponent } from './editor/object-type/object-type.component'
 import { SwitchComponent } from './editor/switch/switch.component';
 import { ToggleWrapperComponent } from './editor/toggle-wrapper/toggle-wrappers.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
+import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
@@ -76,7 +77,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     ToggleWrapperComponent,
     BucketsComponent,
     HorizontalWrapperComponent,
-    AggregationSliderComponent
+    AggregationSliderComponent,
+    SelectWithSortTypeComponent
   ],
   imports: [
     CoreModule,
@@ -116,7 +118,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'array', component: ArrayTypeComponent },
         { name: 'object', component: ObjectTypeComponent },
         { name: 'multischema', component: MultiSchemaTypeComponent },
-        { name: 'datepicker', component: DatepickerTypeComponent }
+        { name: 'datepicker', component: DatepickerTypeComponent },
+        { name: 'selectWithSort', component: SelectWithSortTypeComponent }
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
