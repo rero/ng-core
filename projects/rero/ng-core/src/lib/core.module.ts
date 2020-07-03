@@ -18,13 +18,14 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import {  ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { DialogComponent } from './dialog/dialog.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
 import { Nl2brPipe } from './pipe/nl2br.pipe';
+import { SortByKeysPipe } from './pipe/sort-by-keys.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
 import { SearchInputComponent } from './search-input/search-input.component';
@@ -46,7 +47,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     SearchInputComponent,
     MenuComponent,
     TranslateLanguagePipe,
-    TextReadMoreComponent
+    TextReadMoreComponent,
+    SortByKeysPipe
   ],
   imports: [
     CommonModule,
@@ -75,7 +77,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     DialogComponent,
     SearchInputComponent,
     MenuComponent,
-    TextReadMoreComponent
+    TextReadMoreComponent,
+    SortByKeysPipe
   ],
   entryComponents: [DialogComponent]
 })
