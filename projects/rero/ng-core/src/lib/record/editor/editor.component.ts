@@ -251,12 +251,58 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Process All schema entries to translate oneOf type
+   * @param schema - object, JSONSchema
+   */
+  private translateSchemaAllTitleOneOf(schema: any) {
+    const entries = Object.entries(schema.properties);
+    for (const entrie of entries) {
+      this.translateTitleOneOf(entrie[1]);
+    }
+    return schema;
+  }
+
+  /**
+   * Process title on OneOf part
+   * @param properties - object, JSONSchema
+   */
+  private translateTitleOneOf(properties: any) {
+    let oneOfValues = null;
+    const typeKey = 'type';
+    const oneOfKey = 'oneOf';
+    const itemKey = 'items';
+    switch (properties[typeKey]) {
+      case 'object': {
+        if (properties.hasOwnProperty(oneOfKey)) {
+          oneOfValues = properties[oneOfKey];
+        }
+        break;
+      }
+      case 'array': {
+        if (
+          properties.hasOwnProperty(itemKey)
+          && properties[itemKey].hasOwnProperty(oneOfKey)) {
+          oneOfValues = properties[itemKey][oneOfKey];
+        }
+        break;
+      }
+    }
+    if (oneOfValues !== null) {
+      oneOfValues.forEach((ofValue: any) => {
+        const keyTitle = 'title';
+        ofValue[keyTitle] = this._translateService.instant(ofValue[keyTitle]);
+      });
+      this.translateTitleOneOf(oneOfValues);
+    }
+  }
+
+  /**
    * Preprocess the record before passing it to the editor
-   * @param schema - object, JOSNSchemag
+   * @param schema - object, JSONSchema
    */
   setSchema(schema: any) {
     // reorder all object properties
-    this.schema = orderedJsonSchema(schema);
+    this.schema = this.translateSchemaAllTitleOneOf(orderedJsonSchema(schema));
     this.options = {};
 
     // form configuration
@@ -582,7 +628,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
     // select labels and values
     if (formOptions.options) {
-      field.templateOptions.options = formOptions.options;
+      field.templateOptions.options = formOptions.options
+      .map((option: { label: string, value: string }) => {
+        return {
+          label: this._translateService.instant(option.label),
+          value: option.value
+        };
+      });
     }
     // expression properties
     if (formOptions.expressionProperties) {
