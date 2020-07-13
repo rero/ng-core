@@ -57,4 +57,15 @@ export class MenuComponent {
     event.preventDefault();
     this.clickItem.emit(item);
   }
+
+  /**
+   * String used for `id=` in html menu result
+   * @param item One element of the menu
+   * @return item id parameter
+   */
+  getId(item: any) {
+    if (item.id !== null) {
+      return item.id;
+    }
+  }
 }
