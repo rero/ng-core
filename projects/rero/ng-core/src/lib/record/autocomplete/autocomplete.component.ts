@@ -17,7 +17,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, Observable, of, Subscriber } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 
@@ -83,6 +83,8 @@ export class AutocompleteComponent implements OnInit {
   @ViewChild('form', { static: false })
   form: any;
 
+  // The suggestion list subscriber, used to close the dropdown
+  suggestions$: Subscriber<object>;
   /**
    * Constructor.
    *
@@ -114,12 +116,17 @@ export class AutocompleteComponent implements OnInit {
           };
         }
       }
-      this.dataSource = new Observable((observer: any) => {
+      this.dataSource = new Observable((suggestions$: Subscriber<object>) => {
         // Runs on every search
-        observer.next(this.asyncSelected);
+        this.suggestions$ = suggestions$;
+        this.suggestions$.next(this.asyncSelected);
       }).pipe(
-        switchMap((asyncSelected: any) =>
-          this.getSuggestions(asyncSelected.query)
+        switchMap((asyncSelected: any) => {
+          if (asyncSelected == null) {
+            return of([]);
+          }
+          return this.getSuggestions(asyncSelected.query);
+        }
         )
       );
     });
@@ -140,6 +147,8 @@ export class AutocompleteComponent implements OnInit {
           q: this.asyncSelected.query
         }
       });
+      // empty the suggestion list to close the dropdown
+      this.suggestions$.next(null);
     } else {
       this.form.nativeElement.submit();
     }
