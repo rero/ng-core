@@ -22,20 +22,23 @@
     [ngSwitch]="itemType(item)">
       <a *ngSwitchCase="'routerLink'" [routerLink]="item.routerLink" [queryParams]="item.queryParams ? item.queryParams : {}"
       [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'nav-link'"
+      [attr.id]="getId(item)"
       ><i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i> {{ item.name|translate }}</a>
 
       <a *ngSwitchCase="'href'" [href]="item.href"
       [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'nav-link'"
+      [attr.id]="getId(item)"
       ><i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i> {{ item.name|translate }}</a>
 
       <a *ngSwitchDefault href="#"
       [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'nav-link'"
       (click)="doClickItem($event, item)"
+      [attr.id]="getId(item)"
       ><i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i> {{ item.name|translate }}</a>
     </li>
     <ng-template #subMenu>
       <li class="nav-item dropdown" dropdown>
-        <a dropdownToggle class="nav-link dropdown-toggle">
+        <a dropdownToggle class="nav-link dropdown-toggle" [attr.id]="getId(item)">
           <i *ngIf="item.iconCssClass" [ngClass]="item.iconCssClass" aria-hidden="true"></i>
           {{ item.name|translate }}
         </a>
@@ -44,6 +47,7 @@
             <a *ngSwitchCase="'routerLink'"
                [routerLink]="subItem.routerLink" [queryParams]="subItem.queryParams ? subItem.queryParams : {}"
                [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
+               [attr.id]="getId(subItem)"
             >
               <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
                 {{ subItem.prefix|translate }}
@@ -58,6 +62,7 @@
             <a *ngSwitchCase="'href'"
                [href]="subItem.href"
                [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
+               [attr.id]="getId(subItem)"
             >
               <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
                 {{ subItem.prefix|translate }}
@@ -76,6 +81,7 @@
                [ngClass]="menu.hasOwnProperty('linkCssClass')? menu.linkCssClass : 'dropdown-item'"
                class="clearfix"
                (click)="doClickItem($event, subItem)"
+               [attr.id]="getId(subItem)"
             >
               <span *ngIf="subItem.prefix" class="pr-2 text-dark small font-weight-bold">
                 {{ subItem.prefix|translate }}
