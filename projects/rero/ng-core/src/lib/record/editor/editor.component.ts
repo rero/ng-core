@@ -106,7 +106,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param changes: the changed properties
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.model) { // Model has changed
+    if (changes.model && !changes.model.isFirstChange) { // Model has changed
       this._setModel(changes.model.currentValue);
     }
   }
@@ -115,6 +115,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
+    this._subscribers.push(
+      this._editorService.hiddenFields$.subscribe(() =>
+        this.getTocFields()
+      )
+    );
     combineLatest([this._route.params, this._route.queryParams])
       .subscribe(([params, queryParams]) => {
         // uncomment for debug
@@ -127,42 +132,37 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         this._resourceConfig = this._recordUiService.getResourceConfig(this.recordType);
         if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
-          this._subscribers.push(
-            this._editorService.hiddenFields$.subscribe(() =>
-              this.getTocFields()
-            )
-          );
         }
         this.pid = params.pid;
         this._recordService
           .getSchemaForm(this.recordType)
           .subscribe(schemaform => {
             this.setSchema(schemaform.schema);
-          });
-        // edition
-        if (this.pid) {
-          this._recordService
-            .getRecord(this.recordType, this.pid)
-            .subscribe(record => {
-              this._recordUiService
-                .canUpdateRecord$(record, this.recordType)
-                .subscribe(result => {
-                  if (result.can === false) {
-                    this._toastrService.error(
-                      this._translateService.instant(
-                        'You cannot update this record'
-                      ),
-                      this._translateService.instant(this.recordType)
-                    );
-                    this._location.back();
-                  } else {
-                    this._setModel(record.metadata);
-                  }
+            // edition
+            if (this.pid) {
+              this._recordService
+                .getRecord(this.recordType, this.pid)
+                .subscribe(record => {
+                  this._recordUiService
+                    .canUpdateRecord$(record, this.recordType)
+                    .subscribe(result => {
+                      if (result.can === false) {
+                        this._toastrService.error(
+                          this._translateService.instant(
+                            'You cannot update this record'
+                          ),
+                          this._translateService.instant(this.recordType)
+                        );
+                        this._location.back();
+                      } else {
+                        this._setModel(record.metadata);
+                      }
+                    });
                 });
-            });
-        } else {
-          this._setModel({});
-        }
+            } else {
+              this._setModel({});
+            }
+          });
       });
   }
 
@@ -185,7 +185,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       }
       // preprocess the model before sending to formly
       this.model = this.preprocessRecord(model);
-      this.modelChange.emit(this.model);
+      this.modelChanged(this.model);
     }
   }
 
@@ -517,13 +517,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                 }
                 const keysToKeep = formOptions.validation.validators.uniqueValueKeysInObject.keys;
                 const uniqueItems = Array.from(
-                   new Set(control.value.map((v: any) => {
-                     const keys = keysToKeep.reduce((acc, elt) => {
-                       acc[elt] = v[elt];
-                       return acc;
-                     }, {});
-                     return JSON.stringify(keys);
-                   })),
+                  new Set(control.value.map((v: any) => {
+                    const keys = keysToKeep.reduce((acc, elt) => {
+                      acc[elt] = v[elt];
+                      return acc;
+                    }, {});
+                    return JSON.stringify(keys);
+                  })),
                 );
                 return uniqueItems.length === control.value.length;
               }
