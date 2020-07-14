@@ -115,7 +115,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param changes: the changed properties
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.model) { // Model has changed
+    if (changes.model && !changes.model.isFirstChange) { // Model has changed
       this._setModel(changes.model.currentValue);
     }
   }
@@ -124,6 +124,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
+    this._subscribers.push(
+      this._editorService.hiddenFields$.subscribe(() =>
+        this.getTocFields()
+      )
+    );
     combineLatest([this._route.params, this._route.queryParams]).subscribe(
       ([params, queryParams]) => {
         // uncomment for debug
@@ -140,11 +145,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         );
         if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
-          this._subscribers.push(
-            this._editorService.hiddenFields$.subscribe(() =>
-              this.getTocFields()
-            )
-          );
         }
         this.pid = params.pid;
 
@@ -212,7 +212,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       }
       // preprocess the model before sending to formly
       this.model = this.preprocessRecord(model);
-      this.modelChange.emit(this.model);
+      this.modelChanged(this.model);
     }
   }
 
@@ -549,13 +549,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                 }
                 const keysToKeep = formOptions.validation.validators.uniqueValueKeysInObject.keys;
                 const uniqueItems = Array.from(
-                   new Set(control.value.map((v: any) => {
-                     const keys = keysToKeep.reduce((acc, elt) => {
-                       acc[elt] = v[elt];
-                       return acc;
-                     }, {});
-                     return JSON.stringify(keys);
-                   })),
+                  new Set(control.value.map((v: any) => {
+                    const keys = keysToKeep.reduce((acc, elt) => {
+                      acc[elt] = v[elt];
+                      return acc;
+                    }, {});
+                    return JSON.stringify(keys);
+                  })),
                 );
                 return uniqueItems.length === control.value.length;
               }
