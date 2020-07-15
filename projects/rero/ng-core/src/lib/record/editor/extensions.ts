@@ -17,6 +17,8 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
+import sha256 from 'crypto-js/sha256';
 
 /**
  * Add onPopulate hook at the field level.
@@ -54,7 +56,12 @@ export class TranslateExtension {
   constructor(private _translate: TranslateService) { }
 
   /**
-   * Translate some fields before  populating the form.
+   * Options Map
+   */
+  private _optionsMap = new Map();
+
+  /**
+   * Translate some fields before populating the form.
    *
    * It translates the label, the description and the placeholder.
    * @param field formly field config
@@ -94,6 +101,35 @@ export class TranslateExtension {
         'templateOptions.placeholder': this._translate.stream(to.placeholder),
       };
     }
+    // Select options
+    if (to.options) {
+      const key = sha256(JSON.stringify(to)).toString();
+      this._optionsMap.set(key, to.options);
+      const bs = new BehaviorSubject(this._translateOptions(to.options));
+      this._translate.onLangChange.subscribe(() => {
+        bs.next(this._translateOptions(this._optionsMap.get(key)));
+      });
+      field.expressionProperties = {
+        ...(field.expressionProperties || {}),
+        'templateOptions.options': bs.asObservable(),
+      };
+    }
+  }
+
+  /**
+   * Translate select options
+   * @param options - array of object
+   */
+  private _translateOptions(options: any) {
+    const selectOptions = [];
+    options.forEach((element: any) => {
+      selectOptions.push({
+        label: this._translate.instant(element.label),
+        value: element.value
+      });
+    });
+
+    return selectOptions;
   }
 }
 

@@ -17,7 +17,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EditorService } from '../editor.service';
 
@@ -25,7 +25,7 @@ import { EditorService } from '../editor.service';
  * Type a head selection type
  */
 interface FormlyFieldConfigSelection {
-  name: string;
+  name: any;
   field: FormlyFieldConfig;
 }
 
@@ -62,9 +62,12 @@ export class AddFieldEditorComponent implements OnInit {
     // avoid duplicate when switching between page
     this._editorService.clearHiddenFields();
     this.typeaheadFields$ = this._editorService.hiddenFields$.pipe(
-      map( (fields: FormlyFieldConfig[]) => {
+      map((fields: FormlyFieldConfig[]) => {
         const value = fields.map(field => {
-          return {name: field.templateOptions.label, field};
+          const name = field.expressionProperties['templateOptions.label']
+          ? field.expressionProperties['templateOptions.label']
+          : of(field.templateOptions.label);
+          return { name, field };
         });
         return value;
       })
