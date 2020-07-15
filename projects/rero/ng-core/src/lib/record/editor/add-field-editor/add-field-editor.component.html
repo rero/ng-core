@@ -19,9 +19,10 @@
   <div  class="form-group">
     <label for="addField" translate>Add field</label>
     <input
-      id="#addField"
+      id="addField"
       [(ngModel)]="value"
       [typeahead]="typeaheadFields"
+      [typeaheadItemTemplate]="itemTemplate"
       typeaheadOptionField="name"
       (typeaheadOnSelect)="itemSelected($event)"
       class="form-control"
@@ -38,8 +39,12 @@
         (click)="showSelectedField(field.field)"
         class="btn btn-outline-secondary w-100 mb-1 btn-sm overflow-hidden"
       >
-        {{ field.field.templateOptions.label }}
+        {{ field.name | async }}
       </button>
     </li>
   </ul>
 </div>
+
+<ng-template #itemTemplate let-model="item">
+  {{ model.name | async }}
+</ng-template>
