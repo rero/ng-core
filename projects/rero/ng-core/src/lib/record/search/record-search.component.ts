@@ -25,6 +25,7 @@ import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
+import { ApiService } from '../../api/api.service';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -172,13 +173,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param _recordSearchService Record search service.
    * @param _translateService Translate service.
    * @param _spinner Spinner service.
+   * @param _apiService Api service.
    */
   constructor(
     private _recordService: RecordService,
     private _recordUiService: RecordUiService,
     private _recordSearchService: RecordSearchService,
     private _translateService: TranslateService,
-    private _spinner: NgxSpinnerService
+    private _spinner: NgxSpinnerService,
+    private _apiService: ApiService
   ) { }
 
   /**
@@ -453,6 +456,35 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       return this._config.component;
     }
     return null;
+  }
+
+  /**
+   * Get Export formats for the current resource given by configuration.
+   * @return Array of export format to generate an `export as` button or an empty array.
+   */
+  get exportFormats(): Array<any> {
+    if (this._config && this._config.exportFormats) {
+      return this._config.exportFormats;
+    }
+    return [];
+  }
+
+  /**
+   * Get export format url.
+   * @param format - string, export format
+   * @return formatted url for an export format.
+   */
+  getExportFormatUrl(format: string) {
+    const baseUrl = this._apiService.getEndpointByType(this.currentType);
+    let url = `${baseUrl}?&format=${format}&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
+    if (this.aggregationsFilters) {
+      this.aggregationsFilters.map(filter => {
+        filter.values.map(v => {
+          url += `&${filter.key}=${v}`;
+        });
+      });
+    }
+    return url;
   }
 
   /**

@@ -37,10 +37,27 @@ export class HomeComponent {
       key: 'documents',
       label: 'Documents',
       component: DocumentComponent
+      ,
+      exportFormats: [
+        {
+          label: 'JSON',
+          format: 'json'
+        }
+      ],
     },
     {
       key: 'organisations',
-      label: 'Organisations'
+      label: 'Organisations',
+      exportFormats: [
+        {
+          label: 'JSON',
+          format: 'json'
+        },
+        {
+          label: 'CSV',
+          format: 'csv'
+        }
+      ],
     }
   ];
 

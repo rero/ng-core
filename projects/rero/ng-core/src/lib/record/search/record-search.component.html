@@ -54,6 +54,31 @@
           <i class="fa fa-plus mr-0 mr-sm-1"></i>
           <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
         </a>
+        <a role="button" class="btn btn-outline-primary ml-2" *ngIf="exportFormats && exportFormats.length == 1"
+           [href]="getExportFormatUrl(exportFormats[0].format)" >
+          <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} {{ exportFormats[0].label }}
+        </a>
+        <div class="btn-group ml-2" dropdown *ngIf="exportFormats && exportFormats.length > 1">
+          <button
+            id="button-export-basic"
+            dropdownToggle
+            type="button"
+            class="btn btn-outline-primary dropdown-toggle"
+          >
+            <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} ... <span class="caret"></span>
+          </button>
+          <ul
+            id="dropdown-export-basic"
+            *dropdownMenu
+            class="dropdown-menu"
+            role="menu"
+            aria-labelledby="button-export-basic"
+          >
+            <li role="menuitem" *ngFor="let format of exportFormats">
+              <a class="dropdown-item" [href]="getExportFormatUrl(format.format)" >{{ format.label }}</a>
+            </li>
+          </ul>
+        </div>
         <div class="btn-group ml-2" dropdown>
           <button
             id="button-basic"
