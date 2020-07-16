@@ -18,6 +18,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 } from 'json-schema';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionStatus } from '../action-status';
@@ -119,11 +120,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   aggregations: Array<{ key: string, bucketSize: any, value: { buckets: [] } }>;
 
   /**
-   * Search is processing
-   */
-  isLoading = false;
-
-  /**
    * Error message when something wrong happend during a search
    */
   error: string = null;
@@ -174,12 +170,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param _recordUiService Record UI service.
    * @param _recordSearchService Record search service.
    * @param _translateService Translate service.
+   * @param _spinner Spinner service.
    */
   constructor(
     private _recordService: RecordService,
     private _recordUiService: RecordUiService,
     private _recordSearchService: RecordSearchService,
-    private _translateService: TranslateService
+    private _translateService: TranslateService,
+    private _spinner: NgxSpinnerService
   ) { }
 
   /**
@@ -422,11 +420,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   changeType(event: Event, type: string) {
     event.preventDefault();
 
-    // if records are loading, we prevent to change the type of the resource.
-    if (this.isLoading === true) {
-      return;
-    }
-
     this.currentType = type;
     this.loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
@@ -583,7 +576,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this.page = 1;
     }
 
-    this.isLoading = true;
+    this._spinner.show();
 
     this._recordService.getRecords(
       this.currentType,
@@ -601,7 +594,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           this.aggregations = this.aggregationsOrder(aggr);
         });
 
-        this.isLoading = false;
+        this._spinner.hide();
 
         if (emitParameters) {
           this.emitNewParameters();
@@ -609,7 +602,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       },
       (error) => {
         this.error = error;
-        this.isLoading = false;
+        this._spinner.hide();
       }
     );
   }

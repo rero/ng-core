@@ -31,7 +31,7 @@
       </a>
     </li>
   </ul>
-  <div *ngIf="!isLoading; else loading" class="main-content">
+  <div class="main-content">
     <h5 *ngIf="types.length == 1 && showLabel">
       {{ types[0].label | translate }}
     </h5>
@@ -122,9 +122,4 @@
       </div>
     </div>
   </div>
-  <ng-template #loading>
-    <div class="text-center my-5">
-      <i class="fa fa-spin fa-spinner fa-2x"></i>
-    </div>
-  </ng-template>
 </ng-template>
