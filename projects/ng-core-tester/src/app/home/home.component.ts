@@ -18,6 +18,7 @@ import { Component } from '@angular/core';
 import { ApiService, DialogService, RecordSearchService, TranslateLanguageService } from '@rero/ng-core';
 import { ToastrService } from 'ngx-toastr';
 import { DocumentComponent } from '../record/document/document.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -65,6 +66,17 @@ export class HomeComponent {
   };
 
   /**
+   * Show spinner for 5 seconds
+   */
+  showSpinner() {
+    this._spinner.show();
+
+    setTimeout(() => {
+      this._spinner.hide();
+    }, 5000);
+  }
+
+  /**
    * Constructor.
    *
    * - Initializes API object paths.
@@ -76,13 +88,15 @@ export class HomeComponent {
    * @param _translateLanguageService Translate language service.
    * @param _toastrService Toastr service.
    * @param _recordSearchService Record search service.
+   * @param _spinner Spinner service
    */
   constructor(
     private _dialogService: DialogService,
     private _apiService: ApiService,
     private _translateLanguageService: TranslateLanguageService,
     private _toastrService: ToastrService,
-    private _recordSearchService: RecordSearchService
+    private _recordSearchService: RecordSearchService,
+    private _spinner: NgxSpinnerService
   ) {
     this.apiData = {
       relative: this._apiService.getEndpointByType('documents'),

@@ -22,9 +22,10 @@ import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 } from 'json-schema';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subscription } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -85,6 +86,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param _translateService Translate service.
    * @param _toastrService Toast service.
    * @param _location Location.
+   * @param _spinner Spinner service.
    */
   constructor(
     private _formlyJsonschema: FormlyJsonschema,
@@ -95,7 +97,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _recordUiService: RecordUiService,
     private _translateService: TranslateService,
     private _toastrService: ToastrService,
-    private _location: Location
+    private _location: Location,
+    private _spinner: NgxSpinnerService
   ) {
     this.form = new FormGroup({});
   }
@@ -115,16 +118,19 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
-    combineLatest([this._route.params, this._route.queryParams])
-      .subscribe(([params, queryParams]) => {
+    combineLatest([this._route.params, this._route.queryParams]).subscribe(
+      ([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
         //   console.log('model', this.model, 'v', v, 'form', this.form)
         // );
+        this._spinner.show();
 
         this.recordType = params.type;
         this._recordUiService.types = this._route.snapshot.data.types;
-        this._resourceConfig = this._recordUiService.getResourceConfig(this.recordType);
+        this._resourceConfig = this._recordUiService.getResourceConfig(
+          this.recordType
+        );
         if (this._resourceConfig.editorLongMode === true) {
           this.longMode = true;
           this._subscribers.push(
@@ -134,36 +140,47 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           );
         }
         this.pid = params.pid;
-        this._recordService
-          .getSchemaForm(this.recordType)
-          .subscribe(schemaform => {
-            this.setSchema(schemaform.schema);
-          });
-        // edition
+
+        const schema$: Observable<any> = this._recordService.getSchemaForm(
+          this.recordType
+        );
+
+        let record$: Observable<any> = of({ record: {}, result: null });
         if (this.pid) {
-          this._recordService
+          record$ = this._recordService
             .getRecord(this.recordType, this.pid)
-            .subscribe(record => {
-              this._recordUiService
-                .canUpdateRecord$(record, this.recordType)
-                .subscribe(result => {
-                  if (result.can === false) {
-                    this._toastrService.error(
-                      this._translateService.instant(
-                        'You cannot update this record'
-                      ),
-                      this._translateService.instant(this.recordType)
-                    );
-                    this._location.back();
-                  } else {
-                    this._setModel(record.metadata);
-                  }
-                });
-            });
-        } else {
-          this._setModel({});
+            .pipe(
+              switchMap((record: any) => {
+                return this._recordUiService
+                  .canUpdateRecord$(record, this.recordType)
+                  .pipe(
+                    map((result) => {
+                      return { result, record: record.metadata };
+                    })
+                  );
+              })
+            );
         }
-      });
+
+        combineLatest([schema$, record$]).subscribe(([schemaform, data]) => {
+          // Set schema
+          this.setSchema(schemaform.schema);
+
+          // Check permissions and set record
+          if (data.result && data.result.can === false) {
+            this._toastrService.error(
+              this._translateService.instant('You cannot update this record'),
+              this._translateService.instant(this.recordType)
+            );
+            this._location.back();
+          } else {
+            this._setModel(data.record);
+          }
+
+          this._spinner.hide();
+        });
+      }
+    );
   }
 
   /**
@@ -347,41 +364,43 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param event - object, JSON to POST on the backend
    */
   submit(event) {
+    this._spinner.show();
+
     let data = removeEmptyValues(this.model);
     data = this.postprocessRecord(data);
+
+    let recordAction$: Observable<any>;
+    let action = 'create';
+
     if (data.pid != null) {
-      this._recordService
-        .update(this.recordType, this.preUpdateRecord(data))
-        .subscribe(record => {
-          this._toastrService.success(
-            this._translateService.instant('Record Updated!'),
-            this._translateService.instant(this.recordType)
-          );
-          this._recordUiService.redirectAfterSave(
-            this.pid,
-            record,
-            this.recordType,
-            'update',
-            this._route
-          );
-        });
+      action = 'update';
+      recordAction$ = this._recordService.update(this.recordType, this.preUpdateRecord(data)).pipe(
+        map(record => {
+          return { record, action: 'update', message: 'Record Updated!' };
+        })
+      );
     } else {
-      this._recordService
-        .create(this.recordType, this.preCreateRecord(data))
-        .subscribe(record => {
-          this._toastrService.success(
-            this._translateService.instant('Resource created'),
-            this._translateService.instant(this.recordType)
-          );
-          this._recordUiService.redirectAfterSave(
-            record.metadata.pid,
-            record,
-            this.recordType,
-            'create',
-            this._route
-          );
-        });
+      recordAction$ = this._recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
+        map(record => {
+          return { record, action: 'create', message: 'Resource created' };
+        })
+      );
     }
+
+    recordAction$.subscribe(result => {
+      this._spinner.hide();
+      this._toastrService.success(
+        this._translateService.instant(result.message),
+        this._translateService.instant(this.recordType)
+      );
+      this._recordUiService.redirectAfterSave(
+        result.record.metadata.pid,
+        result.record,
+        this.recordType,
+        result.action,
+        this._route
+      );
+    });
   }
 
   /**

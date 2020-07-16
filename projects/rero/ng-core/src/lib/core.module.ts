@@ -20,6 +20,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { DialogComponent } from './dialog/dialog.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
@@ -61,7 +62,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     }),
     ModalModule.forRoot(),
     BsDropdownModule.forRoot(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NgxSpinnerModule
   ],
   exports: [
     BsDropdownModule,
@@ -78,7 +80,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     SearchInputComponent,
     MenuComponent,
     TextReadMoreComponent,
-    SortByKeysPipe
+    SortByKeysPipe,
+    NgxSpinnerModule
   ],
   entryComponents: [DialogComponent]
 })

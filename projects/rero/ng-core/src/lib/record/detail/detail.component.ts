@@ -15,11 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, ComponentFactoryResolver, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription, pipe } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -97,6 +98,18 @@ export class DetailComponent implements OnInit, OnDestroy {
   @ViewChild(RecordDetailDirective, { static: true })
   recordDetail: RecordDetailDirective;
 
+  /**
+   *
+   * @param _route Current route.
+   * @param _router Router service.
+   * @param _location Location.
+   * @param _componentFactoryResolver Component factory resolver.
+   * @param _recordService Record service.
+   * @param _recordUiService Record UI service.
+   * @param _toastrService Toastr service.
+   * @param _translate Translate service.
+   * @param _spinner Spinner service.
+   */
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
@@ -105,7 +118,8 @@ export class DetailComponent implements OnInit, OnDestroy {
     private _recordService: RecordService,
     private _recordUiService: RecordUiService,
     private _toastrService: ToastrService,
-    private _translate: TranslateService
+    private _translate: TranslateService,
+    private _spinner: NgxSpinnerService
   ) { }
 
   /**
@@ -113,6 +127,8 @@ export class DetailComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this._routeParametersSubscription = this._route.paramMap.subscribe(() => {
+      this._spinner.show();
+
       this.loadViewComponentRef();
 
       const pid = this._route.snapshot.paramMap.get('pid');
@@ -147,9 +163,12 @@ export class DetailComponent implements OnInit, OnDestroy {
           if (this._route.snapshot.data.adminMode) {
             this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
           }
+
+          this._spinner.hide();
         },
         (error) => {
           this.error = error;
+          this._spinner.hide();
         }
       );
 

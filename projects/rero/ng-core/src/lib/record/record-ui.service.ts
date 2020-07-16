@@ -17,9 +17,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
-import { delay, first, map, mergeMap } from 'rxjs/operators';
+import { first, map, mergeMap, tap } from 'rxjs/operators';
 import { DialogService } from '../dialog/dialog.service';
 import { ActionStatus } from './action-status';
 import { RecordService } from './record.service';
@@ -39,13 +40,15 @@ export class RecordUiService {
    * @param _translateService Translate service.
    * @param _recordService Record service.
    * @param _router Router.
+   * @param _spinner Spinner service.
    */
   constructor(
     private _dialogService: DialogService,
     private _toastService: ToastrService,
     private _translateService: TranslateService,
     private _recordService: RecordService,
-    private _router: Router
+    private _router: Router,
+    private _spinner: NgxSpinnerService
   ) { }
 
   /**
@@ -71,13 +74,16 @@ export class RecordUiService {
           return of(false);
         }
 
+        this._spinner.show();
+
         return this._recordService.delete(type, pid).pipe(
           map(() => {
-            this._toastService.success(this._translateService.instant('Record deleted.'));
             return true;
           }),
-          // delay before doing anything else, otherwise records may be not refreshed.
-          delay(1000)
+          tap(() => {
+            this._spinner.hide();
+            this._toastService.success(this._translateService.instant('Record deleted.'));
+          })
         );
       })
     );
