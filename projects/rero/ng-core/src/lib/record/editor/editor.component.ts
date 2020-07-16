@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
@@ -34,7 +34,9 @@ import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
 @Component({
   selector: 'ng-core-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss']
+  styleUrls: ['./editor.component.scss'],
+  // make the style global: required by JSONSchema cssClass
+  encapsulation: ViewEncapsulation.None
 })
 export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   // angular formGroup root
