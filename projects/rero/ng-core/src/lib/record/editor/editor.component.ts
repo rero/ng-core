@@ -341,11 +341,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     if (
       !['object', 'multischema', 'array'].some(f => f === field.type)
     ) {
+      // TODO following line seems to raise an error with v5.9.0 of ngx-formly
       model = field.model[field.key];
     }
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
-    if (!modelEmpty && (field.hide !== false)) {
+    if (!modelEmpty && (field.hide === true)) {
       setTimeout(() => {
         field.hide = false;
         this._editorService.removeHiddenField(field);
