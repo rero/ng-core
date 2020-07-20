@@ -17,7 +17,7 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, isObservable } from 'rxjs';
 import sha256 from 'crypto-js/sha256';
 
 /**
@@ -103,17 +103,30 @@ export class TranslateExtension {
     }
     // Select options
     if (to.options) {
-      const key = sha256(JSON.stringify(to)).toString();
-      this._optionsMap.set(key, to.options);
-      const bs = new BehaviorSubject(this._translateOptions(to.options));
-      this._translate.onLangChange.subscribe(() => {
-        bs.next(this._translateOptions(this._optionsMap.get(key)));
-      });
-      field.expressionProperties = {
-        ...(field.expressionProperties || {}),
-        'templateOptions.options': bs.asObservable(),
-      };
+      if (isObservable(to.options)) {
+        to.options.subscribe((opts) => this._processOptions(field, to));
+      } else {
+        this._processOptions(field, to);
+      }
     }
+  }
+
+  /**
+   * Translate the options of a select.
+   * @params field - ngx formly field
+   * @params options - ngx formly templateOptions.options
+   */
+  _processOptions(field, to) {
+    const key = sha256(JSON.stringify(to)).toString();
+    this._optionsMap.set(key, to);
+    const bs = new BehaviorSubject(this._translateOptions(to.options));
+    this._translate.onLangChange.subscribe(() => {
+      bs.next(this._translateOptions(this._optionsMap.get(key)));
+    });
+    field.expressionProperties = {
+      ...(field.expressionProperties || {}),
+      'templateOptions.options': bs.asObservable(),
+    };
   }
 
   /**
@@ -128,7 +141,6 @@ export class TranslateExtension {
         value: element.value
       });
     });
-
     return selectOptions;
   }
 }
