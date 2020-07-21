@@ -43,7 +43,7 @@ export class EditorService {
    */
   setFocus(field: FormlyFieldConfig, scroll: boolean = false) {
     if (scroll === true && field.id)  {
-      const el = document.getElementById(field.id);
+      const el = document.getElementById(`field-${field.id}`);
       if (el != null) {
         // TODO : investigate why sometimes(often) the scroll isn't smooth...
         el.scrollIntoView({ behavior: 'smooth' });
