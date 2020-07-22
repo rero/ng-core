@@ -38,12 +38,18 @@ import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
   styleUrls: ['./editor.component.scss']
 })
 export class EditorComponent implements OnInit, OnChanges, OnDestroy {
-  // angular formGroup root
-  form: FormGroup;
 
+  // form intial values
+  @Input() model: any = null;
+
+  // initial values changes notification
   @Output() modelChange = new EventEmitter<any>();
 
-  @Input() model: any = null;
+  // editor loading state notifications
+  @Output() loadingChange = new EventEmitter<boolean>();
+
+  // angular formGroup root
+  form: FormGroup;
 
   // additionnal form options
   options: FormlyFormOptions;
@@ -125,6 +131,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         //   console.log('model', this.model, 'v', v, 'form', this.form)
         // );
         this._spinner.show();
+        this.loadingChange.emit(true);
 
         this.recordType = params.type;
         this._recordUiService.types = this._route.snapshot.data.types;
@@ -177,7 +184,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setModel(data.record);
           }
 
-          this._spinner.hide();
+          // add a small amount of time as the editor needs additionnal time to
+          // resolve all async tasks
+          setTimeout(() => this._spinner.hide(), 500);
+          this.loadingChange.emit(false);
         });
       }
     );
@@ -366,6 +376,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   submit(event) {
     this._spinner.show();
+    this.loadingChange.emit(true);
 
     let data = removeEmptyValues(this.model);
     data = this.postprocessRecord(data);
@@ -389,7 +400,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     recordAction$.subscribe(result => {
-      this._spinner.hide();
       this._toastrService.success(
         this._translateService.instant(result.message),
         this._translateService.instant(this.recordType)
@@ -401,6 +411,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         result.action,
         this._route
       );
+      this._spinner.hide();
+      this.loadingChange.emit(true);
     });
   }
 
