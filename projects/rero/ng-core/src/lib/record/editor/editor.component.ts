@@ -328,7 +328,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           }
 
           // Add an horizontal wrapper
-          if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
+          if (this.longMode && this._horizontalWrapperTypes.some(elem => elem === field.type)) {
             field.wrappers = [
               ...(field.wrappers ? field.wrappers : []),
               'form-field-horizontal'
