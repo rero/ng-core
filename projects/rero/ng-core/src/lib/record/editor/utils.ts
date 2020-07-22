@@ -50,16 +50,22 @@ export function orderedJsonSchema(schema: any) {
       orderedJsonSchema(item);
     }
   }
-    // recursion for anyOf
+  // recursion for anyOf
   if (schema.anyOf) {
-    for (const item of schema.oneOf) {
-      orderedJsonSchema(schema.anyOf);
+    for (const item of schema.anyOf) {
+      orderedJsonSchema(item);
     }
   }
   // recursion for allOf
   if (schema.allOf) {
-    for (const item of schema.oneOf) {
-      orderedJsonSchema(schema.allOf);
+    for (const item of schema.allOf) {
+      orderedJsonSchema(item);
+    }
+  }
+  // recursion for definitions
+  if (schema.definitions) {
+    for (const property of Object.keys(schema.definitions)) {
+      orderedJsonSchema(schema.definitions[property]);
     }
   }
   return schema;
@@ -87,7 +93,7 @@ export function resolveRefs(data: any) {
     for (const key of Object.keys(data)) {
       const value = resolveRefs(data[key]);
       if (key === '$ref') {
-        newObject.pid =  extractIdOnRef(value);
+        newObject.pid = extractIdOnRef(value);
       } else {
         newObject[key] = value;
       }
