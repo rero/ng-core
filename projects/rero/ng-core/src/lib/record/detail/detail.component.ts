@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, Subscription } from 'rxjs';
+import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -61,7 +62,7 @@ export class DetailComponent implements OnInit, OnDestroy {
   /**
    * Error message
    */
-  error: string = null;
+  error: Error;
 
   /**
    * Admin mode for CRUD operations

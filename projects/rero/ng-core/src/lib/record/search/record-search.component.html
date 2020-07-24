@@ -14,9 +14,7 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="alert alert-danger" *ngIf="error; else showComponent">
-  {{ error | translate }}
-</div>
+<ng-core-error [error]="error" *ngIf="error; else showComponent"></ng-core-error>
 <ng-template #showComponent>
   <ul class="nav nav-tabs" *ngIf="types.length > 1">
     <li class="nav-item" *ngFor="let type of types">

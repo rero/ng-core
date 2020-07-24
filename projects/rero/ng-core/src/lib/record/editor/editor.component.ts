@@ -27,6 +27,8 @@ import { ToastrService } from 'ngx-toastr';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
+import { Error } from '../../error/error';
+import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { EditorService } from './editor.service';
@@ -73,6 +75,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   // store pid on edit mode
   pid = null;
+
+  // If an error occurred, it is stored, to display in interface.
+  error: Error;
 
   // subscribers
   private _subscribers: Subscription[] = [];
@@ -171,26 +176,33 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             );
         }
 
-        combineLatest([schema$, record$]).subscribe(([schemaform, data]) => {
-          // Set schema
-          this.setSchema(schemaform.schema);
+        combineLatest([schema$, record$]).subscribe(
+          ([schemaform, data]) => {
+            // Set schema
+            this.setSchema(schemaform.schema);
 
-          // Check permissions and set record
-          if (data.result && data.result.can === false) {
-            this._toastrService.error(
-              this._translateService.instant('You cannot update this record'),
-              this._translateService.instant(this.recordType)
-            );
-            this._location.back();
-          } else {
-            this._setModel(data.record);
+            // Check permissions and set record
+            if (data.result && data.result.can === false) {
+              this._toastrService.error(
+                this._translateService.instant('You cannot update this record'),
+                this._translateService.instant(this.recordType)
+              );
+              this._location.back();
+            } else {
+              this._setModel(data.record);
+            }
+
+            // add a small amount of time as the editor needs additionnal time to
+            // resolve all async tasks
+            setTimeout(() => this._spinner.hide(), 500);
+            this.loadingChange.emit(false);
+          },
+          (error) => {
+            this.error = error;
+            this._spinner.hide();
+            this.loadingChange.emit(false);
           }
-
-          // add a small amount of time as the editor needs additionnal time to
-          // resolve all async tasks
-          setTimeout(() => this._spinner.hide(), 500);
-          this.loadingChange.emit(false);
-        });
+        );
       }
     );
   }
@@ -467,7 +479,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           f.templateOptions.options = this._recordService
             .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
             .pipe(
-              map(data =>
+              map((data: Record) =>
                 data.hits.hits.map((record: any) => {
                   return {
                     label: formOptions.remoteOptions.labelField && formOptions.remoteOptions.labelField in record.metadata

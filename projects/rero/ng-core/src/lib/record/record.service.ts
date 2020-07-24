@@ -17,9 +17,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, Subject, throwError } from 'rxjs';
 import { catchError, debounceTime, map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
+import { Error } from '../error/error';
 import { resolveRefs } from './editor/utils';
 import { Record } from './record';
 
@@ -73,8 +75,13 @@ export class RecordService {
    * Constructor
    * @param _http HttpClient
    * @param _apiService ApiService
+   * @param _translateService Translate service.
    */
-  constructor(private _http: HttpClient, private _apiService: ApiService) { }
+  constructor(
+    private _http: HttpClient,
+    private _apiService: ApiService,
+    private _translateService: TranslateService
+  ) {}
 
   /**
    * Get records filtered by given parameters.
@@ -94,7 +101,7 @@ export class RecordService {
     preFilters: object = {},
     headers: any = null,
     sort: string = null
-  ): Observable<Record> {
+  ): Observable<Record | Error> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
     httpParams = httpParams.append('page', '' + page);
@@ -119,7 +126,7 @@ export class RecordService {
         params: httpParams,
         headers: this.createRequestHeaders(headers),
       })
-      .pipe(catchError(this.handleError));
+      .pipe(catchError((error) => this.handleError(error)));
   }
 
   /**
@@ -127,12 +134,12 @@ export class RecordService {
    * @param type - string, type of record
    * @param pid - string, PID to remove
    */
-  delete(type: string, pid: string): Observable<void> {
+  delete(type: string, pid: string): Observable<void | Error> {
     return this._http
       .delete<void>(this._apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(
         tap(() => this.onDelete.next(this.createEvent(type, { pid }))),
-        catchError(this.handleError)
+        catchError((error) => this.handleError(error))
       );
   }
 
@@ -146,7 +153,7 @@ export class RecordService {
     pid: string,
     resolve = 0,
     headers: any = {}
-  ): Observable<any> {
+  ): Observable<any | Error> {
     return this._http
       .get<Record>(
         `${this._apiService.getEndpointByType(
@@ -157,7 +164,7 @@ export class RecordService {
           headers: this.createRequestHeaders(headers),
         }
       )
-      .pipe(catchError(this.handleError));
+      .pipe(catchError(error => this.handleError(error)));
   }
 
   /**
@@ -228,7 +235,7 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res) => res.hits.total),
+      map((res: Record) => res.hits.total),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(1000)
     );
@@ -275,7 +282,7 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res) => res.hits.total),
+      map((res: Record) => res.hits.total),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(500)
     );
@@ -285,19 +292,35 @@ export class RecordService {
    * Error handling during api call process.
    * @param error - HttpErrorResponse
    */
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
-      );
+  private handleError(error: HttpErrorResponse): Observable<Error> {
+    let title: string;
+    let status = error.status;
+
+    switch (status) {
+      case 400: {
+        title = this._translateService.instant('Bad request');
+        break;
+      }
+      case 401: {
+        title = this._translateService.instant('Unauthorized');
+        break;
+      }
+      case 403: {
+        title = this._translateService.instant('Forbidden');
+        break;
+      }
+      case 404: {
+        title = this._translateService.instant('Not found');
+        break;
+      }
+      default: {
+        title = this._translateService.instant('An error occurred');
+        status = 500;
+        break;
+      }
     }
-    // return an observable with a user-facing error message
-    return throwError('Something bad happened; please try again later.');
+
+    return throwError({ status, title });
   }
 
   /**
