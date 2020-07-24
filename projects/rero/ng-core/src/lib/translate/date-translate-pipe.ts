@@ -16,11 +16,11 @@
  */
 import { DatePipe } from '@angular/common';
 import { Inject, Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService } from './translate-service';
 
 @Pipe({
   name: 'dateTranslate',
-  pure: false // required to update the value when the promise is resolved
+  pure: false, // required to update the value when the promise is resolved
 })
 export class DateTranslatePipe extends DatePipe implements PipeTransform {
   /**
@@ -28,17 +28,22 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
    *
    * @param _translateService Translate service.
    */
-  constructor(@Inject(TranslateService) private _translateService: TranslateService) {
-    super(_translateService.currentLang);
+  constructor(
+    @Inject(TranslateService) private _translateService: TranslateService
+  ) {
+    super(_translateService.currentLanguage);
   }
 
-  transform(value: any, format = 'mediumDate', timezone?: string, locale?: string): string {
-    let tlocale = (locale) ? locale : this._translateService.currentLang;
-    this._translateService.onLangChange.subscribe(() => {
-      tlocale = (locale) ? locale : this._translateService.currentLang;
-      return super.transform(value, format, timezone, tlocale);
-    });
+  transform(
+    value: any,
+    format = 'mediumDate',
+    timezone?: string,
+    locale?: string
+  ): string {
+    if (!locale) {
+      locale = this._translateService.currentLanguage;
+    }
 
-    return super.transform(value, format, timezone, tlocale);
+    return super.transform(value, format, timezone, locale);
   }
 }

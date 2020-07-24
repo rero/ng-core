@@ -14,32 +14,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Pipe, PipeTransform } from '@angular/core';
 
 /**
- * Class representing a record set retured by API.
+ * Get human readable file size.
  */
-export class Record {
-  aggregations: any;
-  hits: any;
-  links: any;
-}
+@Pipe({
+  name: 'filesize'
+})
+export class FilesizePipe implements PipeTransform {
+  /**
+   * Transform size to a human readable size.
+   *
+   * @param size Size of file.
+   * @param precision Number of decimals.
+   * @return Human readable file size.
+   */
+  transform(size: number, precision = 2) {
+    let i = -1;
+    const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    do {
+        size = size / 1024;
+        i++;
+    } while (size > 1024);
 
-export interface File {
-  updated: string;
-  size: string;
-  mimetype: string;
-  version_id: string;
-  is_head: boolean;
-  created: string;
-  tags: any;
-  delete_marker: boolean;
-  links: {
-    self: string,
-    version: string,
-    uploads: string
-  };
-  checksum: string;
-  key: string;
-  showInfo: boolean;
-  showChildren: boolean;
+    return [Math.max(size, 0.1).toFixed(precision), byteUnits[i]].join(' ');
+  }
 }

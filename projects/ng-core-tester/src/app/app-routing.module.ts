@@ -256,7 +256,8 @@ const routes: Routes = [
           },
           itemHeaders: {
             'Content-Type': 'application/rero+json'
-          }
+          },
+          filesEnabled: true
         },
         {
           key: 'organisations',

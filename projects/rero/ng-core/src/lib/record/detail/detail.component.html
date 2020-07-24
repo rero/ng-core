@@ -17,26 +17,27 @@
 <div class="main-content">
   <ng-core-error [error]="error" *ngIf="error"></ng-core-error>
   <div class="float-right ml-4 mt-2 mb-4" *ngIf="record && adminMode.can">
-      <a href class="btn btn-sm btn-primary" [routerLink]="['../../edit', record.metadata.pid]"
-          *ngIf="updateStatus && updateStatus.can" id="detail-edit-button">
-          <i class="fa fa-pencil"></i>
-          {{ 'Edit' | translate }}
-      </a>
-      <ng-container *ngIf="deleteStatus">
-          <button id ="detail-delete-button" class="btn btn-sm btn-outline-danger ml-1" [title]="'Delete'|translate"
-              (click)="deleteRecord(record)" *ngIf="deleteStatus.can; else deleteMessageLink">
-              <i class="fa fa-trash"></i>
-              {{ 'Delete' | translate }}
-          </button>
-          <ng-template #deleteMessageLink>
-              <button id ="detail-delete-button"  class="btn btn-sm btn-outline-danger ml-1 disabled" [title]="'Delete'|translate"
-                  (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
-                  <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
-              </button>
-          </ng-template>
-      </ng-container>
-    </div>
-    <ng-template ngCoreRecordDetail></ng-template>
-    <hr class="my-4">
-    <button id="detail-back-button" class="btn btn-link" (click)="goBack()">&laquo; {{ 'Back' | translate }}</button>
+    <a href class="btn btn-sm btn-primary" [routerLink]="['../../edit', record.metadata.pid]"
+      *ngIf="updateStatus && updateStatus.can" id="detail-edit-button">
+      <i class="fa fa-pencil"></i>
+      {{ 'Edit' | translate }}
+    </a>
+    <ng-container *ngIf="deleteStatus">
+      <button id="detail-delete-button" class="btn btn-sm btn-outline-danger ml-1" [title]="'Delete'|translate" (click)="deleteRecord(record)"
+        *ngIf="deleteStatus.can; else deleteMessageLink">
+        <i class="fa fa-trash"></i>
+        {{ 'Delete' | translate }}
+      </button>
+      <ng-template #deleteMessageLink>
+        <button id="detail-delete-button" class="btn btn-sm btn-outline-danger ml-1 disabled" [title]="'Delete'|translate"
+          (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
+          <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
+        </button>
+      </ng-template>
+    </ng-container>
+  </div>
+  <ng-template ngCoreRecordDetail></ng-template>
+  <ng-core-record-files [type]="type" [pid]="record.metadata.pid" *ngIf="record && filesEnabled"></ng-core-record-files>
+  <hr class="my-4">
+  <button id="detail-back-button" class="btn btn-link" (click)="goBack()">&laquo; {{ 'Back' | translate }}</button>
 </div>

@@ -1,0 +1,107 @@
+<!--
+ RERO angular core
+ Copyright (C) 2020 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="card my-4">
+  <div class="card-header">
+    <h5 class="m-0" translate>Files</h5>
+  </div>
+  <ng-container *ngIf="!hasError && files.length">
+    <ul class="list-group list-group-flush">
+      <ng-container *ngFor="let file of files">
+        <li class="list-group-item" *ngIf="showItem(file)">
+          <div class="row">
+            <div class="col-sm-8" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+              <p class="m-0">
+                {{ file.key }}
+                <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showInfo = !file.showInfo">
+                  <i class="fa fa-info-circle"></i>
+                </a>
+                <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showChildren = !file.showChildren"
+                  *ngIf="hasChildren(file)">
+                  <i class="fa fa-history"></i>
+                </a>
+              </p>
+              <dl class="row mt-2 mb-0" *ngIf="file.showInfo">
+                <dt class="col-sm-3" translate>Size</dt>
+                <dd class="col-sm-9">{{ file.size | filesize }}</dd>
+
+                <dt class="col-sm-3" translate>Mime type</dt>
+                <dd class="col-sm-9">{{ file.mimetype }}</dd>
+
+                <dt class="col-sm-3" translate>Checksum</dt>
+                <dd class="col-sm-9">{{ file.checksum }}</dd>
+
+                <dt class="col-sm-3" translate>Modified at</dt>
+                <dd class="col-sm-9">{{ file.updated | dateTranslate:'medium' }}</dd>
+              </dl>
+            </div>
+            <div class="col-sm-4 text-right">
+              <button class="btn btn-sm btn-outline-primary" (click)="manageFile(file)">
+                <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
+              </button>
+              <a [href]="getFileUrl(file)" target="_blank" class="btn btn-sm btn-outline-primary ml-1" download>
+                <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
+              </a>
+              <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete(file)">
+                <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
+              </button>
+            </div>
+          </div>
+        </li>
+      </ng-container>
+    </ul>
+  </ng-container>
+  <ng-template #noFiles>
+  </ng-template>
+  <div class="card-body" *ngIf="hasError || files.length === 0">
+    <div class="alert alert-info m-0" *ngIf="!hasError && files.length === 0" translate>No file found for this record.
+    </div>
+    <div class="alert alert-danger m-0" *ngIf="hasError" translate>An error occurred, files cannot be loaded.</div>
+  </div>
+  <div class="card-footer text-center">
+    <button class="btn btn-sm btn-primary" (click)="manageFile(null)">
+      <i class="fa fa-plus mr-1"></i>{{ 'Add a new file' | translate }}
+    </button>
+  </div>
+</div>
+
+<ng-template #formModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ currentFile ? currentFile.key : 'Add a new file' | translate }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="formModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <input #file type="file" id="file" (change)="handleFileInput($event.target.files)">
+    </div>
+    <div class="form-group" *ngIf="!currentFile && filesToUpload">
+      <label for="file-key" translate>File name</label>
+      <input type="text" id="file-key" class="form-control" [(ngModel)]="fileKey">
+    </div>
+    <div>
+      <ng-container *ngIf="filesToUpload && filesToUpload.length > 0">
+        <button class="btn btn-sm btn-outline-primary mr-1" (click)="upload()">
+          <i class="fa fa-upload mr-1"></i> {{ 'Upload' | translate }}
+        </button>
+        <button class="btn btn-sm btn-outline-danger" (click)="resetForm(); hideForm()">
+          <i class="fa fa-times mr-1"></i> {{ 'Cancel' | translate }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

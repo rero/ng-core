@@ -21,14 +21,10 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ActionStatus } from '@rero/ng-core/public-api';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { ToastrModule } from 'ngx-toastr';
 import { Observable, of, throwError } from 'rxjs';
-import { ErrorComponent } from '../../error/error.component';
-import { DefaultPipe } from '../../pipe/default.pipe';
+import { RecordModule } from '../record.module';
 import { RecordService } from '../record.service';
 import { DetailComponent } from './detail.component';
-import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
 
 const adminMode = (): Observable<ActionStatus> => {
@@ -77,20 +73,12 @@ describe('RecordDetailComponent', () => {
     const spy = jasmine.createSpyObj('RecordService', ['getRecord']);
 
     TestBed.configureTestingModule({
-      declarations: [
-        DetailComponent,
-        JsonComponent,
-        RecordDetailDirective,
-        ErrorComponent,
-        DefaultPipe
-      ],
       imports: [
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
         RouterTestingModule,
-        ModalModule.forRoot(),
-        ToastrModule.forRoot()
+        RecordModule
       ],
       providers: [
         { provide: RecordService, useValue: spy },
