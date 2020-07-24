@@ -14,32 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { FilesService } from './files.service';
 
-/**
- * Class representing a record set retured by API.
- */
-export class Record {
-  aggregations: any;
-  hits: any;
-  links: any;
-}
+describe('FilesService', () => {
+  beforeEach(() =>
+    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] })
+  );
 
-export interface File {
-  updated: string;
-  size: string;
-  mimetype: string;
-  version_id: string;
-  is_head: boolean;
-  created: string;
-  tags: any;
-  delete_marker: boolean;
-  links: {
-    self: string,
-    version: string,
-    uploads: string
-  };
-  checksum: string;
-  key: string;
-  showInfo: boolean;
-  showChildren: boolean;
-}
+  it('should be created', () => {
+    const service: FilesService = TestBed.get(FilesService);
+    expect(service).toBeTruthy();
+  });
+});

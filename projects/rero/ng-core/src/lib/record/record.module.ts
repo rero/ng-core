@@ -43,6 +43,7 @@ import { SwitchComponent } from './editor/switch/switch.component';
 import { ToggleWrapperComponent } from './editor/toggle-wrapper/toggle-wrappers.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
+import { RecordFilesComponent } from './files/files.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
@@ -80,7 +81,8 @@ import { RemoteTypeaheadComponent } from './editor/remote-typeahead/remote-typea
     HorizontalWrapperComponent,
     AggregationSliderComponent,
     SelectWithSortTypeComponent,
-    RemoteTypeaheadComponent
+    RemoteTypeaheadComponent,
+    RecordFilesComponent
   ],
   imports: [
     CoreModule,

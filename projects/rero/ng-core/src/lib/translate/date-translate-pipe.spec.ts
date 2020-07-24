@@ -16,7 +16,7 @@
  */
 import { EventEmitter } from '@angular/core';
 import { DateTranslatePipe } from './date-translate-pipe';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService } from './translate-service';
 
 let dateTranslateService: DateTranslatePipe;
 
@@ -29,7 +29,7 @@ class TranslateServiceMock {
   get onLangChange() {
     return new EventEmitter<LangChangeEvent>();
   }
-  get currentLang() {
+  get currentLanguage() {
     return 'en';
   }
 }

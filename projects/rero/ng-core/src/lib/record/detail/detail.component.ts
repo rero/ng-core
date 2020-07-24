@@ -187,6 +187,24 @@ export class DetailComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Getter for type of resource.
+   *
+   * @returns Type of resource as string.
+   */
+  get type(): string {
+    return this._type;
+  }
+
+  /**
+   * Getter giving the information if file management is enabled.
+   *
+   * @returns True if file management is enabled.
+   */
+  get filesEnabled(): boolean {
+    return this._config.filesEnabled ? this._config.filesEnabled : false;
+  }
+
+  /**
    * Go back to previous page
    */
   goBack() {
