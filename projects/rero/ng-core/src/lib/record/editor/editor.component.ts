@@ -388,13 +388,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       action = 'update';
       recordAction$ = this._recordService.update(this.recordType, this.preUpdateRecord(data)).pipe(
         map(record => {
-          return { record, action: 'update', message: 'Record Updated!' };
+          return { record, action: 'update', message: this._translateService.instant('Record updated.') };
         })
       );
     } else {
       recordAction$ = this._recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
         map(record => {
-          return { record, action: 'create', message: 'Resource created' };
+          return { record, action: 'create', message: this._translateService.instant('Record created.') };
         })
       );
     }
