@@ -23,6 +23,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { DialogComponent } from './dialog/dialog.component';
+import { ErrorComponent } from './error/error.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
 import { Nl2brPipe } from './pipe/nl2br.pipe';
@@ -49,7 +50,8 @@ import { MenuComponent } from './widget/menu/menu.component';
     MenuComponent,
     TranslateLanguagePipe,
     TextReadMoreComponent,
-    SortByKeysPipe
+    SortByKeysPipe,
+    ErrorComponent
   ],
   imports: [
     CommonModule,
@@ -80,6 +82,7 @@ import { MenuComponent } from './widget/menu/menu.component';
     SearchInputComponent,
     MenuComponent,
     TextReadMoreComponent,
+    ErrorComponent,
     SortByKeysPipe,
     NgxSpinnerModule
   ],

@@ -21,11 +21,13 @@ import { JSONSchema7 } from 'json-schema';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ApiService } from '../../api/api.service';
+import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
+import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
-import { ApiService } from '../../api/api.service';
 
 @Component({
   selector: 'ng-core-record-search',
@@ -124,7 +126,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Error message when something wrong happend during a search
    */
-  error: string = null;
+  error: Error;
 
   /**
    * Check if record can be added
@@ -220,7 +222,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this._recordService.getRecords(
         type.key, '', 1, 1, [],
         this._config.preFilters || {},
-        this._config.listHeaders || null).subscribe(records => {
+        this._config.listHeaders || null).subscribe((records: Record) => {
           type.total = records.hits.total;
         });
     }
@@ -621,7 +623,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this._config.listHeaders || null,
       this.sort
     ).subscribe(
-      records => {
+      (records: Record) => {
         this.hits = records.hits;
         this.aggregations$(records.aggregations).subscribe((aggr: any) => {
           this.aggregations = this.aggregationsOrder(aggr);

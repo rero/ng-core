@@ -17,7 +17,9 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
+import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ApiService } from '../api/api.service';
+import { Error } from '../error/error';
 import { Record } from './record';
 import { RecordService } from './record.service';
 
@@ -34,7 +36,10 @@ describe('RecordService', () => {
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        TranslateModule.forRoot({
+          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })
       ],
       providers: [
         { provide: ApiService, useValue: spy }
@@ -68,7 +73,7 @@ describe('RecordService', () => {
       links: {}
     };
 
-    service.getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }]).subscribe(data => {
+    service.getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }]).subscribe((data: Record) => {
       expect(data.hits.total).toBe(2);
     });
 
@@ -82,8 +87,8 @@ describe('RecordService', () => {
 
     service.getRecords('documents').subscribe(
       () => fail('should have failed with the 404 error'),
-      (error: HttpErrorResponse) => {
-        expect(error).toContain('Something bad happened');
+      (error: Error) => {
+        expect(error.title).toBe('Not found');
       });
 
     const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
@@ -96,8 +101,8 @@ describe('RecordService', () => {
 
     service.getRecords('documents').subscribe(
       () => fail('should have failed with the 404 error'),
-      (error: HttpErrorResponse) => {
-        expect(error).toContain('Something bad happened');
+      (error: Error) => {
+        expect(error.title).toBe('An error occurred');
       });
 
     const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');

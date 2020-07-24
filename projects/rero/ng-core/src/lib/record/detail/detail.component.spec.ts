@@ -24,6 +24,8 @@ import { ActionStatus } from '@rero/ng-core/public-api';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { Observable, of, throwError } from 'rxjs';
+import { ErrorComponent } from '../../error/error.component';
+import { DefaultPipe } from '../../pipe/default.pipe';
 import { RecordService } from '../record.service';
 import { DetailComponent } from './detail.component';
 import { RecordDetailDirective } from './detail.directive';
@@ -78,7 +80,9 @@ describe('RecordDetailComponent', () => {
       declarations: [
         DetailComponent,
         JsonComponent,
-        RecordDetailDirective
+        RecordDetailDirective,
+        ErrorComponent,
+        DefaultPipe
       ],
       imports: [
         TranslateModule.forRoot({
@@ -174,7 +178,6 @@ describe('RecordDetailComponent', () => {
     fixture.detectChanges();
 
     expect(component.record).toBe(null);
-    expect(component.error).toBe('error');
   });
 
   it('should use a custom view component for displaying record', () => {
