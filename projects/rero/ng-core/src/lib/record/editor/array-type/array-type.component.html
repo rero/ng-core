@@ -36,7 +36,7 @@
     <div class="d-flex mb-1" [ngClass]="{ 'border-left': isChildrenObject }">
       <div class="flex-grow-1">
         <!-- put title with menu section for item object -->
-        <div *ngIf="isChildrenObject" class="header ml-4">
+        <div *ngIf="isChildrenObject" class="header">
           <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f, i: i }">
           </ng-container>
           <!--  object validation error message -->
@@ -45,7 +45,7 @@
           </div>
         </div>
       <!-- add label for array of arrays -->
-      <div *ngIf="isChildrenArray" class="header ml-4">
+      <div *ngIf="isChildrenArray" class="header">
         <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
           {{ f.templateOptions.label }}
           <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
@@ -57,7 +57,7 @@
           <i class="fa fa-trash"></i>
         </button>
       </div>
-      <div class="content ml-4">
+      <div class="content">
         <formly-field [field]="f"></formly-field>
       </div>
     </div>
@@ -85,7 +85,7 @@
           ">
           <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
           <button class="dropdown-item" (click)="fChildren.hide = false" type="button">
-            {{ fChildren.templateOptions.label }}
+            {{ translateLabel(fChildren) | async }}
           </button>
           <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
         </ng-container>

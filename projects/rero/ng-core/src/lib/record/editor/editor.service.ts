@@ -45,8 +45,9 @@ export class EditorService {
     if (scroll === true && field.id)  {
       const el = document.getElementById(`field-${field.id}`);
       if (el != null) {
-        // TODO : investigate why sometimes(often) the scroll isn't smooth...
-        el.scrollIntoView({ behavior: 'smooth' });
+        // we need to scroll after the focus setTimeout push the action in the
+        // next event loop.
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }));
         scroll = false;
       }
     }

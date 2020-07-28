@@ -17,6 +17,7 @@
 import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { EditorService } from '../editor.service';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Component for displaying an object in editor.
@@ -34,23 +35,13 @@ export class ObjectTypeComponent extends FieldType {
   /**
    * Constructor
    * @param editorService - EditorService, that keep the list of hidden fields
+   * @param _translateService - TranslateService, that translate the labels of the hidden fields
    */
-  constructor(private _editorService: EditorService) {
+  constructor(
+    private _editorService: EditorService,
+    private _translateService: TranslateService
+  ) {
     super();
-  }
-
-  /**
-   * Push the field to hide in the editor Service
-   */
-  addHiddenFields() {
-    if (!this.isRoot() || !this.field.templateOptions.longMode) {
-      return;
-    }
-    for (const f of this.field.fieldGroup) {
-      if (f.hide) {
-        this._editorService.addHiddenField(f);
-      }
-    }
   }
 
   /**
@@ -70,8 +61,17 @@ export class ObjectTypeComponent extends FieldType {
    * @param fieldGroup - FormlyFieldConfig[], the fieldGroup to filter
    * @returns FormlyFieldConfig[], the filtered list
    */
-  hiddenFieldGroup(fieldGroup: any) {
-    return fieldGroup.filter((f: any) => f.hide && f.hideExpression == null);
+  hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
+    return fieldGroup.filter(f => f.hide && f.hideExpression == null);
+  }
+
+  /**
+   * Translate the label of a given formly field.
+   *
+   * @param field ngx-formly field
+   */
+  translateLabel(field: FormlyFieldConfig) {
+    return this._translateService.stream(field.templateOptions.untranslatedLabel);
   }
 
   /**
@@ -136,6 +136,11 @@ export class ObjectTypeComponent extends FieldType {
   getCssClass(field: FormlyFieldConfig = null): string {
     if (field !== null) {
       return field.templateOptions.cssClass;
+    }
+    const fieldGroup = this.field.fieldGroup;
+    // formly jsonschema duplicate the object in the form hierarchy
+    if (fieldGroup && fieldGroup.length === 1 && fieldGroup[0].type === 'multischema') {
+      return '';
     }
     return this.to.cssClass;
   }

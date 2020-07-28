@@ -15,13 +15,14 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- from ngx-boostrap -->
-<div class="w-100" *ngIf="typeaheadFields$ | async as typeaheadFields">
+<div class="w-100" *ngIf="typeaheadFields">
   <div  class="form-group">
     <label for="addField" translate>Add field</label>
     <input
       id="addField"
       [(ngModel)]="value"
-      [typeahead]="typeaheadFields"
+      [typeahead]="typeaheadFields$"
+      [typeaheadAsync]="true"
       [typeaheadItemTemplate]="itemTemplate"
       typeaheadOptionField="name"
       (typeaheadOnSelect)="itemSelected($event)"
@@ -35,16 +36,16 @@
   </div>
   <ul class="list-unstyled">
     <li *ngFor="let field of typeaheadFields">
-      <button *ngIf="isFieldEssential(field.field)"
-        (click)="showSelectedField(field.field)"
-        class="btn btn-outline-secondary w-100 mb-1 btn-sm overflow-hidden"
+      <button *ngIf="isFieldEssential(field)"
+        (click)="showSelectedField(field)"
+        class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
       >
-        {{ field.name | async }}
+        {{ translateLabel(field) | async }}
       </button>
     </li>
   </ul>
 </div>
 
-<ng-template #itemTemplate let-model="item">
-  {{ model.name | async }}
+<ng-template #itemTemplate let-field="item">
+  {{ translateLabel(field) | async }}
 </ng-template>

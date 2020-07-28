@@ -37,7 +37,7 @@
         </ng-container>
       </ng-container>
       <!-- field -->
-      <div class="d-flex content ml-4 mb-1">
+      <div class="d-flex content mb-1">
         <div class="flex-grow-1">
           <formly-field [field]="f"></formly-field>
         </div>
@@ -61,7 +61,7 @@
         ">
         <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
         <button class="dropdown-item" (click)="show(fChildren)" type="button">
-          {{ fChildren.templateOptions.label }}
+          {{ translateLabel(fChildren) | async }}
         </button>
         <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
       </ng-container>
@@ -75,8 +75,9 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <div class="header ml-4">
-    <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
+  <div class="header">
+    <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id"
+      [tooltip]="f.templateOptions.description">
       {{ f.templateOptions.label }}
       <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
       <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
