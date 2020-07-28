@@ -16,6 +16,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Component for displaying array fields in editor.
@@ -30,6 +31,14 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
 
   /** True if the children are of type array */
   isChildrenArray = false;
+
+  /** Constructor
+   *
+   * @param _translateService - TranslateService, that translate the labels of the hidden fields
+   */
+  constructor(private _translateService: TranslateService) {
+    super();
+  }
 
   /**
    * Component initialization
@@ -152,6 +161,15 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
       (f.type === 'object' && this.hiddenFieldGroup(f.fieldGroup).length > 0) ||
       f.templateOptions.helpURL
     );
+  }
+
+  /**
+   * Translate the label of a given formly field.
+   *
+   * @param field ngx-formly field
+   */
+  translateLabel(field: FormlyFieldConfig) {
+    return this._translateService.stream(field.templateOptions.untranslatedLabel);
   }
 
   /**
