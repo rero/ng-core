@@ -476,7 +476,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   getExportFormatUrl(format: string) {
     const baseUrl = this._apiService.getEndpointByType(this.currentType);
-    let url = `${baseUrl}?&format=${format}&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
+    let url = `${baseUrl}?q=${this.q}&format=${format}&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
     if (this.aggregationsFilters) {
       this.aggregationsFilters.map(filter => {
         filter.values.map(v => {
