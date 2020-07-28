@@ -75,19 +75,17 @@ export class TranslateExtension {
     }
     to._translated = true;
 
-    const options: any = {
-    };
     // label / title
     if (to.label) {
-      options.label = this._translate.stream(to.label);
+      // store the untranslated label as the hidden fields are not translated
+      to.untranslatedLabel = to.label;
       field.expressionProperties = {
         ...(field.expressionProperties || {}),
-        'templateOptions.label': this._translate.stream(to.label),
+        'templateOptions.label': this._translate.stream(to.label)
       };
     }
     // description
     if (to.description) {
-      options.description = this._translate.stream(to.description);
       field.expressionProperties = {
         ...(field.expressionProperties || {}),
         'templateOptions.description': this._translate.stream(to.description),
@@ -95,7 +93,6 @@ export class TranslateExtension {
     }
     // placeholder
     if (to.placeholder) {
-      options.placeholder = this._translate.stream(to.placeholder);
       field.expressionProperties = {
         ...(field.expressionProperties || {}),
         'templateOptions.placeholder': this._translate.stream(to.placeholder),
