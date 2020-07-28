@@ -17,8 +17,8 @@
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, isObservable } from 'rxjs';
 import sha256 from 'crypto-js/sha256';
+import { BehaviorSubject, isObservable } from 'rxjs';
 
 /**
  * Add onPopulate hook at the field level.
@@ -32,7 +32,6 @@ export function onPopulateHook(field: FormlyFieldConfig) {
   }
 }
 
-
 export const hooksFormlyExtension: FormlyExtension = {
 
   /**
@@ -45,6 +44,38 @@ export const hooksFormlyExtension: FormlyExtension = {
   onPopulate: onPopulateHook
 };
 
+/**
+ * Add a custom id before populating the form
+ * @param field formly field config
+ */
+export function prePopulateFieldIdGenerator(field: FormlyFieldConfig) {
+  if (field.key) {
+    field.id = getKey(field);
+  }
+ }
+
+/**
+ * Call the field id generator
+ */
+export const fieldIdGenerator: FormlyExtension = {
+   prePopulate: prePopulateFieldIdGenerator
+};
+
+/**
+ * Create an id html attribute by joining field and parents keys
+ * @param field formly field config
+ * @returns array - keys to create the id html attribute
+ */
+export function getKey(field: any): string {
+  let parentKey = null;
+  if (field.parent != null && field.parent.key != null) {
+    parentKey = getKey(field.parent);
+  }
+  if (parentKey != null) {
+    return [parentKey, field.key].join('-');
+  }
+  return field.key;
+}
 
 export class TranslateExtension {
 

@@ -35,7 +35,7 @@ import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-edi
 import { ArrayTypeComponent } from './editor/array-type/array-type.component';
 import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
-import { hooksFormlyExtension, registerTranslateExtension } from './editor/extensions';
+import { hooksFormlyExtension, registerTranslateExtension, fieldIdGenerator } from './editor/extensions';
 import { HorizontalWrapperComponent } from './editor/horizontal-wrapper/horizontal-wrapper.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/object-type/object-type.component';
@@ -92,7 +92,10 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     PaginationModule.forRoot(),
     BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
-      extensions: [{ name: 'hooks', extension: hooksFormlyExtension }],
+      extensions: [
+        { name: 'hooks', extension: hooksFormlyExtension },
+        { name: 'field-id-generator', extension: fieldIdGenerator }
+      ],
       types: [
         { name: 'string', extends: 'input' },
         {
