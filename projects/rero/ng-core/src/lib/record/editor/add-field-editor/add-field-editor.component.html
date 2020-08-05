@@ -35,8 +35,9 @@
     </small>
   </div>
   <ul class="list-unstyled">
-    <li *ngFor="let field of typeaheadFields">
+    <li *ngFor="let field of typeaheadFields; let i = index">
       <button *ngIf="isFieldEssential(field)"
+        id="{{'add-field-' + i}}"
         (click)="showSelectedField(field)"
         class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
       >
