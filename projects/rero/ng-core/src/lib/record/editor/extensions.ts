@@ -68,11 +68,17 @@ export const fieldIdGenerator: FormlyExtension = {
  */
 export function getKey(field: any): string {
   let parentKey = null;
-  if (field.parent != null && field.parent.key != null) {
+
+  if (field.parent != null) {
     parentKey = getKey(field.parent);
   }
+
   if (parentKey != null) {
-    return [parentKey, field.key].join('-');
+    let newId = parentKey;
+    if (field.key != null) {
+      newId = [parentKey, field.key].join('-');
+    }
+    return newId;
   }
   return field.key;
 }

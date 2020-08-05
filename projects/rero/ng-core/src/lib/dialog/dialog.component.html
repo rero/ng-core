@@ -20,11 +20,13 @@
 <div class="modal-body" [innerHtml]="body|nl2br"></div>
 <div class="modal-footer">
   <button
+  id="modal-cancel-button"
     type="button"
     class="btn btn-light"
     (click)="decline()"
   >{{ cancelTitleButton | translate }}</button>
   <button
+    id="modal-confirm-button"
     type="button"
     class="btn btn-primary"
     (click)="confirm()"
