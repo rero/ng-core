@@ -15,7 +15,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- from ngx-boostrap -->
-<div class="w-100" *ngIf="typeaheadFields">
+<div class="w-100" *ngIf="hiddenFields$ | async as hiddenFields">
   <div  class="form-group">
     <label for="addField" translate>Add field</label>
     <input
@@ -28,15 +28,15 @@
       (typeaheadOnSelect)="itemSelected($event)"
       class="form-control"
       typeaheadMinLength="0"
-      [disabled]="typeaheadFields.length === 0"
+      [disabled]="hiddenFields.length < 1"
     />
     <small id="addFieldHelp" class="form-text text-muted" translate>
       Press space for all.
     </small>
   </div>
   <ul class="list-unstyled">
-    <li *ngFor="let field of typeaheadFields; let i = index">
-      <button *ngIf="isFieldEssential(field)"
+    <li *ngFor="let field of essentialFields$ | async ; let i = index ">
+      <button
         id="{{'add-field-' + i}}"
         (click)="showSelectedField(field)"
         class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"

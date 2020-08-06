@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
-import { Observable, of, Subscriber, Subscription } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+import { Observable, of, Subscriber } from 'rxjs';
+import { first, map, mergeMap } from 'rxjs/operators';
 import { EditorService } from '../editor.service';
 
 /**
@@ -30,22 +30,19 @@ import { EditorService } from '../editor.service';
   selector: 'ng-core-editor-add-field-editor',
   templateUrl: './add-field-editor.component.html'
 })
-export class AddFieldEditorComponent implements OnInit, OnDestroy {
+export class AddFieldEditorComponent implements OnInit {
 
   // current input value
   value: string;
 
-  // current list of object suggestion for autocomplete
-  typeaheadFields: Array<FormlyFieldConfig>;
-
   // current observables list of object suggestion for autocomplete
   typeaheadFields$: Observable<Array<FormlyFieldConfig>>;
 
-  // editor servide hidden fields list
+  // editor service hidden fields list
   hiddenFields$: Observable<Array<FormlyFieldConfig>>;
 
-  // subscribers
-  private _subscribers: Subscription[] = [];
+  // editor service essential fields list
+  essentialFields$: Observable<Array<FormlyFieldConfig>>;
 
   /***
    * Constructor
@@ -55,10 +52,9 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   constructor(
     private _editorService: EditorService,
     private _translateService: TranslateService
-  ) {
-    this.hiddenFields$ = this._editorService.hiddenFields$;
-    this._subscribers.push(
-      this.hiddenFields$.subscribe(fields => this.typeaheadFields = fields));
+  ) { }
+
+  ngOnInit() {
     this.typeaheadFields$ = new Observable((observer: Subscriber<string>) => {
       // Runs on every search
       observer.next(this.value);
@@ -66,13 +62,37 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
       .pipe(
         mergeMap((token: string) => this.getSuggestionsList(token))
       );
+
+    this.hiddenFields$ = this._editorService.hiddenFields$.pipe(
+      map(fields => fields.sort(
+        (field1, field2) => this.sortFieldsByLabel(field1, field2)
+      )
+      )
+    );
+
+    this.essentialFields$ = this.hiddenFields$.pipe(
+      map(fields =>
+        fields
+          .filter(f => this.isFieldEssential(f))
+      )
+    );
   }
 
   /**
-   * Component destruction
+   *
+   * @param field1 first value to sort
+   * @param field2 value to compare to
    */
-  ngOnDestroy() {
-    this._subscribers.forEach(s => s.unsubscribe());
+  sortFieldsByLabel(field1: FormlyFieldConfig, field2: FormlyFieldConfig) {
+    const f1 = field1.templateOptions.label;
+    const f2 = field2.templateOptions.label;
+    if (f1 > f2) {
+      return 1;
+    }
+    if (f1 < f2) {
+      return -1;
+    }
+    return 0;
   }
 
   /**
@@ -88,25 +108,21 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
     }
     const spaceRegexp = new RegExp(/^\s+$/);
     const query = new RegExp(token, 'i');
+    // take only the first value to avoid the selection still open after selection
+    const hiddenFieldsFirst$ = this.hiddenFields$.pipe(first());
     if (spaceRegexp.test(token)) {
-      return of(this.typeaheadFields);
+      return hiddenFieldsFirst$;
     }
-    return of(
-      this.typeaheadFields.filter(field => {
-        // the label is not translated as the field is hidden
-        const f = this._translateService.instant(field.templateOptions.untranslatedLabel);
-        // true if match
-        return query.test(f);
-      })
+    return hiddenFieldsFirst$.pipe(
+      map(
+        fields => fields.filter(field => {
+          // the label is not translated as the field is hidden
+          const f = this._translateService.instant(field.templateOptions.untranslatedLabel);
+          // true if match
+          return query.test(f);
+        })
+      )
     );
-  }
-
-  /***
-   * Component init
-   */
-  ngOnInit() {
-    // avoid duplicate when switching between page
-    this._editorService.clearHiddenFields();
   }
 
   /**
