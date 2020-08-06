@@ -90,5 +90,8 @@ export class AppMenuService {
       .setRouterLink(['/records', 'documents']);
     menu.addChild('Organisation records')
       .setRouterLink(['/records', 'organisations']);
+    menu.addChild('Editor')
+      .setRouterLink(['/editor'])
+      .setExtra('iconClass', 'fa fa-edit');
   }
 }

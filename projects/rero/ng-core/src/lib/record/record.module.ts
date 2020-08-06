@@ -176,4 +176,4 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     { provide: FORMLY_CONFIG, multi: true, useFactory: registerTranslateExtension, deps: [TranslateService] },
   ]
 })
-export class RecordModule {}
+export class RecordModule { }
