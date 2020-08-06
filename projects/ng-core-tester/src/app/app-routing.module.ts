@@ -23,6 +23,7 @@ import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
+import { EditorComponent } from './record/editor/editor.component';
 import { RouteService } from './routes/route.service';
 
 /**
@@ -211,6 +212,10 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: 'editor',
+    component: EditorComponent
   },
   {
     matcher: documentsMatcher,

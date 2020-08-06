@@ -20,17 +20,18 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core';
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { defineLocale } from 'ngx-bootstrap/chronos';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
+import { EditorComponent } from './record/editor/editor.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @NgModule({
@@ -39,7 +40,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     DocumentComponent,
     HomeComponent,
     DetailComponent,
-    SearchBarComponent
+    SearchBarComponent,
+    EditorComponent
   ],
   imports: [
     BrowserModule,

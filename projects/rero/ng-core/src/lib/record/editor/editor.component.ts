@@ -74,9 +74,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   tocFields = [];
 
   // JSONSchema
-  schema: any;
+  @Input() schema: any;
 
   // editor settings
+  @Input()
   editorSettings = {
     longMode: false,  // editor long mode
     template: {
@@ -87,7 +88,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   };
 
   // save alternatives
-  saveAlternatives: {label: string, action: any}[];
+  saveAlternatives: { label: string, action: any }[] = [];
 
   // current record type from the url
   recordType = null;
@@ -168,6 +169,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         this.setSchema(this.schema);
       }
     }
+    if (changes.schema && changes.schema.isFirstChange()) { // Schema has changed
+      this.setSchema(changes.schema.currentValue);
+    }
   }
 
   /**
@@ -187,7 +191,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         // );
         this._spinner.show();
         this.loadingChange.emit(true);
-
+        if (!params.type) {
+          this.model = {};
+          this.schema = {};
+          this._spinner.hide();
+          return;
+        }
         this.recordType = params.type;
         this._recordUiService.types = this._route.snapshot.data.types;
 
@@ -195,7 +204,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           this.recordType
         );
         if (this._resourceConfig.editorSettings) {
-          this.editorSettings = {...cloneDeep(this.editorSettings), ...this._resourceConfig.editorSettings};
+          this.editorSettings = { ...cloneDeep(this.editorSettings), ...this._resourceConfig.editorSettings };
         }
 
         // load template resource configuration if needed
@@ -205,7 +214,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           const tmplResource = this._routeCollectionService.getRoute(this.editorSettings.template.recordType);
           const tmplConfiguration = tmplResource.getConfiguration();
           if (tmplConfiguration.hasOwnProperty('data')
-              && tmplConfiguration.data.hasOwnProperty('types')) {
+            && tmplConfiguration.data.hasOwnProperty('types')) {
             this._recordUiService.types = this._recordUiService.types.concat(tmplConfiguration.data.types);
           }
         }
@@ -230,32 +239,32 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         //   then we need to use the data from this template as data source to fill the form.
         if (queryParams.source === 'templates' && queryParams.pid != null) {
           record$ = this._recordService.getRecord('templates', queryParams.pid).pipe(
-              map((record: any) => {
-                this._toastrService.success(
-                  this._translateService.instant('Template loaded')
-                );
-                return {
-                  result: true,
-                  record: record.metadata.data
-                };
-              })
+            map((record: any) => {
+              this._toastrService.success(
+                this._translateService.instant('Template loaded')
+              );
+              return {
+                result: true,
+                record: record.metadata.data
+              };
+            })
           );
-        // load data from existing document
-        //   If the parsed url contains a 'pid' value, then user try to edit a record. Then
-        //   we need to load this record and use it as data source to fill the form.
+          // load data from existing document
+          //   If the parsed url contains a 'pid' value, then user try to edit a record. Then
+          //   we need to load this record and use it as data source to fill the form.
         } else if (this.pid) {
           record$ = this._recordService
             .getRecord(this.recordType, this.pid)
             .pipe(
               switchMap((record: any) => {
                 return this._recordUiService.canUpdateRecord$(record, this.recordType).pipe(
-                    map((result) => {
-                      return {
-                        result,
-                        record: record.metadata
-                      };
-                    })
-                  );
+                  map((result) => {
+                    return {
+                      result,
+                      record: record.metadata
+                    };
+                  })
+                );
               })
             );
         }
@@ -320,7 +329,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param modelValue Model.
    */
   modelChanged(modelValue: any) {
-    this.modelChange.emit(modelValue);
+    this.modelChange.emit(removeEmptyValues(modelValue));
   }
 
   /**
@@ -404,6 +413,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setRemoteSelectOptions(field, formOptions);
             this._setRemoteTypeahead(field, formOptions);
           }
+
           if (this.editorSettings.longMode === true) {
             // show the field if the model contains a value useful for edition
             field.hooks = {
@@ -412,11 +422,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                 this.hideShowEmptyField(f);
               }
             };
-          }
-
-          field.templateOptions.longMode = this.editorSettings.longMode;
-
-          if (this.editorSettings.longMode) {
             // Add an horizontal wrapper
             if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
               field.wrappers = [
@@ -433,7 +438,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             }
           }
 
-          if (this._resourceConfig.formFieldMap) {
+          field.templateOptions.longMode = this.editorSettings.longMode;
+
+          if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
 
@@ -444,7 +451,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     this.fields = fields;
     // set root element
     if (this.fields) {
-        this.rootFomlyConfig = this.fields[0];
+      this.rootFomlyConfig = this.fields[0];
     }
   }
 
@@ -464,16 +471,16 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
     if (!modelEmpty && (field.templateOptions.hide === true)) {
-        setTimeout(() => {
-          field.hide = false;
-          this._editorService.removeHiddenField(field);
-        });
+      setTimeout(() => {
+        field.hide = false;
+        this._editorService.removeHiddenField(field);
+      });
     }
     if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
-        setTimeout(() => {
-          field.hide = true;
-          this._editorService.addHiddenField(field);
-        });
+      setTimeout(() => {
+        field.hide = true;
+        this._editorService.addHiddenField(field);
+      });
     }
   }
 
@@ -545,40 +552,40 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     // if the modal is closed by clicking the 'save' button, the `saveEvent` is fired.
     // Subscribe to this event know when creating a model
     component._subscribers.push(saveAsTemplateModalRef.content.saveEvent.subscribe(
-        (data) => {
-          component._spinner.show();
-          let modelData = removeEmptyValues(component.model);
-          modelData = component.postprocessRecord(modelData);
+      (data) => {
+        component._spinner.show();
+        let modelData = removeEmptyValues(component.model);
+        modelData = component.postprocessRecord(modelData);
 
-          let record = {
-            name: data.name,
-            data: modelData,
-            template_type: component.recordType,
-          };
-          const tmplConfig = component._recordUiService.getResourceConfig(component.editorSettings.template.recordType);
-          if (tmplConfig.preCreateRecord) {
-            record = tmplConfig.preCreateRecord(record);
-          }
-
-          // create template
-          component._recordService.create(component.editorSettings.template.recordType, record).subscribe(
-            (createdRecord) => {
-              component._toastrService.success(
-                component._translateService.instant('Record created.'),
-                component._translateService.instant(component.editorSettings.template.recordType)
-              );
-              component._recordUiService.redirectAfterSave(
-                createdRecord.metadata.pid,
-                createdRecord,
-                component.editorSettings.template.recordType,
-                'create',
-                component._route
-              );
-            }
-          );
-          component._spinner.hide();
-          component.loadingChange.emit(true);
+        let record = {
+          name: data.name,
+          data: modelData,
+          template_type: component.recordType,
+        };
+        const tmplConfig = component._recordUiService.getResourceConfig(component.editorSettings.template.recordType);
+        if (tmplConfig.preCreateRecord) {
+          record = tmplConfig.preCreateRecord(record);
         }
+
+        // create template
+        component._recordService.create(component.editorSettings.template.recordType, record).subscribe(
+          (createdRecord) => {
+            component._toastrService.success(
+              component._translateService.instant('Record created.'),
+              component._translateService.instant(component.editorSettings.template.recordType)
+            );
+            component._recordUiService.redirectAfterSave(
+              createdRecord.metadata.pid,
+              createdRecord,
+              component.editorSettings.template.recordType,
+              'create',
+              component._route
+            );
+          }
+        );
+        component._spinner.hide();
+        component.loadingChange.emit(true);
+      }
     ));
   }
 
@@ -597,9 +604,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Populate the field to add to the TOC
    */
   getTocFields() {
-      if (this.fields && this.fields.length > 0) {
-        this.tocFields = this.fields[0].fieldGroup.filter(f => f.hide !== true);
-      }
+    if (this.fields && this.fields.length > 0) {
+      this.tocFields = this.fields[0].fieldGroup.filter(f => f.hide !== true);
+    }
   }
 
   /**
@@ -675,7 +682,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       field.type = 'remoteTypeahead';
       field.templateOptions = {
         ...field.templateOptions,
-        ...{remoteTypeahead: formOptions.remoteTypeahead}
+        ...{ remoteTypeahead: formOptions.remoteTypeahead }
       };
     }
   }
@@ -776,8 +783,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                   const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
                   const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
                   const isMustLessThan = strict
-                  ? dateStart >= dateEnd ? false : true
-                  : dateStart > dateEnd ? false : true;
+                    ? dateStart >= dateEnd ? false : true
+                    : dateStart > dateEnd ? false : true;
                   if (isMustLessThan) {
                     endDateFc.setErrors(null);
                     endDateFc.markAsDirty();
@@ -807,8 +814,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                   const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
                   const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
                   const isMustBeGreaterThan = strict
-                  ? dateStart <= dateEnd ? true : false
-                  : dateStart < dateEnd ? true : false;
+                    ? dateStart <= dateEnd ? true : false
+                    : dateStart < dateEnd ? true : false;
                   if (isMustBeGreaterThan) {
                     startDateFc.setErrors(null);
                     startDateFc.markAsDirty();
