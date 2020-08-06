@@ -47,7 +47,7 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
     this.isChildrenObject = this.field.fieldArray.type === 'object';
     this.isChildrenArray = this.field.fieldArray.type === 'array';
 
-    // reset the number of elements in the array when the array id hidden
+    // reset the number of elements in the array when the array is hidden
     this.field.options.fieldChanges.subscribe(changes => {
       const minItems = this.field.templateOptions.minItems ? this.field.templateOptions.minItems : 0;
       if (
@@ -61,12 +61,9 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
         // number of elements to remove
         const numberOfItemsToRemove = this.field.fieldGroup.length - minItems;
         // remove the extra elements
-        // force removing the elements in the next event loop else this cause errors when removing multiple values
-        setTimeout(() => {
-          for (let i = 0; i < numberOfItemsToRemove; i++) {
-            this.remove(0);
-          }
-        });
+        for (let i = 0; i < numberOfItemsToRemove; i++) {
+          this.remove(0);
+        }
       }
     });
   }

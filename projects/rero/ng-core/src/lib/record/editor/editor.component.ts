@@ -129,8 +129,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param changes: the changed properties
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.model && !changes.model.isFirstChange) { // Model has changed
+    if (changes.model && !changes.model.isFirstChange()) { // Model has changed
       this._setModel(changes.model.currentValue);
+      // needed to select the right value for existing data in the multi select
+      // components such as oneOf
+      if (this.schema) {
+        this.setSchema(this.schema);
+      }
     }
   }
 
@@ -306,6 +311,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     // reorder all object properties
     this.schema = orderedJsonSchema(schema);
     this.options = {};
+    // remove hidden field list in case of a previous setSchema call
+    this._editorService.clearHiddenFields();
 
     // form configuration
     const fields = [
@@ -379,16 +386,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
     if (!modelEmpty && (field.hide === true)) {
-      setTimeout(() => {
         field.hide = false;
         this._editorService.removeHiddenField(field);
-      });
     }
     if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
-      setTimeout(() => {
         field.hide = true;
         this._editorService.addHiddenField(field);
-      });
     }
   }
 
@@ -452,11 +455,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Populate the field to add to the TOC
    */
   getTocFields() {
-    setTimeout(() => {
       if (this.fields && this.fields.length > 0) {
         this.tocFields = this.fields[0].fieldGroup.filter(f => f.hide !== true);
       }
-    });
   }
 
   /**
