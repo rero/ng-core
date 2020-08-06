@@ -98,16 +98,18 @@ export class DatepickerTypeComponent extends FieldType implements OnInit {
    */
   private initValueChange() {
     this.formControl.valueChanges.subscribe(isoDate => {
-      let patchDate: any;
-      try {
-        const date = new Date(isoDate);
-        patchDate = formatDate(
-          date,
-          this.field.templateOptions.outputDateFormat,
-          this._locale
-        );
-      } catch {
-        patchDate = undefined;
+      let patchDate: any = null;
+      if (isoDate != null) {  // if reset() function is called, 'null' is send
+        try {
+          const date = new Date(isoDate);
+          patchDate = formatDate(
+            date,
+            this.field.templateOptions.outputDateFormat,
+            this._locale
+          );
+        } catch {
+          patchDate = undefined;
+        }
       }
       if (this.formControl.value !== patchDate) {
         this.formControl.patchValue(patchDate);
