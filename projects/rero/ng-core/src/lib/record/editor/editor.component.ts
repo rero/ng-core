@@ -320,12 +320,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           const formOptions = jsonSchema.form;
 
           if (formOptions) {
-            this.setSimpleOptions(field, formOptions);
-            this.setValidation(field, formOptions);
-            this.setRemoteSelectOptions(field, formOptions);
+            this._setSimpleOptions(field, formOptions);
+            this._setValidation(field, formOptions);
+            this._setRemoteSelectOptions(field, formOptions);
+            this._setRemoteTypeahead(field, formOptions);
           }
           if (this.longMode === true) {
-            // show the field if the model contains a value usefull for edition
+            // show the field if the model contains a value useful for edition
             field.hooks = {
               ...field.hooks,
               onPopulate: (f: any) => {
@@ -472,7 +473,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private setRemoteSelectOptions(
+  private _setRemoteSelectOptions(
     field: FormlyFieldConfig,
     formOptions: JSONSchema7
   ) {
@@ -506,11 +507,29 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Store the remote typeahead options.
+   * @param field formly field config
+   * @param formOptions JSONSchema object
+   */
+  private _setRemoteTypeahead(
+    field: FormlyFieldConfig,
+    formOptions: JSONSchema7
+  ) {
+    if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
+      field.type = 'remoteTypeahead';
+      field.templateOptions = {
+        ...field.templateOptions,
+        ...{remoteTypeahead: formOptions.remoteTypeahead}
+      };
+    }
+  }
+
+  /**
    *
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private setValidation(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+  private _setValidation(field: FormlyFieldConfig, formOptions: JSONSchema7) {
     if (formOptions.validation) {
       // custom validation messages
       const messages = formOptions.validation.messages;
@@ -608,7 +627,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private setSimpleOptions(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: JSONSchema7) {
     // ngx formly standard options
     // hide a field at startup
     if (formOptions.hide === true) {
