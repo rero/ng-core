@@ -1,0 +1,42 @@
+<!--
+ RERO angular core
+ Copyright (C) 2020 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<!-- input field: empty ref -->
+<ng-container *ngIf="formControl">
+  <div *ngIf="!formControl.value; else metadataTemplate" class="input-group">
+    <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
+      [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
+      (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
+      [typeaheadGroupField]="groupField" typeaheadOptionField="label" />
+    <div class="input-group-append">
+      <span class="input-group-text" id="{field.id}-search">
+        <i *ngIf="!typeaheadLoading" class="fa fa-search"></i>
+        <i *ngIf="typeaheadLoading" class="fa fa-spinner fa-spin"></i>
+      </span>
+    </div>
+  </div>
+
+  <!-- text representation of the value in ref -->
+  <ng-template #metadataTemplate>
+    <div *ngIf="valueAsHTML$ | async as valueAsHTML">
+      <div class="d-inline" [innerHTML]="valueAsHTML"></div>
+      <button class="btn btn-link text-secondary btn-sm" type="button" (click)="clear()">
+        <i class="fa fa-trash"></i>
+      </button>
+    </div>
+  </ng-template>
+</ng-container>

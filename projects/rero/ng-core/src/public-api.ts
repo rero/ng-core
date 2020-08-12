@@ -62,3 +62,5 @@ export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/error/error.component';
+export * from './lib/record/editor/remote-typeahead/remote-typeahead.service';
+export * from './lib/record/editor/remote-typeahead/remote-typeahead.component';

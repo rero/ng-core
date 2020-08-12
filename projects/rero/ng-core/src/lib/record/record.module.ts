@@ -52,6 +52,7 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { RemoteTypeaheadComponent } from './editor/remote-typeahead/remote-typeahead.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     BucketsComponent,
     HorizontalWrapperComponent,
     AggregationSliderComponent,
-    SelectWithSortTypeComponent
+    SelectWithSortTypeComponent,
+    RemoteTypeaheadComponent
   ],
   imports: [
     CoreModule,
@@ -122,7 +124,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'object', component: ObjectTypeComponent },
         { name: 'multischema', component: MultiSchemaTypeComponent },
         { name: 'datepicker', component: DatepickerTypeComponent },
-        { name: 'selectWithSort', component: SelectWithSortTypeComponent }
+        { name: 'selectWithSort', component: SelectWithSortTypeComponent },
+        { name: 'remoteTypeahead', component: RemoteTypeaheadComponent }
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
