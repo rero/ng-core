@@ -64,11 +64,9 @@ const sortByKey = <T>(a: T, b: T, ...keys: string[]): number => {
     const direction = (desc) ? -1 : 1;
 
     // Perform bubble sort based on the values.
-    if (a[key] > b[key]) {
-        return 1 * direction;
-    }
-    if (a[key] < b[key]) {
-        return -1 * direction;
+    const authorizedSort = [-1, 1];
+    if (authorizedSort.includes(a[key].localeCompare(b[key]))) {
+      return a[key].localeCompare(b[key]) * direction;
     }
 
     // The values of the current key are equal, so if we still
