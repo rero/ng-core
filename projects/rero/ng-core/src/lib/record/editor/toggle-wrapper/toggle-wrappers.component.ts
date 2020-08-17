@@ -27,7 +27,6 @@ import { isEmpty, removeEmptyValues } from '../utils';
           <input class="custom-control-input" type="checkbox" id="toggle-switch" (change)="toggle($event)" [checked]="tsOptions.enabled">
           <label class="custom-control-label" for="toggle-switch" [tooltip]="tsOptions.description">{{ tsOptions.label }}</label>
         </div>
-        <small class="form-text text-muted" *ngIf="tsOptions.description">{{ tsOptions.description }}</small>
       </div>
       <ng-container *ngIf="tsOptions.enabled" #fieldComponent></ng-container>
     </div>
