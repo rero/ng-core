@@ -19,6 +19,7 @@ import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import sha256 from 'crypto-js/sha256';
 import { BehaviorSubject, isObservable } from 'rxjs';
+import { SelectOption } from './interfaces';
 
 /**
  * Add onPopulate hook at the field level.
@@ -176,10 +177,16 @@ export class TranslateExtension {
   private _translateOptions(options: any) {
     const selectOptions = [];
     options.forEach((element: any) => {
-      selectOptions.push({
+      const translatedOption: SelectOption = {
         label: this._translate.instant(element.label),
         value: element.value
-      });
+      };
+
+      if (element.group) {
+        translatedOption.group = element.group;
+      }
+
+      selectOptions.push(translatedOption);
     });
     return selectOptions;
   }
