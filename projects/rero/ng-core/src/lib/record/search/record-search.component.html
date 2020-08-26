@@ -104,7 +104,31 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-3" *ngIf="aggregations && aggregations.length">
+      <div class="col-sm-3" *ngIf="(aggregations && aggregations.length) || searchFields.length > 0">
+        <div class="btn-group btn-block mb-3" dropdown *ngIf="searchFields.length > 0 && q">
+          <button
+              class="btn btn-outline-primary btn-sm text-left"
+              [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
+              *ngIf="searchFields.length === 1; else fieldsDropdown"
+              (click)="searchInField(searchFields[0])"
+          >
+              {{ 'Search in' | translate }} {{ searchFields[0].label | lowercase }}
+          </button>
+          <ng-template #fieldsDropdown>
+            <button dropdownToggle type="button" class="btn btn-outline-primary btn-sm rounded text-left" [ngClass]="{ active: selectedSearchFields.length > 0 }">
+              {{ 'Search in' | translate }}
+              <span>{{ selectedSearchFields.length > 0 ? ' "' + selectedSearchFields[0].label + '"' : '...' }}</span>
+            </button>
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
+              <li *ngFor="let field of searchFields">
+                <a href="#" class="dropdown-item" [ngClass]="{ 'active': field.selected }"
+                  (click)="$event.preventDefault(); searchInField(field)">
+                  {{ field.label }}
+                </a>
+              </li>
+            </ul>
+          </ng-template>
+        </div>
         <div *ngFor="let item of aggregations">
           <ng-core-record-search-aggregation
             [aggregation]="item"

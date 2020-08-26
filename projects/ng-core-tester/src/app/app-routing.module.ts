@@ -257,7 +257,17 @@ const routes: Routes = [
           itemHeaders: {
             'Content-Type': 'application/rero+json'
           },
-          filesEnabled: true
+          filesEnabled: true,
+          searchFields: [
+            {
+              label: 'Full-text',
+              path: 'fulltext'
+            },
+            {
+              label: 'Main title',
+              path: 'title.mainTitle.value'
+            }
+          ]
         },
         {
           key: 'organisations',

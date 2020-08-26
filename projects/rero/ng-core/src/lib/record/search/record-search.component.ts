@@ -24,7 +24,7 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
-import { Record } from '../record';
+import { Record, SearchField } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
@@ -135,6 +135,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     can: true,
     message: ''
   };
+
+  /**
+   * List of fields on which we can do a specific search.
+   */
+  searchFields: Array<SearchField> = [];
 
   /**
    * JSON stringified of last search parameters. Used for checking if we have
@@ -336,7 +341,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (this._config.resultsText) {
       return this._config.resultsText(this.hits);
     }
-    return this._translateService.stream('{{ total }} results', {total: this.total});
+    return this._translateService.stream('{{ total }} results', { total: this.total });
   }
 
   /**
@@ -394,6 +399,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   set currentPage(page: number) {
     this.page = +page;
     this._getRecords(false);
+  }
+
+  /**
+   * Return the list of search fields that are selected.
+   *
+   * @return List of selected search fields.
+   */
+  get selectedSearchFields(): Array<SearchField> {
+    return this.searchFields.filter((field: SearchField) => field.selected);
   }
 
   /**
@@ -600,6 +614,29 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Select or deselect a search field and launch a search if a query is specified.
+   *
+   * @param field SearchField
+   * @returns void
+   */
+  searchInField(field: SearchField): void {
+    // Toggle the current field and un-select others.
+    this.searchFields = this.searchFields.map((item: SearchField) => {
+      if (item === field) {
+        item.selected = !item.selected;
+      } else {
+        item.selected = false;
+      }
+      return item;
+    });
+
+    // If query string is specified, search is processed.
+    if (this.q) {
+      this.searchByQuery(this.q);
+    }
+  }
+
+  /**
    * Search for records.
    * @param resetPage If page needs to be resetted to 1.
    * @param emitParameters If parameters have to be emitted in parents.
@@ -613,9 +650,12 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     this._spinner.show();
 
+    // Build query string
+    const q = this._buildQueryString();
+
     this._recordService.getRecords(
       this.currentType,
-      this.q,
+      q,
       this.page,
       this.size,
       this.aggregationsFilters,
@@ -666,6 +706,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
     });
+
+    this._loadSearchFields();
   }
 
   /**
@@ -712,5 +754,48 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       sort: this.sort,
       aggregationsFilters: this.aggregationsFilters
     });
+  }
+
+  /**
+   * Load search fields stored in configuration and assign to them the
+   * `selected` property.
+   *
+   * @returns void
+   */
+  private _loadSearchFields(): void {
+    // No search fields, reset previous stored and return.
+    if (!this._config.searchFields) {
+      this.searchFields = [];
+      return;
+    }
+
+    // Store search fields.
+    this.searchFields = this._config.searchFields.map((field: SearchField) => {
+      if (!field.selected) {
+        field.selected = false;
+      }
+      return field;
+    });
+  }
+
+  /**
+   * Build query string with possibly search fields.
+   *
+   * @return Final query string.
+   */
+  private _buildQueryString(): string {
+    // If query is empty or no selected fields found, the initial query string
+    // is returned.
+    if (!this.q || this.selectedSearchFields.length === 0) {
+      return this.q;
+    }
+
+    // Loop over select fields and add them to final query string.
+    const queries = [];
+    this.selectedSearchFields.forEach((field: SearchField) => {
+      queries.push(`${field.path}:${this.q}`);
+    });
+
+    return queries.join(' ');
   }
 }
