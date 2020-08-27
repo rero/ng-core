@@ -19,7 +19,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { RecordService } from '../../../record.service';
@@ -58,7 +58,8 @@ export class LoadTemplateFormComponent implements OnInit {
       private _translateService: TranslateService,
       protected _bsModalRef: BsModalRef,
       private _router: Router,
-      private _toastrService: ToastrService
+      private _toastrService: ToastrService,
+      private _route: ActivatedRoute
   ) { }
 
   /**
@@ -66,7 +67,6 @@ export class LoadTemplateFormComponent implements OnInit {
    */
   ngOnInit() {
     const initialState: any = this._modalService.config.initialState;
-
     this.formFields.push({
       key: 'template',
       type: 'select',
@@ -108,7 +108,8 @@ export class LoadTemplateFormComponent implements OnInit {
     const formValues = this.form.value;
     this._recordService.getRecord('templates', formValues.template).subscribe(
         (template) => {
-          this._router.navigate([], {queryParams: {source: 'templates', pid: template.metadata.pid}});
+          const params = {...this._route.snapshot.queryParams, ...{source: 'templates', pid: template.metadata.pid}};
+          this._router.navigate([], {queryParams: params});
           this.closeModal();
         },
         (error) => {
