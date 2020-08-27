@@ -14,66 +14,100 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="row editor">
-  <!-- add fields section -->
-  <div *ngIf="longMode" class="col-md-3 col-xl-2 bd-sidebar">
-    <ng-core-editor-add-field-editor
-      class="bd-search d-flex align-items-center"
-    >
-    </ng-core-editor-add-field-editor>
-  </div>
+<form [formGroup]="form" (ngSubmit)="submit()">
 
-  <!-- TOC navigation -->
-  <nav
-    *ngIf="longMode"
-    class="d-none d-xl-block col-xl-2 bd-toc"
-    aria-label="Secondary navigation"
-  >
-    <label for="addField" translate>Jump to</label>
-    <ul class="section-nav">
-      <li *ngFor="let f of tocFields" class="toc-entry toc-h2">
-        <a href (click)="setFocus($event, f)">{{ f.templateOptions.label }}</a>
-      </li>
-    </ul>
-  </nav>
+    <div class="row editor">
 
-  <!-- editor itself -->
-  <div class="col" [ngClass]="{ longMode: 'col-md-9 col-xl-8' }" role="main">
-    <form
-      class="col"
-      [formGroup]="form"
-      (ngSubmit)="submit()"
-    >
-      <!-- ngx-formly -->
-      <formly-form
-        [model]="model"
-        [fields]="fields"
-        [options]="options"
-        [form]="form"
-        (modelChange)="modelChanged($event)"
-      ></formly-form>
+        <!-- Editor title and editor actions buttons -->
+        <div class="header py-2 mb-3 col-12 border-bottom">
+            <legend *ngIf="rootFomlyConfig">
+                <span [tooltip]="rootFomlyConfig.templateOptions.description">
+                  {{ rootFomlyConfig.templateOptions.label }}
+                </span>
+            </legend>
+            <!-- buttons -->
+            <div class="actions">
+                <!-- cancel button -->
+                <button type="button"
+                        id="editor-delete-button"
+                        class="btn btn-outline-danger btn-sm"
+                        (click)="cancel()">
+                    <i class="fa fa-times"></i>
+                    {{ 'Cancel' | translate }}
+                </button>
+                <!-- load from template button -->
+                <button *ngIf="editorSettings.template.loadFromTemplate"
+                        type="button"
+                        id="editor-load-template-button"
+                        class="btn btn-outline-primary btn-sm ml-1"
+                        (click)="showLoadTemplateDialog()">
+                    <i class="fa fa-upload"></i>
+                    {{ 'Load template' | translate }} …
+                </button>
+                <!-- save button -->
+                <div class="btn-group" dropdown>
+                    <button type="submit"
+                            id="editor-save-button"
+                            class="btn btn-primary btn-sm ml-1">
+                        <i class="fa fa-save"></i>
+                        {{ 'Save' | translate }}
+                    </button>
+                    <ng-container *ngIf="saveAlternatives.length > 0">
+                        <button type="button"
+                                id="editor-save-button-split"
+                                dropdownToggle
+                                class="btn btn-sm btn-primary dropdown-toggle-split"
+                                aria-controls="dropdown-split">
+                            <i class="fa fa-caret-down"></i>
+                        </button>
+                        <ul id="editor-save-button-dropdown-split"
+                            *dropdownMenu
+                            class="dropdown-menu dropdown-menu-right"
+                            role="menu"
+                            aria-labelledby="button-split">
+                            <li role="menuitem" *ngFor="let entry of saveAlternatives">
+                                <a class="dropdown-item" (click)="entry.action(entry, this)">{{ entry.label }}</a>
+                            </li>
+                        </ul>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
 
-      <div class="mt-4 float-right">
-        <!-- submit button -->
-        <button
-          id="editor-delete-button"
-          type="button"
-          (click)="cancel()"
-          class="btn btn-outline-danger btn-sm mr-1"
+
+        <!-- add fields section -->
+        <div *ngIf="editorSettings.longMode" class="col-md-3 col-xl-2 bd-sidebar">
+            <ng-core-editor-add-field-editor
+                    class="bd-search d-flex align-items-center"
+            >
+            </ng-core-editor-add-field-editor>
+        </div>
+
+        <!-- TOC navigation -->
+        <nav
+                *ngIf="editorSettings.longMode"
+                class="d-none d-xl-block col-xl-2 bd-toc"
+                aria-label="Secondary navigation"
         >
-          <i class="fa fa-times"></i>
-          {{ 'Cancel' | translate }}
-        </button>
-        <button
-          id="editor-save-button"
-          type="submit"
-          class="btn btn-primary btn-sm"
-        >
-          <i class="fa fa-save"></i>
-          {{ 'Save' | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+            <label for="addField" translate>Jump to</label>
+            <ul class="section-nav">
+                <li *ngFor="let f of tocFields" class="toc-entry toc-h2">
+                    <a href (click)="setFocus($event, f)">{{ f.templateOptions.label }}</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- editor itself -->
+        <div class="col" [ngClass]="{ 'col-md-9 col-xl-8': editorSettings.longMode }" role="main">
+            <!-- ngx-formly -->
+            <formly-form
+                    [model]="model"
+                    [fields]="fields"
+                    [options]="options"
+                    [form]="form"
+                    (modelChange)="modelChanged($event)"
+            ></formly-form>
+        </div>
+    </div>
+</form>
 <ng-core-error [error]="error" *ngIf="error"></ng-core-error>

@@ -16,7 +16,7 @@
  */
 import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../../services/editor.service';
 import { TranslateService } from '@ngx-translate/core';
 
 /**

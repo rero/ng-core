@@ -17,22 +17,27 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 } from 'json-schema';
+import { cloneDeep } from 'lodash-es';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
+import { RouteCollectionService } from '../../route/route-collection.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { EditorService } from './editor.service';
+import { EditorService } from './services/editor.service';
 import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
+import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
+import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
 @Component({
   selector: 'ng-core-editor',
@@ -61,14 +66,27 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   // form configuration
   fields: FormlyFieldConfig[];
 
+  // root element of the editor
+  rootFomlyConfig: FormlyFieldConfig;
+
   // list of fields to display in the TOC
   tocFields = [];
 
   // JSONSchema
   schema: any;
 
-  // mode for long editor
-  longMode = false;
+  // editor settings
+  editorSettings = {
+    longMode: false,  // editor long mode
+    template: {
+      recordType: undefined,    // the resource considerate as template
+      loadFromTemplate: false,  // enable load from template button
+      saveAsTemplate: false     // allow to save the record as a template
+    }
+  };
+
+  // save alternatives
+  saveAlternatives: {label: string, action: any}[];
 
   // current record type from the url
   recordType = null;
@@ -107,6 +125,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param _toastrService Toast service.
    * @param _location Location.
    * @param _spinner Spinner service.
+   * @param _modalService BsModalService.
+   * @param _router Router.
+   * @param _routeCollectionService RouteCollectionService
    */
   constructor(
     private _formlyJsonschema: FormlyJsonschema,
@@ -118,7 +139,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _translateService: TranslateService,
     private _toastrService: ToastrService,
     private _location: Location,
-    private _spinner: NgxSpinnerService
+    private _spinner: NgxSpinnerService,
+    private _modalService: BsModalService,
+    private _router: Router,
+    private _routeCollectionService: RouteCollectionService
   ) {
     this.form = new FormGroup({});
   }
@@ -159,29 +183,70 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
         this.recordType = params.type;
         this._recordUiService.types = this._route.snapshot.data.types;
+
         this._resourceConfig = this._recordUiService.getResourceConfig(
           this.recordType
         );
-        if (this._resourceConfig.editorLongMode === true) {
-          this.longMode = true;
+        if (this._resourceConfig.editorSettings) {
+          this.editorSettings = {...cloneDeep(this.editorSettings), ...this._resourceConfig.editorSettings};
         }
+
+        // load template resource configuration if needed
+        //   If editor allowed to use a resource as a template, we need to load the configuration
+        //   of this resource and save it into `recordUIService.types` to use it when loading and saving
+        if (this.editorSettings.template.recordType !== undefined) {
+          const tmplResource = this._routeCollectionService.getRoute(this.editorSettings.template.recordType);
+          const tmplConfiguration = tmplResource.getConfiguration();
+          if (tmplConfiguration.hasOwnProperty('data')
+              && tmplConfiguration.data.hasOwnProperty('types')) {
+            this._recordUiService.types = this._recordUiService.types.concat(tmplConfiguration.data.types);
+          }
+        }
+
+        // saveAlternatives construction
+        //   Depending of editor configuration, it's possible to provide some alternatives save
+        //   methods. Each method must defined a label and a callback function used when user choose
+        //   this save method.
+        this.saveAlternatives = [];
+        if (this.editorSettings.template.saveAsTemplate) {
+          this.saveAlternatives.push({
+            label: this._translateService.instant('Save as template') + '…',
+            action: this._saveAsTemplate
+          });
+        }
+
         this.pid = params.pid;
-
-        const schema$: Observable<any> = this._recordService.getSchemaForm(
-          this.recordType
-        );
-
+        const schema$: Observable<any> = this._recordService.getSchemaForm(this.recordType);
         let record$: Observable<any> = of({ record: {}, result: null });
-        if (this.pid) {
+        // load from template
+        //   If the url contains query arguments 'source' and 'pid' and 'source'=='templates'
+        //   then we need to use the data from this template as data source to fill the form.
+        if (queryParams.source === 'templates' && queryParams.pid != null) {
+          record$ = this._recordService.getRecord('templates', queryParams.pid).pipe(
+              map((record: any) => {
+                this._toastrService.success(
+                  this._translateService.instant('Template loaded')
+                );
+                return {
+                  result: true,
+                  record: record.metadata.data
+                };
+              })
+          );
+        // load data from existing document
+        //   If the parsed url contains a 'pid' value, then user try to edit a record. Then
+        //   we need to load this record and use it as data source to fill the form.
+        } else if (this.pid) {
           record$ = this._recordService
             .getRecord(this.recordType, this.pid)
             .pipe(
               switchMap((record: any) => {
-                return this._recordUiService
-                  .canUpdateRecord$(record, this.recordType)
-                  .pipe(
+                return this._recordUiService.canUpdateRecord$(record, this.recordType).pipe(
                     map((result) => {
-                      return { result, record: record.metadata };
+                      return {
+                        result,
+                        record: record.metadata
+                      };
                     })
                   );
               })
@@ -332,7 +397,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setRemoteSelectOptions(field, formOptions);
             this._setRemoteTypeahead(field, formOptions);
           }
-          if (this.longMode === true) {
+          if (this.editorSettings.longMode === true) {
             // show the field if the model contains a value useful for edition
             field.hooks = {
               ...field.hooks,
@@ -342,7 +407,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             };
           }
 
-          field.templateOptions.longMode = this.longMode;
+          field.templateOptions.longMode = this.editorSettings.longMode;
 
           if (this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
@@ -357,7 +422,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           }
 
           // Add an horizontal wrapper
-          if (this.longMode && this._horizontalWrapperTypes.some(elem => elem === field.type)) {
+          if (this.editorSettings.longMode && this._horizontalWrapperTypes.some(elem => elem === field.type)) {
             field.wrappers = [
               ...(field.wrappers ? field.wrappers : []),
               'form-field-horizontal'
@@ -368,6 +433,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       })
     ];
     this.fields = fields;
+    // set root element
+    if (this.fields) {
+        this.rootFomlyConfig = this.fields[0];
+    }
   }
 
   /**
@@ -415,10 +484,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     data = this.postprocessRecord(data);
 
     let recordAction$: Observable<any>;
-    let action = 'create';
-
     if (data.pid != null) {
-      action = 'update';
       recordAction$ = this._recordService.update(this.recordType, this.preUpdateRecord(data)).pipe(
         map(record => {
           return { record, action: 'update', message: this._translateService.instant('Record updated.') };
@@ -450,6 +516,61 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   *  Save the current editor content as a template
+   *  @param entry: the entry to use to fire this function
+   *  @param component: the parent editor component
+   */
+  private _saveAsTemplate(entry, component: EditorComponent) {
+    // NOTE about `component` param :
+    //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
+    //   loop value, not the current component. We need to pass this component as parameter of
+    //   the function to use it.
+
+    const saveAsTemplateModalRef = component._modalService.show(SaveTemplateFormComponent, {
+      ignoreBackdropClick: true,
+    });
+    // if the modal is closed by clicking the 'save' button, the `saveEvent` is fired.
+    // Subscribe to this event know when creating a model
+    component._subscribers.push(saveAsTemplateModalRef.content.saveEvent.subscribe(
+        (data) => {
+          component._spinner.show();
+          let modelData = removeEmptyValues(component.model);
+          modelData = component.postprocessRecord(modelData);
+
+          let record = {
+            name: data.name,
+            data: modelData,
+            template_type: component.recordType,
+          };
+          const tmplConfig = component._recordUiService.getResourceConfig(component.editorSettings.template.recordType);
+          if (tmplConfig.preCreateRecord) {
+            record = tmplConfig.preCreateRecord(record);
+          }
+
+          // create template
+          component._recordService.create(component.editorSettings.template.recordType, record).subscribe(
+            (createdRecord) => {
+              component._toastrService.success(
+                component._translateService.instant('Record created.'),
+                component._translateService.instant(component.editorSettings.template.recordType)
+              );
+              component._recordUiService.redirectAfterSave(
+                createdRecord.metadata.pid,
+                createdRecord,
+                component.editorSettings.template.recordType,
+                'create',
+                component._route
+              );
+            }
+          );
+          component._spinner.hide();
+          component.loadingChange.emit(true);
+        }
+    ));
+  }
+
+
+  /**
    * Scroll the window in to the DOM element corresponding to a given config field.
    * @param event - click DOM event
    * @param field - FormlyFieldConfig, the form config corresponding to the DOM element to jump to.
@@ -473,6 +594,19 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   cancel() {
     this._location.back();
+  }
+
+  /**
+   * Open a modal dialog box to load a template.
+   */
+  showLoadTemplateDialog() {
+    this._modalService.show(LoadTemplateFormComponent, {
+      ignoreBackdropClick: true,
+      initialState: {
+        templateResourceType: this.editorSettings.template.recordType,
+        resourceType: this.recordType
+      }
+    });
   }
 
   /********************* Private  ***************************************/
