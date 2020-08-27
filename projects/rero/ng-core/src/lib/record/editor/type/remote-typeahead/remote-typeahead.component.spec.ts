@@ -19,8 +19,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { CoreModule } from '../../../core.module';
-import { RecordModule } from '../../record.module';
+import { CoreModule } from '../../../../core.module';
+import { RecordModule } from '../../../record.module';
 import { RemoteTypeaheadComponent } from './remote-typeahead.component';
 
 

@@ -23,6 +23,7 @@ import { RecordUiService } from '../record-ui.service';
 import { RecordModule } from '../record.module';
 import { RecordService } from '../record.service';
 import { EditorComponent } from './editor.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 const recordUiServiceSpy = jasmine.createSpyObj('RecordUiService', [
   'getResourceConfig',
@@ -78,6 +79,7 @@ describe('EditorComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         RecordModule,
+        BrowserAnimationsModule,
         RouterTestingModule,
         TranslateModule.forRoot()
       ],

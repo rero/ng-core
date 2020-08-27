@@ -16,7 +16,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
-import { isEmpty, removeEmptyValues } from '../utils';
+import { isEmpty, removeEmptyValues } from '../../utils';
 
 @Component({
   selector: 'ng-core-editor-formly-toggle-wrapper',

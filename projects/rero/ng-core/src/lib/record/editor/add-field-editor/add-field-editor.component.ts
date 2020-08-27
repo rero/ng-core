@@ -21,7 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
 import { Observable, of, Subscriber } from 'rxjs';
 import { first, map, mergeMap } from 'rxjs/operators';
-import { EditorService } from '../editor.service';
+import { EditorService } from '../services/editor.service';
 
 /**
  * For big editor add the possiblity to display

@@ -14,15 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Observable } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
+import { TestBed } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
+import { TemplatesService } from './templates.service';
 
-/**
- * Interface representing a record detail.
- */
-export interface DetailRecord {
-    // Observable resolving record data
-    record$: Observable<any>;
+describe('TemplatesService', () => {
+  beforeEach(() => TestBed.configureTestingModule({
+    imports: [
+      TranslateModule.forRoot(),
+      HttpClientModule,
+    ]
+  }));
 
-    // Resource type
-    type: string;
-}
+  it('should be created', () => {
+    const service: TemplatesService = TestBed.get(TemplatesService);
+    expect(service).toBeTruthy();
+  });
+});

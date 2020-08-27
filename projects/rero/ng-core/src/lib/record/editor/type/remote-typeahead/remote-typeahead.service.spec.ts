@@ -17,8 +17,8 @@
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ApiService } from '../../../api/api.service';
-import { RecordService } from '../../record.service';
+import { ApiService } from '../../../../api/api.service';
+import { RecordService } from '../../../record.service';
 import { RemoteTypeaheadService } from './remote-typeahead.service';
 import { TranslateModule } from '@ngx-translate/core';
 
