@@ -16,12 +16,12 @@
  */
 
 import { Injectable } from '@angular/core';
-import { RecordService } from '../../record.service';
+import { RecordService } from '../../../record.service';
 import { map } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
-import { ApiService } from '../../../api/api.service';
+import { ApiService } from '../../../../api/api.service';
 import { SuggestionMetadata } from './remote-typeahead.component';
-import { Record } from '../../record';
+import { Record } from '../../../record';
 
 @Injectable({
   providedIn: 'root'

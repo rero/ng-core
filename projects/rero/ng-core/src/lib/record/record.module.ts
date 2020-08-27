@@ -32,16 +32,15 @@ import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
 import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-editor.component';
-import { ArrayTypeComponent } from './editor/array-type/array-type.component';
+import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
 import { fieldIdGenerator, hooksFormlyExtension, registerTranslateExtension } from './editor/extensions';
-import { HorizontalWrapperComponent } from './editor/horizontal-wrapper/horizontal-wrapper.component';
-import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
-import { ObjectTypeComponent } from './editor/object-type/object-type.component';
-import { RemoteTypeaheadComponent } from './editor/remote-typeahead/remote-typeahead.component';
-import { SwitchComponent } from './editor/switch/switch.component';
-import { ToggleWrapperComponent } from './editor/toggle-wrapper/toggle-wrappers.component';
+import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
+import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
+import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
+import { SwitchComponent } from './editor/type/switch/switch.component';
+import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
 import { RecordFilesComponent } from './files/files.component';
@@ -54,6 +53,10 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
+import { LoadTemplateFormComponent } from './editor/widgets/load-template-form/load-template-form.component';
+import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/save-template-form.component';
+
 
 @NgModule({
   declarations: [
@@ -82,9 +85,13 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     AggregationSliderComponent,
     SelectWithSortTypeComponent,
     RemoteTypeaheadComponent,
-    RecordFilesComponent
+    RecordFilesComponent,
+    LoadTemplateFormComponent,
+    SaveTemplateFormComponent
   ],
   imports: [
+    // NOTE : BrowserAnimationModule **should** be include in application core module.
+    // BrowserAnimationsModule,
     CoreModule,
     FormsModule,
     ReactiveFormsModule,
@@ -149,7 +156,9 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
   entryComponents: [
     JsonComponent,
     DetailJsonComponent,
-    AutocompleteComponent
+    AutocompleteComponent,
+    LoadTemplateFormComponent,
+    SaveTemplateFormComponent
   ],
   providers: [
     { provide: FORMLY_CONFIG, multi: true, useFactory: registerTranslateExtension, deps: [TranslateService] },

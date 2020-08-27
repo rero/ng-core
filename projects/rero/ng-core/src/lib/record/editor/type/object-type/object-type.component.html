@@ -14,12 +14,6 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!-- main title -->
-<ng-container *ngIf="isRoot()">
-  <legend>
-    <span [tooltip]="to.description">{{ to.label }}</span>
-  </legend>
-</ng-container>
 
 <!--  validation error message -->
 <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
