@@ -15,18 +15,45 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="float-right ml-5 mb-2" *ngIf="adminMode.can">
-    <a href id="result-edit-button" class="btn btn-link p-0 ml-2" [title]="'Edit'|translate" routerLink="edit/{{ record.metadata.pid }}"
-        *ngIf="updateStatus && updateStatus.can">
+    <!-- use button -->
+    <button *ngIf="useStatus && useStatus.can && useStatus.url"
+            id="result-use-button"
+            class="btn btn-sm btn-outline-primary"
+            [title]="'Use' | translate"
+            [name]="'Use' | translate"
+            (click)="useRecord()"
+    >
+        <i class="fa fa-hand-o-right"></i>
+    </button>
+
+    <!-- edit button -->
+    <button *ngIf="updateStatus && updateStatus.can"
+            id="result-edit-button"
+            class="btn btn-sm btn-outline-primary ml-2"
+            [title]="'Edit' | translate"
+            [name]="'Edit' | translate"
+            (click)="editRecord(record.metadata.pid)"
+            routerLink="edit/{{ record.metadata.pid }}">
         <i class="fa fa-pencil"></i>
-    </a>
+    </button>
+
+    <!-- delete button -->
     <span class="ml-2" *ngIf="deleteStatus">
-        <button id="result-delete-button" class="btn btn-link p-0" [title]="'Delete'|translate" (click)="deleteRecord(record.metadata.pid)"
-            *ngIf="deleteStatus.can; else deleteMessageLink">
+        <button *ngIf="deleteStatus.can; else deleteMessageLink"
+                id="result-delete-button"
+                class="btn btn-sm btn-outline-danger"
+                [title]="'Delete' | translate"
+                [name]="'Delete' | translate"
+                (click)="deleteRecord(record.metadata.pid)">
             <i class="fa fa-trash"></i>
         </button>
         <ng-template #deleteMessageLink>
-            <button id="result-delete-button" class="btn btn-link p-0 text-muted" [title]="'Delete'|translate"
-                (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
+            <button id="result-delete-button"
+                    disabled
+                    class="btn btn-sm btn-outline-danger"
+                    [title]="'Delete'|translate"
+                    [name]="'Delete'|translate"
+                    (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
                 <i class="fa fa-trash"></i>
             </button>
         </ng-template>

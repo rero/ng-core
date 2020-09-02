@@ -21,6 +21,8 @@ import { RecordUiService } from '../../record-ui.service';
 import { JsonComponent } from './item/json.component';
 import { ResultItem } from './item/result-item';
 import { RecordSearchResultDirective } from './record-search-result.directive';
+import { Router} from '@angular/router';
+
 
 @Component({
   selector: 'ng-core-record-search-result',
@@ -41,6 +43,11 @@ export class RecordSearchResultComponent implements OnInit {
    * Store if record can be updated or not
    */
   updateStatus: ActionStatus;
+
+  /**
+   * Store if record can be use or not
+   */
+  useStatus: ActionStatus;
 
   /**
    * Detail URL value, resolved by observable property detailUrl$.
@@ -87,6 +94,12 @@ export class RecordSearchResultComponent implements OnInit {
   canDelete$: Observable<ActionStatus>;
 
   /**
+   * Record can be used (mainly for templates)
+   */
+  @Input()
+  canUse$: Observable<ActionStatus>;
+
+  /**
    * Aggregations
    */
   @Input()
@@ -113,10 +126,12 @@ export class RecordSearchResultComponent implements OnInit {
    *
    * @param _componentFactoryResolver Component factory resolver.
    * @param _recordUiService Record UI service.
+   * @param _router: Router
    */
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
-    private _recordUiService: RecordUiService
+    private _recordUiService: RecordUiService,
+    private _router: Router
   ) {
     this.currentUrl = window.location.href;
   }
@@ -134,6 +149,12 @@ export class RecordSearchResultComponent implements OnInit {
     if (this.canUpdate$) {
       this.canUpdate$.subscribe((result: ActionStatus) => {
         this.updateStatus = result;
+      });
+    }
+
+    if (this.canUse$) {
+      this.canUse$.subscribe((result: ActionStatus) => {
+        this.useStatus = result;
       });
     }
 
@@ -163,7 +184,6 @@ export class RecordSearchResultComponent implements OnInit {
 
   /**
    * Delete a record
-   * @param event - Event, dom event fired
    * @param pid - string, pid to delete
    */
   deleteRecord(pid: string) {
@@ -171,8 +191,22 @@ export class RecordSearchResultComponent implements OnInit {
   }
 
   /**
+   * Edit a record
+   * @param pid - string: the pid to edit
+   */
+  editRecord(pid: string) {
+    this._router.navigate(['/', 'records', this.type, 'edit', pid]);
+  }
+
+  /**
+   * Use a record
+   */
+  useRecord() {
+    this._router.navigateByUrl(this.useStatus.url);
+  }
+
+  /**
    * Show dialog with the reason why record cannot be deleted.
-   * @param event - Event
    * @param message - string, message to display
    */
   showDeleteMessage(message: string) {
