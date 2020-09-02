@@ -17,8 +17,28 @@
 <div class="main-content">
   <ng-core-error [error]="error" *ngIf="error"></ng-core-error>
   <div class="float-right ml-4 mt-2 mb-4" *ngIf="record && adminMode.can">
-    <a href class="btn btn-sm btn-primary" [routerLink]="['../../edit', record.metadata.pid]"
-      *ngIf="updateStatus && updateStatus.can" id="detail-edit-button">
+    <button *ngIf="useStatus && useStatus.can && useStatus.url"
+            id="detail-use-button"
+            class="btn btn-sm btn-primary ml-1"
+            [ngClass]="{
+               'btn-outline-primary': !isPrimaryAction('use'),
+               'btn-primary': isPrimaryAction('use')
+            }"
+            (click)="useRecord()"
+    >
+      <i class="fa fa-hand-o-right"></i>
+      {{ 'Use' | translate }}
+    </button>
+    <a *ngIf="updateStatus && updateStatus.can"
+       id="detail-edit-button"
+       href
+       class="btn btn-sm ml-1"
+       [ngClass]="{
+           'btn-outline-primary': !isPrimaryAction('edit'),
+           'btn-primary': isPrimaryAction('edit')
+       }"
+       [routerLink]="['../../edit', record.metadata.pid]"
+      >
       <i class="fa fa-pencil"></i>
       {{ 'Edit' | translate }}
     </a>
