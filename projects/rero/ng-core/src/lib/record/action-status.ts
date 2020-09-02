@@ -21,4 +21,5 @@
 export interface ActionStatus {
     can: boolean;
     message: string;
+    url?: string;
 }

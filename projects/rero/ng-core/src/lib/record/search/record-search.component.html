@@ -148,6 +148,7 @@
               [itemViewComponent]="getResultItemComponentView()"
               [canUpdate$]="canUpdateRecord$(record)"
               [canDelete$]="canDeleteRecord$(record)"
+              [canUse$]="canUseRecord$(record)"
               [detailUrl$]="resolveDetailUrl$(record)"
               (deletedRecord)="deleteRecord($event)"
             >

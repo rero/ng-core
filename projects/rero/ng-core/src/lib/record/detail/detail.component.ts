@@ -50,6 +50,15 @@ export class DetailComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Record can be used ?
+   */
+  useStatus: ActionStatus = {
+    can: false,
+    message: '',
+    url: ''
+  };
+
+  /**
    * Observable resolving record data
    */
   record$: Observable<any> = null;
@@ -161,6 +170,10 @@ export class DetailComponent implements OnInit, OnDestroy {
             this.updateStatus = result;
           });
 
+          this._recordUiService.canUseRecord$(this.record, this._type).subscribe(result => {
+            this.useStatus = result;
+          });
+
           if (this._route.snapshot.data.adminMode) {
             this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
           }
@@ -210,6 +223,31 @@ export class DetailComponent implements OnInit, OnDestroy {
   goBack() {
     this._location.back();
   }
+
+  /**
+   * Use the record
+   */
+  useRecord() {
+    this._router.navigateByUrl(this.useStatus.url);
+  }
+
+  /**
+   * define if an action is the primary action for the resource
+   * @param actionName - string: the action name to check
+   * @return boolean
+   */
+  isPrimaryAction(actionName: string): boolean {
+    switch (actionName) {
+      case 'edit':
+      case 'update':
+        return this.updateStatus && this.updateStatus.can && (!this.useStatus || !this.useStatus.can);
+      case 'use':
+        return this.useStatus && this.useStatus.can;
+      default:
+        return false;
+    }
+  }
+
 
   /**
    * Delete the record and go back to previous page.

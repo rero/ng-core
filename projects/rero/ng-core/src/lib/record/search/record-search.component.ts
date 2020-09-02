@@ -571,6 +571,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Check if a record can be used
+   * @param record - object, record to check
+   * @return Observable
+   */
+  canUseRecord$(record: object): Observable<ActionStatus> {
+    return this._recordUiService.canUseRecord$(record, this.currentType);
+  }
+
+  /**
    * Filter the aggregations with given configuration function.
    * If no configuration is given, return the original aggregations.
    * @param records - Result records
