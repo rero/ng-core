@@ -139,7 +139,7 @@ export class RecordFilesComponent implements OnInit {
         initialState: {
           title: this._translateService.instant('Confirmation'),
           body: this._translateService.instant(
-            'Do you really want to remove this file ?'
+            'Do you really want to remove this file?'
           ),
           confirmButton: true,
           confirmTitleButton: this._translateService.instant('OK'),
