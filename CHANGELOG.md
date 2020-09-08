@@ -1,11 +1,40 @@
 # Changelog
 
+## [v0.9.0](https://github.com/rero/ng-core/tree/v0.9.0) (2020-09-08)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.8.0...v0.9.0)
+
+**Implemented enhancements:**
+
+- Removes console logs when API calls fail. [\#167](https://github.com/rero/ng-core/issues/167)
+
+**Fixed bugs:**
+
+- Switches don't work in editors [\#213](https://github.com/rero/ng-core/issues/213)
+
+**Closed issues:**
+
+- group property for options in select are not displayed anymore [\#243](https://github.com/rero/ng-core/issues/243)
+- Ability to add, edit or delete files associated to record [\#202](https://github.com/rero/ng-core/issues/202)
+- Provide a configuration for handling errors on API calls [\#168](https://github.com/rero/ng-core/issues/168)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#255](https://github.com/rero/ng-core/pull/255) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalogs [\#253](https://github.com/rero/ng-core/pull/253) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- security: update dependencies [\#252](https://github.com/rero/ng-core/pull/252) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- Translations update from Weblate [\#251](https://github.com/rero/ng-core/pull/251) ([weblate](https://github.com/weblate))
+- records: search on specific fields [\#245](https://github.com/rero/ng-core/pull/245) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: fix options groups for select boxes [\#244](https://github.com/rero/ng-core/pull/244) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: files management [\#210](https://github.com/rero/ng-core/pull/210) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v0.8.0](https://github.com/rero/ng-core/tree/v0.8.0) (2020-08-18)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.7.0...v0.8.0)
 
 **Merged pull requests:**
 
+- editor: avoid loading the whole bootstrap library. [\#241](https://github.com/rero/ng-core/pull/241) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: improve sorting of selects [\#240](https://github.com/rero/ng-core/pull/240) ([Garfield-fr](https://github.com/Garfield-fr))
 - security: update dependencies [\#239](https://github.com/rero/ng-core/pull/239) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - formly: improve id generator [\#238](https://github.com/rero/ng-core/pull/238) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -54,7 +83,6 @@
 - form: add the possibility to order a select menu [\#199](https://github.com/rero/ng-core/pull/199) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix problem with jump to [\#198](https://github.com/rero/ng-core/pull/198) ([zannkukai](https://github.com/zannkukai))
 - tester: point to a fake API [\#197](https://github.com/rero/ng-core/pull/197) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.5.0](https://github.com/rero/ng-core/tree/v0.5.0) (2020-06-25)
 
@@ -201,6 +229,7 @@
 
 **Merged pull requests:**
 
+- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix field visibility on the model change [\#134](https://github.com/rero/ng-core/pull/134) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#133](https://github.com/rero/ng-core/pull/133) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
