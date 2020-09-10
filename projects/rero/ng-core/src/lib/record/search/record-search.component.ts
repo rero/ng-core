@@ -199,6 +199,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Loads total count of records for each resource.
    */
   ngOnInit() {
+
     // Subscribe on aggregation filters changes and do search.
     this._aggregationsFiltersSubscription = this._recordSearchService.aggregationsFilters.subscribe(
       (aggregationsFilters: Array<AggregationsFilter>) => {
@@ -228,7 +229,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         type.key, '', 1, 1, [],
         this._config.preFilters || {},
         this._config.listHeaders || null).subscribe((records: Record) => {
-          type.total = records.hits.total;
+          type.total = this._recordService.totalHits(records.hits.total);
         });
     }
   }
@@ -329,7 +330,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return integer representing the number of results.
    */
   get total(): number {
-    return this.hits && this.hits.total ? this.hits.total : 0;
+    return this.hits && this.hits.total ? this._recordService.totalHits(this.hits.total) : 0;
   }
 
   /**

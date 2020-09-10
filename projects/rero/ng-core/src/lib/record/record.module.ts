@@ -35,10 +35,11 @@ import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-edi
 import { ArrayTypeComponent } from './editor/array-type/array-type.component';
 import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
-import { hooksFormlyExtension, registerTranslateExtension, fieldIdGenerator } from './editor/extensions';
+import { fieldIdGenerator, hooksFormlyExtension, registerTranslateExtension } from './editor/extensions';
 import { HorizontalWrapperComponent } from './editor/horizontal-wrapper/horizontal-wrapper.component';
 import { MultiSchemaTypeComponent } from './editor/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/object-type/object-type.component';
+import { RemoteTypeaheadComponent } from './editor/remote-typeahead/remote-typeahead.component';
 import { SwitchComponent } from './editor/switch/switch.component';
 import { ToggleWrapperComponent } from './editor/toggle-wrapper/toggle-wrappers.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
@@ -53,7 +54,6 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { RemoteTypeaheadComponent } from './editor/remote-typeahead/remote-typeahead.component';
 
 @NgModule({
   declarations: [
