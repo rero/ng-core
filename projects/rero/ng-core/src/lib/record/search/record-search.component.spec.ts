@@ -77,9 +77,10 @@ describe('RecordSearchComponent', () => {
     links: {}
   };
 
-  const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete']);
+  const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete', 'totalHits']);
   recordServiceSpy.getRecords.and.returnValue(of(emptyRecords));
   recordServiceSpy.delete.and.returnValue(of({}));
+  recordServiceSpy.totalHits.and.returnValue(10);
 
   const recordUiServiceSpy = jasmine.createSpyObj('RecordUiService', [
     'getResourceConfig',

@@ -235,7 +235,7 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res: Record) => res.hits.total),
+      map((res: Record) => this.totalHits(res.hits.total)),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(1000)
     );
@@ -282,10 +282,33 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res: Record) => res.hits.total),
+      map((res: Record) => this.totalHits(res.hits.total)),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(500)
     );
+  }
+
+  /**
+   * Transform a total value string or object representation
+   * (ES compatibility v6 and v7)
+   * @param total - string or object
+   * @param relation - boolean
+   * @return integer, text or null
+   */
+  totalHits(total: any, relation = false): any {
+    switch (typeof total) {
+      case 'object':
+        if (relation) {
+          return `${this._translateService.instant(total.relation)} ${total.value.toString()}`;
+        }
+        return Number(total.value);
+      case 'number':
+        return total;
+      case 'string':
+        return Number(total);
+      default:
+        return null;
+    }
   }
 
   /**

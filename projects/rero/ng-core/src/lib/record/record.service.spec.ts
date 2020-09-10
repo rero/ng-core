@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpErrorResponse } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -74,7 +73,7 @@ describe('RecordService', () => {
     };
 
     service.getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }]).subscribe((data: Record) => {
-      expect(data.hits.total).toBe(2);
+      expect(service.totalHits(data.hits.total)).toBe(2);
     });
 
     const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
