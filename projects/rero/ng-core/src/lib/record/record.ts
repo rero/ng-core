@@ -42,6 +42,7 @@ export interface File {
   key: string;
   showInfo: boolean;
   showChildren: boolean;
+  metadata: any;
 }
 
 /**

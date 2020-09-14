@@ -16,11 +16,13 @@
  */
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import {
   TranslateFakeLoader,
   TranslateLoader,
   TranslateModule
 } from '@ngx-translate/core';
+import { RecordUiService } from '../record-ui.service';
 import { RecordModule } from '../record.module';
 import { RecordFilesComponent } from './files.component';
 
@@ -28,21 +30,29 @@ describe('RecordFilesComponent', () => {
   let component: RecordFilesComponent;
   let fixture: ComponentFixture<RecordFilesComponent>;
 
+  const recordUiServiceSpy = jasmine.createSpyObj('RecordUiService', [
+    'getResourceConfig',
+  ]);
+  recordUiServiceSpy.getResourceConfig.and.returnValue({ key: 'documents', files: { enabled: true } });
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         RecordModule,
         HttpClientTestingModule,
+        RouterTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader },
         }),
       ],
+      providers: [{ provide: RecordUiService, useValue: recordUiServiceSpy }],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RecordFilesComponent);
     component = fixture.componentInstance;
+    component.type = 'documents';
     fixture.detectChanges();
   });
 

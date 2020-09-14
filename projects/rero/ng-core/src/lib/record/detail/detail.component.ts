@@ -201,7 +201,7 @@ export class DetailComponent implements OnInit, OnDestroy {
    * @returns True if file management is enabled.
    */
   get filesEnabled(): boolean {
-    return this._config.filesEnabled ? this._config.filesEnabled : false;
+    return this._config.files && this._config.files.enabled ? this._config.files.enabled : false;
   }
 
   /**
