@@ -1,0 +1,20 @@
+{
+  "/api/*": {
+    "target": "https://l985g.mocklab.io",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": "https://l985g.mocklab.io/api"
+    }
+  },
+  "/schemas/*": {
+    "target": "https://l985g.mocklab.io",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/schemas": "https://l985g.mocklab.io/schemas"
+    }
+  }
+}

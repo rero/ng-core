@@ -110,6 +110,12 @@
             "browserTarget": "ng-core-tester:build"
           },
           "configurations": {
+            "localhost": {
+              "proxyConfig": "proxies/localhost.json"
+            },
+            "mocklab": {
+              "proxyConfig": "proxies/mocklab.json"
+            },
             "production": {
               "browserTarget": "ng-core-tester:build:production"
             }
