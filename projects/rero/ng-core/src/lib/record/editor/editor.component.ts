@@ -397,9 +397,17 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Save the data on the server.
-   * @param event - object, JSON to POST on the backend
    */
-  submit(event) {
+  submit() {
+    this.form.updateValueAndValidity();
+
+    if (this.form.valid === false) {
+      this._toastrService.error(
+        this._translateService.instant('The form contains errors.')
+      );
+      return;
+    }
+
     this._spinner.show();
     this.loadingChange.emit(true);
 
