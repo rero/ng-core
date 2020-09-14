@@ -3,7 +3,7 @@
   "version": "0.9.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "serve": "ng serve --configuration mocklab",
     "build-lib": "ng build @rero/ng-core",
     "pack": "ng build @rero/ng-core; npm pack dist/rero/ng-core",
     "test-lib": "ng test @rero/ng-core",

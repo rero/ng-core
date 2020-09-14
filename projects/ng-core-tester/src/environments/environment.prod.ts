@@ -17,7 +17,7 @@
 export const environment = {
   production: true,
   prefixWindow: 'NG CORE TESTER',
-  apiBaseUrl: 'https://l985g.mocklab.io',
+  apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en'],
   translationsURLs: [
