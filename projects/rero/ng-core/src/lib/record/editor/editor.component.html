@@ -42,7 +42,7 @@
     <form
       class="col"
       [formGroup]="form"
-      (ngSubmit)="submit($event)"
+      (ngSubmit)="submit()"
     >
       <!-- ngx-formly -->
       <formly-form
@@ -68,7 +68,6 @@
           id="editor-save-button"
           type="submit"
           class="btn btn-primary btn-sm"
-          [disabled]="!form.valid"
         >
           <i class="fa fa-save"></i>
           {{ 'Save' | translate }}
