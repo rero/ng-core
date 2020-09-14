@@ -22,6 +22,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -29,7 +31,10 @@ import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../dialog/dialog.service';
+import { orderedJsonSchema, removeEmptyValues } from '../editor/utils';
 import { File as RecordFile } from '../record';
+import { RecordUiService } from '../record-ui.service';
+import { RecordService } from '../record.service';
 import { FilesService } from './files.service';
 
 @Component({
@@ -37,6 +42,14 @@ import { FilesService } from './files.service';
   templateUrl: './files.component.html',
 })
 export class RecordFilesComponent implements OnInit {
+  // Record PID.
+  @Input()
+  pid: string;
+
+  // Type of resource.
+  @Input()
+  type: string;
+
   // List of files for the record.
   files: Array<RecordFile> = [];
 
@@ -55,13 +68,32 @@ export class RecordFilesComponent implements OnInit {
   // File key to add
   fileKey: string;
 
-  // PID of the record.
-  @Input()
-  pid: string;
+  // Record data
+  record: any;
 
-  // Type of resource.
-  @Input()
-  type: string;
+  // Object containing data to build the metadata editor.
+  metadataForm: {
+    fields: Array<any>;
+    model: any;
+    form: any;
+  } = {
+    fields: [],
+    model: null,
+    form: null,
+  };
+
+  // Fields not to display in metadata info.
+  infoExcludedFields = [
+    'key',
+    'bucket',
+    'checksum',
+    'file_id',
+    'size',
+    'version_id',
+  ];
+
+  // Configuration for record type.
+  private _config: any;
 
   // Reference on file input, used to reset value
   @ViewChild('file', { read: ElementRef, static: false })
@@ -69,6 +101,9 @@ export class RecordFilesComponent implements OnInit {
 
   @ViewChild('formModal', { static: false })
   formModalTemplate: TemplateRef<any>;
+
+  @ViewChild('metadataFormModal', { static: false })
+  metadataFormModalTemplate: TemplateRef<any>;
 
   /**
    * Constructor.
@@ -79,6 +114,9 @@ export class RecordFilesComponent implements OnInit {
    * @param _toastrService Toastr service.
    * @param _spinner Spinner service.
    * @param _modalService Modal service.
+   * @param _recordService Record service.
+   * @param _recordUiService Record UI service.
+   * @param _formlyJsonschema JSON schema for formly.
    */
   constructor(
     private _fileService: FilesService,
@@ -86,7 +124,10 @@ export class RecordFilesComponent implements OnInit {
     private _translateService: TranslateService,
     private _toastrService: ToastrService,
     private _spinner: NgxSpinnerService,
-    private _modalService: BsModalService
+    private _modalService: BsModalService,
+    private _recordService: RecordService,
+    private _recordUiService: RecordUiService,
+    private _formlyJsonschema: FormlyJsonschema
   ) {}
 
   /**
@@ -95,36 +136,53 @@ export class RecordFilesComponent implements OnInit {
    * Retrieve files from record
    */
   ngOnInit() {
+    // Load configuration
+    this._config = this._recordUiService.getResourceConfig(this.type);
+
+    // Configures properties that are not displayed in information.
+    if (this._config.files.infoExcludedFields) {
+      this.infoExcludedFields = this.infoExcludedFields.concat(
+        this._config.files.infoExcludedFields
+      );
+    }
+
     this._spinner.show();
 
-    // Retrieve files for record.
-    this.getFiles$()
-      .pipe(
-        catchError(() => {
-          this.hasError = true;
-          return of([]);
-        })
-      )
-      .subscribe(() => {
-        this._spinner.hide();
-      });
-  }
+    // Load files
+    this._getFiles$().subscribe(() => {
+      this._spinner.hide();
+    });
 
-  /**
-   * Get list of files for the record.
-   *
-   * @returns An observable emitting the list of files.
-   */
-  getFiles$(): Observable<any> {
-    return this._fileService.list(this.type, this.pid).pipe(
-      tap((files) => {
-        this.files = files.map((item: RecordFile) => {
-          item.showInfo = false;
-          item.showChildren = false;
-          return item;
-        });
-      })
-    );
+    // Load JSON schema and initialize form.
+    this._recordService
+      .getSchemaForm(this.type)
+      .subscribe((jsonSchema: any) => {
+        if (jsonSchema.schema.properties._files) {
+          this.metadataForm.form = new FormGroup({});
+          this.metadataForm.fields = [
+            this._formlyJsonschema.toFieldConfig(
+              orderedJsonSchema(jsonSchema.schema.properties._files.items),
+              {
+                map: (field: any, schema: any) => {
+                  if (schema.form) {
+                    // Hide expression
+                    if (schema.form.hideExpression) {
+                      field.hideExpression = schema.form.hideExpression;
+                    }
+
+                    // expression properties
+                    if (schema.form.expressionProperties) {
+                      field.expressionProperties =
+                        schema.form.expressionProperties;
+                    }
+                  }
+                  return field;
+                },
+              }
+            ),
+          ];
+        }
+      });
   }
 
   /**
@@ -160,7 +218,7 @@ export class RecordFilesComponent implements OnInit {
       )
       .subscribe((removed: boolean) => {
         if (removed === true) {
-          this.getFiles$().subscribe(() => {
+          this._getFiles$().subscribe(() => {
             this._spinner.hide();
             this._toastrService.success(
               this._translateService.instant('File removed successfully.')
@@ -215,7 +273,7 @@ export class RecordFilesComponent implements OnInit {
    * Show form inside the modal.
    */
   showForm() {
-    this.formModalRef = this._modalService.show(this.formModalTemplate, { class: 'modal-lg' });
+    this.formModalRef = this._modalService.show(this.formModalTemplate);
   }
 
   /**
@@ -259,7 +317,7 @@ export class RecordFilesComponent implements OnInit {
               this._translateService.instant('File uploaded successfully.')
             );
 
-            this.getFiles$().subscribe(() => {
+            this._getFiles$().subscribe(() => {
               this._spinner.hide();
             });
           });
@@ -299,5 +357,126 @@ export class RecordFilesComponent implements OnInit {
    */
   getFileUrl(file: RecordFile): string {
     return this._fileService.getUrl(this.type, this.pid, file.key);
+  }
+
+  /**
+   * Edition of metadata for the given file.
+   *
+   * @param file File object.
+   * @returns void
+   */
+  editMetadata(file: RecordFile): void {
+    if (!file.metadata) {
+      return;
+    }
+
+    // Set the model
+    this.metadataForm.model = file.metadata;
+
+    // Show modal
+    this.formModalRef = this._modalService.show(this.metadataFormModalTemplate);
+  }
+
+  /**
+   * Save file's metadata.
+   *
+   * @returns void
+   */
+  saveMetadata(): void {
+    // Check if form has errors
+    this.metadataForm.form.updateValueAndValidity();
+
+    // Show a message if form has errors.
+    if (this.metadataForm.form.valid === false) {
+      this._toastrService.error(
+        this._translateService.instant('The form contains errors.')
+      );
+      return;
+    }
+
+    this._spinner.show();
+
+    // Clean empty data
+    this.record._files = removeEmptyValues(this.record._files);
+
+    // Update record
+    this._recordService
+      .update(this.type, this.record)
+      .pipe(
+        switchMap(() => {
+          return this._getFiles$();
+        })
+      )
+      .subscribe(() => {
+        this._spinner.hide();
+        this.formModalRef.hide();
+        this._toastrService.success(
+          this._translateService.instant(
+            'Metadata have been saved successfully.'
+          )
+        );
+      });
+  }
+
+  /**
+   * Observable for loading record and files.
+   *
+   * @returns Observable emitting files
+   */
+  private _getFiles$(): Observable<any> {
+    return this._recordService.getRecord(this.type, this.pid).pipe(
+      switchMap((record: any) => {
+        this.record = record.metadata;
+        return this._fileService.list(this.type, this.pid);
+      }),
+      tap((files) => {
+        files = files.map((item: RecordFile) => {
+          // By default, show info about the file.
+          item.showInfo = true;
+
+          // By default, hide other versions of the file.
+          item.showChildren = false;
+
+          // Store metadata (retrieved from record).
+          item.metadata = this._getFilesMetadata(item.key);
+          return item;
+        });
+
+        // If set in config, apply the function for filtering files.
+        if (this._config.files && this._config.files.filterList) {
+          files = files.filter(this._config.files.filterList);
+        }
+
+        // If set in config, apply the function for filtering files.
+        if (this._config.files && this._config.files.orderList) {
+          files.sort(this._config.files.orderList);
+        }
+
+        this.files = files;
+      }),
+      catchError(() => {
+        this.hasError = true;
+        return of([]);
+      })
+    );
+  }
+
+  /**
+   * Get files metadata corresponding to file key, stored in record.
+   *
+   * @param fileKey File key.
+   * @returns Metadata object for the file.
+   */
+  private _getFilesMetadata(fileKey: string): any {
+    if (!this.record._files) {
+      return null;
+    }
+
+    // Get metadata stored in record.
+    const metadata = this.record._files.filter(
+      (item: any) => fileKey === item.key
+    );
+
+    return metadata.length > 0 ? metadata[0] : null;
   }
 }

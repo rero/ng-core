@@ -23,7 +23,7 @@
       <ng-container *ngFor="let file of files">
         <li class="list-group-item" *ngIf="showItem(file)">
           <div class="row">
-            <div class="col-sm-8" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+            <div class="col-sm-6" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
               <p class="m-0">
                 {{ file.key }}
                 <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showInfo = !file.showInfo">
@@ -34,23 +34,14 @@
                   <i class="fa fa-history"></i>
                 </a>
               </p>
-              <dl class="row mt-2 mb-0" *ngIf="file.showInfo">
-                <dt class="col-sm-3" translate>Size</dt>
-                <dd class="col-sm-9">{{ file.size | filesize }}</dd>
-
-                <dt class="col-sm-3" translate>Mime type</dt>
-                <dd class="col-sm-9">{{ file.mimetype }}</dd>
-
-                <dt class="col-sm-3" translate>Checksum</dt>
-                <dd class="col-sm-9">{{ file.checksum }}</dd>
-
-                <dt class="col-sm-3" translate>Modified at</dt>
-                <dd class="col-sm-9">{{ file.updated | dateTranslate:'medium' }}</dd>
-              </dl>
             </div>
-            <div class="col-sm-4 text-right">
-              <button class="btn btn-sm btn-outline-primary" (click)="manageFile(file)">
+            <div class="col-sm-6 text-right">
+              <button class="btn btn-sm btn-outline-primary" (click)="editMetadata(file)"
+                *ngIf="file.is_head && file.metadata">
                 <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
+              </button>
+              <button class="btn btn-sm btn-outline-primary ml-1" (click)="manageFile(file)" *ngIf="file.is_head">
+                <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
               </button>
               <a [href]="getFileUrl(file)" target="_blank" class="btn btn-sm btn-outline-primary ml-1" download>
                 <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
@@ -58,6 +49,33 @@
               <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete(file)">
                 <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
               </button>
+            </div>
+          </div>
+          <div class="row mt-2" *ngIf="file.showInfo">
+            <div class="col-lg-6" *ngIf="file.is_head">
+              <dl class="row mt-2 mb-0">
+                <ng-container *ngFor="let item of file.metadata | keyvalue">
+                  <ng-container *ngIf="!infoExcludedFields.includes(item.key) && item.value">
+                    <dt class="col-sm-4">{{ item.key | translate }}</dt>
+                    <dd class="col-sm-8">{{ item.value }}</dd>
+                  </ng-container>
+                </ng-container>
+              </dl>
+            </div>
+            <div class="col-lg-6"[ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+              <dl class="row mt-2 mb-0">
+                <dt class="col-sm-4" translate>Size</dt>
+                <dd class="col-sm-8">{{ file.size | filesize }}</dd>
+
+                <dt class="col-sm-4" translate>Mime type</dt>
+                <dd class="col-sm-8">{{ file.mimetype }}</dd>
+
+                <dt class="col-sm-4" translate>Checksum</dt>
+                <dd class="col-sm-8">{{ file.checksum }}</dd>
+
+                <dt class="col-sm-4" translate>Modified at</dt>
+                <dd class="col-sm-8">{{ file.updated | dateTranslate:'medium' }}</dd>
+              </dl>
             </div>
           </div>
         </li>
@@ -103,5 +121,25 @@
         </button>
       </ng-container>
     </div>
+  </div>
+</ng-template>
+
+<ng-template #metadataFormModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ metadataForm.model.key }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="formModalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="metadataForm.form" (ngSubmit)="saveMetadata()">
+      <formly-form [form]="metadataForm.form" [model]="metadataForm.model" [fields]="metadataForm.fields"></formly-form>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-block">
+          <i class="fa fa-floppy-o mr-2"></i>
+          {{ 'Save' | translate }}
+        </button>
+      </div>
+    </form>
   </div>
 </ng-template>

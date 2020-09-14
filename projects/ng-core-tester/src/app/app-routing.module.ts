@@ -136,6 +136,23 @@ const aggregations = (agg: object) => {
 };
 
 /**
+ * Filter files list (callback function called in Array.prototype.filter)
+ */
+const filterFilesList = (file: any): boolean => {
+  return file.key.indexOf('.pdf') !== -1;
+};
+
+const orderFilesList = (a: any, b: any) => {
+  if (a.metadata.order < b.metadata.order) {
+    return -1;
+  }
+  if (a.metadata.order > b.metadata.order) {
+    return 1;
+  }
+  return 0;
+};
+
+/**
  * Returned matched URL.
  *
  * @param url List of URL segments.
@@ -257,7 +274,12 @@ const routes: Routes = [
           itemHeaders: {
             'Content-Type': 'application/rero+json'
           },
-          filesEnabled: true,
+          files: {
+            enabled: true,
+            filterList: filterFilesList,
+            orderList: orderFilesList,
+            infoExcludedFields: ['restriction', 'type']
+          },
           searchFields: [
             {
               label: 'Full-text',
