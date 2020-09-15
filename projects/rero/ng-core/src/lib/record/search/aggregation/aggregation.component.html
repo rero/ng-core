@@ -14,29 +14,38 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="card mb-2"
-  *ngIf="(aggregation.value.buckets && aggregation.value.buckets.length) || aggregation.type !== 'terms'">
-  <div class="card-header p-0">
-    <h5 class="mb-0">
-      <button class="btn btn-link" type="button" (click)="expand = !expand;">
-        {{ aggregation.key | translate | ucfirst }}
-      </button>
-    </h5>
-  </div>
-  <div class="collapse" [class.show]="showAggregation()">
-    <div class="card-body">
-      <ng-container [ngSwitch]="aggregation.type">
-        <!-- Range -->
-        <ng-core-aggregation-slider [key]="aggregation.key" [min]="aggregation.config.min || 1"
-          [max]="aggregation.config.max || 100" [step]="aggregation.config.step || 1"
-          [buckets]="aggregation.value.buckets" *ngSwitchCase="'range'">
-        </ng-core-aggregation-slider>
+<!-- Aggregation with no bucket, containing only the count. -->
+<div class="mb-3" *ngIf="aggregation.doc_count && aggregation.doc_count > 0; else cardAggregation">
+  <ng-core-record-search-aggregation-buckets
+    [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
+    [size]="aggregation.bucketSize">
+  </ng-core-record-search-aggregation-buckets>
+</div>
+<ng-template #cardAggregation>
+  <div class="card mb-2"
+    *ngIf="(aggregation.value.buckets && aggregation.value.buckets.length) || aggregation.type !== 'terms'">
+    <div class="card-header p-0">
+      <h5 class="mb-0">
+        <button class="btn btn-link" type="button" (click)="expand = !expand;">
+          {{ aggregation.key | translate | ucfirst }}
+        </button>
+      </h5>
+    </div>
+    <div class="collapse" [class.show]="showAggregation()">
+      <div class="card-body">
+        <ng-container [ngSwitch]="aggregation.type">
+          <!-- Range -->
+          <ng-core-aggregation-slider [key]="aggregation.key" [min]="aggregation.config.min || 1"
+            [max]="aggregation.config.max || 100" [step]="aggregation.config.step || 1"
+            [buckets]="aggregation.value.buckets" *ngSwitchCase="'range'">
+          </ng-core-aggregation-slider>
 
-        <!-- Terms (default) -->
-        <ng-core-record-search-aggregation-buckets [buckets]="aggregation.value.buckets"
-          [aggregationKey]="aggregation.key" [size]="aggregation.bucketSize" *ngSwitchDefault>
-        </ng-core-record-search-aggregation-buckets>
-      </ng-container>
+          <!-- Terms (default) -->
+          <ng-core-record-search-aggregation-buckets [buckets]="aggregation.value.buckets"
+            [aggregationKey]="aggregation.key" [size]="aggregation.bucketSize" *ngSwitchDefault>
+          </ng-core-record-search-aggregation-buckets>
+        </ng-container>
+      </div>
     </div>
   </div>
-</div>
+</ng-template>

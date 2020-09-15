@@ -286,14 +286,14 @@ describe('RecordSearchComponent', () => {
   it('should reorder aggregations', async(() => {
     component.currentType = 'documents';
     const result = [
-      { key: 'author', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
-      { key: 'language', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'author', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'language', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null},
     ];
     expect(component.aggregationsOrder(aggregations)).toEqual(result);
 
     const resultOrder = [
-      { key: 'language', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
-      { key: 'author', bucketSize: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'language', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null},
+      { key: 'author', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null},
     ];
     component['_config'] = { key: 'documents', aggregationsOrder: ['language', 'author'] };
     expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);
