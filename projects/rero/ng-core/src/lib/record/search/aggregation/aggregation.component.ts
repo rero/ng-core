@@ -25,7 +25,7 @@ export class RecordSearchAggregationComponent {
    * Aggregation data
    */
   @Input()
-  aggregation: { key: string, bucketSize: any, value: { buckets: Array<any> }, type: string, config?: any };
+  aggregation: { key: string, bucketSize: any, doc_count?: number, value: { buckets: Array<any> }, type: string, config?: any };
 
   /**
    * Current selected values
