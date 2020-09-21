@@ -18,6 +18,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnDestroy,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -28,20 +29,20 @@ import { TranslateService } from '@ngx-translate/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../dialog/dialog.service';
+import { ActionStatus } from '../action-status';
 import { orderedJsonSchema, removeEmptyValues } from '../editor/utils';
 import { File as RecordFile } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { FilesService } from './files.service';
-
 @Component({
   selector: 'ng-core-record-files',
   templateUrl: './files.component.html',
 })
-export class RecordFilesComponent implements OnInit {
+export class RecordFilesComponent implements OnDestroy, OnInit {
   // Record PID.
   @Input()
   pid: string;
@@ -92,8 +93,14 @@ export class RecordFilesComponent implements OnInit {
     'version_id',
   ];
 
+  // Observable resolving if files metadata can be updated.
+  updateMetadata: ActionStatus = { can: false, message: '' };
+
   // Configuration for record type.
   private _config: any;
+
+  // Subscriptions to observables.
+  private _subscriptions: Subscription = new Subscription();
 
   // Reference on file input, used to reset value
   @ViewChild('file', { read: ElementRef, static: false })
@@ -146,6 +153,16 @@ export class RecordFilesComponent implements OnInit {
       );
     }
 
+    // Check if metadata can be updated.
+    const canUpdateMetadata$ = this._config.files.canUpdateMetadata
+      ? this._config.files.canUpdateMetadata()
+      : of({ can: false, message: '' });
+    this._subscriptions.add(
+      canUpdateMetadata$.subscribe((result: ActionStatus) => {
+        this.updateMetadata = result;
+      })
+    );
+
     this._spinner.show();
 
     // Load files
@@ -183,6 +200,15 @@ export class RecordFilesComponent implements OnInit {
           ];
         }
       });
+  }
+
+  /**
+   * Component destruction
+   *
+   * Unsubscribe from all subscriptions.
+   */
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
   }
 
   /**

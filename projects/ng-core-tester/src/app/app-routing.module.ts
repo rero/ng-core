@@ -90,6 +90,18 @@ const canRead = (record: any): Observable<ActionStatus> => {
   });
 };
 
+/**
+ * Wether files metadata can be updated.
+ *
+ * @param record Record.
+ */
+const canUpdateFilesMetadata = (): Observable<ActionStatus> => {
+  return of({
+    can: true,
+    message: ''
+  });
+};
+
 // Permissions override simple canRead, canUpdate and canDelete if defined
 const permissions = (record: any) => {
   const perms = record.metadata.permissions;
@@ -278,7 +290,8 @@ const routes: Routes = [
             enabled: true,
             filterList: filterFilesList,
             orderList: orderFilesList,
-            infoExcludedFields: ['restriction', 'type']
+            infoExcludedFields: ['restriction', 'type'],
+            canUpdateMetadata: canUpdateFilesMetadata
           },
           searchFields: [
             {
