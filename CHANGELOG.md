@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.10.0](https://github.com/rero/ng-core/tree/v0.10.0) (2020-09-21)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.9.0...v0.10.0)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#271](https://github.com/rero/ng-core/pull/271) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: update files metadata [\#270](https://github.com/rero/ng-core/pull/270) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- export: fix urlencode at export [\#267](https://github.com/rero/ng-core/pull/267) ([benerken](https://github.com/benerken))
+- Translations update from Weblate [\#266](https://github.com/rero/ng-core/pull/266) ([weblate](https://github.com/weblate))
+- aggregations: display simple filter [\#265](https://github.com/rero/ng-core/pull/265) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- security: update dependencies [\#264](https://github.com/rero/ng-core/pull/264) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: validate data during editor submission [\#263](https://github.com/rero/ng-core/pull/263) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: edit metadata of files [\#262](https://github.com/rero/ng-core/pull/262) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- tester: add proxies for API calls [\#261](https://github.com/rero/ng-core/pull/261) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- record: added a function to convert "total hits" for Elasticsearch [\#260](https://github.com/rero/ng-core/pull/260) ([Garfield-fr](https://github.com/Garfield-fr))
+- menu: add menu generation [\#256](https://github.com/rero/ng-core/pull/256) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.9.0](https://github.com/rero/ng-core/tree/v0.9.0) (2020-09-08)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.8.0...v0.9.0)
@@ -26,6 +44,7 @@
 - Translations update from Weblate [\#251](https://github.com/rero/ng-core/pull/251) ([weblate](https://github.com/weblate))
 - records: search on specific fields [\#245](https://github.com/rero/ng-core/pull/245) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: fix options groups for select boxes [\#244](https://github.com/rero/ng-core/pull/244) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: avoid loading the whole bootstrap library. [\#241](https://github.com/rero/ng-core/pull/241) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: files management [\#210](https://github.com/rero/ng-core/pull/210) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.8.0](https://github.com/rero/ng-core/tree/v0.8.0) (2020-08-18)
@@ -34,7 +53,6 @@
 
 **Merged pull requests:**
 
-- editor: avoid loading the whole bootstrap library. [\#241](https://github.com/rero/ng-core/pull/241) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: improve sorting of selects [\#240](https://github.com/rero/ng-core/pull/240) ([Garfield-fr](https://github.com/Garfield-fr))
 - security: update dependencies [\#239](https://github.com/rero/ng-core/pull/239) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - formly: improve id generator [\#238](https://github.com/rero/ng-core/pull/238) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -76,6 +94,7 @@
 - search: add button to export results [\#212](https://github.com/rero/ng-core/pull/212) ([lauren-d](https://github.com/lauren-d))
 - security: update dependencies [\#209](https://github.com/rero/ng-core/pull/209) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - project: add `ngx-spinner` library [\#208](https://github.com/rero/ng-core/pull/208) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: fix data loss for repeatable fields [\#207](https://github.com/rero/ng-core/pull/207) ([jma](https://github.com/jma))
 - menu: add Id option for menu and submenu [\#206](https://github.com/rero/ng-core/pull/206) ([blankoworld](https://github.com/blankoworld))
 - autocomplete: close the suggestion list [\#205](https://github.com/rero/ng-core/pull/205) ([jma](https://github.com/jma))
 - editor: fix translation [\#204](https://github.com/rero/ng-core/pull/204) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -83,6 +102,7 @@
 - form: add the possibility to order a select menu [\#199](https://github.com/rero/ng-core/pull/199) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix problem with jump to [\#198](https://github.com/rero/ng-core/pull/198) ([zannkukai](https://github.com/zannkukai))
 - tester: point to a fake API [\#197](https://github.com/rero/ng-core/pull/197) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.5.0](https://github.com/rero/ng-core/tree/v0.5.0) (2020-06-25)
 
@@ -229,7 +249,6 @@
 
 **Merged pull requests:**
 
-- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix field visibility on the model change [\#134](https://github.com/rero/ng-core/pull/134) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#133](https://github.com/rero/ng-core/pull/133) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
@@ -408,6 +427,7 @@
 - routing: fix error on production build [\#61](https://github.com/rero/ng-core/pull/61) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - module: fix translate module import for lazy loading [\#60](https://github.com/rero/ng-core/pull/60) ([jma](https://github.com/jma))
 - template: update pr template [\#59](https://github.com/rero/ng-core/pull/59) ([AoNoOokami](https://github.com/AoNoOokami))
+- project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.14](https://github.com/rero/ng-core/tree/v0.0.14) (2019-11-19)
 
@@ -416,7 +436,6 @@
 **Merged pull requests:**
 
 - editor: allow editor component inheritance [\#54](https://github.com/rero/ng-core/pull/54) ([jma](https://github.com/jma))
-- project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.13](https://github.com/rero/ng-core/tree/v0.0.13) (2019-11-15)
