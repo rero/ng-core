@@ -157,17 +157,20 @@ export class TranslateExtension {
    * @params to - ngx formly templateOptions
    * @params options - ngx formly templateOptions.options
    */
-  _processOptions(field, to, options) {
-    const key = sha256(JSON.stringify(to)).toString();
-    this._optionsMap.set(key, options);
-    const bs = new BehaviorSubject(this._translateOptions(options));
-    this._translate.onLangChange.subscribe(() => {
-      bs.next(this._translateOptions(this._optionsMap.get(key)));
-    });
-    field.expressionProperties = {
-      ...(field.expressionProperties || {}),
-      'templateOptions.options': bs.asObservable(),
-    };
+  _processOptions(field: any, to: any, options: any) {
+    // Not translate if Observable
+    if (!isObservable(to.options)) {
+      const key = sha256(JSON.stringify(to)).toString();
+      this._optionsMap.set(key, options);
+      const bs = new BehaviorSubject(this._translateOptions(options));
+      this._translate.onLangChange.subscribe(() => {
+        bs.next(this._translateOptions(this._optionsMap.get(key)));
+      });
+      field.expressionProperties = {
+        ...(field.expressionProperties || {}),
+        'templateOptions.options': bs.asObservable(),
+      };
+    }
   }
 
   /**
