@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.10.1](https://github.com/rero/ng-core/tree/v0.10.1) (2020-10-02)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.10.0...v0.10.1)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#276](https://github.com/rero/ng-core/pull/276) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- extension: Improve process options [\#275](https://github.com/rero/ng-core/pull/275) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.10.0](https://github.com/rero/ng-core/tree/v0.10.0) (2020-09-21)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.9.0...v0.10.0)
@@ -61,7 +70,6 @@
 - editor: fix ToggleSwitch & DatePicker  [\#235](https://github.com/rero/ng-core/pull/235) ([zannkukai](https://github.com/zannkukai))
 - editor: fix hidden field with value from the model [\#234](https://github.com/rero/ng-core/pull/234) ([jma](https://github.com/jma))
 - template: add id html attribute for cypress usage [\#233](https://github.com/rero/ng-core/pull/233) ([AoNoOokami](https://github.com/AoNoOokami))
-- editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
 - records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.7.0](https://github.com/rero/ng-core/tree/v0.7.0) (2020-07-30)
@@ -72,6 +80,7 @@
 
 - release: version 0.7.0 [\#231](https://github.com/rero/ng-core/pull/231) ([jma](https://github.com/jma))
 - Maj us1542 better editor [\#230](https://github.com/rero/ng-core/pull/230) ([jma](https://github.com/jma))
+- editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
 - search list: fix export urls [\#228](https://github.com/rero/ng-core/pull/228) ([jma](https://github.com/jma))
 - translations: update catalogs [\#226](https://github.com/rero/ng-core/pull/226) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add ordered property for definitions [\#224](https://github.com/rero/ng-core/pull/224) ([jma](https://github.com/jma))
@@ -94,7 +103,6 @@
 - search: add button to export results [\#212](https://github.com/rero/ng-core/pull/212) ([lauren-d](https://github.com/lauren-d))
 - security: update dependencies [\#209](https://github.com/rero/ng-core/pull/209) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - project: add `ngx-spinner` library [\#208](https://github.com/rero/ng-core/pull/208) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- editor: fix data loss for repeatable fields [\#207](https://github.com/rero/ng-core/pull/207) ([jma](https://github.com/jma))
 - menu: add Id option for menu and submenu [\#206](https://github.com/rero/ng-core/pull/206) ([blankoworld](https://github.com/blankoworld))
 - autocomplete: close the suggestion list [\#205](https://github.com/rero/ng-core/pull/205) ([jma](https://github.com/jma))
 - editor: fix translation [\#204](https://github.com/rero/ng-core/pull/204) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -427,7 +435,6 @@
 - routing: fix error on production build [\#61](https://github.com/rero/ng-core/pull/61) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - module: fix translate module import for lazy loading [\#60](https://github.com/rero/ng-core/pull/60) ([jma](https://github.com/jma))
 - template: update pr template [\#59](https://github.com/rero/ng-core/pull/59) ([AoNoOokami](https://github.com/AoNoOokami))
-- project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.14](https://github.com/rero/ng-core/tree/v0.0.14) (2019-11-19)
 
@@ -436,6 +443,7 @@
 **Merged pull requests:**
 
 - editor: allow editor component inheritance [\#54](https://github.com/rero/ng-core/pull/54) ([jma](https://github.com/jma))
+- project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.13](https://github.com/rero/ng-core/tree/v0.0.13) (2019-11-15)
