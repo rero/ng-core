@@ -24,7 +24,7 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
-import { Record, SearchField } from '../record';
+import { SearchResult, Record, SearchField } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
@@ -171,6 +171,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Output current state when parameters change.
    */
   @Output() parametersChanged = new EventEmitter<any>();
+
+  /**
+   * Output current result of records by type
+   */
+  @Output() recordsSearched = new EventEmitter<SearchResult>();
 
   /**
    * Constructor.
@@ -686,6 +691,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         if (emitParameters) {
           this.emitNewParameters();
         }
+        this.recordsSearched.emit({ type: this.currentType, records });
       },
       (error) => {
         this.error = error;

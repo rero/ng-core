@@ -24,6 +24,11 @@ export class Record {
   links: any;
 }
 
+export class SearchResult {
+  type: string;
+  records: Record;
+}
+
 export interface File {
   updated: string;
   size: string;
