@@ -111,9 +111,9 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
    * @param _recordSearchService Record search service.
    */
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _recordSearchService: RecordSearchService
+    protected _route: ActivatedRoute,
+    protected _router: Router,
+    protected _recordSearchService: RecordSearchService
   ) { }
 
   /**
@@ -220,7 +220,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
    *
    * @returns Updated url without query string
    */
-  private getCurrentUrl(type: string): string {
+  protected getCurrentUrl(type: string): string {
     const segments = this._router.parseUrl(this._router.url).root.children.primary.segments.map(it => it.path);
     segments[segments.length - 1] = type;
 

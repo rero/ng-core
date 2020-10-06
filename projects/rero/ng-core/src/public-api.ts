@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 export * from './lib/api/api.service';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
@@ -34,19 +35,20 @@ export * from './lib/record/action-status';
 export * from './lib/record/autocomplete/autocomplete.component';
 export * from './lib/record/detail/detail.component';
 export * from './lib/record/editor/add-field-editor/add-field-editor.component';
-export * from './lib/record/editor/type/array-type/array-type.component';
 export * from './lib/record/editor/dropdown-label-editor/dropdown-label-editor.component';
 export * from './lib/record/editor/editor.component';
-export * from './lib/record/editor/services/editor.service';
 export * from './lib/record/editor/extensions';
+export * from './lib/record/editor/services/editor.service';
+export * from './lib/record/editor/type/array-type/array-type.component';
+export * from './lib/record/editor/type/datepicker-type.component';
 export * from './lib/record/editor/type/multischema/multischema.component';
 export * from './lib/record/editor/type/object-type/object-type.component';
-export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.service';
 export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.component';
+export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.service';
 export * from './lib/record/editor/type/switch/switch.component';
-export * from './lib/record/editor/wrappers/toggle-wrapper/toggle-wrappers.component';
-export * from './lib/record/editor/type/datepicker-type.component';
 export * from './lib/record/editor/utils';
+export * from './lib/record/editor/wrappers/toggle-wrapper/toggle-wrappers.component';
+export * from './lib/record/record';
 export * from './lib/record/record-ui.service';
 export * from './lib/record/record.module';
 export * from './lib/record/record.service';
@@ -67,4 +69,4 @@ export * from './lib/utils/sort-by-keys';
 export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
-export * from './lib/error/error.component';
+
