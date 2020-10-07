@@ -23,6 +23,7 @@ import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
+import moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -107,10 +108,18 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _horizontalWrapperTypes = [
     'enum',
     'string',
-    'remoteautocomplete',
+    'remoteTypeahead',
     'selectWithSort',
     'integer',
     'textarea'
+  ];
+
+  // Types to apply field wrapper on
+  private _fieldWrapperTypes = [
+    'boolean',
+    'datepicker',
+    'remoteTypeahead',
+    'selectWithSort'
   ];
 
   /**
@@ -126,7 +135,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param _location Location.
    * @param _spinner Spinner service.
    * @param _modalService BsModalService.
-   * @param _router Router.
    * @param _routeCollectionService RouteCollectionService
    */
   constructor(
@@ -141,7 +149,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _location: Location,
     private _spinner: NgxSpinnerService,
     private _modalService: BsModalService,
-    private _router: Router,
     private _routeCollectionService: RouteCollectionService
   ) {
     this.form = new FormGroup({});
@@ -409,25 +416,27 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
           field.templateOptions.longMode = this.editorSettings.longMode;
 
+          if (this.editorSettings.longMode) {
+            // Add an horizontal wrapper
+            if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
+              field.wrappers = [
+                ...(field.wrappers ? field.wrappers : []),
+                'form-field-horizontal'
+              ];
+            }
+          } else {
+            if (this._fieldWrapperTypes.some(elem => elem === field.type)) {
+              field.wrappers = [
+                ...(field.wrappers ? field.wrappers : []),
+                'form-field'
+              ];
+            }
+          }
+
           if (this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
 
-          // add a form-field wrapper for boolean (switch)
-          if (field.type === 'boolean') {
-            field.wrappers = [
-              ...(field.wrappers ? field.wrappers : []),
-              'form-field'
-            ];
-          }
-
-          // Add an horizontal wrapper
-          if (this.editorSettings.longMode && this._horizontalWrapperTypes.some(elem => elem === field.type)) {
-            field.wrappers = [
-              ...(field.wrappers ? field.wrappers : []),
-              'form-field-horizontal'
-            ];
-          }
           return field;
         }
       })
@@ -745,6 +754,73 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             }
           };
         }
+
+        // The start date must be less than the end date.
+        if (formOptions.validation.validators.dateMustBeLessThan) {
+          const startDate: string = formOptions.validation.validators.dateMustBeLessThan.startDate;
+          const endDate: string = formOptions.validation.validators.dateMustBeLessThan.endDate;
+          const strict: boolean = formOptions.validation.validators.dateMustBeLessThan.strict || false;
+          const updateOn: 'change' | 'blur' | 'submit' =
+            formOptions.validation.validators.dateMustBeLessThan.strict || 'change';
+          field.validators = {
+            dateMustBeLessThan: {
+              updateOn,
+              expression: (control: FormControl) => {
+                const startDateFc = control.parent.get(startDate);
+                const endDateFc = control.parent.get(endDate);
+                if (!control.touched) {
+                  return true;
+                }
+                if (startDateFc.value && endDateFc.value) {
+                  const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
+                  const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
+                  const isMustLessThan = strict
+                  ? dateStart <= dateEnd ? false : true
+                  : dateStart > dateEnd ? false : true;
+                  if (isMustLessThan) {
+                    endDateFc.setErrors(null);
+                    endDateFc.markAsDirty();
+                  }
+                  return isMustLessThan;
+                }
+              }
+            }
+          };
+        }
+
+        // The end date must be greater than the start date.
+        if (formOptions.validation.validators.dateMustBeGreaterThan) {
+          const startDate: string = formOptions.validation.validators.dateMustBeGreaterThan.startDate;
+          const endDate: string = formOptions.validation.validators.dateMustBeGreaterThan.endDate;
+          const strict: boolean = formOptions.validation.validators.dateMustBeGreaterThan.strict || false;
+          const updateOn: 'change' | 'blur' | 'submit' =
+            formOptions.validation.validators.dateMustBeGreaterThan.strict || 'change';
+          field.validators = {
+            datesMustBeGreaterThan: {
+              updateOn,
+              expression: (control: FormControl) => {
+                const startDateFc = control.parent.get(startDate);
+                const endDateFc = control.parent.get(endDate);
+                if (!control.touched) {
+                  return true;
+                }
+                if (startDateFc.value && endDateFc.value) {
+                  const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
+                  const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
+                  const isMustBeGreaterThan = strict
+                  ? dateStart <= dateEnd ? true : false
+                  : dateStart < dateEnd ? true : false;
+                  if (isMustBeGreaterThan) {
+                    startDateFc.setErrors(null);
+                    startDateFc.markAsDirty();
+                  }
+                  return isMustBeGreaterThan;
+                }
+              }
+            }
+          };
+        }
+
         // validators: add validator with expressions
         const validatorsKey = Object.keys(formOptions.validation.validators);
         validatorsKey.map(validatorKey => {

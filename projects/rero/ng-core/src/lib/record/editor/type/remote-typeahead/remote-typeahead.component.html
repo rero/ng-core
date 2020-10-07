@@ -21,9 +21,10 @@
     <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
       [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
       (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
-      [typeaheadGroupField]="groupField" typeaheadOptionField="label" />
+      [typeaheadLatinize]="true" [typeaheadGroupField]="groupField"
+      typeaheadOptionField="label" [class.is-invalid]="showError" />
     <div class="input-group-append">
-      <span class="input-group-text" id="{field.id}-search">
+      <span class="input-group-text" id="{{ field.id }}-search">
         <i *ngIf="!typeaheadLoading" class="fa fa-search"></i>
         <i *ngIf="typeaheadLoading" class="fa fa-spinner fa-spin"></i>
       </span>
