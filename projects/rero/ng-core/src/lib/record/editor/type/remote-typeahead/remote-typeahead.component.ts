@@ -108,6 +108,7 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
     } else {
       this.formControl.get('$ref').reset();
     }
+    this.search = null;
   }
 
   /**
