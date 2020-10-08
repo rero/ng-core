@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.11.0](https://github.com/rero/ng-core/tree/v0.11.0) (2020-10-08)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.10.1...v0.11.0)
+
+**Merged pull requests:**
+
+- editor: improve typeahead and add new date validators [\#279](https://github.com/rero/ng-core/pull/279) ([Garfield-fr](https://github.com/Garfield-fr))
+- record search: implement ng-content on page [\#278](https://github.com/rero/ng-core/pull/278) ([Garfield-fr](https://github.com/Garfield-fr))
+- Us1642 templates [\#273](https://github.com/rero/ng-core/pull/273) ([zannkukai](https://github.com/zannkukai))
+
 ## [v0.10.1](https://github.com/rero/ng-core/tree/v0.10.1) (2020-10-02)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.10.0...v0.10.1)
@@ -70,6 +80,7 @@
 - editor: fix ToggleSwitch & DatePicker  [\#235](https://github.com/rero/ng-core/pull/235) ([zannkukai](https://github.com/zannkukai))
 - editor: fix hidden field with value from the model [\#234](https://github.com/rero/ng-core/pull/234) ([jma](https://github.com/jma))
 - template: add id html attribute for cypress usage [\#233](https://github.com/rero/ng-core/pull/233) ([AoNoOokami](https://github.com/AoNoOokami))
+- editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
 - records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.7.0](https://github.com/rero/ng-core/tree/v0.7.0) (2020-07-30)
@@ -80,7 +91,6 @@
 
 - release: version 0.7.0 [\#231](https://github.com/rero/ng-core/pull/231) ([jma](https://github.com/jma))
 - Maj us1542 better editor [\#230](https://github.com/rero/ng-core/pull/230) ([jma](https://github.com/jma))
-- editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
 - search list: fix export urls [\#228](https://github.com/rero/ng-core/pull/228) ([jma](https://github.com/jma))
 - translations: update catalogs [\#226](https://github.com/rero/ng-core/pull/226) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add ordered property for definitions [\#224](https://github.com/rero/ng-core/pull/224) ([jma](https://github.com/jma))
@@ -166,6 +176,7 @@
 
 **Merged pull requests:**
 
+- ui: improve display of editor, brief and detail views [\#182](https://github.com/rero/ng-core/pull/182) ([AoNoOokami](https://github.com/AoNoOokami))
 - autocomplete: fix suggestions list [\#177](https://github.com/rero/ng-core/pull/177) ([jma](https://github.com/jma))
 
 ## [v0.2.2](https://github.com/rero/ng-core/tree/v0.2.2) (2020-04-27)
