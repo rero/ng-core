@@ -761,21 +761,18 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           const endDate: string = formOptions.validation.validators.dateMustBeLessThan.endDate;
           const strict: boolean = formOptions.validation.validators.dateMustBeLessThan.strict || false;
           const updateOn: 'change' | 'blur' | 'submit' =
-            formOptions.validation.validators.dateMustBeLessThan.strict || 'change';
+            formOptions.validation.validators.dateMustBeLessThan.strict || 'blur';
           field.validators = {
             dateMustBeLessThan: {
               updateOn,
               expression: (control: FormControl) => {
                 const startDateFc = control.parent.get(startDate);
                 const endDateFc = control.parent.get(endDate);
-                if (!control.touched) {
-                  return true;
-                }
-                if (startDateFc.value && endDateFc.value) {
+                if (startDateFc.value !== null && endDateFc.value !== null) {
                   const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
                   const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
                   const isMustLessThan = strict
-                  ? dateStart <= dateEnd ? false : true
+                  ? dateStart >= dateEnd ? false : true
                   : dateStart > dateEnd ? false : true;
                   if (isMustLessThan) {
                     endDateFc.setErrors(null);
@@ -783,6 +780,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                   }
                   return isMustLessThan;
                 }
+                return false;
               }
             }
           };
@@ -794,17 +792,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           const endDate: string = formOptions.validation.validators.dateMustBeGreaterThan.endDate;
           const strict: boolean = formOptions.validation.validators.dateMustBeGreaterThan.strict || false;
           const updateOn: 'change' | 'blur' | 'submit' =
-            formOptions.validation.validators.dateMustBeGreaterThan.strict || 'change';
+            formOptions.validation.validators.dateMustBeGreaterThan.strict || 'blur';
           field.validators = {
             datesMustBeGreaterThan: {
               updateOn,
               expression: (control: FormControl) => {
                 const startDateFc = control.parent.get(startDate);
                 const endDateFc = control.parent.get(endDate);
-                if (!control.touched) {
-                  return true;
-                }
-                if (startDateFc.value && endDateFc.value) {
+                if (startDateFc.value !== null && endDateFc.value !== null) {
                   const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
                   const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
                   const isMustBeGreaterThan = strict
@@ -816,6 +811,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                   }
                   return isMustBeGreaterThan;
                 }
+                return false;
               }
             }
           };

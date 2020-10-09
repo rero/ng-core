@@ -91,6 +91,10 @@ export class DatepickerTypeComponent extends FieldType implements OnInit {
     if (!('outputDateFormat' in this.field.templateOptions)) {
       this.field.templateOptions.outputDateFormat = 'yyy-MM-dd';
     }
+    if (!('readonly' in this.field.templateOptions)
+    || this.field.templateOptions.readonly === undefined) {
+      this.field.templateOptions.readonly = false;
+    }
   }
 
   /**
