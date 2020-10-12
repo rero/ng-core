@@ -1,5 +1,13 @@
 # Changelog
 
+## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.11.0...v0.11.1)
+
+**Merged pull requests:**
+
+- validator: fix date validators [\#280](https://github.com/rero/ng-core/pull/280) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.11.0](https://github.com/rero/ng-core/tree/v0.11.0) (2020-10-08)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.10.1...v0.11.0)
@@ -176,7 +184,6 @@
 
 **Merged pull requests:**
 
-- ui: improve display of editor, brief and detail views [\#182](https://github.com/rero/ng-core/pull/182) ([AoNoOokami](https://github.com/AoNoOokami))
 - autocomplete: fix suggestions list [\#177](https://github.com/rero/ng-core/pull/177) ([jma](https://github.com/jma))
 
 ## [v0.2.2](https://github.com/rero/ng-core/tree/v0.2.2) (2020-04-27)
