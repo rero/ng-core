@@ -78,6 +78,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
   types: {
     key: string,
     label: string,
+    index?: string,
     component?: Component,
     total?: number,
     canAdd?: any,
@@ -86,6 +87,7 @@ export class RecordSearchComponent implements OnInit, OnDestroy {
     canRead?: any,
     permissions?: any,
     aggregations?: any,
+    preFilters?: any,
     listHeaders?: any,
     itemHeaders?: any,
     aggregationsOrder?: Array<string>,
