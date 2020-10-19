@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.12.0](https://github.com/rero/ng-core/tree/v0.12.0) (2020-10-19)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.11.1...v0.12.0)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
+- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.11.0...v0.11.1)
@@ -14,7 +24,6 @@
 
 **Merged pull requests:**
 
-- editor: improve typeahead and add new date validators [\#279](https://github.com/rero/ng-core/pull/279) ([Garfield-fr](https://github.com/Garfield-fr))
 - record search: implement ng-content on page [\#278](https://github.com/rero/ng-core/pull/278) ([Garfield-fr](https://github.com/Garfield-fr))
 - Us1642 templates [\#273](https://github.com/rero/ng-core/pull/273) ([zannkukai](https://github.com/zannkukai))
 
@@ -462,7 +471,6 @@
 
 - editor: allow editor component inheritance [\#54](https://github.com/rero/ng-core/pull/54) ([jma](https://github.com/jma))
 - project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.13](https://github.com/rero/ng-core/tree/v0.0.13) (2019-11-15)
 
@@ -482,6 +490,7 @@
 
 **Merged pull requests:**
 
+- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: export RecordUiService [\#51](https://github.com/rero/ng-core/pull/51) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - pipe: create a new getRecord pipe [\#50](https://github.com/rero/ng-core/pull/50) ([Garfield-fr](https://github.com/Garfield-fr))
 - git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
