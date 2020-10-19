@@ -81,6 +81,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   types: {
     key: string,
     label: string,
+    index?: string,
     component?: Component,
     total?: number,
     canAdd?: any,
@@ -89,6 +90,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     canRead?: any,
     permissions?: any,
     aggregations?: any,
+    preFilters?: any,
     listHeaders?: any,
     itemHeaders?: any,
     aggregationsOrder?: Array<string>,
@@ -231,9 +233,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // Load totals for each resource type
     for (const type of this.types) {
       this._recordService.getRecords(
-        type.key, '', 1, 1, [],
-        this._config.preFilters || {},
-        this._config.listHeaders || null).subscribe((records: Record) => {
+        type.index ? type.index : type.key, '', 1, 1, [],
+        type.preFilters || {},
+        type.listHeaders || null).subscribe((records: Record) => {
           type.total = this._recordService.totalHits(records.hits.total);
         });
     }
@@ -611,7 +613,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     const url = { link: `detail/${record.metadata.pid}`, external: false };
 
     if (this.detailUrl) {
-      url.link = this.detailUrl.replace(':type', this.currentType).replace(':pid', record.metadata.pid);
+      url.link = this.detailUrl.replace(':type', this._currentIndex()).replace(':pid', record.metadata.pid);
       url.external = true;
     }
 
@@ -671,7 +673,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     const q = this._buildQueryString();
 
     this._recordService.getRecords(
-      this.currentType,
+      this._currentIndex(),
       q,
       this.page,
       this.size,
@@ -709,7 +711,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       q: this.q,
       page: this.page,
       size: this.size,
-      currentType: this.currentType,
+      currentType: this._config.key,
+      index: this._config.index,
       aggregationsFilters: this.aggregationsFilters,
       sort: this.sort
     });
@@ -765,7 +768,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     return JSON.stringify({
-      currentType: this.currentType,
+      currentType: this._config.key,
+      index: this._config.index,
       q: this.q,
       page: this.page,
       size: this.size,
@@ -815,5 +819,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     return queries.join(' ');
+  }
+
+  /**
+   * Return the name of the index defined either by the index key or key.
+   *
+   * @return string, current index defined by keys index or key
+   */
+  private _currentIndex() {
+    return this._config.index ? this._config.index : this._config.key;
   }
 }

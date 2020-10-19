@@ -270,6 +270,7 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should resolve detail url', async(() => {
+    component.changeType(new Event('click'), 'documents');
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 
