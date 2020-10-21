@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.12.1](https://github.com/rero/ng-core/tree/v0.12.1) (2020-10-21)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.12.0...v0.12.1)
+
+**Merged pull requests:**
+
+- record: fix type query with index on getRecord [\#286](https://github.com/rero/ng-core/pull/286) ([Garfield-fr](https://github.com/Garfield-fr))
+- editor: fix toggle wrapper if multiple [\#285](https://github.com/rero/ng-core/pull/285) ([zannkukai](https://github.com/zannkukai))
+
 ## [v0.12.0](https://github.com/rero/ng-core/tree/v0.12.0) (2020-10-19)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.11.1...v0.12.0)
@@ -24,6 +33,7 @@
 
 **Merged pull requests:**
 
+- editor: improve typeahead and add new date validators [\#279](https://github.com/rero/ng-core/pull/279) ([Garfield-fr](https://github.com/Garfield-fr))
 - record search: implement ng-content on page [\#278](https://github.com/rero/ng-core/pull/278) ([Garfield-fr](https://github.com/Garfield-fr))
 - Us1642 templates [\#273](https://github.com/rero/ng-core/pull/273) ([zannkukai](https://github.com/zannkukai))
 
@@ -182,7 +192,6 @@
 **Merged pull requests:**
 
 - editor: fix preprocessRecord calls [\#185](https://github.com/rero/ng-core/pull/185) ([zannkukai](https://github.com/zannkukai))
-- translations: add http translations support [\#183](https://github.com/rero/ng-core/pull/183) ([jma](https://github.com/jma))
 - editor: adapt editor according to UX chart [\#181](https://github.com/rero/ng-core/pull/181) ([zannkukai](https://github.com/zannkukai))
 - utils : update extractIdOnRef if value is null. [\#180](https://github.com/rero/ng-core/pull/180) ([zannkukai](https://github.com/zannkukai))
 - search input: set focus on search input by default [\#178](https://github.com/rero/ng-core/pull/178) ([AoNoOokami](https://github.com/AoNoOokami))
@@ -471,6 +480,7 @@
 
 - editor: allow editor component inheritance [\#54](https://github.com/rero/ng-core/pull/54) ([jma](https://github.com/jma))
 - project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.13](https://github.com/rero/ng-core/tree/v0.0.13) (2019-11-15)
 
@@ -490,7 +500,6 @@
 
 **Merged pull requests:**
 
-- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: export RecordUiService [\#51](https://github.com/rero/ng-core/pull/51) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - pipe: create a new getRecord pipe [\#50](https://github.com/rero/ng-core/pull/50) ([Garfield-fr](https://github.com/Garfield-fr))
 - git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
