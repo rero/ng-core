@@ -147,7 +147,8 @@ export class DetailComponent implements OnInit, OnDestroy {
       this._recordUiService.types = this._route.snapshot.data.types;
       this._config = this._recordUiService.getResourceConfig(this._type);
 
-      this.record$ = this._recordService.getRecord(this._type, pid, 1, this._config.itemHeaders || null);
+      const type = this._config.index ? this._config.index : this._config.key;
+      this.record$ = this._recordService.getRecord(type, pid, 1, this._config.itemHeaders || null);
       this.record$.subscribe(
         (record) => {
           this.record = record;
