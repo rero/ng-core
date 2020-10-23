@@ -21,7 +21,10 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ToastrModule } from 'ngx-toastr';
+import { CoreModule } from '../../../core.module';
 import { JsonComponent } from './item/json.component';
 import { RecordSearchResultComponent } from './record-search-result.component';
 import { RecordSearchResultDirective } from './record-search-result.directive';
@@ -44,7 +47,10 @@ describe('RecordSearchResultComponent', () => {
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
         ToastrModule.forRoot(),
-        HttpClientModule
+        HttpClientModule,
+        TooltipModule.forRoot(),
+        PopoverModule.forRoot(),
+        CoreModule
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

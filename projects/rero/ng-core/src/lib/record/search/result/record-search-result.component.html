@@ -48,14 +48,17 @@
             <i class="fa fa-trash"></i>
         </button>
         <ng-template #deleteMessageLink>
-            <button id="result-delete-button"
-                    disabled
-                    class="btn btn-sm btn-outline-danger"
+            <button *ngIf="deleteStatus.message"
+                    id="result-delete-button"
+                    class="btn btn-sm btn-outline-danger disabled"
                     [title]="'Delete'|translate"
                     [name]="'Delete'|translate"
-                    (click)="showDeleteMessage(deleteStatus.message)" *ngIf="deleteStatus.message">
+                    [popover]="tolTemplate" triggers="mouseenter:mouseleave">
                 <i class="fa fa-trash"></i>
             </button>
+        </ng-template>
+        <ng-template #tolTemplate>
+          <div [innerHtml]="deleteInfoMessage | nl2br"></div>
         </ng-template>
     </span>
 </div>
