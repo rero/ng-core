@@ -176,9 +176,15 @@ export class RecordUiService {
     const config = this.getResourceConfig(type);
     if (config.permissions) {
       const permissions = config.permissions(record);
-      if ('canUpdate' in permissions) {
-        return permissions.canUpdate;
-      }
+      return permissions.pipe(
+        map((perms: any) => {
+          if ('canUpdate' in perms) {
+            return perms.canUpdate;
+          } else {
+            return of({ can: true, message: '' });
+          }
+        })
+      );
     }
     return (config.canUpdate)
       ? config.canUpdate(record).pipe(first())
@@ -195,9 +201,15 @@ export class RecordUiService {
     const config = this.getResourceConfig(type);
     if (config.permissions) {
       const permissions = config.permissions(record);
-      if ('canDelete' in permissions) {
-        return permissions.canDelete;
-      }
+      return permissions.pipe(
+        map((perms: any) => {
+          if ('canDelete' in perms) {
+            return perms.canDelete;
+          } else {
+            return of({ can: true, message: '' });
+          }
+        })
+      );
     }
     return (config.canDelete)
       ? config.canDelete(record).pipe(first())
@@ -214,9 +226,15 @@ export class RecordUiService {
     const config = this.getResourceConfig(type);
     if (config.permissions) {
       const permissions = config.permissions(record);
-      if ('canRead' in permissions) {
-        return permissions.canRead;
-      }
+      return permissions.pipe(
+        map((perms: any) => {
+          if ('canRead' in perms) {
+            return perms.canRead;
+          } else {
+            return of({ can: true, message: '' });
+          }
+        })
+      );
     }
     return (config.canRead)
       ? config.canRead(record).pipe(first())
