@@ -25,6 +25,7 @@ import { NgxBootstrapSliderModule } from 'ngx-bootstrap-slider';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CoreModule } from '../core.module';
@@ -98,6 +99,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     ReactiveFormsModule,
     RecordRoutingModule,
     TooltipModule.forRoot(),
+    PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),
     PaginationModule.forRoot(),
     CollapseModule.forRoot(),

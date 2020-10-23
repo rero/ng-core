@@ -120,7 +120,7 @@ const permissions = (record: any) => {
     }),
     canDelete: of({
         can: perms.delete,
-        message: ''
+        message: 'This record cannot be deleted.'
     })
   };
 };

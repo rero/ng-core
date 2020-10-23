@@ -15,13 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, ComponentFactoryResolver, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ActionStatus } from '../../action-status';
-import { RecordUiService } from '../../record-ui.service';
 import { JsonComponent } from './item/json.component';
 import { ResultItem } from './item/result-item';
 import { RecordSearchResultDirective } from './record-search-result.directive';
-import { Router} from '@angular/router';
 
 
 @Component({
@@ -121,16 +120,22 @@ export class RecordSearchResultComponent implements OnInit {
    */
   @ViewChild(RecordSearchResultDirective, { static: true }) searchResultItem: RecordSearchResultDirective;
 
+
+  /**
+   * Return a message containing the reasons why the item cannot be deleted
+   */
+  get deleteInfoMessage(): string {
+    return this.deleteStatus.message;
+  }
+
   /**
    * Constructor.
    *
    * @param _componentFactoryResolver Component factory resolver.
-   * @param _recordUiService Record UI service.
    * @param _router: Router
    */
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
-    private _recordUiService: RecordUiService,
     private _router: Router
   ) {
     this.currentUrl = window.location.href;
@@ -203,13 +208,5 @@ export class RecordSearchResultComponent implements OnInit {
    */
   useRecord() {
     this._router.navigateByUrl(this.useStatus.url);
-  }
-
-  /**
-   * Show dialog with the reason why record cannot be deleted.
-   * @param message - string, message to display
-   */
-  showDeleteMessage(message: string) {
-    this._recordUiService.showDeleteMessage(message);
   }
 }
