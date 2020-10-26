@@ -1,5 +1,14 @@
 # Changelog
 
+## [v0.12.2](https://github.com/rero/ng-core/tree/v0.12.2) (2020-10-26)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.12.1...v0.12.2)
+
+**Merged pull requests:**
+
+- search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
+- permissions: fix permissions on the configuration [\#287](https://github.com/rero/ng-core/pull/287) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.12.1](https://github.com/rero/ng-core/tree/v0.12.1) (2020-10-21)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.12.0...v0.12.1)
@@ -192,6 +201,7 @@
 **Merged pull requests:**
 
 - editor: fix preprocessRecord calls [\#185](https://github.com/rero/ng-core/pull/185) ([zannkukai](https://github.com/zannkukai))
+- translations: add http translations support [\#183](https://github.com/rero/ng-core/pull/183) ([jma](https://github.com/jma))
 - editor: adapt editor according to UX chart [\#181](https://github.com/rero/ng-core/pull/181) ([zannkukai](https://github.com/zannkukai))
 - utils : update extractIdOnRef if value is null. [\#180](https://github.com/rero/ng-core/pull/180) ([zannkukai](https://github.com/zannkukai))
 - search input: set focus on search input by default [\#178](https://github.com/rero/ng-core/pull/178) ([AoNoOokami](https://github.com/AoNoOokami))
