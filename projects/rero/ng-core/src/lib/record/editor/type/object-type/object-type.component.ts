@@ -51,8 +51,8 @@ export class ObjectTypeComponent extends FieldType {
    */
   hasMenu(field: FormlyFieldConfig) {
     return (
-      (field.type === 'object' && this.hiddenFieldGroup(field.fieldGroup).length > 0) ||
-      field.templateOptions.helpURL
+      ((field.type === 'object' && this.hiddenFieldGroup(field.fieldGroup).length > 0) ||
+      field.templateOptions.helpURL) && this.field.templateOptions.longMode
     );
   }
 

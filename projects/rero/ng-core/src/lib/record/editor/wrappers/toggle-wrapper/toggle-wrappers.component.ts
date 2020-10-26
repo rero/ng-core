@@ -46,8 +46,11 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
     if (this.to['toggle-switch']) {
       this.tsOptions = {...this.tsOptions, ...this.to['toggle-switch']};
     }
-    /* For simple field the ode below works fine to enable the toggle switch if needed */
+    /* For simple field the code below works fine to enable the toggle switch if needed */
     this.tsOptions.enabled = !isEmpty(removeEmptyValues(this.formControl.value));
+    if (!this.tsOptions.enabled) {
+      this.field.formControl.disable({emitEvent: false});
+    }
     /* For complex object (array or object), it's more complex:
      *   When wrapper is initialize, we should enable the toggle if the model already contains some data.
      *   But, on init, the model isn't yet populated with data ; so we can't just check the model.
@@ -57,6 +60,11 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
     this.formControl.valueChanges.subscribe(
       (newValue) => {
         this.tsOptions.enabled = !isEmpty(removeEmptyValues(newValue));
+        if (this.tsOptions.enabled) {
+          this.field.formControl.enable({emitEvent: false});
+        } else {
+          this.field.formControl.disable({emitEvent: false});
+        }
       }
     );
   }
@@ -64,12 +72,12 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
   toggle(event: any) {
     if (this.tsOptions.enabled === true) {
       // toggle switch will became 'false', so just reset the field.
-      //   Resetting the filed will change its value and so the `valueChanges` Observer will be called. The toggle `enabled` value will
+      //   Resetting the field will change its value and so the `valueChanges` Observer will be called. The toggle `enabled` value will
       //   be update (to false) by this method.
       this.field.formControl.reset();  // reset all children fields
     } else {
       this.tsOptions.enabled = true;
+      this.field.formControl.enable({emitEvent: false});
     }
   }
-
 }
