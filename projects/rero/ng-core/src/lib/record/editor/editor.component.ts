@@ -463,13 +463,17 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
-    if (!modelEmpty && (field.hide === true)) {
-        field.hide = false;
-        this._editorService.removeHiddenField(field);
+    if (!modelEmpty && (field.templateOptions.hide === true)) {
+        setTimeout(() => {
+          field.hide = false;
+          this._editorService.removeHiddenField(field);
+        });
     }
     if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
-        field.hide = true;
-        this._editorService.addHiddenField(field);
+        setTimeout(() => {
+          field.hide = true;
+          this._editorService.addHiddenField(field);
+        });
     }
   }
 

@@ -46,26 +46,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
   ngOnInit() {
     this.isChildrenObject = this.field.fieldArray.type === 'object';
     this.isChildrenArray = this.field.fieldArray.type === 'array';
-
-    // reset the number of elements in the array when the array is hidden
-    this.field.options.fieldChanges.subscribe(changes => {
-      const minItems = this.field.templateOptions.minItems ? this.field.templateOptions.minItems : 0;
-      if (
-        // hide property has changed
-        changes.type === 'hidden'
-        // transition from visible to hide
-        && (changes.value === true)
-        // the changes concern the current field
-        && (this.field.id === changes.field.id)
-      ) {
-        // number of elements to remove
-        const numberOfItemsToRemove = this.field.fieldGroup.length - minItems;
-        // remove the extra elements
-        for (let i = 0; i < numberOfItemsToRemove; i++) {
-          this.remove(0);
-        }
-      }
-    });
   }
 
   /**
@@ -136,11 +116,7 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * Hide the array and remove all the elements
    */
   hide() {
-    for (const f of this.field.fieldGroup) {
-      this.remove(0);
-    }
     this.field.hide = true;
-    this.field.formControl.reset();
   }
 
   /**
