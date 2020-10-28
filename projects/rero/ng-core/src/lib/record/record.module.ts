@@ -47,6 +47,7 @@ import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type
 import { SwitchComponent } from './editor/type/switch/switch.component';
 import { LoadTemplateFormComponent } from './editor/widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/save-template-form.component';
+import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { RecordFilesComponent } from './files/files.component';
@@ -84,6 +85,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     ToggleWrapperComponent,
     BucketsComponent,
     HorizontalWrapperComponent,
+    HideWrapperComponent,
     AggregationSliderComponent,
     SelectWithSortTypeComponent,
     RemoteTypeaheadComponent,
@@ -106,6 +108,10 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     PaginationModule.forRoot(),
     BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
+      extras: {
+        resetFieldOnHide: true,
+        lazyRender: true
+      },
       extensions: [
         { name: 'hooks', extension: hooksFormlyExtension },
         { name: 'field-id-generator', extension: fieldIdGenerator }
@@ -141,7 +147,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
-        { name: 'form-field-horizontal', component: HorizontalWrapperComponent }
+        { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
+        { name: 'hide', component: HideWrapperComponent }
       ]
     }),
     FormlyBootstrapModule,

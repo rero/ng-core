@@ -83,7 +83,7 @@ export class EditorService {
    * @param field - FormlyFieldConfig, form config to be added
    */
   addHiddenField(field: FormlyFieldConfig) {
-    if (!this._hiddenFields.some(f => f === field) && this.isFieldRoot(field)) {
+    if (!this._hiddenFields.some(f => f.id === field.id) && this.isFieldRoot(field)) {
       this._hiddenFields.push(field);
       this._hiddenFieldsSubject.next(this._hiddenFields);
     }

@@ -259,13 +259,14 @@ export class RecordService {
     filter: string = null
   ) {
     let key = field.key;
+    console.log('unique', field);
     if (term != null) {
       key = term;
     }
     const value = field.formControl.value;
     const model = resolveRefs(field.model);
     if (value == null) {
-      return of(false);
+      return of(true);
     }
     if (limitToValues.length > 0 && !limitToValues.some((v) => v === value)) {
       return of(true);

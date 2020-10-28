@@ -95,7 +95,6 @@ export class ObjectTypeComponent extends FieldType {
    * @param field - FormlyFieldConfig, the field to hide
    */
   hide(field: FormlyFieldConfig) {
-    field.formControl.reset();
     field.hide = true;
     if (this.isRoot()) {
       this._editorService.addHiddenField(field);
