@@ -166,10 +166,21 @@ export class AutocompleteComponent implements OnInit {
     const combineGetRecords = [];
     const recordTypesKeys = this.recordTypes.map(recordType => recordType.type);
     this.recordTypes.forEach(recordType => {
+      const queryParams = [];
+      // use queryParams only if ES filter does not exist.
+      if ('queryParams' in recordType) {
+        Object.keys(recordType.queryParams).forEach(key => {
+          queryParams.push(`${key}:${recordType.queryParams[key].replace(':', '\\:')}`);
+        });
+      }
+      let queryRecord = `${recordType.field}:${query}`;
+      if (queryParams.length > 0) {
+        queryRecord += ` AND ${queryParams.join(' AND ')}`;
+      }
       combineGetRecords.push(
         this._recordService.getRecords(
-          recordType.type,
-          `${recordType.field}:${query}`,
+          recordType.index ? recordType.index : recordType.type,
+          queryRecord,
           1,
           recordType.maxNumberOfSuggestions
             ? recordType.maxNumberOfSuggestions

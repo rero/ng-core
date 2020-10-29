@@ -259,7 +259,6 @@ export class RecordService {
     filter: string = null
   ) {
     let key = field.key;
-    console.log('unique', field);
     if (term != null) {
       key = term;
     }
