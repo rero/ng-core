@@ -38,6 +38,7 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
+import { SortListComponent } from './widget/sort-list/sort-list.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
     SortByKeysPipe,
     ErrorComponent,
     FilesizePipe,
-    MenuWidgetComponent
+    MenuWidgetComponent,
+    SortListComponent
   ],
   imports: [
     CommonModule,
@@ -90,7 +92,8 @@ import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
     ErrorComponent,
     SortByKeysPipe,
     NgxSpinnerModule,
-    MenuWidgetComponent
+    MenuWidgetComponent,
+    SortListComponent
   ],
   entryComponents: [DialogComponent]
 })
