@@ -51,7 +51,7 @@
               </button>
             </div>
           </div>
-          <div class="row mt-2" *ngIf="file.showInfo">
+          <div class="row mt-2" *ngIf="file.showInfo && !metadataForm.model">
             <div class="col-lg-6" *ngIf="file.is_head">
               <dl class="row mt-2 mb-0">
                 <ng-container *ngFor="let item of file.metadata | keyvalue">
@@ -62,7 +62,7 @@
                 </ng-container>
               </dl>
             </div>
-            <div class="col-lg-6"[ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+            <div class="col-lg-6" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
               <dl class="row mt-2 mb-0">
                 <dt class="col-sm-4" translate>Size</dt>
                 <dd class="col-sm-8">{{ file.size | filesize }}</dd>
@@ -125,21 +125,24 @@
 </ng-template>
 
 <ng-template #metadataFormModal>
-  <div class="modal-header">
-    <h4 class="modal-title pull-left">{{ metadataForm.model.key }}</h4>
-    <button type="button" class="close pull-right" aria-label="Close" (click)="formModalRef.hide()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="metadataForm.form" (ngSubmit)="saveMetadata()">
-      <formly-form [form]="metadataForm.form" [model]="metadataForm.model" [fields]="metadataForm.fields"></formly-form>
-      <div class="text-center">
-        <button type="submit" class="btn btn-primary btn-block">
-          <i class="fa fa-floppy-o mr-2"></i>
-          {{ 'Save' | translate }}
-        </button>
-      </div>
-    </form>
-  </div>
+  <ng-container *ngIf="metadataForm.model">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">{{ metadataForm.model.key }}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="hideForm();">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="metadataForm.form" (ngSubmit)="saveMetadata()">
+        <formly-form [form]="metadataForm.form" [model]="metadataForm.model" [fields]="metadataForm.fields">
+        </formly-form>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fa fa-floppy-o mr-2"></i>
+            {{ 'Save' | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </ng-container>
 </ng-template>

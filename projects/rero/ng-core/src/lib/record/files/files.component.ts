@@ -200,6 +200,13 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
           ];
         }
       });
+
+    // Process when modal is hidden
+    this._subscriptions.add(
+      this._modalService.onHide.subscribe((reason: string | any) => {
+        this.hideForm();
+      })
+    );
   }
 
   /**
@@ -306,6 +313,11 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * Hide the modal.
    */
   hideForm() {
+    if (this.metadataForm.model) {
+      this._getFiles$().subscribe(() => {
+        this.metadataForm.model = null;
+      });
+    }
     this.formModalRef.hide();
   }
 
@@ -435,7 +447,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       )
       .subscribe(() => {
         this._spinner.hide();
-        this.formModalRef.hide();
+        this.hideForm();
         this._toastrService.success(
           this._translateService.instant(
             'Metadata have been saved successfully.'

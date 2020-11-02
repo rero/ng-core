@@ -24,7 +24,6 @@ import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { RouteService } from './routes/route.service';
-import { RecordDetailDirective } from '@rero/ng-core/lib/record/detail/detail.directive';
 
 /**
  * Disallows access to admin functionalities.
@@ -109,20 +108,20 @@ const permissions = (record: any) => {
   perms.update = true;
   perms.delete = false;
 
-  return {
-    canRead: of({
-        can: perms.read,
-        message: ''
-    }),
-    canUpdate: of({
-        can: perms.update,
-        message: ''
-    }),
-    canDelete: of({
-        can: perms.delete,
-        message: 'This record cannot be deleted.'
-    })
-  };
+  return of({
+    canRead: {
+      can: perms.read,
+      message: '',
+    },
+    canUpdate: {
+      can: perms.update,
+      message: '',
+    },
+    canDelete: {
+      can: perms.delete,
+      message: 'This record cannot be deleted.',
+    },
+  });
 };
 
 const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
