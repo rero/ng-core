@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.13.0](https://github.com/rero/ng-core/tree/v0.13.0) (2020-11-02)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.12.2...v0.13.0)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#295](https://github.com/rero/ng-core/pull/295) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- files: fix metadata edition [\#294](https://github.com/rero/ng-core/pull/294) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- widget: sort list widget. [\#293](https://github.com/rero/ng-core/pull/293) ([zannkukai](https://github.com/zannkukai))
+- search: improve autocompletion [\#292](https://github.com/rero/ng-core/pull/292) ([Garfield-fr](https://github.com/Garfield-fr))
+- editor: restore default value for hidden field [\#291](https://github.com/rero/ng-core/pull/291) ([jma](https://github.com/jma))
+- editor: fix toggle wrapper field control behavior [\#289](https://github.com/rero/ng-core/pull/289) ([zannkukai](https://github.com/zannkukai))
+
 ## [v0.12.2](https://github.com/rero/ng-core/tree/v0.12.2) (2020-10-26)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.12.1...v0.12.2)
@@ -156,7 +169,6 @@
 - form: add the possibility to order a select menu [\#199](https://github.com/rero/ng-core/pull/199) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix problem with jump to [\#198](https://github.com/rero/ng-core/pull/198) ([zannkukai](https://github.com/zannkukai))
 - tester: point to a fake API [\#197](https://github.com/rero/ng-core/pull/197) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.5.0](https://github.com/rero/ng-core/tree/v0.5.0) (2020-06-25)
 
@@ -303,6 +315,7 @@
 
 **Merged pull requests:**
 
+- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix field visibility on the model change [\#134](https://github.com/rero/ng-core/pull/134) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#133](https://github.com/rero/ng-core/pull/133) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
