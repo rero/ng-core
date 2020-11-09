@@ -456,7 +456,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     let model = field.model;
     // for simple object the model is the parent dict
     if (
-      !['object', 'multischema', 'array'].some(f => f === field.type)
+      field.model != null && !['object', 'multischema', 'array'].some(f => f === field.type)
     ) {
       // New from ngx-formly v5.9.0
       model = field.model[Array.isArray(field.key) ? field.key[0] : field.key];

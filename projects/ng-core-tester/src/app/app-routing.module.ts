@@ -269,6 +269,9 @@ const routes: Routes = [
           label: 'Documents',
           component: DocumentComponent,
           detailComponent: DetailComponent,
+          editorSettings: {
+            longMode: true
+          },
           canAdd,
           canUpdate,
           canDelete,
