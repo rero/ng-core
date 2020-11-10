@@ -85,11 +85,16 @@ export class RecordService {
 
   /**
    * Get records filtered by given parameters.
+   *
    * @param type - string, type of resource
    * @param query - string, keyword to search for
    * @param page - number, return records corresponding to this page
    * @param itemsPerPage - number, number of records to return
-   * @param aggregationsFilters - number, option list of filters
+   * @param aggregationsFilters - list, option list of filters; usually used by
+   *                              the aggregation filters.
+   * @param preFilters - object, option list of additionnal filters.  The value can
+   *                     a string or a list of string to filter with multiple values.
+   * @param headers - HttpHeaders optional http header for the backend call.
    * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')
    */
   getRecords(
@@ -111,16 +116,26 @@ export class RecordService {
       httpParams = httpParams.append('sort', sort);
     }
 
-    aggregationsFilters.forEach((filter) => {
-      filter.values.forEach((value: string) => {
+    // aggregationsFilters
+    aggregationsFilters.map((filter) => {
+      filter.values.map((value: string) => {
         httpParams = httpParams.append(filter.key, value);
       });
     });
 
+    // preFilters
     for (const key of Object.keys(preFilters)) {
-      httpParams = httpParams.append(key, preFilters[key]);
+      const value = preFilters[key];
+      if (Array.isArray(value)) {
+        value.map(val => {
+          httpParams = httpParams.append(key, val);
+        });
+      } else {
+        httpParams = httpParams.append(key, value);
+      }
     }
 
+    // http request with headers
     return this._http
       .get<Record>(this._apiService.getEndpointByType(type, true) + '/', {
         params: httpParams,
