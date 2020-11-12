@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.14.0](https://github.com/rero/ng-core/tree/v0.14.0) (2020-11-12)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.13.0...v0.14.0)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#298](https://github.com/rero/ng-core/pull/298) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: fix hide or show empty fields method [\#297](https://github.com/rero/ng-core/pull/297) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: add multiple pre filters support [\#299](https://github.com/rero/ng-core/pull/299) ([jma](https://github.com/jma))
+
 ## [v0.13.0](https://github.com/rero/ng-core/tree/v0.13.0) (2020-11-02)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.12.2...v0.13.0)
@@ -39,7 +49,6 @@
 
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
-- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
 
@@ -65,6 +74,7 @@
 
 **Merged pull requests:**
 
+- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 - translations: update catalogs [\#276](https://github.com/rero/ng-core/pull/276) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - extension: Improve process options [\#275](https://github.com/rero/ng-core/pull/275) ([Garfield-fr](https://github.com/Garfield-fr))
 
@@ -169,6 +179,7 @@
 - form: add the possibility to order a select menu [\#199](https://github.com/rero/ng-core/pull/199) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix problem with jump to [\#198](https://github.com/rero/ng-core/pull/198) ([zannkukai](https://github.com/zannkukai))
 - tester: point to a fake API [\#197](https://github.com/rero/ng-core/pull/197) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.5.0](https://github.com/rero/ng-core/tree/v0.5.0) (2020-06-25)
 
@@ -315,7 +326,6 @@
 
 **Merged pull requests:**
 
-- record: add permissions parameter to global control access [\#137](https://github.com/rero/ng-core/pull/137) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix field visibility on the model change [\#134](https://github.com/rero/ng-core/pull/134) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#133](https://github.com/rero/ng-core/pull/133) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
