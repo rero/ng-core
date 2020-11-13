@@ -1,11 +1,20 @@
 # Changelog
 
+## [v0.14.1](https://github.com/rero/ng-core/tree/v0.14.1) (2020-11-13)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.14.0...v0.14.1)
+
+**Merged pull requests:**
+
+- documents: translate files metadata [\#301](https://github.com/rero/ng-core/pull/301) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v0.14.0](https://github.com/rero/ng-core/tree/v0.14.0) (2020-11-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.13.0...v0.14.0)
 
 **Merged pull requests:**
 
+- release: version 0.14.0 [\#300](https://github.com/rero/ng-core/pull/300) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - translations: update catalogs [\#298](https://github.com/rero/ng-core/pull/298) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: fix hide or show empty fields method [\#297](https://github.com/rero/ng-core/pull/297) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: add multiple pre filters support [\#299](https://github.com/rero/ng-core/pull/299) ([jma](https://github.com/jma))
@@ -49,6 +58,7 @@
 
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
+- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
 
@@ -74,7 +84,6 @@
 
 **Merged pull requests:**
 
-- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 - translations: update catalogs [\#276](https://github.com/rero/ng-core/pull/276) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - extension: Improve process options [\#275](https://github.com/rero/ng-core/pull/275) ([Garfield-fr](https://github.com/Garfield-fr))
 
