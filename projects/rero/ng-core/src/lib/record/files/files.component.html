@@ -57,7 +57,7 @@
                 <ng-container *ngFor="let item of file.metadata | keyvalue">
                   <ng-container *ngIf="!infoExcludedFields.includes(item.key) && item.value">
                     <dt class="col-sm-4">{{ item.key | translate }}</dt>
-                    <dd class="col-sm-8">{{ item.value }}</dd>
+                    <dd class="col-sm-8">{{ item.value | translate }}</dd>
                   </ng-container>
                 </ng-container>
               </dl>
