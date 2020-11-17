@@ -21,27 +21,25 @@
 </div>
 
 <!-- each object properties -->
-<div class="{{ getCssClass() }}">
-  <ng-container *ngFor="let f of field.fieldGroup">
-    <div class="{{ getCssClass(f) }}" *ngIf="!f.hide" [id]="'field-' + f.id">
-      <!-- if the field is repeatable the title is rendered by the corresponding array -->
-      <ng-container *ngIf="((!isParrentArray() && f.type === 'object') || f.type === 'array')">
-        <!-- section header -->
-        <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
-        </ng-container>
+<ng-container *ngFor="let f of field.fieldGroup">
+  <div class="{{ getCssClass(f) }}" *ngIf="!f.hide" [id]="'field-' + f.id">
+    <!-- if the field is repeatable the title is rendered by the corresponding array -->
+    <ng-container *ngIf="f.type === 'object' || f.type === 'array'">
+      <!-- section header -->
+      <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
       </ng-container>
-      <!-- field -->
-      <div class="d-flex content mb-1">
-        <div class="flex-grow-1">
-          <formly-field [field]="f"></formly-field>
-        </div>
-        <ng-container *ngIf="f.type !== 'array'">
-          <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
-        </ng-container>
+    </ng-container>
+    <!-- field -->
+    <div class="d-flex content mb-1">
+      <div class="flex-grow-1">
+        <formly-field [field]="f"></formly-field>
       </div>
+      <ng-container *ngIf="f.type !== 'array'">
+        <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
+      </ng-container>
     </div>
-  </ng-container>
-</div>
+  </div>
+</ng-container>
 
 <!-- TEMPLATES -->
 <!-- dropdown menu -->

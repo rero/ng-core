@@ -75,14 +75,6 @@ export class ObjectTypeComponent extends FieldType {
   }
 
   /**
-   * Is my parent an array?
-   * @returns boolean, true if my parent is an array
-   */
-  isParrentArray() {
-    return this.field.parent.type === 'array';
-  }
-
-  /**
    * Am I at the root of the form?
    * @returns boolean, true if I'm the root
    */
