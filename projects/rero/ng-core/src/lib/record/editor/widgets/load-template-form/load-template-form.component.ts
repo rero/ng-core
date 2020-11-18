@@ -108,8 +108,14 @@ export class LoadTemplateFormComponent implements OnInit {
     const formValues = this.form.value;
     this._recordService.getRecord('templates', formValues.template).subscribe(
         (template) => {
-          const params = {...this._route.snapshot.queryParams, ...{source: 'templates', pid: template.metadata.pid}};
-          this._router.navigate([], {queryParams: params});
+          this._router.navigate([], {
+            queryParams: {
+              source: 'templates',
+              pid: template.metadata.pid
+            },
+            queryParamsHandling: 'merge',
+            skipLocationChange: true
+          });
           this.closeModal();
         },
         (error) => {
