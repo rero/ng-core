@@ -158,40 +158,27 @@ export class TranslateExtension {
    * @params options - ngx formly templateOptions.options
    */
   _processOptions(field: any, to: any, options: any) {
-    // Not translate if Observable
-    if (!isObservable(to.options)) {
-      const key = sha256(JSON.stringify(to)).toString();
-      this._optionsMap.set(key, options);
-      const bs = new BehaviorSubject(this._translateOptions(options));
-      this._translate.onLangChange.subscribe(() => {
-        bs.next(this._translateOptions(this._optionsMap.get(key)));
-      });
-      field.expressionProperties = {
-        ...(field.expressionProperties || {}),
-        'templateOptions.options': bs.asObservable(),
-      };
-    }
+    const key = sha256(JSON.stringify(to)).toString();
+    this._optionsMap.set(key, options);
+    const bs = new BehaviorSubject(this._translateOptions(options));
+    this._translate.onLangChange.subscribe(() => {
+      bs.next(this._translateOptions(this._optionsMap.get(key)));
+    });
+    field.expressionProperties = {
+      ...(field.expressionProperties || {}),
+      'templateOptions.options': bs.asObservable(),
+    };
   }
 
   /**
    * Translate select options
-   * @param options - array of object
+   * @param options - array of option object
    */
   private _translateOptions(options: any) {
-    const selectOptions = [];
-    options.forEach((element: any) => {
-      const translatedOption: SelectOption = {
-        label: this._translate.instant(element.label),
-        value: element.value
-      };
-
-      if (element.group) {
-        translatedOption.group = element.group;
-      }
-
-      selectOptions.push(translatedOption);
+    return options.map((option: any) => {
+      option.label = (option.hasOwnProperty('label')) ? this._translate.instant(option.label) : option.value;
+      return option;
     });
-    return selectOptions;
   }
 }
 
