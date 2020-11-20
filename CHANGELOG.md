@@ -1,12 +1,21 @@
 # Changelog
 
+## [v0.14.2](https://github.com/rero/ng-core/tree/v0.14.2) (2020-11-20)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.14.1...v0.14.2)
+
 ## [v0.14.1](https://github.com/rero/ng-core/tree/v0.14.1) (2020-11-13)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.14.0...v0.14.1)
 
+**Fixed bugs:**
+
+- editor: fix options translation problems. [\#304](https://github.com/rero/ng-core/pull/304) ([zannkukai](https://github.com/zannkukai))
+
 **Merged pull requests:**
 
 - documents: translate files metadata [\#301](https://github.com/rero/ng-core/pull/301) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: fix cancel button behavior. [\#303](https://github.com/rero/ng-core/pull/303) ([zannkukai](https://github.com/zannkukai))
 
 ## [v0.14.0](https://github.com/rero/ng-core/tree/v0.14.0) (2020-11-12)
 
@@ -38,7 +47,6 @@
 
 **Merged pull requests:**
 
-- search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
 - permissions: fix permissions on the configuration [\#287](https://github.com/rero/ng-core/pull/287) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.1](https://github.com/rero/ng-core/tree/v0.12.1) (2020-10-21)
@@ -56,6 +64,7 @@
 
 **Merged pull requests:**
 
+- search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
 - select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
