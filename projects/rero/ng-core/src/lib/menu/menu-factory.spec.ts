@@ -17,13 +17,13 @@
 import { MenuFactory } from './menu-factory';
 import { MenuItem } from './menu-item';
 import { ExtensionInterface } from './extension/extension-interface';
-import { ItemInterface } from './item-interface';
+import { MenuItemInterface } from './menu-item-interface';
 
 class ExtensionMock implements ExtensionInterface {
   buildOptions(options: {}): {} {
     return {};
   }
-  buildItem(item: ItemInterface, options: {}): void {
+  buildItem(item: MenuItemInterface, options: {}): void {
   }
 }
 

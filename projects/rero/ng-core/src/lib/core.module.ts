@@ -39,6 +39,7 @@ import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
+import { MenuWidgetPrefixSuffixComponent } from './menu/menu-widget/menu-widget-prefix-suffix/menu-widget-prefix-suffix.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
     ErrorComponent,
     FilesizePipe,
     MenuWidgetComponent,
-    SortListComponent
+    SortListComponent,
+    MenuWidgetPrefixSuffixComponent
   ],
   imports: [
     CommonModule,

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { ItemInterface } from '../item-interface';
+import { MenuItemInterface } from '../menu-item-interface';
 
 export interface ExtensionInterface {
   /**
@@ -29,5 +29,5 @@ export interface ExtensionInterface {
    * @param item - ItemInterface
    * @param options - array
    */
-  buildItem(item: ItemInterface, options: {}): void;
+  buildItem(item: MenuItemInterface, options: {}): void;
 }
