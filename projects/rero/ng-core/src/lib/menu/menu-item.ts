@@ -15,19 +15,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { isArray } from 'util';
-import { ItemInterface } from './item-interface';
+import { MenuItemInterface } from './menu-item-interface';
 import { MenuFactoryInterface } from './menu-factory-interface';
 
-export class MenuItem implements ItemInterface {
+export class MenuItem implements MenuItemInterface {
 
   /** Menu name */
   private _name: string;
+
+  /** Prefix */
+  private _prefix: {
+    name: string,
+    class: string
+  };
+
+  /** Suffix */
+  private _suffix: {
+    name: string,
+    class: string
+  };
 
   /** Factory */
   private _factory: MenuFactoryInterface;
 
   /** Parent menuItem */
-  private _parent?: ItemInterface;
+  private _parent?: MenuItemInterface;
 
   /** Children of menuItem */
   private _children = [];
@@ -72,7 +84,6 @@ export class MenuItem implements ItemInterface {
    */
   setFactory(factory: MenuFactoryInterface): this {
     this._factory = factory;
-
     return this;
   }
 
@@ -97,12 +108,67 @@ export class MenuItem implements ItemInterface {
    * @param name - string, set name of menu
    * @return MenuItem
    */
-  setName(name: string) {
+  setName(name: string): this {
     if (this._name === name) {
       return this;
     }
     this._name = name;
+    return this;
+  }
 
+  /**
+   * Get Prefix
+   * @return Object with name and class properties
+   */
+  getPrefix() {
+    return this._prefix;
+  }
+
+  /**
+   * Set Prefix
+   * @param name - string
+   * @param htmlClasses - string
+   * @return MenuItem
+   */
+  setPrefix(name: string, htmlClasses?: string): this {
+    this._prefix = this._setPrefixSuffix(name, htmlClasses);
+    return this;
+  }
+
+  /**
+   * Remove Prefix
+   * @return MenuItem
+   */
+  removePrefix(): this {
+    this._prefix = undefined;
+    return this;
+  }
+
+  /**
+   * Get Suffix
+   * @return Object with name and class properties
+   */
+  getSuffix() {
+    return this._suffix;
+  }
+
+  /**
+   * Set Suffix
+   * @param name - string
+   * @param htmlClasses - string
+   * @return MenuItem
+   */
+  setSuffix(name: string, htmlClasses?: string): this {
+    this._suffix = this._setPrefixSuffix(name, htmlClasses);
+    return this;
+  }
+
+  /**
+   * Remove Suffix
+   * @return MenuItem
+   */
+  removeSuffix(): this {
+    this._suffix = undefined;
     return this;
   }
 
@@ -129,7 +195,6 @@ export class MenuItem implements ItemInterface {
    */
   setUri(uri?: string): this {
     this._uri = uri;
-
     return this;
   }
 
@@ -158,7 +223,6 @@ export class MenuItem implements ItemInterface {
    */
   setRouterLink(routerLink?: string[]): this {
     this._routerLink = routerLink;
-
     return this;
   }
 
@@ -177,7 +241,6 @@ export class MenuItem implements ItemInterface {
    */
   setLabel(label?: string): this {
     this._label = label;
-
     return this;
   }
 
@@ -205,7 +268,6 @@ export class MenuItem implements ItemInterface {
    */
   setAttributes(attributes: {}): this {
     this._attributes = attributes;
-
     return this;
   }
 
@@ -229,7 +291,6 @@ export class MenuItem implements ItemInterface {
    */
   setAttribute(name: string, value: string): this {
     this._attributes[name] = value;
-
     return this;
   }
 
@@ -248,13 +309,12 @@ export class MenuItem implements ItemInterface {
    * @param options - dictionnary of options
    * @return MenuItem
    */
-  addChild(child: ItemInterface | string, options?: {}): ItemInterface {
+  addChild(child: MenuItemInterface | string, options?: {}): MenuItemInterface {
     if (typeof(child) === 'string') {
       child = this._factory.createItem(child, options);
     }
     child.setParent(this);
     this._children.push(child);
-
     return child;
   }
 
@@ -271,7 +331,7 @@ export class MenuItem implements ItemInterface {
    * @param name - string, name of child menu
    * @return MenuItem or null
    */
-  getChild(name: string): ItemInterface {
+  getChild(name: string): MenuItemInterface {
     return this.has(name, this._children)
       ? this._children[name]
       : null;
@@ -303,7 +363,7 @@ export class MenuItem implements ItemInterface {
    * Get parent
    * @return parent MenuItem
    */
-  getParent(): ItemInterface {
+  getParent(): MenuItemInterface {
     return this._parent;
   }
 
@@ -317,7 +377,6 @@ export class MenuItem implements ItemInterface {
       throw new Error('Item cannot be a child of itself');
     }
     this._parent = parent;
-
     return this;
   }
 
@@ -345,7 +404,6 @@ export class MenuItem implements ItemInterface {
    */
   setLabelAttributes(labelAttributes: {}): this {
     this._labelAttributes = labelAttributes;
-
     return this;
   }
 
@@ -370,7 +428,6 @@ export class MenuItem implements ItemInterface {
    */
   setLabelAttribute(name: string, value: string): this {
     this._labelAttributes[name] = value;
-
     return this;
   }
 
@@ -407,7 +464,6 @@ export class MenuItem implements ItemInterface {
    */
   setExtras(extras: {}): this {
     this._extras = extras;
-
     return this;
   }
 
@@ -434,7 +490,6 @@ export class MenuItem implements ItemInterface {
     if (!(this.hasExtra(name))) {
       this._extras[name] = value;
     }
-
     return this;
   }
 
@@ -461,7 +516,6 @@ export class MenuItem implements ItemInterface {
    */
   setActive(active: boolean) {
     this._active = active;
-
     return this;
   }
 
@@ -496,7 +550,19 @@ export class MenuItem implements ItemInterface {
       delete attributes[name];
       return true;
     }
-
     return false;
+  }
+
+  /**
+   * Set Prefix Suffix
+   * @param name - string
+   * @param htmlClasses - null or string
+   * @return Object with name and class attributes
+   */
+  _setPrefixSuffix(name: string, htmlClasses: null | string) {
+    return {
+      name,
+      class: htmlClasses
+    };
   }
 }

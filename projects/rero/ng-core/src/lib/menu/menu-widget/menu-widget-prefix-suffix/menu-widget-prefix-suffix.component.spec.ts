@@ -14,33 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MenuWidgetComponent } from './menu-widget.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { MenuWidgetPrefixSuffixComponent } from './menu-widget-prefix-suffix/menu-widget-prefix-suffix.component';
+import { MenuWidgetPrefixSuffixComponent } from './menu-widget-prefix-suffix.component';
 
-describe('MenuWidgetComponent', () => {
-  let component: MenuWidgetComponent;
-  let fixture: ComponentFixture<MenuWidgetComponent>;
+describe('MenuWidgetPrefixSuffixComponent', () => {
+  let component: MenuWidgetPrefixSuffixComponent;
+  let fixture: ComponentFixture<MenuWidgetPrefixSuffixComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        TranslateModule.forRoot()
-      ],
-      declarations: [
-        MenuWidgetComponent,
-        MenuWidgetPrefixSuffixComponent
-      ]
+      declarations: [ MenuWidgetPrefixSuffixComponent ],
+      schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MenuWidgetComponent);
+    fixture = TestBed.createComponent(MenuWidgetPrefixSuffixComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

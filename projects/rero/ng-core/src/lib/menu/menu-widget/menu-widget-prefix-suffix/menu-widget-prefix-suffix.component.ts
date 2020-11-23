@@ -14,14 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { MenuItemInterface } from './menu-item-interface';
 
-export interface MenuFactoryInterface {
-  /**
-   * Creates a menu item
-   * @param name - string
-   * @param options - array
-   * @return ItemInterface
-   */
-  createItem(name: string, options?: {}): MenuItemInterface;
+import { Component, Input } from '@angular/core';
+import { MenuItem } from '../../menu-item';
+
+
+@Component({
+  selector: 'ng-core-menu-widget-prefix-suffix',
+  templateUrl: './menu-widget-prefix-suffix.component.html'
+})
+export class MenuWidgetPrefixSuffixComponent {
+
+  /** Menu Item */
+  @Input() item: MenuItem;
 }

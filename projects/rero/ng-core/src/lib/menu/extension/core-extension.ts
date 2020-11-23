@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { cloneDeep } from 'lodash-es';
-import { ItemInterface } from '../item-interface';
+import { MenuItemInterface } from '../menu-item-interface';
 import { ExtensionInterface } from './extension-interface';
 import { OptionsInterface } from './options-interface';
 
@@ -46,7 +46,7 @@ export class CoreExtension implements ExtensionInterface {
    * @param item - ItemInterface
    * @param options - OptionsInterface
    */
-  buildItem(item: ItemInterface, options: OptionsInterface) {
+  buildItem(item: MenuItemInterface, options: OptionsInterface) {
     item
       .setUri(options.uri)
       .setRouterLink(options.routerLink)

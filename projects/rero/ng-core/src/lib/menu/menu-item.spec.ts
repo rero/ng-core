@@ -52,6 +52,20 @@ describe('MenuItem', () => {
     expect(menuItem.hasUri()).toBeFalsy();
   });
 
+  it('should have prefix', () => {
+    menuItem.setPrefix('menu-prefix');
+    expect(menuItem.getPrefix()).toEqual(
+      { name: 'menu-prefix', class: undefined }
+    );
+  });
+
+  it('should have suffix', () => {
+    menuItem.setSuffix('menu-prefix', 'foo');
+    expect(menuItem.getSuffix()).toEqual(
+      { name: 'menu-prefix', class: 'foo' }
+    );
+  });
+
   it('should have uri', () => {
     const uri = 'http://myUri.com';
     menuItem.setUri(uri);

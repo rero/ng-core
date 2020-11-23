@@ -23,6 +23,7 @@ export * from './lib/dialog/dialog.service';
 export * from './lib/error/error.component';
 export * from './lib/menu/menu-factory';
 export * from './lib/menu/menu-item';
+export * from './lib/menu/menu-item-interface';
 export * from './lib/menu/menu-widget/menu-widget.component';
 export * from './lib/pipe/callback-array-filter.pipe';
 export * from './lib/pipe/default.pipe';
@@ -69,4 +70,3 @@ export * from './lib/utils/sort-by-keys';
 export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
-

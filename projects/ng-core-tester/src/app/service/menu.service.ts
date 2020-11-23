@@ -76,6 +76,8 @@ export class MenuService {
     records.addChild('UNISI records')
       .setRouterLink(['/unisi', 'record', 'search', 'documents']);
     records.addChild('Backend records')
+      .setPrefix('[admin]')
+      .setSuffix('[search]', 'text-warning')
       .setRouterLink(['/admin', 'record', 'search', 'documents']);
     records.addChild('Document records')
       .setRouterLink(['/records', 'documents']);

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ItemInterface } from '../item-interface';
+import { MenuItemInterface } from '../menu-item-interface';
 import { MenuItem } from '../menu-item';
 
 @Component({
@@ -25,7 +25,7 @@ import { MenuItem } from '../menu-item';
 export class MenuWidgetComponent {
 
   /** Menu items */
-  @Input() menu: ItemInterface;
+  @Input() menu: MenuItemInterface;
 
   /** Event */
   @Output() clickItem = new EventEmitter();
