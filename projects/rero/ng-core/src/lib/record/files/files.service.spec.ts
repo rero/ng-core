@@ -24,7 +24,7 @@ describe('FilesService', () => {
   );
 
   it('should be created', () => {
-    const service: FilesService = TestBed.get(FilesService);
+    const service: FilesService = TestBed.inject(FilesService);
     expect(service).toBeTruthy();
   });
 });

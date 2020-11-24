@@ -23,7 +23,7 @@ describe('CryptoJsService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({}),
-    service = TestBed.get(CryptoJsService);
+    service = TestBed.inject(CryptoJsService);
   });
 
   it('should be created', () => {

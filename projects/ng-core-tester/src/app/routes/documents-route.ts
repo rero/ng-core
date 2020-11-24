@@ -19,11 +19,9 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   ActionStatus,
   DetailComponent as RecordDetailComponent,
-  EditorComponent,
-  RecordSearchComponent,
-  RouteInterface,
+  EditorComponent, JSONSchema7, RecordSearchComponent,
+  RouteInterface
 } from '@rero/ng-core';
-import { JSONSchema7 } from 'json-schema';
 import { Observable, of } from 'rxjs';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';

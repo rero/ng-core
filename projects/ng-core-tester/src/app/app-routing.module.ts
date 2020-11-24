@@ -17,8 +17,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, UrlSegment } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { ActionStatus } from '@rero/ng-core';
-import { JSONSchema7 } from 'json-schema';
+import { ActionStatus, JSONSchema7 } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
@@ -324,7 +323,7 @@ const routes: Routes = [
  * Routing module for application.
  */
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule {

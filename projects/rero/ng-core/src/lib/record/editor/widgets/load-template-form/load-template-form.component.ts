@@ -40,6 +40,11 @@ export class LoadTemplateFormComponent implements OnInit {
   /** model of the form */
   model: FormModel;
 
+  /** BsModalService initialState Parameter */
+  templateResourceType: string;
+
+  /** BsModalService initialState Parameter */
+  resourceType: string;
 
   /**
    * constructor
@@ -52,21 +57,18 @@ export class LoadTemplateFormComponent implements OnInit {
    * @param _toastrService: ToastrService
    */
   constructor(
-      private _modalService: BsModalService,
       private _recordService: RecordService,
       private _templateService: TemplatesService,
       private _translateService: TranslateService,
       protected _bsModalRef: BsModalRef,
       private _router: Router,
-      private _toastrService: ToastrService,
-      private _route: ActivatedRoute
+      private _toastrService: ToastrService
   ) { }
 
   /**
    * hook OnInit
    */
   ngOnInit() {
-    const initialState: any = this._modalService.config.initialState;
     this.formFields.push({
       key: 'template',
       type: 'select',
@@ -80,7 +82,8 @@ export class LoadTemplateFormComponent implements OnInit {
       }
     });
 
-    this._templateService.getTemplates(initialState.templateResourceType, initialState.resourceType).subscribe(
+    this._templateService.getTemplates(
+      this.templateResourceType, this.resourceType).subscribe(
         (templates) => {
           templates = templates.map(hit => {
             const data = {

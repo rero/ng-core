@@ -21,7 +21,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -39,6 +39,10 @@ import { EditorService } from './services/editor.service';
 import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
+
+export interface JSONSchema7 extends JSONSchema7Base {
+  form: any;
+}
 
 @Component({
   selector: 'ng-core-editor',
@@ -227,7 +231,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editorSettings.template.saveAsTemplate) {
           this.saveAlternatives.push({
             label: this._translateService.instant('Save as template') + '…',
-            action: this._saveAsTemplate
+            action: this.saveAsTemplate
           });
         }
 
@@ -540,12 +544,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    *  @param entry: the entry to use to fire this function
    *  @param component: the parent editor component
    */
-  private _saveAsTemplate(entry, component: EditorComponent) {
+  saveAsTemplate(entry, component: EditorComponent) {
     // NOTE about `component` param :
     //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
     //   loop value, not the current component. We need to pass this component as parameter of
     //   the function to use it.
-
     const saveAsTemplateModalRef = component._modalService.show(SaveTemplateFormComponent, {
       ignoreBackdropClick: true,
     });
@@ -620,10 +623,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Open a modal dialog box to load a template.
    */
   showLoadTemplateDialog() {
+    const templateResourceType = this.editorSettings.template.recordType;
     this._modalService.show(LoadTemplateFormComponent, {
       ignoreBackdropClick: true,
       initialState: {
-        templateResourceType: this.editorSettings.template.recordType,
+        templateResourceType,
         resourceType: this.recordType
       }
     });
@@ -638,7 +642,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _setRemoteSelectOptions(
     field: FormlyFieldConfig,
-    formOptions: JSONSchema7
+    formOptions: any
   ) {
     if (formOptions.remoteOptions && formOptions.remoteOptions.type) {
       field.type = 'select';
@@ -676,7 +680,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _setRemoteTypeahead(
     field: FormlyFieldConfig,
-    formOptions: JSONSchema7
+    formOptions: any
   ) {
     if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
       field.type = 'remoteTypeahead';
@@ -692,7 +696,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private _setValidation(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+  private _setValidation(field: FormlyFieldConfig, formOptions: any) {
     if (formOptions.validation) {
       // custom validation messages
       const messages = formOptions.validation.messages;
@@ -853,7 +857,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: JSONSchema7) {
+  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any) {
     // ngx formly standard options
     // hide a field at startup
     if (formOptions.hide === true) {

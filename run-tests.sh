@@ -30,7 +30,7 @@ display_success_message () {
 set -e
 
 display_success_message "Building library..."
-ng build @rero/ng-core
+ng build --configuration production @rero/ng-core
 
 display_success_message "Building test application..."
 ng build ng-core-tester --prod

@@ -47,9 +47,9 @@ export class TranslateService {
    * @param _bsLocaleService Bootstrap locale service.
    */
   constructor(
-    @Inject(NgxTranslateService) private _translateService: NgxTranslateService,
-    @Inject(CoreConfigService) private _coreConfigService: CoreConfigService,
-    @Inject(BsLocaleService) private _bsLocaleService: BsLocaleService
+    private _translateService: NgxTranslateService,
+    private _coreConfigService: CoreConfigService,
+    private _bsLocaleService: BsLocaleService
   ) {
     this.init();
   }

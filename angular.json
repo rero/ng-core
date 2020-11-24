@@ -14,6 +14,11 @@
           "options": {
             "tsConfig": "projects/rero/ng-core/tsconfig.lib.json",
             "project": "projects/rero/ng-core/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/rero/ng-core/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
@@ -63,7 +68,7 @@
             "main": "projects/ng-core-tester/src/main.ts",
             "polyfills": "projects/ng-core-tester/src/polyfills.ts",
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
-            "aot": false,
+            "aot": true,
             "assets": [
               "projects/ng-core-tester/src/favicon.ico",
               "projects/ng-core-tester/src/assets"
@@ -88,9 +93,7 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -99,6 +102,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }

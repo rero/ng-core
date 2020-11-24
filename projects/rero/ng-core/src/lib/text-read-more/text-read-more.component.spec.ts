@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
 import { TextReadMoreComponent } from './text-read-more.component';
 
@@ -22,7 +22,7 @@ describe('TextReadMoreComponent', () => {
   let component: TextReadMoreComponent;
   let fixture: ComponentFixture<TextReadMoreComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ TextReadMoreComponent, Nl2brPipe ]
     })

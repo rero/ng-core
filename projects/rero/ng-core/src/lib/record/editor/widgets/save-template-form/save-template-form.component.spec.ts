@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SaveTemplateFormComponent } from './save-template-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +28,7 @@ describe('SaveTemplateFormComponent', () => {
   let component: SaveTemplateFormComponent;
   let fixture: ComponentFixture<SaveTemplateFormComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RecordModule,

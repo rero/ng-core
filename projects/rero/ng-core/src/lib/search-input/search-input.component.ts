@@ -41,7 +41,7 @@ export class SearchInputComponent {
   trimQueryString = true;
 
   /** The current search input object from the template. */
-  @ViewChild('searchinput', { static: false })
+  @ViewChild('searchinput')
   input: any;
 
   /** Search output event emitter */

@@ -55,7 +55,7 @@ import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
-import { RecordSearchComponent as RecordSearchPageComponent } from './search/record-search-page.component';
+import { RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';

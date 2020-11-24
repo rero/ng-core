@@ -21,7 +21,7 @@ describe('CoreConfigService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CoreConfigService = TestBed.get(CoreConfigService);
+    const service: CoreConfigService = TestBed.inject(CoreConfigService);
     expect(service).toBeTruthy();
   });
 });

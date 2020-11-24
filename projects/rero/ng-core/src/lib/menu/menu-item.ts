@@ -203,9 +203,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasRouterLink(): boolean {
-    return isArray(this._routerLink) && this._routerLink.length > 0
-    ? true
-    : false;
+    return Array.isArray(this._routerLink) && this._routerLink.length > 0;
   }
 
   /**

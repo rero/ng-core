@@ -31,19 +31,19 @@ describe('RoutingCollectionService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RouteCollectionService = TestBed.get(RouteCollectionService);
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     expect(service).toBeTruthy();
   });
 
   it('GetRoute return the correct route added', () => {
-    const service: RouteCollectionService = TestBed.get(RouteCollectionService);
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
     service.addRoute(routeMock);
     expect(service.getRoute('routeMock')).toEqual(routeMock);
   });
 
   it('DeleteRoute return true', () => {
-    const service: RouteCollectionService = TestBed.get(RouteCollectionService);
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
     service.addRoute(routeMock);
     expect(service.size()).toBe(1);
@@ -51,7 +51,7 @@ describe('RoutingCollectionService', () => {
   });
 
   it('GetRoutes return all route(s) added', () => {
-    const service: RouteCollectionService = TestBed.get(RouteCollectionService);
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
     service.addRoute(routeMock);
     expect(service.getRoutes().length).toBe(1);
@@ -59,7 +59,7 @@ describe('RoutingCollectionService', () => {
   });
 
   it('availableRoutesName return all route names', () => {
-    const service: RouteCollectionService = TestBed.get(RouteCollectionService);
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
     service.addRoute(routeMock);
     expect(service.availableRoutesName()).toEqual(['routeMock']);

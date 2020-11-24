@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '../../record.module';
 import { RecordSearchService } from '../record-search.service';
@@ -25,7 +25,7 @@ describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
   let fixture: ComponentFixture<RecordSearchAggregationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RecordModule,

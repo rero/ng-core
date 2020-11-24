@@ -46,8 +46,8 @@ describe('TranslateLoader', () => {
       ],
       providers: [TranslateService]
     });
-    translate = TestBed.get(TranslateService);
-    http = TestBed.get(HttpTestingController);
+    translate = TestBed.inject(TranslateService);
+    http = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
