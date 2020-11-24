@@ -23,7 +23,7 @@ describe('RecordSearchService', () => {
   }));
 
   it('should be created', () => {
-    const service: RecordSearchService = TestBed.get(RecordSearchService);
+    const service: RecordSearchService = TestBed.inject(RecordSearchService);
     expect(service).toBeTruthy();
   });
 });

@@ -27,11 +27,10 @@ describe('RecordService', () => {
 
   let injector: TestBed;
   let service: RecordService;
-  let apiServiceSpy: jasmine.SpyObj<ApiService>;
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('ApiService', ['getEndpointByType']);
+    const apiServiceSpy = jasmine.createSpyObj('ApiService', ['getEndpointByType']);
 
     TestBed.configureTestingModule({
       imports: [
@@ -41,18 +40,17 @@ describe('RecordService', () => {
         })
       ],
       providers: [
-        { provide: ApiService, useValue: spy }
+        { provide: ApiService, useValue: apiServiceSpy }
       ]
     });
 
-    service = TestBed.get(RecordService);
+    service = TestBed.inject(RecordService);
 
-    apiServiceSpy = TestBed.get(ApiService);
     apiServiceSpy.getEndpointByType.and.returnValue(url);
 
     injector = getTestBed();
-    service = injector.get(RecordService);
-    httpMock = injector.get(HttpTestingController);
+    service = injector.inject(RecordService);
+    httpMock = injector.inject(HttpTestingController);
   });
 
   afterEach(() => {

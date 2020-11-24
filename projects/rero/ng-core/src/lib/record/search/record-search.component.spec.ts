@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -139,7 +139,7 @@ describe('RecordSearchComponent', () => {
     language: { buckets: []}
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SearchInputComponent,
@@ -269,7 +269,7 @@ describe('RecordSearchComponent', () => {
     });
   });
 
-  it('should resolve detail url', async(() => {
+  it('should resolve detail url', waitForAsync(() => {
     component.changeType(new Event('click'), 'documents');
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
@@ -285,7 +285,7 @@ describe('RecordSearchComponent', () => {
     });
   }));
 
-  it('should reorder aggregations', async(() => {
+  it('should reorder aggregations', waitForAsync(() => {
     component.currentType = 'documents';
     const result = [
       { key: 'author', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null},
@@ -301,7 +301,7 @@ describe('RecordSearchComponent', () => {
     expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);
   }));
 
-  it('should expand aggregation', async(() => {
+  it('should expand aggregation', waitForAsync(() => {
     // recordUiServiceSpy.getResourceConfig.and.returnValue();
     component['_config'] = { key: 'documents', aggregationsExpand: ['language'] };
     expect(component.expandFacet('language')).toBeTruthy();

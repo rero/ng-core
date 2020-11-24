@@ -17,7 +17,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7 } from '../editor/editor.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordSearchService } from './record-search.service';
@@ -26,7 +26,7 @@ import { RecordSearchService } from './record-search.service';
   selector: 'ng-core-record-search-page',
   templateUrl: './record-search-page.component.html'
 })
-export class RecordSearchComponent implements OnInit, OnDestroy {
+export class RecordSearchPageComponent implements OnInit, OnDestroy {
   /**
    * Current selected resource type
    */

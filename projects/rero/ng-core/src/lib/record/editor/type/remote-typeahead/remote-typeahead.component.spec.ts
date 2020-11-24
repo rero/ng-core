@@ -16,7 +16,7 @@
  */
 
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CoreModule } from '../../../../core.module';
@@ -28,7 +28,7 @@ describe('RemoteTypeaheadComponent', () => {
   let component: RemoteTypeaheadComponent;
   let fixture: ComponentFixture<RemoteTypeaheadComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule,

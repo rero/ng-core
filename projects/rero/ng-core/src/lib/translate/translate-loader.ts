@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
 import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { CoreConfigService } from '../core-config.service.js';
+import { CoreConfigService } from '../core-config.service';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
 import fr from './i18n/fr.json';
@@ -43,8 +42,8 @@ export class TranslateLoader implements BaseTranslateLoader {
    * @param _coreConfigService Configuration service.
    */
   constructor(
-    @Inject(CoreConfigService) private _coreConfigService: CoreConfigService,
-    @Inject(HttpClient) private _http: HttpClient
+    private _coreConfigService: CoreConfigService,
+    private _http: HttpClient
   ) { }
 
   /**

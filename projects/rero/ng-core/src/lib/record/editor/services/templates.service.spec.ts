@@ -28,7 +28,7 @@ describe('TemplatesService', () => {
   }));
 
   it('should be created', () => {
-    const service: TemplatesService = TestBed.get(TemplatesService);
+    const service: TemplatesService = TestBed.inject(TemplatesService);
     expect(service).toBeTruthy();
   });
 });

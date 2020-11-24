@@ -34,11 +34,11 @@ describe('ApiService', () => {
       ]
     });
 
-    apiService = TestBed.get(ApiService);
+    apiService = TestBed.inject(ApiService);
   });
 
   it('should be created', () => {
-    const service: ApiService = TestBed.get(ApiService);
+    const service: ApiService = TestBed.inject(ApiService);
     expect(service).toBeTruthy();
   });
 

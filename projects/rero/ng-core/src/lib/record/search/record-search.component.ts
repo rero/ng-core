@@ -17,7 +17,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7 } from '../editor/editor.component';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';

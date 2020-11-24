@@ -17,11 +17,11 @@
 import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, ParamMap, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ActionStatus } from '@rero/ng-core/public-api';
-import { Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { RecordModule } from '../record.module';
 import { RecordService } from '../record.service';
 import { DetailComponent } from './detail.component';
@@ -34,32 +34,42 @@ const adminMode = (): Observable<ActionStatus> => {
   });
 };
 
+export class ActivatedRouteStub {
+
+  // Observable that contains a map of the parameters
+  private subjectParamMap = new BehaviorSubject(convertToParamMap(this.testParamMap));
+  paramMap = this.subjectParamMap.asObservable();
+  private data = {};
+
+  private _testParamMap: ParamMap;
+
+  get testParamMap() {
+    return this._testParamMap;
+  }
+
+  set testParamMap(params: {}) {
+    this._testParamMap = convertToParamMap(params);
+    // this.subjectParamMap.next(this._testParamMap);
+  }
+
+  set testData(data) {
+    this.data = data;
+  }
+
+  get snapshot() {
+    return {
+      paramMap: this.testParamMap,
+      data: this.data
+    };
+  }
+}
+
 describe('RecordDetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
-  let recordServiceSpy: jasmine.SpyObj<RecordService>;
+  const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecord']);
 
   const loc = jasmine.createSpyObj('Location', ['back']);
-
-  const route = {
-    paramMap: of(convertToParamMap({
-      type: 'documents', pid: '1'
-    })),
-    snapshot: {
-      paramMap: convertToParamMap({
-        type: 'documents', pid: '1'
-      }),
-      data: {
-        types: [
-          {
-            key: 'documents',
-          }
-        ],
-        showSearchInput: true,
-        adminMode
-      }
-    }
-  };
 
   const detailRecord = {
     id: '1',
@@ -70,8 +80,6 @@ describe('RecordDetailComponent', () => {
   };
 
   beforeEach(() => {
-    const spy = jasmine.createSpyObj('RecordService', ['getRecord']);
-
     TestBed.configureTestingModule({
       imports: [
         TranslateModule.forRoot({
@@ -81,9 +89,9 @@ describe('RecordDetailComponent', () => {
         RecordModule
       ],
       providers: [
-        { provide: RecordService, useValue: spy },
+        { provide: RecordService, useValue: recordServiceSpy },
         { provide: Location, useValue: loc },
-        { provide: ActivatedRoute, useValue: route }
+        { provide: ActivatedRoute, useClass: ActivatedRouteStub }
       ]
     })
       .overrideModule(BrowserDynamicTestingModule, {
@@ -92,9 +100,18 @@ describe('RecordDetailComponent', () => {
         }
       });
 
-    recordServiceSpy = TestBed.get(RecordService);
     recordServiceSpy.getRecord.and.returnValue(of(detailRecord));
-
+    const routeSpy = TestBed.inject(ActivatedRoute) as any;
+    routeSpy.testParamMap = { type: 'documents', pid: '1' };
+    routeSpy.testData = {
+      types: [
+        {
+          key: 'documents',
+        }
+      ],
+      showSearchInput: true,
+      adminMode
+    };
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -115,11 +132,8 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should raise exception when configuration not found for type', () => {
-    const routeSpy = TestBed.get(ActivatedRoute);
-    routeSpy.snapshot.paramMap = convertToParamMap({
-      type: 'test', pid: '1'
-    });
-
+    const routeSpy = TestBed.inject(ActivatedRoute) as any;
+    routeSpy.testParamMap = { type: 'test', pid: '1' };
     expect(() => {
       /* tslint:disable:no-string-literal */
       component['loadViewComponentRef']();
@@ -127,8 +141,12 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should raise exception when no types are specified in configuration', () => {
-    const routeSpy = TestBed.get(ActivatedRoute);
-    routeSpy.snapshot.data.types = [];
+    const routeSpy = TestBed.inject(ActivatedRoute) as any;
+    routeSpy.testData = {
+      types: [],
+      showSearchInput: true,
+      adminMode
+    };
 
     expect(() => {
       /* tslint:disable:no-string-literal */
@@ -144,7 +162,7 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should store component for viewing notice detail', () => {
-    const routeSpy = TestBed.get(ActivatedRoute);
+    const routeSpy = TestBed.inject(ActivatedRoute);
     routeSpy.snapshot.data.types = [
       {
         key: 'documents',
@@ -158,7 +176,6 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should store an error message when API is not available', () => {
-    recordServiceSpy = TestBed.get(RecordService);
     recordServiceSpy.getRecord.and.returnValue(throwError('error'));
 
     fixture = TestBed.createComponent(DetailComponent);
@@ -169,7 +186,7 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should use a custom view component for displaying record', () => {
-    const routeSpy = TestBed.get(ActivatedRoute);
+    const routeSpy = TestBed.inject(ActivatedRoute);
     routeSpy.snapshot.data.types = [
       {
         key: 'documents',

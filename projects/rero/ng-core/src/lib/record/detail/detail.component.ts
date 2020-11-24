@@ -307,7 +307,6 @@ export class DetailComponent implements OnInit, OnDestroy {
 
     const type = this._route.snapshot.paramMap.get('type');
     const types = this._route.snapshot.data.types;
-
     const index = types.findIndex((item: any) => item.key === type);
 
     if (index === -1) {

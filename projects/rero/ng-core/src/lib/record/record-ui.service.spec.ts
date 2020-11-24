@@ -34,7 +34,7 @@ describe('RecordUiService', () => {
   }));
 
   it('should be created', () => {
-    const service: RecordUiService = TestBed.get(RecordUiService);
+    const service: RecordUiService = TestBed.inject(RecordUiService);
     expect(service).toBeTruthy();
   });
 });

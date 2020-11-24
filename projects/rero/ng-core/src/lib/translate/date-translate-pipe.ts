@@ -34,12 +34,10 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
     super(_translateService.currentLanguage);
   }
 
-  transform(
-    value: any,
-    format = 'mediumDate',
-    timezone?: string,
-    locale?: string
-  ): string {
+  transform(value: Date | string | number, format?: string, timezone?: string, locale?: string): string | null;
+  transform(value: null | undefined, format?: string, timezone?: string, locale?: string): null;
+  transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string): string | null
+  {
     if (!locale) {
       locale = this._translateService.currentLanguage;
     }

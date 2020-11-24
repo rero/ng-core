@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -53,7 +53,8 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     TranslateModule.forRoot({
       loader: {
         provide: BaseTranslateLoader,
-        useClass: TranslateLoader
+        useClass: TranslateLoader,
+        deps: [CoreConfigService, HttpClient]
       }
     }),
     RecordModule

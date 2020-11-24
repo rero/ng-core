@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,7 +36,7 @@ import { TranslateLanguagePipe } from '../../translate/translate-language.pipe';
 import { ActionStatus } from '../action-status';
 import { RecordService } from '../record.service';
 import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
-import { RecordSearchComponent } from './record-search-page.component';
+import { RecordSearchPageComponent } from './record-search-page.component';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
 
 const adminMode = (): Observable<ActionStatus> => {
@@ -46,9 +46,9 @@ const adminMode = (): Observable<ActionStatus> => {
   });
 };
 
-describe('RecordSearchComponent', () => {
-  let component: RecordSearchComponent;
-  let fixture: ComponentFixture<RecordSearchComponent>;
+describe('RecordSearchPageComponent', () => {
+  let component: RecordSearchPageComponent;
+  let fixture: ComponentFixture<RecordSearchPageComponent>;
 
   const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
   routerSpy.url = '';
@@ -95,12 +95,12 @@ describe('RecordSearchComponent', () => {
     queryParams: of({})
   };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         SearchInputComponent,
         RecordSearchAggregationComponent,
-        RecordSearchComponent,
+        RecordSearchPageComponent,
         RecordSearchResultComponent,
         DefaultPipe,
         UpperCaseFirstPipe,
@@ -136,7 +136,7 @@ describe('RecordSearchComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordSearchComponent);
+    fixture = TestBed.createComponent(RecordSearchPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

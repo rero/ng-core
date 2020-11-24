@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -22,8 +23,11 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { ErrorComponent } from './error/error.component';
+import { MenuWidgetPrefixSuffixComponent } from './menu/menu-widget/menu-widget-prefix-suffix/menu-widget-prefix-suffix.component';
+import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
 import { FilesizePipe } from './pipe/filesize.pipe';
@@ -37,9 +41,7 @@ import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
-import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
-import { MenuWidgetPrefixSuffixComponent } from './menu/menu-widget/menu-widget-prefix-suffix/menu-widget-prefix-suffix.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,8 @@ import { MenuWidgetPrefixSuffixComponent } from './menu/menu-widget/menu-widget-
     TranslateModule.forChild({
       loader: {
         provide: BaseTranslateLoader,
-        useClass: TranslateLoader
+        useClass: TranslateLoader,
+        deps: [CoreConfigService, HttpClient]
       }
     }),
     ModalModule.forRoot(),

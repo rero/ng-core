@@ -80,7 +80,7 @@ export class AutocompleteComponent implements OnInit {
   dataSource: Observable<any>;
 
   // The current form object from the template.
-  @ViewChild('form', { static: false })
+  @ViewChild('form')
   form: any;
 
   // The suggestion list subscriber, used to close the dropdown

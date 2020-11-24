@@ -35,7 +35,7 @@ describe('RemoteTypeaheadService', () => {
     ]
   }));
   it('should be created', () => {
-    const service: RemoteTypeaheadService = TestBed.get(RemoteTypeaheadService);
+    const service: RemoteTypeaheadService = TestBed.inject(RemoteTypeaheadService);
     expect(service).toBeTruthy();
   });
 });

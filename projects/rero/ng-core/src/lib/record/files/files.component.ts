@@ -103,13 +103,13 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   private _subscriptions: Subscription = new Subscription();
 
   // Reference on file input, used to reset value
-  @ViewChild('file', { read: ElementRef, static: false })
+  @ViewChild('file', { read: ElementRef })
   fileInput: ElementRef;
 
-  @ViewChild('formModal', { static: false })
+  @ViewChild('formModal')
   formModalTemplate: TemplateRef<any>;
 
-  @ViewChild('metadataFormModal', { static: false })
+  @ViewChild('metadataFormModal')
   metadataFormModalTemplate: TemplateRef<any>;
 
   /**

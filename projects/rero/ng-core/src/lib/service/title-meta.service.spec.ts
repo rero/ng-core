@@ -28,24 +28,24 @@ describe('TitleMetaService', () => {
   }));
 
   it('should be created', () => {
-    const service: TitleMetaService = TestBed.get(TitleMetaService);
+    const service: TitleMetaService = TestBed.inject(TitleMetaService);
     expect(service).toBeTruthy();
   });
 
   it('should be set title', () => {
-    const service: TitleMetaService = TestBed.get(TitleMetaService);
+    const service: TitleMetaService = TestBed.inject(TitleMetaService);
     service.setTitle('my title');
     expect(service.getTitle()).toEqual('my title');
   });
 
   it('should be set title with prefix', () => {
-    const service: TitleMetaService = TestBed.get(TitleMetaService);
+    const service: TitleMetaService = TestBed.inject(TitleMetaService);
     service.setPrefix('my app').setTitle('my title');
     expect(service.getTitle()).toEqual('my app: my title');
   });
 
   it('should be set title', () => {
-    const service: TitleMetaService = TestBed.get(TitleMetaService);
+    const service: TitleMetaService = TestBed.inject(TitleMetaService);
     service.setMeta('description', 'my description');
     expect(service.getMeta('name=description').content).toEqual('my description');
   });

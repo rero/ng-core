@@ -18,10 +18,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DetailComponent } from './detail/detail.component';
 import { EditorComponent } from './editor/editor.component';
-import { RecordSearchComponent } from './search/record-search-page.component';
+import { RecordSearchPageComponent } from './search/record-search-page.component';
 
 const routes: Routes = [
-  { path: ':type', component: RecordSearchComponent },
+  { path: ':type', component: RecordSearchPageComponent },
   { path: ':type/detail/:pid', component: DetailComponent },
   { path: ':type/edit/:pid', component: EditorComponent },
   { path: ':type/new', component: EditorComponent }

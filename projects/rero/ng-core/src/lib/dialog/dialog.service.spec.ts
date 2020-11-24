@@ -48,8 +48,8 @@ describe('DialogService', () => {
       }
     }).compileComponents();
 
-    service = TestBed.get(DialogService);
-    bsModalService = TestBed.get(BsModalService);
+    service = TestBed.inject(DialogService);
+    bsModalService = TestBed.inject(BsModalService);
   });
 
   it('should be created', () => {

@@ -34,7 +34,7 @@ describe('TranslateLanguageService', () => {
       ]
     });
 
-    service = TestBed.get(TranslateLanguageService);
+    service = TestBed.inject(TranslateLanguageService);
   });
 
   it('should be created', () => {
