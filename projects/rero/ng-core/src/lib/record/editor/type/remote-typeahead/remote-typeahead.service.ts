@@ -50,7 +50,7 @@ export class RemoteTypeaheadService {
       .getRecord(options.type, pid, 1)
       .pipe(
         map(result => {
-          return result.metadata[options.field];
+          return result.metadata[options.label || options.field];
         }),
         map(v => `<strong>${v}</strong>`)
       );
@@ -86,7 +86,7 @@ export class RemoteTypeaheadService {
           }
           results.hits.hits.map((hit: any) => {
             names.push({
-              label: hit.metadata[options.field],
+              label: hit.metadata[options.label || options.field],
               value: this._apiService.getRefEndpoint(options.type, hit.metadata.pid)
               // add a group field to group the results
               // group: 'book'
