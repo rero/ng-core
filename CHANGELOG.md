@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.15.0](https://github.com/rero/ng-core/tree/v0.15.0) (2020-11-27)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.14.2...v0.15.0)
+
+**Implemented enhancements:**
+
+- menu: add prefix and suffix [\#306](https://github.com/rero/ng-core/pull/306) ([Garfield-fr](https://github.com/Garfield-fr))
+
+**Closed issues:**
+
+- Create an example of the editor with a local JSONSchema [\#115](https://github.com/rero/ng-core/issues/115)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#309](https://github.com/rero/ng-core/pull/309) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: display a label in typeahead suggestions [\#307](https://github.com/rero/ng-core/pull/307) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add schema example in the demo application [\#249](https://github.com/rero/ng-core/pull/249) ([jma](https://github.com/jma))
+
 ## [v0.14.2](https://github.com/rero/ng-core/tree/v0.14.2) (2020-11-20)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.14.1...v0.14.2)
@@ -47,6 +65,7 @@
 
 **Merged pull requests:**
 
+- search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
 - permissions: fix permissions on the configuration [\#287](https://github.com/rero/ng-core/pull/287) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.1](https://github.com/rero/ng-core/tree/v0.12.1) (2020-10-21)
@@ -64,7 +83,6 @@
 
 **Merged pull requests:**
 
-- search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
 - select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -111,7 +129,6 @@
 - records: validate data during editor submission [\#263](https://github.com/rero/ng-core/pull/263) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: edit metadata of files [\#262](https://github.com/rero/ng-core/pull/262) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - tester: add proxies for API calls [\#261](https://github.com/rero/ng-core/pull/261) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- record: added a function to convert "total hits" for Elasticsearch [\#260](https://github.com/rero/ng-core/pull/260) ([Garfield-fr](https://github.com/Garfield-fr))
 - menu: add menu generation [\#256](https://github.com/rero/ng-core/pull/256) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.9.0](https://github.com/rero/ng-core/tree/v0.9.0) (2020-09-08)
