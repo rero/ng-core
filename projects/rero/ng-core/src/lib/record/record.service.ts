@@ -139,9 +139,9 @@ export class RecordService {
     return this._http
       .get<Record>(this._apiService.getEndpointByType(type, true) + '/', {
         params: httpParams,
-        headers: this.createRequestHeaders(headers),
+        headers: this._createRequestHeaders(headers),
       })
-      .pipe(catchError((error) => this.handleError(error)));
+      .pipe(catchError((error) => this._handleError(error)));
   }
 
   /**
@@ -153,8 +153,8 @@ export class RecordService {
     return this._http
       .delete<void>(this._apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(
-        tap(() => this.onDelete.next(this.createEvent(type, { pid }))),
-        catchError((error) => this.handleError(error))
+        catchError((error) => this._handleError(error)),
+        tap(() => this.onDelete.next(this._createEvent(type, { pid })))
       );
   }
 
@@ -176,10 +176,10 @@ export class RecordService {
           true
         )}/${pid}?resolve=${resolve}`,
         {
-          headers: this.createRequestHeaders(headers),
+          headers: this._createRequestHeaders(headers),
         }
       )
-      .pipe(catchError(error => this.handleError(error)));
+      .pipe(catchError(error => this._handleError(error)));
   }
 
   /**
@@ -208,10 +208,12 @@ export class RecordService {
    * @param record - object, record to create
    */
   create(recordType: string, record: object): Observable<any> {
+
     return this._http
       .post(this._apiService.getEndpointByType(recordType, true) + '/', record)
       .pipe(
-        tap(() => this.onCreate.next(this.createEvent(recordType, { record })))
+        catchError((error) => this._handleError(error)),
+        tap(() => this.onCreate.next(this._createEvent(recordType, { record })))
       );
   }
 
@@ -228,7 +230,8 @@ export class RecordService {
     return this._http
       .put(url, record)
       .pipe(
-        tap(() => this.onUpdate.next(this.createEvent(recordType, { record })))
+        catchError((error) => this._handleError(error)),
+        tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
       );
   }
 
@@ -329,8 +332,9 @@ export class RecordService {
   /**
    * Error handling during api call process.
    * @param error - HttpErrorResponse
+   * @return throwError
    */
-  private handleError(error: HttpErrorResponse): Observable<Error> {
+  private _handleError(error: HttpErrorResponse): Observable<Error> {
     let title: string;
     let status = error.status;
 
@@ -365,7 +369,7 @@ export class RecordService {
    * Creates and returns a HttpHeader object to send to request.
    * @param headers Object containing http headers to send to request.
    */
-  private createRequestHeaders(headers: any = {}) {
+  private _createRequestHeaders(headers: any = {}) {
     return headers
       ? new HttpHeaders(headers)
       : new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -376,11 +380,12 @@ export class RecordService {
    * @param resource - string
    * @param data - any
    */
-  private createEvent(resource: string, data: any) {
+  private _createEvent(resource: string, data: any) {
     return { resource, data };
   }
 }
 
+/** Record Event Interface */
 export interface RecordEvent {
   resource: string;
   data: any;
