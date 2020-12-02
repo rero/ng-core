@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -27,8 +28,8 @@ import moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest, Observable, of, Subscription } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
@@ -506,12 +507,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     let recordAction$: Observable<any>;
     if (data.pid != null) {
       recordAction$ = this._recordService.update(this.recordType, this.preUpdateRecord(data)).pipe(
+        catchError((error) => this._handleError(error)),
         map(record => {
           return { record, action: 'update', message: this._translateService.instant('Record updated.') };
         })
       );
     } else {
       recordAction$ = this._recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
+        catchError((error) => this._handleError(error)),
         map(record => {
           return { record, action: 'create', message: this._translateService.instant('Record created.') };
         })
@@ -912,5 +915,16 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         ...formOptions.templateOptions
       };
     }
+  }
+
+  /**
+   * Handle form error
+   * @param object with status and title parameters
+   * @return Observable<Error>
+   */
+  private _handleError(error: { status: number, title: string }): Observable<Error> {
+    this._spinner.hide();
+    this.form.setErrors({ formError: true });
+    return throwError({ status: error.status, title: error.title });
   }
 }
