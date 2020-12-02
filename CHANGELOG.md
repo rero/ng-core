@@ -1,5 +1,28 @@
 # Changelog
 
+## [v1.0.0](https://github.com/rero/ng-core/tree/v1.0.0) (2020-12-02)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v0.15.0...v1.0.0)
+
+**Implemented enhancements:**
+
+- Remove unnecessary record property in detail component [\#121](https://github.com/rero/ng-core/issues/121)
+
+**Fixed bugs:**
+
+- Detail view component doesn't listen to changes in url [\#142](https://github.com/rero/ng-core/issues/142)
+
+**Closed issues:**
+
+- Configure a proxy for the tester to avoid errors on first call to fake API [\#257](https://github.com/rero/ng-core/issues/257)
+- Upgrade ngx-formly to latest version [\#254](https://github.com/rero/ng-core/issues/254)
+- Use yarn instead of npm [\#1](https://github.com/rero/ng-core/issues/1)
+
+**Merged pull requests:**
+
+- toggle-switch: translate label and description [\#314](https://github.com/rero/ng-core/pull/314) ([Garfield-fr](https://github.com/Garfield-fr))
+- form: improve error message [\#313](https://github.com/rero/ng-core/pull/313) ([Garfield-fr](https://github.com/Garfield-fr))
+
 ## [v0.15.0](https://github.com/rero/ng-core/tree/v0.15.0) (2020-11-27)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.14.2...v0.15.0)
@@ -16,6 +39,7 @@
 
 - translations: update catalogs [\#309](https://github.com/rero/ng-core/pull/309) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: display a label in typeahead suggestions [\#307](https://github.com/rero/ng-core/pull/307) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependency: update to angular 11 [\#308](https://github.com/rero/ng-core/pull/308) ([jma](https://github.com/jma))
 - editor: add schema example in the demo application [\#249](https://github.com/rero/ng-core/pull/249) ([jma](https://github.com/jma))
 
 ## [v0.14.2](https://github.com/rero/ng-core/tree/v0.14.2) (2020-11-20)
@@ -129,6 +153,7 @@
 - records: validate data during editor submission [\#263](https://github.com/rero/ng-core/pull/263) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: edit metadata of files [\#262](https://github.com/rero/ng-core/pull/262) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - tester: add proxies for API calls [\#261](https://github.com/rero/ng-core/pull/261) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- record: added a function to convert "total hits" for Elasticsearch [\#260](https://github.com/rero/ng-core/pull/260) ([Garfield-fr](https://github.com/Garfield-fr))
 - menu: add menu generation [\#256](https://github.com/rero/ng-core/pull/256) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.9.0](https://github.com/rero/ng-core/tree/v0.9.0) (2020-09-08)
