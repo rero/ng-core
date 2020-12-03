@@ -556,10 +556,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   expandFacet(key: string): boolean {
     const expandConfig = ('aggregationsExpand' in this._config) ? this._config.aggregationsExpand : [];
-    if (expandConfig.indexOf(key) === -1) {
-      return false;
-    }
-    return true;
+    return expandConfig.includes(key);
   }
 
   /**
