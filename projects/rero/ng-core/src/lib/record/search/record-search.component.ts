@@ -17,17 +17,27 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { JSONSchema7 } from '../editor/editor.component';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Observable, of, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
-import { SearchResult, Record, SearchField } from '../record';
+import { JSONSchema7 } from '../editor/editor.component';
+import { Record, SearchField, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
+
+export interface SearchParams {
+  currentType: string;
+  index: string;
+  q: string;
+  page: number;
+  size: number;
+  aggregationsFilters: Array<AggregationsFilter>;
+  sort: string;
+}
 
 @Component({
   selector: 'ng-core-record-search',
@@ -121,12 +131,12 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   hits: any = [];
 
   /**
-   * Facets retreived from request result
+   * Facets retrieved from request result
    */
   aggregations: Array<{ key: string, bucketSize: any, value: { buckets: [] } }>;
 
   /**
-   * Error message when something wrong happend during a search
+   * Error message when something wrong happens during a search
    */
   error: Error;
 
@@ -147,7 +157,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * JSON stringified of last search parameters. Used for checking if we have
    * to do a search or not.
    */
-  private _lastSearchParameters: string = null;
+  private _searchParameters: BehaviorSubject<SearchParams> = new BehaviorSubject(null);
 
   /**
    * Define if search input have to be displayed or not.
@@ -159,15 +169,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _showLabel = true;
 
+  // Subscriptions to observables.
+  private _subscriptions: Subscription = new Subscription();
+
   /**
    * Store configuration for type
    */
   private _config: any = null;
-
-  /**
-   * Subscription to aggregationsFilters observable
-   */
-  private _aggregationsFiltersSubscription: Subscription;
 
   /**
    * Output current state when parameters change.
@@ -208,36 +216,58 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
 
     // Subscribe on aggregation filters changes and do search.
-    this._aggregationsFiltersSubscription = this._recordSearchService.aggregationsFilters.subscribe(
+    this._subscriptions.add(this._recordSearchService.aggregationsFilters.subscribe(
       (aggregationsFilters: Array<AggregationsFilter>) => {
         // No aggregations filters are set at this time, we do nothing.
         if (aggregationsFilters === null) {
           return;
         }
+        aggregationsFilters.forEach((item, key) => {
+          aggregationsFilters[key].values = item.values.sort();
+        });
 
         // Detects if it's the first change. This allows to know if the page
         // have to be resetted.
         const firstChange = this.aggregationsFilters === null;
 
         this.aggregationsFilters = aggregationsFilters;
-
-        // Search parameters have not changed, useless to do a search
-        if (this.haveSearchParametersChanged() === false) {
-          return;
-        }
-
-        this._getRecords(firstChange === false);
+        this._searchParamsHasChanged(firstChange === false);
       }
+    )
+    );
+    this._subscriptions.add(
+      this._searchParameters.asObservable().pipe(
+        // only if the patterns changed
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        // cancel previous pending requests
+        switchMap(() => this._getRecords())
+      ).subscribe(
+        (records: Record) => {
+          this.hits = records.hits;
+          this._spinner.hide();
+          this.aggregations$(records.aggregations).subscribe((aggr: any) => {
+            this.aggregations = this.aggregationsOrder(aggr);
+          });
+          this._emitNewParameters();
+          this.recordsSearched.emit({ type: this.currentType, records });
+        },
+        (error) => {
+          this.error = error;
+          this._spinner.hide();
+        }
+      )
     );
 
     // Load totals for each resource type
-    for (const type of this.types) {
-      this._recordService.getRecords(
-        type.index ? type.index : type.key, '', 1, 1, [],
-        type.preFilters || {},
-        type.listHeaders || null).subscribe((records: Record) => {
-          type.total = this._recordService.totalHits(records.hits.total);
-        });
+    if (this.types.length > 1) {
+      for (const type of this.types) {
+        this._recordService.getRecords(
+          type.index ? type.index : type.key, '', 1, 1, [],
+          type.preFilters || {},
+          type.listHeaders || null).subscribe((records: Record) => {
+            type.total = this._recordService.totalHits(records.hits.total);
+          });
+      }
     }
   }
 
@@ -277,17 +307,29 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       // triggered by clicking on a tab (which already load configuration),
       // we reload configuration.
       // If no configuration is loaded, we load it, too.
-      if (this._config === null || changes.currentType.currentValue !== this._config.key) {
-        this.loadConfigurationForType(this.currentType);
+      if (this._config === null || (changes.currentType.currentValue != null && (changes.currentType.currentValue !== this._config.key))) {
+        this._loadConfigurationForType(this.currentType);
       }
     }
 
     // If it's the first change, we don't do a search, it's delegated to the
     // aggregations filters subscription.
-    if (changes[Object.keys(changes)[0]].firstChange === false && this.haveSearchParametersChanged() === true) {
+    if (changes[Object.keys(changes)[0]].firstChange === false) {
       // Get records and reset page only if page has not changed
-      this._getRecords('page' in changes === false);
+      this._searchParamsHasChanged('page' in changes === false);
     }
+  }
+
+  /**
+   * Internal notification that the search parameters has changed.
+   *
+   * @param resetPage reset the page to the first page
+   */
+  private _searchParamsHasChanged(resetPage: boolean = true) {
+    if (resetPage) {
+      this.page = 1;
+    }
+    this._searchParameters.next(this._serializeSearchParameters());
   }
 
   /**
@@ -296,7 +338,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Unsubscribes from the observable of the aggregations filters.
    */
   ngOnDestroy() {
-    this._aggregationsFiltersSubscription.unsubscribe();
+    this._subscriptions.unsubscribe();
   }
 
   /**
@@ -310,7 +352,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Activate the first and last button on pagination
    */
   get paginationBoundaryLinks(): boolean {
-    const paginationConfig = this.getResourceConfig('pagination', {});
+    const paginationConfig = this._getResourceConfig('pagination', {});
     return ('boundaryLinks' in paginationConfig) ? paginationConfig.boundaryLinks : false;
   }
 
@@ -318,7 +360,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Number of pages showed on pagination
    */
   get paginationMaxSize(): number {
-    const paginationConfig = this.getResourceConfig('pagination', {});
+    const paginationConfig = this._getResourceConfig('pagination', {});
     return ('maxSize' in paginationConfig) ? paginationConfig.maxSize : 5;
   }
 
@@ -406,7 +448,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   set currentPage(page: number) {
     this.page = +page;
-    this._getRecords(false);
+    this._searchParamsHasChanged(false);
   }
 
   /**
@@ -426,7 +468,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   changeSize(event: Event, size: number) {
     event.preventDefault();
     this.size = size;
-    this._getRecords();
+    this._searchParamsHasChanged();
   }
 
   /**
@@ -436,7 +478,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   searchByQuery(event: string) {
     this.q = event;
     this.aggregationsFilters = [];
-    this._getRecords();
+    this._searchParamsHasChanged();
     this._recordSearchService.setAggregationsFilters([]);
   }
 
@@ -449,9 +491,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     event.preventDefault();
 
     this.currentType = type;
-    this.loadConfigurationForType(this.currentType);
+    this._loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
-    this._getRecords();
+    this._searchParamsHasChanged();
     this._recordSearchService.setAggregationsFilters([]);
   }
 
@@ -460,15 +502,22 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param pid - string, PID to delete
    */
   deleteRecord(pid: string) {
-    this._recordUiService.deleteRecord(this.currentType, pid).subscribe((result) => {
-      if (result === true) {
-        // refresh records
-        this._getRecords(true, false);
-
-        // update main counter
-        this._config.total--;
+    this._recordUiService.deleteRecord(this.currentType, pid).pipe(
+      switchMap(result => {
+        if (result === true) {
+          this.page = 1;
+          return this._getRecords();
+        }
+        return of(null);
+      })
+    ).subscribe((records: Record) => {
+      if (records != null) {
+        this.hits = records.hits;
+        this._spinner.hide();
       }
     });
+    // update main counter
+    this._config.total--;
   }
 
   /**
@@ -657,22 +706,17 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Search for records.
-   * @param resetPage If page needs to be resetted to 1.
+   * @param resetPage If page needs to be reset to 1.
    * @param emitParameters If parameters have to be emitted in parents.
    */
-  private _getRecords(resetPage: boolean = true, emitParameters: boolean = true) {
-    this._lastSearchParameters = this._serializeSearchParameters();
-
-    if (resetPage === true) {
-      this.page = 1;
-    }
+  private _getRecords(): Observable<any> {
 
     this._spinner.show();
 
     // Build query string
     const q = this._buildQueryString();
 
-    this._recordService.getRecords(
+    return this._recordService.getRecords(
       this._currentIndex(),
       q,
       this.page,
@@ -681,24 +725,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this._config.preFilters || {},
       this._config.listHeaders || null,
       this.sort
-    ).subscribe(
-      (records: Record) => {
-        this.hits = records.hits;
-        this.aggregations$(records.aggregations).subscribe((aggr: any) => {
-          this.aggregations = this.aggregationsOrder(aggr);
-        });
-
-        this._spinner.hide();
-
-        if (emitParameters) {
-          this.emitNewParameters();
-        }
-        this.recordsSearched.emit({ type: this.currentType, records });
-      },
-      (error) => {
-        this.error = error;
-        this._spinner.hide();
-      }
     );
   }
 
@@ -706,7 +732,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Emit new parameters when a search is done.
    */
-  private emitNewParameters() {
+  private _emitNewParameters() {
     this.parametersChanged.emit({
       q: this.q,
       page: this.page,
@@ -722,7 +748,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get configuration for the current resource type.
    * @param type Type of resource
    */
-  private loadConfigurationForType(type: string) {
+  private _loadConfigurationForType(type: string) {
     this._config = this._recordUiService.getResourceConfig(type);
     this._recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
@@ -737,45 +763,24 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param defaultValue - Default value is returned if the parameter is not defined
    * @return A config value or the given default value instead
    */
-  private getResourceConfig(paramName: string, defaultValue: any) {
+  private _getResourceConfig(paramName: string, defaultValue: any) {
     return (paramName in this._config) ? this._config[paramName] : defaultValue;
-  }
-
-  /**
-   * Check if search parameters have changed since last search, by comparing
-   * JSON strings.
-   * @return Boolean
-   */
-  private haveSearchParametersChanged(): boolean {
-    const params = this._serializeSearchParameters();
-
-    if (this._lastSearchParameters !== params) {
-      this._lastSearchParameters = params;
-      return true;
-    }
-
-    return false;
   }
 
   /**
    * Serialize all the search parameters with JSON.stringify method.
    * @return The serialized string.
    */
-  private _serializeSearchParameters(): string {
-    // Order aggregations filters for comparison
-    this.aggregationsFilters.forEach((item, key) => {
-      this.aggregationsFilters[key].values = item.values.sort();
-    });
-
-    return JSON.stringify({
+  private _serializeSearchParameters(): SearchParams {
+    return {
       currentType: this._config.key,
-      index: this._config.index,
+      index: this._currentIndex(),
       q: this.q,
       page: this.page,
       size: this.size,
       sort: this.sort,
       aggregationsFilters: this.aggregationsFilters
-    });
+    };
   }
 
   /**
@@ -827,6 +832,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return string, current index defined by keys index or key
    */
   private _currentIndex() {
+    if (this._config == null) {
+      return null;
+    }
     return this._config.index ? this._config.index : this._config.key;
   }
 }
