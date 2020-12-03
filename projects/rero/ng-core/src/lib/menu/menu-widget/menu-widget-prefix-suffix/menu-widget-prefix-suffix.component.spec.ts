@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MenuWidgetPrefixSuffixComponent } from './menu-widget-prefix-suffix.component';
 
@@ -23,7 +23,7 @@ describe('MenuWidgetPrefixSuffixComponent', () => {
   let component: MenuWidgetPrefixSuffixComponent;
   let fixture: ComponentFixture<MenuWidgetPrefixSuffixComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MenuWidgetPrefixSuffixComponent ],
       schemas: [ NO_ERRORS_SCHEMA ]
