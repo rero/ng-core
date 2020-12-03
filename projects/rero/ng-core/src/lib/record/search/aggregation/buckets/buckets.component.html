@@ -14,13 +14,15 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ul *ngIf="buckets" class="list-unstyled m-0">
-  <li class="form-check" *ngFor="let bucket of buckets|slice:0:bucketSize">
-    <input class="form-check-input" type="checkbox" [checked]="isSelected(bucket.key)"
-      (click)="updateFilter(bucket)">
-    <label class="form-check-label">
-      {{ getBucketName(bucket) }} ({{ bucket.doc_count }})
-    </label>
+<ul *ngIf="buckets" class="list-unstyled m-0 bucket-group">
+  <li class="form-check bucket-item" *ngFor="let bucket of buckets|slice:0:bucketSize">
+    <div class="d-flex flex-row bucket-data" (click)="updateFilter(bucket)">
+      <input class="form-check-input" type="checkbox" [checked]="isSelected(bucket.key)"/>
+      <a class="form-check-label">{{ getBucketName(bucket) }}</a>
+      <span class="ml-auto bucket-count">
+        <span class="bucket-count-badge">{{ bucket.doc_count }}</span>
+      </span>
+    </div>
     <ng-container *ngIf="isSelected(bucket.key)">
       <ng-core-record-search-aggregation-buckets
       *ngFor="let aggregation of bucketChildren[bucket.key]"

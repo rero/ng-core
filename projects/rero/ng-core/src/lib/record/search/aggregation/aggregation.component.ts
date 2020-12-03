@@ -21,23 +21,12 @@ import { Component, Input } from '@angular/core';
   templateUrl: './aggregation.component.html',
 })
 export class RecordSearchAggregationComponent {
-  /**
-   * Aggregation data
-   */
-  @Input()
-  aggregation: { key: string, bucketSize: any, doc_count?: number, value: { buckets: Array<any> }, type: string, config?: any };
-
-  /**
-   * Current selected values
-   */
-  @Input()
-  aggregationsFilters = [];
-
-  /**
-   * If true, by default buckets are displayed.
-   */
-  @Input()
-  expand = true;
+  /** Aggregation data */
+  @Input() aggregation: { key: string, bucketSize: any, doc_count?: number, value: { buckets: Array<any> }, type: string, config?: any };
+  /** Current selected values */
+  @Input() aggregationsFilters = [];
+  /** If true, by default buckets are displayed. */
+  @Input() expand = true;
 
   /**
    * Returns aggregations filters corresponding to the aggregation key.
@@ -45,12 +34,9 @@ export class RecordSearchAggregationComponent {
    */
   get aggregationFilters(): Array<string> {
     const aggregationFilters = this.aggregationsFilters.find((item: any) => item.key === this.aggregation.key);
-
-    if (aggregationFilters === undefined) {
-      return [];
-    }
-
-    return aggregationFilters.values;
+    return (aggregationFilters === undefined)
+      ? []
+      : aggregationFilters.values;
   }
 
   /**

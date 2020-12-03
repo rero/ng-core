@@ -22,52 +22,36 @@ import { AggregationsFilter, RecordSearchService } from '../../record-search.ser
 
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',
-  templateUrl: './buckets.component.html'
+  templateUrl: './buckets.component.html',
+  styleUrls: ['./buckets.component.scss']
 })
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
-  /**
-   * Buckets list for aggregation
-   */
-  @Input()
-  buckets: Array<any>;
 
-  /**
-   * Aggregation key
-   */
-  @Input()
-  aggregationKey: string;
+  // COMPONENT ATTRIBUTES ============================================================
+  /** Buckets list for aggregation */
+  @Input() buckets: Array<any>;
+  /** Aggregation key */
+  @Input() aggregationKey: string;
+  /** Bucket size, if not null, reduce displayed items to this size. */
+  @Input() size: number;
 
-  /**
-   * Bucket size, if not null, reduce displayed items to this size.
-   */
-  @Input()
-  size: number;
-
-  /**
-   * More and less on aggregation content (facet)
-   */
+  /** More and less on aggregation content (facet) */
   moreMode = true;
-
-  /**
-   * Current selected values for the aggregation
-   */
+  /** Current selected values for the aggregation */
   aggregationsFilters: Array<AggregationsFilter> = [];
-
-  /**
-   * Children of current bucket
-   */
+  /** Children of current bucket */
   bucketChildren: any = {};
 
-  /**
-   * Subscription to aggregationsFilters observable
-   */
+  /** Subscription to aggregationsFilters observable */
   private _aggregationsFiltersSubscription: Subscription;
 
+
+  // CONSTRUCTOR & HOOKS ==============================================================
   /**
    * Constructor
-   * @param translate Translate service
-   * @param _recordSearchService Record search service
-   * @param _translateLanguage TranslateLanguageService
+   * @param _translateService - TranslateService
+   * @param _recordSearchService - RecordSearchService
+   * @param _translateLanguage - TranslateLanguageService
    */
   constructor(
     private _translateService: TranslateService,
@@ -111,6 +95,8 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
     this._aggregationsFiltersSubscription.unsubscribe();
   }
 
+
+  // GETTERS & SETTERS =================================================================
   /**
    * Returns selected filters for the aggregation key.
    * @return List of selected filters
@@ -119,10 +105,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
     const aggregationFilters = this.aggregationsFilters.find(
       (item: AggregationsFilter) => item.key === this.aggregationKey
     );
-    if (aggregationFilters === undefined) {
-      return [];
-    }
-    return aggregationFilters.values;
+    return (aggregationFilters === undefined)
+      ? []
+      : aggregationFilters.values;
   }
 
   /**
@@ -139,12 +124,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    */
   get bucketSize(): number {
     const size = this.buckets.length;
-
-    if (this.size === null || this.moreMode === false) {
-      return size;
-    }
-
-    return this.size;
+    return (this.size === null || this.moreMode === false)
+      ? size
+      : this.size;
   }
 
   /**
@@ -159,7 +141,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Update selected filters by adding or removing the given value and push
    * values to service.
-   * @param value - string, filter value
+   * @param bucket - string, filter value
    */
   updateFilter(bucket: any) {
     const index = this.aggregationsFilters.findIndex((item: any) => {
@@ -213,10 +195,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @return Boolean
    */
   displayMoreAndLessLink(): boolean {
-    if (this.size === null) {
-      return false;
-    }
-    return this.buckets.length > this.size;
+    return (this.size === null)
+      ? false
+      : this.buckets.length > this.size;
   }
 
   /**
