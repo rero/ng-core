@@ -76,11 +76,19 @@ export class MenuService {
     records.addChild('UNISI records')
       .setRouterLink(['/unisi', 'record', 'search', 'documents']);
     records.addChild('Backend records')
-      .setPrefix('[admin]')
-      .setSuffix('[search]', 'text-warning')
+      .setPrefix('[admin]', 'mr-2')
+      .setSuffix('[search]', 'ml-2 text-warning')
       .setRouterLink(['/admin', 'record', 'search', 'documents']);
     records.addChild('Document records')
       .setRouterLink(['/records', 'documents']);
+    records.addChild('Document records')
+      .setSuffix('[with query params]', 'ml-2 font-weight-bold')
+      .setRouterLink(['/records', 'documents'])
+      .setQueryParams({
+        q: 'anatomic',
+        page: 1,
+        size: 10
+      });
     records.addChild('Organisation records')
       .setRouterLink(['/records', 'organisations']);
   }

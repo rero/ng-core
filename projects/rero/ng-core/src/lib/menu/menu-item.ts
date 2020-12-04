@@ -47,6 +47,9 @@ export class MenuItem implements MenuItemInterface {
   /** Uri */
   private _uri?: string;
 
+  /** Uri params */
+  private _queryParams = {};
+
   /** Angular router link */
   private _routerLink: string[];
 
@@ -195,6 +198,56 @@ export class MenuItem implements MenuItemInterface {
    */
   setUri(uri?: string): this {
     this._uri = uri;
+    return this;
+  }
+
+  /**
+   * Has query param
+   * @param name - string
+   * @return boolean
+   */
+  hasQueryParam(name: string): boolean {
+    return this.has(name, this._queryParams);
+  }
+
+  /**
+   * Get query params
+   * @return Object
+   */
+  getQueryParams(): {} {
+    return this._queryParams;
+  }
+
+  /**
+   * Get query params
+   * @param name - attribute name
+   * @param defaultValue - any | null
+   */
+  getQueryParam(name: string, defaultValue?: null | string): null | any {
+    if (this.hasQueryParam(name)) {
+      return this._queryParams[name];
+    }
+    return defaultValue;
+  }
+
+  /**
+   * Set query param
+   * @param param - string
+   * @param value - any
+   * @return MenuItem
+   */
+  setQueryParam(param: string, value: any): this {
+    this._queryParams[param] = value;
+    return this;
+  }
+
+  /**
+   * Set query param
+   * @param params - object
+   * @return MenuItem
+   */
+  setQueryParams(params: {}): this {
+    this._queryParams = params;
     return this;
   }
 
