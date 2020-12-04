@@ -73,6 +73,17 @@ describe('MenuItem', () => {
     expect(menuItem.getUri()).toEqual(uri);
   });
 
+  it('should have query params', () => {
+    const queryParams = {q: 'anatomic', page: 1};
+    menuItem.setQueryParams(queryParams);
+    expect(menuItem.hasQueryParam('q')).toBeTruthy();
+    expect(menuItem.hasQueryParam('foo')).toBeFalsy();
+    expect(menuItem.getQueryParams()).toEqual(queryParams);
+    expect(menuItem.getQueryParam('q')).toEqual('anatomic');
+    menuItem.setQueryParam('size', 10);
+    expect(menuItem.getQueryParam('size')).toEqual(10);
+  });
+
   it('should have router link', () => {
     const routerLink = ['/foo', 'bar'];
     expect(menuItem.hasRouterLink()).toBeFalsy();

@@ -28,6 +28,10 @@ export interface MenuItemInterface {
   removeSuffix(): this;
   getUri(): null | string;
   setUri(uri?: string): this;
+  getQueryParams(): {};
+  getQueryParam(name: string, defaultValue?: null | string): null | string;
+  setQueryParams(params: {}): this;
+  setQueryParam(param: string, value: any): this;
   getRouterLink(): string[];
   setRouterLink(routerLink?: string[]): this;
   getLabel(): null | string;

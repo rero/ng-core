@@ -28,6 +28,7 @@
               class="nav-link"
               [attr.id]="item.getAttribute('id')"
               [routerLink]="item.getRouterLink()"
+              [queryParams]="item.getQueryParams() ? item.getQueryParams() : {}"
               (click)="doClick(item)"
             >
               <i *ngIf="item.hasExtra('iconClass')" [ngClass]="item.getExtra('iconClass')"></i>
@@ -90,6 +91,7 @@
                   [attr.id]="sub.getAttribute('id')"
                   [attr.target]="sub.getAttribute('target')"
                   [routerLink]="sub.getRouterLink()"
+                  [queryParams]="sub.getQueryParams() ? sub.getQueryParams() : {}"
                   (click)="doClick(sub)"
                 >
                   <i *ngIf="sub.hasExtra('iconClass')" [ngClass]="sub.getExtra('iconClass')"></i>
