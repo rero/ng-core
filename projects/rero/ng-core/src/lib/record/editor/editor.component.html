@@ -53,22 +53,26 @@
                         {{ 'Save' | translate }}
                     </button>
                     <ng-container *ngIf="saveAlternatives.length > 0">
-                        <button type="button"
-                                id="editor-save-button-split"
-                                dropdownToggle
-                                class="btn btn-sm btn-primary dropdown-toggle-split"
-                                aria-controls="dropdown-split">
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                        <ul id="editor-save-button-dropdown-split"
-                            *dropdownMenu
-                            class="dropdown-menu dropdown-menu-right"
-                            role="menu"
-                            aria-labelledby="button-split">
-                            <li role="menuitem" *ngFor="let entry of saveAlternatives">
-                                <a class="dropdown-item" (click)="saveAsTemplate(entry, this)">{{ entry.label }}</a>
-                            </li>
-                        </ul>
+                        <ng-container *ngVar="this as component">
+                            <button type="button"
+                                    id="editor-save-button-split"
+                                    dropdownToggle
+                                    class="btn btn-sm btn-primary dropdown-toggle-split"
+                                    aria-controls="dropdown-split">
+                                <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul id="editor-save-button-dropdown-split"
+                                *dropdownMenu
+                                class="dropdown-menu dropdown-menu-right"
+                                role="menu"
+                                aria-labelledby="button-split">
+                                <li role="menuitem" *ngFor="let entry of saveAlternatives">
+                                    <a class="dropdown-item" (click)="entry.action(entry, component)">
+                                        {{ entry.label }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </ng-container>
                     </ng-container>
                 </div>
             </div>

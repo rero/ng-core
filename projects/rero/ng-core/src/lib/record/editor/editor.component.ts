@@ -232,7 +232,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editorSettings.template.saveAsTemplate) {
           this.saveAlternatives.push({
             label: this._translateService.instant('Save as template') + '…',
-            action: this.saveAsTemplate
+            action: this._saveAsTemplate
           });
         }
 
@@ -547,7 +547,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    *  @param entry: the entry to use to fire this function
    *  @param component: the parent editor component
    */
-  saveAsTemplate(entry, component: EditorComponent) {
+  _saveAsTemplate(entry, component: EditorComponent) {
     // NOTE about `component` param :
     //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
     //   loop value, not the current component. We need to pass this component as parameter of
