@@ -19,12 +19,18 @@ import moment from 'moment';
 
 // @dynamic
 export class TimeValidator {
+
+  /**
+   * Allow to control if time interval limits are well formed : the end limit should be 'older' the start limit
+   * @param start: the field name where to find the start limit value
+   * @param end: the field name where to find the end limit value
+   */
   static greaterThanValidator(start: string, end: string): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
       if (control) {
         let isLessThan = false;
-        const startTime = control.get('start_time');
-        const endTime = control.get('end_time');
+        const startTime = control.get(start);
+        const endTime = control.get(end);
         const startDate = moment(startTime.value, 'HH:mm');
         const endDate = moment(endTime.value, 'HH:mm');
         if (startDate.format('HH:mm') !== '00:00' || endDate.format('HH:mm') !== '00:00') {
