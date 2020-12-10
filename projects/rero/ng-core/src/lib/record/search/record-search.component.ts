@@ -349,7 +349,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (this._config.resultsText) {
       return this._config.resultsText(this.hits);
     }
-    return this._translateService.stream('{{ total }} results', { total: this.total });
+    return (this.total <= 1)
+      ? this._translateService.stream('{{ total }} result', { total: this.total }) // O or 1 result
+      : this._translateService.stream('{{ total }} results', { total: this.total });
   }
 
   /**
