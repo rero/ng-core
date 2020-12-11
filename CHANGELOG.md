@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.1.0](https://github.com/rero/ng-core/tree/v1.1.0) (2020-12-11)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.0.0...v1.1.0)
+
+**Merged pull requests:**
+
+- search: fix multiple backend call [\#317](https://github.com/rero/ng-core/pull/317) ([jma](https://github.com/jma))
+- menu: add query parameters [\#316](https://github.com/rero/ng-core/pull/316) ([Garfield-fr](https://github.com/Garfield-fr))
+- search: improve facet design. [\#315](https://github.com/rero/ng-core/pull/315) ([zannkukai](https://github.com/zannkukai))
+
 ## [v1.0.0](https://github.com/rero/ng-core/tree/v1.0.0) (2020-12-02)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v0.15.0...v1.0.0)
@@ -17,11 +27,14 @@
 - Configure a proxy for the tester to avoid errors on first call to fake API [\#257](https://github.com/rero/ng-core/issues/257)
 - Upgrade ngx-formly to latest version [\#254](https://github.com/rero/ng-core/issues/254)
 - Use yarn instead of npm [\#1](https://github.com/rero/ng-core/issues/1)
+- "start" and "end" arguments are not use in TimeValidator.greaterThanValidator [\#320](https://github.com/rero/ng-core/issues/320)
 
 **Merged pull requests:**
 
 - toggle-switch: translate label and description [\#314](https://github.com/rero/ng-core/pull/314) ([Garfield-fr](https://github.com/Garfield-fr))
 - form: improve error message [\#313](https://github.com/rero/ng-core/pull/313) ([Garfield-fr](https://github.com/Garfield-fr))
+- validators: fix greaterThan validator [\#323](https://github.com/rero/ng-core/pull/323) ([zannkukai](https://github.com/zannkukai))
+- editor: fix save alternative problem. [\#319](https://github.com/rero/ng-core/pull/319) ([zannkukai](https://github.com/zannkukai))
 
 ## [v0.15.0](https://github.com/rero/ng-core/tree/v0.15.0) (2020-11-27)
 
@@ -39,6 +52,7 @@
 
 - translations: update catalogs [\#309](https://github.com/rero/ng-core/pull/309) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: display a label in typeahead suggestions [\#307](https://github.com/rero/ng-core/pull/307) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- search: fix missing pre filters behind the export button [\#318](https://github.com/rero/ng-core/pull/318) ([lauren-d](https://github.com/lauren-d))
 - dependency: update to angular 11 [\#308](https://github.com/rero/ng-core/pull/308) ([jma](https://github.com/jma))
 - editor: add schema example in the demo application [\#249](https://github.com/rero/ng-core/pull/249) ([jma](https://github.com/jma))
 
@@ -200,6 +214,7 @@
 - editor: fix hidden field with value from the model [\#234](https://github.com/rero/ng-core/pull/234) ([jma](https://github.com/jma))
 - template: add id html attribute for cypress usage [\#233](https://github.com/rero/ng-core/pull/233) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
+- editor: fix unstranslated label for hidden fields [\#227](https://github.com/rero/ng-core/pull/227) ([jma](https://github.com/jma))
 - records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.7.0](https://github.com/rero/ng-core/tree/v0.7.0) (2020-07-30)
