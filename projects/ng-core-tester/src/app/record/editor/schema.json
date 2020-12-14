@@ -15,7 +15,13 @@
     "object_of_object",
     "array",
     "array_of_array",
-    "array_of_object_of_object"
+    "array_of_object_of_object",
+    "hidden_with_default",
+    "readonly_changeable",
+    "simple_not_required",
+    "hide_expression_cannot_be_added",
+    "hidden_sub_property_hide_expr",
+    "array_of_objects_with_sub_objects"
   ],
   "required": [
     "required"
@@ -385,6 +391,143 @@
             "cssClass": "row"
           }
         }
+      },
+      "form": {
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "hidden_with_default": {
+      "title": "[issue] Hidden with default",
+      "description": "Hidden field with a default value must not be added to the form.",
+      "type": "string",
+      "default": "Value 1",
+      "enum": [
+        "Value 1"
+      ],
+      "form": {
+        "hide": true,
+        "navigation": {
+          "essential": true
+        },
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "readonly_changeable": {
+      "title": "[issue] Readonly value changeable",
+      "description": "Readonly values must not be changeable.",
+      "type": "string",
+      "default": "Value 1",
+      "readOnly": true,
+      "enum": [
+        "Value 1",
+        "Value 2"
+      ],
+      "form": {
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "simple_not_required": {
+      "title": "[issue] Simple element of list are not required.",
+      "description": "Simple element must not pass the validation if they are required and empty.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "Item",
+        "type": "string",
+        "pattern": "^.+$",
+        "minLength": 1
+      },
+      "form": {
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "hide_expression_cannot_be_added": {
+      "title": "[issue] Property with hide expression.",
+      "description": "Property with hide expression cannot be added.",
+      "type": "string",
+      "minLength": 1,
+      "form": {
+        "hideExpression": "true",
+        "navigation": {
+          "essential": true
+        },
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "hidden_sub_property_hide_expr": {
+      "title": "[issue] Hidden sub-property with hide expression.",
+      "description": "Hidden sub-property with hide expression can be added to the form.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "statement": {
+          "title": "Statements",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "title": "Statement",
+            "type": "string",
+            "minLength": 1
+          },
+          "form": {
+            "hideExpresssion": "true"
+          }
+        }
+      },
+      "propertiesOrder": [
+        "statement"
+      ],
+      "form": {
+        "templateOptions": {
+          "cssClass": "editor-title"
+        }
+      }
+    },
+    "array_of_objects_with_sub_objects": {
+      "title": "[issue] Array of objects containing sub-objects",
+      "description": "Array of objects containing sub-objects, which label is not displayed",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "Object",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prop1": {
+            "title": "Property 1",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "subprop1": {
+                "title": "Sub property 1",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "subprop1"
+            ]
+          },
+          "prop2": {
+            "title": "Property 2",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "prop1",
+          "prop2"
+        ]
       },
       "form": {
         "templateOptions": {
