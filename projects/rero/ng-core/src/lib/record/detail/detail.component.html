@@ -15,6 +15,10 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="main-content">
+  <a href class="d-inline-block mb-2" (click)="$event.preventDefault(); goBack()">
+    <i class="fa fa-arrow-left mr-1"></i>
+    {{ 'Back' | translate }}
+  </a>
   <ng-core-error [error]="error" *ngIf="error"></ng-core-error>
   <div class="float-right ml-4 mt-2 mb-4" *ngIf="record && adminMode.can">
     <button *ngIf="useStatus && useStatus.can && useStatus.url"
@@ -58,6 +62,4 @@
   </div>
   <ng-template ngCoreRecordDetail></ng-template>
   <ng-core-record-files [type]="type" [pid]="record.metadata.pid" *ngIf="record && filesEnabled"></ng-core-record-files>
-  <hr class="my-4">
-  <button id="detail-back-button" class="btn btn-link" (click)="goBack()">&laquo; {{ 'Back' | translate }}</button>
 </div>
