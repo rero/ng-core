@@ -730,7 +730,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       q,
       this.page,
       this.size,
-      this.aggregationsFilters,
+      this.aggregationsFilters || [],
       this._config.preFilters || {},
       this._config.listHeaders || null,
       this.sort
