@@ -17,6 +17,7 @@
 
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
@@ -99,7 +100,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     CoreModule,
     FormsModule,
     ReactiveFormsModule,
-    RecordRoutingModule,
+    RouterModule,
     TooltipModule.forRoot(),
     PopoverModule.forRoot(),
     TypeaheadModule.forRoot(),

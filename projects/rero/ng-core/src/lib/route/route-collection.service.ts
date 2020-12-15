@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-import { RouteInterface } from './route-interface';
+import { IRoute } from './route-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -25,14 +25,15 @@ export class RouteCollectionService {
   /**
    * Collection of routes
    */
-  private _collection = new Map();
+  _collection = new Map();
 
   /**
    * Add route on collection
-   * @param route - RouteInterface
+   * @param route - IRoute or IRouteRouter
+   * @param priority - number, level of priority
    * @return this - RouteCollectionService
    */
-  addRoute(route: RouteInterface): RouteCollectionService {
+  addRoute(route: IRoute): RouteCollectionService {
     const routeName = route.name;
     if (!this.hasRoute(routeName)) {
       this._collection.set(routeName, route);
@@ -67,7 +68,7 @@ export class RouteCollectionService {
    * @param name - string
    * @return mixed - RouteInterface | null
    */
-  getRoute(name: string): RouteInterface | null {
+  getRoute(name: string): IRoute | null {
     if (this.hasRoute(name)) {
       return this._collection.get(name);
     }
@@ -76,12 +77,32 @@ export class RouteCollectionService {
 
   /**
    * Get All routes
-   * @return routes separated by comma
+   * @return array of routes
    */
-  getRoutes() {
+  getRoutes(): any[] {
     const routes = [];
+    const routesPriority = {};
     for (const value of this._collection.values()) {
-      routes.push(value.getConfiguration());
+      const priority = value.priority;
+      if (!(priority in routesPriority)) {
+        routesPriority[priority] = [];
+      }
+      routesPriority[priority].push(value);
+    }
+    const keys = Object.keys(routesPriority)
+    .map((key: string) => Number(key))
+    .sort((left: number, right: number) => right - left);
+    for (const key of keys) {
+      for (const routeDef of routesPriority[key]) {
+        const routeDefConfig = routeDef.getConfiguration();
+        if (routeDefConfig instanceof Array) {
+          for (const route of routeDefConfig) {
+            routes.push(route);
+          }
+        } else {
+          routes.push(routeDefConfig);
+        }
+      }
     }
     return routes;
   }
@@ -90,7 +111,7 @@ export class RouteCollectionService {
    * Return a array of route name
    * @return array
    */
-  availableRoutesName() {
+  availableRoutesName(): string[] {
     const routesName = [];
     for (const route of this._collection.keys()) {
       routesName.push(route);
@@ -102,7 +123,12 @@ export class RouteCollectionService {
    * Count available routes
    * @return number;
    */
-  size() {
+  size(): number {
     return this._collection.size;
+  }
+
+  /** Clear */
+  clear(): void {
+    this._collection = new Map();
   }
 }

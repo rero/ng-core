@@ -1,3 +1,4 @@
+
 /*
  * RERO angular core
  * Copyright (C) 2020 RERO
@@ -14,14 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export interface IRoute {
+import { IRoute } from '@rero/ng-core';
+import { EditorComponent } from '../editor/editor.component';
 
-  /** Route name */
-  readonly name: string;
+export class RecordModuleRoutes implements IRoute {
 
-  /** Route priority */
-  readonly priority: number;
+  // Route name
+  readonly name = 'record-module-routes';
 
-  /** Get configuration of the current route */
-  getConfiguration(): any;
+  // Priority of the current route
+  readonly priority = 200;
+
+  /**
+   * Get Configuration.
+   * @return Array of configuration.
+   */
+  getConfiguration(): any[] {
+    return [
+      {
+        path: 'editor',
+        component: EditorComponent
+      }
+    ];
+  }
 }

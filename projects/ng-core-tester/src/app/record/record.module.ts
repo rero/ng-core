@@ -14,19 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RecordModule } from '@rero/ng-core';
+import { CommonModule } from '@angular/common';
 
-/**
- * Module used to wrap record module of ng-core for using it in routes lazy
- * loading.
- */
+import { RecordRoutingModule } from './record-routing.module';
+
+
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    RecordModule
+    RecordRoutingModule
   ]
 })
-export class RecordWrapperModule { }
+export class RecordModule { }
