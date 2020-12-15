@@ -637,6 +637,16 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  /**
+   * Can the `load template` should be visible.
+   * The 'load template' button will be visible only if the corresponding setting is set and the user
+   * isn't in 'edit mode' (load template is only available for new resources)
+   * @return True if the button could be visible ; False otherwise
+   */
+  canLoadTemplate() {
+    return this.editorSettings.template.loadFromTemplate && !this.pid;
+  }
+
   /********************* Private  ***************************************/
 
   /**
