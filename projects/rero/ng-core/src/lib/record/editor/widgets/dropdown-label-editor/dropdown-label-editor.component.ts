@@ -16,6 +16,7 @@
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { EditorService } from '../../services/editor.service';
 
 /**
  * Component for displaying a label with dropdown in editor.
@@ -35,6 +36,15 @@ export class DropdownLabelEditorComponent {
 
   // event when the add button is clicked
   @Output() addClicked = new EventEmitter<boolean>();
+
+  /**
+   * Constructor
+   * @param editorService - EditorService, that keep the list of hidden fields
+   */
+  constructor(
+    private _editorService: EditorService
+  ) {
+  }
 
   /**
    * Emit a new Ouput event when the add button is clicked

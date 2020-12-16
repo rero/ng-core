@@ -22,21 +22,13 @@
   <!-- dropdown button with legend -->
   <div class="btn-group" dropdown>
     <!-- add subfield button -->
-    <button
-      [id]="field.id"
-      dropdownToggle
-      type="button"
+    <button [id]="field.id" dropdownToggle type="button"
       class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
       aria-controls="dropdown-basic">
       <i class="ml-2 caret"></i>
     </button>
     <!-- dropdown list -->
-    <div
-      id="dropdown-basic"
-      *dropdownMenu
-      class="dropdown-menu"
-      role="menu"
-      aria-labelledby="button-basic">
+    <div id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
       <ng-content select="[dropdown-list]"></ng-content>
     </div>
     <!-- clone button -->

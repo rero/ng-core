@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +28,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
@@ -37,7 +36,7 @@ import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { EditorService } from './services/editor.service';
-import { isEmpty, orderedJsonSchema, removeEmptyValues } from './utils';
+import { orderedJsonSchema, removeEmptyValues } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
@@ -76,7 +75,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   rootFomlyConfig: FormlyFieldConfig;
 
   // list of fields to display in the TOC
-  tocFields = [];
+  tocFields$: Observable<any>;
 
   // JSONSchema
   @Input() schema: any;
@@ -109,25 +108,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   // Config for resource
   private _resourceConfig: any;
-
-  // Types to apply horizontal wrapper on
-  private _horizontalWrapperTypes = [
-    'enum',
-    'string',
-    'remoteTypeahead',
-    'selectWithSort',
-    'integer',
-    'textarea',
-    'datepicker'
-  ];
-
-  // Types to apply field wrapper on
-  private _fieldWrapperTypes = [
-    'boolean',
-    'datepicker',
-    'remoteTypeahead',
-    'selectWithSort'
-  ];
 
   /**
    * Constructor.
@@ -184,10 +164,25 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Component initialisation
    */
   ngOnInit() {
-    this._subscribers.push(
-      this._editorService.hiddenFields$.subscribe(() =>
-        this.getTocFields()
-      )
+    this.tocFields$ = this._editorService.hiddenFields$.pipe(
+      debounceTime(300),
+      switchMap(() => {
+        if (this.fields && this.fields.length > 0) {
+          return of(
+            this.fields[0].fieldGroup.filter(f => {
+              // hidden properties should not be in the navigation
+              if (f.hide === true) {
+                return false;
+              }
+              // properties with hide wrapper should not be in the navigation
+              if (f.wrappers && f.wrappers.some(w => w === 'hide')) {
+                return false;
+              }
+              return true;
+            }));
+        }
+        return of([]);
+      })
     );
     combineLatest([this._route.params, this._route.queryParams]).subscribe(
       ([params, queryParams]) => {
@@ -420,30 +415,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setRemoteTypeahead(field, formOptions);
           }
 
-          if (this.editorSettings.longMode === true) {
-            // show the field if the model contains a value useful for edition
-            field.hooks = {
-              ...field.hooks,
-              onPopulate: (f: any) => {
-                this.hideShowEmptyField(f);
-              }
-            };
-            // Add an horizontal wrapper
-            if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
-              field.wrappers = [
-                ...(field.wrappers ? field.wrappers : []),
-                'form-field-horizontal'
-              ];
-            }
-          } else {
-            if (this._fieldWrapperTypes.some(elem => elem === field.type)) {
-              field.wrappers = [
-                ...(field.wrappers ? field.wrappers : []),
-                'form-field'
-              ];
-            }
-          }
-
           field.templateOptions.longMode = this.editorSettings.longMode;
 
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
@@ -454,39 +425,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         }
       })
     ];
+    // mark the root field
+    fields[0].templateOptions.isRoot = true;
     this.fields = fields;
     // set root element
     if (this.fields) {
       this.rootFomlyConfig = this.fields[0];
-    }
-  }
-
-  /**
-   * Hide of show the field depending on the model value.
-   * @param field formly field config
-   */
-  private hideShowEmptyField(field: FormlyFieldConfig) {
-    let model = field.model;
-    // for simple object the model is the parent dict
-    if (
-      field.model != null && !['object', 'multischema', 'array'].some(f => f === field.type)
-    ) {
-      // New from ngx-formly v5.9.0
-      model = field.model[Array.isArray(field.key) ? field.key[0] : field.key];
-    }
-    model = removeEmptyValues(model);
-    const modelEmpty = isEmpty(model);
-    if (!modelEmpty && (field.templateOptions.hide === true)) {
-      setTimeout(() => {
-        field.hide = false;
-        this._editorService.removeHiddenField(field);
-      });
-    }
-    if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
-      setTimeout(() => {
-        field.hide = true;
-        this._editorService.addHiddenField(field);
-      });
     }
   }
 
@@ -605,15 +549,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   setFocus(event: any, field: FormlyFieldConfig) {
     event.preventDefault();
     this._editorService.setFocus(field, true);
-  }
-
-  /**
-   * Populate the field to add to the TOC
-   */
-  getTocFields() {
-    if (this.fields && this.fields.length > 0) {
-      this.tocFields = this.fields[0].fieldGroup.filter(f => f.hide !== true);
-    }
   }
 
   /**
@@ -877,13 +812,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     if (formOptions.hide === true) {
       field.templateOptions.hide = true;
     }
-    // wrappers
-    if (formOptions.wrappers && formOptions.wrappers.length > 0) {
-      field.wrappers = [
-        ...(field.wrappers ? field.wrappers : []),
-        ...formOptions.wrappers
-      ];
-    }
     // custom type
     if (formOptions.type != null) {
       field.type = formOptions.type;
@@ -912,7 +840,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     if (formOptions.hideExpression) {
       field.hideExpression = formOptions.hideExpression;
     }
-
     // non ngx formly options
     // custom help URL displayed  in the object dropdown
     if (formOptions.helpURL) {
@@ -922,7 +849,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     if (formOptions.navigation) {
       field.templateOptions.navigation = formOptions.navigation;
     }
-
     // template options
     if (formOptions.templateOptions) {
       field.templateOptions = {

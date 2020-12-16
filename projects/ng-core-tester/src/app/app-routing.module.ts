@@ -104,21 +104,17 @@ const canUpdateFilesMetadata = (): Observable<ActionStatus> => {
 // Permissions override simple canRead, canUpdate and canDelete if defined
 const permissions = (record: any) => {
   const perms = record.metadata.permissions;
-  perms.read = true;
-  perms.update = true;
-  perms.delete = false;
-
   return of({
     canRead: {
-      can: perms.read,
+      can: perms ? perms.read : true,
       message: '',
     },
     canUpdate: {
-      can: perms.update,
+      can: perms ? perms.update : false,
       message: '',
     },
     canDelete: {
-      can: perms.delete,
+      can: perms ? perms.delete : false,
       message: 'This record cannot be deleted.',
     },
   });
@@ -226,6 +222,9 @@ const routes: Routes = [
         {
           key: 'documents',
           label: 'Documents',
+          editorSettings: {
+            longMode: true
+          },
           component: DocumentComponent
         }
       ]

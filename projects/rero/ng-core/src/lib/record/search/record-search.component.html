@@ -32,7 +32,7 @@
     <h5 *ngIf="types.length == 1 && showLabel">
       {{ types[0].label | translate }}
     </h5>
-    <div class="row align-items-center my-3">
+    <div class="row align-items-start my-3">
       <div class="col-sm-3 mb-3 mb-sm-0" *ngIf="showSearchInput">
         <ng-core-search-input
           [placeholder]="'search' | translate | ucfirst"

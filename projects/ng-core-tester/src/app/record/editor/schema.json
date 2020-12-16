@@ -14,12 +14,14 @@
     "object",
     "object_of_object",
     "array",
+    "array_min_items",
+    "array_of_objects",
     "array_of_array",
     "array_of_object_of_object",
     "hidden_with_default",
     "readonly_changeable",
-    "simple_not_required",
-    "hide_expression_cannot_be_added",
+    "hide_with_required_expression_control",
+    "hide_with_required_expression",
     "hidden_sub_property_hide_expr",
     "array_of_objects_with_sub_objects"
   ],
@@ -46,20 +48,22 @@
             "name": {
               "title": "Name",
               "type": "string",
+              "minLength": 3,
               "form": {
                 "templateOptions": {
-                  "cssClass": "col-lg-6"
+                  "itemCssClass": "col-lg-6"
                 }
               }
             },
             "hidden": {
               "title": "Hidden name",
               "type": "string",
+              "minLength": 3,
               "form": {
+                "templateOptions": {
+                  "itemCssClass": "col-lg-6"
+                },
                 "hide": true
-              },
-              "templateOptions": {
-                "cssClass": "col-lg-6"
               }
             },
             "type": {
@@ -70,45 +74,65 @@
               "readOnly": true,
               "form": {
                 "templateOptions": {
-                  "cssClass": "col-lg-6"
+                  "wrappers": [
+                    "hide"
+                  ]
                 }
               }
             }
           },
           "form": {
             "templateOptions": {
-              "cssClass": "row"
+              "containerCssClass": "row"
             }
           }
         },
         {
           "title": "Property 2",
-          "required": [
-            "name"
-          ],
           "properties": {
             "name": {
               "title": "Name",
-              "type": "string"
+              "type": "string",
+              "minLength": 3,
+              "form": {
+                "templateOptions": {
+                  "itemCssClass": "col-lg-6"
+                }
+              }
             },
             "type": {
               "title": "Type",
               "type": "string",
               "const": "type2",
               "default": "type2",
-              "readOnly": true
+              "readOnly": true,
+              "form": {
+                "templateOptions": {
+                  "itemCssClass": "col-lg-6"
+                }
+              }
             },
             "bool": {
               "title": "boolean",
               "type": "boolean",
-              "default": true
+              "default": true,
+              "form": {
+                "templateOptions": {
+                  "itemCssClass": "col-lg-6"
+                }
+              }
+            }
+          },
+          "form": {
+            "templateOptions": {
+              "containerCssClass": "row"
             }
           }
         }
       ],
       "form": {
         "templateOptions": {
-          "cssClass": "editor-title"
+          "cssClass": "border border-info rounded p-2"
         }
       }
     },
@@ -117,7 +141,7 @@
       "description": "Not present in the form, not present in the model.",
       "type": "string",
       "default": "default",
-      "minLength": 1
+      "minLength": 3
     },
     "hidden": {
       "title": "Hidden",
@@ -132,15 +156,19 @@
       "description": "Hidden field with a default value.",
       "type": "string",
       "default": "default value",
-      "minLength": 1,
+      "minLength": 3,
       "form": {
-        "hide": true
+        "templateOptions": {
+          "wrappers": [
+            "hide"
+          ]
+        }
       }
     },
     "essential": {
       "title": "Essential",
       "type": "string",
-      "minLength": 1,
+      "minLength": 3,
       "form": {
         "hide": true,
         "navigation": {
@@ -151,21 +179,22 @@
     "optional": {
       "title": "Optional",
       "type": "string",
-      "minLength": 1
+      "minLength": 3,
+      "form": {
+        "templateOptions": {
+          "cssClass": "w-md-50"
+        }
+      }
     },
     "required": {
       "title": "Required",
       "type": "string",
-      "minLength": 3,
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title editor-max-width"
-        }
-      }
+      "minLength": 3
     },
     "enum": {
       "title": "List of values",
       "type": "string",
+      "minLength": 3,
       "default": "val1",
       "enum": [
         "val1",
@@ -173,21 +202,18 @@
         "val3"
       ],
       "form": {
-        "templateOptions": {
-          "cssClass": "editor-title editor-max-width"
-        },
         "options": [
           {
-            "value": "Value 1",
-            "label": "val1"
+            "value": "val1",
+            "label": "Value 1"
           },
           {
-            "value": "Value 2",
-            "label": "val2"
+            "value": "val2",
+            "label": "Value 2"
           },
           {
-            "value": "Value 3",
-            "label": "val3"
+            "value": "val3",
+            "label": "Value 3"
           }
         ]
       }
@@ -206,16 +232,29 @@
       "properties": {
         "prop1": {
           "title": "Property 1",
-          "type": "string"
+          "type": "string",
+          "minLength": 3,
+          "form": {
+            "templateOptions": {
+              "itemCssClass": "col-md-6"
+            }
+          }
         },
         "prop2": {
           "title": "Property 2",
-          "type": "string"
+          "type": "string",
+          "minLength": 3,
+          "form": {
+            "templateOptions": {
+              "itemCssClass": "col-md-6"
+            }
+          }
         }
       },
       "form": {
         "templateOptions": {
-          "cssClass": "editor-title"
+          "containerCssClass": "row",
+          "hideLabel": true
         }
       }
     },
@@ -242,27 +281,64 @@
           "properties": {
             "prop1": {
               "title": "Property 1",
-              "type": "string"
+              "type": "string",
+              "minLength": 3
             },
             "prop2": {
               "title": "Property 2",
-              "type": "string"
+              "type": "string",
+              "minLength": 3
             }
           }
         },
         "prop3": {
           "title": "Property 3",
-          "type": "string"
-        }
-      },
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
+          "type": "string",
+          "minLength": 3
         }
       }
     },
     "array": {
       "title": "Array",
+      "type": "array",
+      "items": {
+        "title": "Values",
+        "type": "string",
+        "minLength": 3,
+        "form": {
+          "templateOptions": {
+            "itemCssClass": "col-lg-6"
+          }
+        }
+      },
+      "form": {
+        "templateOptions": {
+          "containerCssClass": "row"
+        }
+      }
+    },
+    "array_min_items": {
+      "title": "Array with a minimum of 2 items",
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "title": "Values",
+        "type": "string",
+        "minLength": 3,
+        "form": {
+          "templateOptions": {
+            "itemCssClass": "col-lg-6"
+          }
+        }
+      },
+      "form": {
+        "templateOptions": {
+          "containerCssClass": "row"
+        }
+      }
+    },
+    "array_of_objects": {
+      "title": "Array of Objects",
       "type": "array",
       "minItems": 1,
       "items": {
@@ -280,32 +356,29 @@
           "prop1": {
             "title": "Property 1",
             "type": "string",
+            "minLength": 3,
             "form": {
               "templateOptions": {
-                "cssClass": "col"
+                "itemCssClass": "col-6"
               }
             }
           },
           "prop2": {
             "title": "Property 2",
             "type": "string",
+            "minLength": 3,
             "form": {
               "hide": true,
               "templateOptions": {
-                "cssClass": "col-lg-6"
+                "itemCssClass": "col-6"
               }
             }
           }
         },
         "form": {
           "templateOptions": {
-            "cssClass": "row"
+            "containerCssClass": "row"
           }
-        }
-      },
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
         }
       }
     },
@@ -329,18 +402,10 @@
         "items": {
           "title": "Values",
           "type": "string",
-          "minLength": 1
-        },
-        "form": {
-          "templateOptions": {
-            "cssClass": "row"
-          }
+          "minLength": 3
         }
       },
       "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
-        },
         "navigation": {
           "essential": true
         }
@@ -373,28 +438,21 @@
             "properties": {
               "prop1": {
                 "title": "Property 1",
-                "type": "string"
+                "type": "string",
+                "minLength": 3
               },
               "prop2": {
                 "title": "Property 2",
-                "type": "string"
+                "type": "string",
+                "minLength": 3
               }
             }
           },
           "prop3": {
             "title": "Property 3",
-            "type": "string"
+            "type": "string",
+            "minLength": 3
           }
-        },
-        "form": {
-          "templateOptions": {
-            "cssClass": "row"
-          }
-        }
-      },
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
         }
       }
     },
@@ -402,17 +460,11 @@
       "title": "[issue] Hidden with default",
       "description": "Hidden field with a default value must not be added to the form.",
       "type": "string",
-      "default": "Value 1",
-      "enum": [
-        "Value 1"
-      ],
+      "default": "Default hidden",
       "form": {
         "hide": true,
         "navigation": {
           "essential": true
-        },
-        "templateOptions": {
-          "cssClass": "editor-title"
         }
       }
     },
@@ -425,50 +477,43 @@
       "enum": [
         "Value 1",
         "Value 2"
+      ]
+    },
+    "hide_with_required_expression_control": {
+      "title": "Hidden Property with required expression control",
+      "type": "string",
+      "minLength": 3,
+      "default": "optional",
+      "enum": [
+        "optional",
+        "required"
       ],
       "form": {
         "templateOptions": {
-          "cssClass": "editor-title"
+          "cssClass": "w-md-25"
         }
       }
     },
-    "simple_not_required": {
-      "title": "[issue] Simple element of list are not required.",
-      "description": "Simple element must not pass the validation if they are required and empty.",
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "title": "Item",
-        "type": "string",
-        "pattern": "^.+$",
-        "minLength": 1
-      },
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
-        }
-      }
-    },
-    "hide_expression_cannot_be_added": {
-      "title": "[issue] Property with hide expression.",
-      "description": "Property with hide expression cannot be added.",
+    "hide_with_required_expression": {
+      "title": "Hidden Property with required expression.",
+      "description": "Hidden Property should be shown when it becomes required.",
       "type": "string",
-      "minLength": 1,
+      "minLength": 3,
       "form": {
-        "hideExpression": "true",
-        "navigation": {
-          "essential": true
-        },
-        "templateOptions": {
-          "cssClass": "editor-title"
+        "hide": true,
+        "expressionProperties": {
+          "templateOptions.required": "field.parent.model.hide_with_required_expression_control === 'required'"
         }
       }
     },
     "hidden_sub_property_hide_expr": {
-      "title": "[issue] Hidden sub-property with hide expression.",
+      "title": "Hidden sub-property with hide expression.",
       "description": "Hidden sub-property with hide expression can be added to the form.",
       "type": "object",
       "additionalProperties": false,
+      "required": [
+        "statement"
+      ],
       "properties": {
         "statement": {
           "title": "Statements",
@@ -477,24 +522,28 @@
           "items": {
             "title": "Statement",
             "type": "string",
-            "minLength": 1
-          },
+            "minLength": 3
+          }
+        },
+        "prop": {
+          "title": "Hidden Property",
+          "type": "string",
+          "minLength": 3,
           "form": {
-            "hideExpresssion": "true"
+            "hide": true,
+            "expressionProperties": {
+              "templateOptions.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
+            }
           }
         }
       },
       "propertiesOrder": [
-        "statement"
-      ],
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
-        }
-      }
+        "statement",
+        "prop"
+      ]
     },
     "array_of_objects_with_sub_objects": {
-      "title": "[issue] Array of objects containing sub-objects",
+      "title": "Array of objects containing sub-objects",
       "description": "Array of objects containing sub-objects, which label is not displayed",
       "type": "array",
       "minItems": 1,
@@ -511,7 +560,7 @@
               "subprop1": {
                 "title": "Sub property 1",
                 "type": "string",
-                "minLength": 1
+                "minLength": 3
               }
             },
             "required": [
@@ -521,18 +570,13 @@
           "prop2": {
             "title": "Property 2",
             "type": "string",
-            "minLength": 1
+            "minLength": 3
           }
         },
         "required": [
           "prop1",
           "prop2"
         ]
-      },
-      "form": {
-        "templateOptions": {
-          "cssClass": "editor-title"
-        }
       }
     }
   }

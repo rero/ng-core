@@ -34,10 +34,9 @@ import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
-import { AddFieldEditorComponent } from './editor/add-field-editor/add-field-editor.component';
-import { DropdownLabelEditorComponent } from './editor/dropdown-label-editor/dropdown-label-editor.component';
 import { EditorComponent } from './editor/editor.component';
-import { fieldIdGenerator, hooksFormlyExtension, registerTranslateExtension } from './editor/extensions';
+import { registerNgCoreFormlyExtension } from './editor/extensions';
+import { EditorService } from './editor/services/editor.service';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
@@ -45,8 +44,12 @@ import { ObjectTypeComponent } from './editor/type/object-type/object-type.compo
 import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
 import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
+import { AddFieldEditorComponent } from './editor/widgets/add-field-editor/add-field-editor.component';
+import { DropdownLabelEditorComponent } from './editor/widgets/dropdown-label-editor/dropdown-label-editor.component';
+import { LabelComponent } from './editor/widgets/label/label.component';
 import { LoadTemplateFormComponent } from './editor/widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/save-template-form.component';
+import { CardWrapperComponent } from './editor/wrappers/card-wrapper/card-wrapper.component';
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
@@ -91,7 +94,9 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     RemoteTypeaheadComponent,
     RecordFilesComponent,
     LoadTemplateFormComponent,
-    SaveTemplateFormComponent
+    SaveTemplateFormComponent,
+    CardWrapperComponent,
+    LabelComponent
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -112,10 +117,6 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         resetFieldOnHide: true,
         lazyRender: true
       },
-      extensions: [
-        { name: 'hooks', extension: hooksFormlyExtension },
-        { name: 'field-id-generator', extension: fieldIdGenerator }
-      ],
       types: [
         { name: 'string', extends: 'input' },
         {
@@ -148,7 +149,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
         { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
-        { name: 'hide', component: HideWrapperComponent }
+        { name: 'hide', component: HideWrapperComponent },
+        { name: 'card', component: CardWrapperComponent }
       ]
     }),
     FormlyBootstrapModule,
@@ -173,7 +175,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     SaveTemplateFormComponent
   ],
   providers: [
-    { provide: FORMLY_CONFIG, multi: true, useFactory: registerTranslateExtension, deps: [TranslateService] },
+    { provide: FORMLY_CONFIG, multi: true, useFactory: registerNgCoreFormlyExtension, deps: [TranslateService, EditorService] }
   ]
 })
 export class RecordModule { }

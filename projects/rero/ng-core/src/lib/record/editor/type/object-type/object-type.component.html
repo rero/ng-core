@@ -14,74 +14,21 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-<!--  validation error message -->
-<div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-  <formly-validation-message [field]="field"></formly-validation-message>
+<div class="header">
+  <ng-core-label-editor *ngIf="field.templateOptions.hideLabel !== true" [field]="field"></ng-core-label-editor>
 </div>
-
 <!-- each object properties -->
-<div class="{{ getCssClass() }}">
-  <ng-container *ngFor="let f of field.fieldGroup">
-    <div class="{{ getCssClass(f) }}" *ngIf="!f.hide" [id]="'field-' + f.id">
-      <!-- if the field is repeatable the title is rendered by the corresponding array -->
-      <ng-container *ngIf="((!isParrentArray() && f.type === 'object') || f.type === 'array')">
-        <!-- section header -->
-        <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f }">
-        </ng-container>
-      </ng-container>
-      <!-- field -->
-      <div class="d-flex content mb-1">
-        <div class="flex-grow-1">
-          <formly-field [field]="f"></formly-field>
-        </div>
-        <ng-container *ngIf="f.type !== 'array'">
-          <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
-        </ng-container>
-      </div>
-    </div>
-  </ng-container>
-</div>
-
-<!-- TEMPLATES -->
-<!-- dropdown menu -->
-<ng-template #menu let-f="f">
-  <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
-    <ng-container *ngIf="f.type === 'object'">
-      <ng-container *ngFor="
-          let fChildren of hiddenFieldGroup(f.fieldGroup);
-          let first = first;
-          let last = last
-        ">
-        <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
-        <button class="dropdown-item" (click)="show(fChildren)" type="button">
-          {{ translateLabel(fChildren) | async }}
-        </button>
-        <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
-      </ng-container>
-    </ng-container>
-
-    <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
-      Help
-    </a>
-  </ng-core-editor-dropdown-label-editor>
-</ng-template>
-
-<!-- section title -->
-<ng-template #title let-f="f">
-  <div class="header">
-    <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id"
-      [tooltip]="f.templateOptions.description">
-      {{ f.templateOptions.label }}
-      <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
-      <ng-container *ngTemplateOutlet="hideButton; context: { f: f }"></ng-container>
-    </label>
+<div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true, 'content': true}">
+  <!--  validation error message -->
+  <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
+    <formly-validation-message [field]="field"></formly-validation-message>
   </div>
-</ng-template>
-
-<!-- trash button -->
-<ng-template #hideButton let-f="f">
-  <button type="button" (click)="hide(f)" *ngIf="canHide(f)" class="btn btn-link text-secondary btn-sm">
-    <i class="fa fa-trash"></i>
-  </button>
-</ng-template>
+  <div class="{{ to.containerCssClass }}">
+    <ng-container *ngFor="let f of field.fieldGroup">
+      <div class="{{ f.templateOptions.itemCssClass }} mb-1" *ngIf="!f.hide" [id]="'field-' + f.id">
+        <!-- field -->
+        <formly-field [field]="f"></formly-field>
+      </div>
+    </ng-container>
+  </div>
+</div>

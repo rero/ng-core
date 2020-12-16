@@ -20,8 +20,8 @@ import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/t
 import { ActivatedRoute, convertToParamMap, ParamMap, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ActionStatus } from '@rero/ng-core/public-api';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { ActionStatus } from '../action-status';
 import { RecordModule } from '../record.module';
 import { RecordService } from '../record.service';
 import { DetailComponent } from './detail.component';

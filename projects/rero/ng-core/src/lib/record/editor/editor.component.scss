@@ -17,6 +17,20 @@
 @import "node_modules/bootstrap/scss/functions";
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/variables";
+
+// add w-xx-100, w-xx-50 for bootstrap
+// TODO: add to global
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    @each $prop, $abbrev in (width: w, height: h) {
+      @each $size, $length in $sizes {
+        .#{$abbrev}#{$infix}-#{$size} { #{$prop}: $length !important; }
+      }
+    }
+  }
+}
+
 .editor {
 
   > .header {
@@ -176,57 +190,9 @@
     color: rgba(0, 0, 0, 0.85);
     background-color: transparent;
   }
-  .content,
-  .header {
-    margin-left: map-get($spacers, 3);
-  }
-
-  .editor-title {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
-    height: $card-height;
-    word-wrap: break-word;
-    background-color: $card-bg;
-    background-clip: border-box;
-    border: $card-border-width solid $card-border-color;
-    margin-bottom: map-get($spacers, 2);
-    @include border-radius($card-border-radius);
-    > .header {
-      padding: map-get($spacers, 1) map-get($spacers, 3);
-      margin-bottom: 0 !important; // Removes the default margin-bottom of <hN>
-      margin-left: 0 !important; // Removes the default margin-bottom of <hN>
-      color: $card-cap-color;
-      background-color: $card-cap-bg;
-      border-bottom: $card-border-width solid $card-border-color;
-
-      &:first-child {
-        @include border-radius(
-          $card-inner-border-radius $card-inner-border-radius 0 0
-        );
-      }
-    }
-    > .header > label {
-      margin-bottom: 0;
-    }
-    > .content {
-      margin-bottom: 0 !important;
-      margin-left: 0 !important;
-      padding: map-get($spacers, 2) map-get($spacers, 3);
-    }
-    .header:hover ~ .content {
-      @include border-radius($card-border-radius);
-    }
-  }
 
   .header:hover ~ .content {
-    background-color: $gray-100;
+    background-color: $gray-200;
   }
 
-  .editor-max-width > div {
-    @include media-breakpoint-up(lg) {
-      max-width: 500px;
-    }
-  }
 }

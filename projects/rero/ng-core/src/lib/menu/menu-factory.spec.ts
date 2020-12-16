@@ -44,7 +44,6 @@ describe('MenuFactory', () => {
   });
 
   it('should add an extension', () => {
-    console.log(menuFactory.getExtensions());
     expect(Object.keys(menuFactory.getExtensions()).length).toEqual(1);
     menuFactory.addExtension(new ExtensionMock(), 1);
     expect(Object.keys(menuFactory.getExtensions()).length).toEqual(2);

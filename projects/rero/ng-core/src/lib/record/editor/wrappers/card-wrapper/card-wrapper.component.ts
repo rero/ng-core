@@ -14,19 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 import { Component, OnInit } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { FieldWrapper } from '@ngx-formly/core';
 
 @Component({
-  selector: 'ng-core-editor-formly-multi-schema-type',
+  selector: 'ng-core-card-wrapper',
   template: `
-    <div class="{{field.parent.templateOptions.cssClass}}">
-      <legend *ngIf="to.label" [tooltip]="to.description">{{ to.label }}</legend>
-      <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
-      <formly-field *ngFor="let f of field.fieldGroup" [field]="f"></formly-field>
+  <div class="card wrapper">
+    <div class="card-header">
+      <ng-core-label-editor [field]="field"></ng-core-label-editor>
     </div>
+    <div class="card-body">
+      <ng-template #fieldComponent></ng-template>
+    </div>
+  </div>
   `,
+  styles: [
+    `
+      .card-header {
+        padding: .25rem 1rem;
+      }
+      .card-body {
+        padding: .25rem 1rem;
+      }
+    `
+  ]
 })
-export class MultiSchemaTypeComponent extends FieldType {}
+export class CardWrapperComponent extends FieldWrapper implements OnInit{
+
+  ngOnInit() {
+    // remove the field label as it is displayed by this wrapper
+    this.field.templateOptions.hideLabel = true;
+  }
+
+}

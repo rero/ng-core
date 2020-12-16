@@ -26,26 +26,15 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: 'array-type.component.html'
 })
 export class ArrayTypeComponent extends FieldArrayType implements OnInit {
-  /** True if children are of type object */
-  isChildrenObject = false;
-
-  /** True if the children are of type array */
-  isChildrenArray = false;
-
-  /** Constructor
-   *
-   * @param _translateService - TranslateService, that translate the labels of the hidden fields
-   */
-  constructor(private _translateService: TranslateService) {
-    super();
-  }
 
   /**
    * Component initialization
    */
   ngOnInit() {
-    this.isChildrenObject = this.field.fieldArray.type === 'object';
-    this.isChildrenArray = this.field.fieldArray.type === 'array';
+    this.field.templateOptions.remove = this.remove.bind(this);
+    this.field.templateOptions.add = this.add.bind(this);
+    this.field.templateOptions.canAdd = this.canAdd.bind(this);
+    this.field.templateOptions.canRemove = this.canRemove.bind(this);
   }
 
   /**
@@ -77,7 +66,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * @param i - number, the position to remove the element
    */
   remove(i: number) {
-
     super.remove(i);
   }
 
@@ -86,7 +74,6 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * @param i - number, the position to add the element
    */
   add(i: number, initialModel?: any) {
-    // TODO: focus in the first input child
     super.add(i, initialModel);
     this.setFocusInChildren(this.field.fieldGroup[i]);
   }
@@ -112,45 +99,4 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
     return false;
   }
 
-  /**
-   * Hide the array and remove all the elements
-   */
-  hide() {
-    this.field.hide = true;
-  }
-
-  /**
-   * Is the dropdown menu displayed?
-   * @param field - FormlyFieldConfig, the correspondig form field config
-   * @returns boolean, true if the menu should be displayed
-   */
-  hasMenu(field: FormlyFieldConfig) {
-    // TODO: add support for anyOf
-    const f = field;
-    // if (field.type === 'multischema') {
-    //   f = f.fieldGroup[1];
-    // }
-    return (
-      (f.type === 'object' && this.hiddenFieldGroup(f.fieldGroup).length > 0) ||
-      f.templateOptions.helpURL
-    );
-  }
-
-  /**
-   * Translate the label of a given formly field.
-   *
-   * @param field ngx-formly field
-   */
-  translateLabel(field: FormlyFieldConfig) {
-    return this._translateService.stream(field.templateOptions.untranslatedLabel);
-  }
-
-  /**
-   * Filter the fieldGroup to return the list of hidden field.
-   * @param fieldGroup - FormlyFieldConfig[], the fieldGroup to filter
-   * @returns FormlyFieldConfig[], the filtered list
-   */
-  hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fieldGroup.filter(f => f.hide && f.hideExpression == null);
-  }
 }
