@@ -196,7 +196,7 @@ export function registerTranslateExtension(translate: TranslateService) {
       {
         name: 'formError',
         // use a marker to force translation extraction due to a bad detection of ngx-translate-extract
-        message: () => translate.stream(_('The form contains errors'))
+        message: () => translate.stream(_('The form contains errors.'))
       },
       {
         name: 'required',
