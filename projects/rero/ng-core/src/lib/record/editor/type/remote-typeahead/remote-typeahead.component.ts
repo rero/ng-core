@@ -133,5 +133,6 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
 export interface SuggestionMetadata {
   label: string;
   value: string;
+  externalLink?: string;
   group?: string;
 }

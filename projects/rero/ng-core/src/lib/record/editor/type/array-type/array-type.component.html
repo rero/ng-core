@@ -15,109 +15,24 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- array title only if the array is empty -->
-<label *ngIf="to.label && to.hideLabel !== true && formControl && formControl.length === 0" [attr.for]="id" [tooltip]="to.description">
-  <!-- add button only if the max is not reached -->
-  <span [tooltip]="to.description">{{ to.label }}</span>
-  <a *ngIf="canAdd()" (click)="add(0)" class="btn btn-link btn-sm">
-    <i class="fa fa-plus"></i>
-  </a>
-  <span *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
-</label>
 
-<!--  validation error message -->
-<div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-  <formly-validation-message [field]="field"></formly-validation-message>
-</div>
+<ng-core-label-editor *ngIf="to.label && field.templateOptions.hideLabel !== true" [field]="field">
+</ng-core-label-editor>
 
-<!-- for each item -->
-<ng-container *ngFor="let f of field.fieldGroup; let i = index">
-  <!-- all kind of item -->
-    <!-- item itself -->
-    <div class="d-flex mb-1" [ngClass]="{ 'border-left': isChildrenObject }">
-      <div class="flex-grow-1">
-        <!-- put title with menu section for item object -->
-        <div *ngIf="isChildrenObject" class="header">
-          <ng-container *ngTemplateOutlet="hasMenu(f) ? menu : title; context: { f: f, i: i }">
-          </ng-container>
-          <!--  object validation error message -->
-          <div class="alert alert-danger" role="alert" *ngIf="f.options.showError && f.formControl.errors">
-            <formly-validation-message [field]="f"></formly-validation-message>
-          </div>
-        </div>
-      <!-- add label for array of arrays -->
-      <div *ngIf="isChildrenArray" class="header">
-        <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
-          {{ f.templateOptions.label }}
-          <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
-        </label>
-        <button type="button" *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-clone"></i>
-        </button>
-        <button type="button" (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-trash"></i>
-        </button>
-      </div>
-      <div class="content">
-        <formly-field [field]="f"></formly-field>
-      </div>
-    </div>
-    <div *ngIf="!isChildrenObject && !isChildrenArray">
-      <button type="button" *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link text-secondary btn-sm ml-1 h-100">
-        <i class="fa fa-clone"></i>
-      </button>
-      <button type="button" (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm ml-1 h-100">
-        <i class="fa fa-trash"></i>
-      </button>
-    </div>
+<div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true}">
+  <!--  validation error message -->
+  <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
+    <formly-validation-message [field]="field"></formly-validation-message>
   </div>
-</ng-container>
 
-<!-- TEMPLATES -->
-<!-- dropdown menu -->
-<ng-template #menu let-f="f" let-i="i">
-  <ng-core-editor-dropdown-label-editor [field]="f">
-    <ng-container dropdown-list>
-      <ng-container *ngIf="f.type === 'object'">
-        <ng-container *ngFor="
-            let fChildren of hiddenFieldGroup(f.fieldGroup);
-            let first = first;
-            let last = last
-          ">
-          <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
-          <button class="dropdown-item" (click)="fChildren.hide = false" type="button">
-            {{ translateLabel(fChildren) | async }}
-          </button>
-          <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
-        </ng-container>
-      </ng-container>
-      <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
-        Help
-      </a>
-    </ng-container>
-    <ng-container buttons>
-      <button *ngIf="canAdd()" (click)="add(i + 1)" type="button" class="btn btn-link text-secondary btn-sm ml-2">
-        <i class="fa fa-clone"></i>
-      </button>
-      <button type="button" (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm">
-        <i class="fa fa-trash"></i>
-      </button>
-    </ng-container>
-  </ng-core-editor-dropdown-label-editor>
-</ng-template>
-
-<!-- section title -->
-<ng-template #title let-f="f" let-i="i">
-  <label *ngIf="f.templateOptions.label && f.templateOptions.hideLabel !== true"
-  [attr.for]="f.id"
-  [tooltip]="f.templateOptions.description">
-    {{ f.templateOptions.label }}
-    <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
-    <!-- add and remove buttons -->
-    <a *ngIf="canAdd()" (click)="add(i + 1)" class="btn btn-link text-secondary btn-sm">
-      <i class="fa fa-clone"></i>
-    </a>
-    <a (click)="remove(i)" *ngIf="canRemove()" class="btn btn-link text-secondary btn-sm">
-      <i class="fa fa-trash"></i>
-    </a>
-  </label>
-</ng-template>
+  <!-- for each item -->
+  <div class="{{ to.containerCssClass }} ">
+  <ng-container *ngFor="let f of field.fieldGroup">
+    <div class="{{ f.templateOptions.itemCssClass }} mb-1" *ngIf="!f.hide" [id]="'field-' + f.id">
+      <div class="border-left pl-1">
+      <formly-field [field]="f"></formly-field>
+    </div>
+    </div>
+  </ng-container>
+  </div>
+</div>

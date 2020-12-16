@@ -82,7 +82,7 @@
         <!-- add fields section -->
         <div *ngIf="editorSettings.longMode" class="col-md-3 col-xl-2 bd-sidebar">
             <ng-core-editor-add-field-editor
-                    class="bd-search d-flex align-items-center"
+                    class="bd-search d-flex "
             >
             </ng-core-editor-add-field-editor>
         </div>
@@ -95,7 +95,7 @@
         >
             <label for="addField" translate>Jump to</label>
             <ul class="section-nav">
-                <li *ngFor="let f of tocFields" class="toc-entry toc-h2">
+                <li *ngFor="let f of tocFields$ | async" class="toc-entry toc-h2 mb-1">
                     <a href (click)="setFocus($event, f)">{{ f.templateOptions.label }}</a>
                 </li>
             </ul>

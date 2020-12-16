@@ -21,8 +21,8 @@
     <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
       [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
       (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
-      [typeaheadLatinize]="true" [typeaheadGroupField]="groupField"
-      typeaheadOptionField="label" [class.is-invalid]="showError" />
+      [typeaheadLatinize]="true" [typeaheadGroupField]="groupField" typeaheadOptionField="label"
+      [class.is-invalid]="showError" [optionsListTemplate]="customListTemplate" />
     <div class="input-group-append">
       <span class="input-group-text" id="{{ field.id }}-search">
         <i *ngIf="!typeaheadLoading" class="fa fa-search"></i>
@@ -33,11 +33,28 @@
 
   <!-- text representation of the value in ref -->
   <ng-template #metadataTemplate>
-    <div *ngIf="valueAsHTML$ | async as valueAsHTML">
-      <div class="d-inline" [innerHTML]="valueAsHTML"></div>
+    <div class="py-1" *ngIf="valueAsHTML$ | async as valueAsHTML">
+      <span [innerHTML]="valueAsHTML"></span>
       <button class="btn btn-link text-secondary btn-sm" type="button" (click)="clear()">
         <i class="fa fa-trash"></i>
       </button>
     </div>
   </ng-template>
 </ng-container>
+
+<ng-template #customListTemplate let-matches="matches" let-query="query" let-typeaheadTemplateMethods>
+  <ul class="list-group">
+    <ng-container *ngFor="let match of matches">
+      <li [ngClass]="{'disabled font-weight-bold': match.header}" class="list-group-item list-group-item-action"
+        [class.active]="typeaheadTemplateMethods.isActive(match)">
+        <span (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
+          (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
+          {{match.value}}
+        </span>
+        <a *ngIf="match.item.externalLink && typeaheadTemplateMethods.isActive(match)" target="_blank" href="{{match.item.externalLink}}">
+          <i class="float-right fa fa-external-link text-light"></i>
+        </a>
+      </li>
+    </ng-container>
+  </ul>
+</ng-template>

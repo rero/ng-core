@@ -32,10 +32,13 @@ export class EditorComponent {
     }
   };
 
+  // TODO:
+  // hide as expression
+
   // JSONSchema
   schema = {};
 
-  // form intial values
+  // form initial values
   model = {};
 
   /** Constructor */

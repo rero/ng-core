@@ -83,7 +83,10 @@ export class EditorService {
    * @param field - FormlyFieldConfig, form config to be added
    */
   addHiddenField(field: FormlyFieldConfig) {
-    if (!this._hiddenFields.some(f => f.id === field.id) && this.isFieldRoot(field)) {
+    if (this.isRoot(field.parent)) {
+      // formly can change the reference of a field. Especially when the model
+      // change such as external import.
+      this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
       this._hiddenFields.push(field);
       this._hiddenFieldsSubject.next(this._hiddenFields);
     }
@@ -94,9 +97,48 @@ export class EditorService {
    * @param field - FormlyFieldConfig, form config to be removed
    */
   removeHiddenField(field: FormlyFieldConfig) {
-    if (this._hiddenFields.some(f => f === field) && this.isFieldRoot(field)) {
+    if (this._hiddenFields.some(f => f.id === field.id) && this.isRoot(field.parent)) {
       this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
       this._hiddenFieldsSubject.next(this._hiddenFields);
+    }
+  }
+
+  /**
+   * Can the field be hidden?
+   * @param field - FormlyFieldConfig, the field to hide
+   * @returns boolean, true if the field can be hidden
+   */
+  canHide(field: FormlyFieldConfig) {
+    if (!field.templateOptions.longMode) {
+      return false;
+    }
+    return (
+      !field.templateOptions.required &&
+      !field.hide &&
+      field.hideExpression == null
+    );
+  }
+
+  /**
+   * Am I at the root of the form?
+   * @param field - FormlyFieldConfig, the field to hide
+   * @returns boolean, true if I'm the root
+   */
+  isRoot(field: FormlyFieldConfig) {
+    if (!field) {
+      return false;
+    }
+    return field.templateOptions && field.templateOptions.isRoot && field.templateOptions.isRoot === true;
+  }
+
+  /**
+   * Hide the given formly field.
+   * @param field - FormlyFieldConfig, the field to hide
+   */
+  hide(field: FormlyFieldConfig) {
+    field.hide = true;
+    if (this.isRoot(field.parent)) {
+      this.addHiddenField(field);
     }
   }
 }
