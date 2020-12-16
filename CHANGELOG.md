@@ -1,8 +1,8 @@
 # Changelog
 
-## [v1.1.1](https://github.com/rero/ng-core/tree/v1.1.1) (2020-12-16)
+## [v1.1.2](https://github.com/rero/ng-core/tree/v1.1.2) (2020-12-16)
 
-[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.0...v1.1.1)
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.0...v1.1.2)
 
 **Closed issues:**
 
@@ -12,6 +12,7 @@
 
 **Merged pull requests:**
 
+- translations: update catalogs [\#334](https://github.com/rero/ng-core/pull/334) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add issues in tester [\#324](https://github.com/rero/ng-core/pull/324) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
