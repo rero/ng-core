@@ -26,7 +26,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { ErrorComponent } from './error/error.component';
-import { MenuWidgetPrefixSuffixComponent } from './menu/menu-widget/menu-widget-prefix-suffix/menu-widget-prefix-suffix.component';
 import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
@@ -62,7 +61,6 @@ import { NgVarDirective } from './directives/ng-var.directive';
     FilesizePipe,
     MenuWidgetComponent,
     SortListComponent,
-    MenuWidgetPrefixSuffixComponent,
     NgVarDirective
   ],
   imports: [

@@ -99,9 +99,8 @@ export class AppComponent implements OnInit {
         menu.setActive(false);
       }
     });
-    item
-    .setLabelAttribute('class', 'font-weight-bold')
-    .setActive(true);
+    item.setLabelAttribute('class', 'font-weight-bold')
+        .setActive(true);
     this._translateService.use(item.getName());
     this._bsLocaleService.use(item.getName());
   }
