@@ -37,7 +37,7 @@ export class MenuService {
       {
         attributes: { id: 'home' },
         labelAttributes: { hideLabel: true },
-        extras: { iconClass: 'fa fa-home'}, routerlink: ['/']
+        extras: { iconClass: 'fa fa-home'}, routerlink: ['/'],
       }
     );
     /**
@@ -47,6 +47,9 @@ export class MenuService {
      *  .setExtra('iconClass', 'fa fa-home')
      *  .setRouterLink(['/']);
      */
+    menu.addChild('No link')
+        .disable();
+
 
     this._recordsMenu(menu);
 
@@ -56,7 +59,8 @@ export class MenuService {
     menu.addChild('Sonar')
       .setUri('http://sonar.ch')
       .setAttributes({ id: 'sonar-link', target: '_blank' })
-      .setExtra('iconClass', 'fa fa-external-link');
+      .setExtra('iconClass', 'fa fa-external-link')
+      .setActive(true);
 
     this._externalLinks(menu);
 
@@ -68,17 +72,20 @@ export class MenuService {
    * @param menu - MenuItem
    */
   private _recordsMenu(menu: MenuItem) {
-    const records = menu.addChild('Records');
+    const records = menu.addChild('Records')
+      .setAttribute('class', 'dropdown-menu-right');
     records.addChild('Global records')
       .setAttribute('id', 'global-records')
       .setExtra('iconClass', 'fa fa-book')
       .setRouterLink(['/record', 'search', 'documents']);
     records.addChild('UNISI records')
-      .setRouterLink(['/unisi', 'record', 'search', 'documents']);
+      .setRouterLink(['/unisi', 'record', 'search', 'documents'])
+      .disable();
     records.addChild('Backend records')
       .setPrefix('[admin]', 'mr-2')
       .setSuffix('[search]', 'ml-2 text-warning')
-      .setRouterLink(['/admin', 'record', 'search', 'documents']);
+      .setRouterLink(['/admin', 'record', 'search', 'documents'])
+      .setExtra('divider', 'dropdown-divider');
     records.addChild('Document records')
       .setRouterLink(['/records', 'documents']);
     records.addChild('Document records')
@@ -88,7 +95,8 @@ export class MenuService {
         q: 'anatomic',
         page: 1,
         size: 10
-      });
+      })
+      .setExtra('divider', 'dropdown-divider');
     records.addChild('Organisation records')
       .setRouterLink(['/records', 'organisations']);
   }

@@ -28,10 +28,12 @@ export interface MenuItemInterface {
   removeSuffix(): this;
   getUri(): null | string;
   setUri(uri?: string): this;
+  hasUri(): boolean;
   getQueryParams(): {};
   getQueryParam(name: string, defaultValue?: null | string): null | string;
   setQueryParams(params: {}): this;
   setQueryParam(param: string, value: any): this;
+  hasRouterLink(): boolean;
   getRouterLink(): string[];
   setRouterLink(routerLink?: string[]): this;
   getLabel(): null | string;
@@ -45,6 +47,7 @@ export interface MenuItemInterface {
   setLabelAttributes(labelAttributes: {}): this;
   getLabelAttribute(name: string, defaultValue?: string): null | string;
   setLabelAttribute(name: string, value: string): this;
+  hasLabelAttribute(name: string): boolean;
   deleteLabelAttribute(name: string): boolean;
   hasExtra(name: string): boolean;
   getExtras(): {};
@@ -53,10 +56,13 @@ export interface MenuItemInterface {
   setExtra(name: string, value: string): this;
   deleteExtraAttribute(name: string): boolean;
   isActive(): boolean;
-  setActive(active: boolean): this;
+  setActive(state: boolean): this;
+  isEnabled(): boolean;
+  enable(): this;
+  disable(): this;
   addChild(child: MenuItemInterface | string, options?: []): MenuItemInterface;
   getChild(name: string): MenuItemInterface;
-  getChildren(): {};
+  getChildren(): Array<MenuItemInterface>;
   hasChildren(): boolean;
   getLevel(): number;
   getParent(): MenuItemInterface;

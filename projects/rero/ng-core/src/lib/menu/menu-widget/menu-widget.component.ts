@@ -34,7 +34,7 @@ export class MenuWidgetComponent {
    * Emit a event on click item menu
    * @param item - MenuItem
    */
-  doClick(item: MenuItem) {
+  doClick(item: MenuItem | MenuItemInterface) {
     this.clickItem.emit(item);
   }
 }

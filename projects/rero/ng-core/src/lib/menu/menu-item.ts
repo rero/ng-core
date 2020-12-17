@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { isArray } from 'util';
 import { MenuItemInterface } from './menu-item-interface';
 import { MenuFactoryInterface } from './menu-factory-interface';
 
@@ -68,6 +67,10 @@ export class MenuItem implements MenuItemInterface {
   /** Active menu */
   private _active = false;
 
+  /** Is the menu is enabled */
+  private _enabled = true;
+
+
   /**
    * Constructor
    * @param name - string
@@ -95,7 +98,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasFactory() {
-    return this._factory ? true : false;
+    return !!this._factory;
   }
 
   /**
@@ -180,7 +183,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasUri(): boolean {
-    return this._uri ? true : false;
+    return (this._uri) ? true : false;
   }
 
   /**
@@ -207,7 +210,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasQueryParam(name: string): boolean {
-    return this.has(name, this._queryParams);
+    return name in this._queryParams;
   }
 
   /**
@@ -301,7 +304,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasAttribute(name: string) {
-    return this.has(name, this._attributes);
+    return name in this._attributes;
   }
 
   /**
@@ -328,10 +331,9 @@ export class MenuItem implements MenuItemInterface {
    * @param defaultValue - string | null
    */
   getAttribute(name: string, defaultValue?: null | string): null | string {
-    if (this.hasAttribute(name)) {
-      return this._attributes[name];
-    }
-    return defaultValue;
+    return (name in this._attributes)
+      ? this._attributes[name]
+      : defaultValue;
   }
 
   /**
@@ -373,7 +375,7 @@ export class MenuItem implements MenuItemInterface {
    * Get Children
    * @return array of children
    */
-  getChildren() {
+  getChildren(): Array<MenuItemInterface> {
     return this._children;
   }
 
@@ -383,7 +385,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem or null
    */
   getChild(name: string): MenuItemInterface {
-    return this.has(name, this._children)
+    return (name in this._children)
       ? this._children[name]
       : null;
   }
@@ -436,8 +438,8 @@ export class MenuItem implements MenuItemInterface {
    * @param name - string, name of label attribute
    * @return boolean
    */
-  hasLabelAttribute(name: string) {
-    return this.has(name, this._labelAttributes);
+  hasLabelAttribute(name: string): boolean {
+    return name in this._labelAttributes;
   }
 
   /**
@@ -497,7 +499,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasExtra(name: string): boolean {
-    return this.has(name, this._extras);
+    return name in this._extras;
   }
 
   /**
@@ -571,23 +573,38 @@ export class MenuItem implements MenuItemInterface {
   }
 
   /**
+   * Is the menuItem is enabled
+   * @return boolean
+   */
+  isEnabled(): boolean {
+    return this._enabled;
+  }
+
+  /**
+   * enable the menuItem
+   * @return MenuItem
+   */
+  enable(): this {
+    this._enabled = true;
+    return this;
+  }
+
+  /**
+   * enable the menuItem
+   * @return MenuItem
+   */
+  disable(): this {
+    this._enabled = false;
+    return this;
+  }
+
+
+  /**
    * Count
    * @return integer, number of children
    */
   count(): number {
     return this._children.length;
-  }
-
-  /**
-   * has parameter in dictionnary
-   * @param name - string, attribute propriety name
-   * @param dict - dictionnary of attributes
-   * @return boolean
-   */
-  private has(name: string, dict = {}): boolean {
-    return Object.keys(dict).find(element => element === name)
-      ? true
-      : false;
   }
 
   /**
@@ -597,9 +614,8 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   private _deleteAttr(name: string, attributes: {}): boolean {
-    if (this.has(name, attributes)) {
-      delete attributes[name];
-      return true;
+    if (name in attributes) {
+      return delete attributes[name];
     }
     return false;
   }
@@ -610,7 +626,7 @@ export class MenuItem implements MenuItemInterface {
    * @param htmlClasses - null or string
    * @return Object with name and class attributes
    */
-  _setPrefixSuffix(name: string, htmlClasses: null | string) {
+  private _setPrefixSuffix(name: string, htmlClasses: null | string) {
     return {
       name,
       class: htmlClasses
