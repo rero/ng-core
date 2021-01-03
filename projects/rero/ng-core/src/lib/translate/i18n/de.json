@@ -38,7 +38,7 @@
   "No file found for this record.": "Keine Datei für diese Ressource gefunden.",
   "Not found": "Nicht gefunden",
   "OK": "OK",
-  "Press space for all.": "Drücken Sie die Leertaste für alle.",
+  "Press space for all.": "Drücken Sie die Leertaste, um alle anzuzeigen.",
   "Public templates": "Öffentliche Vorlagen",
   "Record created.": "Ressource erstellt.",
   "Record deleted.": "Datensatz gelöscht.",
@@ -66,7 +66,7 @@
   "more…": "Weiteres…",
   "search": "suchen",
   "should NOT be longer than {{maxLength}} characters": "muss nicht länger als {{maxLength}} Zeichen sein",
-  "should NOT be shorter than {{minLength}} characters": "muss nicht kürzer als {{minLength}} Zeichen sein",
+  "should NOT be shorter than {{minLength}} characters": "darf nicht kürzer als {{minLength}} Zeichen sein",
   "should NOT have duplicate items": "sollte NICHT doppelt vorhanden sein",
   "should NOT have fewer than {{minItems}} items": "muss mindestens {{minItems}} Exemplare haben",
   "should NOT have more than {{maxItems}} items": "muss maximal {{maxItems}} Exemplare haben",
@@ -78,6 +78,6 @@
   "should be multiple of ${{step}}": "muss ein Vielfaches von ${{step}} sein",
   "should be null": "sollte null sein",
   "the value is already taken": "der Wert ist bereits vergeben",
-  "{{ total }} result": "{{ total }} result",
+  "{{ total }} result": "{{ total }} Ergebnis",
   "{{ total }} results": "{{ total }} Ergebnisse"
 }
