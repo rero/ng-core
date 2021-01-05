@@ -257,18 +257,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
       )
     );
-
-    // Load totals for each resource type
-    if (this.types.length > 1) {
-      for (const type of this.types) {
-        this._recordService.getRecords(
-          type.index ? type.index : type.key, '', 1, 1, [],
-          type.preFilters || {},
-          type.listHeaders || null).subscribe((records: Record) => {
-            type.total = this._recordService.totalHits(records.hits.total);
-          });
-      }
-    }
   }
 
   /**
