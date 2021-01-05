@@ -15,34 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
-import { RouteFactoryService, routeToken } from '@rero/ng-core';
+import { RouterModule, ROUTES } from '@angular/router';
+import { CoreRouterModule } from 'projects/rero/ng-core/src/public-api';
 import { BaseRoute } from './routes/base-route';
+
+const routesProviders: any[] = [
+  { provide: ROUTES, useClass: BaseRoute, multi: true }
+];
 
 /**
  * Routing module for application.
  */
 @NgModule({
-  imports: [RouterModule.forRoot([])],
-  exports: [RouterModule],
-  providers: [
-    { provide: routeToken, useClass: BaseRoute, multi: true },
-  ]
+  imports: [
+    CoreRouterModule.forRoot(routesProviders),
+    RouterModule.forRoot([])
+  ],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {
-  /**
-   * Constructor
-   * @param _router - Router
-   * @param routerFactoryService - RouteFactoryService
-   */
-  constructor(
-    private _router: Router,
-    private routerFactoryService: RouteFactoryService
-    ) {
-      /**
-       * Use the resetConfig function only on the main application.
-       * To add other routes in different modules, use "router.config.push".
-       */
-    _router.resetConfig(routerFactoryService.createRoutes());
-  }
 }

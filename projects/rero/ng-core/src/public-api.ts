@@ -18,6 +18,7 @@
 export * from './lib/api/api.service';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
+export * from './lib/core-router.module';
 export * from './lib/dialog/dialog.component';
 export * from './lib/dialog/dialog.service';
 export * from './lib/directives/ng-var.directive';

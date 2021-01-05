@@ -52,7 +52,6 @@ import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrappe
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { RecordFilesComponent } from './files/files.component';
-import { RecordRoutingModule } from './record-routing.module';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';

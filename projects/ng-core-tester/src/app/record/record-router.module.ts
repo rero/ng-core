@@ -15,9 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Injector, NgModule } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule, Routes, ROUTES } from '@angular/router';
-import { RouteCollectionService, RouteFactoryService, routeToken } from '@rero/ng-core';
+import { NgModule } from '@angular/core';
+import { ActivatedRoute, RouterModule, ROUTES, Routes } from '@angular/router';
+import { CoreRouterModule } from '@rero/ng-core';
 import { RouteToolsService } from '../service/route-tools-service';
 import { EditorComponent } from './editor/editor.component';
 import { BackendAdminRoute } from './routes/backend-admin-route';
@@ -27,10 +27,6 @@ import { DocumentsUnisiRoute } from './routes/documents-unisi-route';
 import { OrganisationsRoute } from './routes/organisations-route';
 import { RecordModuleRoutes } from './routes/record-module-route';
 
-export function routesFactory(injector: Injector): RouteFactoryService {
-  return new RouteFactoryService(injector, new RouteCollectionService());
-}
-
 const routes: Routes = [
   {
     path: 'editor',
@@ -38,22 +34,22 @@ const routes: Routes = [
   }
 ];
 
+const providersRoutes: any[] = [
+  { provide: ROUTES, useClass: RecordModuleRoutes, multi: true },
+  { provide: ROUTES, useClass: DocumentsGlobalsRoute, multi: true, deps: [RouteToolsService] },
+  { provide: ROUTES, useClass: DocumentsUnisiRoute, multi: true, deps: [RouteToolsService] },
+  { provide: ROUTES, useClass: BackendAdminRoute, multi: true, deps: [RouteToolsService] },
+  { provide: ROUTES, useClass: DocumentsRoute, multi: true, deps: [RouteToolsService] },
+  { provide: ROUTES, useClass: OrganisationsRoute, multi: true, deps: [RouteToolsService, ActivatedRoute] }
+];
+
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-  providers: [
-    { provide: ROUTES, useFactory: routesFactory, multi: true, deps: [Injector]},
-    { provide: routeToken, useClass: RecordModuleRoutes, multi: true },
-    { provide: routeToken, useClass: DocumentsGlobalsRoute, multi: true, deps: [RouteToolsService] },
-    { provide: routeToken, useClass: DocumentsUnisiRoute, multi: true, deps: [RouteToolsService] },
-    { provide: routeToken, useClass: BackendAdminRoute, multi: true, deps: [RouteToolsService] },
-    { provide: routeToken, useClass: DocumentsRoute, multi: true, deps: [RouteToolsService] },
-    { provide: routeToken, useClass: OrganisationsRoute, multi: true, deps: [RouteToolsService, ActivatedRoute] }
-  ]
+  imports: [
+    RouterModule.forChild(routes),
+    CoreRouterModule.forChild(providersRoutes)
+  ],
+  exports: [RouterModule, CoreRouterModule]
 })
-export class RecordRoutingModule {
-  constructor(private _router: Router) {
-    console.log('RecordRoutingModule', _router.config);
-  }
+export class RecordRouterModule {
 }
