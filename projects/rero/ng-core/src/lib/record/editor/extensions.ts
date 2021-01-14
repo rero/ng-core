@@ -19,7 +19,6 @@ import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import sha256 from 'crypto-js/sha256';
 import { BehaviorSubject, isObservable } from 'rxjs';
-import { SelectOption } from './interfaces';
 
 /**
  * Add onPopulate hook at the field level.
