@@ -22,8 +22,9 @@ import { FieldWrapper } from '@ngx-formly/core';
   template: `
     <div class="form-group m-0">
       <div class="d-flex">
-        <label [attr.for]="id" class="text-nowrap1 mr-2 col-form-label-1" *ngIf="to.label" [tooltip]="to.description">
-          {{ to.label }}<ng-container *ngIf="to.required && to.hideRequiredMarker !== true">&nbsp;*</ng-container>
+        <label [attr.for]="id" class="text-nowrap mr-2 col-form-label" *ngIf="to.label && to.hideLabel !== true" [tooltip]="to.description" [ngClass]="to.labelClasses">
+          {{ to.label }}
+          <span *ngIf="to.required && to.hideRequiredMarker !== true">*</span>
         </label>
         <div class="flex-grow-1">
           <ng-template #fieldComponent></ng-template>

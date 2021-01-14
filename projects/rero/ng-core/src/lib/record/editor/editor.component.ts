@@ -117,7 +117,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     'remoteTypeahead',
     'selectWithSort',
     'integer',
-    'textarea'
+    'textarea',
+    'datepicker'
   ];
 
   // Types to apply field wrapper on
