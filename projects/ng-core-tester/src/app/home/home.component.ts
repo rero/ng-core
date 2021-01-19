@@ -139,7 +139,9 @@ export class HomeComponent implements OnInit {
       initialState: {
         title: 'Confirmation',
         body: 'Exit without saving changes?',
-        confirmButton: true
+        confirmButton: true,
+        cancelTitleButton: 'Abort',
+        confirmTitleButton: 'Confirm'
       }
     };
 
