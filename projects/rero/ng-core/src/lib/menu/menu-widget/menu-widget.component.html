@@ -35,7 +35,8 @@
           <li class="nav-item dropdown" dropdown placement="bottom right">
             <a class="nav-link dropdown-toggle"
                dropdownToggle
-               href=""
+               href
+               (click)="false"
                [attr.aria-controls]="item.getAttribute('id')"
             >
               <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
