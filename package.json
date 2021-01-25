@@ -48,6 +48,7 @@
     "npm-registry-fetch": "^9.0.0",
     "rxjs": "^6.6.3",
     "serialize-javascript": "^5.0.1",
+    "socket.io": ">=2.4.0",
     "tree-kill": ">=1.2.2",
     "tslib": "^2.1.0",
     "zone.js": "~0.10.2"
