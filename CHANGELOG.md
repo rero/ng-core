@@ -1,8 +1,40 @@
 # Changelog
 
+## [v1.2.0](https://github.com/rero/ng-core/tree/v1.2.0) (2021-01-25)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.2...v1.2.0)
+
+**Implemented enhancements:**
+
+- Match the user interface to guidelines [\#156](https://github.com/rero/ng-core/issues/156)
+- Change badge Travis CI --\> Github Actions [\#127](https://github.com/rero/ng-core/issues/127)
+
+**Fixed bugs:**
+
+- Tooltips are sometimes displayed twice [\#196](https://github.com/rero/ng-core/issues/196)
+
+**Closed issues:**
+
+- Hidden property with a default value is still displayed [\#329](https://github.com/rero/ng-core/issues/329)
+
+**Merged pull requests:**
+
+- security: update dependencies [\#343](https://github.com/rero/ng-core/pull/343) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- bug: correct dropdown menu issue and modal tester config. [\#341](https://github.com/rero/ng-core/pull/341) ([zannkukai](https://github.com/zannkukai))
+- dependencies: update and fix vulnerabilities [\#340](https://github.com/rero/ng-core/pull/340) ([jma](https://github.com/jma))
+- editor: fix horizontal wrapper [\#339](https://github.com/rero/ng-core/pull/339) ([zannkukai](https://github.com/zannkukai))
+
 ## [v1.1.2](https://github.com/rero/ng-core/tree/v1.1.2) (2020-12-16)
 
-[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.0...v1.1.2)
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.1...v1.1.2)
+
+**Merged pull requests:**
+
+- translations: update catalogs [\#334](https://github.com/rero/ng-core/pull/334) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
+## [v1.1.1](https://github.com/rero/ng-core/tree/v1.1.1) (2020-12-16)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.1.0...v1.1.1)
 
 **Closed issues:**
 
@@ -12,7 +44,6 @@
 
 **Merged pull requests:**
 
-- translations: update catalogs [\#334](https://github.com/rero/ng-core/pull/334) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add issues in tester [\#324](https://github.com/rero/ng-core/pull/324) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
@@ -50,6 +81,9 @@
 
 - toggle-switch: translate label and description [\#314](https://github.com/rero/ng-core/pull/314) ([Garfield-fr](https://github.com/Garfield-fr))
 - form: improve error message [\#313](https://github.com/rero/ng-core/pull/313) ([Garfield-fr](https://github.com/Garfield-fr))
+- search: remove total count on tab [\#337](https://github.com/rero/ng-core/pull/337) ([Garfield-fr](https://github.com/Garfield-fr))
+- menu: improve menu generation management [\#335](https://github.com/rero/ng-core/pull/335) ([zannkukai](https://github.com/zannkukai))
+- templates: restrict template loading to resource creation. [\#332](https://github.com/rero/ng-core/pull/332) ([zannkukai](https://github.com/zannkukai))
 - validators: fix greaterThan validator [\#323](https://github.com/rero/ng-core/pull/323) ([zannkukai](https://github.com/zannkukai))
 - search: fix result counter [\#322](https://github.com/rero/ng-core/pull/322) ([zannkukai](https://github.com/zannkukai))
 - editor: fix save alternative problem. [\#319](https://github.com/rero/ng-core/pull/319) ([zannkukai](https://github.com/zannkukai))
@@ -115,6 +149,7 @@
 - search: improve autocompletion [\#292](https://github.com/rero/ng-core/pull/292) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: restore default value for hidden field [\#291](https://github.com/rero/ng-core/pull/291) ([jma](https://github.com/jma))
 - editor: fix toggle wrapper field control behavior [\#289](https://github.com/rero/ng-core/pull/289) ([zannkukai](https://github.com/zannkukai))
+- Translations update from Weblate [\#282](https://github.com/rero/ng-core/pull/282) ([weblate](https://github.com/weblate))
 
 ## [v0.12.2](https://github.com/rero/ng-core/tree/v0.12.2) (2020-10-26)
 
