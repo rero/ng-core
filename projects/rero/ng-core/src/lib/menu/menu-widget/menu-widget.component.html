@@ -5,7 +5,7 @@
   >
     <ul [ngClass]="menu.getAttribute('class', 'navbar-nav')">
       <ng-container *ngFor="let item of menu.getChildren()">
-        <li class="nav-item" *ngIf="!item.hasChildren(); else withDropdown">
+        <li id="item.getAttribute('id')" class="nav-item" *ngIf="!item.hasChildren(); else withDropdown">
           <a
             *ngIf="item.hasUri(); else linkRouterLink"
             class="nav-link"
@@ -32,7 +32,7 @@
           </ng-template>
         </li>
         <ng-template #withDropdown>
-          <li class="nav-item dropdown" dropdown placement="bottom right">
+          <li [attr.id]="item.getAttribute('id')" class="nav-item dropdown" dropdown placement="bottom right">
             <a class="nav-link dropdown-toggle"
                dropdownToggle
                href
