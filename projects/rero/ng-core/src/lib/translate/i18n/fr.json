@@ -78,6 +78,6 @@
   "should be multiple of ${{step}}": "Doit être un multiple de ${{step}}",
   "should be null": "doit être vide",
   "the value is already taken": "cette valeur est déjà utilisée",
-  "{{ total }} result": "{{ total }} result",
+  "{{ total }} result": "{{ total }} résultat",
   "{{ total }} results": "{{ total }} résultats"
 }
