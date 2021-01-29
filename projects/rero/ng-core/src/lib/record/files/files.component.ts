@@ -102,6 +102,9 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   // Subscriptions to observables.
   private _subscriptions: Subscription = new Subscription();
 
+  // Default max file size in Mb.
+  private _defaultMaxSize = 500;
+
   // Reference on file input, used to reset value
   @ViewChild('file', { read: ElementRef })
   fileInput: ElementRef;
@@ -335,34 +338,47 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * Upload files
    */
   upload() {
-    this._spinner.show();
-
     // Iterate over FileList object to process each files.
     Array.from(this.filesToUpload).forEach((file) => {
-      const reader = new FileReader();
+      this._spinner.show();
 
-      // This method is called when file is finished to read in client side.
-      reader.onload = () => {
-        // Update or create a new file
-        const fileName = this.currentFile ? this.currentFile.key : this.fileKey;
+      try {
+        if (file.size > this._defaultMaxSize * 1000 * 1000) {
+          throw new Error(`The maximum size for a file is ${this._defaultMaxSize}Mb, ${file.name} cannot be uploaded.`);
+        }
 
-        this._fileService
-          .put(this.type, this.pid, fileName, file)
-          .subscribe(() => {
-            this.hideForm();
+        const reader = new FileReader();
 
-            this._toastrService.success(
-              this._translateService.instant('File uploaded successfully.')
-            );
+        // This method is called when file is finished to read in client side.
+        reader.onload = () => {
+          // Update or create a new file
+          const fileName = this.currentFile
+            ? this.currentFile.key
+            : this.fileKey;
 
-            this._getFiles$().subscribe(() => {
-              this._spinner.hide();
+          this._fileService
+            .put(this.type, this.pid, fileName, file)
+            .subscribe(() => {
+              this.hideForm();
+
+              this._toastrService.success(
+                this._translateService.instant('File uploaded successfully.')
+              );
+
+              this._getFiles$().subscribe(() => {
+                this._spinner.hide();
+              });
             });
-          });
-      };
+        };
 
-      // Begin file read.
-      reader.readAsBinaryString(file);
+        // Begin file read.
+        reader.readAsBinaryString(file);
+      } catch (error) {
+        this._spinner.hide();
+        this._toastrService.error(
+          this._translateService.instant(error.message)
+        );
+      }
     });
   }
 
