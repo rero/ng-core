@@ -49,11 +49,11 @@
           <button type="button" *ngIf="canAddItem()" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
             <i class="fa fa-plus"></i>
           </button>
-          <button type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
+          <button id="{{f.id}}-clone-button" type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
             <i class="fa fa-clone"></i>
           </button>
           <!-- hide button -->
-          <button type="button" (click)="remove()" *ngIf="canRemove()"
+          <button id="{{f.id}}-remove-button"  type="button" (click)="remove()" *ngIf="canRemove()"
             class="btn btn-link text-secondary btn-sm align-baseline">
             <i class="fa fa-trash"></i>
           </button>
@@ -72,11 +72,11 @@
         <button type="button" *ngIf="canAddItem()" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
           <i class="fa fa-plus"></i>
         </button>
-        <button type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
+        <button id="{{f.id}}-clone-button" type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
           <i class="fa fa-clone"></i>
         </button>
         <!-- hide button -->
-        <button type="button" (click)="remove()" *ngIf="canRemove()"
+        <button id="{{f.id}}-remove-button"  type="button" (click)="remove()" *ngIf="canRemove()"
           class="btn btn-link text-secondary btn-sm align-baseline">
           <i class="fa fa-trash"></i>
         </button>
