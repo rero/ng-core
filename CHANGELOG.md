@@ -1,5 +1,22 @@
 # Changelog
 
+## [v1.3.0](https://github.com/rero/ng-core/tree/v1.3.0) (2021-02-03)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.2.0...v1.3.0)
+
+**Implemented enhancements:**
+
+- files: set default upload max size [\#347](https://github.com/rero/ng-core/pull/347) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
+**Closed issues:**
+
+- Permissions pages creation [\#155](https://github.com/rero/ng-core/issues/155)
+
+**Merged pull requests:**
+
+- gh actions: set the stale workflow [\#345](https://github.com/rero/ng-core/pull/345) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
+
 ## [v1.2.0](https://github.com/rero/ng-core/tree/v1.2.0) (2021-01-25)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.1.2...v1.2.0)
@@ -149,7 +166,6 @@
 - search: improve autocompletion [\#292](https://github.com/rero/ng-core/pull/292) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: restore default value for hidden field [\#291](https://github.com/rero/ng-core/pull/291) ([jma](https://github.com/jma))
 - editor: fix toggle wrapper field control behavior [\#289](https://github.com/rero/ng-core/pull/289) ([zannkukai](https://github.com/zannkukai))
-- Translations update from Weblate [\#282](https://github.com/rero/ng-core/pull/282) ([weblate](https://github.com/weblate))
 
 ## [v0.12.2](https://github.com/rero/ng-core/tree/v0.12.2) (2020-10-26)
 
@@ -259,6 +275,7 @@
 
 **Merged pull requests:**
 
+- editor: allow more actions and actions always visible  [\#246](https://github.com/rero/ng-core/pull/246) ([zannkukai](https://github.com/zannkukai))
 - editor: improve sorting of selects [\#240](https://github.com/rero/ng-core/pull/240) ([Garfield-fr](https://github.com/Garfield-fr))
 - security: update dependencies [\#239](https://github.com/rero/ng-core/pull/239) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - formly: improve id generator [\#238](https://github.com/rero/ng-core/pull/238) ([Garfield-fr](https://github.com/Garfield-fr))
