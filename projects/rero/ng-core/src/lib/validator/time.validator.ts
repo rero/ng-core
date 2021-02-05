@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AbstractControl, FormArray, ValidatorFn } from '@angular/forms';
+import {AbstractControl, FormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 import moment from 'moment';
 
 // @dynamic
@@ -26,7 +26,7 @@ export class TimeValidator {
    * @param end: the field name where to find the end limit value
    */
   static greaterThanValidator(start: string, end: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
+    return (control: AbstractControl): ValidationErrors|null => {
       if (control) {
         let isLessThan = false;
         const startTime = control.get(start);
@@ -36,13 +36,15 @@ export class TimeValidator {
         if (startDate.format('HH:mm') !== '00:00' || endDate.format('HH:mm') !== '00:00') {
           isLessThan = startDate.diff(endDate) >= 0;
         }
-        return isLessThan ? { lessThan: { value: isLessThan }} : null;
+        return (isLessThan)
+            ? ({ lessThan: { value: isLessThan }})
+            : null;
       }
     };
   }
 
   static RangePeriodValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
+    return (control: AbstractControl): ValidationErrors|null => {
       if (control.value) {
         let isRangeLessThan = false;
         const times = control.get('times') as FormArray;
@@ -59,7 +61,9 @@ export class TimeValidator {
               || lastStartDate.diff(firstEndDate) <= 0;
           }
         }
-        return isRangeLessThan ? { rangeLessThan: { value: isRangeLessThan} } : null;
+        return (isRangeLessThan)
+            ? ({ rangeLessThan: { value: isRangeLessThan}})
+            : null;
       }
     };
   }
