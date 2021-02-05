@@ -1,3 +1,4 @@
+
 /*
  * RERO angular core
  * Copyright (C) 2020 RERO
@@ -14,24 +15,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { NgModule } from '@angular/core';
-import { RouterModule, ROUTES } from '@angular/router';
-import { CoreRouterModule } from 'projects/rero/ng-core/src/public-api';
-import { BaseRoute } from './routes/base-route';
+import { IRoute } from '@rero/ng-core';
+import { HomeComponent } from '../home/home.component';
 
-const routesProviders: any[] = [
-  { provide: ROUTES, useClass: BaseRoute, multi: true }
-];
+export class BaseRoute implements IRoute {
 
-/**
- * Routing module for application.
- */
-@NgModule({
-  imports: [
-    CoreRouterModule.forRoot(routesProviders),
-    RouterModule.forRoot([])
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {
+  // Route name
+  readonly name = 'base-routes';
+
+  // Priority of the current route
+  readonly priority = 255;
+
+  /**
+   * Get Configuration.
+   * @return Array of configuration.
+   */
+  getConfiguration(): any[] {
+    return [
+      {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'records',
+        loadChildren: () => import('../record/record.module').then(m => m.RecordModule)
+      }
+    ];
+  }
 }

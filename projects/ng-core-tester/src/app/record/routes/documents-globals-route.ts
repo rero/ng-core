@@ -19,30 +19,30 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import {
   ActionStatus,
   DetailComponent as RecordDetailComponent,
-  EditorComponent, JSONSchema7, RecordSearchComponent,
-  RouteInterface
+  EditorComponent,
+  IRoute, JSONSchema7, RecordSearchPageComponent
 } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
-import { DetailComponent } from '../record/document/detail/detail.component';
-import { DocumentComponent } from '../record/document/document.component';
+import { DetailComponent } from '../document/detail/detail.component';
+import { DocumentComponent } from '../document/document.component';
 
-/**
- * Routes for document resources
- */
-export class DocumentsRoute implements RouteInterface {
+export class DocumentsGlobalsRoute implements IRoute {
+
   // Route name
-  readonly name = 'documents';
+  readonly name = 'documents-globals';
+
+  // Priority of the current route
+  readonly priority = 0;
 
   /**
    * Get Configuration.
-   *
-   * @return Configuration object.
+   * @return Object of configuration.
    */
-  getConfiguration() {
+  getConfiguration(): object {
     return {
       path: 'record/search',
       children: [
-        { path: ':type', component: RecordSearchComponent },
+        { path: ':type', component: RecordSearchPageComponent },
         { path: ':type/new', component: EditorComponent },
         { path: ':type/edit/:pid', component: EditorComponent },
         { path: ':type/detail/:pid', component: RecordDetailComponent }

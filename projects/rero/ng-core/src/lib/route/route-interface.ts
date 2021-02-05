@@ -14,10 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export interface RouteInterface {
+export interface IRoute {
 
   /** Route name */
   readonly name: string;
+
+  /** Route priority */
+  readonly priority: number;
 
   /** Get configuration of the current route */
   getConfiguration(): any;

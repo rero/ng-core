@@ -81,17 +81,17 @@ export class AppMenuService {
     menu.addChild('Global records')
       .setAttribute('id', 'app-global-records')
       .setExtra('iconClass', 'fa fa-book')
-      .setRouterLink(['/record', 'search', 'documents']);
+      .setRouterLink(['/records', '/record', 'search', 'documents']);
     menu.addChild('UNISI records')
-      .setRouterLink(['/unisi', 'record', 'search', 'documents']);
+      .setRouterLink(['/records', '/unisi', 'search', 'documents']);
     menu.addChild('Backend records')
-      .setRouterLink(['/admin', 'record', 'search', 'documents']);
+      .setRouterLink(['/records', '/admin', 'search', 'documents']);
     menu.addChild('Document records')
       .setRouterLink(['/records', 'documents']);
     menu.addChild('Organisation records')
       .setRouterLink(['/records', 'organisations']);
     menu.addChild('Editor')
-      .setRouterLink(['/editor'])
+      .setRouterLink(['/records', 'editor'])
       .setExtra('iconClass', 'fa fa-edit');
   }
 }

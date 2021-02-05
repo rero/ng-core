@@ -1,3 +1,4 @@
+
 /*
  * RERO angular core
  * Copyright (C) 2020 RERO
@@ -14,24 +15,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { NgModule } from '@angular/core';
-import { RouterModule, ROUTES } from '@angular/router';
-import { CoreRouterModule } from 'projects/rero/ng-core/src/public-api';
-import { BaseRoute } from './routes/base-route';
+import { IRoute } from '@rero/ng-core';
+import { EditorComponent } from '../editor/editor.component';
 
-const routesProviders: any[] = [
-  { provide: ROUTES, useClass: BaseRoute, multi: true }
-];
+export class RecordModuleRoutes implements IRoute {
 
-/**
- * Routing module for application.
- */
-@NgModule({
-  imports: [
-    CoreRouterModule.forRoot(routesProviders),
-    RouterModule.forRoot([])
-  ],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {
+  // Route name
+  readonly name = 'record-module-routes';
+
+  // Priority of the current route
+  readonly priority = 200;
+
+  /**
+   * Get Configuration.
+   * @return Array of configuration.
+   */
+  getConfiguration(): any[] {
+    return [
+      {
+        path: 'editor',
+        component: EditorComponent
+      }
+    ];
+  }
 }

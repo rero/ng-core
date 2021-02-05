@@ -16,11 +16,11 @@
  */
 import { TestBed } from '@angular/core/testing';
 import { RouteCollectionService } from './route-collection.service';
-import { RouteInterface } from './route-interface';
+import { IRoute } from './route-interface';
 
-class RouteMock implements RouteInterface {
-
+class RouteMock implements IRoute {
   name = 'routeMock';
+  priority = 0;
 
   getConfiguration() {
     return { route: this.name };
@@ -28,40 +28,40 @@ class RouteMock implements RouteInterface {
 }
 
 describe('RoutingCollectionService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let routeCollectionService: RouteCollectionService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    routeCollectionService = TestBed.inject(RouteCollectionService);
+  });
 
   it('should be created', () => {
-    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
-    expect(service).toBeTruthy();
+    expect(routeCollectionService).toBeTruthy();
   });
 
   it('GetRoute return the correct route added', () => {
-    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
-    service.addRoute(routeMock);
-    expect(service.getRoute('routeMock')).toEqual(routeMock);
+    routeCollectionService.addRoute(routeMock);
+    expect(routeCollectionService.getRoute('routeMock')).toEqual(routeMock);
   });
 
   it('DeleteRoute return true', () => {
-    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
-    service.addRoute(routeMock);
-    expect(service.size()).toBe(1);
-    expect(service.deleteRoute('routeMock')).toBeTruthy();
+    routeCollectionService.addRoute(routeMock);
+    expect(routeCollectionService.size()).toBe(1);
+    expect(routeCollectionService.deleteRoute('routeMock')).toBeTruthy();
   });
 
   it('GetRoutes return all route(s) added', () => {
-    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
-    service.addRoute(routeMock);
-    expect(service.getRoutes().length).toBe(1);
-    expect(service.getRoutes()[0]).toEqual({ route: 'routeMock' });
+    routeCollectionService.addRoute(routeMock);
+    expect(routeCollectionService.getRoutes().length).toBe(1);
+    expect(routeCollectionService.getRoutes()[0]).toEqual({ route: 'routeMock' });
   });
 
   it('availableRoutesName return all route names', () => {
-    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
     const routeMock = new RouteMock();
-    service.addRoute(routeMock);
-    expect(service.availableRoutesName()).toEqual(['routeMock']);
+    routeCollectionService.addRoute(routeMock);
+    expect(routeCollectionService.availableRoutesName()).toEqual(['routeMock']);
   });
 });
