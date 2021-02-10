@@ -1,5 +1,26 @@
 # Changelog
 
+## [v1.4.0](https://github.com/rero/ng-core/tree/v1.4.0) (2021-02-10)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.3.0...v1.4.0)
+
+**Implemented enhancements:**
+
+- Validators should return AbstractValidators with nodev12 [\#349](https://github.com/rero/ng-core/issues/349)
+
+**Closed issues:**
+
+- Property with hide expression cannot be added [\#328](https://github.com/rero/ng-core/issues/328)
+- Hidden sub-property with hide expression [\#327](https://github.com/rero/ng-core/issues/327)
+- Read-only properties are changeable in editor [\#325](https://github.com/rero/ng-core/issues/325)
+- Additional border is displayed for object types [\#248](https://github.com/rero/ng-core/issues/248)
+- Object data are not cleaned correctly when the property is removed [\#242](https://github.com/rero/ng-core/issues/242)
+
+**Merged pull requests:**
+
+- translations: update catalog [\#352](https://github.com/rero/ng-core/pull/352) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: fix issues [\#338](https://github.com/rero/ng-core/pull/338) ([jma](https://github.com/jma))
+
 ## [v1.3.0](https://github.com/rero/ng-core/tree/v1.3.0) (2021-02-03)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.2.0...v1.3.0)
@@ -73,6 +94,7 @@
 - search: fix multiple backend call [\#317](https://github.com/rero/ng-core/pull/317) ([jma](https://github.com/jma))
 - menu: add query parameters [\#316](https://github.com/rero/ng-core/pull/316) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: improve facet design. [\#315](https://github.com/rero/ng-core/pull/315) ([zannkukai](https://github.com/zannkukai))
+- validators: fix custom validators return type [\#350](https://github.com/rero/ng-core/pull/350) ([zannkukai](https://github.com/zannkukai))
 
 ## [v1.0.0](https://github.com/rero/ng-core/tree/v1.0.0) (2020-12-02)
 
@@ -275,7 +297,6 @@
 
 **Merged pull requests:**
 
-- editor: allow more actions and actions always visible  [\#246](https://github.com/rero/ng-core/pull/246) ([zannkukai](https://github.com/zannkukai))
 - editor: improve sorting of selects [\#240](https://github.com/rero/ng-core/pull/240) ([Garfield-fr](https://github.com/Garfield-fr))
 - security: update dependencies [\#239](https://github.com/rero/ng-core/pull/239) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - formly: improve id generator [\#238](https://github.com/rero/ng-core/pull/238) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -549,7 +570,6 @@
 - editor: expose the model as input component [\#104](https://github.com/rero/ng-core/pull/104) ([jma](https://github.com/jma))
 - editor: hide trash button for non long editors [\#103](https://github.com/rero/ng-core/pull/103) ([jma](https://github.com/jma))
 - project: configure GitHub actions. [\#102](https://github.com/rero/ng-core/pull/102) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- editor: add process data record [\#101](https://github.com/rero/ng-core/pull/101) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.0.23](https://github.com/rero/ng-core/tree/v0.0.23) (2020-01-08)
 
@@ -557,6 +577,7 @@
 
 **Merged pull requests:**
 
+- editor: add process data record [\#101](https://github.com/rero/ng-core/pull/101) ([Garfield-fr](https://github.com/Garfield-fr))
 - fix: correct method to get pid from $ref [\#100](https://github.com/rero/ng-core/pull/100) ([AoNoOokami](https://github.com/AoNoOokami))
 - pagination: fix text on first page link [\#99](https://github.com/rero/ng-core/pull/99) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: move to ngx-formly [\#90](https://github.com/rero/ng-core/pull/90) ([jma](https://github.com/jma))
