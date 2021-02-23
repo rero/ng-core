@@ -23,7 +23,6 @@ import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
-import moment from 'moment';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
@@ -108,6 +107,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   // Config for resource
   private _resourceConfig: any;
+
+  // list of custom validators
+  private _customValidators = [
+    'valueAlreadyExists',
+    'uniqueValueKeysInObject',
+    'dateMustBeGreaterThan',
+    'dateMustBeLessThan'
+  ];
 
   /**
    * Constructor.
@@ -407,6 +414,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             field.defaultValue = new Array(jsonSchema.minItems);
           }
           const formOptions = jsonSchema.form;
+          field.templateOptions.longMode = this.editorSettings.longMode;
+          field.templateOptions.recordType = this.recordType;
+          field.templateOptions.pid = this.pid;
 
           if (formOptions) {
             this._setSimpleOptions(field, formOptions);
@@ -415,7 +425,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setRemoteTypeahead(field, formOptions);
           }
 
-          field.templateOptions.longMode = this.editorSettings.longMode;
 
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
@@ -648,6 +657,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _setValidation(field: FormlyFieldConfig, formOptions: any) {
     if (formOptions.validation) {
       // custom validation messages
+      // TODO: use widget instead
       const messages = formOptions.validation.messages;
       if (messages) {
         if (!field.validation) {
@@ -666,122 +676,21 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._translateService.stream(msg) as any;
         }
       }
-      // custom validators
+
+      // store the custom validators config
+      field.templateOptions.customValidators = {};
+      if (formOptions.validation && formOptions.validation.validators) {
+        for (const customValidator of this._customValidators) {
+          const validatorConfig = formOptions.validation.validators[customValidator];
+          if (validatorConfig != null) {
+            field.templateOptions.customValidators[customValidator] = validatorConfig;
+          }
+        }
+      }
+
       if (formOptions.validation.validators) {
-        // asyncValidators: valueAlreadyExists
-        if (formOptions.validation.validators.valueAlreadyExists) {
-          const remoteRecordType =
-            formOptions.validation.validators.valueAlreadyExists.remoteRecordType;
-          const limitToValues =
-            formOptions.validation.validators.valueAlreadyExists.limitToValues;
-          const filter =
-            formOptions.validation.validators.valueAlreadyExists.filter;
-          const term = formOptions.validation.validators.valueAlreadyExists.term;
-          field.asyncValidators = {
-            validation: [
-              (control: FormControl) => {
-                return this._recordService.uniqueValue(
-                  field,
-                  remoteRecordType ? remoteRecordType : this.recordType,
-                  this.pid ? this.pid : null,
-                  term ? term : null,
-                  limitToValues ? limitToValues : [],
-                  filter ? filter : null
-                );
-              }
-            ]
-          };
-          delete formOptions.validation.validators.valueAlreadyExists;
-        }
-        // asyncValidators: valueKeysInObject
-        //  This validator is similar to uniqueValidator but only check on some specific fields of array items.
-        if (formOptions.validation.validators.uniqueValueKeysInObject) {
-          field.validators = {
-            uniqueValueKeysInObject: {
-              expression: (control: FormControl) => {
-                // if value isn't an array or array contains less than 2 elements, no need to check
-                if (!(control.value instanceof Array) || control.value.length < 2) {
-                  return true;
-                }
-                const keysToKeep = formOptions.validation.validators.uniqueValueKeysInObject.keys;
-                const uniqueItems = Array.from(
-                  new Set(control.value.map((v: any) => {
-                    const keys = keysToKeep.reduce((acc, elt) => {
-                      acc[elt] = v[elt];
-                      return acc;
-                    }, {});
-                    return JSON.stringify(keys);
-                  })),
-                );
-                return uniqueItems.length === control.value.length;
-              }
-            }
-          };
-        }
-
-        // The start date must be less than the end date.
-        if (formOptions.validation.validators.dateMustBeLessThan) {
-          const startDate: string = formOptions.validation.validators.dateMustBeLessThan.startDate;
-          const endDate: string = formOptions.validation.validators.dateMustBeLessThan.endDate;
-          const strict: boolean = formOptions.validation.validators.dateMustBeLessThan.strict || false;
-          const updateOn: 'change' | 'blur' | 'submit' =
-            formOptions.validation.validators.dateMustBeLessThan.strict || 'blur';
-          field.validators = {
-            dateMustBeLessThan: {
-              updateOn,
-              expression: (control: FormControl) => {
-                const startDateFc = control.parent.get(startDate);
-                const endDateFc = control.parent.get(endDate);
-                if (startDateFc.value !== null && endDateFc.value !== null) {
-                  const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
-                  const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
-                  const isMustLessThan = strict
-                    ? dateStart >= dateEnd ? false : true
-                    : dateStart > dateEnd ? false : true;
-                  if (isMustLessThan) {
-                    endDateFc.setErrors(null);
-                    endDateFc.markAsDirty();
-                  }
-                  return isMustLessThan;
-                }
-                return false;
-              }
-            }
-          };
-        }
-
-        // The end date must be greater than the start date.
-        if (formOptions.validation.validators.dateMustBeGreaterThan) {
-          const startDate: string = formOptions.validation.validators.dateMustBeGreaterThan.startDate;
-          const endDate: string = formOptions.validation.validators.dateMustBeGreaterThan.endDate;
-          const strict: boolean = formOptions.validation.validators.dateMustBeGreaterThan.strict || false;
-          const updateOn: 'change' | 'blur' | 'submit' =
-            formOptions.validation.validators.dateMustBeGreaterThan.strict || 'blur';
-          field.validators = {
-            datesMustBeGreaterThan: {
-              updateOn,
-              expression: (control: FormControl) => {
-                const startDateFc = control.parent.get(startDate);
-                const endDateFc = control.parent.get(endDate);
-                if (startDateFc.value !== null && endDateFc.value !== null) {
-                  const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
-                  const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
-                  const isMustBeGreaterThan = strict
-                    ? dateStart <= dateEnd ? true : false
-                    : dateStart < dateEnd ? true : false;
-                  if (isMustBeGreaterThan) {
-                    startDateFc.setErrors(null);
-                    startDateFc.markAsDirty();
-                  }
-                  return isMustBeGreaterThan;
-                }
-                return false;
-              }
-            }
-          };
-        }
-
         // validators: add validator with expressions
+        // TODO: use widget
         const validatorsKey = Object.keys(formOptions.validation.validators);
         validatorsKey.map(validatorKey => {
           const validator = formOptions.validation.validators[validatorKey];

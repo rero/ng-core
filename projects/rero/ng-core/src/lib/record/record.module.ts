@@ -50,11 +50,13 @@ import { LabelComponent } from './editor/widgets/label/label.component';
 import { LoadTemplateFormComponent } from './editor/widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/save-template-form.component';
 import { CardWrapperComponent } from './editor/wrappers/card-wrapper/card-wrapper.component';
+import { FormFieldWrapperComponent } from './editor/wrappers/form-field-wrapper/form-field-wrapper.component';
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { RecordFilesComponent } from './files/files.component';
 import { RecordRoutingModule } from './record-routing.module';
+import { RecordService } from './record.service';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
@@ -88,6 +90,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     ToggleWrapperComponent,
     BucketsComponent,
     HorizontalWrapperComponent,
+    FormFieldWrapperComponent,
     HideWrapperComponent,
     AggregationSliderComponent,
     SelectWithSortTypeComponent,
@@ -149,6 +152,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
         { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
+        { name: 'form-field', component: FormFieldWrapperComponent },
         { name: 'hide', component: HideWrapperComponent },
         { name: 'card', component: CardWrapperComponent }
       ]
@@ -175,7 +179,12 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     SaveTemplateFormComponent
   ],
   providers: [
-    { provide: FORMLY_CONFIG, multi: true, useFactory: registerNgCoreFormlyExtension, deps: [TranslateService, EditorService] }
+    {
+      provide: FORMLY_CONFIG,
+      multi: true,
+      useFactory: registerNgCoreFormlyExtension,
+      deps: [TranslateService, EditorService, RecordService]
+    }
   ]
 })
 export class RecordModule { }
