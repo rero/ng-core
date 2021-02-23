@@ -14,13 +14,16 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { FormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
 import sha256 from 'crypto-js/sha256';
 import { BehaviorSubject, isObservable } from 'rxjs';
 import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
+import { RecordService } from '../record.service';
 
 
 export class NgCoreFormlyExtension {
@@ -47,8 +50,11 @@ export class NgCoreFormlyExtension {
   /**
    * Constructor
    * @param _editorService - editor service
+   * @params _recordService - ng core record service
    */
-  constructor(private _editorService: EditorService) { }
+  constructor(
+    private _editorService: EditorService,
+    private _recordService: RecordService) { }
 
   /**
    * prePopulate Formly hook
@@ -58,6 +64,7 @@ export class NgCoreFormlyExtension {
     if (field.key) {
       field.id = this._getKey(field);
     }
+    this._setCustomValidators(field);
   }
 
   /**
@@ -175,6 +182,129 @@ export class NgCoreFormlyExtension {
       });
     }
   }
+
+  /**
+   * Set custom validators from the templateOptions configuration.
+   * @param field - FormlyFieldConfig
+   */
+  private _setCustomValidators(field: FormlyFieldConfig) {
+    if (field.templateOptions == null || field.templateOptions.customValidators == null) {
+      return;
+    }
+    const customValidators = field.templateOptions.customValidators ? field.templateOptions.customValidators : {};
+    // asyncValidators: valueAlreadyExists
+    if (customValidators.valueAlreadyExists) {
+      const remoteRecordType =
+        customValidators.valueAlreadyExists.remoteRecordType;
+      const limitToValues =
+        customValidators.valueAlreadyExists.limitToValues;
+      const filter =
+        customValidators.valueAlreadyExists.filter;
+      const term = customValidators.valueAlreadyExists.term;
+      field.asyncValidators = {
+        validation: [
+          (control: FormControl) => {
+            return this._recordService.uniqueValue(
+              field,
+              remoteRecordType ? remoteRecordType : field.templateOptions.recordType,
+              field.templateOptions.pid ? field.templateOptions.pid : null,
+              term ? term : null,
+              limitToValues ? limitToValues : [],
+              filter ? filter : null
+            );
+          }
+        ]
+      };
+      delete customValidators.valueAlreadyExists;
+    }
+    // asyncValidators: valueKeysInObject
+    //  This validator is similar to uniqueValidator but only check on some specific fields of array items.
+    if (customValidators.uniqueValueKeysInObject) {
+      field.validators = {
+        uniqueValueKeysInObject: {
+          expression: (control: FormControl) => {
+            // if value isn't an array or array contains less than 2 elements, no need to check
+            if (!(control.value instanceof Array) || control.value.length < 2) {
+              return true;
+            }
+            const keysToKeep = customValidators.uniqueValueKeysInObject.keys;
+            const uniqueItems = Array.from(
+              new Set(control.value.map((v: any) => {
+                const keys = keysToKeep.reduce((acc, elt) => {
+                  acc[elt] = v[elt];
+                  return acc;
+                }, {});
+                return JSON.stringify(keys);
+              })),
+            );
+            return uniqueItems.length === control.value.length;
+          }
+        }
+      };
+    }
+
+    // The start date must be less than the end date.
+    if (customValidators.dateMustBeLessThan) {
+      const startDate: string = customValidators.dateMustBeLessThan.startDate;
+      const endDate: string = customValidators.dateMustBeLessThan.endDate;
+      const strict: boolean = customValidators.dateMustBeLessThan.strict || false;
+      const updateOn: 'change' | 'blur' | 'submit' =
+        customValidators.dateMustBeLessThan.strict || 'blur';
+      field.validators = {
+        dateMustBeLessThan: {
+          updateOn,
+          expression: (control: FormControl) => {
+            const startDateFc = control.parent.get(startDate);
+            const endDateFc = control.parent.get(endDate);
+            if (startDateFc.value !== null && endDateFc.value !== null) {
+              const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
+              const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
+              const isMustLessThan = strict
+                ? dateStart >= dateEnd ? false : true
+                : dateStart > dateEnd ? false : true;
+              if (isMustLessThan) {
+                endDateFc.setErrors(null);
+                endDateFc.markAsDirty();
+              }
+              return isMustLessThan;
+            }
+            return false;
+          }
+        }
+      };
+    }
+
+    // The end date must be greater than the start date.
+    if (customValidators.dateMustBeGreaterThan) {
+      const startDate: string = customValidators.dateMustBeGreaterThan.startDate;
+      const endDate: string = customValidators.dateMustBeGreaterThan.endDate;
+      const strict: boolean = customValidators.dateMustBeGreaterThan.strict || false;
+      const updateOn: 'change' | 'blur' | 'submit' =
+        customValidators.dateMustBeGreaterThan.strict || 'blur';
+      field.validators = {
+        datesMustBeGreaterThan: {
+          updateOn,
+          expression: (control: FormControl) => {
+            const startDateFc = control.parent.get(startDate);
+            const endDateFc = control.parent.get(endDate);
+            if (startDateFc.value !== null && endDateFc.value !== null) {
+              const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
+              const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
+              const isMustBeGreaterThan = strict
+                ? dateStart <= dateEnd ? true : false
+                : dateStart < dateEnd ? true : false;
+              if (isMustBeGreaterThan) {
+                startDateFc.setErrors(null);
+                startDateFc.markAsDirty();
+              }
+              return isMustBeGreaterThan;
+            }
+            return false;
+          }
+        }
+      };
+    }
+  }
 }
 
 export class TranslateExtension {
@@ -275,9 +405,14 @@ export class TranslateExtension {
  * To register an ngx-formly translations extension.
  *
  * @param translate ngx-translate service
+ * @param editorService - ng core editor service
+ * @param recordService - ng core record service
  * @returns FormlyConfig object configuration
  */
-export function registerNgCoreFormlyExtension(translate: TranslateService, editorService: EditorService) {
+export function registerNgCoreFormlyExtension(
+  translate: TranslateService,
+  editorService: EditorService,
+  recordService: RecordService) {
   return {
     // translate the default validators messages
     // widely inspired from ngx-formly example
@@ -364,7 +499,7 @@ export function registerNgCoreFormlyExtension(translate: TranslateService, edito
       extension: new TranslateExtension(translate)
     }, {
       name: 'ng-core',
-      extension: new NgCoreFormlyExtension(editorService)
+      extension: new NgCoreFormlyExtension(editorService, recordService)
     }],
   };
 }
