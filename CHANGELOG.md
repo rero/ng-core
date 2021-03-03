@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.5.0](https://github.com/rero/ng-core/tree/v1.5.0) (2021-03-03)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.4.0...v1.5.0)
+
+**Merged pull requests:**
+
+- app: export error interface [\#355](https://github.com/rero/ng-core/pull/355) ([Garfield-fr](https://github.com/Garfield-fr))
+- editor: add custom validators support [\#354](https://github.com/rero/ng-core/pull/354) ([jma](https://github.com/jma))
+- tests: add id html attributes for cypress tests [\#348](https://github.com/rero/ng-core/pull/348) ([AoNoOokami](https://github.com/AoNoOokami))
+
 ## [v1.4.0](https://github.com/rero/ng-core/tree/v1.4.0) (2021-02-10)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.3.0...v1.4.0)
@@ -19,6 +29,7 @@
 **Merged pull requests:**
 
 - translations: update catalog [\#352](https://github.com/rero/ng-core/pull/352) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- validators: fix custom validators return type [\#350](https://github.com/rero/ng-core/pull/350) ([zannkukai](https://github.com/zannkukai))
 - editor: fix issues [\#338](https://github.com/rero/ng-core/pull/338) ([jma](https://github.com/jma))
 
 ## [v1.3.0](https://github.com/rero/ng-core/tree/v1.3.0) (2021-02-03)
@@ -84,6 +95,7 @@
 
 - records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add issues in tester [\#324](https://github.com/rero/ng-core/pull/324) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- toggle-switch: translate label and description [\#314](https://github.com/rero/ng-core/pull/314) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v1.1.0](https://github.com/rero/ng-core/tree/v1.1.0) (2020-12-11)
 
@@ -94,7 +106,6 @@
 - search: fix multiple backend call [\#317](https://github.com/rero/ng-core/pull/317) ([jma](https://github.com/jma))
 - menu: add query parameters [\#316](https://github.com/rero/ng-core/pull/316) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: improve facet design. [\#315](https://github.com/rero/ng-core/pull/315) ([zannkukai](https://github.com/zannkukai))
-- validators: fix custom validators return type [\#350](https://github.com/rero/ng-core/pull/350) ([zannkukai](https://github.com/zannkukai))
 
 ## [v1.0.0](https://github.com/rero/ng-core/tree/v1.0.0) (2020-12-02)
 
@@ -118,7 +129,6 @@
 
 **Merged pull requests:**
 
-- toggle-switch: translate label and description [\#314](https://github.com/rero/ng-core/pull/314) ([Garfield-fr](https://github.com/Garfield-fr))
 - form: improve error message [\#313](https://github.com/rero/ng-core/pull/313) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: remove total count on tab [\#337](https://github.com/rero/ng-core/pull/337) ([Garfield-fr](https://github.com/Garfield-fr))
 - menu: improve menu generation management [\#335](https://github.com/rero/ng-core/pull/335) ([zannkukai](https://github.com/zannkukai))
@@ -570,6 +580,7 @@
 - editor: expose the model as input component [\#104](https://github.com/rero/ng-core/pull/104) ([jma](https://github.com/jma))
 - editor: hide trash button for non long editors [\#103](https://github.com/rero/ng-core/pull/103) ([jma](https://github.com/jma))
 - project: configure GitHub actions. [\#102](https://github.com/rero/ng-core/pull/102) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add process data record [\#101](https://github.com/rero/ng-core/pull/101) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.0.23](https://github.com/rero/ng-core/tree/v0.0.23) (2020-01-08)
 
@@ -577,7 +588,6 @@
 
 **Merged pull requests:**
 
-- editor: add process data record [\#101](https://github.com/rero/ng-core/pull/101) ([Garfield-fr](https://github.com/Garfield-fr))
 - fix: correct method to get pid from $ref [\#100](https://github.com/rero/ng-core/pull/100) ([AoNoOokami](https://github.com/AoNoOokami))
 - pagination: fix text on first page link [\#99](https://github.com/rero/ng-core/pull/99) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: move to ngx-formly [\#90](https://github.com/rero/ng-core/pull/90) ([jma](https://github.com/jma))
