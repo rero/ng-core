@@ -17,6 +17,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { cloneDeep } from 'lodash-es';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
@@ -317,7 +318,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (resetPage) {
       this.page = 1;
     }
-    this._searchParameters.next(this._serializeSearchParameters());
+    // Deep copy is sent, to avoid the reference (source object) to be
+    // accidentally changed.
+    this._searchParameters.next(cloneDeep(this._serializeSearchParameters()));
   }
 
   /**
