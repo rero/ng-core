@@ -32,7 +32,7 @@
     "bootstrap": "^4.5.3",
     "crypto-js": "^3.3.0",
     "dot-prop": "^6.0.1",
-    "elliptic": ">=6.5.3",
+    "elliptic": ">=6.5.4",
     "font-awesome": "^4.7.0",
     "handlebars": "^4.7.6",
     "http-proxy": ">=1.18.1",
