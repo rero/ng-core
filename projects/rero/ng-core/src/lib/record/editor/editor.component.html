@@ -22,7 +22,7 @@
         <div class="header py-2 mb-3 col-12 border-bottom">
             <legend *ngIf="rootFomlyConfig">
                 <span [tooltip]="rootFomlyConfig.templateOptions.description">
-                  {{ rootFomlyConfig.templateOptions.label }}
+                  {{ rootFomlyConfig.templateOptions.label || recordType | ucfirst | translate }}
                 </span>
             </legend>
             <!-- buttons -->

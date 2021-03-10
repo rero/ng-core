@@ -32,8 +32,8 @@
             class="btn btn-sm btn-outline-primary ml-2"
             [title]="'Edit' | translate"
             [name]="'Edit' | translate"
-            (click)="editRecord(record.metadata.pid)"
-            routerLink="edit/{{ record.metadata.pid }}">
+            (click)="editRecord(record.id)"
+            routerLink="edit/{{ record.id }}">
         <i class="fa fa-pencil"></i>
     </button>
 
@@ -44,7 +44,7 @@
                 class="btn btn-sm btn-outline-danger"
                 [title]="'Delete' | translate"
                 [name]="'Delete' | translate"
-                (click)="deleteRecord(record.metadata.pid)">
+                (click)="deleteRecord(record.id)">
             <i class="fa fa-trash"></i>
         </button>
         <ng-template #deleteMessageLink>

@@ -274,13 +274,13 @@ describe('RecordSearchComponent', () => {
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 
-    component.resolveDetailUrl$({ metadata: { pid: 100 } }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ id: 100 }).subscribe((result: any) => {
       expect(result.link).toBe('/custom/url/for/detail/documents/100');
     });
 
     component.detailUrl = null;
 
-    component.resolveDetailUrl$({ metadata: { pid: 100 } }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ id: 100 }).subscribe((result: any) => {
       expect(result.link).toBe('detail/100');
     });
   }));

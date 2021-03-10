@@ -122,7 +122,7 @@ describe('RecordService', () => {
     };
 
     service.getRecord('documents', '1').subscribe(data => {
-      expect(data.metadata.pid).toBe('1');
+      expect(data.id).toBe('1');
     });
 
     const req = httpMock.expectOne(request => {

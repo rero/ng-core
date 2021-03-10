@@ -256,7 +256,7 @@ export class DetailComponent implements OnInit, OnDestroy {
    * @param element - string (PID to remove) or object
    */
   deleteRecord(element: any) {
-    const pid = typeof element === 'object' ? element.metadata.pid : element;
+    const pid = typeof element === 'object' ? element.id : element;
     return this._recordUiService.deleteRecord(this._type, pid).subscribe((result: any) => {
       let redirectUrl = '../..';
       const navigateOptions = { relativeTo: this._route };
