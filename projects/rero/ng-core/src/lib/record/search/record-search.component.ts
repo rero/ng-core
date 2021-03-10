@@ -658,10 +658,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable emitting detail URL object
    */
   resolveDetailUrl$(record: any): Observable<any> {
-    const url = { link: `detail/${record.metadata.pid}`, external: false };
+    const url = { link: `detail/${record.id}`, external: false };
 
     if (this.detailUrl) {
-      url.link = this.detailUrl.replace(':type', this._currentIndex()).replace(':pid', record.metadata.pid);
+      url.link = this.detailUrl.replace(':type', this._currentIndex()).replace(':pid', record.id);
       url.external = true;
     }
 

@@ -14,7 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -127,7 +132,7 @@ export class RecordService {
     for (const key of Object.keys(preFilters)) {
       const value = preFilters[key];
       if (Array.isArray(value)) {
-        value.map(val => {
+        value.map((val) => {
           httpParams = httpParams.append(key, val);
         });
       } else {
@@ -179,7 +184,7 @@ export class RecordService {
           headers: this._createRequestHeaders(headers),
         }
       )
-      .pipe(catchError(error => this._handleError(error)));
+      .pipe(catchError((error) => this._handleError(error)));
   }
 
   /**
@@ -218,21 +223,18 @@ export class RecordService {
   }
 
   /**
-   * Create a new record
+   * Update a record
    * @param recordType - string, type of resource
-   * @param record - object, record to create
    * @param pid - string, record PID
+   * @param record - object, record to update
    */
-  update(recordType: string, record: { pid: string }) {
-    const url = `${this._apiService.getEndpointByType(recordType, true)}/${
-      record.pid
-      }`;
-    return this._http
-      .put(url, record)
-      .pipe(
-        catchError((error) => this._handleError(error)),
-        tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
-      );
+  update(recordType: string, pid: string, record: any) {
+    const url = `${this._apiService.getEndpointByType(recordType, true)}/${pid}`;
+
+    return this._http.put(url, record).pipe(
+      catchError((error) => this._handleError(error)),
+      tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
+    );
   }
 
   /**
@@ -317,7 +319,9 @@ export class RecordService {
     switch (typeof total) {
       case 'object':
         if (relation) {
-          return `${this._translateService.instant(total.relation)} ${total.value.toString()}`;
+          return `${this._translateService.instant(
+            total.relation
+          )} ${total.value.toString()}`;
         }
         return Number(total.value);
       case 'number':

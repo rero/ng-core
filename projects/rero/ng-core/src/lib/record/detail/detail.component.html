@@ -41,7 +41,7 @@
            'btn-outline-primary': !isPrimaryAction('edit'),
            'btn-primary': isPrimaryAction('edit')
        }"
-       [routerLink]="['../../edit', record.metadata.pid]"
+       [routerLink]="['../../edit', record.id]"
       >
       <i class="fa fa-pencil"></i>
       {{ 'Edit' | translate }}
@@ -61,5 +61,5 @@
     </ng-container>
   </div>
   <ng-template ngCoreRecordDetail></ng-template>
-  <ng-core-record-files [type]="type" [pid]="record.metadata.pid" *ngIf="record && filesEnabled"></ng-core-record-files>
+  <ng-core-record-files [type]="type" [pid]="record.id" *ngIf="record && filesEnabled"></ng-core-record-files>
 </div>

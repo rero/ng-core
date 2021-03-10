@@ -114,7 +114,7 @@ export class LoadTemplateFormComponent implements OnInit {
           this._router.navigate([], {
             queryParams: {
               source: 'templates',
-              pid: template.metadata.pid
+              pid: template.id
             },
             queryParamsHandling: 'merge',
             skipLocationChange: true

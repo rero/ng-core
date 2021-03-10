@@ -280,7 +280,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         combineLatest([schema$, record$]).subscribe(
           ([schemaform, data]) => {
             // Set schema
-            this.setSchema(schemaform.schema);
+            this.setSchema(
+              this._resourceConfig.recordResource
+                ? schemaform.schema.properties.metadata
+                : schemaform.schema
+            );
 
             // Check permissions and set record
             if (data.result && data.result.can === false) {
@@ -322,6 +326,10 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _setModel(model: any): void {
     if (this._resourceConfig != null) {
       // the parent dont know that we are editing a record
+
+      // /!\ This will probably not work anymore with resources managed by
+      // invenio-records-resources, a fix will be necessary to make it work
+      // with both systems.
       if (this.pid != null && (this.model == null || this.model.pid == null)) {
         model.pid = this.pid;
       }
@@ -462,9 +470,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     let data = removeEmptyValues(this.model);
     data = this.postprocessRecord(data);
 
+    // For compatibility with resources managed with invenio-records-resources
+    if (this._resourceConfig.recordResource) {
+      data = { metadata: data };
+    }
+
     let recordAction$: Observable<any>;
-    if (data.pid != null) {
-      recordAction$ = this._recordService.update(this.recordType, this.preUpdateRecord(data)).pipe(
+    if (this.pid != null) {
+      recordAction$ = this._recordService.update(this.recordType, this.pid, this.preUpdateRecord(data)).pipe(
         catchError((error) => this._handleError(error)),
         map(record => {
           return { record, action: 'update', message: this._translateService.instant('Record updated.') };
@@ -485,7 +498,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         this._translateService.instant(this.recordType)
       );
       this._recordUiService.redirectAfterSave(
-        result.record.metadata.pid,
+        result.record.id,
         result.record,
         this.recordType,
         result.action,
@@ -535,7 +548,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
               component._translateService.instant(component.editorSettings.template.recordType)
             );
             component._recordUiService.redirectAfterSave(
-              createdRecord.metadata.pid,
+              createdRecord.id,
               createdRecord,
               component.editorSettings.template.recordType,
               'create',
@@ -620,7 +633,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                       : record.metadata.name,
                     value: this._apiService.getRefEndpoint(
                       recordType,
-                      record.metadata.pid
+                      record.id
                     )
                   };
                 })

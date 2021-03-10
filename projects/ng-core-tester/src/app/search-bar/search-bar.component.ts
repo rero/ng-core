@@ -104,7 +104,7 @@ export class SearchBarComponent implements OnInit {
         query: '',
         index: 'organisations',
         category: this._translateService.instant('direct links'),
-        href: `/records/organisations/detail/${hit.metadata.pid}`,
+        href: `/records/organisations/detail/${hit.id}`,
         iconCssClass: 'fa fa-bank'
       });
     });
@@ -136,7 +136,7 @@ export class SearchBarComponent implements OnInit {
         query: hit.metadata.title.replace(/[:\-\[\]()/"]/g, ' ').replace(/\s\s+/g, ' '),
         index: 'documents',
         category: this._translateService.instant('documents')
-        // href: `/${this.viewcode}/documents/${hit.metadata.pid}`
+        // href: `/${this.viewcode}/documents/${hit.id}`
       });
     });
     return values;

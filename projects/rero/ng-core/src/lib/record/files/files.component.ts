@@ -455,7 +455,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
 
     // Update record
     this._recordService
-      .update(this.type, this.record)
+      .update(this.type, this.pid, this.record)
       .pipe(
         switchMap(() => {
           return this._getFiles$();

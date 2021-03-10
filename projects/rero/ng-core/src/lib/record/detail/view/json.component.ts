@@ -24,7 +24,7 @@ import { DetailRecord } from './detail-record';
 @Component({
   template: `
     <ng-container *ngIf="record">
-      <h1>Record of type "{{ type }}" #{{ record.metadata.pid }}</h1>
+      <h1>Record of type "{{ type }}" #{{ record.id }}</h1>
       {{ record|json }}
     </ng-container>
   `
