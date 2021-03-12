@@ -38,6 +38,7 @@ export interface SearchParams {
   size: number;
   aggregationsFilters: Array<AggregationsFilter>;
   sort: string;
+  searchFields: Array<SearchField>;
 }
 
 @Component({
@@ -781,7 +782,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       page: this.page,
       size: this.size,
       sort: this.sort,
-      aggregationsFilters: this.aggregationsFilters
+      aggregationsFilters: this.aggregationsFilters,
+      searchFields: this.searchFields
     };
   }
 
