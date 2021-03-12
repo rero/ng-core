@@ -112,14 +112,6 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   }
 
   /**
-   * Render the string representation of the $ref.
-   * @returns string - html to inject in the template.
-   */
-  getValueAsHTML(): Observable<string> {
-    return this._remoteTypeaheadService.getValueAsHTML(this._rtOptions, this.formControl.value);
-  }
-
-  /**
    * Clear current value
    */
   clear(): void {

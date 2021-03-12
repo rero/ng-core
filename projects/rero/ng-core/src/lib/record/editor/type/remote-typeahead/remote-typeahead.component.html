@@ -43,18 +43,18 @@
 </ng-container>
 
 <ng-template #customListTemplate let-matches="matches" let-query="query" let-typeaheadTemplateMethods>
-  <ul class="list-group">
-    <ng-container *ngFor="let match of matches">
-      <li [ngClass]="{'disabled font-weight-bold': match.header}" class="list-group-item list-group-item-action"
-        [class.active]="typeaheadTemplateMethods.isActive(match)">
-        <span (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
-          (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
-          {{match.value}}
-        </span>
-        <a *ngIf="match.item.externalLink && typeaheadTemplateMethods.isActive(match)" target="_blank" href="{{match.item.externalLink}}">
-          <i class="float-right fa fa-external-link text-light"></i>
-        </a>
-      </li>
-    </ng-container>
-  </ul>
+  <ng-container *ngFor="let match of matches">
+    <div [ngClass]="{ 'disabled font-weight-bold': match.header }" class="dropdown-item"
+      [class.active]="typeaheadTemplateMethods.isActive(match)">
+      <span (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
+        (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
+        <span *ngIf="match.item.currentSearch">{{ 'Add' | translate }}:&nbsp;</span>
+        {{ match.value }}
+      </span>
+      <a *ngIf="match.item.externalLink && typeaheadTemplateMethods.isActive(match)" target="_blank"
+        href="{{ match.item.externalLink }}">
+        <i class="float-right fa fa-external-link text-light"></i>
+      </a>
+    </div>
+  </ng-container>
 </ng-template>
