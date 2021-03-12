@@ -44,6 +44,15 @@ export class RemoteTypeaheadService {
    * @returns Observable of string - html template representation of the value.
    */
   getValueAsHTML(options, value: string): Observable<string> {
+    // If value does not contain a $ref, we juste have to return the value,
+    // no need to search in backend.
+    const $refExpression = new RegExp(
+      `^https?:\/\/.*\/${options.type}\/[^\/]+$`
+    );
+    if ($refExpression.test(value) === false) {
+      return of(`<strong>${value}</strong>`);
+    }
+
     const url = value.split('/');
     const pid = url.pop();
     return this._recordService
@@ -92,6 +101,16 @@ export class RemoteTypeaheadService {
               // group: 'book'
             });
           });
+
+          // If add new option is allowed, the current value is pushed to
+          // the suggestions.
+          if (
+            options.allowAdd === true &&
+            names.some((item) => item.label === query) === false
+          ) {
+            names.push({ label: query, value: query, currentSearch: true });
+          }
+
           return names;
         })
       );
