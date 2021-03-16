@@ -433,7 +433,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             this._setRemoteTypeahead(field, formOptions);
           }
 
-
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
@@ -776,6 +775,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       field.templateOptions = {
         ...field.templateOptions,
         ...formOptions.templateOptions
+      };
+    }
+    // some fields should not submit the form when enter key is pressed
+    if (field.templateOptions.doNotSubmitOnEnter != null) {
+      field.templateOptions.keydown = (f: FormlyFieldConfig, event?: any) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
       };
     }
   }
