@@ -189,7 +189,12 @@
     "required": {
       "title": "Required",
       "type": "string",
-      "minLength": 3
+      "minLength": 3,
+      "form": {
+        "templateOptions": {
+          "doNotSubmitOnEnter": true
+        }
+      }
     },
     "enum": {
       "title": "List of values",
