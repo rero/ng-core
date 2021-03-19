@@ -36,7 +36,7 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   typeaheadLoading: boolean;
 
   /** Observable on Suggestions Metadata */
-  suggestions$: Observable<Array<SuggestionMetadata>>;
+  suggestions$: Observable<Array<SuggestionMetadata|string>>;
 
   /** Template representation of the formControl value. */
   valueAsHTML$: Observable<string>;

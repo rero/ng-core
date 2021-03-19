@@ -81,38 +81,69 @@ export class RemoteTypeaheadService {
    * @param numberOfSuggestions - the max number of suggestion to return
    * @returns - an observable of the list of suggestions.
    */
-  getSuggestions(options: any, query: string, numberOfSuggestions: number): Observable<Array<SuggestionMetadata>> {
+  getSuggestions(
+    options: any,
+    query: string,
+    numberOfSuggestions: number
+  ): Observable<Array<SuggestionMetadata | string>> {
     if (!query) {
       return of([]);
     }
-    return this._recordService
-      .getRecords(options.type, `${options.field}:${query}` , 1, numberOfSuggestions)
-      .pipe(
-        map((results: Record) => {
-          const names = [];
-          if (!results) {
-            return [];
-          }
-          results.hits.hits.map((hit: any) => {
-            names.push({
-              label: hit.metadata[options.label || options.field],
-              value: this._apiService.getRefEndpoint(options.type, hit.id)
-              // add a group field to group the results
-              // group: 'book'
+
+    let suggestions$ = null;
+    if (options.suggest) {
+      suggestions$ = this._recordService
+        .suggestions(options.type, options.suggest, options.field, query)
+        .pipe(
+          map((results: Array<string>) => {
+            return results.map((item: string) => {
+              return { label: item, value: item };
             });
-          });
+          })
+        );
+    } else {
+      suggestions$ = this._recordService
+        .getRecords(
+          options.type,
+          `${options.field}:${query}`,
+          1,
+          numberOfSuggestions
+        )
+        .pipe(
+          map((results: Record) => {
+            const names = [];
+            if (!results) {
+              return [];
+            }
+            results.hits.hits.map((hit: any) => {
+              const label = hit.metadata[options.label || options.field];
+              const value = options.isNotRef
+                ? label
+                : this._apiService.getRefEndpoint(options.type, hit.id);
+              names.push({
+                label,
+                value,
+              });
+            });
 
-          // If add new option is allowed, the current value is pushed to
-          // the suggestions.
-          if (
-            options.allowAdd === true &&
-            names.some((item) => item.label === query) === false
-          ) {
-            names.push({ label: query, value: query, currentSearch: true });
-          }
+            return names;
+          })
+        );
+    }
 
-          return names;
-        })
-      );
+    return suggestions$.pipe(
+      map((results: any) => {
+        // If add new option is allowed, the current value is pushed to
+        // the suggestions.
+        if (
+          options.allowAdd === true &&
+          results.some((item) => item.label === query) === false
+        ) {
+          results.push({ label: query, value: query, currentSearch: true });
+        }
+
+        return results;
+      })
+    );
   }
 }
