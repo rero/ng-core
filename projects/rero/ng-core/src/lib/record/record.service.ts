@@ -334,6 +334,26 @@ export class RecordService {
   }
 
   /**
+   * Return the suggestions for query and field.
+   *
+   * @param resource Resource type.
+   * @param url URL of suggestions endpoint.
+   * @param field Field to search for suggestions.
+   * @param q Query.
+   * @returns Observable containing the list of suggestions.
+   */
+  suggestions(
+    resource: string,
+    url: string,
+    field: string,
+    q: string
+  ): Observable<Array<string>> {
+    return this._http.get<Array<string>>(`${this._apiService.baseUrl}${url}`, {
+      params: { resource, field, q },
+    });
+  }
+
+  /**
    * Error handling during api call process.
    * @param error - HttpErrorResponse
    * @return throwError
