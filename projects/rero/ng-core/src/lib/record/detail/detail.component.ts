@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription } from 'rxjs';
+import { isObservable, Observable, of, Subscription } from 'rxjs';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
@@ -101,6 +101,9 @@ export class DetailComponent implements OnInit, OnDestroy {
    * Object type
    */
   private _type: string;
+
+  // Subscription to detail component view observable.
+  private _detailComponentSubscription: Subscription;
 
   /**
    * Directive for displaying record
@@ -195,9 +198,14 @@ export class DetailComponent implements OnInit, OnDestroy {
    * Component destruction.
    *
    * Unsubscribes from the observables of the route parameters.
+   * Unsubscribes from the observable for detail view.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this._routeParametersSubscription.unsubscribe();
+
+    if (this._detailComponentSubscription) {
+      this._detailComponentSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -314,7 +322,17 @@ export class DetailComponent implements OnInit, OnDestroy {
     }
 
     if (types[index].detailComponent) {
-      this.viewComponent = types[index].detailComponent;
+      let detailComponent$ = types[index].detailComponent;
+
+      if (isObservable(detailComponent$) === false) {
+        detailComponent$ = of(detailComponent$);
+      }
+
+      this._detailComponentSubscription = detailComponent$.subscribe(
+        (component: any) => {
+          this.viewComponent = component;
+        }
+      );
     }
   }
 }
