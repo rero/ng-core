@@ -307,6 +307,12 @@ const routes: Routes = [
               label: 'Main title',
               path: 'title.mainTitle.value'
             }
+          ],
+          searchFilters: [
+            {
+              label: 'Open access',
+              filter: 'open_access'
+            }
           ]
         },
         {

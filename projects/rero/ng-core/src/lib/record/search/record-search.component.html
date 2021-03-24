@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-3" *ngIf="(aggregations && aggregations.length) || searchFields.length > 0">
+      <div class="col-sm-3" *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0">
         <div class="btn-group btn-block mb-3" dropdown *ngIf="searchFields.length > 0 && q">
           <button
               class="btn btn-outline-primary btn-sm text-left"
@@ -128,6 +128,12 @@
             </ul>
           </ng-template>
         </div>
+        <ng-container *ngIf="searchFilters">
+          <button class="btn btn-outline-primary btn-sm btn-block text-center mb-3"
+            [ngClass]="{ active: isFilterActive(filter) }" (click)="searchFilter(filter)" *ngFor="let filter of searchFilters">
+            {{ filter.label }}
+          </button>
+        </ng-container>
         <div *ngFor="let item of aggregations">
           <ng-core-record-search-aggregation
             [aggregation]="item"

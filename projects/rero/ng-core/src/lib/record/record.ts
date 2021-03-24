@@ -59,3 +59,12 @@ export interface SearchField {
   path: string;
   selected?: boolean;
 }
+
+/**
+ * Interface representing a search filter.
+ */
+export interface SearchFilter {
+  filter: string;
+  label: string;
+  value?: string;
+}
