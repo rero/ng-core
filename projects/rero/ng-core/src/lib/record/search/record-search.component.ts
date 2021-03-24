@@ -25,7 +25,7 @@ import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
-import { Record, SearchField, SearchResult } from '../record';
+import { Record, SearchField, SearchFilter, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
@@ -39,6 +39,7 @@ export interface SearchParams {
   aggregationsFilters: Array<AggregationsFilter>;
   sort: string;
   searchFields: Array<SearchField>;
+  searchFilters: Array<SearchFilter>;
 }
 
 @Component({
@@ -154,6 +155,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * List of fields on which we can do a specific search.
    */
   searchFields: Array<SearchField> = [];
+
+  /**
+   * List of fields on which we can filter.
+   */
+   searchFilters: Array<SearchFilter> = [];
 
   /**
    * JSON stringified of last search parameters. Used for checking if we have
@@ -708,6 +714,30 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Select or deselect a search filter.
+   *
+   * @param filter SearchFilter
+   * @returns void
+   */
+  searchFilter(filter: SearchFilter): void {
+    const values =
+      this.isFilterActive(filter) === true ? [] : [filter.value || '1'];
+    this._recordSearchService.updateAggregationFilter(filter.filter, values);
+  }
+
+  /**
+   * Check if a filter is selected.
+   *
+   * @param filter SearchFilter
+   * @returns true if the given filter is selected.
+   */
+  isFilterActive(filter: SearchFilter): boolean {
+    return this.aggregationsFilters.some((item: any) => {
+      return item.key === filter.filter;
+    });
+  }
+
+  /**
    * Search for records.
    * @param resetPage If page needs to be reset to 1.
    * @param emitParameters If parameters have to be emitted in parents.
@@ -758,6 +788,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this._loadSearchFields();
+
+    // load search filters
+    this.searchFilters = this._config.searchFilters
+      ? this._config.searchFilters
+      : [];
   }
 
   /**
@@ -783,7 +818,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       size: this.size,
       sort: this.sort,
       aggregationsFilters: this.aggregationsFilters,
-      searchFields: this.searchFields
+      searchFields: this.searchFields,
+      searchFilters: this.searchFilters
     };
   }
 
