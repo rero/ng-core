@@ -44,6 +44,7 @@ import { ObjectTypeComponent } from './editor/type/object-type/object-type.compo
 import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
 import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
+import { TextareaFieldComponent } from './editor/type/textarea/textarea.component';
 import { AddFieldEditorComponent } from './editor/widgets/add-field-editor/add-field-editor.component';
 import { DropdownLabelEditorComponent } from './editor/widgets/dropdown-label-editor/dropdown-label-editor.component';
 import { LabelComponent } from './editor/widgets/label/label.component';
@@ -99,7 +100,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     LoadTemplateFormComponent,
     SaveTemplateFormComponent,
     CardWrapperComponent,
-    LabelComponent
+    LabelComponent,
+    TextareaFieldComponent
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -147,7 +149,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'multischema', component: MultiSchemaTypeComponent },
         { name: 'datepicker', component: DatepickerTypeComponent },
         { name: 'selectWithSort', component: SelectWithSortTypeComponent },
-        { name: 'remoteTypeahead', component: RemoteTypeaheadComponent }
+        { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
+        { name: 'textarea', component: TextareaFieldComponent }
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
