@@ -330,7 +330,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       // /!\ This will probably not work anymore with resources managed by
       // invenio-records-resources, a fix will be necessary to make it work
       // with both systems.
-      if (this.pid != null && (this.model == null || this.model.pid == null)) {
+      if (
+        !this._resourceConfig.recordResource &&
+        this.pid != null &&
+        (this.model == null || this.model.pid == null)
+      ) {
         model.pid = this.pid;
       }
       // preprocess the model before sending to formly
