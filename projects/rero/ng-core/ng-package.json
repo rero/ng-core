@@ -2,6 +2,31 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/rero/ng-core",
   "lib": {
-    "entryFile": "src/public-api.ts"
+    "entryFile": "src/public-api.ts",
+    "umdModuleIds": {
+      "@biesbjerg/ngx-translate-extract-marker": "@biesbjerg/ngx-translate-extract-marker",
+      "@ngx-formly/bootstrap": "@ngx-formly/bootstrap",
+      "@ngx-formly/core": "@ngx-formly/core",
+      "@ngx-formly/core/json-schema": "@ngx-formly/core/json-schema",
+      "@ngx-translate/core": "@ngx-translate/core",
+      "@ngx-formly/core/select": "@ngx-formly/core/select",
+      "crypto-js": "crypto-js",
+      "crypto-js/sha256": "crypto-js/sha256",
+      "lodash-es": "lodash-es",
+      "ngx-bootstrap/dropdown": "ngx-bootstrap/dropdown",
+      "ngx-bootstrap/chronos": "ngx-bootstrap/chronos",
+      "ngx-bootstrap/collapse": "ngx-bootstrap/collapse",
+      "ngx-bootstrap/datepicker": "ngx-bootstrap/datepicker",
+      "ngx-bootstrap/locale": "ngx-bootstrap/locale",
+      "ngx-bootstrap/modal": "ngx-bootstrap/modal",
+      "ngx-bootstrap/pagination": "ngx-bootstrap/pagination",
+      "ngx-bootstrap/popover": "ngx-bootstrap/popover",
+      "ngx-bootstrap-slider": "ngx-bootstrap-slider",
+      "ngx-bootstrap/tooltip": "ngx-bootstrap/tooltip",
+      "ngx-bootstrap/typeahead": "ngx-bootstrap/typeahead",
+      "ngx-spinner": "ngx-spinner",
+      "ngx-toastr": "ngx-toastr",
+      "moment": "moment"
+    }
   }
 }
