@@ -32,7 +32,7 @@
             'fa-chevron-down': !expand && aggregationFilters.length == 0,
             'fa-chevron-right': aggregationFilters.length > 0
           }"></i>
-          {{ aggregation.key | translate | ucfirst }}
+          {{ (aggregation.name || aggregation.key) | translate | ucfirst }}
         </button>
       </h5>
     </div>

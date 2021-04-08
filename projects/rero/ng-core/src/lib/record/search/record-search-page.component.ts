@@ -90,6 +90,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     preFilters?: any,
     listHeaders?: any,
     itemHeaders?: any,
+    aggregationsName?: any,
     aggregationsOrder?: Array<string>,
     aggregationsExpand?: Array<string>,
     aggregationsBucketSize?: number,
