@@ -106,6 +106,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     preFilters?: any,
     listHeaders?: any,
     itemHeaders?: any,
+    aggregationsName?: any,
     aggregationsOrder?: Array<string>,
     aggregationsExpand?: Array<string>,
     aggregationsBucketSize?: number,
@@ -591,7 +592,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
             doc_count: aggr[key].doc_count || null,
             value: { buckets: aggr[key].buckets },
             type: aggr[key].type || 'terms',
-            config: aggr[key].config || null
+            config: aggr[key].config || null,
+            name: aggr[key].name || this._aggregationName(key)
           });
         }
       });
@@ -603,7 +605,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           doc_count: aggr[key].doc_count || null,
           value: { buckets: aggr[key].buckets },
           type: aggr[key].type || 'terms',
-          config: aggr[key].config || null
+          config: aggr[key].config || null,
+          name: aggr[key].name || this._aggregationName(key)
         });
       });
     }
@@ -876,5 +879,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       return null;
     }
     return this._config.index ? this._config.index : this._config.key;
+  }
+
+  /**
+   * Get personalized name for current aggregation
+   * @param key - string, aggregation key
+   * @return string or null
+   */
+  private _aggregationName(key: string): string | null {
+    return this._config.aggregationsName && key in this._config.aggregationsName
+      ? this._config.aggregationsName[key]
+      : null;
   }
 }
