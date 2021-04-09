@@ -111,9 +111,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   // list of custom validators
   private _customValidators = [
     'valueAlreadyExists',
+    'valueAlreadyExistsMultipleFields',
     'uniqueValueKeysInObject',
     'dateMustBeGreaterThan',
-    'dateMustBeLessThan'
+    'dateMustBeLessThan',
+    'isbn',
+    'issn'
   ];
 
   /**

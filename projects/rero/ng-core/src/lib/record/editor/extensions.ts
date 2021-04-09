@@ -14,16 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
 import sha256 from 'crypto-js/sha256';
-import { BehaviorSubject, isObservable } from 'rxjs';
+import * as ISBN from 'isbn3';
+import * as ISSN from 'issn';
+import moment from 'moment';
+import { BehaviorSubject, isObservable, of } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
+import { Record } from '../record';
+import { RecordService } from '../record.service';
 import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
-import { RecordService } from '../record.service';
 
 
 export class NgCoreFormlyExtension {
@@ -192,6 +196,9 @@ export class NgCoreFormlyExtension {
       return;
     }
     const customValidators = field.templateOptions.customValidators ? field.templateOptions.customValidators : {};
+    if (field.validators === undefined) {
+      field.validators = {};
+    }
     // asyncValidators: valueAlreadyExists
     if (customValidators.valueAlreadyExists) {
       const remoteRecordType =
@@ -217,6 +224,101 @@ export class NgCoreFormlyExtension {
       };
       delete customValidators.valueAlreadyExists;
     }
+
+    // asyncValidators: valueAlreadyExistsMultipleFields
+    if (customValidators.valueAlreadyExistsMultipleFields) {
+      let currentType = null;
+      const remoteRecordType = customValidators
+        .valueAlreadyExistsMultipleFields.remoteRecordType;
+      const fieldPrefix = customValidators
+        .valueAlreadyExistsMultipleFields.fieldPrefix;
+      const fields = customValidators
+        .valueAlreadyExistsMultipleFields.fields;
+      const limitToTypeField = customValidators
+        .valueAlreadyExistsMultipleFields.limitToTypeField;
+      const limitToTypes = customValidators
+        .valueAlreadyExistsMultipleFields.limitToTypes;
+      field.asyncValidators = {
+        validation: [
+          (control: FormGroup) => {
+            const type = control.get(limitToTypeField).value;
+            if (currentType !== type) {
+              currentType = type;
+              // Force validation if change the type
+              Object.keys(control.value).forEach((key) => {
+                if (key !== limitToTypeField) {
+                  control.get(key).updateValueAndValidity();
+                }
+              });
+            }
+            if (limitToTypes.includes(type)) {
+              const queryParams = [];
+              const keys = Object.keys(control.value)
+                .filter((key: string) => fields.includes(key));
+              keys.forEach((key: string) => {
+                let value = control.get(key).value;
+                if (value) {
+                  value = control.get(key).value.replace(':', '\\:');
+                  queryParams.push(`${fieldPrefix}.${key}:${value}`);
+                }
+              });
+              const query = queryParams.join(' AND ');
+              return this._recordService
+                .getRecords(remoteRecordType, query, 1, 1)
+                .pipe(
+                  map((res: Record) => this._recordService.totalHits(res.hits.total)),
+                  map((total: number) => (total ? { valueAlreadyExistsMultipleFields: true } : null)),
+                  debounceTime(500)
+                );
+            }
+            return of(true);
+          }
+        ]
+      };
+      delete customValidators.valueAlreadyExistsMultipleFields;
+    }
+
+    // validators: isbn
+    if (customValidators.isbn) {
+      const fieldType = customValidators.isbn.fieldType;
+      const fieldTypeValues = customValidators.isbn.fieldTypeValues;
+      const updateOn: 'change' | 'blur' | 'submit' =
+        customValidators.isbn.updateOn || 'blur';
+      field.validators.isbn = {
+        updateOn,
+        expression: (control: FormControl) => {
+          if (control.value !== null && control.value !== '') {
+            const fType = control.parent.get(fieldType);
+            if (fieldTypeValues.includes(fType.value)) {
+              const info = ISBN.parse(control.value);
+              return (info !== null && info.isValid === true);
+            }
+          }
+          return true;
+        }
+      };
+    }
+
+    // validators: issn
+    if (customValidators.issn) {
+      const fieldType = customValidators.issn.fieldType;
+      const fieldTypeValues = customValidators.issn.fieldTypeValues;
+      const updateOn: 'change' | 'blur' | 'submit' =
+        customValidators.issn.updateOn || 'blur';
+      field.validators.issn = {
+        updateOn,
+        expression: (control: FormControl) => {
+          if (control.value !== null && control.value !== '') {
+            const fType = control.parent.get(fieldType);
+            if (fieldTypeValues.includes(fType.value)) {
+              return ISSN.default(control.value);
+            }
+          }
+          return true;
+        }
+      };
+    }
+
     // asyncValidators: valueKeysInObject
     //  This validator is similar to uniqueValidator but only check on some specific fields of array items.
     if (customValidators.uniqueValueKeysInObject) {
@@ -249,7 +351,7 @@ export class NgCoreFormlyExtension {
       const endDate: string = customValidators.dateMustBeLessThan.endDate;
       const strict: boolean = customValidators.dateMustBeLessThan.strict || false;
       const updateOn: 'change' | 'blur' | 'submit' =
-        customValidators.dateMustBeLessThan.strict || 'blur';
+        customValidators.dateMustBeLessThan.updateOn || 'blur';
       field.validators = {
         dateMustBeLessThan: {
           updateOn,
@@ -280,7 +382,7 @@ export class NgCoreFormlyExtension {
       const endDate: string = customValidators.dateMustBeGreaterThan.endDate;
       const strict: boolean = customValidators.dateMustBeGreaterThan.strict || false;
       const updateOn: 'change' | 'blur' | 'submit' =
-        customValidators.dateMustBeGreaterThan.strict || 'blur';
+        customValidators.dateMustBeGreaterThan.updateOn || 'blur';
       field.validators = {
         datesMustBeGreaterThan: {
           updateOn,
