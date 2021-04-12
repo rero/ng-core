@@ -22,7 +22,15 @@ import { Component, Input } from '@angular/core';
 })
 export class RecordSearchAggregationComponent {
   /** Aggregation data */
-  @Input() aggregation: { key: string, bucketSize: any, doc_count?: number, value: { buckets: Array<any> }, type: string, config?: any };
+  @Input() aggregation: {
+    key: string;
+    title?: string;
+    bucketSize: any;
+    doc_count?: number;
+    value: { buckets: Array<any> };
+    type: string;
+    config?: any;
+  };
   /** Current selected values */
   @Input() aggregationsFilters = [];
   /** If true, by default buckets are displayed. */

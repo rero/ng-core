@@ -587,6 +587,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         if (key in aggr) {
           aggregations.push({
             key,
+            title: aggr[key].title || null,
             bucketSize,
             doc_count: aggr[key].doc_count || null,
             value: { buckets: aggr[key].buckets },
@@ -599,6 +600,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       Object.keys(aggr).forEach((key: string) => {
         aggregations.push({
           key,
+          title: aggr[key].title || null,
           bucketSize,
           doc_count: aggr[key].doc_count || null,
           value: { buckets: aggr[key].buckets },
