@@ -1,12 +1,25 @@
 # Changelog
 
+## [v1.7.0](https://github.com/rero/ng-core/tree/v1.7.0) (2021-04-16)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.6.0...v1.7.0)
+
+**Merged pull requests:**
+
+- translations: update catalog [\#380](https://github.com/rero/ng-core/pull/380) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- project: update dependencies [\#377](https://github.com/rero/ng-core/pull/377) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- aggregation: make the name customizable [\#375](https://github.com/rero/ng-core/pull/375) ([Garfield-fr](https://github.com/Garfield-fr))
+- dependencies: fix warning on build [\#374](https://github.com/rero/ng-core/pull/374) ([Garfield-fr](https://github.com/Garfield-fr))
+- editor: count chars and words in textarea [\#370](https://github.com/rero/ng-core/pull/370) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- search: support for search filters [\#369](https://github.com/rero/ng-core/pull/369) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- records: typeahead suggestions [\#367](https://github.com/rero/ng-core/pull/367) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.6.0](https://github.com/rero/ng-core/tree/v1.6.0) (2021-03-16)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.5.0...v1.6.0)
 
 **Merged pull requests:**
 
-- translations: update catalog [\#366](https://github.com/rero/ng-core/pull/366) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: some fields should not submit the form [\#365](https://github.com/rero/ng-core/pull/365) ([jma](https://github.com/jma))
 - search: fix search filters [\#363](https://github.com/rero/ng-core/pull/363) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: improve typeahead [\#362](https://github.com/rero/ng-core/pull/362) ([sebastiendeleze](https://github.com/sebastiendeleze))
@@ -213,6 +226,7 @@
 - search: improve autocompletion [\#292](https://github.com/rero/ng-core/pull/292) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: restore default value for hidden field [\#291](https://github.com/rero/ng-core/pull/291) ([jma](https://github.com/jma))
 - editor: fix toggle wrapper field control behavior [\#289](https://github.com/rero/ng-core/pull/289) ([zannkukai](https://github.com/zannkukai))
+- permissions: fix permissions on the configuration [\#287](https://github.com/rero/ng-core/pull/287) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.2](https://github.com/rero/ng-core/tree/v0.12.2) (2020-10-26)
 
@@ -221,7 +235,6 @@
 **Merged pull requests:**
 
 - search: add tooltip on delete button of brief view [\#288](https://github.com/rero/ng-core/pull/288) ([Garfield-fr](https://github.com/Garfield-fr))
-- permissions: fix permissions on the configuration [\#287](https://github.com/rero/ng-core/pull/287) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.1](https://github.com/rero/ng-core/tree/v0.12.1) (2020-10-21)
 
@@ -267,6 +280,7 @@
 **Merged pull requests:**
 
 - translations: update catalogs [\#276](https://github.com/rero/ng-core/pull/276) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- extension: Improve process options [\#275](https://github.com/rero/ng-core/pull/275) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.10.0](https://github.com/rero/ng-core/tree/v0.10.0) (2020-09-21)
 
@@ -274,7 +288,6 @@
 
 **Merged pull requests:**
 
-- extension: Improve process options [\#275](https://github.com/rero/ng-core/pull/275) ([Garfield-fr](https://github.com/Garfield-fr))
 - translations: update catalogs [\#271](https://github.com/rero/ng-core/pull/271) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: update files metadata [\#270](https://github.com/rero/ng-core/pull/270) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - export: fix urlencode at export [\#267](https://github.com/rero/ng-core/pull/267) ([benerken](https://github.com/benerken))
@@ -517,7 +530,6 @@
 
 **Merged pull requests:**
 
-- editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix field visibility on the model change [\#134](https://github.com/rero/ng-core/pull/134) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#133](https://github.com/rero/ng-core/pull/133) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'de' [\#132](https://github.com/rero/ng-core/pull/132) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
@@ -546,6 +558,7 @@
 
 **Merged pull requests:**
 
+- editor: fix add fields [\#135](https://github.com/rero/ng-core/pull/135) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: customize fields by resource [\#125](https://github.com/rero/ng-core/pull/125) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - routing: manage routes with classes [\#123](https://github.com/rero/ng-core/pull/123) ([Garfield-fr](https://github.com/Garfield-fr))
 - search input: set focus [\#122](https://github.com/rero/ng-core/pull/122) ([AoNoOokami](https://github.com/AoNoOokami))
@@ -624,7 +637,6 @@
 **Fixed bugs:**
 
 - Changing the number of results fire two REST requests [\#86](https://github.com/rero/ng-core/issues/86)
-- Routing issue with custom URLs for detail view [\#35](https://github.com/rero/ng-core/issues/35)
 
 **Merged pull requests:**
 
@@ -714,6 +726,7 @@
 **Fixed bugs:**
 
 - Pagination issues [\#45](https://github.com/rero/ng-core/issues/45)
+- Routing issue with custom URLs for detail view [\#35](https://github.com/rero/ng-core/issues/35)
 
 **Closed issues:**
 
