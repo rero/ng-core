@@ -51,33 +51,67 @@
           <i class="fa fa-plus mr-0 mr-sm-1"></i>
           <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
         </a>
-        <a id="search-export-button" role="button" class="btn btn-outline-primary ml-2" *ngIf="exportFormats && exportFormats.length == 1"
-           [class.disabled]="total === 0"
-           [href]="getExportFormatUrl(exportFormats[0].format)" >
-          <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} {{ exportFormats[0].label }}
-        </a>
-        <div class="btn-group ml-2" dropdown *ngIf="exportFormats && exportFormats.length > 1">
-          <button
-            id="search-export-button-basic"
-            dropdownToggle
-            [disabled]="total === 0"
-            type="button"
-            class="btn btn-outline-primary dropdown-toggle"
-          >
-            <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} ... <span class="caret"></span>
-          </button>
-          <ul
-            id="dropdown-export-basic"
-            *dropdownMenu
-            class="dropdown-menu"
-            role="menu"
-            aria-labelledby="button-export-basic"
-          >
-            <li role="menuitem" *ngFor="let format of exportFormats">
-              <a class="dropdown-item" [href]="getExportFormatUrl(format.format)" >{{ format.label }}</a>
-            </li>
-          </ul>
-        </div>
+        <!-- EXPORT BUTTON -->
+        <ng-container *ngIf="exportFormats.length > 0">
+          <!-- check single export format -->
+          <ng-container *ngIf="exportFormats.length == 1; else  multipleFormats">
+            <!-- check if we can export list -->
+            <ng-container *ngIf="canExport(exportFormats[0]); else cannotExport">
+              <a id="search-export-button"
+                 role="button" class="btn btn-outline-primary ml-2"
+                 [href]="getExportFormatUrl(exportFormats[0])">
+                <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} {{ exportFormats[0].label }}
+              </a>
+            </ng-container>
+            <ng-template #cannotExport>
+              <button id="search-export-button"
+                      role="button"
+                      class="btn btn-outline-primary ml-2 disabled"
+                      [popover]="cannotExportMessage"
+                      triggers="mouseenter:mouseleave">
+                <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} {{ exportFormats[0].label }}
+              </button>
+            </ng-template>
+          </ng-container>
+          <!-- display multiple export formats as dropdown list -->
+          <ng-template #multipleFormats>
+            <div class="btn-group ml-2" dropdown>
+              <button
+                id="search-export-button-basic"
+                dropdownToggle
+                [disabled]="total === 0"
+                type="button"
+                class="btn btn-outline-primary dropdown-toggle"
+              >
+                <i class="fa fa-download mr-1"></i> {{ 'Export as' | translate }} ... <span class="caret"></span>
+              </button>
+              <ul
+                id="dropdown-export-basic"
+                *dropdownMenu
+                class="dropdown-menu"
+                role="menu"
+                aria-labelledby="button-export-basic"
+              >
+                <li role="menuitem" *ngFor="let format of exportFormats">
+                  <!-- check if we can export list -->
+                  <ng-container *ngIf="canExport(format); else cannotExport">
+                    <a class="dropdown-item" [href]="getExportFormatUrl(format)">{{ format.label }}</a>
+                  </ng-container>
+                  <ng-template #cannotExport>
+                    <!-- use tooltip to display error message -->
+                    <span [tooltip]="cannotExportMessage" placement="right">
+                      <button disabled class="btn btn-link dropdown-item">{{ format.label }}</button>
+                    </span>
+                  </ng-template>
+                </li>
+              </ul>
+            </div>
+          </ng-template>
+        </ng-container>
+        <ng-template #cannotExportMessage>
+          <div [innerHtml]="exportInfoMessage | nl2br"></div>
+        </ng-template>
+        <!-- END EXPORT BUTTON -->
         <div class="btn-group ml-2" dropdown>
           <button
             id="button-basic"
