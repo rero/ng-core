@@ -59,14 +59,16 @@ export class RecordSearchService {
   /**
    * Set all aggregations filters and emit the list.
    * @param aggregationsFilters List of aggregations filters
+   * @param forceRefresh Force the refresh of aggregations filters
    */
-  setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>) {
+  setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>, forceRefresh: boolean = false) {
     // TODO: If the filter is in a child bucket, checks if all parents are
     // selected, too. If not, adds all parents filters.
+    if (!forceRefresh && (JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters))) {
+      forceRefresh = true;
+    }
 
-    if (JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters)) {
-      // Filters are deep copied on assigning and sending, to avoid changes
-      // outside the service on the local value.
+    if (forceRefresh) {
       this._aggregationsFilters = cloneDeep(aggregationsFilters);
       this._aggregationsFiltersSubject.next(cloneDeep(this._aggregationsFilters));
     }
@@ -78,6 +80,9 @@ export class RecordSearchService {
    * @param values Selected values
    */
   updateAggregationFilter(term: string, values: string[]) {
+    if (this._aggregationsFilters === null) {
+      this._aggregationsFilters = [];
+    }
     const index = this._aggregationsFilters.findIndex(item => item.key === term);
 
     if (values.length === 0) {

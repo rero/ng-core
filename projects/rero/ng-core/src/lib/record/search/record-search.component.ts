@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
@@ -205,6 +206,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param _translateService Translate service.
    * @param _spinner Spinner service.
    * @param _apiService Api service.
+   * @param _activatedRoute Activated Route
    */
   constructor(
     private _recordService: RecordService,
@@ -212,7 +214,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     private _recordSearchService: RecordSearchService,
     private _translateService: TranslateService,
     private _spinner: NgxSpinnerService,
-    private _apiService: ApiService
+    private _apiService: ApiService,
+    private _activatedRoute: ActivatedRoute
   ) { }
 
   /**
@@ -480,7 +483,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this.q = event;
     this.aggregationsFilters = [];
     this._searchParamsHasChanged();
-    this._recordSearchService.setAggregationsFilters([]);
+    this._recordSearchService.setAggregationsFilters(
+      this._extractPersistentAggregationsFilters(),
+      true
+    );
   }
 
   /**
@@ -723,8 +729,23 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns void
    */
   searchFilter(filter: SearchFilter): void {
-    const values =
-      this.isFilterActive(filter) === true ? [] : [filter.value || '1'];
+    let values = [];
+    const agg = this.aggregationsFilters.filter((item: any) => {
+      return item.key === filter.filter;
+    });
+    if (agg.length > 0) {
+      const aggFilter = agg[0];
+      if (!aggFilter.values.includes(filter.value)) {
+        values = [filter.value];
+      } else {
+        if (filter.disabledValue) {
+          values = [filter.disabledValue];
+        }
+      }
+    } else {
+      values = [filter.value];
+    }
+
     this._recordSearchService.updateAggregationFilter(filter.filter, values);
   }
 
@@ -735,8 +756,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns true if the given filter is selected.
    */
   isFilterActive(filter: SearchFilter): boolean {
+    if (!this.aggregationsFilters) {
+      return false;
+    }
     return this.aggregationsFilters.some((item: any) => {
-      return item.key === filter.filter;
+      return item.key === filter.filter && item.values.includes(String(filter.value));
     });
   }
 
@@ -890,5 +914,24 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     return this._config.aggregationsName && key in this._config.aggregationsName
       ? this._config.aggregationsName[key]
       : null;
+  }
+
+  /**
+   * Extract persistent search filters on current url
+   * @return Array of aggregations filter
+   */
+  private _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
+    const persistent = [];
+    const filters = this.searchFilters.filter(filter => filter.persistent === true);
+    filters.forEach((filter: SearchFilter) => {
+      if (this._activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
+        let data = this._activatedRoute.snapshot.queryParams[filter.filter];
+        if (!Array.isArray(data)) {
+          data = [data];
+        }
+        persistent.push({ key: filter.filter, values: data });
+      }
+    });
+    return persistent;
   }
 }

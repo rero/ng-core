@@ -310,8 +310,33 @@ const routes: Routes = [
           ],
           searchFilters: [
             {
+              label: 'Advanced search',
+              filter: 'simple',
+              value: '0',
+              /* If you set this value, the url parameter will still be present,
+              but with different values */
+              disabledValue: '1',
+              persistent: true,
+              url: {
+                routerLink: ['/record', 'search', 'documents'],
+                title: 'Link to search document'
+              }
+            },
+            {
               label: 'Open access',
-              filter: 'open_access'
+              filter: 'open_access',
+              value: '1',
+              url: {
+                external: true,
+                link: 'https://sonar.rero.ch',
+                target: '_blank',
+                title: 'Link to Sonar interface'
+              }
+            },
+            {
+              label: 'Another filter',
+              filter: 'other',
+              value: '1'
             }
           ]
         },
