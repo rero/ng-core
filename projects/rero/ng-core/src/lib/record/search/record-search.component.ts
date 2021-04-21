@@ -545,13 +545,20 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Get export format url.
-   * @param format - string, export format
+   * @param format - export format object
    * @return formatted url for an export format.
    */
-  getExportFormatUrl(format: string) {
-    const baseUrl = this._apiService.getEndpointByType(this._currentIndex());
-    let url = `${baseUrl}?q=${encodeURIComponent(this.q)}&format=${format}&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
+  getExportFormatUrl(format: any) {
+    // TODO: maybe we can use URLSerializer to build query string
+    const baseUrl = format.endpoint
+      ? format.endpoint
+      : this._apiService.getEndpointByType(this._currentIndex());
+    let url = `${baseUrl}?q=${encodeURIComponent(this.q)}&format=${format.format}`;
 
+    // check if max rest result size is disabled
+    if (!format.disableMaxRestResultsSize) {
+      url += `&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
+    }
     // preFilters
     if (this._config && this._config.preFilters) {
       for (const [key, value] of Object.entries(this._config.preFilters)) {
@@ -571,6 +578,29 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       });
     }
     return url;
+  }
+
+  /**
+   * Check if a record list can be exported
+   * @param format - export format object
+   * @return Boolean
+   */
+  canExport(format: any): boolean {
+    return (format.hasOwnProperty('disableMaxRestResultsSize') && format.disableMaxRestResultsSize)
+      ? this.total > 0
+      : this.total > 0 && this.total < RecordService.MAX_REST_RESULTS_SIZE;
+  }
+
+  /**
+   * Return a message containing the reasons why record list cannot be exported
+   * @return Boolean
+   */
+  get exportInfoMessage(): string {
+    return (this.total === 0)
+      ? this._translateService.instant('Result list is empty.')
+      : this._translateService.instant('Too many items. Should be less than {{max}}.',
+        { max: RecordService.MAX_REST_RESULTS_SIZE }
+      );
   }
 
   /**
