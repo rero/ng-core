@@ -21,6 +21,7 @@ import { JSONSchema7 } from '../editor/editor.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordSearchService } from './record-search.service';
+import { RecordUiService } from '../record-ui.service';
 
 @Component({
   selector: 'ng-core-record-search-page',
@@ -116,7 +117,8 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
   constructor(
     protected _route: ActivatedRoute,
     protected _router: Router,
-    protected _recordSearchService: RecordSearchService
+    protected _recordSearchService: RecordSearchService,
+    protected _recordUiService: RecordUiService
   ) { }
 
   /**
@@ -131,6 +133,9 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
       ([paramMap, queryParams]) => {
         // store current type of resource
         this.currentType = paramMap.get('type');
+        this._recordUiService.types = this._route.snapshot.data.types;
+
+        const config = this._recordUiService.getResourceConfig(this.currentType);
 
         // Stores query parameters
         this.q = queryParams.get('q') || '';
@@ -146,6 +151,15 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
             aggregationsFilters.push({ key, values });
           }
         });
+
+        // Add filter parameter value
+        if (config.searchFilters) {
+          config.searchFilters.forEach((filter: any) => {
+            if (queryParams.get(filter.filter) === null && filter.disabledValue) {
+              aggregationsFilters.push({ key: filter.filter, values: [filter.disabledValue] });
+            }
+          });
+        }
 
         // No default parameters found, we update the url to put them
         if (queryParams.has('q') === false || queryParams.has('size') === false || queryParams.has('page') === false) {

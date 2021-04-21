@@ -66,5 +66,16 @@ export interface SearchField {
 export interface SearchFilter {
   filter: string;
   label: string;
-  value?: string;
+  value: string;
+  /* If you set this value, the url parameter will still be present,
+  but with different values */
+  disabledValue?: string;
+  persistent?: boolean;
+  url?: {
+    external?: boolean;
+    link?: string;
+    routerLink?: Array<string>;
+    target?: string;
+    title?: string;
+  };
 }

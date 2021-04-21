@@ -129,10 +129,35 @@
           </ng-template>
         </div>
         <ng-container *ngIf="searchFilters">
-          <button class="btn btn-outline-primary btn-sm btn-block text-center mb-3"
-            [ngClass]="{ active: isFilterActive(filter) }" (click)="searchFilter(filter)" *ngFor="let filter of searchFilters">
-            {{ filter.label }}
-          </button>
+          <div class="mb-2">
+            <div class="custom-control custom-switch" *ngFor="let searchfilter of searchFilters">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="customSwitch-{{ searchfilter.filter }}"
+                (click)="searchFilter(searchfilter)"
+                [checked]="isFilterActive(searchfilter)"
+              >
+              <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label }}</label>
+              <ng-container *ngIf="searchfilter.url">
+                <ng-container *ngIf="searchfilter.url.external; else internal">
+                  <a
+                    class="ml-1 text-dark"
+                    [title]="searchfilter.url.title"
+                    [href]="searchfilter.url.link"
+                    [target]="searchfilter.url.target"
+                  >
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  </a>
+                </ng-container>
+                <ng-template #internal>
+                  <a class="ml-1 text-dark" [title]="searchfilter.url.title" [routerLink]="searchfilter.url.routerLink">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  </a>
+                </ng-template>
+              </ng-container>
+            </div>
+          </div>
         </ng-container>
         <div *ngFor="let item of aggregations">
           <ng-core-record-search-aggregation
