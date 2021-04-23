@@ -19,14 +19,13 @@ import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en';
 import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
 import moment from 'moment';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
 import { CoreConfigService } from '../core-config.service';
-import { SelectOption } from '../record/editor/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -80,30 +79,6 @@ export class TranslateService {
     return this._translateService.currentLang
       || this._coreConfigService.defaultLanguage
       || 'en';
-  }
-
-  /**
-   * Return the options for select box, with translations.
-   * @param values Values to populate option with.
-   * @param prefix Prefix for translations.
-   * @param sort If true, sort in alphabetical order after populating options.
-   * @return List of options.
-   */
-  getSelectOptions(values: Array<string>, prefix: string = null, sort = true): Array<SelectOption> {
-    const options = values.map((value: string) => {
-      return {
-        label: this._translateService.instant((prefix || '') + value),
-        value
-      };
-    });
-
-    if (sort === true) {
-      return options.sort((a: SelectOption, b: SelectOption) => {
-        return a.label.localeCompare(b.label);
-      });
-    }
-
-    return options;
   }
 
   private init() {

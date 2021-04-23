@@ -359,45 +359,6 @@ export class TranslateExtension {
         'templateOptions.placeholder': this._translate.stream(to.placeholder),
       };
     }
-    // Select options
-    if (to.options) {
-      if (isObservable(to.options)) {
-        to.options.subscribe((opts) => this._processOptions(field, to, opts));
-      } else {
-        this._processOptions(field, to, to.options);
-      }
-    }
-  }
-
-  /**
-   * Translate the options of a select.
-   *
-   * @params field - ngx formly field
-   * @params to - ngx formly templateOptions
-   * @params options - ngx formly templateOptions.options
-   */
-  _processOptions(field: any, to: any, options: any) {
-    const key = sha256(JSON.stringify(to)).toString();
-    this._optionsMap.set(key, options);
-    const bs = new BehaviorSubject(this._translateOptions(options));
-    this._translate.onLangChange.subscribe(() => {
-      bs.next(this._translateOptions(this._optionsMap.get(key)));
-    });
-    field.expressionProperties = {
-      ...(field.expressionProperties || {}),
-      'templateOptions.options': bs.asObservable(),
-    };
-  }
-
-  /**
-   * Translate select options
-   * @param options - array of option object
-   */
-  private _translateOptions(options: any) {
-    return options.map((option: any) => {
-      option.label = (option.hasOwnProperty('label')) ? this._translate.instant(option.label) : option.value;
-      return option;
-    });
   }
 }
 

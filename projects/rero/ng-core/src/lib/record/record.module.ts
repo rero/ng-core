@@ -38,11 +38,11 @@ import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
 import { EditorService } from './editor/services/editor.service';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
+import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-select.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
-import { SelectWithSortTypeComponent } from './editor/type/select-with-sort-type.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
 import { TextareaFieldComponent } from './editor/type/textarea/textarea.component';
 import { AddFieldEditorComponent } from './editor/widgets/add-field-editor/add-field-editor.component';
@@ -94,14 +94,14 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     FormFieldWrapperComponent,
     HideWrapperComponent,
     AggregationSliderComponent,
-    SelectWithSortTypeComponent,
     RemoteTypeaheadComponent,
     RecordFilesComponent,
     LoadTemplateFormComponent,
     SaveTemplateFormComponent,
     CardWrapperComponent,
     LabelComponent,
-    TextareaFieldComponent
+    TextareaFieldComponent,
+    CustomSelectFieldComponent
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -148,9 +148,10 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         { name: 'object', component: ObjectTypeComponent },
         { name: 'multischema', component: MultiSchemaTypeComponent },
         { name: 'datepicker', component: DatepickerTypeComponent },
-        { name: 'selectWithSort', component: SelectWithSortTypeComponent },
+        { name: 'selectWithSort', extends: 'select' }, // Kept for compatibility reason with existing configuration in backend.
         { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
-        { name: 'textarea', component: TextareaFieldComponent }
+        { name: 'textarea', component: TextareaFieldComponent },
+        { name: 'select', component: CustomSelectFieldComponent }
       ],
       wrappers: [
         { name: 'toggle-switch', component: ToggleWrapperComponent },
