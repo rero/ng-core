@@ -14,14 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule} from '@angular/forms';
-import { LoadTemplateFormComponent } from './load-template-form.component';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { RecordModule } from '@rero/ng-core';
-import { HttpClientTestingModule} from '@angular/common/http/testing';
-import { RouterTestingModule} from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { RecordModule } from '@rero/ng-core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { LoadTemplateFormComponent } from './load-template-form.component';
 
 describe('LoadTemplateFormComponent', () => {
   let component: LoadTemplateFormComponent;
@@ -31,6 +32,7 @@ describe('LoadTemplateFormComponent', () => {
     TestBed.configureTestingModule({
       declarations: [LoadTemplateFormComponent],
       imports: [
+        BrowserAnimationsModule,
         RecordModule,
         ReactiveFormsModule,
         RouterTestingModule,

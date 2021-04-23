@@ -23,7 +23,9 @@
     "hide_with_required_expression_control",
     "hide_with_required_expression",
     "hidden_sub_property_hide_expr",
-    "array_of_objects_with_sub_objects"
+    "array_of_objects_with_sub_objects",
+    "select",
+    "selectGroup"
   ],
   "required": [
     "required"
@@ -581,6 +583,72 @@
         "required": [
           "prop1",
           "prop2"
+        ]
+      }
+    },
+    "select": {
+      "title": "Select with option tree",
+      "type": "string",
+      "enum": ["value1", "value2", "value3"],
+      "form": {
+        "options": [
+          {
+            "label": "3 Value",
+            "value": "value3"
+          },
+          {
+            "label": "Group",
+            "children": [
+              {
+                "label": "2 Value",
+                "value": "value2"
+              },
+              {
+                "label": "1 Value",
+                "value": "value1",
+                "children": [
+                  {
+                    "label": "3 Value",
+                    "value": "value3",
+                    "preferred": true
+                  },
+                  {
+                    "label": "2 Value",
+                    "value": "value2",
+                    "disabled": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "label": "2 Value",
+            "value": "value2",
+            "preferred": true
+          }
+        ]
+      }
+    },
+    "selectGroup": {
+      "title": "Select group (compatibility)",
+      "type": "string",
+      "enum": ["value1", "value2", "value3"],
+      "form": {
+        "options": [
+          {
+            "label": "3 Value",
+            "value": "value3",
+            "group": "test"
+          },
+          {
+            "label": "1 Value",
+            "value": "value1"
+          },
+          {
+            "label": "2 Value",
+            "value": "value2",
+            "group": "test"
+          }
         ]
       }
     }

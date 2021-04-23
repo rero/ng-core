@@ -741,10 +741,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     if (formOptions.type != null) {
       field.type = formOptions.type;
     }
-    // make selectWithSort field type by default if form options are defined
-    if (!formOptions.hasOwnProperty('type') && formOptions.hasOwnProperty('options')) {
-      field.type = 'selectWithSort';
-    }
     // put the focus in this field
     if (formOptions.focus === true) {
       field.focus = true;
