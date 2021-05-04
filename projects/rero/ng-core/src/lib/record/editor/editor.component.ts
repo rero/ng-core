@@ -478,6 +478,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       data = { metadata: data };
     }
 
+    // The record has validation, the action `save` is set.
+    if (data.metadata?.validation) {
+      data.metadata.validation.action = 'save';
+    }
+
     let recordAction$: Observable<any>;
     if (this.pid != null) {
       recordAction$ = this._recordService.update(this.recordType, this.pid, this.preUpdateRecord(data)).pipe(
