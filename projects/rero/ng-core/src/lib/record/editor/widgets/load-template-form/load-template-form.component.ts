@@ -46,6 +46,8 @@ export class LoadTemplateFormComponent implements OnInit {
   /** BsModalService initialState Parameter */
   resourceType: string;
 
+  isDataFormLoaded = false;
+
   /**
    * constructor
    * @param _modalService: BsModalService
@@ -74,7 +76,6 @@ export class LoadTemplateFormComponent implements OnInit {
       type: 'select',
       templateOptions: {
         required: true,
-        placeholder: this._translateService.instant('Select…'),
         options: [],
         attributes: {
           size: 10
@@ -99,6 +100,7 @@ export class LoadTemplateFormComponent implements OnInit {
             return data;
           });
           this.formFields[0].templateOptions.options = templates;
+          this.isDataFormLoaded = true;
         }
     );
   }
