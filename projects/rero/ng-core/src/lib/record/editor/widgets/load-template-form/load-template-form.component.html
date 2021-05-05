@@ -16,7 +16,7 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<form [formGroup]="form" (ngSubmit)="onSubmitForm()">
+<form *ngIf="isDataFormLoaded" [formGroup]="form" (ngSubmit)="onSubmitForm()">
     <div class="modal-header">
         <h5 class="modal-title" translate>Load from template</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -30,6 +30,7 @@
                 Loading a template will reload the current form. All values previously encoded will be lost.
             </p>
         </div>
+        <div class="my-1 font-weight-bold" translate>Select a template</div>
         <formly-form [form]="form" [fields]="formFields" [model]="model"></formly-form>
     </div>
     <div class="modal-footer">
