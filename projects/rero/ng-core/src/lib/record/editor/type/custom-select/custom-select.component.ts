@@ -39,7 +39,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
   };
 
   // Current selected option
-  selectedOption: SelectOption;
+  selectedOptions: Array<SelectOption> = [];
 
   // List of options
   optionsList: Array<SelectOption> = [];
@@ -74,13 +74,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
       this.to.options.subscribe((options) => {
         this._extract_groups(options);
         this.optionsList = this._prependPreferred(this._processOptions(options));
-
-        // Select the option for current value.
-        if (this.formControl.value != null) {
-          this.selectedOption = this.optionsList.find((option) => option?.value === this.formControl.value);
-          // Call this to refresh the selected option in template.
-          this._changeDetectorRef.markForCheck();
-        }
+        this._updateSelectedOptions();
       })
     );
 
@@ -95,20 +89,14 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
         .subscribe((options) => {
           this._extract_groups(options);
           this.optionsList = this._prependPreferred(this._processOptions(options));
-
-          // Update selected option
-          if (this.selectedOption) {
-            this.selectedOption = this.optionsList.find((option) => option.value === this.selectedOption.value);
-          }
+          this._updateSelectedOptions();
         })
     );
 
     // If value externally changed, the selected option must be updated.
     this._subscriptions.add(
-      this.formControl.valueChanges.subscribe((value) => {
-        this.selectedOption = this.optionsList.find((option) => option.value === value);
-        // Call this to refresh the selected option in template.
-        this._changeDetectorRef.markForCheck();
+      this.formControl.valueChanges.subscribe(() => {
+        this._updateSelectedOptions();
       })
     );
   }
@@ -129,9 +117,33 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
     if (!this.filter) {
       return this.optionsList;
     }
-    return this.optionsList.filter(
-      (option) => !option.preferred && option.translatedLabel.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1
-    );
+
+    return this.optionsList.reduce((arr, option) => {
+      // Take only options which have a value, not disabled, not preferred,
+      // corresponding to filter and not yet added to filtered list.
+      if (
+        option.value &&
+        !option.disabled &&
+        !option.preferred &&
+        option.translatedLabel.toLowerCase().indexOf(this.filter.toLowerCase()) !== -1 &&
+        !arr.some((x) => x.value === option.value)
+      ) {
+        arr.push(option);
+      }
+      return arr;
+    }, []);
+  }
+
+  /**
+   * Return the selected values as string.
+   *
+   * @returns The selected values as string.
+   */
+  get selectedValuesAsString(): string {
+    return this.selectedOptions
+      .map((option: SelectOption) => option.translatedLabel)
+      .filter((value: string, index: number, self) => self.indexOf(value) === index)
+      .join(', ');
   }
 
   /**
@@ -149,9 +161,38 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * @param option The clicked option.
    */
   selectOption(option: SelectOption): void {
-    this.selectedOption = option;
-    this.formControl.patchValue(option.value);
+    let value = this.formControl.value;
+
+    if (this.to.multiple === true) {
+      const index = value.indexOf(option.value, 0);
+      // Option is not yet selected, we add it.
+      if (index === -1) {
+        value.push(option.value);
+      }
+      // Option is selected, we delete it.
+      else {
+        value.splice(index, 1);
+      }
+    } else {
+      value = option.value;
+    }
+
+    this.formControl.patchValue(value);
     this.filter = null;
+  }
+
+  /**
+   * Check if an option is in the selected values.
+   *
+   * @param option Select option.
+   * @returns True is option is in the selected values.
+   */
+  isOptionSelected(option: SelectOption): boolean {
+    if (this.to.multiple === true) {
+      return this.formControl.value.includes(option.value);
+    }
+
+    return this.formControl.value === option.value;
   }
 
   /**
@@ -241,5 +282,24 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
         options.splice(index, 1);
       }
     });
+  }
+
+  /**
+   * Update the selected options.
+   */
+  private _updateSelectedOptions(): void {
+    if (this.formControl.value == null) {
+      this.selectedOptions = [];
+    } else {
+      this.selectedOptions = this.optionsList.filter((option) => {
+        if (this.to.multiple === true) {
+          return this.formControl.value.includes(option?.value);
+        }
+
+        return this.formControl.value === option?.value;
+      });
+    }
+    // Call this to refresh the selected option in template.
+    this._changeDetectorRef.markForCheck();
   }
 }
