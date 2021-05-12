@@ -25,7 +25,8 @@
     "hidden_sub_property_hide_expr",
     "array_of_objects_with_sub_objects",
     "select",
-    "selectGroup"
+    "selectGroup",
+    "selectMultiple"
   ],
   "required": [
     "required"
@@ -589,7 +590,11 @@
     "select": {
       "title": "Select with option tree",
       "type": "string",
-      "enum": ["value1", "value2", "value3"],
+      "enum": [
+        "value1",
+        "value2",
+        "value3"
+      ],
       "form": {
         "options": [
           {
@@ -626,13 +631,20 @@
             "value": "value2",
             "preferred": true
           }
-        ]
+        ],
+        "templateOptions": {
+          "minItemsToDisplaySearch": 3
+        }
       }
     },
     "selectGroup": {
       "title": "Select group (compatibility)",
       "type": "string",
-      "enum": ["value1", "value2", "value3"],
+      "enum": [
+        "value1",
+        "value2",
+        "value3"
+      ],
       "form": {
         "options": [
           {
@@ -648,6 +660,40 @@
             "label": "2 Value",
             "value": "value2",
             "group": "test"
+          }
+        ]
+      }
+    },
+    "selectMultiple": {
+      "title": "Multiple select",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "default": [
+        "value2",
+        "value3"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "value1",
+          "value2",
+          "value3"
+        ]
+      },
+      "form": {
+        "options": [
+          {
+            "label": "Value 1",
+            "value": "value1"
+          },
+          {
+            "label": "Value 2",
+            "value": "value2"
+          },
+          {
+            "label": "Value 3",
+            "value": "value3"
           }
         ]
       }
