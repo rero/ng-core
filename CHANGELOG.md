@@ -1,5 +1,17 @@
 # Changelog
 
+## [v1.8.0](https://github.com/rero/ng-core/tree/v1.8.0) (2021-05-15)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.7.1...v1.8.0)
+
+**Merged pull requests:**
+
+- translations: update catalog [\#397](https://github.com/rero/ng-core/pull/397) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add support for multiple select [\#396](https://github.com/rero/ng-core/pull/396) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependencies: fix security issues [\#395](https://github.com/rero/ng-core/pull/395) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add validation action [\#387](https://github.com/rero/ng-core/pull/387) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: select with options tree [\#381](https://github.com/rero/ng-core/pull/381) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.7.1](https://github.com/rero/ng-core/tree/v1.7.1) (2021-05-05)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.7.0...v1.7.1)
@@ -11,7 +23,6 @@
 **Merged pull requests:**
 
 - translations: update catalog [\#390](https://github.com/rero/ng-core/pull/390) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- template: display of the form after loading the data [\#389](https://github.com/rero/ng-core/pull/389) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v1.7.0](https://github.com/rero/ng-core/tree/v1.7.0) (2021-04-16)
 
@@ -48,7 +59,6 @@
 **Merged pull requests:**
 
 - app: export error interface [\#355](https://github.com/rero/ng-core/pull/355) ([Garfield-fr](https://github.com/Garfield-fr))
-- editor: add custom validators support [\#354](https://github.com/rero/ng-core/pull/354) ([jma](https://github.com/jma))
 - tests: add id html attributes for cypress tests [\#348](https://github.com/rero/ng-core/pull/348) ([AoNoOokami](https://github.com/AoNoOokami))
 
 ## [v1.4.0](https://github.com/rero/ng-core/tree/v1.4.0) (2021-02-10)
@@ -80,6 +90,7 @@
 **Implemented enhancements:**
 
 - files: set default upload max size [\#347](https://github.com/rero/ng-core/pull/347) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- search list: improve export button [\#384](https://github.com/rero/ng-core/pull/384) ([lauren-d](https://github.com/lauren-d))
 
 **Closed issues:**
 
@@ -88,6 +99,8 @@
 **Merged pull requests:**
 
 - gh actions: set the stale workflow [\#345](https://github.com/rero/ng-core/pull/345) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
+- search: improve filter configuration [\#383](https://github.com/rero/ng-core/pull/383) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v1.2.0](https://github.com/rero/ng-core/tree/v1.2.0) (2021-01-25)
 
@@ -108,11 +121,12 @@
 
 **Merged pull requests:**
 
-- tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
 - security: update dependencies [\#343](https://github.com/rero/ng-core/pull/343) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - bug: correct dropdown menu issue and modal tester config. [\#341](https://github.com/rero/ng-core/pull/341) ([zannkukai](https://github.com/zannkukai))
 - dependencies: update and fix vulnerabilities [\#340](https://github.com/rero/ng-core/pull/340) ([jma](https://github.com/jma))
 - editor: fix horizontal wrapper [\#339](https://github.com/rero/ng-core/pull/339) ([zannkukai](https://github.com/zannkukai))
+- template: display of the form after loading the data [\#389](https://github.com/rero/ng-core/pull/389) ([Garfield-fr](https://github.com/Garfield-fr))
+- editor: add custom validators support [\#354](https://github.com/rero/ng-core/pull/354) ([jma](https://github.com/jma))
 
 ## [v1.1.2](https://github.com/rero/ng-core/tree/v1.1.2) (2020-12-16)
 
@@ -186,6 +200,10 @@
 
 - menu: add prefix and suffix [\#306](https://github.com/rero/ng-core/pull/306) ([Garfield-fr](https://github.com/Garfield-fr))
 
+**Closed issues:**
+
+- Create an example of the editor with a local JSONSchema [\#115](https://github.com/rero/ng-core/issues/115)
+
 **Merged pull requests:**
 
 - translations: update catalogs [\#309](https://github.com/rero/ng-core/pull/309) ([sebastiendeleze](https://github.com/sebastiendeleze))
@@ -253,6 +271,7 @@
 
 - record: fix type query with index on getRecord [\#286](https://github.com/rero/ng-core/pull/286) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix toggle wrapper if multiple [\#285](https://github.com/rero/ng-core/pull/285) ([zannkukai](https://github.com/zannkukai))
+- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.0](https://github.com/rero/ng-core/tree/v0.12.0) (2020-10-19)
 
@@ -262,7 +281,6 @@
 
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
-- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
 
@@ -647,10 +665,6 @@
 
 - Changing the number of results fire two REST requests [\#86](https://github.com/rero/ng-core/issues/86)
 
-**Closed issues:**
-
-- Create an example of the editor with a local JSONSchema [\#115](https://github.com/rero/ng-core/issues/115)
-
 **Merged pull requests:**
 
 - record: adapt redirection after saving a resource [\#93](https://github.com/rero/ng-core/pull/93) ([sebastiendeleze](https://github.com/sebastiendeleze))
@@ -721,7 +735,6 @@
 - routing: fix error on production build [\#61](https://github.com/rero/ng-core/pull/61) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - module: fix translate module import for lazy loading [\#60](https://github.com/rero/ng-core/pull/60) ([jma](https://github.com/jma))
 - template: update pr template [\#59](https://github.com/rero/ng-core/pull/59) ([AoNoOokami](https://github.com/AoNoOokami))
-- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.14](https://github.com/rero/ng-core/tree/v0.0.14) (2019-11-19)
 
@@ -731,6 +744,7 @@
 
 - editor: allow editor component inheritance [\#54](https://github.com/rero/ng-core/pull/54) ([jma](https://github.com/jma))
 - project: modules definitions refactor [\#53](https://github.com/rero/ng-core/pull/53) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- routing: fix routing issues [\#52](https://github.com/rero/ng-core/pull/52) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.13](https://github.com/rero/ng-core/tree/v0.0.13) (2019-11-15)
 
