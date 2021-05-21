@@ -26,7 +26,8 @@
     "array_of_objects_with_sub_objects",
     "select",
     "selectGroup",
-    "selectMultiple"
+    "selectMultiple",
+    "markdown"
   ],
   "required": [
     "required"
@@ -696,6 +697,15 @@
             "value": "value3"
           }
         ]
+      }
+    },
+    "markdown": {
+      "title": "Markdown",
+      "type": "string",
+      "minLength": 1,
+      "default": "Hello **world**",
+      "form": {
+        "type": "markdown"
       }
     }
   }
