@@ -16,6 +16,7 @@
  */
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -48,6 +49,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    FormsModule,
     CollapseModule.forRoot(),
     TypeaheadModule.forRoot(),
     TranslateModule.forRoot({

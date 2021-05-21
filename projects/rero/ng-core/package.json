@@ -28,7 +28,8 @@
     "ngx-bootstrap": "^6.2.0",
     "ngx-bootstrap-slider": "^1.9.0",
     "ngx-spinner": "^10.0.1",
-    "ngx-toastr": "^13.2.1"
+    "ngx-toastr": "^13.2.1",
+    "simplemde": "^1.11.2"
   },
   "publishConfig": {
     "access": "public"

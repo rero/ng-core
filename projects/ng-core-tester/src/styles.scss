@@ -19,3 +19,9 @@ $fa-font-path: "~font-awesome/fonts";
 @import "~bootstrap/scss/bootstrap.scss";
 @import "~font-awesome/scss/font-awesome.scss";
 @import "~ngx-toastr/toastr-bs4-alert";
+
+// Styles for markdown editor
+@import "~simplemde/dist/simplemde.min.css";
+.CodeMirror, .CodeMirror-scroll {
+	min-height: 120px;
+}

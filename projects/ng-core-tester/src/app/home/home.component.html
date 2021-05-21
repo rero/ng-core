@@ -67,3 +67,7 @@
 
 <h4 class="mt-5">Spinner</h4>
 <button class="btn btn-primary" (click)="showSpinner()">Show spinner (for 5 seconds)</button>
+
+<h4 class="mt-5">Markdown pipe</h4>
+<input type="text" id="markdown" value="*Hello* **world**" class="form-control" [(ngModel)]="markdownText">
+<div class="my-2" [innerHTML]="markdownText | markdown"></div>

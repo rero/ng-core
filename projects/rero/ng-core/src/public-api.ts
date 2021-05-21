@@ -31,6 +31,7 @@ export * from './lib/pipe/callback-array-filter.pipe';
 export * from './lib/pipe/default.pipe';
 export * from './lib/pipe/filesize.pipe';
 export * from './lib/pipe/get-record.pipe';
+export * from './lib/pipe/markdown.pipe';
 export * from './lib/pipe/nl2br.pipe';
 export * from './lib/pipe/sort-by-keys.pipe';
 export * from './lib/pipe/truncate-text.pipe';

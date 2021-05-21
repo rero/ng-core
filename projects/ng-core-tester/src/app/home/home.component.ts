@@ -68,6 +68,9 @@ export class HomeComponent implements OnInit {
   // Menu click
   menuClick: MenuItem;
 
+  // Markdown text
+  markdownText = '*Hello* **world**';
+
   /**
    * Component initialization
    *
