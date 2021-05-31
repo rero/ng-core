@@ -79,12 +79,14 @@ export class RemoteTypeaheadService {
    * @param options - remote typeahead options
    * @param query - search query to retrieve the suggestions list
    * @param numberOfSuggestions - the max number of suggestion to return
+   * @param currentPid - current edited record PID or null in case of add.
    * @returns - an observable of the list of suggestions.
    */
   getSuggestions(
     options: any,
     query: string,
-    numberOfSuggestions: number
+    numberOfSuggestions: number,
+    currentPid: string
   ): Observable<Array<SuggestionMetadata | string>> {
     if (!query) {
       return of([]);
@@ -102,12 +104,18 @@ export class RemoteTypeaheadService {
           })
         );
     } else {
+      const filters: any = {};
+      if (currentPid) {
+        filters.currentPid = currentPid;
+      }
       suggestions$ = this._recordService
         .getRecords(
           options.type,
           `${options.field}:${query}`,
           1,
-          numberOfSuggestions
+          numberOfSuggestions,
+          [],
+          filters
         )
         .pipe(
           map((results: Record) => {

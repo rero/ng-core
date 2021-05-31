@@ -16,6 +16,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FieldType } from '@ngx-formly/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
@@ -52,10 +53,9 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   /**
    * Constructor
    * @param _remoteTypeaheadService - RemoteTypeaheadService
+   * @param _route - Activated route
    */
-  constructor(
-    private _remoteTypeaheadService: RemoteTypeaheadService
-  ) {
+  constructor(private _remoteTypeaheadService: RemoteTypeaheadService, private _route: ActivatedRoute) {
     super();
   }
 
@@ -67,7 +67,12 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
       observer.next(this.search);
     }).pipe(
       switchMap((query: string) => {
-        return this._remoteTypeaheadService.getSuggestions(this._rtOptions, query, this._numberOfSuggestions);
+        return this._remoteTypeaheadService.getSuggestions(
+          this._rtOptions,
+          query,
+          this._numberOfSuggestions,
+          this._route.snapshot.params.pid || null
+        );
       })
     );
 
