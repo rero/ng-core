@@ -17,18 +17,20 @@
 <div class="header">
   <ng-core-label-editor *ngIf="field.templateOptions.hideLabel !== true" [field]="field"></ng-core-label-editor>
 </div>
-<!-- each object properties -->
-<div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true, 'content': true}">
-  <!--  validation error message -->
-  <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-    <formly-validation-message [field]="field"></formly-validation-message>
-  </div>
-  <div class="{{ to.containerCssClass }}">
-    <ng-container *ngFor="let f of field.fieldGroup">
-      <div class="{{ f.templateOptions.itemCssClass }} mb-1" *ngIf="!f.hide" [id]="'field-' + f.id">
-        <!-- field -->
-        <formly-field [field]="f"></formly-field>
-      </div>
-    </ng-container>
+<div class="object">
+  <!-- each object properties -->
+  <div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true, 'content': true}">
+    <!--  validation error message -->
+    <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
+      <formly-validation-message [field]="field"></formly-validation-message>
+    </div>
+    <div class="{{ to.containerCssClass }}">
+      <ng-container *ngFor="let f of field.fieldGroup">
+        <div class="{{ f.templateOptions.itemCssClass }} mb-1" *ngIf="!f.hide" [id]="'field-' + f.id">
+          <!-- field -->
+          <formly-field [field]="f"></formly-field>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>
