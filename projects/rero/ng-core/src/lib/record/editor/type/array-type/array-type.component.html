@@ -19,7 +19,7 @@
 <ng-core-label-editor *ngIf="to.label && field.templateOptions.hideLabel !== true" [field]="field">
 </ng-core-label-editor>
 
-<div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true}">
+<div class="array-item" [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true}">
   <!--  validation error message -->
   <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
     <formly-validation-message [field]="field"></formly-validation-message>
