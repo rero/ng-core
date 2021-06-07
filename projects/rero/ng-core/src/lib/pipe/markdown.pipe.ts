@@ -15,9 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import marked from 'marked';
-import { Nl2brPipe } from './nl2br.pipe';
 
 /**
  * Pipe to transform markdown to html.
@@ -39,7 +38,7 @@ export class MarkdownPipe implements PipeTransform {
    * @param value Markdown initial value.
    * @returns HTML corresponding to markdown.
    */
-  transform(value: string): string {
-    return new Nl2brPipe(this._sanitizer).transform(marked(value));
+  transform(value: string): SafeHtml {
+    return this._sanitizer.bypassSecurityTrustHtml(marked(value, { gfm: true, breaks: false }));
   }
 }
