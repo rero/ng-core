@@ -1,5 +1,22 @@
 # Changelog
 
+## [v1.9.0](https://github.com/rero/ng-core/tree/v1.9.0) (2021-06-08)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.8.0...v1.9.0)
+
+**Closed issues:**
+
+- Provide a way to customize the button bar in detail views [\#312](https://github.com/rero/ng-core/issues/312)
+- Add permissions to delete or add items in list in editor [\#311](https://github.com/rero/ng-core/issues/311)
+- Update browserlist [\#94](https://github.com/rero/ng-core/issues/94)
+
+**Merged pull requests:**
+
+- markdown: fix pipe [\#407](https://github.com/rero/ng-core/pull/407) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalog [\#406](https://github.com/rero/ng-core/pull/406) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add selectors [\#405](https://github.com/rero/ng-core/pull/405) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: add context for remote typeahead [\#403](https://github.com/rero/ng-core/pull/403) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.8.0](https://github.com/rero/ng-core/tree/v1.8.0) (2021-05-15)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.7.1...v1.8.0)
@@ -100,6 +117,7 @@
 
 - gh actions: set the stale workflow [\#345](https://github.com/rero/ng-core/pull/345) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
+- editor: add markdown editor field [\#398](https://github.com/rero/ng-core/pull/398) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - search: improve filter configuration [\#383](https://github.com/rero/ng-core/pull/383) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v1.2.0](https://github.com/rero/ng-core/tree/v1.2.0) (2021-01-25)
@@ -271,7 +289,6 @@
 
 - record: fix type query with index on getRecord [\#286](https://github.com/rero/ng-core/pull/286) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: fix toggle wrapper if multiple [\#285](https://github.com/rero/ng-core/pull/285) ([zannkukai](https://github.com/zannkukai))
-- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.12.0](https://github.com/rero/ng-core/tree/v0.12.0) (2020-10-19)
 
@@ -281,6 +298,7 @@
 
 - translations: update catalogs [\#284](https://github.com/rero/ng-core/pull/284) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Tabs: several tabs on the same index. [\#283](https://github.com/rero/ng-core/pull/283) ([Garfield-fr](https://github.com/Garfield-fr))
+- select widget: improve select with sort [\#281](https://github.com/rero/ng-core/pull/281) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.11.1](https://github.com/rero/ng-core/tree/v0.11.1) (2020-10-12)
 
@@ -655,7 +673,6 @@
 
 - records: search responsiveness [\#96](https://github.com/rero/ng-core/pull/96) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - localStorage: Improve message on event onSet [\#95](https://github.com/rero/ng-core/pull/95) ([Garfield-fr](https://github.com/Garfield-fr))
-- records: search refactor [\#87](https://github.com/rero/ng-core/pull/87) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.21](https://github.com/rero/ng-core/tree/v0.0.21) (2019-12-20)
 
