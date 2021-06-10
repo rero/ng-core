@@ -365,6 +365,10 @@
           "prop1": {
             "title": "Property 1",
             "type": "string",
+            "enum": [
+              "value#1",
+              "value#2"
+            ],
             "minLength": 3,
             "form": {
               "templateOptions": {
@@ -387,6 +391,19 @@
         "form": {
           "templateOptions": {
             "containerCssClass": "row"
+          }
+        }
+      },
+      "form": {
+        "validation": {
+          "validators": {
+            "numberOfSpecificValuesInObject": {
+              "min": 1,
+              "max": 2,
+              "keys": {
+                "prop1": "value#1"
+              }
+            }
           }
         }
       }

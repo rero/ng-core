@@ -19,8 +19,6 @@ import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
-import sha256 from 'crypto-js/sha256';
-import { BehaviorSubject, isObservable } from 'rxjs';
 import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
 import { RecordService } from '../record.service';
@@ -194,12 +192,9 @@ export class NgCoreFormlyExtension {
     const customValidators = field.templateOptions.customValidators ? field.templateOptions.customValidators : {};
     // asyncValidators: valueAlreadyExists
     if (customValidators.valueAlreadyExists) {
-      const remoteRecordType =
-        customValidators.valueAlreadyExists.remoteRecordType;
-      const limitToValues =
-        customValidators.valueAlreadyExists.limitToValues;
-      const filter =
-        customValidators.valueAlreadyExists.filter;
+      const remoteRecordType = customValidators.valueAlreadyExists.remoteRecordType;
+      const limitToValues = customValidators.valueAlreadyExists.limitToValues;
+      const filter = customValidators.valueAlreadyExists.filter;
       const term = customValidators.valueAlreadyExists.term;
       field.asyncValidators = {
         validation: [
@@ -242,7 +237,30 @@ export class NgCoreFormlyExtension {
         }
       };
     }
+    // asyncValidators: numberOfSpecificValuesInObject
+    if (customValidators.numberOfSpecificValuesInObject) {
+      field.validators = {
+        numberOfSpecificValuesInObject: {
+          expression: (control: FormControl) => {
 
+            function objIntersection(a, b) {
+              const k1 = Object.keys(a);
+              return k1.filter(k => a[k] === b[k]);
+            }
+            const min = customValidators.numberOfSpecificValuesInObject.min || 0;
+            const max = customValidators.numberOfSpecificValuesInObject.max || Infinity;
+            const keys = customValidators.numberOfSpecificValuesInObject.keys;
+
+            // if value isn't an array and no minimum value is specified, no need to check.
+            if (!(control.value instanceof Array) && min === 0) {
+              return true;
+            }
+            const counter = control.value.filter(element => objIntersection(keys, element).length > 0).length;
+            return (min <= counter && counter <= max);
+          }
+        }
+      };
+    }
     // The start date must be less than the end date.
     if (customValidators.dateMustBeLessThan) {
       const startDate: string = customValidators.dateMustBeLessThan.startDate;
@@ -399,6 +417,36 @@ export function registerNgCoreFormlyExtension(
       {
         name: 'uniqueValueKeysInObject',
         message: () => translate.stream(_('should NOT have duplicate items'))
+      },
+      {
+        name: 'numberOfSpecificValuesInObject',
+        message: (err, field: FormlyFieldConfig) => {
+          const validatorConfig = field.templateOptions.customValidators.numberOfSpecificValuesInObject;
+          const min = validatorConfig.min || 0;
+          const max = validatorConfig.max || Infinity;
+          const keys = validatorConfig.keys;
+
+          // Build a string based on validators specified keys
+          // the object `{a: 'testA', b= 'testB'}` will be transform to a string `a=testA and b=testB`
+          const keysString = Object.keys(keys).map(key => key + '=' + translate.instant(keys[key]));
+          const joinKeysString = keysString.join(' ' + translate.instant('and') + ' ');
+
+          // Build a string based on min/max values specified into configuration
+          // depending of min/max configuration, the message must be different
+          let counterMessage = '';
+          if (min > 0 && max < Infinity){
+            counterMessage = (min === max)
+              ? translate.instant(_('strictly {{counter}}'), { counter: min })
+              : translate.instant(_('between {{min}} and {{max}}'), { min, max });
+          } else if (min > 0) {
+            counterMessage = translate.instant('minimum {{min}}', { min });
+          } else if (max < Infinity) {
+            counterMessage = translate.instant('maximum {{max}}', { max });
+          }
+
+          // Combine string to return a full sentence
+          return translate.instant(_('should have {{counter}} {{keys}}'), {counter: counterMessage, keys: joinKeysString});
+        }
       },
       {
         name: 'alreadyTaken',
