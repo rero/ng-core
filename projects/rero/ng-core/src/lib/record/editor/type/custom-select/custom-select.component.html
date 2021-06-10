@@ -1,27 +1,28 @@
 <!--
- RERO angular core
- Copyright (C) 2021 RERO
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as published by
- the Free Software Foundation, version 3 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU Affero General Public License for more details.
-
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ RERO angular core
+ Copyright (C) 2021 RERO
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published by
+ the Free Software Foundation, version 3 of the License.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div>
-  <div class="btn-group mt-1" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="to.readonly">
+  <div class="btn-group my-2 w-100" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="to.readonly">
     <button id="button-basic" dropdownToggle type="button"
-      class="btn btn-outline-primary btn-sm btn-block dropdown-toggle px-3" aria-controls="dropdown-basic">
+            class="btn btn-outline-primary btn-block dropdown-toggle px-3 text-left d-flex align-items-center"
+            aria-controls="dropdown-basic">
       {{ selectedOptions.length ? selectedValuesAsString : ('Select an option' | translate) }}
-      <span class="caret"></span>
+      <span class="caret ml-auto"></span>
     </button>
-    <div id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+    <div id="dropdown-basic" *dropdownMenu class="dropdown-menu w-100" role="menu" aria-labelledby="button-basic">
       <div class="px-4 py-2" *ngIf="filter || filteredOptions.length > to.minItemsToDisplaySearch">
         <input type="text" class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
           [value]="filter" [placeholder]="'Filter...' | translate" />

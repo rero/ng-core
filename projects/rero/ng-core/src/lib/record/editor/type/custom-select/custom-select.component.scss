@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-.btn-group > button {
-  color: #495057 !important;
-  font-size: 0.9rem;
-  border: 1px solid #ced4da !important;
-  box-shadow: none !important;
-  background-color: transparent !important;
-}
+.btn-group {
+  & > button {
+    color: #495057 !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
 
-.btn-group > button:hover {
-  background-color: transparent !important;
-}
-
-.btn-group .dropdown-item {
-  font-size: 0.8rem !important;
-}
-
-.btn-group .dropdown-menu {
-  max-height: 300px;
-  overflow: scroll;
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+  .dropdown-menu {
+    max-height: 300px;
+    overflow: scroll;
+  }
 }
