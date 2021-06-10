@@ -112,6 +112,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _customValidators = [
     'valueAlreadyExists',
     'uniqueValueKeysInObject',
+    'numberOfSpecificValuesInObject',
     'dateMustBeGreaterThan',
     'dateMustBeLessThan'
   ];
