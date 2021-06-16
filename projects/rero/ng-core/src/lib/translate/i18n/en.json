@@ -65,6 +65,7 @@
   "Warning!": "Warning!",
   "You cannot read this record": "You cannot read this record",
   "You cannot update this record": "You cannot update this record",
+  "between {{min}} and {{max}}": "between {{min}} and {{max}}",
   "de": "German",
   "en": "English",
   "fr": "French",
@@ -84,6 +85,8 @@
   "should be equal to constant \"{{const}}\"": "should be equal to constant \"{{const}}\"",
   "should be multiple of ${{step}}": "should be multiple of ${{step}}",
   "should be null": "should be null",
+  "should have {{counter}} {{keys}}": "should have {{counter}} {{keys}}",
+  "strictly {{counter}}": "strictly {{counter}}",
   "the value is already taken": "the value is already taken",
   "{{ total }} result": "{{ total }} result",
   "{{ total }} results": "{{ total }} results"
