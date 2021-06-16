@@ -65,6 +65,7 @@
   "Warning!": "Achtung!",
   "You cannot read this record": "Sie dürfen diesen Datensatz nicht lesen",
   "You cannot update this record": "Sie dürfen diesen Datensatz nicht aktualisieren",
+  "between {{min}} and {{max}}": "between {{min}} and {{max}}",
   "de": "Deutsch",
   "en": "Englisch",
   "fr": "Französisch",
@@ -84,6 +85,8 @@
   "should be equal to constant \"{{const}}\"": "muss gleich der Konstante \"{{const}}\" sein",
   "should be multiple of ${{step}}": "muss ein Vielfaches von ${{step}} sein",
   "should be null": "sollte null sein",
+  "should have {{counter}} {{keys}}": "should have {{counter}} {{keys}}",
+  "strictly {{counter}}": "strictly {{counter}}",
   "the value is already taken": "der Wert ist bereits vergeben",
   "{{ total }} result": "{{ total }} Ergebnis",
   "{{ total }} results": "{{ total }} Ergebnisse"

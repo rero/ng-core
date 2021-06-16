@@ -65,6 +65,7 @@
   "Warning!": "Attenzione!",
   "You cannot read this record": "Lei non ha autorizzazioni sufficienti per vedere questa risorsa",
   "You cannot update this record": "Non è abilitato a modificare questo record",
+  "between {{min}} and {{max}}": "between {{min}} and {{max}}",
   "de": "Tedesco",
   "en": "Inglese",
   "fr": "Francese",
@@ -84,6 +85,8 @@
   "should be equal to constant \"{{const}}\"": "Deve essere uguale alla costante \"{{const}}\"",
   "should be multiple of ${{step}}": "Deve essere un multiplo di ${{step}}",
   "should be null": "Deve essere vuoto",
+  "should have {{counter}} {{keys}}": "should have {{counter}} {{keys}}",
+  "strictly {{counter}}": "strictly {{counter}}",
   "the value is already taken": "Il valore è già utilizzato",
   "{{ total }} result": "{{ total }} risultato",
   "{{ total }} results": "{{ total }} risultati"
