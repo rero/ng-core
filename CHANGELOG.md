@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.10.0](https://github.com/rero/ng-core/tree/v1.10.0) (2021-06-16)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.9.0...v1.10.0)
+
+**Merged pull requests:**
+
+- editor: fix `custom-select` widget display [\#408](https://github.com/rero/ng-core/pull/408) ([zannkukai](https://github.com/zannkukai))
+
 ## [v1.9.0](https://github.com/rero/ng-core/tree/v1.9.0) (2021-06-08)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.8.0...v1.9.0)
@@ -117,6 +125,7 @@
 
 - gh actions: set the stale workflow [\#345](https://github.com/rero/ng-core/pull/345) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
+- editor: add min/max keys validator on object [\#409](https://github.com/rero/ng-core/pull/409) ([zannkukai](https://github.com/zannkukai))
 - editor: add markdown editor field [\#398](https://github.com/rero/ng-core/pull/398) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - search: improve filter configuration [\#383](https://github.com/rero/ng-core/pull/383) ([Garfield-fr](https://github.com/Garfield-fr))
 
@@ -166,7 +175,6 @@
 
 **Merged pull requests:**
 
-- records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add issues in tester [\#324](https://github.com/rero/ng-core/pull/324) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v1.1.0](https://github.com/rero/ng-core/tree/v1.1.0) (2020-12-11)
@@ -175,6 +183,7 @@
 
 **Merged pull requests:**
 
+- records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - search: fix multiple backend call [\#317](https://github.com/rero/ng-core/pull/317) ([jma](https://github.com/jma))
 - menu: add query parameters [\#316](https://github.com/rero/ng-core/pull/316) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: improve facet design. [\#315](https://github.com/rero/ng-core/pull/315) ([zannkukai](https://github.com/zannkukai))
@@ -673,6 +682,7 @@
 
 - records: search responsiveness [\#96](https://github.com/rero/ng-core/pull/96) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - localStorage: Improve message on event onSet [\#95](https://github.com/rero/ng-core/pull/95) ([Garfield-fr](https://github.com/Garfield-fr))
+- records: search refactor [\#87](https://github.com/rero/ng-core/pull/87) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.21](https://github.com/rero/ng-core/tree/v0.0.21) (2019-12-20)
 
@@ -752,6 +762,7 @@
 - routing: fix error on production build [\#61](https://github.com/rero/ng-core/pull/61) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - module: fix translate module import for lazy loading [\#60](https://github.com/rero/ng-core/pull/60) ([jma](https://github.com/jma))
 - template: update pr template [\#59](https://github.com/rero/ng-core/pull/59) ([AoNoOokami](https://github.com/AoNoOokami))
+- git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
 
 ## [v0.0.14](https://github.com/rero/ng-core/tree/v0.0.14) (2019-11-19)
 
@@ -783,7 +794,6 @@
 
 - records: export RecordUiService [\#51](https://github.com/rero/ng-core/pull/51) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - pipe: create a new getRecord pipe [\#50](https://github.com/rero/ng-core/pull/50) ([Garfield-fr](https://github.com/Garfield-fr))
-- git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
 - api: custom headers [\#48](https://github.com/rero/ng-core/pull/48) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: search refactoring [\#47](https://github.com/rero/ng-core/pull/47) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: remove linkPrefix parameter [\#46](https://github.com/rero/ng-core/pull/46) ([sebastiendeleze](https://github.com/sebastiendeleze))
