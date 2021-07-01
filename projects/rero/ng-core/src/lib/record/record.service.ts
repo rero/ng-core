@@ -359,34 +359,26 @@ export class RecordService {
    * @return throwError
    */
   private _handleError(error: HttpErrorResponse): Observable<Error> {
-    let title: string;
-    let status = error.status;
-
-    switch (status) {
-      case 400: {
-        title = this._translateService.instant('Bad request');
-        break;
-      }
-      case 401: {
-        title = this._translateService.instant('Unauthorized');
-        break;
-      }
-      case 403: {
-        title = this._translateService.instant('Forbidden');
-        break;
-      }
-      case 404: {
-        title = this._translateService.instant('Not found');
-        break;
-      }
-      default: {
-        title = this._translateService.instant('An error occurred');
-        status = 500;
-        break;
-      }
+    // check if we have possible custom error message to display
+    if (error.status === 400 && error.error.hasOwnProperty('message')) {
+      let message = error.error.message;
+      message = message.replace(/^Validation error: /, '').trim();  // Remove invenio `ValidationError` header
+      return throwError({ status: error.status, title: this._translateService.instant(message) });
     }
 
-    return throwError({ status, title });
+    // If not, then return default message
+    switch (error.status) {
+      case 400:
+        return throwError({ status: error.status, title: this._translateService.instant('Bad request') });
+      case 401:
+        return throwError({ status: error.status, title: this._translateService.instant('Unauthorized') });
+      case 403:
+        return throwError({ status: error.status, title: this._translateService.instant('Forbidden') });
+      case 404:
+        return throwError({ status: error.status, title: this._translateService.instant('Not found') });
+      default:
+        return throwError({ status: 500, title: this._translateService.instant('An error occurred') });
+    }
   }
 
   /**

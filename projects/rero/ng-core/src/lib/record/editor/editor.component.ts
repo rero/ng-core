@@ -795,12 +795,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Handle form error
-   * @param object with status and title parameters
+   * @param error: object with status and title parameters
    * @return Observable<Error>
    */
   private _handleError(error: { status: number, title: string }): Observable<Error> {
     this._spinner.hide();
-    this.form.setErrors({ formError: true });
+    this.form.setErrors({ formError: error });
     return throwError({ status: error.status, title: error.title });
   }
 }
