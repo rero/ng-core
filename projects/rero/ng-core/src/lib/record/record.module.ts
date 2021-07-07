@@ -67,6 +67,7 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     LabelComponent,
     TextareaFieldComponent,
     CustomSelectFieldComponent,
-    MarkdownFieldComponent
+    MarkdownFieldComponent,
+    AggregationDateRangeComponent
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
