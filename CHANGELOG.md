@@ -1,11 +1,23 @@
 # Changelog
 
+## [v1.11.0](https://github.com/rero/ng-core/tree/v1.11.0) (2021-07-07)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.10.0...v1.11.0)
+
+**Merged pull requests:**
+
+- translations: translate v0.11.0 [\#415](https://github.com/rero/ng-core/pull/415) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- editor: improve error message [\#414](https://github.com/rero/ng-core/pull/414) ([zannkukai](https://github.com/zannkukai))
+- General : fix HTML copyright [\#413](https://github.com/rero/ng-core/pull/413) ([zannkukai](https://github.com/zannkukai))
+- editor: no autocomplete on `add\_field` field [\#412](https://github.com/rero/ng-core/pull/412) ([zannkukai](https://github.com/zannkukai))
+
 ## [v1.10.0](https://github.com/rero/ng-core/tree/v1.10.0) (2021-06-16)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.9.0...v1.10.0)
 
 **Merged pull requests:**
 
+- translations: update catalog [\#410](https://github.com/rero/ng-core/pull/410) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: fix `custom-select` widget display [\#408](https://github.com/rero/ng-core/pull/408) ([zannkukai](https://github.com/zannkukai))
 
 ## [v1.9.0](https://github.com/rero/ng-core/tree/v1.9.0) (2021-06-08)
@@ -175,6 +187,7 @@
 
 **Merged pull requests:**
 
+- records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add issues in tester [\#324](https://github.com/rero/ng-core/pull/324) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v1.1.0](https://github.com/rero/ng-core/tree/v1.1.0) (2020-12-11)
@@ -183,7 +196,6 @@
 
 **Merged pull requests:**
 
-- records: move back link in record detail [\#331](https://github.com/rero/ng-core/pull/331) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - search: fix multiple backend call [\#317](https://github.com/rero/ng-core/pull/317) ([jma](https://github.com/jma))
 - menu: add query parameters [\#316](https://github.com/rero/ng-core/pull/316) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: improve facet design. [\#315](https://github.com/rero/ng-core/pull/315) ([zannkukai](https://github.com/zannkukai))
@@ -399,6 +411,7 @@
 - template: add id html attribute for cypress usage [\#233](https://github.com/rero/ng-core/pull/233) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
 - records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- documentation: add a weblate badge [\#222](https://github.com/rero/ng-core/pull/222) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.7.0](https://github.com/rero/ng-core/tree/v0.7.0) (2020-07-30)
 
@@ -412,7 +425,6 @@
 - translations: update catalogs [\#226](https://github.com/rero/ng-core/pull/226) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: add ordered property for definitions [\#224](https://github.com/rero/ng-core/pull/224) ([jma](https://github.com/jma))
 - editor: add new output when the editor is loaded [\#223](https://github.com/rero/ng-core/pull/223) ([jma](https://github.com/jma))
-- documentation: add a weblate badge [\#222](https://github.com/rero/ng-core/pull/222) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.6.0](https://github.com/rero/ng-core/tree/v0.6.0) (2020-07-21)
 
@@ -716,7 +728,6 @@
 
 **Merged pull requests:**
 
-- document: fixes editor [\#81](https://github.com/rero/ng-core/pull/81) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fixes editor redirection [\#80](https://github.com/rero/ng-core/pull/80) ([jma](https://github.com/jma))
 - autocomplete: fix multiple search input in a page [\#79](https://github.com/rero/ng-core/pull/79) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#78](https://github.com/rero/ng-core/pull/78) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
@@ -728,6 +739,7 @@
 
 **Merged pull requests:**
 
+- document: fixes editor [\#81](https://github.com/rero/ng-core/pull/81) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix update permission [\#77](https://github.com/rero/ng-core/pull/77) ([AoNoOokami](https://github.com/AoNoOokami))
 - resource tab label: translation [\#75](https://github.com/rero/ng-core/pull/75) ([Garfield-fr](https://github.com/Garfield-fr))
 - general: fix redirection after add, update, delete resource [\#74](https://github.com/rero/ng-core/pull/74) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -762,7 +774,6 @@
 - routing: fix error on production build [\#61](https://github.com/rero/ng-core/pull/61) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - module: fix translate module import for lazy loading [\#60](https://github.com/rero/ng-core/pull/60) ([jma](https://github.com/jma))
 - template: update pr template [\#59](https://github.com/rero/ng-core/pull/59) ([AoNoOokami](https://github.com/AoNoOokami))
-- git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
 
 ## [v0.0.14](https://github.com/rero/ng-core/tree/v0.0.14) (2019-11-19)
 
@@ -794,6 +805,7 @@
 
 - records: export RecordUiService [\#51](https://github.com/rero/ng-core/pull/51) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - pipe: create a new getRecord pipe [\#50](https://github.com/rero/ng-core/pull/50) ([Garfield-fr](https://github.com/Garfield-fr))
+- git: add PR and issue template [\#49](https://github.com/rero/ng-core/pull/49) ([AoNoOokami](https://github.com/AoNoOokami))
 - api: custom headers [\#48](https://github.com/rero/ng-core/pull/48) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: search refactoring [\#47](https://github.com/rero/ng-core/pull/47) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - records: remove linkPrefix parameter [\#46](https://github.com/rero/ng-core/pull/46) ([sebastiendeleze](https://github.com/sebastiendeleze))
