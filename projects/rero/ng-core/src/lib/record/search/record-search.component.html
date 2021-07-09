@@ -145,18 +145,20 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-sm-3" *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0">
-          <div class="btn-group btn-block mb-3" dropdown *ngIf="searchFields.length > 0 && q">
-            <button
-                class="btn btn-outline-primary btn-sm text-left"
-                [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
-                *ngIf="searchFields.length === 1; else fieldsDropdown"
-                (click)="searchInField(searchFields[0])"
-            >
-                {{ 'Search in' | translate }} {{ searchFields[0].label | lowercase }}
+        <div *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0"
+             class="col-sm-12 col-md-5 col-lg-3 order-2 order-md-1">
+          <div *ngIf="searchFields.length > 0 && q"
+               class="btn-group btn-block mb-3" dropdown>
+            <button *ngIf="searchFields.length === 1; else fieldsDropdown"
+                    class="btn btn-outline-primary btn-sm text-left"
+                    [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
+                    (click)="searchInField(searchFields[0])">
+            {{ 'Search in' | translate }} {{ searchFields[0].label | lowercase }}
             </button>
             <ng-template #fieldsDropdown>
-              <button dropdownToggle type="button" class="btn btn-outline-primary btn-sm rounded text-left" [ngClass]="{ active: selectedSearchFields.length > 0 }">
+              <button dropdownToggle type="button"
+                      class="btn btn-outline-primary btn-sm rounded text-left"
+                      [ngClass]="{ active: selectedSearchFields.length > 0 }">
                 {{ 'Search in' | translate }}
                 <span>{{ selectedSearchFields.length > 0 ? ' "' + selectedSearchFields[0].label + '"' : '...' }}</span>
               </button>
@@ -212,7 +214,7 @@
             </div>
           </ng-container>
         </div>
-        <div id="recordlist" class="col">
+        <div id="recordlist" class="col-sm-12 col-md-7 col-lg-9 order-1 order-md-2">
           <div class="alert alert-info m-0" *ngIf="showEmptySearchMessage">
             <i class="fa fa-info-circle"></i>
             {{ 'Enter a query to get results.' | translate }}
