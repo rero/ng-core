@@ -1,0 +1,39 @@
+<!--
+  RERO angular core
+  Copyright (C) 2021 RERO
+  Copyright (C) 2021 UCLouvain
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="row mt-3">
+    <div class="col-12 form-group">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+            </div>
+            <input class="form-control"
+                   [(ngModel)]="dateRangeModel"
+                   [bsValue]="dateRangeModel"
+                   [bsConfig]="bsConfig"
+                   bsDaterangepicker>
+        </div>
+    </div>
+</div>
+<div class="text-center mt-2">
+    <small>
+        <a href class="mx-3" (click)="$event.preventDefault(); updateFilter()" translate>Filter</a>
+        <a href class="mx-3" (click)="$event.preventDefault(); clearFilter()" *ngIf="hasQueryParam" translate>Clear filter</a>
+    </small>
+</div>
+

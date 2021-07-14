@@ -40,14 +40,24 @@
       <div class="card-body pl-3 pr-2 py-3">
         <ng-container [ngSwitch]="aggregation.type">
           <!-- Range -->
-          <ng-core-aggregation-slider [key]="aggregation.key" [min]="aggregation.config.min || 1"
-            [max]="aggregation.config.max || 100" [step]="aggregation.config.step || 1"
-            [buckets]="aggregation.value.buckets" *ngSwitchCase="'range'">
+          <ng-core-aggregation-slider *ngSwitchCase="'range'"
+              [key]="aggregation.key"
+              [min]="aggregation.config.min || 1"
+              [max]="aggregation.config.max || 100"
+              [step]="aggregation.config.step || 1"
+              [buckets]="aggregation.value.buckets" >
           </ng-core-aggregation-slider>
-
+          <!-- Date range -->
+          <ng-core-aggregation-date-range *ngSwitchCase="'date-range'"
+              [key]="aggregation.key"
+              [config]="aggregation.config"
+              [buckets]="aggregation.value.buckets" >
+          </ng-core-aggregation-date-range>
           <!-- Terms (default) -->
-          <ng-core-record-search-aggregation-buckets [buckets]="aggregation.value.buckets"
-            [aggregationKey]="aggregation.key" [size]="aggregation.bucketSize" *ngSwitchDefault>
+          <ng-core-record-search-aggregation-buckets *ngSwitchDefault
+              [buckets]="aggregation.value.buckets"
+              [aggregationKey]="aggregation.key"
+              [size]="aggregation.bucketSize" >
           </ng-core-record-search-aggregation-buckets>
         </ng-container>
       </div>
