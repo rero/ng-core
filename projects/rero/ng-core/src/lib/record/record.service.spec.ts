@@ -113,6 +113,32 @@ describe('RecordService', () => {
     httpMock.verify();
   });
 
+  it('should return requested aggregations', () => {
+    const expectedData: Record = {
+      aggregations: {
+        authors: {
+          buckets: [{
+           doc_count: 2,
+           key: 'Doe, John'
+          }]
+        }
+      },
+      hits: {
+        total: 2
+      },
+      links: {}
+    };
+
+    service
+        .getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }], undefined, null, null, ['authors'])
+        .subscribe((data: Record) => {
+          expect(data.aggregations.authors.buckets[0].doc_count).toBe(2);
+        });
+
+    const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');
+    req.flush(expectedData);
+  });
+
   it('should get a record detail', () => {
     const expectedData: any = {
       id: '1',
