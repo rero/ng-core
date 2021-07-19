@@ -284,6 +284,7 @@ const routes: Routes = [
           adminMode: adminModeCan,
           aggregationsBucketSize: 8,
           aggregationsExpand: ['language'],
+          aggregationsOrder: ['author', 'language'],
           formFieldMap,
           listHeaders: {
             'Content-Type': 'application/rero+json'
@@ -338,7 +339,8 @@ const routes: Routes = [
               filter: 'other',
               value: '1'
             }
-          ]
+          ],
+          allowEmptySearch: false
         },
         {
           key: 'organisations',

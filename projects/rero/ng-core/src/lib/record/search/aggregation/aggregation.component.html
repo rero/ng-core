@@ -1,35 +1,34 @@
 <!--
   RERO angular core
   Copyright (C) 2020 RERO
- 
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
   the Free Software Foundation, version 3 of the License.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU Affero General Public License for more details.
- 
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- Aggregation with no bucket, containing only the count. -->
-<div class="mb-3" *ngIf="aggregation.doc_count && aggregation.doc_count > 0; else cardAggregation">
+<div class="mb-3" *ngIf="aggregation.doc_count != null; else cardAggregation">
   <ng-core-record-search-aggregation-buckets
     [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
     [size]="aggregation.bucketSize">
   </ng-core-record-search-aggregation-buckets>
 </div>
 <ng-template #cardAggregation>
-  <div class="card mb-2"
-    *ngIf="(aggregation.value.buckets && aggregation.value.buckets.length) || aggregation.type !== 'terms'">
+  <div class="card mb-2">
     <div class="card-header p-0">
       <h5 class="mb-0">
-        <button class="btn btn-link text-decoration-none" type="button" (click)="expand = !expand;">
+        <button class="btn btn-link text-decoration-none" type="button" (click)="toggleVisibility()">
           <i class="fa pr-2 small" [ngClass]="{
-            'fa-chevron-up': expand && aggregationFilters.length == 0,
-            'fa-chevron-down': !expand && aggregationFilters.length == 0,
+            'fa-chevron-up': aggregation.expanded && aggregationFilters.length === 0,
+            'fa-chevron-down': !aggregation.expanded && aggregationFilters.length === 0,
             'fa-chevron-right': aggregationFilters.length > 0
           }"></i>
           {{ (aggregation.name || aggregation.key) | translate | ucfirst }}
@@ -46,9 +45,15 @@
           </ng-core-aggregation-slider>
 
           <!-- Terms (default) -->
-          <ng-core-record-search-aggregation-buckets [buckets]="aggregation.value.buckets"
-            [aggregationKey]="aggregation.key" [size]="aggregation.bucketSize" *ngSwitchDefault>
-          </ng-core-record-search-aggregation-buckets>
+          <ng-container *ngSwitchDefault>
+            <ng-core-record-search-aggregation-buckets [buckets]="aggregation.value.buckets"
+              [aggregationKey]="aggregation.key" [size]="aggregation.bucketSize"
+              *ngIf="aggregation.value.buckets.length > 0; else noResult">
+            </ng-core-record-search-aggregation-buckets>
+            <ng-template #noResult>
+              <i class="small" translate *ngIf="aggregation.loaded">No result</i>
+            </ng-template>
+          </ng-container>
         </ng-container>
       </div>
     </div>

@@ -79,3 +79,18 @@ export interface SearchFilter {
     title?: string;
   };
 }
+
+/**
+ * Interface for an aggregation
+ */
+export interface Aggregation {
+  key: string;
+  bucketSize: any;
+  value: { buckets: Array<any> };
+  expanded: boolean;
+  loaded?: boolean;
+  doc_count?: number;
+  type?: string;
+  config?: any;
+  name?: string;
+}
