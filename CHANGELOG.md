@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.12.0](https://github.com/rero/ng-core/tree/v1.12.0) (2021-07-19)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.11.1...v1.12.0)
+
+**Merged pull requests:**
+
+- records: optimize search [\#422](https://github.com/rero/ng-core/pull/422) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- api: add `facets` parameter to `getRecords` [\#421](https://github.com/rero/ng-core/pull/421) ([zannkukai](https://github.com/zannkukai))
+- records: fix files permissions [\#420](https://github.com/rero/ng-core/pull/420) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.11.1](https://github.com/rero/ng-core/tree/v1.11.1) (2021-07-09)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.11.0...v1.11.1)
@@ -446,6 +456,7 @@
 - security: update dependencies [\#218](https://github.com/rero/ng-core/pull/218) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: fix asynchronous translations options [\#217](https://github.com/rero/ng-core/pull/217) ([jma](https://github.com/jma))
 - project: downgrade ngx-spinner version [\#216](https://github.com/rero/ng-core/pull/216) ([lauren-d](https://github.com/lauren-d))
+- editor: fix 'oneOf' behaviour [\#215](https://github.com/rero/ng-core/pull/215) ([AoNoOokami](https://github.com/AoNoOokami))
 - search: add button to export results [\#212](https://github.com/rero/ng-core/pull/212) ([lauren-d](https://github.com/lauren-d))
 - security: update dependencies [\#209](https://github.com/rero/ng-core/pull/209) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - project: add `ngx-spinner` library [\#208](https://github.com/rero/ng-core/pull/208) ([sebastiendeleze](https://github.com/sebastiendeleze))
@@ -637,7 +648,6 @@
 - search input: set focus [\#122](https://github.com/rero/ng-core/pull/122) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: new wrapper toggle-switch [\#120](https://github.com/rero/ng-core/pull/120) ([zannkukai](https://github.com/zannkukai))
 - documentation: corrections [\#119](https://github.com/rero/ng-core/pull/119) ([sebastiendeleze](https://github.com/sebastiendeleze))
-- project: export pipes [\#117](https://github.com/rero/ng-core/pull/117) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.0.27](https://github.com/rero/ng-core/tree/v0.0.27) (2020-01-21)
 
@@ -646,10 +656,12 @@
 **Merged pull requests:**
 
 - records: fix record deletion issue [\#118](https://github.com/rero/ng-core/pull/118) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- project: export pipes [\#117](https://github.com/rero/ng-core/pull/117) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'nl' [\#116](https://github.com/rero/ng-core/pull/116) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 - typehead: fix hidden property [\#114](https://github.com/rero/ng-core/pull/114) ([lauren-d](https://github.com/lauren-d))
 - editor: support validator with expression and message [\#113](https://github.com/rero/ng-core/pull/113) ([Garfield-fr](https://github.com/Garfield-fr))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'es' [\#112](https://github.com/rero/ng-core/pull/112) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
+- Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'fr' [\#111](https://github.com/rero/ng-core/pull/111) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 
 ## [v0.0.26](https://github.com/rero/ng-core/tree/v0.0.26) (2020-01-15)
 
@@ -657,7 +669,6 @@
 
 **Merged pull requests:**
 
-- Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'fr' [\#111](https://github.com/rero/ng-core/pull/111) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'en' [\#110](https://github.com/rero/ng-core/pull/110) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 - datepicker: fix output value [\#109](https://github.com/rero/ng-core/pull/109) ([Garfield-fr](https://github.com/Garfield-fr))
 - project: trigger workflow on pushing pull request [\#108](https://github.com/rero/ng-core/pull/108) ([sebastiendeleze](https://github.com/sebastiendeleze))
