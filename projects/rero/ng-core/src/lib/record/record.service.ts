@@ -101,6 +101,7 @@ export class RecordService {
    *                     a string or a list of string to filter with multiple values.
    * @param headers - HttpHeaders optional http header for the backend call.
    * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')
+   * @param facets - list of strings, define which aggregations/facets should be included into the response.
    */
   getRecords(
     type: string,
@@ -110,7 +111,8 @@ export class RecordService {
     aggregationsFilters: any[] = [],
     preFilters: object = {},
     headers: any = null,
-    sort: string = null
+    sort: string = null,
+    facets: string[] = []
   ): Observable<Record | Error> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
@@ -139,6 +141,10 @@ export class RecordService {
         httpParams = httpParams.append(key, value);
       }
     }
+
+    // facets management
+    //   if array `facets` is an empty array, no aggregations data will be included into response.s
+    httpParams = httpParams.append('facets', facets.join(','));
 
     // http request with headers
     return this._http
