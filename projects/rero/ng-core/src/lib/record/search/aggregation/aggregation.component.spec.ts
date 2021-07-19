@@ -57,6 +57,7 @@ describe('RecordSearchAggregationComponent', () => {
           }
         ]
       },
+      expanded: false,
       type: 'terms',
       config: {}
     };

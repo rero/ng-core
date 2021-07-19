@@ -184,6 +184,7 @@ describe('RecordSearchComponent', () => {
     fixture = TestBed.createComponent(RecordSearchComponent);
     component = fixture.componentInstance;
     component.aggregationsFilters = [];
+    component.aggregations = [];
     /* tslint:disable:no-string-literal */
     component['_config'] = {
       preFilters: {}
@@ -283,22 +284,6 @@ describe('RecordSearchComponent', () => {
     component.resolveDetailUrl$({ id: 100 }).subscribe((result: any) => {
       expect(result.link).toBe('detail/100');
     });
-  }));
-
-  it('should reorder aggregations', waitForAsync(() => {
-    component.currentType = 'documents';
-    const result = [
-      { key: 'author', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null, name: null},
-      { key: 'language', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null, name: null},
-    ];
-    expect(component.aggregationsOrder(aggregations)).toEqual(result);
-
-    const resultOrder = [
-      { key: 'language', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null, name: null},
-      { key: 'author', bucketSize: null, doc_count: null, value: { buckets: [] }, type: 'terms', config: null, name: null},
-    ];
-    component['_config'] = { key: 'documents', aggregationsOrder: ['language', 'author'] };
-    expect(component.aggregationsOrder(aggregations)).toEqual(resultOrder);
   }));
 
   it('should expand aggregation', waitForAsync(() => {

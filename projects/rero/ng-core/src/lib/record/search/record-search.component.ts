@@ -26,7 +26,7 @@ import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
-import { Record, SearchField, SearchFilter, SearchResult } from '../record';
+import { Aggregation, Record, SearchField, SearchFilter, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
@@ -138,7 +138,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Facets retrieved from request result
    */
-  aggregations: Array<{ key: string, bucketSize: any, value: { buckets: [] } }>;
+  aggregations: Array<Aggregation>;
 
   /**
    * Error message when something wrong happens during a search
@@ -162,6 +162,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * List of fields on which we can filter.
    */
    searchFilters: Array<SearchFilter> = [];
+
+  /**
+   * Wether to show the empty search message info.
+   */
+  showEmptySearchMessage = false;
 
   /**
    * JSON stringified of last search parameters. Used for checking if we have
@@ -257,9 +262,20 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         (records: Record) => {
           this.hits = records.hits;
           this._spinner.hide();
-          this.aggregations$(records.aggregations).subscribe((aggr: any) => {
-            this.aggregations = this.aggregationsOrder(aggr);
+
+          // Apply filters
+          this.aggregations$(records.aggregations).subscribe((aggregations: any) => {
+            this.aggregations.forEach((agg: Aggregation) => {
+              // Mark all aggregations as not loaded.
+              agg.loaded = false;
+              agg.value.buckets = [];
+              const recordsAggregationKey = Object.keys(aggregations).find((key: string) => key === agg.key);
+              if (recordsAggregationKey) {
+                this._mapAggregation(agg, aggregations[recordsAggregationKey]);
+              }
+            });
           });
+
           this._emitNewParameters();
           this.recordsSearched.emit({ type: this.currentType, records });
         },
@@ -480,6 +496,12 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param event - string, new query text
    */
   searchByQuery(event: string) {
+    // If empty search is not allowed and query is empty, the search is not processed.
+    if (this._config.allowEmptySearch === false && !event) {
+      this.showEmptySearchMessage = true;
+      return;
+    }
+
     this.q = event;
     this.aggregationsFilters = [];
     this._searchParamsHasChanged();
@@ -607,46 +629,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       : this._translateService.instant('Too many items. Should be less than {{max}}.',
         { max: RecordService.MAX_REST_RESULTS_SIZE }
       );
-  }
-
-  /**
-   * Aggregations order (facets)
-   * @param aggr - Aggregations dictonary
-   * @return Array of aggregation, eventually re-ordered.
-   */
-  aggregationsOrder(aggr: any): Array<any> {
-    // TODO: replace 'value' by buckets directly and merge and rename aggregationOrders and aggregationsFilters
-    // to postProcessAggregations in route configuration
-    const aggregations = [];
-    const bucketSize = ('aggregationsBucketSize' in this._config) ? this._config.aggregationsBucketSize : null;
-    if ('aggregationsOrder' in this._config) {
-      this._config.aggregationsOrder.forEach((key: string) => {
-        if (key in aggr) {
-          aggregations.push({
-            key,
-            bucketSize,
-            doc_count: aggr[key].doc_count || null,
-            value: { buckets: aggr[key].buckets },
-            type: aggr[key].type || 'terms',
-            config: aggr[key].config || null,
-            name: aggr[key].name || this._aggregationName(key)
-          });
-        }
-      });
-    } else {
-      Object.keys(aggr).forEach((key: string) => {
-        aggregations.push({
-          key,
-          bucketSize,
-          doc_count: aggr[key].doc_count || null,
-          value: { buckets: aggr[key].buckets },
-          type: aggr[key].type || 'terms',
-          config: aggr[key].config || null,
-          name: aggr[key].name || this._aggregationName(key)
-        });
-      });
-    }
-    return aggregations;
   }
 
   /**
@@ -795,26 +777,66 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Search for records.
-   * @param resetPage If page needs to be reset to 1.
-   * @param emitParameters If parameters have to be emitted in parents.
+   * Load buckets for the given aggregation.
+   *
+   * @param event Object outputted when an aggregation is clicked.
+   * @returns void
    */
-  private _getRecords(): Observable<any> {
+  loadAggregationBuckets(event: { key: string, expanded: boolean }): void {
+    // the aggregation is collapsed, buckets are not loaded.
+    if (event.expanded === false) {
+      return;
+    }
 
-    this._spinner.show();
+    const aggregation = this.aggregations.find((item: any) => item.key === event.key);
 
+    // No aggregation found or buckets are already loaded.
+    if (!aggregation || aggregation.loaded) {
+      return;
+    }
+
+    // Get buckets for the aggregation
+    this._getRecords(1).subscribe((records: any) => {
+      this.aggregations$(records.aggregations).subscribe((aggregations: any) => {
+        if (aggregations[event.key]) {
+          this._mapAggregation(aggregation, aggregations[event.key]);
+        }
+        this._spinner.hide();
+      });
+
+    });
+  }
+
+  /**
+   * Search for records.
+   *
+   * @param size Force size.
+   */
+  private _getRecords(size: number = null): Observable<any> {
     // Build query string
     const q = this._buildQueryString();
+
+    // Empty search is not allowed and query is empty, search in backend is not
+    // processed.
+    if (this._config.allowEmptySearch === false && !q) {
+      this.showEmptySearchMessage = true;
+      return of({ hits: { hits: [], total: 0 }, aggregations: {} });
+    } else {
+      this.showEmptySearchMessage = false;
+    }
+
+    this._spinner.show();
 
     return this._recordService.getRecords(
       this._currentIndex(),
       q,
       this.page,
-      this.size,
+      size || this.size,
       this.aggregationsFilters || [],
       this._config.preFilters || {},
       this._config.listHeaders || null,
-      this.sort
+      this.sort,
+      this._getFacetsParameter()
     );
   }
 
@@ -845,6 +867,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     this._loadSearchFields();
+
+    // Build aggregations.
+    if (this._config.aggregationsOrder) {
+      this.aggregations = this._config.aggregationsOrder.map((key: any) => {
+        const expanded = (this._config.aggregationsExpand || []).includes(key);
+        return { key, bucketSize: this._config.aggregationsBucketSize || null, value: { buckets: [] }, expanded };
+      });
+    } else {
+      this.aggregations = [];
+    }
 
     // load search filters
     this.searchFilters = this._config.searchFilters
@@ -963,5 +995,38 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     return persistent;
+  }
+
+  /**
+   * Map aggregation records data to corresponding aggregation.
+   *
+   * @param aggregation Aggregation object.
+   * @param recordAggregation Aggregation retrieved from record.
+   */
+  private _mapAggregation(aggregation: Aggregation, recordsAggregation: any): void {
+    aggregation.doc_count = recordsAggregation.doc_count || null;
+    aggregation.type = recordsAggregation.type || 'terms';
+    aggregation.config = recordsAggregation.config || null;
+    aggregation.name = recordsAggregation.name || this._aggregationName(aggregation.key);
+    aggregation.value.buckets = recordsAggregation.buckets;
+    if (recordsAggregation.doc_count != null) {
+      aggregation.doc_count = recordsAggregation.doc_count;
+    }
+    aggregation.loaded = true;
+  }
+
+  /**
+   * Compile facets keys to get only expanded facets or having a filter selected.
+   *
+   * @returns List of facets.
+   */
+  private _getFacetsParameter(): Array<string> {
+    const facets = [];
+    this.aggregations.forEach((agg: any) => {
+      if (agg.expanded === true || this.aggregationsFilters.some((filter: any) => filter.key === agg.key)) {
+        facets.push(agg.key);
+      }
+    });
+    return facets;
   }
 }
