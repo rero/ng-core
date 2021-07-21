@@ -872,7 +872,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (this._config.aggregationsOrder) {
       this.aggregations = this._config.aggregationsOrder.map((key: any) => {
         const expanded = (this._config.aggregationsExpand || []).includes(key);
-        return { key, bucketSize: this._config.aggregationsBucketSize || null, value: { buckets: [] }, expanded };
+        return {
+          key,
+          bucketSize: this._config.aggregationsBucketSize || null,
+          value: { buckets: [] },
+          expanded,
+          name: this._aggregationName(key) || null,
+        };
       });
     } else {
       this.aggregations = [];
@@ -1007,7 +1013,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     aggregation.doc_count = recordsAggregation.doc_count || null;
     aggregation.type = recordsAggregation.type || 'terms';
     aggregation.config = recordsAggregation.config || null;
-    aggregation.name = recordsAggregation.name || this._aggregationName(aggregation.key);
+    if (!aggregation.name && recordsAggregation.name) {
+      aggregation.name = recordsAggregation.name;
+    }
     aggregation.value.buckets = recordsAggregation.buckets;
     if (recordsAggregation.doc_count != null) {
       aggregation.doc_count = recordsAggregation.doc_count;
