@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.12.2](https://github.com/rero/ng-core/tree/v1.12.2) (2021-07-22)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.12.1...v1.12.2)
+
+**Merged pull requests:**
+
+- records: fix aggregation name [\#425](https://github.com/rero/ng-core/pull/425) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.12.1](https://github.com/rero/ng-core/tree/v1.12.1) (2021-07-20)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.12.0...v1.12.1)
@@ -35,7 +43,7 @@
 - translations: translate v0.11.0 [\#415](https://github.com/rero/ng-core/pull/415) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: improve error message [\#414](https://github.com/rero/ng-core/pull/414) ([zannkukai](https://github.com/zannkukai))
 - General : fix HTML copyright [\#413](https://github.com/rero/ng-core/pull/413) ([zannkukai](https://github.com/zannkukai))
-- editor: no autocomplete on `add\_field` field [\#412](https://github.com/rero/ng-core/pull/412) ([zannkukai](https://github.com/zannkukai))
+- editor: no autocomplete on `add_field` field [\#412](https://github.com/rero/ng-core/pull/412) ([zannkukai](https://github.com/zannkukai))
 
 ## [v1.10.0](https://github.com/rero/ng-core/tree/v1.10.0) (2021-06-16)
 
@@ -711,7 +719,6 @@
 - fix: correct method to get pid from $ref [\#100](https://github.com/rero/ng-core/pull/100) ([AoNoOokami](https://github.com/AoNoOokami))
 - pagination: fix text on first page link [\#99](https://github.com/rero/ng-core/pull/99) ([Garfield-fr](https://github.com/Garfield-fr))
 - editor: move to ngx-formly [\#90](https://github.com/rero/ng-core/pull/90) ([jma](https://github.com/jma))
-- Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'ar' [\#89](https://github.com/rero/ng-core/pull/89) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 
 ## [v0.0.22](https://github.com/rero/ng-core/tree/v0.0.22) (2019-12-20)
 
@@ -736,6 +743,7 @@
 - record: adapt redirection after saving a resource [\#93](https://github.com/rero/ng-core/pull/93) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - service: add cypto and local storage functionality [\#92](https://github.com/rero/ng-core/pull/92) ([Garfield-fr](https://github.com/Garfield-fr))
 - record: add events on record service [\#91](https://github.com/rero/ng-core/pull/91) ([Garfield-fr](https://github.com/Garfield-fr))
+- Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'ar' [\#89](https://github.com/rero/ng-core/pull/89) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 - service: add new service to personalized title and meta html [\#85](https://github.com/rero/ng-core/pull/85) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: decrease margins [\#84](https://github.com/rero/ng-core/pull/84) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - translation : fix translation problem [\#83](https://github.com/rero/ng-core/pull/83) ([zannkukai](https://github.com/zannkukai))
@@ -758,7 +766,6 @@
 - editor: fixes editor redirection [\#80](https://github.com/rero/ng-core/pull/80) ([jma](https://github.com/jma))
 - autocomplete: fix multiple search input in a page [\#79](https://github.com/rero/ng-core/pull/79) ([jma](https://github.com/jma))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'it' [\#78](https://github.com/rero/ng-core/pull/78) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
-- general: fix redirection after add, update, delete resource [\#74](https://github.com/rero/ng-core/pull/74) ([Garfield-fr](https://github.com/Garfield-fr))
 - pagination: add configuration to customize elements [\#73](https://github.com/rero/ng-core/pull/73) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v0.0.18](https://github.com/rero/ng-core/tree/v0.0.18) (2019-12-09)
@@ -769,6 +776,7 @@
 
 - editor: fix update permission [\#77](https://github.com/rero/ng-core/pull/77) ([AoNoOokami](https://github.com/AoNoOokami))
 - resource tab label: translation [\#75](https://github.com/rero/ng-core/pull/75) ([Garfield-fr](https://github.com/Garfield-fr))
+- general: fix redirection after add, update, delete resource [\#74](https://github.com/rero/ng-core/pull/74) ([Garfield-fr](https://github.com/Garfield-fr))
 - Translate '/projects/rero/ng-core/src/lib/translate/i18n/en\_US.json' in 'fr' [\#71](https://github.com/rero/ng-core/pull/71) ([transifex-integration[bot]](https://github.com/apps/transifex-integration))
 
 ## [v0.0.17](https://github.com/rero/ng-core/tree/v0.0.17) (2019-12-02)
