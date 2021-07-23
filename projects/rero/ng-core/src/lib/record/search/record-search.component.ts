@@ -128,7 +128,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Current aggregations filters applied
    */
-  aggregationsFilters: Array<AggregationsFilter> = null;
+  aggregationsFilters: Array<AggregationsFilter> = [];
 
   /**
    * Contain result row data
@@ -233,8 +233,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   ngOnInit() {
 
     // Subscribe on aggregation filters changes and do search.
-    this._subscriptions.add(this._recordSearchService.aggregationsFilters.subscribe(
-      (aggregationsFilters: Array<AggregationsFilter>) => {
+    let first = true;
+    this._subscriptions.add(
+      this._recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
         // No aggregations filters are set at this time, we do nothing.
         if (aggregationsFilters === null) {
           return;
@@ -243,14 +244,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           aggregationsFilters[key].values = item.values.sort();
         });
 
-        // Detects if it's the first change. This allows to know if the page
-        // have to be resetted.
-        const firstChange = this.aggregationsFilters === null;
-
         this.aggregationsFilters = aggregationsFilters;
-        this._searchParamsHasChanged(firstChange === false);
-      }
-    )
+
+        // if it's the first value emitted, the current page is kept.
+        this._searchParamsHasChanged(first === false);
+
+        // not first anymore
+        first = false;
+      })
     );
     this._subscriptions.add(
       this._searchParameters.asObservable().pipe(
