@@ -225,7 +225,8 @@ const routes: Routes = [
           editorSettings: {
             longMode: true
           },
-          component: DocumentComponent
+          component: DocumentComponent,
+          noRecordMessage: 'No record at this time'
         }
       ]
     }
