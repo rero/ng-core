@@ -481,6 +481,26 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Get the message if there's no record for the type.
+   *
+   * The message can be customized with the `noRecordMessage` property in route configuration.
+   *
+   * @returns A message indicating there's no record.
+   */
+  get emptyRecordMessage(): string {
+    return this._config.noRecordMessage || this._translateService.instant('There are no records in this section');
+  }
+
+  /**
+   * Check if the current type has no record.
+   *
+   * @returns True if no record is found and no search query is done.
+   */
+  get hasNoRecord(): boolean {
+    return !this.q && this.records.length === 0 && !this.showEmptySearchMessage;
+  }
+
+  /**
    * Change number of items per page value.
    * @param event - Event, dom event triggered
    * @param size - number, new page size
