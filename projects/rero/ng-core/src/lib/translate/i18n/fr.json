@@ -58,6 +58,7 @@
   "Size": "Taille",
   "Template loaded": "Modèle chargé",
   "The form contains errors.": "Le formulaire contient des erreurs.",
+  "There are no records in this section": "There are no records in this section",
   "This field is required": "Ce champ est obligatoire",
   "Too many items. Should be less than {{max}}.": "Trop d'exemplaires. Le total doit être inférieur à {{max}}.",
   "Unauthorized": "Non autorisé",
