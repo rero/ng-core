@@ -58,6 +58,7 @@
   "Size": "Size",
   "Template loaded": "Template loaded",
   "The form contains errors.": "The form contains errors.",
+  "There are no records in this section": "There are no records in this section",
   "This field is required": "This field is required",
   "Too many items. Should be less than {{max}}.": "Too many items. Should be less than {{max}}.",
   "Unauthorized": "Unauthorized",
