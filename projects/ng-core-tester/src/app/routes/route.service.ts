@@ -16,6 +16,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { RouteCollectionService } from '@rero/ng-core';
 import { DocumentsRoute } from './documents-route';
 
@@ -34,7 +35,8 @@ export class RouteService {
    */
   constructor(
     private _routeCollectionService: RouteCollectionService,
-    private _router: Router
+    private _router: Router,
+    private _translateService: TranslateService
   ) { }
 
   /**
@@ -42,7 +44,7 @@ export class RouteService {
    */
   initializeRoutes() {
     this._routeCollectionService
-      .addRoute(new DocumentsRoute());
+      .addRoute(new DocumentsRoute(this._translateService));
 
     this._routeCollectionService.getRoutes().map((route: any) => {
       this._router.config.push(route);

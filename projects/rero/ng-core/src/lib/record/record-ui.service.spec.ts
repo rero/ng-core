@@ -20,21 +20,59 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
+import { of } from 'rxjs';
 import { RecordUiService } from './record-ui.service';
 
 describe('RecordUiService', () => {
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [
-      ToastrModule.forRoot(),
-      ModalModule.forRoot(),
-      TranslateModule.forRoot(),
-      HttpClientModule,
-      RouterTestingModule
-    ]
-  }));
+
+  let service: RecordUiService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        ToastrModule.forRoot(),
+        ModalModule.forRoot(),
+        TranslateModule.forRoot(),
+        HttpClientModule,
+        RouterTestingModule
+      ]
+    });
+    service = TestBed.inject(RecordUiService);
+  });
 
   it('should be created', () => {
-    const service: RecordUiService = TestBed.inject(RecordUiService);
     expect(service).toBeTruthy();
+  });
+
+  it('should return the default delete message', () => {
+    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
+      expect(messages[0]).toEqual('Do you really want to delete this record?');
+    });
+  });
+
+  it('Should return the default delete message with a defined type, but no message configuration', () => {
+    service.types = [
+      {
+        key: 'holdings'
+      }
+    ];
+    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
+      expect(messages[0]).toEqual('Do you really want to delete this record?');
+    });
+  });
+
+  it('should return the custom delete message', () => {
+    const messagesType = ['foo', 'bar'];
+    service.types = [
+      {
+        key: 'holdings',
+        deleteMessage: (pid: string) => {
+          return of(messagesType);
+        }
+      }
+    ];
+    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
+      expect(messages).toEqual(messagesType);
+    });
   });
 });

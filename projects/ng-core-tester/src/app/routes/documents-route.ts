@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
 import {
   ActionStatus,
   DetailComponent as RecordDetailComponent,
-  EditorComponent, JSONSchema7, RecordSearchComponent,
-  RecordSearchPageComponent,
+  EditorComponent, JSONSchema7, RecordSearchPageComponent,
   RouteInterface
 } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
@@ -33,6 +33,12 @@ import { DocumentComponent } from '../record/document/document.component';
 export class DocumentsRoute implements RouteInterface {
   // Route name
   readonly name = 'documents';
+
+  /**
+   * Constructor
+   * @param translateService - TranslateService
+   */
+  constructor(protected translateService: TranslateService) {}
 
   /**
    * Get Configuration.
@@ -114,6 +120,13 @@ export class DocumentsRoute implements RouteInterface {
                 can: Math.random() >= 0.5,
                 message: ''
               });
+            },
+            deleteMessage: (pid: string): Observable<string[]> => {
+              // If you want to translate the strings, you have to do it here
+              return of([
+                this.translateService.instant('Document: Do you really want to delete this record?'),
+                this.translateService.instant('Attached items will also be deleted.')
+              ]);
             }
           }
         ]
