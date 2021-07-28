@@ -20,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
-import { first, map, mergeMap, tap } from 'rxjs/operators';
+import { first, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../dialog/dialog.service';
 import { ActionStatus } from './action-status';
 import { RecordService } from './record.service';
@@ -58,35 +58,43 @@ export class RecordUiService {
    * @returns Observable resolving as a boolean
    */
   deleteRecord(type: string, pid: string): Observable<boolean> {
-    const observable = this._dialogService.show({
-      ignoreBackdropClick: true,
-      initialState: {
-        title: this._translateService.instant('Confirmation'),
-        body: this._translateService.instant('Do you really want to delete this record?'),
-        confirmButton: true,
-        confirmTitleButton: this._translateService.instant('Delete'),
-        cancelTitleButton: this._translateService.instant('Cancel')
-      }
-    }).pipe(
-      // return a new observable depending on confirm dialog result.
-      mergeMap((confirm: boolean) => {
-        if (confirm === false) {
-          return of(false);
+    const observable = this.deleteMessage$(pid, type).pipe(map((messages: string[]) => {
+      const translateMessages = [];
+      messages.forEach((message: string) => {
+        translateMessages.push(message);
+      });
+      return translateMessages.join('\n');
+    }), switchMap((message: string) => {
+      return this._dialogService.show({
+        ignoreBackdropClick: true,
+        initialState: {
+          title: this._translateService.instant('Confirmation'),
+          body: message,
+          confirmButton: true,
+          confirmTitleButton: this._translateService.instant('Delete'),
+          cancelTitleButton: this._translateService.instant('Cancel')
         }
+      }).pipe(
+        // return a new observable depending on confirm dialog result.
+        mergeMap((confirm: boolean) => {
+          if (confirm === false) {
+            return of(false);
+          }
 
-        this._spinner.show();
+          this._spinner.show();
 
-        return this._recordService.delete(type, pid).pipe(
-          map(() => {
-            return true;
-          }),
-          tap(() => {
-            this._spinner.hide();
-            this._toastService.success(this._translateService.instant('Record deleted.'));
-          })
-        );
-      })
-    );
+          return this._recordService.delete(type, pid).pipe(
+            map(() => {
+              return true;
+            }),
+            tap(() => {
+              this._spinner.hide();
+              this._toastService.success(this._translateService.instant('Record deleted.'));
+            })
+          );
+        })
+      );
+    }));
 
     return observable;
   }
@@ -149,6 +157,26 @@ export class RecordUiService {
       this._router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
     }
   }
+
+  /**
+   * Personalized message for delete a record
+   * @param pid - record pid string
+   * @param type - Type of resource
+   * @returns  Observable array of string
+   */
+    deleteMessage$(pid: string, type: string): Observable<string[]> {
+      const defaultMessage = of([
+        this._translateService.instant('Do you really want to delete this record?')
+      ]);
+      try {
+        const config = this.getResourceConfig(type);
+        return (config.deleteMessage)
+          ? config.deleteMessage(pid)
+          : defaultMessage;
+      } catch {
+        return defaultMessage;
+      }
+    }
 
   // ================================================================
   //    Permissions
