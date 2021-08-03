@@ -32,9 +32,13 @@
     <h5 *ngIf="types.length == 1 && showLabel">
       {{ types[0].label | translate }}
     </h5>
-    <div class="alert alert-info my-4" *ngIf="hasNoRecord; else results">
-      {{ emptyRecordMessage }}
-    </div>
+    <ng-container *ngIf="hasNoRecord; else results">
+      <div class="alert alert-info my-4">{{ emptyRecordMessage }}</div>
+      <a class="btn btn-primary" routerLink="new" *ngIf="adminMode.can && addStatus.can">
+        <i class="fa fa-plus mr-0 mr-sm-1"></i>
+        <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
+      </a>
+    </ng-container>
     <ng-template #results>
       <div class="row align-items-start my-3">
         <div class="col-sm-3 mb-3 mb-sm-0" *ngIf="showSearchInput">
