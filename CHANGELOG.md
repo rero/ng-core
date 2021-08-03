@@ -1,11 +1,26 @@
 # Changelog
 
+## [v1.13.0](https://github.com/rero/ng-core/tree/v1.13.0) (2021-08-03)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.12.2...v1.13.0)
+
+**Closed issues:**
+
+- Add parameters to manage record sorting in getRecords [\#55](https://github.com/rero/ng-core/issues/55)
+- Change display of delete button when delete is not possible [\#40](https://github.com/rero/ng-core/issues/40)
+
+**Merged pull requests:**
+
+- search: allow add without records [\#431](https://github.com/rero/ng-core/pull/431) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- translations: update catalog [\#430](https://github.com/rero/ng-core/pull/430) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
 ## [v1.12.2](https://github.com/rero/ng-core/tree/v1.12.2) (2021-07-22)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.12.1...v1.12.2)
 
 **Merged pull requests:**
 
+- release: version 1.12.2 [\#426](https://github.com/rero/ng-core/pull/426) ([jma](https://github.com/jma))
 - records: fix aggregation name [\#425](https://github.com/rero/ng-core/pull/425) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v1.12.1](https://github.com/rero/ng-core/tree/v1.12.1) (2021-07-20)
@@ -43,7 +58,7 @@
 - translations: translate v0.11.0 [\#415](https://github.com/rero/ng-core/pull/415) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: improve error message [\#414](https://github.com/rero/ng-core/pull/414) ([zannkukai](https://github.com/zannkukai))
 - General : fix HTML copyright [\#413](https://github.com/rero/ng-core/pull/413) ([zannkukai](https://github.com/zannkukai))
-- editor: no autocomplete on `add_field` field [\#412](https://github.com/rero/ng-core/pull/412) ([zannkukai](https://github.com/zannkukai))
+- editor: no autocomplete on `add\_field` field [\#412](https://github.com/rero/ng-core/pull/412) ([zannkukai](https://github.com/zannkukai))
 
 ## [v1.10.0](https://github.com/rero/ng-core/tree/v1.10.0) (2021-06-16)
 
@@ -127,10 +142,16 @@
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.4.0...v1.5.0)
 
+**Implemented enhancements:**
+
+- resources: customize the delete message [\#429](https://github.com/rero/ng-core/pull/429) ([Garfield-fr](https://github.com/Garfield-fr))
+
 **Merged pull requests:**
 
 - app: export error interface [\#355](https://github.com/rero/ng-core/pull/355) ([Garfield-fr](https://github.com/Garfield-fr))
 - tests: add id html attributes for cypress tests [\#348](https://github.com/rero/ng-core/pull/348) ([AoNoOokami](https://github.com/AoNoOokami))
+- records: display no record message [\#428](https://github.com/rero/ng-core/pull/428) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- search: fix aggregations filters error [\#427](https://github.com/rero/ng-core/pull/427) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v1.4.0](https://github.com/rero/ng-core/tree/v1.4.0) (2021-02-10)
 
