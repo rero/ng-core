@@ -20,8 +20,8 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, isObservable, Observable, of, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
@@ -258,6 +258,25 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         // only if the patterns changed
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
         // cancel previous pending requests
+        switchMap(() => {
+          if (this.aggregations != null) {
+            return of(null);
+          }
+          return this._config.aggregationsOrder.pipe(
+            tap((aggregations: string[]) => {
+              this.aggregations = aggregations.map((key: any) => {
+                const expanded = (this._config.aggregationsExpand || []).includes(key);
+                return {
+                  key: key.key || key,
+                  bucketSize: this._config.aggregationsBucketSize || null,
+                  value: { buckets: [] },
+                  expanded,
+                  name: key.name || this._aggregationName(key) || null,
+                };
+              });
+            })
+          );
+        }),
         switchMap(() => this._getRecords())
       ).subscribe(
         (records: Record) => {
@@ -891,18 +910,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // Build aggregations.
     if (this._config.aggregationsOrder) {
-      this.aggregations = this._config.aggregationsOrder.map((key: any) => {
-        const expanded = (this._config.aggregationsExpand || []).includes(key);
-        return {
-          key,
-          bucketSize: this._config.aggregationsBucketSize || null,
-          value: { buckets: [] },
-          expanded,
-          name: this._aggregationName(key) || null,
-        };
-      });
+      if (!isObservable(this._config.aggregationsOrder)) {
+        this._config.aggregationsOrder = of(this._config.aggregationsOrder);
+      }
     } else {
-      this.aggregations = [];
+      this._config.aggregationsOrder = of([]);
     }
 
     // load search filters
