@@ -266,19 +266,19 @@ export class DetailComponent implements OnInit, OnDestroy {
   deleteRecord(element: any) {
     const pid = typeof element === 'object' ? element.id : element;
     return this._recordUiService.deleteRecord(this._type, pid).subscribe((result: any) => {
-      let redirectUrl = '../..';
-      const navigateOptions = { relativeTo: this._route };
       if (result === true) {
+        let redirectUrl = '../..';
+        const navigateOptions = { relativeTo: this._route };
         if (typeof element === 'object' && this._config.redirectUrl) {
-          this._config.redirectUrl(element).subscribe((redirect: string) => {
+          this._config.redirectUrl(element, 'delete').subscribe((redirect: string) => {
             if (redirect !== null) {
               redirectUrl = redirect;
             }
             this._router.navigate([redirectUrl], navigateOptions);
           });
         }
+        this._router.navigate([redirectUrl], navigateOptions);
       }
-      this._router.navigate([redirectUrl], navigateOptions);
     });
   }
 

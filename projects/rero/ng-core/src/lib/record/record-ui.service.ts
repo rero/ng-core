@@ -142,7 +142,7 @@ export class RecordUiService {
   redirectAfterSave(pid: string, record: any, recordType: string, action: string, route: ActivatedRoute) {
     const config = this.getResourceConfig(recordType);
     if (config.redirectUrl) {
-      config.redirectUrl(record).subscribe((result: string) => {
+      config.redirectUrl(record, action).subscribe((result: string) => {
         if (result !== null) {
           this._router.navigate([result]);
           return;
