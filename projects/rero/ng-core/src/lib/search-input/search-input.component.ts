@@ -40,6 +40,10 @@ export class SearchInputComponent {
   @Input()
   trimQueryString = true;
 
+  /** Disabled attritute of search input */
+  @Input()
+  disabled = false;
+
   /** The current search input object from the template. */
   @ViewChild('searchinput')
   input: any;

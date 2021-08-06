@@ -18,7 +18,7 @@
 <div class="input-group px-0">
   <input #searchinput type="text" id="search" class="form-control"
     [attr.placeholder]="!displayLabel && placeholder ? placeholder : null" attr.aria-label="{{ placeholder }}"
-    [value]="searchText" (keydown.enter)="doSearch(searchinput.value)">
+    [value]="searchText" (keydown.enter)="doSearch(searchinput.value)" [disabled]="disabled">
   <div class="input-group-append">
     <button class="btn btn-outline-primary" type="button" id="button-search" (click)="doSearch(searchinput.value)">
       <span class="fa fa-search" aria-hidden="true"></span>
