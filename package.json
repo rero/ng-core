@@ -47,6 +47,7 @@
     "ngx-spinner": "^10.0.1",
     "ngx-toastr": "^13.2.1",
     "npm-registry-fetch": "^9.0.0",
+    "path-parse": ">=1.0.7",
     "postcss": ">=8.2.10",
     "rxjs": "^6.6.7",
     "serialize-javascript": "^5.0.1",
