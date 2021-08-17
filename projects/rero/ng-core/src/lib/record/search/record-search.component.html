@@ -16,8 +16,8 @@
 -->
 <ng-core-error [error]="error" *ngIf="error; else showComponent"></ng-core-error>
 <ng-template #showComponent>
-  <ul class="nav nav-tabs" *ngIf="types.length > 1">
-    <li class="nav-item" *ngFor="let type of types">
+  <ul class="nav nav-tabs" *ngIf="typesInTabs.length > 1">
+    <li class="nav-item" *ngFor="let type of typesInTabs">
       <a
         href="#"
         class="nav-link"
@@ -29,8 +29,8 @@
     </li>
   </ul>
   <div class="main-content">
-    <h5 *ngIf="types.length == 1 && showLabel">
-      {{ types[0].label | translate }}
+    <h5 *ngIf="typesInTabs.length == 1 && showLabel">
+      {{ typesInTabs[0].label | translate }}
     </h5>
     <ng-container *ngIf="hasNoRecord; else results">
       <div class="alert alert-info my-4">{{ emptyRecordMessage }}</div>
