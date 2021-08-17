@@ -345,7 +345,8 @@ const routes: Routes = [
         },
         {
           key: 'organisations',
-          label: 'Organisations'
+          label: 'Organisations',
+          hideInTabs: false
         }
       ]
     }

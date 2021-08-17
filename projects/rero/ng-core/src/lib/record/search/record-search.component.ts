@@ -116,7 +116,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       boundaryLinks?: boolean,
       maxSize?: number
     },
-    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
+    formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig,
+    hideInTabs?: boolean
   }[] = [{ key: 'documents', label: 'Documents' }];
 
   /**
@@ -521,6 +522,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Returns the list of types that are displayed in tabs.
+   *
+   * @return List of types.
+   */
+  get typesInTabs(): Array<any> {
+    return this.types.filter((item) => item.hideInTabs !== true);
+  }
+
+  /**
    * Change number of items per page value.
    * @param event - Event, dom event triggered
    * @param size - number, new page size
@@ -916,6 +926,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       this._config.aggregationsOrder = of([]);
     }
+
+    // reset aggregations
+    this.aggregations = null;
 
     // load search filters
     this.searchFilters = this._config.searchFilters
