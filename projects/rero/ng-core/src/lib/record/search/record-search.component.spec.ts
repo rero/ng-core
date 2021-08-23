@@ -127,6 +127,7 @@ describe('RecordSearchComponent', () => {
         q: '',
         page: 1,
         size: 10,
+        sort: '',
         author: ['Filippini, Massimo']
       },
       paramMap: convertToParamMap({ type: 'documents' })
