@@ -43,6 +43,13 @@ export interface SearchParams {
   searchFilters: Array<SearchFilter>;
 }
 
+export interface SortOption {
+  value: string;
+  label: string;
+  defaultQuery?: boolean;
+  defaultNoQuery?: boolean;
+}
+
 @Component({
   selector: 'ng-core-record-search',
   templateUrl: './record-search.component.html'
@@ -531,6 +538,29 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Return the sort options.
+   */
+  get sortOptions(): Array<SortOption> {
+    if (!this._config.sortOptions) {
+      return [];
+    }
+
+    return this._config.sortOptions.sort((a: SortOption, b: SortOption) => {
+      return a.label.localeCompare(b.label);
+    });
+  }
+
+  /**
+   * Return the current sort object.
+   */
+  get currentSortOption(): SortOption {
+    if (!this.sort || !this._config.sortOptions) {
+      return null;
+    }
+    return this._config.sortOptions.find((item: SortOption) => item.value === this.sort);
+  }
+
+  /**
    * Change number of items per page value.
    * @param event - Event, dom event triggered
    * @param size - number, new page size
@@ -538,6 +568,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   changeSize(event: Event, size: number) {
     event.preventDefault();
     this.size = size;
+    this._searchParamsHasChanged();
+  }
+
+  /**
+   * Change sorting.
+   *
+   * @param sortOption Sort option object.
+   */
+  changeSorting(sortOption: SortOption) {
+    this.sort = sortOption.value;
     this._searchParamsHasChanged();
   }
 
@@ -554,6 +594,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     this.q = event;
     this.aggregationsFilters = [];
+    this._setDefaultSort();
     this._searchParamsHasChanged();
     this._recordSearchService.setAggregationsFilters(
       this._extractPersistentAggregationsFilters(),
@@ -930,10 +971,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // reset aggregations
     this.aggregations = null;
 
+    // Sort options
+    this._setDefaultSort();
+
     // load search filters
-    this.searchFilters = this._config.searchFilters
-      ? this._config.searchFilters
-      : [];
+    this.searchFilters = this._config.searchFilters ? this._config.searchFilters : [];
   }
 
   /**
@@ -1082,5 +1124,20 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     return facets;
+  }
+
+  /**
+   * Set the default sort.
+   */
+  private _setDefaultSort(): void {
+    this.sort = null;
+    if (this._config.sortOptions) {
+      const defaulSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
+      this._config.sortOptions.forEach((option: SortOption) => {
+        if (option[defaulSortValue] === true) {
+          this.sort = option.value;
+        }
+      });
+    }
   }
 }

@@ -17,11 +17,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { JSONSchema7 } from '../editor/editor.component';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
-import { RecordSearchService } from './record-search.service';
+import { JSONSchema7 } from '../editor/editor.component';
 import { RecordUiService } from '../record-ui.service';
+import { SortOption } from './record-search.component';
+import { RecordSearchService } from './record-search.service';
 
 @Component({
   selector: 'ng-core-record-search-page',
@@ -141,7 +142,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
         this.q = queryParams.get('q') || '';
         this.size = queryParams.get('size') ? +queryParams.get('size') : 10;
         this.page = queryParams.get('page') ? +queryParams.get('page') : 1;
-        this.sort = queryParams.get('sort');
+        this._setDefaultSort(config, queryParams.get('sort'));
 
         // loops over all aggregations filters and stores them.
         const aggregationsFilters = [];
@@ -162,14 +163,19 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
         }
 
         // No default parameters found, we update the url to put them
-        if (queryParams.has('q') === false || queryParams.has('size') === false || queryParams.has('page') === false) {
+        if (
+          queryParams.has('q') === false ||
+          queryParams.has('size') === false ||
+          queryParams.has('page') === false ||
+          queryParams.has('sort') === false
+        ) {
           this.updateUrl({
             currentType: this.currentType,
             q: this.q,
             size: this.size,
             page: this.page,
             sort: this.sort,
-            aggregationsFilters
+            aggregationsFilters,
           });
 
           return;
@@ -242,5 +248,30 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     segments[segments.length - 1] = type;
 
     return '/' + segments.join('/');
+  }
+
+  /**
+   * Sets the default sort for resource type.
+   *
+   * @param config Configuration object.
+   */
+  private _setDefaultSort(config: any, sortParam: string) {
+    if (sortParam) {
+      this.sort = sortParam;
+      return;
+    }
+
+    this.sort = null;
+
+    if (!config.sortOptions) {
+      return;
+    }
+
+    const defaulSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
+    config.sortOptions.forEach((option: SortOption) => {
+      if (option[defaulSortValue] === true) {
+        this.sort = option.value;
+      }
+    });
   }
 }

@@ -59,6 +59,21 @@
             <i class="fa fa-plus mr-0 mr-sm-1"></i>
             <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
           </a>
+          <!-- Sorting -->
+          <div class="btn-group ml-2" dropdown *ngIf="sortOptions.length > 0">
+            <button dropdownToggle type="button" class="btn btn-light dropdown-toggle">
+              {{ 'Sort by' | translate }}{{ currentSortOption ? ': ' + (currentSortOption.label | translate) : '' }} <span class="caret"></span>
+            </button>
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
+              <ng-container *ngFor="let sortOption of sortOptions">
+                <li role="menuitem" *ngIf="!currentSortOption || currentSortOption.value !== sortOption.value">
+                  <a class="dropdown-item" href="#" (click)="$event.preventDefault(); changeSorting(sortOption)">
+                    {{ sortOption.label | translate }}
+                  </a>
+                </li>
+              </ng-container>
+            </ul>
+          </div>
           <!-- EXPORT BUTTON -->
           <ng-container *ngIf="exportFormats.length > 0">
             <!-- check single export format -->
