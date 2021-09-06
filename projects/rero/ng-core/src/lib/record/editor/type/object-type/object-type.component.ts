@@ -25,9 +25,4 @@ import { FieldType } from '@ngx-formly/core';
   templateUrl: './object-type.component.html'
 })
 export class ObjectTypeComponent extends FieldType {
-  // default value
-  defaultOptions = {
-    defaultValue: {}
-  };
-
 }
