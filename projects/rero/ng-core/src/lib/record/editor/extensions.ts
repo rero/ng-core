@@ -167,17 +167,14 @@ export class NgCoreFormlyExtension {
     }
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
-    if (!modelEmpty && field.templateOptions.hide === true) {
-      setTimeout(() => {
+    if (field.templateOptions.hide === true && field.hide === undefined) {
+      // show the field if it contains data
+      if (!modelEmpty) {
         field.hide = false;
-        this._editorService.removeHiddenField(field);
-      });
-    }
-    if (modelEmpty && (field.templateOptions.hide === true && field.hide === undefined)) {
-      setTimeout(() => {
+      } else {
         field.hide = true;
         this._editorService.addHiddenField(field);
-      });
+      }
     }
   }
 
@@ -434,7 +431,7 @@ export function registerNgCoreFormlyExtension(
           // Build a string based on min/max values specified into configuration
           // depending of min/max configuration, the message must be different
           let counterMessage = '';
-          if (min > 0 && max < Infinity){
+          if (min > 0 && max < Infinity) {
             counterMessage = (min === max)
               ? translate.instant(_('strictly {{counter}}'), { counter: min })
               : translate.instant(_('between {{min}} and {{max}}'), { min, max });
@@ -445,7 +442,7 @@ export function registerNgCoreFormlyExtension(
           }
 
           // Combine string to return a full sentence
-          return translate.instant(_('should have {{counter}} {{keys}}'), {counter: counterMessage, keys: joinKeysString});
+          return translate.instant(_('should have {{counter}} {{keys}}'), { counter: counterMessage, keys: joinKeysString });
         }
       },
       {

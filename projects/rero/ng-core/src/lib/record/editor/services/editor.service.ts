@@ -125,7 +125,7 @@ export class EditorService {
    * @returns boolean, true if I'm the root
    */
   isRoot(field: FormlyFieldConfig) {
-    if (!field) {
+    if (field == null) {
       return false;
     }
     return field.templateOptions && field.templateOptions.isRoot && field.templateOptions.isRoot === true;
