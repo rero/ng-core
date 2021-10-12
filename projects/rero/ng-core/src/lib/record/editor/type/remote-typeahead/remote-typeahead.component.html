@@ -44,16 +44,16 @@
 
 <ng-template #customListTemplate let-matches="matches" let-query="query" let-typeaheadTemplateMethods>
   <ng-container *ngFor="let match of matches">
-    <div [ngClass]="{ 'disabled font-weight-bold': match.header }" class="dropdown-item"
+    <div [ngClass]="{ 'disabled font-weight-bold': match.header }" class="dropdown-item d-flex flex-row"
       [class.active]="typeaheadTemplateMethods.isActive(match)">
-      <span (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
+      <div class='flex-grow-1' (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
         (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
         <span *ngIf="match.item.currentSearch">{{ 'Add' | translate }}:&nbsp;</span>
         <span [innerHTML]="match.value"></span>
-      </span>
+      </div>
       <a class="ml-1" *ngIf="match.item.externalLink && typeaheadTemplateMethods.isActive(match)" target="_blank"
         href="{{ match.item.externalLink }}">
-        <i class="float-right fa fa-external-link text-light"></i>
+        <i class="fa fa-external-link text-light"></i>
       </a>
     </div>
   </ng-container>

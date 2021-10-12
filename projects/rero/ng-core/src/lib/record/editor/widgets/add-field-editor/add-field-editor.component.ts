@@ -150,7 +150,6 @@ export class AddFieldEditorComponent implements OnInit {
   showSelectedField(field: any) {
     // show the field in the form
     field.hide = false;
-
     // reset the input value
     this.value = undefined;
     // remove the the element from the list of hidden fields

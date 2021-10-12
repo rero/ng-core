@@ -1,12 +1,42 @@
 # Changelog
 
+## [v1.13.5](https://github.com/rero/ng-core/tree/v1.13.5) (2021-09-09)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.13.4...v1.13.5)
+
+**Merged pull requests:**
+
+- search: move facets at bottom on small screen [\#418](https://github.com/rero/ng-core/pull/418) ([zannkukai](https://github.com/zannkukai))
+- editor: improve error message [\#414](https://github.com/rero/ng-core/pull/414) ([zannkukai](https://github.com/zannkukai))
+
+# Changelog
+
+## [v1.13.4](https://github.com/rero/ng-core/tree/v1.13.4) (2021-09-09)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.13.3...v1.13.4)
+
+**Merged pull requests:**
+
+- editor: speed up the editor [\#446](https://github.com/rero/ng-core/pull/446) ([jma](https://github.com/jma))
+
+# Changelog
+
+## [v1.13.3](https://github.com/rero/ng-core/tree/v1.13.3) (2021-08-20)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.13.2...v1.13.3)
+
+**Merged pull requests:**
+
+- records: hide type in tabs [\#443](https://github.com/rero/ng-core/pull/443) ([sebastiendeleze](https://github.com/sebastiendeleze))
+- dependencies: fix security issues [\#442](https://github.com/rero/ng-core/pull/442) ([sebastiendeleze](https://github.com/sebastiendeleze))
+
+## [v1.13.2](https://github.com/rero/ng-core/tree/v1.13.2) (2021-08-11)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.13.1...v1.13.2)
+
 ## [v1.13.1](https://github.com/rero/ng-core/tree/v1.13.1) (2021-08-10)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.13.0...v1.13.1)
-
-**Implemented enhancements:**
-
-- resources: customize the delete message [\#429](https://github.com/rero/ng-core/pull/429) ([Garfield-fr](https://github.com/Garfield-fr))
 
 **Merged pull requests:**
 
@@ -17,8 +47,6 @@
 - typeahead: allow html content [\#436](https://github.com/rero/ng-core/pull/436) ([Garfield-fr](https://github.com/Garfield-fr))
 - configuration: add action parameter on redirectUrl [\#434](https://github.com/rero/ng-core/pull/434) ([Garfield-fr](https://github.com/Garfield-fr))
 - search: observable for aggregations order [\#433](https://github.com/rero/ng-core/pull/433) ([sebastiendeleze](https://github.com/sebastiendeleze))
-
-# Changelog
 
 ## [v1.13.0](https://github.com/rero/ng-core/tree/v1.13.0) (2021-08-03)
 
@@ -213,6 +241,7 @@
 - gh actions: set the stale workflow [\#345](https://github.com/rero/ng-core/pull/345) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - tests: fix cypress tests [\#344](https://github.com/rero/ng-core/pull/344) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: add min/max keys validator on object [\#409](https://github.com/rero/ng-core/pull/409) ([zannkukai](https://github.com/zannkukai))
+- Translations update from Weblate [\#401](https://github.com/rero/ng-core/pull/401) ([weblate](https://github.com/weblate))
 - editor: add markdown editor field [\#398](https://github.com/rero/ng-core/pull/398) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - search: improve filter configuration [\#383](https://github.com/rero/ng-core/pull/383) ([Garfield-fr](https://github.com/Garfield-fr))
 
@@ -485,7 +514,6 @@
 - editor: fix hidden field with value from the model [\#234](https://github.com/rero/ng-core/pull/234) ([jma](https://github.com/jma))
 - template: add id html attribute for cypress usage [\#233](https://github.com/rero/ng-core/pull/233) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: implement specific id attribute for formly fields [\#229](https://github.com/rero/ng-core/pull/229) ([AoNoOokami](https://github.com/AoNoOokami))
-- records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v0.7.0](https://github.com/rero/ng-core/tree/v0.7.0) (2020-07-30)
 
@@ -507,6 +535,7 @@
 
 **Merged pull requests:**
 
+- records: handle errors [\#225](https://github.com/rero/ng-core/pull/225) ([sebastiendeleze](https://github.com/sebastiendeleze))
 - editor: fix async select translations [\#221](https://github.com/rero/ng-core/pull/221) ([jma](https://github.com/jma))
 - project: update ngx-formly to v5.9.1 [\#220](https://github.com/rero/ng-core/pull/220) ([AoNoOokami](https://github.com/AoNoOokami))
 - editor: fix toggle switch issue [\#219](https://github.com/rero/ng-core/pull/219) ([sebastiendeleze](https://github.com/sebastiendeleze))
