@@ -341,42 +341,12 @@ const routes: Routes = [
               value: '1'
             }
           ],
-          allowEmptySearch: true,
-          sortOptions: [
-            {
-              label: 'Relevance',
-              value: 'relevance',
-              defaultQuery: true
-            },
-            {
-              label: 'Date descending',
-              value: 'newest',
-              defaultNoQuery: true
-            },
-            {
-              label: 'Date ascending',
-              value: 'oldest',
-            },
-            {
-              label: 'Title',
-              value: 'title'
-            }
-          ]
+          allowEmptySearch: false
         },
         {
           key: 'organisations',
           label: 'Organisations',
-          hideInTabs: false,
-          sortOptions: [
-            {
-              label: 'Date descending',
-              value: 'newest'
-            },
-            {
-              label: 'Date ascending',
-              value: 'oldest'
-            }
-          ]
+          hideInTabs: false
         }
       ]
     }
