@@ -256,6 +256,7 @@ export class RecordService {
     value: string,
     excludePid: string
   ) {
+    value = value.replace(/\"/g, '\\"');
     let query = `${field}:"${value}"`;
     if (excludePid) {
       query += ` NOT pid:${excludePid}`;
@@ -288,11 +289,12 @@ export class RecordService {
     if (term != null) {
       key = term;
     }
-    const value = field.formControl.value;
+    let value = field.formControl.value;
     const model = resolveRefs(field.model);
     if (value == null) {
       return of(true);
     }
+    value = value.replace(/\"/g, '\\"');
     if (limitToValues.length > 0 && !limitToValues.some((v) => v === value)) {
       return of(true);
     }
