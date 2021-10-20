@@ -294,7 +294,9 @@ export class RecordService {
     if (value == null) {
       return of(true);
     }
-    value = value.replace(/\"/g, '\\"');
+    if (typeof(value) === 'string') {
+      value = value.replace(/\"/g, '\\"');
+    }
     if (limitToValues.length > 0 && !limitToValues.some((v) => v === value)) {
       return of(true);
     }
