@@ -122,11 +122,21 @@ export class LabelComponent {
    * @param field - FormlyFieldConfig, the field to hide
    */
   remove() {
+
+    // remove all element of an array before hide it
+    // TODO: remove this patch when the fowllowing issue
+    // will be solved:
+    // https://github.com/ngx-formly/ngx-formly/issues/3083
+    if (this.field.type === 'array') {
+      this.field.model.map(() => {
+        this.field.templateOptions.remove(0);
+      });
+    }
+
     if (this.field.parent.type === 'object') {
       return this._editorService.hide(this.field);
     }
     if (this.field.parent.type === 'array') {
-
       return this.field.parent.templateOptions.remove(this.getIndex());
     }
   }
