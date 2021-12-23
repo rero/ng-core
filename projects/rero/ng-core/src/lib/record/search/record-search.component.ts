@@ -239,7 +239,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Loads total count of records for each resource.
    */
   ngOnInit() {
-
     // Subscribe on aggregation filters changes and do search.
     let first = true;
     this._subscriptions.add(
@@ -917,14 +916,23 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this._spinner.show();
-
+    // Check remove filter from preFilters if it is already present in
+    // the aggs filters.
+    const preFilters = {};
+    const aggsKeys = [];
+    this.aggregationsFilters.map(agg => aggsKeys.push(agg.key));
+    for (const [key, value] of Object.entries(this._config.preFilters || {})) {
+      if (!(aggsKeys.includes(key))) {
+        preFilters[key] = value;
+      }
+    }
     return this._recordService.getRecords(
       this._currentIndex(),
       q,
       this.page,
       size || this.size,
       this.aggregationsFilters || [],
-      this._config.preFilters || {},
+      preFilters,
       this._config.listHeaders || null,
       this.sort,
       this._getFacetsParameter()
