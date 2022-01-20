@@ -16,7 +16,7 @@
  */
 import { FormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import moment from 'moment';
 import { TranslateService } from '@ngx-translate/core';
 import { EditorService } from './services/editor.service';
@@ -322,6 +322,30 @@ export class NgCoreFormlyExtension {
   }
 }
 
+export class OptionsLabelTranslateExtension implements FormlyExtension {
+
+  /**
+   * Constructor
+   * @param translate - ngx-translate service
+   */
+  constructor(private translate: TranslateService) {}
+
+  /**
+   * Translate options label on template options
+   * @param field formly field config
+   */
+  prePopulate(field: FormlyFieldConfig) {
+    const to = field.templateOptions || {};
+
+    if (!to.translate || to._translated || !to.options) {
+      return;
+    }
+    to._translated = true;
+
+    to.options.forEach((option: any) => option.label = this.translate.instant(option.label));
+  }
+}
+
 export class TranslateExtension {
 
   /**
@@ -500,12 +524,18 @@ export function registerNgCoreFormlyExtension(
           translate.stream(_('should be equal to constant "{{const}}"'), { const: field.templateOptions.const })
       },
     ],
-    extensions: [{
-      name: 'translate',
-      extension: new TranslateExtension(translate)
-    }, {
-      name: 'ng-core',
-      extension: new NgCoreFormlyExtension(editorService, recordService)
-    }],
+    extensions: [
+      {
+        name: 'options-label-translate',
+        extension: new OptionsLabelTranslateExtension(translate)
+      },
+      {
+        name: 'translate',
+        extension: new TranslateExtension(translate)
+      }, {
+        name: 'ng-core',
+        extension: new NgCoreFormlyExtension(editorService, recordService)
+      }
+    ],
   };
 }

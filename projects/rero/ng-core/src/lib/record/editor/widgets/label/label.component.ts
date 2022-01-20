@@ -44,6 +44,9 @@ export class LabelComponent {
    * @returns boolean, true if the menu should be displayed
    */
   hasMenu(field: FormlyFieldConfig) {
+    if (field.fieldGroup && field.fieldGroup.length > 0 && field.fieldGroup[0].type === 'multischema') {
+      return false;
+    }
     if (this.field.fieldGroup == null) {
       return false;
     }
