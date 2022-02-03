@@ -1,5 +1,36 @@
 # Changelog
 
+## [v1.4.3](https://github.com/rero/ng-core/tree/v1.4.3) (2022-02-03)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.2...v1.4.3)
+
+**Merged pull requests:**
+
+- formly: add extension to translate multiple options label [\#472](https://github.com/rero/ng-core/pull/472) ([Garfield-fr](https://github.com/Garfield-fr))
+- dependencies: update formly to version 5.10.27 [\#466](https://github.com/rero/ng-core/pull/466) ([Garfield-fr](https://github.com/Garfield-fr))
+
+## [v1.14.2](https://github.com/rero/ng-core/tree/v1.14.2) (2021-10-27)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.1...v1.14.2)
+
+**Fixed bugs:**
+
+- validator: fix unique validator [\#460](https://github.com/rero/ng-core/pull/460) ([Garfield-fr](https://github.com/Garfield-fr))
+
+**Merged pull requests:**
+
+- release: version 1.14.2 [\#463](https://github.com/rero/ng-core/pull/463) ([jma](https://github.com/jma))
+- translations: translate v1.14.2 [\#457](https://github.com/rero/ng-core/pull/457) ([iGormilhit](https://github.com/iGormilhit))
+- validator: escape double quotes in value [\#455](https://github.com/rero/ng-core/pull/455) ([Garfield-fr](https://github.com/Garfield-fr))
+
+## [v1.14.1](https://github.com/rero/ng-core/tree/v1.14.1) (2021-10-13)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.0...v1.14.1)
+
+**Merged pull requests:**
+
+- release: version 1.14.1 [\#454](https://github.com/rero/ng-core/pull/454) ([jma](https://github.com/jma))
+
 ## [v1.14.0](https://github.com/rero/ng-core/tree/v1.14.0) (2021-10-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.13.5...v1.14.0)
@@ -25,8 +56,6 @@
 **Merged pull requests:**
 
 - editor: speed up the editor [\#446](https://github.com/rero/ng-core/pull/446) ([jma](https://github.com/jma))
-
-# Changelog
 
 ## [v1.13.3](https://github.com/rero/ng-core/tree/v1.13.3) (2021-08-20)
 
