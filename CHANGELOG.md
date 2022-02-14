@@ -1,5 +1,13 @@
 # Changelog
 
+## [v1.14.4](https://github.com/rero/ng-core/tree/v1.14.4) (2022-02-14)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.3...v1.14.4)
+
+**Merged pull requests:**
+
+- search: fix search parameters on load [\#468](https://github.com/rero/ng-core/pull/468) ([jma](https://github.com/jma))
+
 ## [v1.4.3](https://github.com/rero/ng-core/tree/v1.4.3) (2022-02-03)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.2...v1.4.3)
