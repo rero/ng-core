@@ -25,6 +25,7 @@ import moment from 'moment';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
+import { Observable } from 'rxjs';
 import { CoreConfigService } from '../core-config.service';
 
 @Injectable({
@@ -53,11 +54,16 @@ export class TranslateService {
     this.init();
   }
 
-  setLanguage(language: string) {
-    this._translateService.use(language);
+  /**
+   * Set the current language.
+   *
+   * @param language the language code in iso format
+   * @returns an Observable of the translations
+   */
+  setLanguage(language: string): Observable<any> {
     moment.locale(language);
     this._bsLocaleService.use(language);
-    return this;
+    return this._translateService.use(language);
   }
 
   /**
