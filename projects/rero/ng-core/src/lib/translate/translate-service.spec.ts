@@ -18,12 +18,14 @@ import { CoreConfigService } from '../core-config.service';
 import { TranslateService } from './translate-service';
 import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { of } from 'rxjs';
 
 class TranslateServiceMock {
   private language;
 
   use(lang: string) {
     this.language = lang;
+    return of({});
   }
 
   getBrowserLang() {
@@ -57,7 +59,7 @@ describe('AppTranslateService', () => {
   });
 
   it('should set language on appTranslateService', () => {
-    expect(appTranslateService.setLanguage('fr')).toBeTruthy();
+    appTranslateService.setLanguage('fr').subscribe((res) => expect(res).toBeTruthy());
   });
 
   it('should get Browser language on appTranslateService', () => {
