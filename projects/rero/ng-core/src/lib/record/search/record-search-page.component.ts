@@ -161,26 +161,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
             }
           });
         }
-
-        // No default parameters found, we update the url to put them
-        if (
-          queryParams.has('q') === false ||
-          queryParams.has('size') === false ||
-          queryParams.has('page') === false ||
-          queryParams.has('sort') === false
-        ) {
-          this.updateUrl({
-            currentType: this.currentType,
-            q: this.q,
-            size: this.size,
-            page: this.page,
-            sort: this.sort,
-            aggregationsFilters,
-          });
-
-          return;
-        }
-
+        // update the facet filters given the URL params
         this._recordSearchService.setAggregationsFilters(aggregationsFilters);
       }
     );
