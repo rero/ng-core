@@ -1,5 +1,18 @@
 # Changelog
 
+## [v1.14.5](https://github.com/rero/ng-core/tree/v1.14.5) (2022-02-24)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.4...v1.14.5)
+
+**Closed issues:**
+
+- oneOf with array do not load data correctly [\#449](https://github.com/rero/ng-core/issues/449)
+
+**Merged pull requests:**
+
+- search: load the default params once [\#481](https://github.com/rero/ng-core/pull/481) ([jma](https://github.com/jma))
+- language: notify when the translations are loaded [\#480](https://github.com/rero/ng-core/pull/480) ([jma](https://github.com/jma))
+
 ## [v1.14.4](https://github.com/rero/ng-core/tree/v1.14.4) (2022-02-14)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.3...v1.14.4)
