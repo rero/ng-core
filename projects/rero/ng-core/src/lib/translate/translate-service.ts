@@ -95,6 +95,5 @@ export class TranslateService {
     const languages: Array<string> = this._coreConfigService.languages;
     this._translateService.addLangs(languages);
     this._translateService.setDefaultLang(this._coreConfigService.defaultLanguage);
-    this.setLanguage(this._coreConfigService.defaultLanguage);
   }
 }
