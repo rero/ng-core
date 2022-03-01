@@ -33,7 +33,7 @@ display_success_message "Building library..."
 ng build --configuration production @rero/ng-core
 
 display_success_message "Building test application..."
-ng build ng-core-tester --prod
+ng build ng-core-tester --configuration production
 
 display_success_message "Linting the projects..."
 ng lint

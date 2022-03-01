@@ -20,6 +20,7 @@ import { Directive, Input, ViewContainerRef } from '@angular/core';
  * Directive for displaying a record detail.
  */
 @Directive({
+// eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[ngCoreRecordDetail]',
 })
 export class RecordDetailDirective {

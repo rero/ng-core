@@ -186,7 +186,7 @@ describe('RecordSearchComponent', () => {
     component = fixture.componentInstance;
     component.aggregationsFilters = [];
     component.aggregations = [];
-    /* tslint:disable:no-string-literal */
+    /* eslint-disable @typescript-eslint/dot-notation */
     component['_config'] = {
       preFilters: {}
     };
@@ -238,7 +238,7 @@ describe('RecordSearchComponent', () => {
   it('should delete record', fakeAsync(() => {
     dialogServiceSpy.show.and.returnValue(of(true));
 
-    /* tslint:disable:no-string-literal */
+    /* eslint-disable @typescript-eslint/dot-notation */
     component['_config'].total = 2;
 
     expect(component['_config'].total).toBe(2);

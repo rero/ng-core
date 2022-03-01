@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- Aggregation with no bucket, containing only the count. -->
-<div class="mb-3" *ngIf="aggregation.doc_count != null; else cardAggregation">
+<div class="mb-3" *ngIf="aggregation.doc_count !== undefined && aggregation.doc_count !== null; else cardAggregation">
   <ng-core-record-search-aggregation-buckets
     [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
     [size]="aggregation.bucketSize">

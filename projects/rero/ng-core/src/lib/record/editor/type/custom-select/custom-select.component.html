@@ -31,7 +31,7 @@
         <ng-container *ngFor="let option of filteredOptions">
           <a class="dropdown-item" [ngClass]="{ active: isOptionSelected(option), disabled: option.disabled }" href="#"
             (click)="$event.preventDefault(); selectOption(option); dropdown.hide()"
-            *ngIf="option.value != null; else group">
+            *ngIf="option.value !== null; else group">
             {{ !filter ? '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(option.level) + ' ' : '' }}{{ option.translatedLabel }}
           </a>
           <ng-template #group>

@@ -70,130 +70,123 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
 import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
 
 @NgModule({
-  declarations: [
-    RecordSearchPageComponent,
-    RecordSearchComponent,
-    RecordSearchResultComponent,
-    RecordSearchResultDirective,
-    RecordSearchAggregationComponent,
-    JsonComponent,
-    DetailComponent,
-    RecordDetailDirective,
-    DetailJsonComponent,
-    AutocompleteComponent,
-    GetRecordPipe,
-    EditorComponent,
-    AddFieldEditorComponent,
-    DropdownLabelEditorComponent,
-    ArrayTypeComponent,
-    ObjectTypeComponent,
-    SwitchComponent,
-    MultiSchemaTypeComponent,
-    DatepickerTypeComponent,
-    ToggleWrapperComponent,
-    BucketsComponent,
-    HorizontalWrapperComponent,
-    FormFieldWrapperComponent,
-    HideWrapperComponent,
-    AggregationSliderComponent,
-    RemoteTypeaheadComponent,
-    RecordFilesComponent,
-    LoadTemplateFormComponent,
-    SaveTemplateFormComponent,
-    CardWrapperComponent,
-    LabelComponent,
-    TextareaFieldComponent,
-    CustomSelectFieldComponent,
-    MarkdownFieldComponent,
-    AggregationDateRangeComponent
-  ],
-  imports: [
-    // NOTE : BrowserAnimationModule **should** be include in application core module.
-    // BrowserAnimationsModule,
-    CoreModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RecordRoutingModule,
-    TooltipModule.forRoot(),
-    PopoverModule.forRoot(),
-    TypeaheadModule.forRoot(),
-    PaginationModule.forRoot(),
-    CollapseModule.forRoot(),
-    PaginationModule.forRoot(),
-    BsDatepickerModule.forRoot(),
-    FormlyModule.forRoot({
-      extras: {
-        resetFieldOnHide: true,
-        lazyRender: true
-      },
-      types: [
-        { name: 'string', extends: 'input' },
+    declarations: [
+        RecordSearchPageComponent,
+        RecordSearchComponent,
+        RecordSearchResultComponent,
+        RecordSearchResultDirective,
+        RecordSearchAggregationComponent,
+        JsonComponent,
+        DetailComponent,
+        RecordDetailDirective,
+        DetailJsonComponent,
+        AutocompleteComponent,
+        GetRecordPipe,
+        EditorComponent,
+        AddFieldEditorComponent,
+        DropdownLabelEditorComponent,
+        ArrayTypeComponent,
+        ObjectTypeComponent,
+        SwitchComponent,
+        MultiSchemaTypeComponent,
+        DatepickerTypeComponent,
+        ToggleWrapperComponent,
+        BucketsComponent,
+        HorizontalWrapperComponent,
+        FormFieldWrapperComponent,
+        HideWrapperComponent,
+        AggregationSliderComponent,
+        RemoteTypeaheadComponent,
+        RecordFilesComponent,
+        LoadTemplateFormComponent,
+        SaveTemplateFormComponent,
+        CardWrapperComponent,
+        LabelComponent,
+        TextareaFieldComponent,
+        CustomSelectFieldComponent,
+        MarkdownFieldComponent,
+        AggregationDateRangeComponent
+    ],
+    imports: [
+        // NOTE : BrowserAnimationModule **should** be include in application core module.
+        // BrowserAnimationsModule,
+        CoreModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RecordRoutingModule,
+        TooltipModule.forRoot(),
+        PopoverModule.forRoot(),
+        TypeaheadModule.forRoot(),
+        PaginationModule.forRoot(),
+        CollapseModule.forRoot(),
+        PaginationModule.forRoot(),
+        BsDatepickerModule.forRoot(),
+        FormlyModule.forRoot({
+            extras: {
+                resetFieldOnHide: true,
+                lazyRender: true
+            },
+            types: [
+                { name: 'string', extends: 'input' },
+                {
+                    name: 'number',
+                    extends: 'input',
+                    defaultOptions: {
+                        templateOptions: {
+                            type: 'number'
+                        }
+                    }
+                },
+                {
+                    name: 'integer',
+                    extends: 'input',
+                    defaultOptions: {
+                        templateOptions: {
+                            type: 'number'
+                        }
+                    }
+                },
+                { name: 'boolean', component: SwitchComponent },
+                { name: 'enum', extends: 'select' },
+                { name: 'array', component: ArrayTypeComponent },
+                { name: 'object', component: ObjectTypeComponent },
+                { name: 'multischema', component: MultiSchemaTypeComponent },
+                { name: 'datepicker', component: DatepickerTypeComponent },
+                { name: 'selectWithSort', extends: 'select' },
+                { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
+                { name: 'textarea', component: TextareaFieldComponent },
+                { name: 'select', component: CustomSelectFieldComponent },
+                { name: 'markdown', component: MarkdownFieldComponent }
+            ],
+            wrappers: [
+                { name: 'toggle-switch', component: ToggleWrapperComponent },
+                { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
+                { name: 'form-field', component: FormFieldWrapperComponent },
+                { name: 'hide', component: HideWrapperComponent },
+                { name: 'card', component: CardWrapperComponent }
+            ]
+        }),
+        FormlyBootstrapModule,
+        NgxBootstrapSliderModule,
+        FormlySelectModule
+    ],
+    exports: [
+        RecordSearchComponent,
+        AutocompleteComponent,
+        GetRecordPipe,
+        CoreModule,
+        EditorComponent,
+        FormlyModule,
+        FormlyBootstrapModule,
+        FormlySelectModule
+    ],
+    providers: [
         {
-          name: 'number',
-          extends: 'input',
-          defaultOptions: {
-            templateOptions: {
-              type: 'number'
-            }
-          }
-        },
-        {
-          name: 'integer',
-          extends: 'input',
-          defaultOptions: {
-            templateOptions: {
-              type: 'number'
-            }
-          }
-        },
-        { name: 'boolean', component: SwitchComponent },
-        { name: 'enum', extends: 'select' },
-        { name: 'array', component: ArrayTypeComponent },
-        { name: 'object', component: ObjectTypeComponent },
-        { name: 'multischema', component: MultiSchemaTypeComponent },
-        { name: 'datepicker', component: DatepickerTypeComponent },
-        { name: 'selectWithSort', extends: 'select' }, // Kept for compatibility reason with existing configuration in backend.
-        { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
-        { name: 'textarea', component: TextareaFieldComponent },
-        { name: 'select', component: CustomSelectFieldComponent },
-        { name: 'markdown', component: MarkdownFieldComponent }
-      ],
-      wrappers: [
-        { name: 'toggle-switch', component: ToggleWrapperComponent },
-        { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
-        { name: 'form-field', component: FormFieldWrapperComponent },
-        { name: 'hide', component: HideWrapperComponent },
-        { name: 'card', component: CardWrapperComponent }
-      ]
-    }),
-    FormlyBootstrapModule,
-    NgxBootstrapSliderModule,
-    FormlySelectModule
-  ],
-  exports: [
-    RecordSearchComponent,
-    AutocompleteComponent,
-    GetRecordPipe,
-    CoreModule,
-    EditorComponent,
-    FormlyModule,
-    FormlyBootstrapModule,
-    FormlySelectModule
-  ],
-  entryComponents: [
-    JsonComponent,
-    DetailJsonComponent,
-    AutocompleteComponent,
-    LoadTemplateFormComponent,
-    SaveTemplateFormComponent
-  ],
-  providers: [
-    {
-      provide: FORMLY_CONFIG,
-      multi: true,
-      useFactory: registerNgCoreFormlyExtension,
-      deps: [TranslateService, EditorService, RecordService]
-    }
-  ]
+            provide: FORMLY_CONFIG,
+            multi: true,
+            useFactory: registerNgCoreFormlyExtension,
+            deps: [TranslateService, EditorService, RecordService]
+        }
+    ]
 })
 export class RecordModule { }

@@ -36,14 +36,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/rero/ng-core/tsconfig.lib.json",
-              "projects/rero/ng-core/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "projects/rero/ng-core/**/*.ts",
+              "projects/rero/ng-core/**/*.html"
             ]
           }
         }
@@ -68,7 +65,6 @@
             "main": "projects/ng-core-tester/src/main.ts",
             "polyfills": "projects/ng-core-tester/src/polyfills.ts",
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/ng-core-tester/src/favicon.ico",
               "projects/ng-core-tester/src/assets"
@@ -80,7 +76,13 @@
             ],
             "scripts": [
               "node_modules/bootstrap-slider/dist/bootstrap-slider.min.js"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -109,7 +111,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -155,19 +158,6 @@
             ]
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ng-core-tester/tsconfig.app.json",
-              "projects/ng-core-tester/tsconfig.spec.json",
-              "projects/ng-core-tester/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -179,13 +169,22 @@
               "devServerTarget": "ng-core-tester:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ng-core-tester/**/*.ts",
+              "projects/ng-core-tester/**/*.html"
+            ]
+          }
         }
       }
     }
   },
   "defaultProject": "@rero/ng-core",
   "cli": {
-    "defaultCollection": "@ngx-formly/schematics"
+    "defaultCollection": "@angular-eslint/schematics"
   },
   "schematics": {
     "@ngx-formly/schematics:component": {

@@ -20,6 +20,7 @@ import { Directive, ViewContainerRef } from '@angular/core';
  * Directive for displaying record search result.
  */
 @Directive({
+// eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[ngCoreRecordSearchResult]',
 })
 export class RecordSearchResultDirective {
