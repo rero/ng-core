@@ -40,17 +40,12 @@
 
 **Merged pull requests:**
 
-- release: version 1.14.2 [\#463](https://github.com/rero/ng-core/pull/463) ([jma](https://github.com/jma))
 - translations: translate v1.14.2 [\#457](https://github.com/rero/ng-core/pull/457) ([iGormilhit](https://github.com/iGormilhit))
 - validator: escape double quotes in value [\#455](https://github.com/rero/ng-core/pull/455) ([Garfield-fr](https://github.com/Garfield-fr))
 
 ## [v1.14.1](https://github.com/rero/ng-core/tree/v1.14.1) (2021-10-13)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.0...v1.14.1)
-
-**Merged pull requests:**
-
-- release: version 1.14.1 [\#454](https://github.com/rero/ng-core/pull/454) ([jma](https://github.com/jma))
 
 ## [v1.14.0](https://github.com/rero/ng-core/tree/v1.14.0) (2021-10-12)
 
@@ -97,7 +92,6 @@
 
 **Merged pull requests:**
 
-- release: version 1.13.1 [\#440](https://github.com/rero/ng-core/pull/440) ([jma](https://github.com/jma))
 - dependencies: fix security issues [\#439](https://github.com/rero/ng-core/pull/439) ([jma](https://github.com/jma))
 - translations: translate v0.13.1 [\#438](https://github.com/rero/ng-core/pull/438) ([jma](https://github.com/jma))
 - search input: add the disabled attribute [\#437](https://github.com/rero/ng-core/pull/437) ([Garfield-fr](https://github.com/Garfield-fr))
@@ -125,7 +119,6 @@
 
 **Merged pull requests:**
 
-- release: version 1.12.2 [\#426](https://github.com/rero/ng-core/pull/426) ([jma](https://github.com/jma))
 - records: fix aggregation name [\#425](https://github.com/rero/ng-core/pull/425) ([sebastiendeleze](https://github.com/sebastiendeleze))
 
 ## [v1.12.1](https://github.com/rero/ng-core/tree/v1.12.1) (2021-07-20)
