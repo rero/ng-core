@@ -30,6 +30,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
+import { emailValidator } from '../validator/email.validator';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
@@ -61,13 +62,13 @@ import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
+import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
 import { RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
 
 @NgModule({
   declarations: [
@@ -122,6 +123,9 @@ import { AggregationDateRangeComponent } from './search/aggregation/date-range/d
     PaginationModule.forRoot(),
     BsDatepickerModule.forRoot(),
     FormlyModule.forRoot({
+      extensions: [
+        { name: 'email', extension: { prePopulate: emailValidator } }
+      ],
       extras: {
         resetFieldOnHide: true,
         lazyRender: true
