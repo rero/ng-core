@@ -16,16 +16,17 @@
  */
 import { FormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
-import moment from 'moment';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { cloneDeep } from 'lodash-es';
+import moment from 'moment';
+import { isObservable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { RecordService } from '../record.service';
 import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
-import { RecordService } from '../record.service';
-
 
 export class NgCoreFormlyExtension {
-
   // Types to apply horizontal wrapper on
   private _horizontalWrapperTypes = [
     'enum',
@@ -34,25 +35,18 @@ export class NgCoreFormlyExtension {
     'selectWithSort',
     'integer',
     'textarea',
-    'datepicker'
+    'datepicker',
   ];
 
   // Types to apply field wrapper on
-  private _fieldWrapperTypes = [
-    'boolean',
-    'datepicker',
-    'remoteTypeahead',
-    'selectWithSort'
-  ];
+  private _fieldWrapperTypes = ['boolean', 'datepicker', 'remoteTypeahead', 'selectWithSort'];
 
   /**
    * Constructor
    * @param _editorService - editor service
    * @params _recordService - ng core record service
    */
-  constructor(
-    private _editorService: EditorService,
-    private _recordService: RecordService) { }
+  constructor(private _editorService: EditorService, private _recordService: RecordService) {}
 
   /**
    * prePopulate Formly hook
@@ -70,15 +64,22 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    */
   onPopulate(field: FormlyFieldConfig) {
-    this._hideShowEmptyField(field);
     this._setWrappers(field);
-    field.options.fieldChanges.subscribe(changes => {
-      if (changes.type === 'expressionChanges' && changes.property === 'templateOptions.required' && changes.value === true) {
-        if (changes.field.hide === true) {
-          changes.field.hide = false;
+    this._hideEmptyField(field);
+    const expressionProperties = field?.expressionProperties;
+    if (expressionProperties && expressionProperties['templateOptions.required'] !== undefined) {
+      field.options.fieldChanges.subscribe((changes) => {
+        if (
+          changes.type === 'expressionChanges' &&
+          changes.property === 'templateOptions.required' &&
+          changes.value === true
+        ) {
+          if (changes.field.hide === true) {
+            changes.field.hide = false;
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   /**
@@ -86,36 +87,31 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    */
   private _setWrappers(field: FormlyFieldConfig) {
-
     // get wrappers from the templateOptions (JSONSchema)
     if (field.templateOptions) {
       field.wrappers = [
         ...(field.templateOptions.wrappers ? field.templateOptions.wrappers : []),
-        ...(field.wrappers ? field.wrappers : [])
+        ...(field.wrappers ? field.wrappers : []),
       ];
     }
 
-    if (field.templateOptions && field.templateOptions.longMode === true) {
+    if (field.templateOptions && this._editorService?.rootField?.templateOptions?.longMode === true) {
       // add automatically a card wrapper for the first level fields
       const parent = field.parent;
       if (parent && parent.templateOptions && parent.templateOptions.isRoot === true) {
-        if (field.templateOptions.wrappers == null) {
+        if (!field.wrappers.includes('card')) {
           field.wrappers.push('card');
         }
       }
       // Add an horizontal wrapper for all given field types
-      if (this._horizontalWrapperTypes.some(elem => elem === field.type)) {
-        field.wrappers = field.wrappers.filter(w => w !== 'form-field');
+      if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
+        field.wrappers = field.wrappers.filter((w) => w !== 'form-field');
         field.wrappers.push('form-field-horizontal');
       }
-    }
-    else {
+    } else {
       // adds form-fields for non standard field types
-      if (this._fieldWrapperTypes.some(elem => elem === field.type)) {
-        field.wrappers = [
-          ...(field.wrappers ? field.wrappers : []),
-          'form-field'
-        ];
+      if (this._fieldWrapperTypes.some((elem) => elem === field.type)) {
+        field.wrappers = [...(field.wrappers ? field.wrappers : []), 'form-field'];
       }
     }
     // TODO: this can be fixed in a future formly release
@@ -150,28 +146,97 @@ export class NgCoreFormlyExtension {
   }
 
   /**
-   * Hide or show field depending of the data content and the hide property
+   * Check if the given field or one of his parents has a hide wrapper
    * @param field - FormlyFieldConfig
+   * @return boolean - true if has a hide wrapper
    */
-  private _hideShowEmptyField(field: FormlyFieldConfig) {
-    let model = field.model;
-    if (field.templateOptions == null) {
-      return;
+  private _hasHideWrapper(field) {
+    if ('hide' in field.wrappers) {
+      return true;
     }
+    if (field?.parent) {
+      return this._hasHideWrapper(field.parent);
+    }
+    return false;
+  }
+
+  /**
+   * Check if the given field has at least on parent marked as hidden.
+   * The model should be empty.
+   *
+   * @param field - FormlyFieldConfig
+   * @return boolean - true has a parent marked as hidden.
+   */
+  private _hasHiddenParent(field) {
+    if (field?.hide === true) {
+      return this._modelIsEmpty(field);
+    }
+    if (field?.parent) {
+      return this._hasHiddenParent(field.parent);
+    }
+    return false;
+  }
+
+  /**
+   * Check if a field has an empty model.
+   *
+   * @param field formly field config
+   * @returns true if the given field has an empty model.
+   */
+  private _modelIsEmpty(field): boolean {
+    let model = field?.model;
     // for simple object the model is the parent dict
-    if (
-      field.model != null && !['object', 'multischema', 'array'].some(f => f === field.type)
-    ) {
+    if (field.model != null && !field.hasOwnProperty('fieldGroup')) {
       // New from ngx-formly v5.9.0
       model = field.model[Array.isArray(field.key) ? field.key[0] : field.key];
     }
     model = removeEmptyValues(model);
-    const modelEmpty = isEmpty(model);
-    if (field.templateOptions.hide === true && field.hide === undefined) {
-      // show the field if it contains data
-      if (!modelEmpty) {
-        field.hide = false;
-      } else {
+    return isEmpty(model);
+  }
+
+  /**
+   * Hide or show field depending of the data content and the hide property
+   * @param field - FormlyFieldConfig
+   */
+  private _hideEmptyField(field: FormlyFieldConfig) {
+    // find the root field in the form tree
+    const rootField = this._editorService?.rootField;
+    // edition mode
+    const editMode = rootField?.templateOptions?.editMode;
+    if (
+      // only in longMode else it will not be possible to unhide a field
+      !rootField?.templateOptions?.longMode ||
+      // system field has not key
+      !field?.key ||
+      // ignore array item which as key of the form "0"
+      // TODO: find a better way to identify this case
+      !isNaN(Number(field.key)) ||
+      // do not hide a field containing a 'hide' wrapper
+      this._hasHideWrapper(field) ||
+      // do not hide a field that has a parent maked as hidden and a model is empty
+      (this._hasHiddenParent(field?.parent) && field.templateOptions.hide !== true)
+    ) {
+      return;
+    }
+
+    // is the model empty
+    const modelEmpty = this._modelIsEmpty(field);
+    if (
+      // do not hide field which has value in the model
+      modelEmpty &&
+      // do not hide required fields
+      !field?.templateOptions?.initialRequired
+    ) {
+      if (
+        // hide field marked as hide
+        (field.templateOptions.hide === true &&
+          // do not hide field has been already manipulated
+          field.hide === undefined) ||
+        // in edition empty fields should be hidden
+        (editMode === true &&
+          // only during the editor initialisation
+          !this._editorService.rootField?.formControl?.touched)
+      ) {
         field.hide = true;
         this._editorService.addHiddenField(field);
       }
@@ -193,19 +258,21 @@ export class NgCoreFormlyExtension {
       const limitToValues = customValidators.valueAlreadyExists.limitToValues;
       const filter = customValidators.valueAlreadyExists.filter;
       const term = customValidators.valueAlreadyExists.term;
+      const rootField = this._editorService?.rootField;
+      const pid = rootField?.templateOptions?.pid;
       field.asyncValidators = {
         validation: [
           (control: FormControl) => {
             return this._recordService.uniqueValue(
               field,
-              remoteRecordType ? remoteRecordType : field.templateOptions.recordType,
-              field.templateOptions.pid ? field.templateOptions.pid : null,
+              remoteRecordType ? remoteRecordType : rootField.templateOptions.recordType,
+              pid,
               term ? term : null,
               limitToValues ? limitToValues : [],
               filter ? filter : null
             );
-          }
-        ]
+          },
+        ],
       };
       delete customValidators.valueAlreadyExists;
     }
@@ -221,17 +288,19 @@ export class NgCoreFormlyExtension {
             }
             const keysToKeep = customValidators.uniqueValueKeysInObject.keys;
             const uniqueItems = Array.from(
-              new Set(control.value.map((v: any) => {
-                const keys = keysToKeep.reduce((acc, elt) => {
-                  acc[elt] = v[elt];
-                  return acc;
-                }, {});
-                return JSON.stringify(keys);
-              })),
+              new Set(
+                control.value.map((v: any) => {
+                  const keys = keysToKeep.reduce((acc, elt) => {
+                    acc[elt] = v[elt];
+                    return acc;
+                  }, {});
+                  return JSON.stringify(keys);
+                })
+              )
             );
             return uniqueItems.length === control.value.length;
-          }
-        }
+          },
+        },
       };
     }
     // asyncValidators: numberOfSpecificValuesInObject
@@ -239,10 +308,9 @@ export class NgCoreFormlyExtension {
       field.validators = {
         numberOfSpecificValuesInObject: {
           expression: (control: FormControl) => {
-
             function objIntersection(a, b) {
               const k1 = Object.keys(a);
-              return k1.filter(k => a[k] === b[k]);
+              return k1.filter((k) => a[k] === b[k]);
             }
             const min = customValidators.numberOfSpecificValuesInObject.min || 0;
             const max = customValidators.numberOfSpecificValuesInObject.max || Infinity;
@@ -252,10 +320,10 @@ export class NgCoreFormlyExtension {
             if (!(control.value instanceof Array) && min === 0) {
               return true;
             }
-            const counter = control.value.filter(element => objIntersection(keys, element).length > 0).length;
-            return (min <= counter && counter <= max);
-          }
-        }
+            const counter = control.value.filter((element) => objIntersection(keys, element).length > 0).length;
+            return min <= counter && counter <= max;
+          },
+        },
       };
     }
     // The start date must be less than the end date.
@@ -263,8 +331,7 @@ export class NgCoreFormlyExtension {
       const startDate: string = customValidators.dateMustBeLessThan.startDate;
       const endDate: string = customValidators.dateMustBeLessThan.endDate;
       const strict: boolean = customValidators.dateMustBeLessThan.strict || false;
-      const updateOn: 'change' | 'blur' | 'submit' =
-        customValidators.dateMustBeLessThan.strict || 'blur';
+      const updateOn: 'change' | 'blur' | 'submit' = customValidators.dateMustBeLessThan.strict || 'blur';
       field.validators = {
         dateMustBeLessThan: {
           updateOn,
@@ -275,8 +342,12 @@ export class NgCoreFormlyExtension {
               const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
               const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
               const isMustLessThan = strict
-                ? dateStart >= dateEnd ? false : true
-                : dateStart > dateEnd ? false : true;
+                ? dateStart >= dateEnd
+                  ? false
+                  : true
+                : dateStart > dateEnd
+                ? false
+                : true;
               if (isMustLessThan) {
                 endDateFc.setErrors(null);
                 endDateFc.markAsDirty();
@@ -284,8 +355,8 @@ export class NgCoreFormlyExtension {
               return isMustLessThan;
             }
             return false;
-          }
-        }
+          },
+        },
       };
     }
 
@@ -294,8 +365,7 @@ export class NgCoreFormlyExtension {
       const startDate: string = customValidators.dateMustBeGreaterThan.startDate;
       const endDate: string = customValidators.dateMustBeGreaterThan.endDate;
       const strict: boolean = customValidators.dateMustBeGreaterThan.strict || false;
-      const updateOn: 'change' | 'blur' | 'submit' =
-        customValidators.dateMustBeGreaterThan.strict || 'blur';
+      const updateOn: 'change' | 'blur' | 'submit' = customValidators.dateMustBeGreaterThan.strict || 'blur';
       field.validators = {
         datesMustBeGreaterThan: {
           updateOn,
@@ -306,8 +376,12 @@ export class NgCoreFormlyExtension {
               const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
               const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
               const isMustBeGreaterThan = strict
-                ? dateStart <= dateEnd ? true : false
-                : dateStart < dateEnd ? true : false;
+                ? dateStart <= dateEnd
+                  ? true
+                  : false
+                : dateStart < dateEnd
+                ? true
+                : false;
               if (isMustBeGreaterThan) {
                 startDateFc.setErrors(null);
                 startDateFc.markAsDirty();
@@ -315,50 +389,20 @@ export class NgCoreFormlyExtension {
               return isMustBeGreaterThan;
             }
             return false;
-          }
-        }
+          },
+        },
       };
     }
   }
 }
 
-export class OptionsLabelTranslateExtension implements FormlyExtension {
-
-  /**
-   * Constructor
-   * @param translate - ngx-translate service
-   */
-  constructor(private translate: TranslateService) {}
-
-  /**
-   * Translate options label on template options
-   * @param field formly field config
-   */
-  prePopulate(field: FormlyFieldConfig) {
-    const to = field.templateOptions || {};
-
-    if (!to.translate || to._translated || !to.options) {
-      return;
-    }
-    to._translated = true;
-
-    to.options.forEach((option: any) => option.label = this.translate.instant(option.label));
-  }
-}
-
 export class TranslateExtension {
-
   /**
    * Constructor.
    *
    *  @param translate ngx-translate service
    */
-  constructor(private _translate: TranslateService) { }
-
-  /**
-   * Options Map
-   */
-  private _optionsMap = new Map();
+  constructor(private _translate: TranslateService) {}
 
   /**
    * Translate some fields before populating the form.
@@ -381,7 +425,7 @@ export class TranslateExtension {
       to.untranslatedLabel = to.label;
       field.expressionProperties = {
         ...(field.expressionProperties || {}),
-        'templateOptions.label': this._translate.stream(to.label)
+        'templateOptions.label': this._translate.stream(to.label),
       };
     }
     // description
@@ -398,6 +442,31 @@ export class TranslateExtension {
         'templateOptions.placeholder': this._translate.stream(to.placeholder),
       };
     }
+    // Options
+    if (to.options) {
+      to.options = !isObservable(to.options) ? of(to.options) : to.options;
+      to.options = to.options.pipe(
+        switchMap((opts: any) => {
+          const labels = [];
+          const options = [];
+          opts.forEach((opt: any) => {
+            labels.push(opt.label);
+            options.push(opt);
+          });
+          return this._translate.stream(labels).pipe(
+            map((translations: any) => {
+              const output = [];
+              options.forEach((opt: any) => {
+                const data = cloneDeep(opt);
+                data.label = translations[opt.label];
+                output.push(data);
+              });
+              return output;
+            })
+          );
+        })
+      );
+    }
   }
 }
 
@@ -412,7 +481,8 @@ export class TranslateExtension {
 export function registerNgCoreFormlyExtension(
   translate: TranslateService,
   editorService: EditorService,
-  recordService: RecordService) {
+  recordService: RecordService
+) {
   return {
     // translate the default validators messages
     // widely inspired from ngx-formly example
@@ -420,24 +490,24 @@ export function registerNgCoreFormlyExtension(
       {
         name: 'formError',
         // use a marker to force translation extraction due to a bad detection of ngx-translate-extract
-        message: (err) => translate.stream(err.title)
+        message: (err) => translate.stream(err.title),
       },
       {
         name: 'required',
         // use a marker to force translation extraction due to a bad detection of ngx-translate-extract
-        message: () => translate.stream(_('This field is required'))
+        message: () => translate.stream(_('This field is required')),
       },
       {
         name: 'null',
-        message: () => translate.stream(_('should be null'))
+        message: () => translate.stream(_('should be null')),
       },
       {
         name: 'uniqueItems',
-        message: () => translate.stream(_('should NOT have duplicate items'))
+        message: () => translate.stream(_('should NOT have duplicate items')),
       },
       {
         name: 'uniqueValueKeysInObject',
-        message: () => translate.stream(_('should NOT have duplicate items'))
+        message: () => translate.stream(_('should NOT have duplicate items')),
       },
       {
         name: 'numberOfSpecificValuesInObject',
@@ -449,16 +519,17 @@ export function registerNgCoreFormlyExtension(
 
           // Build a string based on validators specified keys
           // the object `{a: 'testA', b= 'testB'}` will be transform to a string `a=testA and b=testB`
-          const keysString = Object.keys(keys).map(key => key + '=' + translate.instant(keys[key]));
+          const keysString = Object.keys(keys).map((key) => key + '=' + translate.instant(keys[key]));
           const joinKeysString = keysString.join(' ' + translate.instant('and') + ' ');
 
           // Build a string based on min/max values specified into configuration
           // depending of min/max configuration, the message must be different
           let counterMessage = '';
           if (min > 0 && max < Infinity) {
-            counterMessage = (min === max)
-              ? translate.instant(_('strictly {{counter}}'), { counter: min })
-              : translate.instant(_('between {{min}} and {{max}}'), { min, max });
+            counterMessage =
+              min === max
+                ? translate.instant(_('strictly {{counter}}'), { counter: min })
+                : translate.instant(_('between {{min}} and {{max}}'), { min, max });
           } else if (min > 0) {
             counterMessage = translate.instant('minimum {{min}}', { min });
           } else if (max < Infinity) {
@@ -466,76 +537,84 @@ export function registerNgCoreFormlyExtension(
           }
 
           // Combine string to return a full sentence
-          return translate.instant(_('should have {{counter}} {{keys}}'), { counter: counterMessage, keys: joinKeysString });
-        }
+          return translate.instant(_('should have {{counter}} {{keys}}'), {
+            counter: counterMessage,
+            keys: joinKeysString,
+          });
+        },
       },
       {
         name: 'alreadyTaken',
-        message: () => translate.stream(_('the value is already taken'))
+        message: () => translate.stream(_('the value is already taken')),
       },
       {
         name: 'minlength',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should NOT be shorter than {{minLength}} characters'), { minLength: field.templateOptions.minLength })
+          translate.stream(_('should NOT be shorter than {{minLength}} characters'), {
+            minLength: field.templateOptions.minLength,
+          }),
       },
       {
         name: 'maxlength',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should NOT be longer than {{maxLength}} characters'), { maxLength: field.templateOptions.maxLength })
+          translate.stream(_('should NOT be longer than {{maxLength}} characters'), {
+            maxLength: field.templateOptions.maxLength,
+          }),
       },
       {
         name: 'minItems',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should NOT have fewer than {{minItems}} items'), { minItems: field.templateOptions.minItems })
+          translate.stream(_('should NOT have fewer than {{minItems}} items'), {
+            minItems: field.templateOptions.minItems,
+          }),
       },
       {
         name: 'maxItems',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should NOT have more than {{maxItems}} items'), { maxItems: field.templateOptions.maxItems })
+          translate.stream(_('should NOT have more than {{maxItems}} items'), {
+            maxItems: field.templateOptions.maxItems,
+          }),
       },
       {
         name: 'min',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be >=  {{min}}'), { min: field.templateOptions.min })
+          translate.stream(_('should be >=  {{min}}'), { min: field.templateOptions.min }),
       },
       {
         name: 'max',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be <=  {{max}}'), { max: field.templateOptions.max })
+          translate.stream(_('should be <=  {{max}}'), { max: field.templateOptions.max }),
       },
       {
         name: 'exclusiveMinimum',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be >  {{step}}'), { step: field.templateOptions.step })
+          translate.stream(_('should be >  {{step}}'), { step: field.templateOptions.step }),
       },
       {
         name: 'exclusiveMaximum',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be <  {{step}}'), { step: field.templateOptions.step })
+          translate.stream(_('should be <  {{step}}'), { step: field.templateOptions.step }),
       },
       {
         name: 'multipleOf',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be multiple of ${{step}}'), { step: field.templateOptions.step })
+          translate.stream(_('should be multiple of ${{step}}'), { step: field.templateOptions.step }),
       },
       {
         name: 'const',
         message: (err, field: FormlyFieldConfig) =>
-          translate.stream(_('should be equal to constant "{{const}}"'), { const: field.templateOptions.const })
+          translate.stream(_('should be equal to constant "{{const}}"'), { const: field.templateOptions.const }),
       },
     ],
     extensions: [
       {
-        name: 'options-label-translate',
-        extension: new OptionsLabelTranslateExtension(translate)
+        name: 'translate',
+        extension: new TranslateExtension(translate),
       },
       {
-        name: 'translate',
-        extension: new TranslateExtension(translate)
-      }, {
         name: 'ng-core',
-        extension: new NgCoreFormlyExtension(editorService, recordService)
-      }
+        extension: new NgCoreFormlyExtension(editorService, recordService),
+      },
     ],
   };
 }

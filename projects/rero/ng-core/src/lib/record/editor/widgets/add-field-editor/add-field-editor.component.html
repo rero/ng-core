@@ -42,7 +42,7 @@
     <li *ngFor="let field of essentialFields$ | async ; let i = index ">
       <button
         id="{{'add-field-' + i}}"
-        (click)="showSelectedField(field)"
+        (click)="$event.preventDefault(); showSelectedField(field)"
         class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
       >
         {{ translateLabel(field) | async }}

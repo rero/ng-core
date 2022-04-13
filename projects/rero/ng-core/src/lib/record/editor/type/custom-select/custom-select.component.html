@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div>
-  <div class="btn-group my-2 w-100" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="to.readonly">
+  <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="to.readonly">
     <button id="button-basic" dropdownToggle type="button"
             class="btn btn-outline-primary btn-block dropdown-toggle px-3 text-left d-flex align-items-center"
             aria-controls="dropdown-basic">
@@ -24,7 +24,7 @@
     </button>
     <div id="dropdown-basic" *dropdownMenu class="dropdown-menu w-100" role="menu" aria-labelledby="button-basic">
       <div class="px-4 py-2" *ngIf="filter || filteredOptions.length > to.minItemsToDisplaySearch">
-        <input type="text" class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
+        <input type="text" ngCoreAutofocus class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
           [value]="filter" [placeholder]="'Filter...' | translate" />
       </div>
       <ng-container *ngIf="filteredOptions.length; else noResult">

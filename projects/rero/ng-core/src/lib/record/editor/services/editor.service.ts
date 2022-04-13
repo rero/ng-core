@@ -31,6 +31,9 @@ export class EditorService {
   // Observable of hidden fields
   private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
 
+  // the root field of the editor
+  rootField: FormlyFieldConfig;
+
   // current list of hidden fields
   get hiddenFields$(): Observable<any[]> {
     return this._hiddenFieldsSubject.asObservable();
@@ -75,7 +78,7 @@ export class EditorService {
    * @returns boolean, true if the field is at the root JSONSchema.
    */
   isFieldRoot(field: FormlyFieldConfig) {
-    return field.parent.parent.parent === undefined;
+    return field?.parent?.parent?.parent === undefined;
   }
 
   /**
@@ -98,6 +101,9 @@ export class EditorService {
    */
   removeHiddenField(field: FormlyFieldConfig) {
     if (this._hiddenFields.some(f => f.id === field.id) && this.isRoot(field.parent)) {
+      // Form is touched if a field is added.
+      // Required for hide field in edit mode.
+      this.rootField.formControl.markAsTouched();
       this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
       this._hiddenFieldsSubject.next(this._hiddenFields);
     }
@@ -109,7 +115,7 @@ export class EditorService {
    * @returns boolean, true if the field can be hidden
    */
   canHide(field: FormlyFieldConfig) {
-    if (!field.templateOptions.longMode) {
+    if (!this.rootField?.templateOptions?.longMode) {
       return false;
     }
     return (

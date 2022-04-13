@@ -14,7 +14,129 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { ILogger } from '../../ILogger';
 import { extractIdOnRef } from '../../utils/utils';
+
+/**
+ * Initialize the widget key on JSONSchema
+ * @param schema - object, the JSONSchema
+ */
+function createFormConfig(schema: any) {
+  if (!schema.widget) {
+    schema.widget = {};
+  }
+  if (!schema.widget.formlyConfig) {
+    schema.widget.formlyConfig = {};
+  }
+}
+
+/**
+ * Convert form to widget definition in JSONSchema
+ * @param schema - object, the JSONSchema
+ * @param logger - Logger
+ * @returns object, a converted JSONSchema
+ */
+export function formToWidget(schema: any, logger: ILogger): any {
+  // we need to store if a field is required as the extension does not have yet this information processed
+  if (schema.required) {
+    schema.required.map((key: string) => {
+      const childSchema = schema.properties[key];
+      if (childSchema) {
+        createFormConfig(childSchema);
+        templateOptionsCreateIfNotExist(childSchema.widget.formlyConfig);
+        childSchema.widget.formlyConfig.templateOptions.initialRequired = true;
+      }
+    });
+  }
+
+  if (schema.properties) {
+    for (const property of Object.keys(schema.properties)) {
+      formToWidget(schema.properties[property], logger);
+    }
+  }
+
+  /* items */
+  if (schema.items) {
+    formToWidget(schema.items, logger);
+  }
+
+  /* oneOf, anyOf, allOf */
+  ['oneOf', 'anyOf', 'allOf'].map((type: string) => {
+    if (schema[type]) {
+      schema[type].map((element: any) => formToWidget(element, logger));
+    }
+  });
+
+  /* If the form tag does not exist, we simply return the schema. */
+  if (!schema.form) {
+    return schema;
+  }
+  // create the subproperties if not exists
+  createFormConfig(schema);
+
+  /* Template options */
+  if (schema.form.templateOptions) {
+    templateOptionsCreateIfNotExist(schema.widget.formlyConfig);
+    Object.keys(schema.form.templateOptions).map((key: string) => {
+      switch (key) {
+        case 'wrappers':
+          schema.widget.formlyConfig.wrappers = schema.form.templateOptions[key];
+          break;
+        default:
+          schema.widget.formlyConfig.templateOptions[key] = schema.form.templateOptions[key];
+      }
+    });
+    if (Object.keys(schema.widget.formlyConfig.templateOptions).length === 0) {
+      delete schema.widget.formlyConfig.templateOptions;
+    }
+    delete schema.form.templateOptions;
+  }
+
+  ['focus', 'expressionProperties', 'hideExpression', 'type'].map((option: string) => {
+    if (option in schema.form) {
+      schema.widget.formlyConfig[option] = schema.form[option];
+      delete schema.form[option];
+    }
+  });
+
+  [
+    'hide',
+    'helpURL',
+    'fieldMap',
+    'remoteOptions',
+    'selectWithSortOptions',
+    'remoteTypeahead',
+    'validation',
+    'navigation',
+    'placeholder',
+    'options',
+  ].map((option: string) => {
+    if (option in schema.form) {
+      templateOptionsCreateIfNotExist(schema.widget.formlyConfig);
+      schema.widget.formlyConfig.templateOptions[option] = schema.form[option];
+      delete schema.form[option];
+    }
+  });
+
+  if (Object.keys(schema.form).length !== 0) {
+    logger.error(schema.form, 'The form key definition in JSONSCHEMA is not empty.');
+  } else {
+    delete schema.form;
+  }
+
+  return schema;
+}
+
+/**
+ * Create a templateOptions in formlyConfig if not exists.
+ * @param formlyConfig - FormlyFieldConfig
+ */
+function templateOptionsCreateIfNotExist(formlyConfig: FormlyFieldConfig): void {
+  if (!formlyConfig.templateOptions) {
+    formlyConfig.templateOptions = {};
+  }
+}
 
 /**
  * Fix order in JSONSchema
@@ -102,7 +224,6 @@ export function resolveRefs(data: any) {
   }
   return data;
 }
-
 
 /**
  * Tell if a value can be considered as empty
