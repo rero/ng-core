@@ -426,6 +426,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
             field.defaultValue = new Array(jsonSchema.minItems);
           }
+          // If 'format' is defined into the jsonSchema, use it as templateOptions to try a validation on this field.
+          // See: `email.validator.ts` file
+          if (jsonSchema.format) {
+            field.templateOptions.type = jsonSchema.format;
+          }
           const formOptions = jsonSchema.form;
           field.templateOptions.longMode = this.editorSettings.longMode;
           field.templateOptions.recordType = this.recordType;
