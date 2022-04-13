@@ -31,16 +31,17 @@ import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
+import { LoggerService } from '../../service/logger.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { EditorService } from './services/editor.service';
-import { orderedJsonSchema, removeEmptyValues } from './utils';
+import { formToWidget, orderedJsonSchema, removeEmptyValues } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
 export interface JSONSchema7 extends JSONSchema7Base {
-  form: any;
+  widget: any;
 }
 
 @Component({
@@ -71,7 +72,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   fields: FormlyFieldConfig[];
 
   // root element of the editor
-  rootFomlyConfig: FormlyFieldConfig;
+  rootFormlyConfig: FormlyFieldConfig;
 
   // list of fields to display in the TOC
   tocFields$: Observable<any>;
@@ -90,14 +91,14 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
   };
 
+  // store pid on edit mode
+  @Input() pid = null;
+
   // save alternatives
   saveAlternatives: { label: string, action: any }[] = [];
 
   // current record type from the url
   recordType = null;
-
-  // store pid on edit mode
-  pid = null;
 
   // If an error occurred, it is stored, to display in interface.
   error: Error;
@@ -131,6 +132,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param _spinner Spinner service.
    * @param _modalService BsModalService.
    * @param _routeCollectionService RouteCollectionService
+   * @param _loggerService LoggerService
    */
   constructor(
     private _formlyJsonschema: FormlyJsonschema,
@@ -144,7 +146,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _location: Location,
     private _spinner: NgxSpinnerService,
     private _modalService: BsModalService,
-    private _routeCollectionService: RouteCollectionService
+    private _routeCollectionService: RouteCollectionService,
+    private _loggerService: LoggerService
   ) {
     this.form = new FormGroup({});
   }
@@ -165,6 +168,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
     if (changes.schema && changes.schema.isFirstChange()) { // Schema has changed
       this.setSchema(changes.schema.currentValue);
+    }
+    if (changes.pid) { // Assign pid on schema. Reload schema
+      this.pid = changes.pid.currentValue;
+      if (this.schema) {
+        this.setSchema(this.schema);
+      }
     }
   }
 
@@ -411,7 +420,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   setSchema(schema: any) {
     // reorder all object properties
-    this.schema = orderedJsonSchema(schema);
+    this.schema = orderedJsonSchema(formToWidget(schema, this._loggerService));
     this.options = {};
     // remove hidden field list in case of a previous setSchema call
     this._editorService.clearHiddenFields();
@@ -422,20 +431,30 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
           /**** additionnal JSONSchema configurations *******/
-          // initial population of arrays with a minItems constraints
-          if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
-            field.defaultValue = new Array(jsonSchema.minItems);
-          }
-          const formOptions = jsonSchema.form;
           field.templateOptions.longMode = this.editorSettings.longMode;
           field.templateOptions.recordType = this.recordType;
           field.templateOptions.pid = this.pid;
 
-          if (formOptions) {
-            this._setSimpleOptions(field, formOptions);
-            this._setValidation(field, formOptions);
-            this._setRemoteSelectOptions(field, formOptions);
-            this._setRemoteTypeahead(field, formOptions);
+          // initial population of arrays with a minItems constraints
+          if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
+            // Set an element on add action
+            if (!field.templateOptions.pid) {
+              field.defaultValue = new Array(jsonSchema.minItems);
+            } else {
+              // Hide on update
+              field.hide = true;
+            }
+          }
+
+          if (jsonSchema.widget && jsonSchema.widget.formlyConfig) {
+            const templateOptions = jsonSchema.widget.formlyConfig.templateOptions;
+
+            if (templateOptions) {
+              this._setSimpleOptions(field, templateOptions);
+              this._setValidation(field, templateOptions);
+              this._setRemoteSelectOptions(field, templateOptions);
+              this._setRemoteTypeahead(field, templateOptions);
+            }
           }
 
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
@@ -451,7 +470,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     this.fields = fields;
     // set root element
     if (this.fields) {
-      this.rootFomlyConfig = this.fields[0];
+      this.rootFormlyConfig = this.fields[0];
     }
   }
 
@@ -738,51 +757,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param formOptions JSONSchema object
    */
   private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any) {
-    // ngx formly standard options
-    // hide a field at startup
-    if (formOptions.hide === true) {
-      field.templateOptions.hide = true;
-    }
-    // custom type
-    if (formOptions.type != null) {
-      field.type = formOptions.type;
-    }
-    // put the focus in this field
-    if (formOptions.focus === true) {
-      field.focus = true;
-    }
-    // input placeholder
-    if (formOptions.placeholder) {
-      field.templateOptions.placeholder = formOptions.placeholder;
-    }
-    // select labels and values
-    if (formOptions.options) {
-      field.templateOptions.options = formOptions.options;
-    }
-    // expression properties
-    if (formOptions.expressionProperties) {
-      field.expressionProperties = formOptions.expressionProperties;
-    }
-    // hide expression
-    if (formOptions.hideExpression) {
-      field.hideExpression = formOptions.hideExpression;
-    }
-    // non ngx formly options
-    // custom help URL displayed  in the object dropdown
-    if (formOptions.helpURL) {
-      field.templateOptions.helpURL = formOptions.helpURL;
-    }
-    // custom field for navigation options
-    if (formOptions.navigation) {
-      field.templateOptions.navigation = formOptions.navigation;
-    }
-    // template options
-    if (formOptions.templateOptions) {
-      field.templateOptions = {
-        ...field.templateOptions,
-        ...formOptions.templateOptions
-      };
-    }
     // some fields should not submit the form when enter key is pressed
     if (field.templateOptions.doNotSubmitOnEnter != null) {
       field.templateOptions.keydown = (f: FormlyFieldConfig, event?: any) => {

@@ -16,12 +16,12 @@
  */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, UrlSegment } from '@angular/router';
-import { FormlyFieldConfig } from '@ngx-formly/core';
-import { ActionStatus, JSONSchema7 } from '@rero/ng-core';
+import { ActionStatus } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
+import { EditorNewEditComponent } from './record/editor-new-edit/editor-new-edit.component';
 import { EditorComponent } from './record/editor/editor.component';
 import { RouteService } from './routes/route.service';
 
@@ -120,21 +120,6 @@ const permissions = (record: any) => {
   });
 };
 
-const formFieldMap = (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
-  // Populates "type" field with custom options
-  const formOptions = jsonSchema.form;
-  if (formOptions && formOptions.field === 'type') {
-    field.type = 'select';
-    field.templateOptions.options = [
-      { label: 'Type 1', value: 'type 1' },
-      { label: 'Type 2', value: 'type 2' }
-    ];
-    field.defaultValue = 'type 2';
-  }
-
-  return field;
-};
-
 /**
  * Custom treatment for aggregations.
  */
@@ -213,6 +198,10 @@ const routes: Routes = [
     component: EditorComponent
   },
   {
+    path: 'editor-new-edit',
+    component: EditorNewEditComponent
+  },
+  {
     matcher: documentsMatcher,
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
     data: {
@@ -286,7 +275,6 @@ const routes: Routes = [
           aggregationsBucketSize: 8,
           aggregationsExpand: ['language'],
           aggregationsOrder: ['author', 'language'],
-          formFieldMap,
           listHeaders: {
             'Content-Type': 'application/rero+json'
           },

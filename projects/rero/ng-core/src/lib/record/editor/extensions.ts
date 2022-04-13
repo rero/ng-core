@@ -16,13 +16,15 @@
  */
 import { FormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
-import moment from 'moment';
+import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { cloneDeep } from 'lodash-es';
+import moment from 'moment';
+import { isObservable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { RecordService } from '../record.service';
 import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
-import { RecordService } from '../record.service';
-
 
 export class NgCoreFormlyExtension {
 
@@ -73,6 +75,17 @@ export class NgCoreFormlyExtension {
     this._hideShowEmptyField(field);
     this._setWrappers(field);
     field.options.fieldChanges.subscribe(changes => {
+      // If the field is added and it is an array and must contain a value,
+      // we add an element
+      if (
+        changes.type === 'hidden'
+        && changes.field.templateOptions
+        && changes.field.templateOptions.pid
+        && changes.field.templateOptions.minItems
+      ) {
+        changes.field.defaultValue = new Array(changes.field.templateOptions.minItems);
+      }
+
       if (changes.type === 'expressionChanges' && changes.property === 'templateOptions.required' && changes.value === true) {
         if (changes.field.hide === true) {
           changes.field.hide = false;
@@ -99,7 +112,7 @@ export class NgCoreFormlyExtension {
       // add automatically a card wrapper for the first level fields
       const parent = field.parent;
       if (parent && parent.templateOptions && parent.templateOptions.isRoot === true) {
-        if (field.templateOptions.wrappers == null) {
+        if (!field.wrappers.includes('card')) {
           field.wrappers.push('card');
         }
       }
@@ -155,9 +168,7 @@ export class NgCoreFormlyExtension {
    */
   private _hideShowEmptyField(field: FormlyFieldConfig) {
     let model = field.model;
-    if (field.templateOptions == null) {
-      return;
-    }
+
     // for simple object the model is the parent dict
     if (
       field.model != null && !['object', 'multischema', 'array'].some(f => f === field.type)
@@ -167,12 +178,11 @@ export class NgCoreFormlyExtension {
     }
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
-    if (field.templateOptions.hide === true && field.hide === undefined) {
-      // show the field if it contains data
+
+    if (field.key && field.hide) {
       if (!modelEmpty) {
         field.hide = false;
       } else {
-        field.hide = true;
         this._editorService.addHiddenField(field);
       }
     }
@@ -322,30 +332,6 @@ export class NgCoreFormlyExtension {
   }
 }
 
-export class OptionsLabelTranslateExtension implements FormlyExtension {
-
-  /**
-   * Constructor
-   * @param translate - ngx-translate service
-   */
-  constructor(private translate: TranslateService) {}
-
-  /**
-   * Translate options label on template options
-   * @param field formly field config
-   */
-  prePopulate(field: FormlyFieldConfig) {
-    const to = field.templateOptions || {};
-
-    if (!to.translate || to._translated || !to.options) {
-      return;
-    }
-    to._translated = true;
-
-    to.options.forEach((option: any) => option.label = this.translate.instant(option.label));
-  }
-}
-
 export class TranslateExtension {
 
   /**
@@ -354,11 +340,6 @@ export class TranslateExtension {
    *  @param translate ngx-translate service
    */
   constructor(private _translate: TranslateService) { }
-
-  /**
-   * Options Map
-   */
-  private _optionsMap = new Map();
 
   /**
    * Translate some fields before populating the form.
@@ -397,6 +378,31 @@ export class TranslateExtension {
         ...(field.expressionProperties || {}),
         'templateOptions.placeholder': this._translate.stream(to.placeholder),
       };
+    }
+    // Options
+    if (to.options) {
+      to.options = !isObservable(to.options) ? of(to.options) : to.options;
+      to.options = to.options.pipe(
+        switchMap((opts: any) => {
+          const labels = [];
+          const options = [];
+          opts.forEach((opt: any) => {
+            labels.push(opt.label);
+            options.push(opt);
+          });
+          return this._translate.stream(labels).pipe(
+            map((translations: any) => {
+              const output = [];
+              options.forEach((opt: any) => {
+                const data = cloneDeep(opt);
+                data.label = translations[opt.label];
+                output.push(data);
+              });
+              return output;
+            })
+          );
+        })
+      );
     }
   }
 }
@@ -525,10 +531,6 @@ export function registerNgCoreFormlyExtension(
       },
     ],
     extensions: [
-      {
-        name: 'options-label-translate',
-        extension: new OptionsLabelTranslateExtension(translate)
-      },
       {
         name: 'translate',
         extension: new TranslateExtension(translate)
