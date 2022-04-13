@@ -52,7 +52,7 @@ export class LabelComponent {
     }
     return (
       (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 ||
-        this.field.templateOptions.helpURL) && this.field.templateOptions.longMode
+        this.field.templateOptions.helpURL) && this._editorService?.rootField?.templateOptions?.longMode
     );
   }
 

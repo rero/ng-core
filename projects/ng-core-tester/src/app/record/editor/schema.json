@@ -28,6 +28,7 @@
     "selectGroup",
     "selectMultiple",
     "markdown",
+    "textarea",
     "email"
   ],
   "required": [
@@ -54,9 +55,11 @@
               "title": "Name",
               "type": "string",
               "minLength": 3,
-              "form": {
-                "templateOptions": {
-                  "itemCssClass": "col-lg-6"
+              "widget": {
+                "formlyConfig": {
+                  "templateOptions": {
+                    "itemCssClass": "col-lg-6"
+                  }
                 }
               }
             },
@@ -64,11 +67,13 @@
               "title": "Hidden name",
               "type": "string",
               "minLength": 3,
-              "form": {
-                "templateOptions": {
-                  "itemCssClass": "col-lg-6"
-                },
-                "hide": true
+              "widget": {
+                "formlyConfig": {
+                  "hide": true,
+                  "templateOptions": {
+                    "itemCssClass": "col-lg-6"
+                  }
+                }
               }
             },
             "type": {
@@ -77,8 +82,8 @@
               "const": "type1",
               "default": "type1",
               "readOnly": true,
-              "form": {
-                "templateOptions": {
+              "widget": {
+                "formlyConfig": {
                   "wrappers": [
                     "hide"
                   ]
@@ -86,9 +91,11 @@
               }
             }
           },
-          "form": {
-            "templateOptions": {
-              "containerCssClass": "row"
+          "widget": {
+            "formlyConfig": {
+              "templateOptions": {
+                "containerCssClass": "row"
+              }
             }
           }
         },
@@ -99,9 +106,11 @@
               "title": "Name",
               "type": "string",
               "minLength": 3,
-              "form": {
-                "templateOptions": {
-                  "itemCssClass": "col-lg-6"
+              "widget": {
+                "formlyConfig": {
+                  "templateOptions": {
+                    "itemCssClass": "col-lg-6"
+                  }
                 }
               }
             },
@@ -111,9 +120,11 @@
               "const": "type2",
               "default": "type2",
               "readOnly": true,
-              "form": {
-                "templateOptions": {
-                  "itemCssClass": "col-lg-6"
+              "widget": {
+                "formlyConfig": {
+                  "templateOptions": {
+                    "itemCssClass": "col-lg-6"
+                  }
                 }
               }
             },
@@ -121,23 +132,29 @@
               "title": "boolean",
               "type": "boolean",
               "default": true,
-              "form": {
-                "templateOptions": {
-                  "itemCssClass": "col-lg-6"
+              "widget": {
+                "formlyConfig": {
+                  "templateOptions": {
+                    "itemCssClass": "col-lg-6"
+                  }
                 }
               }
             }
           },
-          "form": {
-            "templateOptions": {
-              "containerCssClass": "row"
+          "widget": {
+            "formlyConfig": {
+              "templateOptions": {
+                "containerCssClass": "row"
+              }
             }
           }
         }
       ],
-      "form": {
-        "templateOptions": {
-          "cssClass": "border border-info rounded p-2"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "cssClass": "border border-info rounded p-2"
+          }
         }
       }
     },
@@ -152,8 +169,10 @@
       "title": "Hidden",
       "type": "string",
       "minLength": 1,
-      "form": {
-        "hide": true
+      "widget": {
+        "formlyConfig": {
+          "hide": true
+        }
       }
     },
     "defaultHidden": {
@@ -162,8 +181,8 @@
       "type": "string",
       "default": "default value",
       "minLength": 3,
-      "form": {
-        "templateOptions": {
+      "widget": {
+        "formlyConfig": {
           "wrappers": [
             "hide"
           ]
@@ -174,10 +193,14 @@
       "title": "Essential",
       "type": "string",
       "minLength": 3,
-      "form": {
-        "hide": true,
-        "navigation": {
-          "essential": true
+      "widget": {
+        "formlyConfig": {
+          "hide": true,
+          "templateOptions": {
+            "navigation": {
+              "essential": true
+            }
+          }
         }
       }
     },
@@ -185,9 +208,11 @@
       "title": "Optional",
       "type": "string",
       "minLength": 3,
-      "form": {
-        "templateOptions": {
-          "cssClass": "w-md-50"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "cssClass": "w-md-50"
+          }
         }
       }
     },
@@ -195,9 +220,11 @@
       "title": "Required",
       "type": "string",
       "minLength": 3,
-      "form": {
-        "templateOptions": {
-          "doNotSubmitOnEnter": true
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "doNotSubmitOnEnter": true
+          }
         }
       }
     },
@@ -211,21 +238,25 @@
         "val2",
         "val3"
       ],
-      "form": {
-        "options": [
-          {
-            "value": "val1",
-            "label": "Value 1"
-          },
-          {
-            "value": "val2",
-            "label": "Value 2"
-          },
-          {
-            "value": "val3",
-            "label": "Value 3"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "value": "val1",
+                "label": "Value 1"
+              },
+              {
+                "value": "val2",
+                "label": "Value 2"
+              },
+              {
+                "value": "val3",
+                "label": "Value 3"
+              }
+            ]
           }
-        ]
+        }
       }
     },
     "object": {
@@ -244,9 +275,11 @@
           "title": "Property 1",
           "type": "string",
           "minLength": 3,
-          "form": {
-            "templateOptions": {
-              "itemCssClass": "col-md-6"
+          "widget": {
+            "formlyConfig": {
+              "templateOptions": {
+                "itemCssClass": "col-md-6"
+              }
             }
           }
         },
@@ -261,10 +294,12 @@
           }
         }
       },
-      "form": {
-        "templateOptions": {
-          "containerCssClass": "row",
-          "hideLabel": true
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "containerCssClass": "row",
+            "hideLabel": true
+          }
         }
       }
     },
@@ -315,15 +350,19 @@
         "title": "Values",
         "type": "string",
         "minLength": 3,
-        "form": {
-          "templateOptions": {
-            "itemCssClass": "col-lg-6"
+        "widget": {
+          "formlyConfig": {
+            "templateOptions": {
+              "itemCssClass": "col-lg-6"
+            }
           }
         }
       },
-      "form": {
-        "templateOptions": {
-          "containerCssClass": "row"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "containerCssClass": "row"
+          }
         }
       }
     },
@@ -341,9 +380,11 @@
           }
         }
       },
-      "form": {
-        "templateOptions": {
-          "containerCssClass": "row"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "containerCssClass": "row"
+          }
         }
       }
     },
@@ -371,9 +412,11 @@
               "value#2"
             ],
             "minLength": 3,
-            "form": {
-              "templateOptions": {
-                "itemCssClass": "col-6"
+            "widget": {
+              "formlyConfig": {
+                "templateOptions": {
+                  "itemCssClass": "col-6"
+                }
               }
             }
           },
@@ -381,28 +424,36 @@
             "title": "Property 2",
             "type": "string",
             "minLength": 3,
-            "form": {
-              "hide": true,
-              "templateOptions": {
-                "itemCssClass": "col-6"
+            "widget": {
+              "formlyConfig": {
+                "hide": true,
+                "templateOptions": {
+                  "itemCssClass": "col-6"
+                }
               }
             }
           }
         },
-        "form": {
-          "templateOptions": {
-            "containerCssClass": "row"
+        "widget": {
+          "formlyConfig": {
+            "templateOptions": {
+              "containerCssClass": "row"
+            }
           }
         }
       },
-      "form": {
-        "validation": {
-          "validators": {
-            "numberOfSpecificValuesInObject": {
-              "min": 1,
-              "max": 2,
-              "keys": {
-                "prop1": "value#1"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "validation": {
+              "validators": {
+                "numberOfSpecificValuesInObject": {
+                  "min": 1,
+                  "max": 2,
+                  "keys": {
+                    "prop1": "value#1"
+                  }
+                }
               }
             }
           }
@@ -432,9 +483,13 @@
           "minLength": 3
         }
       },
-      "form": {
-        "navigation": {
-          "essential": true
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "navigation": {
+              "essential": true
+            }
+          }
         }
       }
     },
@@ -488,10 +543,14 @@
       "description": "Hidden field with a default value must not be added to the form.",
       "type": "string",
       "default": "Default hidden",
-      "form": {
-        "hide": true,
-        "navigation": {
-          "essential": true
+      "widget": {
+        "formlyConfig": {
+          "hide": true,
+          "templateOptions": {
+            "navigation": {
+              "essential": true
+            }
+          }
         }
       }
     },
@@ -515,9 +574,11 @@
         "optional",
         "required"
       ],
-      "form": {
-        "templateOptions": {
-          "cssClass": "w-md-25"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "cssClass": "w-md-25"
+          }
         }
       }
     },
@@ -526,10 +587,12 @@
       "description": "Hidden Property should be shown when it becomes required.",
       "type": "string",
       "minLength": 3,
-      "form": {
-        "hide": true,
-        "expressionProperties": {
-          "templateOptions.required": "field.parent.model.hide_with_required_expression_control === 'required'"
+      "widget": {
+        "formlyConfig": {
+          "hide": true,
+          "expressionProperties": {
+            "templateOptions.required": "field.parent.model.hide_with_required_expression_control === 'required'"
+          }
         }
       }
     },
@@ -556,10 +619,12 @@
           "title": "Hidden Property",
           "type": "string",
           "minLength": 3,
-          "form": {
-            "hide": true,
-            "expressionProperties": {
-              "templateOptions.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
+          "widget": {
+            "formlyConfig": {
+              "hide": true,
+              "expressionProperties": {
+                "templateOptions.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
+              }
             }
           }
         }
@@ -614,45 +679,47 @@
         "value2",
         "value3"
       ],
-      "form": {
-        "options": [
-          {
-            "label": "3 Value",
-            "value": "value3"
-          },
-          {
-            "label": "Group",
-            "children": [
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
               {
-                "label": "2 Value",
-                "value": "value2"
+                "label": "3 Value",
+                "value": "value3"
               },
               {
-                "label": "1 Value",
-                "value": "value1",
+                "label": "Group",
                 "children": [
                   {
-                    "label": "3 Value",
-                    "value": "value3",
-                    "preferred": true
+                    "label": "2 Value",
+                    "value": "value2"
                   },
                   {
-                    "label": "2 Value",
-                    "value": "value2",
-                    "disabled": true
+                    "label": "1 Value",
+                    "value": "value1",
+                    "children": [
+                      {
+                        "label": "3 Value",
+                        "value": "value3",
+                        "preferred": true
+                      },
+                      {
+                        "label": "2 Value",
+                        "value": "value2",
+                        "disabled": true
+                      }
+                    ]
                   }
                 ]
+              },
+              {
+                "label": "2 Value",
+                "value": "value2",
+                "preferred": true
               }
-            ]
-          },
-          {
-            "label": "2 Value",
-            "value": "value2",
-            "preferred": true
+            ],
+            "minItemsToDisplaySearch": 3
           }
-        ],
-        "templateOptions": {
-          "minItemsToDisplaySearch": 3
         }
       }
     },
@@ -664,23 +731,27 @@
         "value2",
         "value3"
       ],
-      "form": {
-        "options": [
-          {
-            "label": "3 Value",
-            "value": "value3",
-            "group": "test"
-          },
-          {
-            "label": "1 Value",
-            "value": "value1"
-          },
-          {
-            "label": "2 Value",
-            "value": "value2",
-            "group": "test"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "label": "3 Value",
+                "value": "value3",
+                "group": "test"
+              },
+              {
+                "label": "1 Value",
+                "value": "value1"
+              },
+              {
+                "label": "2 Value",
+                "value": "value2",
+                "group": "test"
+              }
+            ]
           }
-        ]
+        }
       }
     },
     "selectMultiple": {
@@ -700,21 +771,25 @@
           "value3"
         ]
       },
-      "form": {
-        "options": [
-          {
-            "label": "Value 1",
-            "value": "value1"
-          },
-          {
-            "label": "Value 2",
-            "value": "value2"
-          },
-          {
-            "label": "Value 3",
-            "value": "value3"
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "label": "Value 1",
+                "value": "value1"
+              },
+              {
+                "label": "Value 2",
+                "value": "value2"
+              },
+              {
+                "label": "Value 3",
+                "value": "value3"
+              }
+            ]
           }
-        ]
+        }
       }
     },
     "markdown": {
@@ -722,8 +797,22 @@
       "type": "string",
       "minLength": 1,
       "default": "Hello **world**",
-      "form": {
-        "type": "markdown"
+      "widget": {
+        "formlyConfig": {
+          "type": "markdown"
+        }
+      }
+    },
+    "textarea": {
+      "title": "Textarea",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "textarea",
+          "templateOptions": {
+            "rows": 5
+          }
+        }
       }
     },
     "email": {

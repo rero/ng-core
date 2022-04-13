@@ -41,12 +41,10 @@ export class SaveTemplateFormComponent implements OnInit {
 
   /**
    * constructor
-   * @param _modalService - ModalService
    * @param _translateService - TranslateService
    * @param _bsModalRef - BsModalRef
    */
   constructor(
-      private _modalService: BsModalService,
       private _translateService: TranslateService,
       private _bsModalRef: BsModalRef
   ) { }

@@ -43,6 +43,7 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
     MenuWidgetComponent,
     SortListComponent,
     NgVarDirective,
-    MarkdownPipe
+    MarkdownPipe,
+    AutofocusDirective
   ],
   imports: [
     CommonModule,
@@ -102,7 +104,8 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
     MenuWidgetComponent,
     SortListComponent,
     NgVarDirective,
-    MarkdownPipe
+    MarkdownPipe,
+    AutofocusDirective
   ],
   entryComponents: [DialogComponent]
 })
