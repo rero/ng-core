@@ -205,7 +205,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       ([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
-        //   console.log('model', this.model, 'v', v, 'form', this.form)
+        //   // console.log('model', this.model, 'v', v, 'form', this.form.touched)
+        //   console.log('form', this.form.touched)
         // );
         this._spinner.show();
         this.loadingChange.emit(true);
@@ -433,7 +434,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           /**** additionnal JSONSchema configurations *******/
           field.templateOptions.longMode = this.editorSettings.longMode;
           field.templateOptions.recordType = this.recordType;
-          field.templateOptions.pid = this.pid;
 
           // initial population of arrays with a minItems constraints
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
@@ -467,6 +467,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     ];
     // mark the root field
     fields[0].templateOptions.isRoot = true;
+
+    // set the mode only on the root field
+    if (this.pid) {
+      fields[0].templateOptions.updateMode = true;
+    }
+
     this.fields = fields;
     // set root element
     if (this.fields) {
