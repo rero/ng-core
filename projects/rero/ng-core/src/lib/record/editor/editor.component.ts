@@ -437,13 +437,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
           // initial population of arrays with a minItems constraints
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
-            // Set an element on add action
-            if (!field.templateOptions.pid) {
-              field.defaultValue = new Array(jsonSchema.minItems);
-            } else {
-              // Hide on update
-              field.hide = true;
-            }
+            field.defaultValue = new Array(jsonSchema.minItems);
           }
 
           if (jsonSchema.widget && jsonSchema.widget.formlyConfig) {
@@ -467,11 +461,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     ];
     // mark the root field
     fields[0].templateOptions.isRoot = true;
-
-    // set the mode only on the root field
-    if (this.pid) {
-      fields[0].templateOptions.updateMode = true;
-    }
+    fields[0].templateOptions.editMode = this.pid ? true : false;
 
     this.fields = fields;
     // set root element

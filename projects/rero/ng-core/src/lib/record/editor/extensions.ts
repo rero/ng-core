@@ -194,9 +194,9 @@ export class NgCoreFormlyExtension {
       field.key && // some field are not internal field
       (
         // hide empty field just after the editor loading and only in edition
-        (this.rootField?.templateOptions?.editMode && !this.rootField?.formControl?.touched) ||
+        (this.rootField?.templateOptions?.editMode && !this.rootField?.formControl?.touched)
         // hide field if they rare empty and are marked to be hidden
-        (!this.rootField?.templateOptions?.editMode && field.hide)
+        || (!this.rootField?.templateOptions?.editMode && field.hide)
       )
     ) {
       // unhide a non empty field
