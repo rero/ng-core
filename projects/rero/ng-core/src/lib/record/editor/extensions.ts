@@ -20,6 +20,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
+import { setTime } from 'ngx-bootstrap/chronos/utils/date-setters';
 import { isObservable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
@@ -38,8 +39,6 @@ export class NgCoreFormlyExtension {
     'datepicker',
   ];
 
-  // the root field of the editor
-  private rootField;
 
   // Types to apply field wrapper on
   private _fieldWrapperTypes = ['boolean', 'datepicker', 'remoteTypeahead', 'selectWithSort'];
@@ -63,20 +62,25 @@ export class NgCoreFormlyExtension {
   }
 
   /**
+   * postPopulate Formly hook
+   * @param field - FormlyFieldConfig
+   */
+  postPopulate(field: FormlyFieldConfig) {
+    this._hideShowEmptyField(field);
+  }
+
+  /**
    * onPopulate Formly hook
    * @param field - FormlyFieldConfig
    */
   onPopulate(field: FormlyFieldConfig) {
-    this._hideShowEmptyField(field);
     this._setWrappers(field);
     field.options.fieldChanges.subscribe((changes) => {
       // If the field is added and it is an array and must contain a value,
       // we add an element
       if (
         changes.type === 'hidden' &&
-        changes.field.templateOptions &&
-        changes.field.templateOptions.pid &&
-        changes.field.templateOptions.minItems
+        changes.field?.templateOptions?.minItems
       ) {
         changes.field.defaultValue = new Array(changes.field.templateOptions.minItems);
       }
@@ -157,21 +161,6 @@ export class NgCoreFormlyExtension {
   }
 
   /**
-   * Get the root field given a given field somewhere in the editor
-   * @param field - FormlyFieldConfig
-   * @returns FromlyFieldConfig
-   */
-  protected getRootField(field) {
-
-    if (field?.templateOptions?.isRoot) {
-      return field;
-    }
-    if (field.parent) {
-      return this.getRootField(field.parent);
-    }
-  }
-
-  /**
    * Hide or show field depending of the data content and the hide property
    * @param field - FormlyFieldConfig
    */
@@ -186,17 +175,15 @@ export class NgCoreFormlyExtension {
     model = removeEmptyValues(model);
     const modelEmpty = isEmpty(model);
 
-    if (!this.rootField) {
-      this.rootField = this.getRootField(field);
-    }
-
+    const editMode = this._editorService.rootField?.templateOptions?.editMode;
+    // TODO: l'ajout d'un champ dans contribution en mode édit ne fonctionne pas encore
     if (
       field.key && // some field are not internal field
       (
         // hide empty field just after the editor loading and only in edition
-        (this.rootField?.templateOptions?.editMode && !this.rootField?.formControl?.touched)
+        (editMode === true && !this._editorService.rootField?.formControl?.touched) ||
         // hide field if they rare empty and are marked to be hidden
-        || (!this.rootField?.templateOptions?.editMode && field.hide)
+        (editMode === false && field.hide)
       )
     ) {
       // unhide a non empty field

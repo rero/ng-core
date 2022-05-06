@@ -205,8 +205,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
       ([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
-        //   // console.log('model', this.model, 'v', v, 'form', this.form.touched)
-        //   console.log('form', this.form.touched)
+        //   console.log('model', this.model, 'v', v, 'form', this.form)
+        //   // console.log('form', this.form.touched)
         // );
         this._spinner.show();
         this.loadingChange.emit(true);
@@ -423,6 +423,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     // reorder all object properties
     this.schema = orderedJsonSchema(formToWidget(schema, this._loggerService));
     this.options = {};
+    this._editorService.rootField = null;
+
     // remove hidden field list in case of a previous setSchema call
     this._editorService.clearHiddenFields();
 
@@ -462,6 +464,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     // mark the root field
     fields[0].templateOptions.isRoot = true;
     fields[0].templateOptions.editMode = this.pid ? true : false;
+    this._editorService.rootField = fields[0];
 
     this.fields = fields;
     // set root element

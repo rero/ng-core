@@ -31,6 +31,9 @@ export class EditorService {
   // Observable of hidden fields
   private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
 
+  // the root field of the editor
+  rootField: FormlyFieldConfig;
+
   // current list of hidden fields
   get hiddenFields$(): Observable<any[]> {
     return this._hiddenFieldsSubject.asObservable();
