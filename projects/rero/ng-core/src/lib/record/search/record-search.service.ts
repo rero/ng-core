@@ -17,7 +17,6 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
 
 /**
  * Interface representing aggregations filters
@@ -30,11 +29,9 @@ export interface AggregationsFilter {
 /**
  * Service for managing records search.
  */
-@Injectable(
-  {
-    providedIn: 'root'
-  }
-)
+@Injectable({
+  providedIn: 'root',
+})
 export class RecordSearchService {
   /** Aggregations filters array */
   private _aggregationsFilters: Array<AggregationsFilter> = null;
@@ -57,6 +54,20 @@ export class RecordSearchService {
   }
 
   /**
+   * Removes the given value from selected filters and removes all children
+   * selected values, too.
+   * @param key Aggregation key
+   * @param bucket Bucket containing the value to remove
+   */
+  removeAggregationFilter(key: string, bucket: any) {
+    this.removeFilter(key, bucket.key);
+    this.removeChildrenFilters(bucket);
+    this.removeParentFilters(bucket);
+    // Update selected aggregations filters
+    this._aggregationsFiltersSubject.next(cloneDeep(this._aggregationsFilters));
+  }
+
+  /**
    * Set all aggregations filters and emit the list.
    * @param aggregationsFilters List of aggregations filters
    * @param forceRefresh Force the refresh of aggregations filters
@@ -64,7 +75,7 @@ export class RecordSearchService {
   setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>, forceRefresh: boolean = false) {
     // TODO: If the filter is in a child bucket, checks if all parents are
     // selected, too. If not, adds all parents filters.
-    if (!forceRefresh && (JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters))) {
+    if (!forceRefresh && JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters)) {
       forceRefresh = true;
     }
 
@@ -79,22 +90,27 @@ export class RecordSearchService {
    * @param term Term (aggregation key)
    * @param values Selected values
    */
-  updateAggregationFilter(term: string, values: string[]) {
+  updateAggregationFilter(term: string, values: string[], bucket: any = null) {
     if (this._aggregationsFilters === null) {
       this._aggregationsFilters = [];
     }
-    const index = this._aggregationsFilters.findIndex(item => item.key === term);
+
+    if (bucket) {
+      this.removeParentFilters(bucket);
+      this.removeChildrenFilters(bucket);
+    }
 
     if (values.length === 0) {
       // no more items selected, remove filter
-      this._aggregationsFilters.splice(index, 1);
+      this._aggregationsFilters = this._aggregationsFilters.filter(item => item.key !== term);
     } else {
+      const filter = this._aggregationsFilters.find(item => item.key === term);
       // In both cases values are affected with destructuring assignment, to
       // avoid values to be modified outside the service, as array are assigned
       // by reference.
-      if (index !== -1) {
+      if (filter) {
         // update existing filter
-        this._aggregationsFilters[index] = { key: term, values: [...values] };
+        filter.values = [...values];
       } else {
         // add new filter
         this._aggregationsFilters.push({ key: term, values: [...values] });
@@ -105,77 +121,72 @@ export class RecordSearchService {
   }
 
   /**
-   * Get filters of an aggregation
-   * @param key Aggregation key
+   * Remove a filter from the current aggregations filters.
+   * @param key filter name
+   * @param value filter value
    */
-  getAggregationFilters(key: string): Observable<Array<string>> {
-    return this._aggregationsFiltersSubject.pipe(
-      first(),
-      map((aggregationsFilters: Array<AggregationsFilter>) => {
-        const index = aggregationsFilters.findIndex(item => item.key === key);
-        return index === -1 ? [] : aggregationsFilters[index].values;
-      })
-    );
-  }
-
-  /**
-   * Removes the given value from selected filters and removes all children
-   * selected values, too.
-   * @param key Aggregation key
-   * @param bucket Bucket containing the value to remove
-   */
-  removeAggregationFilter(key: string, bucket: any) {
-    let aggregationsFilters = cloneDeep(this._aggregationsFilters);
-
-    const index = aggregationsFilters.findIndex((item: any) => {
-      return item.key === key;
-    });
-
-    let values = aggregationsFilters[index].values;
-
-    // Remove selected value
-    values = values.filter((selectedValue: string) => {
-      return selectedValue !== bucket.key;
-    });
-
-    if (values.length === 0) {
+  removeFilter(key, value) {
+    const filter = this._aggregationsFilters.find(item => item.key === key);
+    if (filter) {
+      filter.values = filter.values.filter(item => item !== value);
       // No more selected values, remove key from aggregations filters.
-      aggregationsFilters.splice(index, 1);
-    } else {
-      // re-assign filtered values
-      aggregationsFilters[index].values = [...values];
-    }
-
-    // List of children keys to remove
-    const keysToRemove = this.getKeysToRemove(bucket);
-
-    // Remove all aggregations filters corresponding to children keys.
-    aggregationsFilters = aggregationsFilters.filter((item: AggregationsFilter) => {
-      return (!keysToRemove.includes(item.key));
-    });
-
-    // Update selected aggregations filters
-    this.setAggregationsFilters(aggregationsFilters);
-  }
-
-  /**
-   * Recursive method which collects all children aggregations keys to remove.
-   * @param bucket Current bucket to check
-   * @return List of keys to remove
-   */
-  private getKeysToRemove(bucket: any): Array<string> {
-    let keys = [];
-
-    for (const k in bucket) {
-      if (bucket[k].buckets) {
-        keys.push(k);
-
-        bucket[k].buckets.forEach((childBucket: any) => {
-          keys = [...keys, ...this.getKeysToRemove(childBucket)];
-        });
+      if (filter.values.length === 0) {
+        this._aggregationsFilters = this._aggregationsFilters.filter(item => item.key !== filter.key);
       }
     }
+  }
 
-    return keys;
+  /**
+   * Check if a given filter exist in the current aggregations filters.
+   * @param key filter name
+   * @param value filter value
+   * @returns true if exists
+   */
+   hasFilter(key, value): boolean {
+    const filter = this._aggregationsFilters.find((a) => a.key === key);
+    return !!(filter && filter.values.some((v) => v === value));
+  }
+
+  /**
+   * Remove the parent filters of a given bucket.
+   * @param bucket elasticseach bucket
+   */
+  removeParentFilters(bucket) {
+    if (bucket.parent) {
+      this.removeParentFilters(bucket.parent);
+    }
+    this.removeFilter(bucket.aggregationKey, bucket.key);
+  }
+
+  /**
+   * Removes children filters of a given bucket.
+   * @param bucket elatic bucket
+   */
+  removeChildrenFilters(bucket) {
+    for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
+      const aggregationsKey = k;
+      for (const childBucket of bucket[k].buckets) {
+        this.removeFilter(aggregationsKey, childBucket.key);
+        this.removeChildrenFilters(childBucket);
+      }
+    }
+  }
+
+  /**
+   * Check if a children filter of a given bucket exists
+   * @param bucket elasticsearch bucket
+   * @returns true if has childre with a corresponding filter
+   */
+  hasChildrenFilter(bucket) {
+    for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
+      const aggregationsKey = k;
+      for (const childBucket of bucket[k].buckets) {
+        const filter = this._aggregationsFilters.find((v) => v.key === aggregationsKey);
+        if ((filter && filter.values.includes(childBucket.key)) || this.hasChildrenFilter(childBucket)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

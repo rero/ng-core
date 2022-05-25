@@ -286,11 +286,4 @@ describe('RecordSearchComponent', () => {
       expect(result.link).toBe('detail/100');
     });
   }));
-
-  it('should expand aggregation', waitForAsync(() => {
-    // recordUiServiceSpy.getResourceConfig.and.returnValue();
-    component['_config'] = { key: 'documents', aggregationsExpand: ['language'] };
-    expect(component.expandFacet('language')).toBeTruthy();
-    expect(component.expandFacet('author')).toBeFalsy();
-  }));
 });

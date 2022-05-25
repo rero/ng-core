@@ -17,13 +17,13 @@
 <ul *ngIf="buckets" class="list-unstyled m-0 bucket-group">
   <li class="form-check bucket-item" *ngFor="let bucket of buckets|slice:0:bucketSize">
     <div class="d-flex flex-row bucket-data align-items-start" (click)="updateFilter(bucket)">
-      <input class="form-check-input" type="checkbox" [checked]="isSelected(bucket.key)"/>
+      <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
       <a class="form-check-label">{{ getBucketName(bucket) }}</a>
       <span class="ml-auto bucket-count">
         <span class="bucket-count-badge">{{ bucket.doc_count }}</span>
       </span>
     </div>
-    <ng-container *ngIf="isSelected(bucket.key)">
+    <ng-container *ngIf="displayChildren(bucket)">
       <ng-core-record-search-aggregation-buckets
       *ngFor="let aggregation of bucketChildren[bucket.key]"
       [buckets]="aggregation.buckets"
