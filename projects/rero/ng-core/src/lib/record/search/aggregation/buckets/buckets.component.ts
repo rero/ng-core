@@ -26,7 +26,6 @@ import { AggregationsFilter, RecordSearchService } from '../../record-search.ser
   styleUrls: ['./buckets.component.scss']
 })
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
-
   // COMPONENT ATTRIBUTES ============================================================
   /** Buckets list for aggregation */
   @Input() buckets: Array<any>;
@@ -37,14 +36,15 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
   /** More and less on aggregation content (facet) */
   moreMode = true;
+
   /** Current selected values for the aggregation */
   aggregationsFilters: Array<AggregationsFilter> = [];
+
   /** Children of current bucket */
   bucketChildren: any = {};
 
   /** Subscription to aggregationsFilters observable */
   private _aggregationsFiltersSubscription: Subscription;
-
 
   // CONSTRUCTOR & HOOKS ==============================================================
   /**
@@ -95,7 +95,6 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
     this._aggregationsFiltersSubscription.unsubscribe();
   }
 
-
   // GETTERS & SETTERS =================================================================
   /**
    * Returns selected filters for the aggregation key.
@@ -105,17 +104,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
     const aggregationFilters = this.aggregationsFilters.find(
       (item: AggregationsFilter) => item.key === this.aggregationKey
     );
-    return (aggregationFilters === undefined)
+    return aggregationFilters === undefined
       ? []
       : aggregationFilters.values;
-  }
-
-  /**
-   * Get current language
-   * @return Current language
-   */
-  get language(): string {
-    return this._translateService.currentLang;
   }
 
   /**
@@ -124,7 +115,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    */
   get bucketSize(): number {
     const size = this.buckets.length;
-    return (this.size === null || this.moreMode === false)
+    return this.size === null || this.moreMode === false
       ? size
       : this.size;
   }
@@ -139,6 +130,20 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   /**
+   * Do we need to display the children?
+   * @return true if we want to display the children
+   */
+  displayChildren(bucket): boolean {
+    return (
+      this.isSelected(bucket.key) ||
+      // not necessary but faster than hasChildrenFilter
+      bucket.indeterminate ||
+      // hasChildrenFilter is require to avoid blinks when a children is selected
+      this._recordSearchService.hasChildrenFilter(bucket)
+    );
+  }
+
+  /**
    * Update selected filters by adding or removing the given value and push
    * values to service.
    * @param bucket - string, filter value
@@ -150,23 +155,19 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
     if (index === -1) {
       // No filters exist for the aggregation.
-      this._recordSearchService.updateAggregationFilter(this.aggregationKey, [
-        bucket.key,
-      ]);
+      this._recordSearchService.updateAggregationFilter(this.aggregationKey, [bucket.key], bucket);
     } else {
       if (!this.aggregationsFilters[index].values.includes(bucket.key)) {
         // Bucket value is not yet selected, we add value to selected values.
         this.aggregationsFilters[index].values.push(bucket.key);
         this._recordSearchService.updateAggregationFilter(
           this.aggregationKey,
-          this.aggregationsFilters[index].values
+          this.aggregationsFilters[index].values,
+          bucket
         );
       } else {
         // Removes value from selected values and all children selected values.
-        this._recordSearchService.removeAggregationFilter(
-          this.aggregationKey,
-          bucket
-        );
+        this._recordSearchService.removeAggregationFilter(this.aggregationKey, bucket);
       }
     }
   }
@@ -178,14 +179,13 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    */
   getBucketChildren(bucket: any): Array<any> {
     const children = [];
-    for (const k in bucket) {
-      if (bucket[k].buckets) {
-        children.push({
-          bucketSize: this.bucketSize,
-          key: k,
-          buckets: [...bucket[k].buckets],
-        });
-      }
+    for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
+      children.push({
+        aggregationKey: k,
+        bucketSize: this.bucketSize,
+        key: k,
+        buckets: bucket[k].buckets,
+      });
     }
     return children;
   }
@@ -195,9 +195,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @return Boolean
    */
   displayMoreAndLessLink(): boolean {
-    return (this.size === null)
-      ? false
-      : this.buckets.length > this.size;
+    return this.size === null ? false : this.buckets.length > this.size;
   }
 
   /**
@@ -214,7 +212,8 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
     // For language aggregation, we transform language code to human readable
     // language.
     if (this.aggregationKey === 'language') {
-      return this._translateLanguage.translate(bucket.key, this.language);
+      return this._translateLanguage.translate(
+        bucket.key, this._translateService.currentLang);
     }
 
     // Simply translate the bucket key.
