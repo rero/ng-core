@@ -94,7 +94,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     itemHeaders?: any,
     aggregationsName?: any,
     aggregationsOrder?: Array<string>,
-    aggregationsExpand?: Array<string>,
+    aggregationsExpand?: Array<string> | (() => Array<string>),
     aggregationsBucketSize?: number,
     pagination?: {
       boundaryLinks?: boolean,
@@ -205,7 +205,6 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
       size: parameters.size,
       sort: parameters.sort
     };
-
     for (const filter of parameters.aggregationsFilters) {
       // We need to loop over each value and insert it on beginning of the array
       // instead of assign values directly. Otherwise, angular router doesn't
@@ -215,7 +214,6 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
         queryParams[filter.key].unshift(value);
       }
     }
-
     this._router.navigate([this.getCurrentUrl(parameters.currentType)], { queryParams, relativeTo: this._route });
   }
 
