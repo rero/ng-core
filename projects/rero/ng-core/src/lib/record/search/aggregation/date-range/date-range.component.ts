@@ -91,16 +91,11 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
       if (!filters) {
         return;
       }
-      let filter = filters.find((element: any) => element.key === this.key);
-      if (filter) {
-        filter = filter.values[0].split('--').map((item: string) => {
-          return new Date(+item);
-        });
-        this.hasQueryParam = true;
-        this.dateRangeModel = filter;
-      } else {
-        this.dateRangeModel = [];
-      }
+      const filter = filters.find((element: any) => element.key === this.key);
+      this.hasQueryParam = filter !== undefined;
+      this.dateRangeModel = (filter)
+        ? filter.values[0].split('--').map((item: string) => new Date(+item))  // split filter data and transform each part into Date
+        : [];
     });
   }
 
