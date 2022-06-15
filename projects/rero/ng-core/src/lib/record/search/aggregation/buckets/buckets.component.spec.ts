@@ -19,6 +19,7 @@ import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-tran
 import { TranslateLanguagePipe } from '../../../../translate/translate-language.pipe';
 import { RecordSearchService } from '../../record-search.service';
 import { BucketsComponent } from './buckets.component';
+import { BucketNamePipe } from '../bucket-name.pipe';
 
 describe('BucketsComponent', () => {
   let component: BucketsComponent;
@@ -28,7 +29,8 @@ describe('BucketsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         BucketsComponent,
-        TranslateLanguagePipe
+        TranslateLanguagePipe,
+        BucketNamePipe
       ],
       imports: [
         TranslateModule.forRoot({

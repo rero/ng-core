@@ -21,7 +21,6 @@
       "ngx-bootstrap/modal": "ngx-bootstrap/modal",
       "ngx-bootstrap/pagination": "ngx-bootstrap/pagination",
       "ngx-bootstrap/popover": "ngx-bootstrap/popover",
-      "ngx-bootstrap-slider": "ngx-bootstrap-slider",
       "ngx-bootstrap/tooltip": "ngx-bootstrap/tooltip",
       "ngx-bootstrap/typeahead": "ngx-bootstrap/typeahead",
       "ngx-spinner": "ngx-spinner",

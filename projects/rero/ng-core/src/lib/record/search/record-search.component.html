@@ -104,6 +104,11 @@
         </div>
       </div>
       <div class="row">
+        <ng-core-list-filters
+          class="col-12"
+          [aggregations]="aggregations"
+          [aggregationsFilters]="aggregationsFilters">
+        </ng-core-list-filters>
         <div *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0"
              class="col-sm-12 col-md-5 col-lg-3 order-2 order-md-1">
           <div *ngIf="searchFields.length > 0 && q"

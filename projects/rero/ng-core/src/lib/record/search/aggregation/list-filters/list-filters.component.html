@@ -1,0 +1,8 @@
+<ul *ngIf="filters?.length > 0" class="pl-0">
+    <li id="filter" *ngFor="let filter of filters" class="list-unstyled mb-1">
+        <button (click)="remove(filter)" type="button" class="btn btn-outline-secondary btn-sm" 
+        data-toggle="button" aria-pressed="false" autocomplete="off">
+            {{filter | bucketName: filter.aggregationKey }} <i class="fa fa-close"></i>
+        </button>
+    </li>
+</ul>
