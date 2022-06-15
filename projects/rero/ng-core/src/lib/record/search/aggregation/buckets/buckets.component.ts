@@ -195,28 +195,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @return Boolean
    */
   displayMoreAndLessLink(): boolean {
-    return this.size === null ? false : this.buckets.length > this.size;
+    return (this.size === null)
+      ? false
+      : this.buckets.length > this.size;
   }
 
-  /**
-   * Return the name displayed for the bucket.
-   * @param bucket Bucket to get the name from.
-   * @return Displayed name of the bucket.
-   */
-  getBucketName(bucket: any): string {
-    // If a name is provided, we take directly that value.
-    if (bucket.name) {
-      return bucket.name;
-    }
-
-    // For language aggregation, we transform language code to human readable
-    // language.
-    if (this.aggregationKey === 'language') {
-      return this._translateLanguage.translate(
-        bucket.key, this._translateService.currentLang);
-    }
-
-    // Simply translate the bucket key.
-    return this._translateService.instant(bucket.key);
-  }
 }

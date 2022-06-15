@@ -21,7 +21,6 @@ import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateService } from '@ngx-translate/core';
-import { NgxBootstrapSliderModule } from 'ngx-bootstrap-slider';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -69,6 +68,8 @@ import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
 import { ExportButtonComponent } from './export-button/export-button.component';
+import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
+import { BucketNamePipe } from './search/aggregation/bucket-name.pipe';
 
 @NgModule({
   declarations: [
@@ -107,7 +108,9 @@ import { ExportButtonComponent } from './export-button/export-button.component';
     CustomSelectFieldComponent,
     MarkdownFieldComponent,
     AggregationDateRangeComponent,
-    ExportButtonComponent
+    ExportButtonComponent,
+    ListFiltersComponent,
+    BucketNamePipe
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -172,7 +175,6 @@ import { ExportButtonComponent } from './export-button/export-button.component';
       ]
     }),
     FormlyBootstrapModule,
-    NgxBootstrapSliderModule,
     FormlySelectModule
   ],
   exports: [
