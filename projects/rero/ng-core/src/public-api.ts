@@ -55,6 +55,7 @@ export * from './lib/record/editor/utils';
 export * from './lib/record/editor/widgets/add-field-editor/add-field-editor.component';
 export * from './lib/record/editor/widgets/dropdown-label-editor/dropdown-label-editor.component';
 export * from './lib/record/editor/wrappers/toggle-wrapper/toggle-wrappers.component';
+export * from './lib/record/export-button/export-button.component';
 export * from './lib/record/record';
 export * from './lib/record/record-ui.service';
 export * from './lib/record/record.module';

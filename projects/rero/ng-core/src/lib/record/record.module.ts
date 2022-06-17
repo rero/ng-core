@@ -69,6 +69,7 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { ExportButtonComponent } from './export-button/export-button.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     TextareaFieldComponent,
     CustomSelectFieldComponent,
     MarkdownFieldComponent,
-    AggregationDateRangeComponent
+    AggregationDateRangeComponent,
+    ExportButtonComponent
   ],
   imports: [
     // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -182,7 +184,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
     EditorComponent,
     FormlyModule,
     FormlyBootstrapModule,
-    FormlySelectModule
+    FormlySelectModule,
+    ExportButtonComponent
   ],
   entryComponents: [
     JsonComponent,
