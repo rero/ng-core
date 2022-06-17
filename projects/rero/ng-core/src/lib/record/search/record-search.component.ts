@@ -1,6 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2022 RERO
+ * Copyright (C) 2022 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -182,6 +183,17 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   showEmptySearchMessage = false;
 
   /**
+   * Export formats configuration.
+   */
+  exportOptions: {
+    label: string,
+    url: string,
+    disabled?: boolean,
+    disabled_message?: string
+  }[];
+
+
+  /**
    * JSON stringified of last search parameters. Used for checking if we have
    * to do a search or not.
    */
@@ -310,6 +322,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
           this._emitNewParameters();
           this.recordsSearched.emit({ type: this.currentType, records });
+          // reload export options
+          this.exportOptions = this._exportFormats();
         },
         (error) => {
           this.error = error;
@@ -666,9 +680,19 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-  get exportFormats(): Array<any> {
+  private _exportFormats(): Array<any> {
+
     if (this._config && this._config.exportFormats) {
-      return this._config.exportFormats;
+      return this._config.exportFormats.map(
+        (format) => {
+          return {
+            label: format.label,
+            url: this.getExportFormatUrl(format),
+            disabled: !this.canExport(format),
+            disabled_message: this.exportInfoMessage
+          };
+        }
+      );
     }
     return [];
   }
@@ -718,7 +742,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   canExport(format: any): boolean {
     return (format.hasOwnProperty('disableMaxRestResultsSize') && format.disableMaxRestResultsSize)
       ? this.total > 0
-      : this.total > 0 && this.total < RecordService.MAX_REST_RESULTS_SIZE;
+      : 0 < this.total && this.total < RecordService.MAX_REST_RESULTS_SIZE;
   }
 
   /**
@@ -996,6 +1020,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // load search filters
     this.searchFilters = this._config.searchFilters ? this._config.searchFilters : [];
+
+    // load export options
+    this.exportOptions = this._exportFormats();
   }
 
   /**
