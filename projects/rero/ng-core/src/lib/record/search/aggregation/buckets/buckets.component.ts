@@ -197,7 +197,20 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   displayMoreAndLessLink(): boolean {
     return (this.size === null)
       ? false
-      : this.buckets.length > this.size;
+      : this.bucketsLength() > this.size;
   }
 
+  /**
+   * Count buckets with non zero doc_count
+   * @return length of buckets
+   */
+  bucketsLength(): number {
+    let bucketLength = 0;
+    for (const bucket of this.buckets) {
+      if (bucket.doc_count){
+        bucketLength += 1;
+      }
+    }
+    return bucketLength;
+  }
 }

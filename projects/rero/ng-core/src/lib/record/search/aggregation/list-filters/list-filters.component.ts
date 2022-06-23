@@ -9,29 +9,37 @@ export class ListFiltersComponent implements OnChanges {
   /**
    * All aggregations
    */
-  @Input()
-  aggregations;
+  @Input() aggregations;
 
   /**
    * Selected aggregations filters
    */
-  @Input()
-  aggregationsFilters;
+  @Input() aggregationsFilters;
+
+  /**
+   * Search filters
+   */
+   @Input() searchFilters;
 
   /**
    * List of selected filters
    */
-  filters: Array<any> = [];
+  filters: Array<any>;
+
+  /**
+   * Filters to hide
+   */
+  filtersToHide = [];
 
   /**
    * Constructor.
    *
    * @param _recordSearchService - RecordSearch service.
-   * @param ref - ChangeDetectorRef.
+   * @param _ref - ChangeDetectorRef.
    */
   constructor(
     private _recordSearchService: RecordSearchService,
-    private ref: ChangeDetectorRef
+    private _ref: ChangeDetectorRef
   ){ }
 
   /**
@@ -40,17 +48,21 @@ export class ListFiltersComponent implements OnChanges {
    * @param changes - SimpleChanges.
    */
   ngOnChanges(changes: SimpleChanges): void {
+    // hide searchFilters from list of filters
+    this.filtersToHide = this.searchFilters.map(filter => filter.filter);
+
     if (changes?.aggregationsFilters) {
-      this.ref.detach();
+      this._ref.detach();
       this.filters = [];
 
       changes.aggregationsFilters.currentValue.map(filter => {
-        this.filters = this.filters.concat(
-          filter.values.filter(v => v !== 'true')
-          .map( value => {
-            return {key: value, aggregationKey: filter.key};
-          })
+        if (!this.filtersToHide.includes(filter.key)) {
+          this.filters = this.filters.concat(
+            filter.values.map( value => {
+              return {key: value, aggregationKey: filter.key};
+            })
           );
+        }
       });
     }
 
@@ -58,7 +70,8 @@ export class ListFiltersComponent implements OnChanges {
       changes.aggregations.currentValue.map(item => {
           this.getFilterNames(item.value.buckets);
       });
-      this.ref.reattach();
+
+      this._ref.reattach();
     }
 
   }
@@ -73,6 +86,7 @@ export class ListFiltersComponent implements OnChanges {
     if (buckets.length === 0){
       return;
     }
+
     buckets.map(bucket => {
       for (const k in bucket) {
         if (bucket[k].buckets) {

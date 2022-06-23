@@ -33,12 +33,10 @@ export class BucketNamePipe implements PipeTransform {
 
     // For language aggregation, we transform language code to human readable
     // language.
-    if (aggregationKey === 'language') {
-      return this._translateLanguage.translate(bucket.key, this._translateService.currentLang);
-    }
+    return (aggregationKey === 'language')
+    ? this._translateLanguage.translate(bucket.key, this._translateService.currentLang)
+    : this._translateService.instant(bucket.key);
 
-    // Simply translate the bucket key.
-    return this._translateService.instant(bucket.key);
   }
 
 }

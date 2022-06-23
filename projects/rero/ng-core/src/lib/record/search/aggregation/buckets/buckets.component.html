@@ -16,7 +16,7 @@
 -->
 <ul *ngIf="buckets" class="list-unstyled m-0 bucket-group">
   <li class="form-check bucket-item" *ngFor="let bucket of buckets|slice:0:bucketSize">
-    <div class="d-flex flex-row bucket-data align-items-start" (click)="updateFilter(bucket)">
+    <div class="d-flex flex-row bucket-data align-items-start" *ngIf="bucket.doc_count" (click)="updateFilter(bucket)">
       <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
       <a class="form-check-label">{{ bucket | bucketName: aggregationKey }}</a>
       <span class="ml-auto bucket-count">
