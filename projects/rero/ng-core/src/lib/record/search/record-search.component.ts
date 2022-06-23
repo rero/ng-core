@@ -559,7 +559,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns True if no record is found and no search query is done.
    */
   get hasNoRecord(): boolean {
-    return !this.q && this.records.length === 0 && !this.showEmptySearchMessage;
+    return (this._config.showFacetsIfNoResults)
+    ? false
+    : !this.q && this.records.length === 0 && !this.showEmptySearchMessage;
   }
 
   /**
@@ -914,7 +916,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const aggregation = this.aggregations.find((item: any) => item.key === event.key);
-
     // No aggregation found or buckets are already loaded.
     if (!aggregation || aggregation.loaded) {
       return;
@@ -963,6 +964,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         preFilters[key] = value;
       }
     }
+
     return this._recordService.getRecords(
       this._currentIndex(),
       q,
@@ -1160,6 +1162,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
     aggregation.value.buckets.map(bucket => this.processBuckets(bucket, aggregation.key));
     aggregation.loaded = true;
+
   }
 
   /**
@@ -1217,5 +1220,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
     }
+  }
+
+  /**
+   * Check if to show search filters.
+   * @returns boolean
+   */
+  showSearchFilters(): boolean {
+    if (this._config.allowEmptySearch === false && !this.q) {
+      return false;
+    }
+    return true;
   }
 }

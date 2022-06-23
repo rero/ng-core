@@ -16,15 +16,19 @@
 -->
 <div class="row mt-3">
   <div class="col-12 col-sm-6">
-    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[0]" #ctrl="ngModel">
+    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center"
+    (keyup.enter)="$event.preventDefault(); updateFilter()" [(ngModel)]="range[0]" #ctrl="ngModel">
   </div>
   <div class="col-12 col-sm-6">
-    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center" [(ngModel)]="range[1]" #ctrl="ngModel">
+    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center"
+    (keyup.enter)="$event.preventDefault(); updateFilter()" [(ngModel)]="range[1]" #ctrl="ngModel">
   </div>
 </div>
 <div class="text-center mt-2">
   <small>
-    <a href class="mx-3" (click)="$event.preventDefault(); updateFilter()" translate>Show</a>
-    <a href class="mx-3" (click)="$event.preventDefault(); clearFilter()" *ngIf="hasQueryParam" translate>Clear filter</a>
+    <a href class="mx-1 btn btn-outline-primary btn-sm" (click)="$event.preventDefault(); updateFilter()"
+    translate>Apply</a>
+    <a href class="mx-1 btn btn-outline-primary btn-sm" (click)="$event.preventDefault(); clearFilter()"
+    *ngIf="hasQueryParam" translate>Clear filter</a>
   </small>
 </div>

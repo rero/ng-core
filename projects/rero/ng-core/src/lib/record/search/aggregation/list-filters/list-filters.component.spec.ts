@@ -43,17 +43,17 @@ describe('ListFiltersComponent', () => {
   });
 
   it('should display 2 buttons', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('li#filter > button');
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
     expect(buttons.length).toBe(2);
   });
 
   it('should display button available', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('li#filter > button');
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
     expect(buttons[0].innerHTML).toContain('available');
   });
 
   it('should display button serial', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('li#filter > button');
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
     expect(buttons[1].innerHTML).toContain('serial');
   });
 });

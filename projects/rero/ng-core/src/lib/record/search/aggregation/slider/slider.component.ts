@@ -101,9 +101,8 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
    * Update aggregation filter.
    */
   updateFilter() {
-    if (!this.range[0] || !this.range[1]) {
-      return;
-    }
+    if (!this.range[0] || this.range[0] < this.min) { this.range[0] = this.min; }
+    if (!this.range[1] || this.range[1] > this.max) { this.range[1] = this.max; }
 
     this._recordSearchService.updateAggregationFilter(this.key, [
       `${this.range[0]}--${this.range[1]}`,
