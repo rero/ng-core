@@ -16,6 +16,7 @@
 -->
 <ng-core-error [error]="error" *ngIf="error; else showComponent"></ng-core-error>
 <ng-template #showComponent>
+  <span #topScrollAnchor></span>
   <ul class="nav nav-tabs" *ngIf="typesInTabs.length > 1">
     <li class="nav-item" *ngFor="let type of typesInTabs">
       <a
@@ -256,6 +257,7 @@
             [itemsPerPage]="size"
             [maxSize]="paginationMaxSize"
             [boundaryLinks]="paginationBoundaryLinks"
+            (pageChanged)="pageChanged()"
             class="justify-content-center mt-5"
             *ngIf="showPagination"
             previousText="&lsaquo;"

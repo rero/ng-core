@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -55,6 +55,11 @@ export interface SortOption {
   templateUrl: './record-search.component.html'
 })
 export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
+  /**
+   * Page anchor to scroll on the top
+   */
+  @ViewChild('topScrollAnchor') topScroll: ElementRef;
+
   /**
    * Current selected resource type
    */
@@ -384,6 +389,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
+  }
+
+  /**
+   * Move to the top of the page if you change page
+   */
+  pageChanged() {
+    this.topScroll.nativeElement.scrollIntoView({ behavior: 'smooth' });
   }
 
   /**
