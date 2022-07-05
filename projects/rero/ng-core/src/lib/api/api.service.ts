@@ -20,11 +20,9 @@ import { CoreConfigService } from '../core-config.service';
 /**
  * Service giving information about API.
  */
-@Injectable(
-  {
-    providedIn: 'root'
-  }
-)
+@Injectable({
+  providedIn: 'root'
+})
 export class ApiService {
   // API base URL. Ex: https://localhost:5000.
   baseUrl = '';
@@ -45,7 +43,7 @@ export class ApiService {
   }
 
   /**
-   * Returns invenio API Endpoint corresponding to type.
+   * Returns Invenio API Endpoint corresponding to type.
    *
    * @param type Type of the resource.
    * @param absolute If absolute or relative url must be returned.
@@ -53,11 +51,24 @@ export class ApiService {
    */
   getEndpointByType(type: string, absolute: boolean = false): string {
     let endpoint = this.endpointPrefix + '/' + type;
-
     if (absolute === true) {
       endpoint = this.baseUrl + endpoint;
     }
+    return endpoint;
+  }
 
+  /**
+   * Returns Invenio-RERO-base API export endpoint corresponding to type.
+   *
+   * @param type Type of the resource.
+   * @param absolute If absolute or relative url must be returned.
+   * @return Endpoint as string.
+   */
+  getExportEndpointByType(type: string, absolute: boolean = false): string {
+    let endpoint = this.endpointPrefix + '/export/' + type;
+    if (absolute === true) {
+      endpoint = this.baseUrl + endpoint;
+    }
     return endpoint;
   }
 
@@ -81,11 +92,9 @@ export class ApiService {
    */
   getSchemaFormEndpoint(type: string, absolute: boolean = false): string {
     let endpoint = this._configService.schemaFormEndpoint + '/' + type;
-
     if (absolute === true) {
       endpoint = this.baseUrl + endpoint;
     }
-
     return endpoint;
   }
 }

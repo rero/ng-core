@@ -26,14 +26,12 @@ describe('ApiService', () => {
       apiEndpointPrefix: '/api',
       apiBaseUrl: 'https://localhost:5000'
     };
-
     TestBed.configureTestingModule({
       providers: [
         ApiService,
         { provide: CoreConfigService, useValue: config }
       ]
     });
-
     apiService = TestBed.inject(ApiService);
   });
 
@@ -43,12 +41,18 @@ describe('ApiService', () => {
   });
 
   it('#getEndpointByType should return endpoint /api/documents', () => {
-    expect(apiService.getEndpointByType('documents'))
-      .toBe('/api/documents');
+    expect(apiService.getEndpointByType('documents')).toBe('/api/documents');
   });
 
   it('#getEndpointByType should return endpoint with absolute URL', () => {
-    expect(apiService.getEndpointByType('documents', true))
-      .toBe('https://localhost:5000/api/documents');
+    expect(apiService.getEndpointByType('documents', true)).toBe('https://localhost:5000/api/documents');
+  });
+
+  it('#getExportEndpointByType should return endpoint /api/documents', () => {
+    expect(apiService.getExportEndpointByType('documents')).toBe('/api/export/documents');
+  });
+
+  it('#getExportEndpointByType should return endpoint with absolute URL', () => {
+    expect(apiService.getExportEndpointByType('documents', true)).toBe('https://localhost:5000/api/export/documents');
   });
 });
