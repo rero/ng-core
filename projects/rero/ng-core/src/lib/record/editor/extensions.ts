@@ -444,28 +444,31 @@ export class TranslateExtension {
     }
     // Options
     if (to.options) {
-      to.options = !isObservable(to.options) ? of(to.options) : to.options;
-      to.options = to.options.pipe(
-        switchMap((opts: any) => {
-          const labels = [];
-          const options = [];
-          opts.forEach((opt: any) => {
-            labels.push(opt.label);
-            options.push(opt);
-          });
-          return this._translate.stream(labels).pipe(
-            map((translations: any) => {
-              const output = [];
-              options.forEach((opt: any) => {
-                const data = cloneDeep(opt);
-                data.label = translations[opt.label];
-                output.push(data);
-              });
-              return output;
-            })
-          );
-        })
-      );
+      // Process only if the array options is observable or contains a dictionnary with label/value
+      if (isObservable(to.options) || to.options.some((o: any) => 'label' in o && 'value' in o)) {
+        to.options = !isObservable(to.options) ? of(to.options) : to.options;
+        to.options = to.options.pipe(
+          switchMap((opts: any) => {
+            const labels = [];
+            const options = [];
+            opts.forEach((opt: any) => {
+              labels.push(opt.label);
+              options.push(opt);
+            });
+            return this._translate.stream(labels).pipe(
+              map((translations: any) => {
+                const output = [];
+                options.forEach((opt: any) => {
+                  const data = cloneDeep(opt);
+                  data.label = translations[opt.label];
+                  output.push(data);
+                });
+                return output;
+              })
+            );
+          })
+        );
+      }
     }
   }
 }
