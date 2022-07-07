@@ -63,4 +63,6 @@
   <ng-template ngCoreRecordDetail></ng-template>
   <ng-core-record-files [type]="type" [pid]="record.id"
     *ngIf="record && filesEnabled && updateStatus && updateStatus.can"></ng-core-record-files>
+  <ng-core-record-statistics id="stats" class="mt-5" [type]="type" [pid]="record.id"
+    *ngIf="record && record.metadata.statistics"></ng-core-record-statistics>
 </div>
