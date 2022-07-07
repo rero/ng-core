@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.15.1](https://github.com/rero/ng-core/tree/v1.15.1) (2022-07-07)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.14.5...v1.15.1)
+
+**Other changes:**
+* select: fix process options [\#512](https://github.com/rero/ng-core/pull/512) (by @Garfield-fr)
+* search: move to the top of the page if you change page [\#510](https://github.com/rero/ng-core/pull/510) (by @Garfield-fr)
+* editor: hide empty fields in edition [\#490](https://github.com/rero/ng-core/pull/490) (by @Garfield-fr)
+* facets: fix date range facet [\#498](https://github.com/rero/ng-core/pull/498) (by @zannkukai)
+* editor: add email validator [\#499](https://github.com/rero/ng-core/pull/499) (by @Garfield-fr)
+
 ## [v1.14.5](https://github.com/rero/ng-core/tree/v1.14.5) (2022-02-24)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.4...v1.14.5)
