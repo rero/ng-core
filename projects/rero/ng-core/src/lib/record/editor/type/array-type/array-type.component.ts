@@ -16,7 +16,6 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
-import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Component for displaying array fields in editor.

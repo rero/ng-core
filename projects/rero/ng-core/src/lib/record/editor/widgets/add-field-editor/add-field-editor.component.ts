@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
 import { Observable, of, Subscriber } from 'rxjs';
 import { first, map, mergeMap } from 'rxjs/operators';
-import { EditorService } from '../../services/editor.service';
+import { EditorComponent } from '../../editor.component';
 
 /**
  * For big editor add the possiblity to display
@@ -31,6 +31,9 @@ import { EditorService } from '../../services/editor.service';
   templateUrl: './add-field-editor.component.html'
 })
 export class AddFieldEditorComponent implements OnInit {
+
+  /** EditorComponent function */
+  @Input() editorComponent: any;
 
   // current input value
   value: string;
@@ -44,17 +47,20 @@ export class AddFieldEditorComponent implements OnInit {
   // editor service essential fields list
   essentialFields$: Observable<Array<FormlyFieldConfig>>;
 
+  /** Instance of EditorComponent */
+  private editorComponentInstance: EditorComponent;
+
   /***
    * Constructor
-   * @param _editorService - EditorService, that keep the list of hidden fields
    * @param _translateService - TranslateService, that translate the labels of the hidden fields
    */
   constructor(
-    private _editorService: EditorService,
     private _translateService: TranslateService
   ) { }
 
+  /** onInit hook */
   ngOnInit() {
+    this.editorComponentInstance = (this.editorComponent)();
     this.typeaheadFields$ = new Observable((observer: Subscriber<string>) => {
       // Runs on every search
       observer.next(this.value);
@@ -63,7 +69,7 @@ export class AddFieldEditorComponent implements OnInit {
         mergeMap((token: string) => this.getSuggestionsList(token))
       );
 
-    this.hiddenFields$ = this._editorService.hiddenFields$.pipe(
+    this.hiddenFields$ = this.editorComponentInstance.hiddenFields$.pipe(
       map(fields => fields.sort(
         (field1, field2) => this.sortFieldsByLabel(field1, field2)
       )
@@ -109,13 +115,14 @@ export class AddFieldEditorComponent implements OnInit {
     const spaceRegexp = new RegExp(/^\s+$/);
     const query = new RegExp(token, 'i');
     // take only the first value to avoid the selection still open after selection
-    const hiddenFieldsFirst$ = this.hiddenFields$.pipe(first());
+    // const hiddenFieldsFirst$ = this.hiddenFields$.pipe(first());
+    const hiddenFieldsFirst$ = this.editorComponentInstance.hiddenFields$.pipe(first());
     if (spaceRegexp.test(token)) {
       return hiddenFieldsFirst$;
     }
     return hiddenFieldsFirst$.pipe(
       map(
-        fields => fields.filter(field => {
+        (fields: any) => fields.filter(field => {
           // the label is not translated as the field is hidden
           const f = this._translateService.instant(field.templateOptions.untranslatedLabel);
           // true if match
@@ -153,12 +160,12 @@ export class AddFieldEditorComponent implements OnInit {
     // reset the input value
     this.value = undefined;
     // remove the the element from the list of hidden fields
-    this._editorService.removeHiddenField(field);
+    this.editorComponentInstance.removeHiddenField(field);
     // scroll at the right position
     // to avoid: Expression has changed after it was checked
     // See: https://blog.angular-university.io/angular-debugging/
     // wait that the component is present in the DOM
-    setTimeout(() => this._editorService.setFocus(field, true));
+    setTimeout(() => this.editorComponentInstance.setFieldFocus(field, true));
   }
 
   /**

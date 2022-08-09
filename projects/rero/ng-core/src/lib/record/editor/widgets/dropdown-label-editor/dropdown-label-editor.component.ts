@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,6 @@
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { EditorService } from '../../services/editor.service';
 
 /**
  * Component for displaying a label with dropdown in editor.
@@ -27,30 +26,19 @@ import { EditorService } from '../../services/editor.service';
 })
 export class DropdownLabelEditorComponent {
   // current form field configuration
-  @Input()
-  field: FormlyFieldConfig;
+  @Input() field: FormlyFieldConfig;
 
   // can we add a new element to the related array
-  @Input()
-  canAdd: boolean;
+  @Input() canAdd: boolean;
 
   // event when the add button is clicked
   @Output() addClicked = new EventEmitter<boolean>();
 
   /**
-   * Constructor
-   * @param editorService - EditorService, that keep the list of hidden fields
-   */
-  constructor(
-    private _editorService: EditorService
-  ) {
-  }
-
-  /**
    * Emit a new Ouput event when the add button is clicked
    * @param event - Event, the click event.
    */
-  addClick(event: any) {
+  addClick(event: any): void {
     this.addClicked.emit(event);
   }
 }

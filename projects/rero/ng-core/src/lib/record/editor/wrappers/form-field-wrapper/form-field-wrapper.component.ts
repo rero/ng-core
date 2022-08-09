@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,9 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
-import { EditorService } from '../../services/editor.service';
+import { EditorComponent } from '../../editor.component';
 
 @Component({
   selector: 'ng-core-form-field-wrapper',
@@ -44,22 +44,27 @@ import { EditorService } from '../../services/editor.service';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWrapperComponent extends FieldWrapper {
+export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
 
-  constructor(private _editorService: EditorService) {
-    super();
+  private editorComponentInstance?: EditorComponent = null;
+
+  ngOnInit(): void {
+    if (this.field?.templateOptions?.editorComponent) {
+      this.editorComponentInstance = (this.field.templateOptions.editorComponent)();
+    }
   }
 
-  /**
-   * Hide the field
-   * @param field - FormlyFieldConfig, the field to hide
-   */
-  remove() {
+  /** Hide the field */
+  remove(): void {
     switch (this.field.parent.type) {
       case 'object':
-        return this._editorService.hide(this.field);
+        if (this.editorComponentInstance) {
+          this.editorComponentInstance.hide(this.field);
+        }
+        break;
       case 'array':
-        return this.field.parent.templateOptions.remove(Number(this.field.key));
+        this.field.parent.templateOptions.remove(Number(this.field.key));
+        break;
     }
   }
 
@@ -67,10 +72,10 @@ export class FormFieldWrapperComponent extends FieldWrapper {
    * Is the field can be hidden?
    * @returns boolean, true if the field can be hidden
    */
-  canRemove() {
+  canRemove(): boolean {
     switch (this.field.parent.type) {
       case 'object':
-        return this._editorService.canHide(this.field);
+        return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
       case 'array':
         return this.field.parent.templateOptions.canRemove();
       default:
@@ -82,20 +87,18 @@ export class FormFieldWrapperComponent extends FieldWrapper {
    * Is the field can be hidden?
    * @returns boolean, true if the field can be hidden
    */
-  canAdd() {
+  canAdd(): boolean {
     if (this.field.parent.type === 'array') {
       return this.field.parent.templateOptions.canAdd();
     }
     return false;
   }
-  /**
-   * Add a new element
-   * @param field - FormlyFieldConfig, the field to hide
-   */
-  add() {
+
+  /** Add a new element */
+  add(): void {
     if (this.field.parent.type === 'array') {
       const index = Number(this.field.key) + 1;
-      return this.field.parent.templateOptions.add(index);
+      this.field.parent.templateOptions.add(index);
     }
   }
 }

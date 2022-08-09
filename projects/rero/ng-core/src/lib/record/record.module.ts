@@ -37,7 +37,6 @@ import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
 import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
-import { EditorService } from './editor/services/editor.service';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-select.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
@@ -196,7 +195,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
       provide: FORMLY_CONFIG,
       multi: true,
       useFactory: registerNgCoreFormlyExtension,
-      deps: [TranslateService, EditorService, RecordService]
+      deps: [TranslateService, RecordService]
     }
   ]
 })

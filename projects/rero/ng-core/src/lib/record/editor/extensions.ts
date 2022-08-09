@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,6 @@ import moment from 'moment';
 import { isObservable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
-import { EditorService } from './services/editor.service';
 import { isEmpty, removeEmptyValues } from './utils';
 
 export class NgCoreFormlyExtension {
@@ -43,16 +42,15 @@ export class NgCoreFormlyExtension {
 
   /**
    * Constructor
-   * @param _editorService - editor service
    * @params _recordService - ng core record service
    */
-  constructor(private _editorService: EditorService, private _recordService: RecordService) {}
+  constructor(private _recordService: RecordService) {}
 
   /**
    * prePopulate Formly hook
    * @param field - FormlyFieldConfig
    */
-  prePopulate(field: FormlyFieldConfig) {
+  prePopulate(field: FormlyFieldConfig): void {
     if (field.key) {
       field.id = this._getKey(field);
     }
@@ -63,7 +61,7 @@ export class NgCoreFormlyExtension {
    * onPopulate Formly hook
    * @param field - FormlyFieldConfig
    */
-  onPopulate(field: FormlyFieldConfig) {
+  onPopulate(field: FormlyFieldConfig): void {
     this._setWrappers(field);
     this._hideEmptyField(field);
     const expressionProperties = field?.expressionProperties;
@@ -86,7 +84,7 @@ export class NgCoreFormlyExtension {
    * Add formly wrappers
    * @param field - FormlyFieldConfig
    */
-  private _setWrappers(field: FormlyFieldConfig) {
+  private _setWrappers(field: FormlyFieldConfig): void {
     // get wrappers from the templateOptions (JSONSchema)
     if (field.templateOptions) {
       field.wrappers = [
@@ -95,7 +93,8 @@ export class NgCoreFormlyExtension {
       ];
     }
 
-    if (field.templateOptions && this._editorService?.rootField?.templateOptions?.longMode === true) {
+    const editorComponent = field.templateOptions?.editorComponent;
+    if (field.templateOptions && editorComponent && editorComponent().longMode) {
       // add automatically a card wrapper for the first level fields
       const parent = field.parent;
       if (parent && parent.templateOptions && parent.templateOptions.isRoot === true) {
@@ -150,7 +149,7 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    * @return boolean - true if has a hide wrapper
    */
-  private _hasHideWrapper(field) {
+  private _hasHideWrapper(field): boolean {
     if ('hide' in field.wrappers) {
       return true;
     }
@@ -167,7 +166,7 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    * @return boolean - true has a parent marked as hidden.
    */
-  private _hasHiddenParent(field) {
+  private _hasHiddenParent(field): boolean {
     if (field?.hide === true) {
       return this._modelIsEmpty(field);
     }
@@ -198,14 +197,20 @@ export class NgCoreFormlyExtension {
    * Hide or show field depending of the data content and the hide property
    * @param field - FormlyFieldConfig
    */
-  private _hideEmptyField(field: FormlyFieldConfig) {
+  private _hideEmptyField(field: FormlyFieldConfig): void {
     // find the root field in the form tree
-    const rootField = this._editorService?.rootField;
+    if (!field.templateOptions?.editorComponent) {
+      return;
+    }
+    // root field
+    const rootField = field.templateOptions.editorComponent().rootField;
     // edition mode
-    const editMode = rootField?.templateOptions?.editMode;
+    const editMode = field.templateOptions.editorComponent().editMode;
+    // long mode
+    const longMode = field.templateOptions.editorComponent().longMode;
     if (
       // only in longMode else it will not be possible to unhide a field
-      !rootField?.templateOptions?.longMode ||
+      !longMode ||
       // system field has not key
       !field?.key ||
       // ignore array item which as key of the form "0"
@@ -235,10 +240,10 @@ export class NgCoreFormlyExtension {
         // in edition empty fields should be hidden
         (editMode === true &&
           // only during the editor initialisation
-          !this._editorService.rootField?.formControl?.touched)
+          !rootField?.formControl?.touched)
       ) {
         field.hide = true;
-        this._editorService.addHiddenField(field);
+        field.templateOptions.editorComponent().addHiddenField(field);
       }
     }
   }
@@ -247,7 +252,7 @@ export class NgCoreFormlyExtension {
    * Set custom validators from the templateOptions configuration.
    * @param field - FormlyFieldConfig
    */
-  private _setCustomValidators(field: FormlyFieldConfig) {
+  private _setCustomValidators(field: FormlyFieldConfig): void {
     if (field.templateOptions == null || field.templateOptions.customValidators == null) {
       return;
     }
@@ -258,15 +263,14 @@ export class NgCoreFormlyExtension {
       const limitToValues = customValidators.valueAlreadyExists.limitToValues;
       const filter = customValidators.valueAlreadyExists.filter;
       const term = customValidators.valueAlreadyExists.term;
-      const rootField = this._editorService?.rootField;
-      const pid = rootField?.templateOptions?.pid;
+      const editorComponent = field.templateOptions.editorComponent;
       field.asyncValidators = {
         validation: [
           (control: FormControl) => {
             return this._recordService.uniqueValue(
               field,
-              remoteRecordType ? remoteRecordType : rootField.templateOptions.recordType,
-              pid,
+              remoteRecordType ? remoteRecordType : editorComponent().recordType,
+              editorComponent().pid,
               term ? term : null,
               limitToValues ? limitToValues : [],
               filter ? filter : null
@@ -410,7 +414,7 @@ export class TranslateExtension {
    * It translates the label, the description and the placeholder.
    * @param field formly field config
    */
-  prePopulate(field: FormlyFieldConfig) {
+  prePopulate(field: FormlyFieldConfig): void {
     const to = field.templateOptions || {};
 
     // translate only once
@@ -477,13 +481,11 @@ export class TranslateExtension {
  * To register an ngx-formly translations extension.
  *
  * @param translate ngx-translate service
- * @param editorService - ng core editor service
  * @param recordService - ng core record service
  * @returns FormlyConfig object configuration
  */
 export function registerNgCoreFormlyExtension(
   translate: TranslateService,
-  editorService: EditorService,
   recordService: RecordService
 ) {
   return {
@@ -616,8 +618,11 @@ export function registerNgCoreFormlyExtension(
       },
       {
         name: 'ng-core',
-        extension: new NgCoreFormlyExtension(editorService, recordService),
-      },
+        extension: new NgCoreFormlyExtension(recordService),
+        // Execute Core Formly extension after formly processing (priority low)
+        // https://main.formly.dev/docs/guide/custom-formly-extension#extension-priority
+        priority: 10
+      }
     ],
   };
 }

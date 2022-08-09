@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,35 +15,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { EditorService } from '../../services/editor.service';
+import { EditorComponent } from '../../editor.component';
 
 @Component({
   selector: 'ng-core-label-editor',
   templateUrl: './label.component.html'
 })
-export class LabelComponent {
+export class LabelComponent implements OnInit {
 
-  @Input()
-  field: FormlyFieldConfig;
+  // Current field
+  @Input() field: FormlyFieldConfig;
+
+  // Instance of Editor Component
+  private editorComponentInstance?: EditorComponent;
+
   /**
    * Constructor
-   * @param editorService - EditorService, that keep the list of hidden fields
    * @param _translateService - TranslateService, that translate the labels of the hidden fields
    */
   constructor(
-    private _editorService: EditorService,
     private _translateService: TranslateService
   ) { }
+
+  /** onInit hook */
+  ngOnInit(): void {
+    if (this.field.templateOptions.editorComponent) {
+      this.editorComponentInstance = (this.field.templateOptions.editorComponent)();
+    }
+  }
 
   /**
    * Is the dropdown menu displayed?
    * @param field - FormlyFieldConfig, the correspondig form field config
    * @returns boolean, true if the menu should be displayed
    */
-  hasMenu(field: FormlyFieldConfig) {
+  hasMenu(field: FormlyFieldConfig): boolean {
     if (field.fieldGroup && field.fieldGroup.length > 0 && field.fieldGroup[0].type === 'multischema') {
       return false;
     }
@@ -52,7 +61,7 @@ export class LabelComponent {
     }
     return (
       (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 ||
-        this.field.templateOptions.helpURL) && this._editorService?.rootField?.templateOptions?.longMode
+        this.field.templateOptions.helpURL) && this.editorComponentInstance?.longMode
     );
   }
 
@@ -116,21 +125,22 @@ export class LabelComponent {
    * Am I at the root of the form?
    * @returns boolean, true if I'm the root
    */
-  isRoot() {
-    return this._editorService.isRoot(this.field);
+  isRoot(): boolean {
+    return this.editorComponentInstance ? this.editorComponentInstance.isRoot(this.field) : false;
   }
 
   /**
    * Hide the field
    * @param field - FormlyFieldConfig, the field to hide
    */
-  remove() {
+  remove(): void {
     if (this.field.parent.type === 'object') {
-      return this._editorService.hide(this.field);
+      if (this.editorComponentInstance) {
+        this.editorComponentInstance.hide(this.field);
+      }
     }
     if (this.field.parent.type === 'array') {
-
-      return this.field.parent.templateOptions.remove(this.getIndex());
+      this.field.parent.templateOptions.remove(this.getIndex());
     }
   }
 
@@ -146,9 +156,9 @@ export class LabelComponent {
    * Is the field can be hidden?
    * @returns boolean, true if the field can be hidden
    */
-  canRemove() {
+  canRemove(): boolean {
     if (this.field.parent.type === 'object') {
-      return this._editorService.canHide(this.field);
+      return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
     }
     if (this.field.parent.type === 'array') {
       return this.field.parent.templateOptions.canRemove();
@@ -162,7 +172,7 @@ export class LabelComponent {
    * clone button should be used.
    * @returns boolean, true if a new item can be added
    */
-  canAddItem() {
+  canAddItem(): boolean {
     if (this.field.type === 'array' && this.field.templateOptions.canAdd) {
       return this.field.templateOptions.canAdd() && this.field.fieldGroup.length === 0;
     }
