@@ -19,25 +19,36 @@ import { FormsModule } from '@angular/forms';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AddFieldEditorComponent } from './add-field-editor.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { EditorComponent, RecordModule } from '@rero/ng-core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AddFieldEditorComponent', () => {
   let component: AddFieldEditorComponent;
+  let editorComponent: ComponentFixture<EditorComponent>;
   let fixture: ComponentFixture<AddFieldEditorComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        RouterTestingModule,
+        RecordModule,
         FormsModule,
         TypeaheadModule.forRoot(),
         TranslateModule.forRoot()
       ],
-      declarations: [AddFieldEditorComponent]
+      declarations: [AddFieldEditorComponent, EditorComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
+    editorComponent = TestBed.createComponent(EditorComponent);
     fixture = TestBed.createComponent(AddFieldEditorComponent);
     component = fixture.componentInstance;
+    component.editorComponent = () => editorComponent.componentInstance;
     fixture.detectChanges();
   });
 

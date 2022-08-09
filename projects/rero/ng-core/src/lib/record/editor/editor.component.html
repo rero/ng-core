@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2022 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -82,7 +82,8 @@
         <!-- add fields section -->
         <div *ngIf="editorSettings.longMode" class="col-md-3 col-xl-2 bd-sidebar">
             <ng-core-editor-add-field-editor
-                    class="bd-search d-flex "
+                    class="bd-search d-flex"
+                    [editorComponent]="editorComponent"
             >
             </ng-core-editor-add-field-editor>
         </div>

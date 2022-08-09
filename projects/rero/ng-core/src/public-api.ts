@@ -43,7 +43,6 @@ export * from './lib/record/autocomplete/autocomplete.component';
 export * from './lib/record/detail/detail.component';
 export * from './lib/record/editor/editor.component';
 export * from './lib/record/editor/extensions';
-export * from './lib/record/editor/services/editor.service';
 export * from './lib/record/editor/type/array-type/array-type.component';
 export * from './lib/record/editor/type/datepicker-type.component';
 export * from './lib/record/editor/type/multischema/multischema.component';

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@ import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
@@ -35,7 +35,6 @@ import { LoggerService } from '../../service/logger.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { EditorService } from './services/editor.service';
 import { formToWidget, orderedJsonSchema, removeEmptyValues } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
@@ -118,13 +117,43 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     'dateMustBeLessThan'
   ];
 
+  // list of fields to be hidden
+  private _hiddenFields: FormlyFieldConfig[] = [];
+
+  // Observable of hidden fields
+  private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
+
+  // current list of hidden fields
+  public get hiddenFields$(): Observable<any[]> {
+    return this._hiddenFieldsSubject.asObservable();
+  }
+
+  // Editor long mode
+  public get longMode(): boolean {
+    return this.editorSettings.longMode;
+  }
+
+  // Editor edit mode
+  public get editMode(): boolean {
+    return this.pid ? true : false;
+  }
+
+  // Editor root field
+  public get rootField(): FormlyFieldConfig {
+    return this.rootFormlyConfig;
+  }
+
+  // Editor fonction
+  public get editorComponent(): () => EditorComponent {
+    return () => this;
+  }
+
   /**
    * Constructor.
    * @param _formlyJsonschema Formly JSON schema.
    * @param _recordService Record service.
    * @param _apiService API service.
    * @param _route Route.
-   * @param _editorService Editor service.
    * @param _recordUiService Record UI service.
    * @param _translateService Translate service.
    * @param _toastrService Toast service.
@@ -139,7 +168,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _recordService: RecordService,
     private _apiService: ApiService,
     private _route: ActivatedRoute,
-    private _editorService: EditorService,
     private _recordUiService: RecordUiService,
     private _translateService: TranslateService,
     private _toastrService: ToastrService,
@@ -177,11 +205,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  /**
-   * Component initialisation
-   */
-  ngOnInit() {
-    this.tocFields$ = this._editorService.hiddenFields$.pipe(
+  /** onInit hook */
+  ngOnInit(): void {
+    this.tocFields$ = this.hiddenFields$.pipe(
       debounceTime(300),
       switchMap(() => {
         if (this.fields && this.fields.length > 0) {
@@ -320,10 +346,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /**
-   * Component destruction
-   */
-  ngOnDestroy() {
+  /** onDestroy hook */
+  ngOnDestroy(): void {
     this._subscribers.forEach(s => s.unsubscribe());
   }
 
@@ -353,10 +377,9 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Emit value when model is changed.
-   *
    * @param modelValue Model.
    */
-  modelChanged(modelValue: any) {
+  modelChanged(modelValue: any): void {
     this.modelChange.emit(removeEmptyValues(modelValue));
   }
 
@@ -364,7 +387,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Preprocess the record before passing it to the editor
    * @param record - Record object to preprocess
    */
-  private preprocessRecord(record: any) {
+  private preprocessRecord(record: any): any {
     const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preprocessRecordEditor) {
@@ -377,7 +400,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Postprocess the record before save
    * @param record - Record object to postprocess
    */
-  private postprocessRecord(record: any) {
+  private postprocessRecord(record: any): any {
     const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.postprocessRecordEditor) {
@@ -390,7 +413,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Pre Create Record
    * @param record - Record object
    */
-  private preCreateRecord(record: any) {
+  private preCreateRecord(record: any): any {
     const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preCreateRecord) {
@@ -403,7 +426,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Pre Update Record
    * @param record - Record object
    */
-  private preUpdateRecord(record: any) {
+  private preUpdateRecord(record: any): any {
     const config = this._recordUiService.getResourceConfig(this.recordType);
 
     if (config.preUpdateRecord) {
@@ -416,14 +439,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Preprocess the record before passing it to the editor
    * @param schema - object, JOSNSchemag
    */
-  setSchema(schema: any) {
+  setSchema(schema: any): void {
     // reorder all object properties
     this.schema = orderedJsonSchema(formToWidget(schema, this._loggerService));
     this.options = {};
-    this._editorService.rootField = null;
 
     // remove hidden field list in case of a previous setSchema call
-    this._editorService.clearHiddenFields();
+    this.clearHiddenFields();
 
     // form configuration
     const fields = [
@@ -452,6 +474,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
               this._setRemoteTypeahead(field, templateOptions);
             }
           }
+          // Add editor component function on the field
+          field.templateOptions.editorComponent = this.editorComponent;
 
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
@@ -463,11 +487,6 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     ];
     // mark the root field
     fields[0].templateOptions.isRoot = true;
-    fields[0].templateOptions.editMode = this.pid ? true : false;
-    fields[0].templateOptions.pid = this.pid;
-    fields[0].templateOptions.longMode = this.editorSettings.longMode;
-    fields[0].templateOptions.recordType = this.recordType;
-    this._editorService.rootField = fields[0];
 
     this.fields = fields;
     // set root element
@@ -479,7 +498,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Save the data on the server.
    */
-  submit() {
+  submit(): void {
     this.form.updateValueAndValidity();
 
     if (this.form.valid === false) {
@@ -544,7 +563,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    *  @param entry: the entry to use to fire this function
    *  @param component: the parent editor component
    */
-  _saveAsTemplate(entry, component: EditorComponent) {
+  _saveAsTemplate(entry, component: EditorComponent): void {
     // NOTE about `component` param :
     //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
     //   loop value, not the current component. We need to pass this component as parameter of
@@ -598,22 +617,22 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param event - click DOM event
    * @param field - FormlyFieldConfig, the form config corresponding to the DOM element to jump to.
    */
-  setFocus(event: any, field: FormlyFieldConfig) {
+  setFocus(event: any, field: FormlyFieldConfig): void {
     event.preventDefault();
-    this._editorService.setFocus(field, true);
+    this.setFieldFocus(field, true);
   }
 
   /**
    * Cancel editing and back to previous page
    */
-  cancel() {
+  cancel(): void {
     this._location.back();
   }
 
   /**
    * Open a modal dialog box to load a template.
    */
-  showLoadTemplateDialog() {
+  showLoadTemplateDialog(): void {
     const templateResourceType = this.editorSettings.template.recordType;
     this._modalService.show(LoadTemplateFormComponent, {
       ignoreBackdropClick: true,
@@ -630,8 +649,110 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * isn't in 'edit mode' (load template is only available for new resources)
    * @return True if the button could be visible ; False otherwise
    */
-  canLoadTemplate() {
+  canLoadTemplate(): boolean {
     return this.editorSettings.template.loadFromTemplate && !this.pid;
+  }
+
+  /********** Form field manipulation **********/
+
+  /**
+   * Scroll to a field or fieldGroup and set focus in the first field candidate.
+   * @param field: the field or fieldGroup where to search about field candidate.
+   * @param scroll: is the screen should scroll to the field.
+   */
+  setFieldFocus(field: FormlyFieldConfig, scroll: boolean = false): boolean {
+    if (scroll === true && field.id)  {
+      const el = document.getElementById(`field-${field.id}`);
+      if (el != null) {
+        // we need to scroll after the focus setTimeout push the action in the
+        // next event loop.
+        setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }));
+        scroll = false;
+      }
+    }
+    if (field.fieldGroup && field.fieldGroup.length > 0) {
+      const visibleFields = field.fieldGroup.filter(f => !f.hide);
+      if (visibleFields.length > 0) {
+        return this.setFieldFocus(visibleFields[0], scroll);
+      }
+    }
+    field.focus = true;
+    return true;
+  }
+
+  /**
+   * Add a field to the hidden list
+   * @param field - FormlyFieldConfig, form config to be added
+   */
+  addHiddenField(field: FormlyFieldConfig): void {
+    if (this.isRoot(field.parent)) {
+      // formly can change the reference of a field. Especially when the model
+      // change such as external import.
+      this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
+      this._hiddenFields.push(field);
+      this._hiddenFieldsSubject.next(this._hiddenFields);
+    }
+  }
+
+  /**
+   * Clear the list of the hidden fields
+   */
+  clearHiddenFields(): void {
+    this._hiddenFields = [];
+    this._hiddenFieldsSubject.next(this._hiddenFields);
+  }
+
+  /**
+   * Remove a field to the hidden list
+   * @param field - FormlyFieldConfig, form config to be removed
+   */
+  removeHiddenField(field: FormlyFieldConfig): void {
+    if (this._hiddenFields.some(f => f.id === field.id) && this.isRoot(field.parent)) {
+      // Form is touched if a field is added.
+      // Required for hide field in edit mode.
+      this.rootField.formControl.markAsTouched();
+      this._hiddenFields = this._hiddenFields.filter(f => f.id !== field.id);
+      this._hiddenFieldsSubject.next(this._hiddenFields);
+    }
+  }
+
+  /**
+   * Am I at the root of the form?
+   * @param field - FormlyFieldConfig, the field to hide
+   * @returns boolean, true if I'm the root
+   */
+  isRoot(field: FormlyFieldConfig): boolean {
+    if (field == null) {
+      return false;
+    }
+    return field.templateOptions?.isRoot || false;
+  }
+
+  /**
+   * Can the field be hidden?
+   * @param field - FormlyFieldConfig, the field to hide
+   * @returns boolean, true if the field can be hidden
+   */
+  canHide(field: FormlyFieldConfig): boolean {
+    if (!this.longMode) {
+      return false;
+    }
+    return (
+      !field.templateOptions.required &&
+      !field.hide &&
+      field.hideExpression == null
+    );
+  }
+
+  /**
+   * Hide the given formly field.
+   * @param field - FormlyFieldConfig, the field to hide
+   */
+  hide(field: FormlyFieldConfig): void {
+    field.hide = true;
+    if (this.isRoot(field.parent)) {
+      this.addHiddenField(field);
+    }
   }
 
   /********************* Private  ***************************************/
@@ -644,7 +765,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _setRemoteSelectOptions(
     field: FormlyFieldConfig,
     formOptions: any
-  ) {
+  ): void {
     if (formOptions.remoteOptions && formOptions.remoteOptions.type) {
       field.type = 'select';
       field.hooks = {
@@ -682,7 +803,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   private _setRemoteTypeahead(
     field: FormlyFieldConfig,
     formOptions: any
-  ) {
+  ): void {
     if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
       field.type = 'remoteTypeahead';
       field.templateOptions = {
@@ -697,7 +818,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private _setValidation(field: FormlyFieldConfig, formOptions: any) {
+  private _setValidation(field: FormlyFieldConfig, formOptions: any): void {
     if (formOptions.validation) {
       // custom validation messages
       // TODO: use widget instead
@@ -758,7 +879,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param field formly field config
    * @param formOptions JSONSchema object
    */
-  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any) {
+  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any): void {
     // some fields should not submit the form when enter key is pressed
     if (field.templateOptions.doNotSubmitOnEnter != null) {
       field.templateOptions.keydown = (f: FormlyFieldConfig, event?: any) => {
