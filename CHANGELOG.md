@@ -1,5 +1,15 @@
 # Changelog
 
+## [v1.16.0](https://github.com/rero/ng-core/tree/v1.16.0) (2022-08-25)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.15.1...v1.16.0)
+
+**Other changes:**
+* ApiService: Export endpoint [\#511](https://github.com/rero/ng-core/pull/511) (by @zannkukai)
+* search: keep only the children filter and add filter list [\#503](https://github.com/rero/ng-core/pull/503) (by @vgranata)
+* editor: improvements [\#516](https://github.com/rero/ng-core/pull/516) (by @Garfield-fr)
+* record: generalize export button [\#504](https://github.com/rero/ng-core/pull/504) (by @lauren-d)
+
 ## [v1.15.1](https://github.com/rero/ng-core/tree/v1.15.1) (2022-07-07)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.5...v1.15.1)
