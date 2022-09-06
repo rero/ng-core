@@ -111,6 +111,7 @@
           [searchFilters]="searchFilters"
           >
         </ng-core-list-filters>
+
         <div *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0"
             class="col-sm-12 col-md-5 col-lg-3 order-2 order-md-1">
           <div *ngIf="searchFields.length > 0 && q"
@@ -153,7 +154,7 @@
                       (click)="searchFilter(searchfilter)"
                       [checked]="isFilterActive(searchfilter)"
                     >
-                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label }}</label>
+                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label | translate }}</label>
                   </div>
                 </ng-container>
                 <!-- other types of filters -->
@@ -166,7 +167,7 @@
                       (click)="searchFilter(searchfilter)"
                       [checked]="isFilterActive(searchfilter)"
                     >
-                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label }}</label>
+                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label | translate }}</label>
                     <ng-container *ngIf="searchfilter.url">
                       <ng-container *ngIf="searchfilter.url.external; else internal">
                         <a
