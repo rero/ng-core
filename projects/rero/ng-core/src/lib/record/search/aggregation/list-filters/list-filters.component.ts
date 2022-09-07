@@ -1,3 +1,19 @@
+/*
+ * RERO angular core
+ * Copyright (C) 2022 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RecordSearchService } from '../../record-search.service';
 
@@ -9,17 +25,17 @@ export class ListFiltersComponent implements OnChanges {
   /**
    * All aggregations
    */
-  @Input() aggregations;
+  @Input() aggregations: any;
 
   /**
    * Selected aggregations filters
    */
-  @Input() aggregationsFilters;
+  @Input() aggregationsFilters: any;
 
   /**
    * Search filters
    */
-   @Input() searchFilters;
+   @Input() searchFilters: any;
 
   /**
    * List of selected filters
@@ -55,11 +71,11 @@ export class ListFiltersComponent implements OnChanges {
       this._ref.detach();
       this.filters = [];
 
-      changes.aggregationsFilters.currentValue.map(filter => {
+      changes.aggregationsFilters.currentValue.map((filter: any) => {
         if (!this.filtersToHide.includes(filter.key)) {
           this.filters = this.filters.concat(
-            filter.values.map( value => {
-              return {key: value, aggregationKey: filter.key};
+            filter.values.map((value: any) => {
+              return { key: value, aggregationKey: filter.key };
             })
           );
         }
@@ -67,7 +83,7 @@ export class ListFiltersComponent implements OnChanges {
     }
 
     if (changes?.aggregations) {
-      changes.aggregations.currentValue.map(item => {
+      changes.aggregations.currentValue.map((item: any) => {
           this.getFilterNames(item.value.buckets);
       });
 
@@ -80,21 +96,21 @@ export class ListFiltersComponent implements OnChanges {
    * Get displayed name of bucket
    * and fill in filters list.
    *
-   * @param bucket - Bucket to get the name from.
+   * @param buckets - Bucket to get the name from.
    */
-  getFilterNames(buckets) {
-    if (buckets.length === 0){
+  getFilterNames(buckets: any) {
+    if (buckets.length === 0) {
       return;
     }
 
-    buckets.map(bucket => {
+    buckets.map((bucket: any) => {
       for (const k in bucket) {
         if (bucket[k].buckets) {
           this.getFilterNames(bucket[k].buckets);
         }
       }
       if (bucket.name) {
-        const index = this.filters.findIndex(filter => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
+        const index = this.filters.findIndex((filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
         if (index > -1) {
           this.filters[index].name = bucket.name;
           this.filters[index] = {...this.filters[index]};
@@ -108,7 +124,7 @@ export class ListFiltersComponent implements OnChanges {
    *
    * @param filter - the filter to remove
    */
-  remove(filter): void {
+  remove(filter: any): void {
     this._recordSearchService.removeFilter(filter.aggregationKey, filter.key, true);
   }
 }

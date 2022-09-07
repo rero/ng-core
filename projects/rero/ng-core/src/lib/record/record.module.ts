@@ -69,7 +69,7 @@ import { RecordSearchResultComponent } from './search/result/record-search-resul
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
 import { ExportButtonComponent } from './export-button/export-button.component';
 import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
-import { BucketNamePipe } from './search/aggregation/bucket-name.pipe';
+import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
 
 @NgModule({
   declarations: [
