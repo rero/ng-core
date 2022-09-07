@@ -18,8 +18,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateLanguagePipe } from '../../../../translate/translate-language.pipe';
 import { RecordSearchService } from '../../record-search.service';
+import { BucketNamePipe } from '../pipe/bucket-name.pipe';
 import { BucketsComponent } from './buckets.component';
-import { BucketNamePipe } from '../bucket-name.pipe';
 
 describe('BucketsComponent', () => {
   let component: BucketsComponent;
