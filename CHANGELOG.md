@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.16.1](https://github.com/rero/ng-core/tree/v1.16.1) (2022-09-12)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.16.0...v1.16.1)
+
+**Changes:**
+* search filters: fix label translation [\#519](https://github.com/rero/ng-core/pull/519) (by @Garfield-fr)
+* search filters: fix dates range format [\#521](https://github.com/rero/ng-core/pull/521) (by @Garfield-fr)
+* search filters: fix translation on button [\#520](https://github.com/rero/ng-core/pull/520) (by @Garfield-fr)
+
 ## [v1.16.0](https://github.com/rero/ng-core/tree/v1.16.0) (2022-08-25)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.15.1...v1.16.0)
