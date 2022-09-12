@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { RecordSearchService } from '../../record-search.service';
 
 @Component({
@@ -52,10 +53,12 @@ export class ListFiltersComponent implements OnChanges {
    *
    * @param _recordSearchService - RecordSearch service.
    * @param _ref - ChangeDetectorRef.
+   * @param _translateService - TranslateService.
    */
   constructor(
     private _recordSearchService: RecordSearchService,
-    private _ref: ChangeDetectorRef
+    private _ref: ChangeDetectorRef,
+    private _translateService: TranslateService
   ){ }
 
   /**
@@ -75,7 +78,17 @@ export class ListFiltersComponent implements OnChanges {
         if (!this.filtersToHide.includes(filter.key)) {
           this.filters = this.filters.concat(
             filter.values.map((value: any) => {
-              return { key: value, aggregationKey: filter.key };
+              const data = { key: value, aggregationKey: filter.key };
+              // Check if value is a range of dates
+              const regex = /\d{13,}--\d{13,}/;
+              if (regex.test(value)) {
+                const nameKey = 'name';
+                const [min, max] = value.split('--');
+                const dateMin = new Intl.DateTimeFormat(this._translateService.currentLang).format(min);
+                const dateMax = new Intl.DateTimeFormat(this._translateService.currentLang).format(max);
+                data[nameKey] = `${dateMin} - ${dateMax}`;
+              }
+              return data;
             })
           );
         }
