@@ -246,7 +246,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
             this._spinner.hide();
 
             return this._fileService
-              .delete(this.type, this.pid, file.key, file.version_id)
+              .delete(this.type, this.pid, encodeURIComponent(file.key), file.version_id)
               .pipe(map(() => true));
           }
           return of(false);
@@ -353,8 +353,8 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         reader.onload = () => {
           // Update or create a new file
           const fileName = this.currentFile
-            ? this.currentFile.key
-            : this.fileKey;
+            ? encodeURIComponent(this.currentFile.key)
+            : encodeURIComponent(this.fileKey);
 
           this._fileService
             .put(this.type, this.pid, fileName, file)
@@ -410,7 +410,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns URL of the file.
    */
   getFileUrl(file: RecordFile): string {
-    return this._fileService.getUrl(this.type, this.pid, file.key);
+    return this._fileService.getUrl(this.type, this.pid, encodeURIComponent(file.key));
   }
 
   /**
@@ -528,9 +528,20 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
 
     // Get metadata stored in record.
     const metadata = this.record._files.filter(
-      (item: any) => fileKey === item.key
+      (item: any) => fileKey === item.key.normalize('NFD')
     );
 
+    // Unicode normalization form of download and preview paths
+    const links = 'links';
+    if (metadata.length > 0 && metadata[0][links]) {
+      Object.keys(metadata[0][links]).forEach((key) => {
+        if (['download', 'preview'].includes(key)) {
+          if (metadata[0][links] && metadata[0][links][key]) {
+            metadata[0][links][key].normalize('NFD');
+          }
+        }
+      });
+    }
     return metadata.length > 0 ? metadata[0] : null;
   }
 }
