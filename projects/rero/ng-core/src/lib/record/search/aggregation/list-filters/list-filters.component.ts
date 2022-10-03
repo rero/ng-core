@@ -46,7 +46,7 @@ export class ListFiltersComponent implements OnChanges {
   /**
    * Filters to hide
    */
-  filtersToHide = [];
+  filtersToHide = ['simple'];
 
   /**
    * Constructor.
@@ -67,8 +67,11 @@ export class ListFiltersComponent implements OnChanges {
    * @param changes - SimpleChanges.
    */
   ngOnChanges(changes: SimpleChanges): void {
-    // hide searchFilters from list of filters
-    this.filtersToHide = this.searchFilters.map(filter => filter.filter);
+    // hide searchFilters defined on route config from list of filters
+    this.filtersToHide = [...new Set<string>([
+      ...this.filtersToHide,
+      ...this.searchFilters.map((filter: any) => filter.filter)
+    ])];
 
     if (changes?.aggregationsFilters) {
       this._ref.detach();
