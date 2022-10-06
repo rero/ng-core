@@ -17,7 +17,7 @@
 
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-// tslint:disable-next-line: directive-selector
+// eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[ngVar]' })
 export class NgVarDirective {
 

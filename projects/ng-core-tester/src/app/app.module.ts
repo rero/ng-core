@@ -37,43 +37,40 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { EditorNewEditComponent } from './record/editor-new-edit/editor-new-edit.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    DocumentComponent,
-    HomeComponent,
-    DetailComponent,
-    SearchBarComponent,
-    EditorComponent,
-    EditorNewEditComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    FormsModule,
-    CollapseModule.forRoot(),
-    TypeaheadModule.forRoot(),
-    TranslateModule.forRoot({
-      loader: {
-        provide: BaseTranslateLoader,
-        useClass: TranslateLoader,
-        deps: [CoreConfigService, HttpClient]
-      }
-    }),
-    RecordModule
-  ],
-  providers: [
-    {
-      provide: CoreConfigService,
-      useClass: AppConfigService
-    },
-    BsLocaleService
-  ],
-  bootstrap: [AppComponent],
-  entryComponents: [
-    DocumentComponent
-  ]
+    declarations: [
+        AppComponent,
+        DocumentComponent,
+        HomeComponent,
+        DetailComponent,
+        SearchBarComponent,
+        EditorComponent,
+        EditorNewEditComponent
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        FormsModule,
+        CollapseModule.forRoot(),
+        TypeaheadModule.forRoot(),
+        TranslateModule.forRoot({
+            loader: {
+                provide: BaseTranslateLoader,
+                useClass: TranslateLoader,
+                deps: [CoreConfigService, HttpClient]
+            }
+        }),
+        RecordModule
+    ],
+    providers: [
+        {
+            provide: CoreConfigService,
+            useClass: AppConfigService
+        },
+        BsLocaleService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
   availableLocales = {

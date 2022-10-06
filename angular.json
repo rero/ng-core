@@ -10,7 +10,7 @@
       "prefix": "ng-core",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/rero/ng-core/tsconfig.lib.json",
             "project": "projects/rero/ng-core/ng-package.json"
@@ -30,15 +30,9 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "projects/rero/ng-core/tsconfig.lib.json",
-              "projects/rero/ng-core/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "lintFilePatterns": ["projects/rero/ng-core/src/**/*.ts", "projects/rero/ng-core/src/**/*.html"]
           }
         }
       }
@@ -62,7 +56,6 @@
             "main": "projects/ng-core-tester/src/main.ts",
             "polyfills": "projects/ng-core-tester/src/polyfills.ts",
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "projects/ng-core-tester/src/favicon.ico",
               "projects/ng-core-tester/src/assets"
@@ -70,7 +63,13 @@
             "styles": [
               "projects/ng-core-tester/src/styles.scss",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -99,7 +98,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -141,19 +141,6 @@
             ]
           }
         },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ng-core-tester/tsconfig.app.json",
-              "projects/ng-core-tester/tsconfig.spec.json",
-              "projects/ng-core-tester/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
@@ -165,13 +152,23 @@
               "devServerTarget": "ng-core-tester:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/ng-core-tester/src/**/*.ts",
+              "projects/ng-core-tester/src/**/*.html"
+            ]
+          }
         }
       }
     }
   },
-  "defaultProject": "@rero/ng-core",
   "cli": {
-    "defaultCollection": "@ngx-formly/schematics"
+    "schematicCollections": [
+      "@ngx-formly/schematics"
+    ]
   },
   "schematics": {
     "@ngx-formly/schematics:component": {

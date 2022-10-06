@@ -31,7 +31,7 @@
     </li>
   </ul>
   <div class="main-content">
-    <h5 *ngIf="typesInTabs.length == 1 && showLabel">
+    <h5 *ngIf="typesInTabs.length === 1 && showLabel">
       {{ typesInTabs[0].label | translate }}
     </h5>
     <ng-container *ngIf="hasNoRecord; else results">
@@ -144,8 +144,8 @@
             <div class="mb-2">
               <div *ngFor="let searchfilter of searchFilters">
                 <!-- filters online and not_online -->
-                <div class="mt-2" *ngIf="showSearchFilters() && searchfilter.filter == 'online'">{{ 'Show only:' | translate }}</div>
-                <ng-container  *ngIf="searchfilter.filter == 'online' || searchfilter.filter == 'not_online'; else otherSearchFilters">
+                <div class="mt-2" *ngIf="showSearchFilters() && searchfilter.filter === 'online'">{{ 'Show only:' | translate }}</div>
+                <ng-container  *ngIf="searchfilter.filter === 'online' || searchfilter.filter === 'not_online'; else otherSearchFilters">
                   <div class="custom-control custom-switch" *ngIf="showSearchFilters()">
                     <input
                       type="checkbox"

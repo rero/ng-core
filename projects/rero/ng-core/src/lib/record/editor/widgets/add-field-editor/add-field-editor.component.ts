@@ -21,7 +21,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
 import { Observable, of, Subscriber } from 'rxjs';
 import { first, map, mergeMap } from 'rxjs/operators';
-import { EditorComponent } from '../../editor.component';
 
 /**
  * For big editor add the possiblity to display
@@ -48,7 +47,8 @@ export class AddFieldEditorComponent implements OnInit {
   essentialFields$: Observable<Array<FormlyFieldConfig>>;
 
   /** Instance of EditorComponent */
-  private editorComponentInstance: EditorComponent;
+  //TODO: add type
+  private editorComponentInstance;
 
   /***
    * Constructor
@@ -70,7 +70,7 @@ export class AddFieldEditorComponent implements OnInit {
       );
 
     this.hiddenFields$ = this.editorComponentInstance.hiddenFields$.pipe(
-      map(fields => fields.sort(
+      map((fields: any[]) => fields.sort(
         (field1, field2) => this.sortFieldsByLabel(field1, field2)
       )
       )
