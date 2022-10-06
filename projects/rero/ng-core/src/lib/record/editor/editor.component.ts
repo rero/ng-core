@@ -16,7 +16,7 @@
  */
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
@@ -62,7 +62,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   @Output() loadingChange = new EventEmitter<boolean>();
 
   // angular formGroup root
-  form: FormGroup;
+  form: UntypedFormGroup;
 
   // additionnal form options
   options: FormlyFormOptions;
@@ -177,7 +177,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     private _routeCollectionService: RouteCollectionService,
     private _loggerService: LoggerService
   ) {
-    this.form = new FormGroup({});
+    this.form = new UntypedFormGroup({});
   }
 
   /**
@@ -862,7 +862,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             const expression = validator.expression;
             const expressionFn = Function('formControl', `return ${expression};`);
             const validatorExpression = {
-              expression: (fc: FormControl) => expressionFn(fc),
+              expression: (fc: UntypedFormControl) => expressionFn(fc),
               // translate the validation message coming form the JSONSchema
               message: this._translateService.stream(validator.message)
             };

@@ -46,67 +46,66 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
-  declarations: [
-    Nl2brPipe,
-    DefaultPipe,
-    TruncateTextPipe,
-    UpperCaseFirstPipe,
-    CallbackArrayFilterPipe,
-    DateTranslatePipe,
-    DialogComponent,
-    SearchInputComponent,
-    MenuComponent,
-    TranslateLanguagePipe,
-    TextReadMoreComponent,
-    SortByKeysPipe,
-    ErrorComponent,
-    FilesizePipe,
-    MenuWidgetComponent,
-    SortListComponent,
-    NgVarDirective,
-    MarkdownPipe,
-    AutofocusDirective
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    TranslateModule.forChild({
-      loader: {
-        provide: BaseTranslateLoader,
-        useClass: TranslateLoader,
-        deps: [CoreConfigService, HttpClient]
-      }
-    }),
-    ModalModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    ToastrModule.forRoot(),
-    NgxSpinnerModule
-  ],
-  exports: [
-    BsDropdownModule,
-    CommonModule,
-    TranslateModule,
-    Nl2brPipe,
-    DefaultPipe,
-    TruncateTextPipe,
-    TranslateLanguagePipe,
-    UpperCaseFirstPipe,
-    CallbackArrayFilterPipe,
-    DateTranslatePipe,
-    FilesizePipe,
-    DialogComponent,
-    SearchInputComponent,
-    MenuComponent,
-    TextReadMoreComponent,
-    ErrorComponent,
-    SortByKeysPipe,
-    NgxSpinnerModule,
-    MenuWidgetComponent,
-    SortListComponent,
-    NgVarDirective,
-    MarkdownPipe,
-    AutofocusDirective
-  ],
-  entryComponents: [DialogComponent]
+    declarations: [
+        Nl2brPipe,
+        DefaultPipe,
+        TruncateTextPipe,
+        UpperCaseFirstPipe,
+        CallbackArrayFilterPipe,
+        DateTranslatePipe,
+        DialogComponent,
+        SearchInputComponent,
+        MenuComponent,
+        TranslateLanguagePipe,
+        TextReadMoreComponent,
+        SortByKeysPipe,
+        ErrorComponent,
+        FilesizePipe,
+        MenuWidgetComponent,
+        SortListComponent,
+        NgVarDirective,
+        MarkdownPipe,
+        AutofocusDirective
+    ],
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule.forChild({
+            loader: {
+                provide: BaseTranslateLoader,
+                useClass: TranslateLoader,
+                deps: [CoreConfigService, HttpClient]
+            }
+        }),
+        ModalModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        ToastrModule.forRoot(),
+        NgxSpinnerModule
+    ],
+    exports: [
+        BsDropdownModule,
+        CommonModule,
+        TranslateModule,
+        Nl2brPipe,
+        DefaultPipe,
+        TruncateTextPipe,
+        TranslateLanguagePipe,
+        UpperCaseFirstPipe,
+        CallbackArrayFilterPipe,
+        DateTranslatePipe,
+        FilesizePipe,
+        DialogComponent,
+        SearchInputComponent,
+        MenuComponent,
+        TextReadMoreComponent,
+        ErrorComponent,
+        SortByKeysPipe,
+        NgxSpinnerModule,
+        MenuWidgetComponent,
+        SortListComponent,
+        NgVarDirective,
+        MarkdownPipe,
+        AutofocusDirective
+    ]
 })
 export class CoreModule { }

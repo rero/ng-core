@@ -18,7 +18,7 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +32,7 @@ import { TemplatesService } from '../../services/templates.service';
 export class LoadTemplateFormComponent implements OnInit {
 
   /** form group */
-  form: FormGroup = new FormGroup({});
+  form: UntypedFormGroup = new UntypedFormGroup({});
 
   /** fields config of the form */
   formFields: FormlyFieldConfig[] = [];

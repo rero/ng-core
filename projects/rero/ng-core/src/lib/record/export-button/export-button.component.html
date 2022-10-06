@@ -17,7 +17,7 @@
 -->
 <ng-container *ngIf="exportOptions && exportOptions.length > 0">
   <!-- check single export format -->
-  <ng-container *ngIf="exportOptions.length == 1; else  multipleFormats">
+  <ng-container *ngIf="exportOptions.length === 1; else  multipleFormats">
     <!-- check if we can export list -->
     <ng-container *ngIf="!exportOptions[0]?.disabled; else cannotExport">
       <a id="search-export-button"

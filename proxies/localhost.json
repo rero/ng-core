@@ -6,6 +6,9 @@
     "changeOrigin": true,
     "pathRewrite": {
       "^/api": "https://localhost:5000/api"
+    },
+    "headers": {
+      "Connection": "keep-alive"
     }
   },
   "/schemas/*": {
@@ -15,6 +18,9 @@
     "changeOrigin": true,
     "pathRewrite": {
       "^/schemas": "https://localhost:5000/schemas"
+    },
+    "headers": {
+      "Connection": "keep-alive"
     }
   }
 }

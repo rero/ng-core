@@ -16,7 +16,7 @@
  */
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormlyFieldTextArea } from '@ngx-formly/bootstrap';
-import SimpleMDE from 'simplemde';
+import EasyMDE from 'easymde';
 
 /**
  * Component to display textarea as a markdown editor.
@@ -41,7 +41,7 @@ export class MarkdownFieldComponent extends FormlyFieldTextArea implements After
    * value.
    */
   ngAfterViewInit(): void {
-    const simplemde = new SimpleMDE({
+    const mde = new EasyMDE({
       spellChecker: false,
       promptURLs: true,
       initialValue: this.formControl.value,
@@ -65,8 +65,8 @@ export class MarkdownFieldComponent extends FormlyFieldTextArea implements After
       status: false,
     });
 
-    simplemde.codemirror.on('change', () => {
-      this.formControl.patchValue(simplemde.value());
+    mde.codemirror.on('change', () => {
+      this.formControl.patchValue(mde.value());
     });
   }
 }

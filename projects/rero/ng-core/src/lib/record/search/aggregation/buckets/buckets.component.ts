@@ -179,7 +179,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    */
   getBucketChildren(bucket: any): Array<any> {
     const children = [];
-    for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
+    for (const k of Object.keys(bucket).filter(key => typeof bucket[key] === 'object' && bucket[key].buckets)) {
       children.push({
         aggregationKey: k,
         bucketSize: this.bucketSize,

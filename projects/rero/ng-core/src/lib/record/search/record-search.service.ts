@@ -181,7 +181,7 @@ export class RecordSearchService {
    * @returns true if has childre with a corresponding filter
    */
   hasChildrenFilter(bucket) {
-    for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
+    for (const k of Object.keys(bucket).filter(key => typeof bucket[key] === 'object' && bucket[key].buckets)) {
       const aggregationsKey = k;
       for (const childBucket of bucket[k].buckets) {
         const filter = this._aggregationsFilters.find((v) => v.key === aggregationsKey);

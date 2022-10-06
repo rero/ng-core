@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Component, EventEmitter, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {UntypedFormGroup} from '@angular/forms';
 import {FormlyFieldConfig} from '@ngx-formly/core';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {TranslateService} from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import {TranslateService} from '@ngx-translate/core';
 export class SaveTemplateFormComponent implements OnInit {
 
   /** form group */
-  form: FormGroup = new FormGroup({});
+  form: UntypedFormGroup = new UntypedFormGroup({});
 
   /** fields config of the form */
   formFields: FormlyFieldConfig[] = [];

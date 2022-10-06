@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {AbstractControl, FormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, UntypedFormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
 import moment from 'moment';
 
 // @dynamic
@@ -47,7 +47,7 @@ export class TimeValidator {
     return (control: AbstractControl): ValidationErrors|null => {
       if (control.value) {
         let isRangeLessThan = false;
-        const times = control.get('times') as FormArray;
+        const times = control.get('times') as UntypedFormArray;
         if (control.get('is_open').value && times.value.length > 1) {
           const firstStartDate = moment(times.at(0).get('start_time').value, 'HH:mm');
           const firstEndDate = moment(times.at(0).get('end_time').value, 'HH:mm');

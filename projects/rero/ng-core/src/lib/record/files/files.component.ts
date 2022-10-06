@@ -23,7 +23,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
@@ -178,7 +178,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       .getSchemaForm(this.type)
       .subscribe((jsonSchema: any) => {
         if (jsonSchema.schema.properties._files) {
-          this.metadataForm.form = new FormGroup({});
+          this.metadataForm.form = new UntypedFormGroup({});
           this.metadataForm.fields = [
             this._formlyJsonschema.toFieldConfig(
               orderedJsonSchema(jsonSchema.schema.properties._files.items),

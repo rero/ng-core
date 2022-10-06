@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -266,7 +266,7 @@ export class NgCoreFormlyExtension {
       const editorComponent = field.templateOptions.editorComponent;
       field.asyncValidators = {
         validation: [
-          (control: FormControl) => {
+          (control: UntypedFormControl) => {
             return this._recordService.uniqueValue(
               field,
               remoteRecordType ? remoteRecordType : editorComponent().recordType,
@@ -285,7 +285,7 @@ export class NgCoreFormlyExtension {
     if (customValidators.uniqueValueKeysInObject) {
       field.validators = {
         uniqueValueKeysInObject: {
-          expression: (control: FormControl) => {
+          expression: (control: UntypedFormControl) => {
             // if value isn't an array or array contains less than 2 elements, no need to check
             if (!(control.value instanceof Array) || control.value.length < 2) {
               return true;
@@ -311,7 +311,7 @@ export class NgCoreFormlyExtension {
     if (customValidators.numberOfSpecificValuesInObject) {
       field.validators = {
         numberOfSpecificValuesInObject: {
-          expression: (control: FormControl) => {
+          expression: (control: UntypedFormControl) => {
             function objIntersection(a, b) {
               const k1 = Object.keys(a);
               return k1.filter((k) => a[k] === b[k]);
@@ -339,7 +339,7 @@ export class NgCoreFormlyExtension {
       field.validators = {
         dateMustBeLessThan: {
           updateOn,
-          expression: (control: FormControl) => {
+          expression: (control: UntypedFormControl) => {
             const startDateFc = control.parent.get(startDate);
             const endDateFc = control.parent.get(endDate);
             if (startDateFc.value !== null && endDateFc.value !== null) {
@@ -373,7 +373,7 @@ export class NgCoreFormlyExtension {
       field.validators = {
         datesMustBeGreaterThan: {
           updateOn,
-          expression: (control: FormControl) => {
+          expression: (control: UntypedFormControl) => {
             const startDateFc = control.parent.get(startDate);
             const endDateFc = control.parent.get(endDate);
             if (startDateFc.value !== null && endDateFc.value !== null) {
