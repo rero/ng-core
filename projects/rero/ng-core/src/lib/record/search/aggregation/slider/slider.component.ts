@@ -24,94 +24,76 @@ import { Subscription } from 'rxjs';
   templateUrl: './slider.component.html',
 })
 export class AggregationSliderComponent implements OnDestroy, OnInit {
-  // Aggregation key.
-  @Input()
-  key: string;
 
-  // Buckets list
-  @Input()
-  buckets: Array<any>;
+  // COMPONENT ATTRIBUTES =====================================================
+  /** The aggregation key. */
+  @Input() key: string;
+  /** Buckets list */
+  @Input() buckets: Array<any>;
+  /** The minimum value */
+  @Input() min = 1;
+  /** The maximum value */
+  @Input() max = 1000;
+  /** gap between each value. */
+  @Input() step = 1;
 
-  // Min value.
-  @Input()
-  min = 1;
-
-  // Max value.
-  @Input()
-  max = 1000;
-
-  // Step
-  @Input()
-  step = 1;
-
-  // Range to search
+  /** Range to search */
   range: Array<number> = null;
-
-  // True if route have aggregation query param.
+  /** True if route have aggregation query param. */
   hasQueryParam = false;
 
-  // Subscription to search service.
+  /** Subscription to search service. */
   private _searchServiceSubscription: Subscription;
 
+  // CONSTRUCTOR & HOOKS ======================================================
   /**
    * Constructor.
-   *
    * @param _recordSearchService Record search service.
    */
   constructor(private _recordSearchService: RecordSearchService) {}
 
   /**
-   * Component initialization.
-   *
-   * Subscribe to route changes for getting aggregation query parameter.
+   * OnInit hook
+   *   Subscribe to route changes for getting aggregation query parameter.
    */
   ngOnInit() {
     this.range = [this.min, this.max];
-
-    this._searchServiceSubscription = this._recordSearchService.aggregationsFilters.subscribe((filters: any) => {
-      if (!filters) {
-        return;
-      }
-
-      let filter = filters.find((element: any) => element.key === this.key);
-
-      if (filter) {
-        filter = filter.values[0].split('--').map((item: string) => {
-          return +item;
+    this._searchServiceSubscription = this._recordSearchService
+        .aggregationsFilters
+        .subscribe((filters: any) => {
+          if (!filters) {
+            return;
+          }
+          let filter = filters.find((element: any) => element.key === this.key);
+          if (filter) {
+            filter = filter.values[0].split('--').map((item: string) => +item);
+            this.hasQueryParam = true;
+            this.range = filter;
+          } else {
+            this.range = [this.min, this.max];
+          }
         });
-
-        this.hasQueryParam = true;
-        this.range = filter;
-      } else {
-        this.range = [this.min, this.max];
-      }
-    });
   }
 
   /**
-   * Component destruction.
-   *
-   * Unsubsribes from search service.
+   * OnDestroy hook
+   *   Unsubscribes from search service.
    */
   ngOnDestroy() {
     this._searchServiceSubscription.unsubscribe();
   }
 
-  /**
-   * Update aggregation filter.
-   */
+  // COMPONENT FUNCTIONS ======================================================
+  /** Update aggregation filter. */
   updateFilter() {
     if (!this.range[0] || this.range[0] < this.min) { this.range[0] = this.min; }
     if (!this.range[1] || this.range[1] > this.max) { this.range[1] = this.max; }
-
     this._recordSearchService.updateAggregationFilter(this.key, [
       `${this.range[0]}--${this.range[1]}`,
     ]);
   }
 
-  /**
-   * Clear aggregation filter.
-   */
+  /** Clear aggregation filter. */
   clearFilter() {
     this._recordSearchService.updateAggregationFilter(this.key, []);
   }

@@ -35,7 +35,7 @@
         </button>
       </h5>
     </div>
-    <div class="collapse" [class.show]="showAggregation()">
+    <div class="collapse" [class.show]="isAggregationDisplayed">
       <div class="card-body pl-3 pr-2 py-3">
         <ng-container [ngSwitch]="aggregation.type">
           <!-- Range -->

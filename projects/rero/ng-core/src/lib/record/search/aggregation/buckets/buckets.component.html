@@ -36,7 +36,7 @@
     </ng-container>
   </li>
 </ul>
-<div *ngIf="displayMoreAndLessLink()">
+<div *ngIf="displayMoreAndLessLink">
   <button class="btn btn-link ml-2"
     (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</button>
 </div>

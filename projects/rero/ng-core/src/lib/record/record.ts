@@ -80,9 +80,7 @@ export interface SearchFilter {
   };
 }
 
-/**
- * Interface for an aggregation
- */
+/** Interfaces for an aggregation */
 export interface Aggregation {
   key: string;
   bucketSize: any;
@@ -91,6 +89,28 @@ export interface Aggregation {
   loaded?: boolean;
   doc_count?: number;
   type?: string;
-  config?: any;
+  config?: AggregationConfig;
   name?: string;
+}
+
+/**
+ * Interface to describe an aggregation configuration
+ *
+ * Additionally to aggregation buckets, an aggregation configuration object could be
+ * provided to control the aggregation display behavior. The configuration keys depends
+ * on the aggregation type.
+ *
+ * attributes are :
+ *   @attribute type - string: the type of aggregation (ex date-range, sum, date-histogram, ...)
+ *   @attribute min - number: the minimum value into the aggregation buckets.
+ *   @attribute max - number: the maximum value into the aggregation buckets.
+ *   @attribute step - number: the step uses between to value.
+ *   @attributes any additional/not known attributes.
+ */
+export interface AggregationConfig {
+  type?: string,
+  min?: number,
+  max?: number,
+  step?: number
+  [x: string | number | symbol]: unknown  // allow additional properties
 }

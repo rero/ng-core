@@ -43,16 +43,15 @@
     </ng-container>
     <ng-template #results>
       <div class="row align-items-start my-3">
-        <div class="col-sm-3 mb-3 mb-sm-0" *ngIf="showSearchInput">
-          <ng-core-search-input
-            [placeholder]="'search' | translate | ucfirst"
-            [searchText]="q"
-            [displayLabel]="false"
-            (search)="searchByQuery($event)"
-            [focus]="true"
-          >
-          </ng-core-search-input>
-        </div>
+        <ng-core-search-input
+          *ngIf="showSearchInput"
+          class="col-sm-3 mb-3 mb-sm-0"
+          [placeholder]="'search' | translate | ucfirst"
+          [searchText]="q"
+          [displayLabel]="false"
+          (search)="searchByQuery($event)"
+          [focus]="true"
+        ></ng-core-search-input>
         <div *ngIf="resultsText$ | async as resultsText" class="col-6 col-sm-3">
           <strong>{{ resultsText }}</strong>
         </div>
@@ -111,7 +110,7 @@
           [searchFilters]="searchFilters"
           >
         </ng-core-list-filters>
-
+        <ng-content select="[top-search-result]"></ng-content>
         <div *ngIf="(aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0"
             class="col-sm-12 col-md-5 col-lg-3 order-2 order-md-1">
           <div *ngIf="searchFields.length > 0 && q"
@@ -191,8 +190,10 @@
             </div>
           </ng-container>
           <ng-container *ngIf="!showEmptySearchMessage || q">
+            <ng-content select="[top-facets]"></ng-content>
             <div *ngFor="let item of aggregations">
               <ng-core-record-search-aggregation
+                *ngIf="!aggregationsToHide.includes(item.key)"
                 [aggregation]="item"
                 [aggregationsFilters]="aggregationsFilters"
                 (aggregationClicked)="loadAggregationBuckets($event)"
@@ -206,6 +207,7 @@
             <i class="fa fa-info-circle"></i>
             {{ 'Enter a query to get results.' | translate }}
           </div>
+          <ng-content select="[top-result]"></ng-content>
           <ul class="list-group list-group-flush">
             <li class="list-group-item px-0 py-4" *ngFor="let record of records">
               <ng-core-record-search-result
@@ -237,9 +239,11 @@
             lastText="&raquo;"
           >
           </pagination>
+          <ng-content select="[footer-result]"></ng-content>
           <ng-content></ng-content>
         </div>
       </div>
+      <ng-content select="[footer-search-result]"></ng-content>
     </ng-template>
   </div>
 </ng-template>
