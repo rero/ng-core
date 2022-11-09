@@ -115,10 +115,9 @@ export class ListFiltersComponent implements OnChanges {
    * @param buckets - Bucket to get the name from.
    */
   getFilterNames(buckets: any) {
-    if (buckets.length === 0) {
+    if (!buckets || buckets.length === 0) {
       return;
     }
-
     buckets.map((bucket: any) => {
       for (const k in bucket) {
         if (bucket[k].buckets) {

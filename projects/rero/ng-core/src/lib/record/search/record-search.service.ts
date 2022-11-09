@@ -89,9 +89,10 @@ export class RecordSearchService {
    * Stores selected values for an aggregation or removes it if values are empty.
    * @param term Term (aggregation key)
    * @param values Selected values
+   * @param bucket The complete ElasticSearch affected bucket configuration
    */
   updateAggregationFilter(term: string, values: string[], bucket: any = null) {
-    if (this._aggregationsFilters === null) {
+     if (this._aggregationsFilters === null) {
       this._aggregationsFilters = [];
     }
 
@@ -116,16 +117,16 @@ export class RecordSearchService {
         this._aggregationsFilters.push({ key: term, values: [...values] });
       }
     }
-
     this._aggregationsFiltersSubject.next(cloneDeep(this._aggregationsFilters));
   }
 
   /**
    * Remove a filter from the current aggregations filters.
-   * @param key filter name
-   * @param value filter value
+   * @param key - the filter name
+   * @param value - the filter value
+   * @param emit - is the `_aggregationsFiltersSubject` should be emitted
    */
-  removeFilter(key, value, emit = false) {
+  removeFilter(key: string, value: string, emit: boolean = false): void {
     const filter = this._aggregationsFilters.find(item => item.key === key);
     if (filter) {
       filter.values = filter.values.filter(item => item !== value);
@@ -141,18 +142,18 @@ export class RecordSearchService {
 
   /**
    * Check if a given filter exist in the current aggregations filters.
-   * @param key filter name
-   * @param value filter value
-   * @returns true if exists
+   * @param key - the filter name
+   * @param value - the filter value
+   * @returns `true` if exists
    */
-   hasFilter(key, value): boolean {
+   hasFilter(key: string, value: string): boolean {
     const filter = this._aggregationsFilters.find((a) => a.key === key);
-    return !!(filter && filter.values.some((v) => v === value));
+    return !!(filter && filter.values.some(v => v === value));
   }
 
   /**
    * Remove the parent filters of a given bucket.
-   * @param bucket elasticseach bucket
+   * @param bucket - The ElasticSearch bucket
    */
   removeParentFilters(bucket) {
     if (bucket.parent) {
@@ -163,7 +164,7 @@ export class RecordSearchService {
 
   /**
    * Removes children filters of a given bucket.
-   * @param bucket elatic bucket
+   * @param bucket - The ElasticSearch bucket
    */
   removeChildrenFilters(bucket) {
     for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
@@ -177,8 +178,8 @@ export class RecordSearchService {
 
   /**
    * Check if a children filter of a given bucket exists
-   * @param bucket elasticsearch bucket
-   * @returns true if has childre with a corresponding filter
+   * @param bucket - The ElasticSearch bucket
+   * @returns `true` if the bucket has children with a corresponding filter
    */
   hasChildrenFilter(bucket) {
     for (const k of Object.keys(bucket).filter(key => typeof bucket[key] === 'object' && bucket[key].buckets)) {

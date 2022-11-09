@@ -22,17 +22,16 @@ import { Aggregation } from '../../record';
   templateUrl: './aggregation.component.html',
 })
 export class RecordSearchAggregationComponent {
+  // COMPONENT ATTRIBUTES =====================================================
   /** Aggregation data */
   @Input() aggregation: Aggregation;
-
   /** Current selected values */
   @Input() aggregationsFilters = [];
 
-  /**
-   * Output event when aggregation is clicked.
-   */
+  /** Output event when aggregation is clicked. */
   @Output() aggregationClicked = new EventEmitter<any>();
 
+  // GETTER & SETTER ==========================================================
   /**
    * Returns aggregations filters corresponding to the aggregation key.
    * @return List of aggregation filters
@@ -42,26 +41,23 @@ export class RecordSearchAggregationComponent {
     return aggregationFilters === undefined ? [] : aggregationFilters.values;
   }
 
-  /**
-   * Display buckets for the aggregation or not.
-   * @return Boolean
-   */
-  showAggregation(): boolean {
+  /** Is the aggregation content should be displayed. */
+  get isAggregationDisplayed(): boolean {
     return this.aggregation.expanded || this.aggregationFilters.length > 0;
   }
+
+  // PUBLIC COMPONENTS ========================================================
 
   /**
    * Method called when the title of an aggregation is clicked.
    */
   toggleVisibility(): void {
-    // if filters are seleted, we do nothing.
+    // if filters are selected, we do nothing.
     if (this.aggregationFilters.length > 0) {
       return;
     }
-
-    // Toggle expanded.
+    // Toggle aggregation expanded attribute
     this.aggregation.expanded = !this.aggregation.expanded;
-
     // Emit the value to parent.
     this.aggregationClicked.emit({
       key: this.aggregation.key,
