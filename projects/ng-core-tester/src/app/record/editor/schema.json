@@ -31,7 +31,8 @@
     "textarea",
     "email",
     "date_time",
-    "password"
+    "password",
+    "array_with_multicheckbox"
   ],
   "required": [
     "required"
@@ -849,6 +850,50 @@
           "type": "passwordGenerator",
           "templateOptions": {
             "enabledEditMode": true
+          }
+        }
+      }
+    },
+    "array_with_multicheckbox": {
+      "title": "Array with multiple checkbox",
+      "type": "array",
+      "minItems": 1,
+      "default": [
+        "checkbox1",
+        "checkbox2"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "checkbox1",
+          "checkbox2",
+          "checkbox3",
+          "checkbox4"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multicheckbox",
+          "templateOptions": {
+            "options": [
+              {
+                "label": "Checkbox 1",
+                "value": "checkbox1",
+                "disabled": true
+              },
+              {
+                "label": "Checkbox 2",
+                "value": "checkbox2"
+              },
+              {
+                "label": "Checkbox 3",
+                "value": "checkbox3"
+              },
+              {
+                "label": "Checkbox 4",
+                "value": "checkbox4"
+              }
+            ]
           }
         }
       }
