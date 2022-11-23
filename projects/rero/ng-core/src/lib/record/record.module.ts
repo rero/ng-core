@@ -43,6 +43,7 @@ import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-s
 import { DateTimepickerTypeComponent } from './editor/type/date-time-picker-type.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
+import { MulticheckboxComponent } from './editor/type/multicheckbox.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
@@ -116,7 +117,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         ListFiltersComponent,
         BucketNamePipe,
         DateTimepickerTypeComponent,
-        PasswordGeneratorTypeComponent
+        PasswordGeneratorTypeComponent,
+        MulticheckboxComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -174,7 +176,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
                 { name: 'select', component: CustomSelectFieldComponent },
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
-                { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent }
+                { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
+                { name: 'multicheckbox', component: MulticheckboxComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },
