@@ -38,7 +38,7 @@ export class NgCoreFormlyExtension {
   ];
 
   // Types to apply field wrapper on
-  private _fieldWrapperTypes = ['boolean', 'datepicker', 'remoteTypeahead', 'selectWithSort'];
+  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator', 'remoteTypeahead', 'selectWithSort'];
 
   /**
    * Constructor

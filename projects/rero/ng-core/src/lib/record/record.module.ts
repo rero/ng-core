@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
@@ -44,6 +45,7 @@ import { DatepickerTypeComponent } from './editor/type/datepicker-type.component
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
+import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
 import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
 import { TextareaFieldComponent } from './editor/type/textarea/textarea.component';
@@ -113,7 +115,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         ExportButtonComponent,
         ListFiltersComponent,
         BucketNamePipe,
-        DateTimepickerTypeComponent
+        DateTimepickerTypeComponent,
+        PasswordGeneratorTypeComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -130,6 +133,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         PaginationModule.forRoot(),
         BsDatepickerModule.forRoot(),
         CalendarModule,
+        ClipboardModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }
@@ -169,7 +173,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
                 { name: 'textarea', component: TextareaFieldComponent },
                 { name: 'select', component: CustomSelectFieldComponent },
                 { name: 'markdown', component: MarkdownFieldComponent },
-                { name: 'dateTimePicker', component: DateTimepickerTypeComponent }
+                { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
+                { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },

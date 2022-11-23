@@ -47,6 +47,7 @@ export * from './lib/record/editor/type/array-type/array-type.component';
 export * from './lib/record/editor/type/datepicker-type.component';
 export * from './lib/record/editor/type/multischema/multischema.component';
 export * from './lib/record/editor/type/object-type/object-type.component';
+export * from './lib/record/editor/type/password-generator-type.component';
 export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.component';
 export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.service';
 export * from './lib/record/editor/type/switch/switch.component';

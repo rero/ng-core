@@ -30,7 +30,8 @@
     "markdown",
     "textarea",
     "email",
-    "date_time"
+    "date_time",
+    "password"
   ],
   "required": [
     "required"
@@ -835,6 +836,19 @@
         "formlyConfig": {
           "templateOptions": {
             "showTime": true
+          }
+        }
+      }
+    },
+    "password": {
+      "title": "Password",
+      "type": "string",
+      "minLength": 20,
+      "widget": {
+        "formlyConfig": {
+          "type": "passwordGenerator",
+          "templateOptions": {
+            "enabledEditMode": true
           }
         }
       }
