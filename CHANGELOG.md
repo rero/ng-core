@@ -1,5 +1,20 @@
 # Changelog
 
+## [v14.1.0](https://github.com/rero/ng-core/tree/v14.1.0) (2022-12-05)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.0.0...v14.1.0)
+
+**Changes:**
+* search : add customizable areas into search result page [\#527](https://github.com/rero/ng-core/pull/527) (by @zannkukai)
+
+## [v14.0.0](https://github.com/rero/ng-core/tree/v14.0.0) (2022-10-13)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v1.16.1...v14.0.0)
+
+**Changes:**
+* dependencies: upgrade to angular 14 [\#525](https://github.com/rero/ng-core/pull/525) (by @jma)
+* search filters: hide simple filter [\#524](https://github.com/rero/ng-core/pull/524) (by @Garfield-fr)
+
 ## [v1.16.1](https://github.com/rero/ng-core/tree/v1.16.1) (2022-09-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.16.0...v1.16.1)
