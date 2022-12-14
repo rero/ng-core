@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2022 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { CalendarModule } from 'primeng/calendar';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { emailValidator } from '../validator/email.validator';
@@ -38,6 +39,7 @@ import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-select.component';
+import { DateTimepickerTypeComponent } from './editor/type/date-time-picker-type.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
@@ -55,21 +57,21 @@ import { FormFieldWrapperComponent } from './editor/wrappers/form-field-wrapper/
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
+import { ExportButtonComponent } from './export-button/export-button.component';
 import { RecordFilesComponent } from './files/files.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
+import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
+import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
 import { RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { ExportButtonComponent } from './export-button/export-button.component';
-import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
-import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
 
 @NgModule({
     declarations: [
@@ -110,7 +112,8 @@ import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
         AggregationDateRangeComponent,
         ExportButtonComponent,
         ListFiltersComponent,
-        BucketNamePipe
+        BucketNamePipe,
+        DateTimepickerTypeComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -126,6 +129,7 @@ import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
         CollapseModule.forRoot(),
         PaginationModule.forRoot(),
         BsDatepickerModule.forRoot(),
+        CalendarModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }
@@ -164,7 +168,8 @@ import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
                 { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
                 { name: 'textarea', component: TextareaFieldComponent },
                 { name: 'select', component: CustomSelectFieldComponent },
-                { name: 'markdown', component: MarkdownFieldComponent }
+                { name: 'markdown', component: MarkdownFieldComponent },
+                { name: 'dateTimePicker', component: DateTimepickerTypeComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },

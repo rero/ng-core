@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { CoreConfigService, MenuItem, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
+import { CoreConfigService, MenuItem, RecordEvent, RecordService, TitleMetaService, TranslateService } from '@rero/ng-core';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
 import { AppMenuService } from './service/app-menu.service';
@@ -74,7 +73,7 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     this.initializeEvents();
-    this._translateService.use(this.lang);
+    this._translateService.setLanguage(this.lang);
     this.appMenu = this._appMenuService.generateApplicationMenu();
     this.languageMenu = this._appMenuService.generateLanguageMenu(
       this._configService.languages,
@@ -101,7 +100,7 @@ export class AppComponent implements OnInit {
     });
     item.setLabelAttribute('class', 'font-weight-bold')
         .setActive(true);
-    this._translateService.use(item.getName());
+    this._translateService.setLanguage(item.getName());
     this._bsLocaleService.use(item.getName());
   }
 

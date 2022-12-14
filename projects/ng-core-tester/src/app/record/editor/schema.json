@@ -29,7 +29,8 @@
     "selectMultiple",
     "markdown",
     "textarea",
-    "email"
+    "email",
+    "date_time"
   ],
   "required": [
     "required"
@@ -823,6 +824,17 @@
         "formlyConfig": {
           "templateOptions": {
             "type": "email"
+          }
+        }
+      }
+    },
+    "date_time": {
+      "title": "Date Time picker",
+      "type": "dateTimePicker",
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "showTime": true
           }
         }
       }

@@ -19,6 +19,7 @@ import { TranslateService } from './translate-service';
 import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { of } from 'rxjs';
+import { PrimeNGConfig } from 'primeng/api';
 
 class TranslateServiceMock {
   private language;
@@ -51,7 +52,8 @@ describe('AppTranslateService', () => {
     appTranslateService = new TranslateService(
       new TranslateServiceMock() as unknown as NgxTranslateService,
       new CoreConfigService(),
-      new BsLocaleServiceMock() as unknown as BsLocaleService
+      new BsLocaleServiceMock() as unknown as BsLocaleService,
+      new PrimeNGConfig()
     );
   });
   it('should create an instance', () => {
