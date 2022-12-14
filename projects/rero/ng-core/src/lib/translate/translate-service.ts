@@ -25,18 +25,23 @@ import moment from 'moment';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
+import { PrimeNGConfig } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CoreConfigService } from '../core-config.service';
+import primeNgDe from './primeng/de.json';
+import primeNgEn from './primeng/en.json';
+import primeNgFr from './primeng/fr.json';
+import primeNgIt from './primeng/it.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslateService {
   languages = {
-    de: { ngx: deLocale, angular: localeDe },
-    en: { ngx: enGbLocale, angular: localeEn },
-    fr: { ngx: frLocale, angular: localeFr },
-    it: { ngx: itLocale, angular: localeIt }
+    de: { ngx: deLocale, angular: localeDe, primeng: primeNgDe },
+    en: { ngx: enGbLocale, angular: localeEn, primeng: primeNgEn },
+    fr: { ngx: frLocale, angular: localeFr, primeng: primeNgFr },
+    it: { ngx: itLocale, angular: localeIt, primeng: primeNgIt }
   };
 
   /**
@@ -45,11 +50,13 @@ export class TranslateService {
    * @param _translateService Translate service.
    * @param _coreConfigService Configuration service.
    * @param _bsLocaleService Bootstrap locale service.
+   * @param _primeNgConfig PrimeNGConfig service.
    */
   constructor(
     private _translateService: NgxTranslateService,
     private _coreConfigService: CoreConfigService,
-    private _bsLocaleService: BsLocaleService
+    private _bsLocaleService: BsLocaleService,
+    private _primeNgConfig: PrimeNGConfig
   ) {
     this.init();
   }
@@ -63,6 +70,7 @@ export class TranslateService {
   setLanguage(language: string): Observable<any> {
     moment.locale(language);
     this._bsLocaleService.use(language);
+    this._primeNgConfig.setTranslation(this.languages[language].primeng);
     return this._translateService.use(language);
   }
 
@@ -95,5 +103,6 @@ export class TranslateService {
     const languages: Array<string> = this._coreConfigService.languages;
     this._translateService.addLangs(languages);
     this._translateService.setDefaultLang(this._coreConfigService.defaultLanguage);
+    this._primeNgConfig.setTranslation(this.languages[this._coreConfigService.defaultLanguage].primeng);
   }
 }

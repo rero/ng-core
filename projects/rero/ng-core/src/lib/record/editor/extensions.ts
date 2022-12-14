@@ -34,7 +34,7 @@ export class NgCoreFormlyExtension {
     'selectWithSort',
     'integer',
     'textarea',
-    'datepicker',
+    'datepicker'
   ];
 
   // Types to apply field wrapper on
