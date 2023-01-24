@@ -237,10 +237,12 @@ export class RecordService {
   update(recordType: string, pid: string, record: any) {
     const url = `${this._apiService.getEndpointByType(recordType, true)}/${pid}`;
 
-    return this._http.put(url, record).pipe(
-      catchError((error) => this._handleError(error)),
-      tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
-    );
+    return this._http
+        .put(url, record)
+        .pipe(
+          catchError((error) => this._handleError(error)),
+          tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
+        );
   }
 
   /**
@@ -369,10 +371,21 @@ export class RecordService {
    * @return throwError
    */
   private _handleError(error: HttpErrorResponse): Observable<Error> {
+
+    // handle Marshmallow errors
+    //   Python marshmallow library can raise ValidationError. In this case, the message is simply 'Validation error'
+    //   but list of errors are passed into the `errors` fields.
+    if (error.error?.errors) {
+      const message = error.error.errors
+          .map(err => this._translateService.instant(err.message))
+          .join(' ; ');
+      return throwError({ status: error.status, title: message});
+    }
+
     // check if we have possible custom error message to display
     if (error.status === 400 && error.error.hasOwnProperty('message')) {
       let message = error.error.message;
-      message = message.replace(/^Validation error: /, '').trim();  // Remove invenio `ValidationError` header
+      message = message.replace(/^Validation error: /, '').trim();  // Remove Invenio `ValidationError` header
       return throwError({ status: error.status, title: this._translateService.instant(message) });
     }
 
