@@ -17,7 +17,9 @@
 <ul id="filters" *ngIf="filters?.length > 0" class="pl-0">
     <li *ngFor="let filter of filters" class="d-inline list-unstyled pr-2">
         <button (click)="remove(filter)" type="button" class="btn btn-outline-secondary btn-sm mb-2"
-        data-toggle="button" aria-pressed="false" autocomplete="off">
+        data-toggle="button" aria-pressed="false" autocomplete="off"
+        title="{{ filter.aggregationKey | translate }}"
+        >
         <ng-container *ngIf="filter.name; else filterKey">{{ filter.name }}</ng-container>
         <ng-template #filterKey>{{ filter.key | bucketName: filter.aggregationKey | translate }}</ng-template>
         <i class="fa fa-close ml-1"></i>
