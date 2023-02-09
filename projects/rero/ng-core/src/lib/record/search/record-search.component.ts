@@ -89,6 +89,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     permissions?: any,
     aggregations?: any,
     preFilters?: any,
+    defaultSearchInputFilters?: Array<AggregationsFilter>,
     listHeaders?: any,
     itemHeaders?: any,
     aggregationsName?: any,
@@ -463,8 +464,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   // COMPONENT FUNCTIONS ======================================================
   /**
-   * Internal notification that the search parameters has changed.
-   * @param resetPage reset the page to the first page
+   * Internal notification that notify the search parameters has changed.
+   * @param resetPage reset the pager to the first page
    */
   private _searchParamsHasChanged(resetPage: boolean = true) {
     if (resetPage) {
@@ -512,13 +513,17 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.q = event;
-    this.aggregationsFilters = [];
+    this.aggregationsFilters = this._config.defaultSearchInputFilters
+        ? this._config.defaultSearchInputFilters
+        : [];
     this._setDefaultSort();
     this._searchParamsHasChanged();
-    this._recordSearchService.setAggregationsFilters(
-      this._extractPersistentAggregationsFilters(),
-      true
-    );
+
+    // Build aggregations to used.
+    //   This is a combination of `defaultSearchInputFilters` and persistent aggregation filters.
+    const aggregations = new Set(this._extractPersistentAggregationsFilters());
+    this.aggregationsFilters.forEach((aggregation) => aggregations.add(aggregation));
+    this._recordSearchService.setAggregationsFilters(Array.from(aggregations), true);
   }
 
   /**
@@ -990,16 +995,17 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
     const persistent = [];
-    const filters = this.searchFilters.filter(filter => filter.persistent === true);
-    filters.forEach((filter: SearchFilter) => {
-      if (this._activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
-        let data = this._activatedRoute.snapshot.queryParams[filter.filter];
-        if (!Array.isArray(data)) {
-          data = [data];
-        }
-        persistent.push({ key: filter.filter, values: data });
-      }
-    });
+    this.searchFilters
+        .filter(filter => filter.persistent === true)
+        .forEach((filter: SearchFilter) => {
+          if (this._activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
+            const data = this._activatedRoute.snapshot.queryParams[filter.filter];
+            persistent.push({
+              key: filter.filter,
+              values: Array.isArray(data) ? data : [data]
+            });
+          }
+        });
     return persistent;
   }
 
