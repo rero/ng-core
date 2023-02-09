@@ -65,6 +65,10 @@ export class DocumentsRoute implements RouteInterface {
             editorSettings: {
               longMode: true
             },
+            defaultSearchInputFilters: [{
+              'key': 'organisation',
+              'values': [1]
+            }],
             aggregationsOrder: [
               'document_type',
               'author',
