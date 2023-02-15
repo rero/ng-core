@@ -32,7 +32,9 @@
     "email",
     "date_time",
     "password",
-    "array_with_multicheckbox"
+    "array_with_multicheckbox",
+    "remoteTypeaheadWithoutFilters",
+    "remoteTypeaheadWithFilters"
   ],
   "required": [
     "required"
@@ -894,6 +896,51 @@
                 "value": "checkbox4"
               }
             ]
+          }
+        }
+      }
+    },
+    "remoteTypeaheadWithFilters": {
+      "title": "Remote typeahead with filters",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "remoteTypeahead",
+          "templateOptions": {
+            "remoteTypeahead": {
+              "enableGroupField": true,
+              "filters": {
+                "default": "value2",
+                "options": [
+                  {
+                    "label": "Value 1",
+                    "value": "value1"
+                  },
+                  {
+                    "label": "Value 2",
+                    "value": "value2"
+                  },
+                  {
+                    "label": "Value 3",
+                    "value": "value3"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "remoteTypeaheadWithoutFilters": {
+      "title": "Remote typeahead without filters",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "remoteTypeahead",
+          "templateOptions": {
+            "remoteTypeahead": {
+              "enableGroupField": true
+            }
           }
         }
       }
