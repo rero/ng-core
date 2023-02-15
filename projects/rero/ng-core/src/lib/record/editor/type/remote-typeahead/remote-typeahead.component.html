@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2023 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -18,6 +18,17 @@
 <!-- input field: empty ref -->
 <ng-container *ngIf="formControl">
   <div *ngIf="!formControl.value; else metadataTemplate" class="input-group">
+    <ng-container *ngIf="filters?.options">
+      <div class="input-group-prepend">
+        <select class="form-control input-group-text" [class]="filters?.itemCssClass" (change)="changeFilter($event.target.value)">
+          <option
+            *ngFor="let option of filters.options"
+            [value]="option.value"
+            [selected]="filters?.default === option.value"
+          >{{ option.label | translate }}</option>
+        </select>
+      </div>
+    </ng-container>
     <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
       [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
       (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,7 +23,6 @@ import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RemoteTypeaheadService } from './remote-typeahead.service';
 
-
 @Component({
   selector: 'ng-core-remote-typeahead',
   templateUrl: './remote-typeahead.component.html'
@@ -37,16 +36,21 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   typeaheadLoading: boolean;
 
   /** Observable on Suggestions Metadata */
-  suggestions$: Observable<Array<SuggestionMetadata|string>>;
+  suggestions$: Observable<Array<SuggestionMetadata | string>>;
 
   /** Template representation of the formControl value. */
   valueAsHTML$: Observable<string>;
+
+  /** Filters options */
+  get filters(): remoteTypeaheadFilters | null {
+    return this.field.templateOptions.remoteTypeahead?.filters;
+  };
 
   /** Number of result in suggestions list */
   private _numberOfSuggestions = 10;
 
   /** Remote Typeahead options from the JONSchema */
-  private get _rtOptions(): object {
+  private get _rtOptions(): remoteTypeahead {
     return this.field.templateOptions.remoteTypeahead;
   }
 
@@ -61,7 +65,7 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
 
   /** Init */
   ngOnInit() {
-
+    this._assignRemoteTypeaheadSelectedOptions();
     // get the list of suggestions based on input search changes
     this.suggestions$ = new Observable((observer: Observer<string>) => {
       observer.next(this.search);
@@ -117,12 +121,31 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   }
 
   /**
-   * Clear current value
+   * Detection of change on the filter menu,
+   * Value assignment and reset value on the search field.
+   * @param filter - selected filter on select menu
    */
+  changeFilter(filter: string): void {
+    this.filters.selected = filter;
+    this.search = null;
+  }
+
+  /** Clear current value */
   clear(): void {
     this.search = null;
     this.formControl.reset();
     this.field.focus = true;
+  }
+
+  /** Set the filter.selected default value. */
+  private _assignRemoteTypeaheadSelectedOptions(): void {
+    const rtOptions = this._rtOptions;
+    if (rtOptions?.filters && rtOptions.filters?.default == null) {
+      throw new Error('Default value is missing for filters.');
+    }
+    if (rtOptions.filters && rtOptions.filters?.default && rtOptions.filters?.selected == null) {
+      rtOptions.filters.selected = rtOptions.filters.default;
+    }
   }
 }
 
@@ -132,4 +155,21 @@ export interface SuggestionMetadata {
   value: string;
   externalLink?: string;
   group?: string;
+}
+
+/** remoteTypeahead interface */
+export interface remoteTypeahead {
+  enableGroupField: boolean;
+  filters: remoteTypeaheadFilters;
+}
+
+/** Filters Interface */
+export interface remoteTypeaheadFilters {
+  itemCssClass?: string,
+  default: string;
+  selected: string;
+  options: {
+    label: string;
+    value: string;
+  }[]
 }
