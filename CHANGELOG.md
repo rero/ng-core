@@ -1,5 +1,17 @@
 # Changelog
 
+## [v14.2.0](https://github.com/rero/ng-core/tree/v14.2.0) (2023-02-28)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.1.0...v14.2.0)
+
+**Changes:**
+* formly type: add password generator [\#531](https://github.com/rero/ng-core/pull/531) (by @Garfield-fr)
+* formly type: add multicheckbox type [\#530](https://github.com/rero/ng-core/pull/530) (by @Garfield-fr)
+* aggregation: add title to filter button [\#540](https://github.com/rero/ng-core/pull/540) (by @Garfield-fr)
+* editor: management of Marshamllow errors [\#537](https://github.com/rero/ng-core/pull/537) (by @zannkukai)
+* dev: add better support of `npm link` [\#536](https://github.com/rero/ng-core/pull/536) (by @jma)
+* document editor: add a date time picker for ngx-formly [\#534](https://github.com/rero/ng-core/pull/534) (by @Garfield-fr)
+
 ## [v14.1.0](https://github.com/rero/ng-core/tree/v14.1.0) (2022-12-05)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.0.0...v14.1.0)
