@@ -11,7 +11,7 @@
     "lint": "ng lint --cache",
     "e2e": "ng e2e",
     "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/en_US.json --fi '  '",
-    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/{de,en,fr,it}.json --fi '  '",
+    "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/{de,en,fr,it,es,nl}.json --fi '  '",
     "postinstall": "ngcc"
   },
   "dependencies": {
