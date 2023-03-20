@@ -1,5 +1,12 @@
 # Changelog
 
+## [v14.2.1](https://github.com/rero/ng-core/tree/v14.2.1) (2023-03-20)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.2.0...v14.2.1)
+
+**Changes:**
+* fix translations [f3744cd](https://github.com/rero/ng-core/commit/f3744cdffba651b3c157d818911ea0f552588c18) (by @PascalRepond)
+
 ## [v14.2.0](https://github.com/rero/ng-core/tree/v14.2.0) (2023-02-28)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.1.0...v14.2.0)
