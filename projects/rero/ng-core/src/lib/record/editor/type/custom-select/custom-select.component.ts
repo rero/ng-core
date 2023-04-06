@@ -266,22 +266,26 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * @param options List of options.
    */
   private _extract_groups(options: Array<SelectOption>): void {
-    options.forEach((option, index) => {
-      // Group is found
-      if (option.group) {
+    // DEV NOTES :: Why iterate options in reverse
+    //   splicing an array means this array is re-indexed. Looping on an array in normal mode
+    //   will skip half of this array. Using reverse, we don't have this problem.
+    //   source : https://stackoverflow.com/a/9882349/5595377
+    let idx = options.length
+    while (idx--) {
+      const option = options[idx];
+      if (options[idx].group) {
         let groupOption = options.find((item) => item.label === option.group);
         // No group exists at this time
         if (!groupOption) {
           groupOption = { label: option.group, children: [] };
           options.push(groupOption);
         }
-
         // Add option to group...
         groupOption.children.push({ ...option });
         // ...and remove it from array.
-        options.splice(index, 1);
+        options.splice(idx, 1);
       }
-    });
+    }
   }
 
   /**
