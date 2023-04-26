@@ -34,7 +34,8 @@
     "password",
     "array_with_multicheckbox",
     "remoteTypeaheadWithoutFilters",
-    "remoteTypeaheadWithFilters"
+    "remoteTypeaheadWithFilters",
+    "input_with_default_value"
   ],
   "required": [
     "required"
@@ -941,6 +942,19 @@
             "remoteTypeahead": {
               "enableGroupField": true
             }
+          }
+        }
+      }
+    },
+    "input_with_default_value": {
+      "title": "Input with default value (jsonschema: defaultValueExpression)",
+      "type": "string",
+      "description": "Calculates a default value for the field",
+      "minLength": 1,
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "defaultValueExpression": "(Math.random() + 1).toString(36).substring(2)"
           }
         }
       }
