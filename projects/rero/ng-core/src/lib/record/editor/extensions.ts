@@ -78,6 +78,12 @@ export class NgCoreFormlyExtension {
         }
       });
     }
+
+    field.options.fieldChanges.subscribe((changes) => {
+      if (changes.type === 'hidden' && changes.value === false) {
+        this._setDefaultValue(field);
+      }
+    });
   }
 
   /**
@@ -396,6 +402,22 @@ export class NgCoreFormlyExtension {
           },
         },
       };
+    }
+  }
+
+  /**
+   * Assigns the default value on the field if it has
+   * a defaultValueExpression definition in the jsonschema.
+   * @param field - FormlyFieldConfig
+   */
+  private _setDefaultValue(field: FormlyFieldConfig): void {
+    if (field.templateOptions?.defaultValueExpression) {
+      const key = String(field.key);
+      if (!(key in field.model && field.model[key] !== null)) {
+        const expression = field.templateOptions.defaultValueExpression;
+        const expressionFn = Function('expression', `return ${expression};`);
+        field.formControl.setValue(expressionFn());
+      }
     }
   }
 }
