@@ -1,5 +1,14 @@
 # Changelog
 
+## [v14.3.0](https://github.com/rero/ng-core/tree/v14.3.0) (2023-05-08)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.2.1...v14.3.0)
+
+**Other changes:**
+* formly: add filter on remote typeahead [\#542](https://github.com/rero/ng-core/pull/542) (by @Garfield-fr)
+* dependencies: fix security issues [\#546](https://github.com/rero/ng-core/pull/546) (by @rerowep)
+* results: allow default aggregation using the search input [\#541](https://github.com/rero/ng-core/pull/541) (by @zannkukai)
+
 ## [v14.2.1](https://github.com/rero/ng-core/tree/v14.2.1) (2023-03-20)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.2.0...v14.2.1)
