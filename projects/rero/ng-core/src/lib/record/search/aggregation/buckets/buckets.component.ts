@@ -127,11 +127,11 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   // COMPONENT F£UNCTIONS =====================================================
   /**
    * Check if a value is present in selected filters.
-   * @param value - string: filter value
+   * @param value: filter value (could be string, number, ...)
    * @return `true` if value is present in the aggregation filters, `false` otherwise.
    */
-  isSelected(value: string): boolean {
-    return this.aggregationFilters.includes(value);
+  isSelected(value: any): boolean {
+    return this.aggregationFilters.includes(value.toString());
   }
 
   /**
@@ -161,9 +161,9 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
       this._recordSearchService.updateAggregationFilter(this.aggregationKey, [bucket.key], bucket);
     } else {
       const aggFilter = this.aggregationsFilters[index];
-      if (!aggFilter.values.includes(bucket.key)) {
+      if (!aggFilter.values.includes(bucket.key.toString())) {
         // Bucket value is not yet selected, we add value to selected values.
-        this.aggregationsFilters[index].values.push(bucket.key);
+        this.aggregationsFilters[index].values.push(bucket.key.toString());
         this._recordSearchService.updateAggregationFilter(
           this.aggregationKey,
           this.aggregationsFilters[index].values,
