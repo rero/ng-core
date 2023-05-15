@@ -60,7 +60,7 @@ export class RecordSearchService {
    * @param bucket Bucket containing the value to remove
    */
   removeAggregationFilter(key: string, bucket: any) {
-    this.removeFilter(key, bucket.key);
+    this.removeFilter(key, bucket.key.toString());
     this.removeChildrenFilters(bucket);
     this.removeParentFilters(bucket);
     // Update selected aggregations filters
