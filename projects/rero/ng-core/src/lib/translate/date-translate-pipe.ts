@@ -42,6 +42,10 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
       locale = this._translateService.currentLanguage;
     }
 
+    if (locale === 'en') {
+      locale = `${locale}-GB`;
+    }
+
     return super.transform(value, format, timezone, locale);
   }
 }
