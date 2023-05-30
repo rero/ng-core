@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
  */
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
-import localeEn from '@angular/common/locales/en';
+import localeEnGB from '@angular/common/locales/en-GB';
 import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
 import { Injectable } from '@angular/core';
@@ -39,7 +39,7 @@ import primeNgIt from './primeng/it.json';
 export class TranslateService {
   languages = {
     de: { ngx: deLocale, angular: localeDe, primeng: primeNgDe },
-    en: { ngx: enGbLocale, angular: localeEn, primeng: primeNgEn },
+    en: { ngx: enGbLocale, angular: localeEnGB, primeng: primeNgEn },
     fr: { ngx: frLocale, angular: localeFr, primeng: primeNgFr },
     it: { ngx: itLocale, angular: localeIt, primeng: primeNgIt }
   };
@@ -92,7 +92,7 @@ export class TranslateService {
   get currentLanguage(): string {
     return this._translateService.currentLang
       || this._coreConfigService.defaultLanguage
-      || 'en';
+      || 'en-GB';
   }
 
   private init() {

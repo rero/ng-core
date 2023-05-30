@@ -17,6 +17,8 @@
 import { EventEmitter } from '@angular/core';
 import { DateTranslatePipe } from './date-translate-pipe';
 import { TranslateService } from './translate-service';
+import en from '@angular/common/locales/en-GB';
+import { registerLocaleData } from '@angular/common';
 
 let dateTranslateService: DateTranslatePipe;
 
@@ -36,6 +38,7 @@ class TranslateServiceMock {
 
 describe('DateTranslatePipePipe', () => {
   beforeEach(() => {
+    registerLocaleData(en);
     dateTranslateService = new DateTranslatePipe(
       new TranslateServiceMock() as unknown as TranslateService
     );
@@ -48,6 +51,6 @@ describe('DateTranslatePipePipe', () => {
 
   it('create an instance', () => {
     const pipe = dateTranslateService;
-    expect(pipe.transform('2019-10-18 12:00:00')).toBe('Oct 18, 2019');
+    expect(pipe.transform('2019-10-18 12:00:00')).toBe('18 Oct 2019');
   });
 });
