@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,11 +24,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription, combineLatest, of, throwError } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
+import { AbstractCanDeactivateComponent } from '../../component/abstract-can-deactivate.component';
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
 import { LoggerService } from '../../service/logger.service';
@@ -50,9 +50,9 @@ export interface JSONSchema7 extends JSONSchema7Base {
   // make the style global: required by JSONSchema cssClass
   encapsulation: ViewEncapsulation.None
 })
-export class EditorComponent implements OnInit, OnChanges, OnDestroy {
+export class EditorComponent extends AbstractCanDeactivateComponent implements OnInit, OnChanges, OnDestroy {
 
-  // form intial values
+  // form initial values
   @Input() model: any = null;
 
   // initial values changes notification
@@ -60,6 +60,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   // editor loading state notifications
   @Output() loadingChange = new EventEmitter<boolean>();
+
+  // editor can deactivate change notification
+  @Output() canDeactivateChange = new EventEmitter<boolean>();
+
+  // Can Deactivate
+  canDeactivate: boolean = false;
 
   // angular formGroup root
   form: UntypedFormGroup;
@@ -103,7 +109,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
   error: Error;
 
   // subscribers
-  private _subscribers: Subscription[] = [];
+  private _subscribers: Subscription = new Subscription();
 
   // Config for resource
   private _resourceConfig: any;
@@ -150,33 +156,32 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Constructor.
-   * @param _formlyJsonschema Formly JSON schema.
-   * @param _recordService Record service.
-   * @param _apiService API service.
-   * @param _route Route.
-   * @param _recordUiService Record UI service.
-   * @param _translateService Translate service.
-   * @param _toastrService Toast service.
-   * @param _location Location.
-   * @param _spinner Spinner service.
-   * @param _modalService BsModalService.
-   * @param _routeCollectionService RouteCollectionService
-   * @param _loggerService LoggerService
+   * @param formlyJsonschema Formly JSON schema.
+   * @param recordService Record service.
+   * @param apiService API service.
+   * @param route Route.
+   * @param recordUiService Record UI service.
+   * @param translateService Translate service.
+   * @param toastrService Toast service.
+   * @param location Location.
+   * @param modalService BsModalService.
+   * @param routeCollectionService RouteCollectionService
+   * @param loggerService LoggerService
    */
   constructor(
-    private _formlyJsonschema: FormlyJsonschema,
-    private _recordService: RecordService,
-    private _apiService: ApiService,
-    private _route: ActivatedRoute,
-    private _recordUiService: RecordUiService,
-    private _translateService: TranslateService,
-    private _toastrService: ToastrService,
-    private _location: Location,
-    private _spinner: NgxSpinnerService,
-    private _modalService: BsModalService,
-    private _routeCollectionService: RouteCollectionService,
-    private _loggerService: LoggerService
+    protected formlyJsonschema: FormlyJsonschema,
+    protected recordService: RecordService,
+    protected apiService: ApiService,
+    protected route: ActivatedRoute,
+    protected recordUiService: RecordUiService,
+    protected translateService: TranslateService,
+    protected toastrService: ToastrService,
+    protected location: Location,
+    protected modalService: BsModalService,
+    protected routeCollectionService: RouteCollectionService,
+    protected loggerService: LoggerService
   ) {
+    super();
     this.form = new UntypedFormGroup({});
   }
 
@@ -227,24 +232,22 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         return of([]);
       })
     );
-    combineLatest([this._route.params, this._route.queryParams]).subscribe(
+    combineLatest([this.route.params, this.route.queryParams]).subscribe(
       ([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
         //   console.log('model', this.model, 'v', v, 'form', this.form)
         // );
-        this._spinner.show();
         this.loadingChange.emit(true);
         if (!params.type) {
           this.model = {};
           this.schema = {};
-          this._spinner.hide();
           return;
         }
         this.recordType = params.type;
-        this._recordUiService.types = this._route.snapshot.data.types;
+        this.recordUiService.types = this.route.snapshot.data.types;
 
-        this._resourceConfig = this._recordUiService.getResourceConfig(
+        this._resourceConfig = this.recordUiService.getResourceConfig(
           this.recordType
         );
         if (this._resourceConfig.editorSettings) {
@@ -255,11 +258,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         //   If editor allowed to use a resource as a template, we need to load the configuration
         //   of this resource and save it into `recordUIService.types` to use it when loading and saving
         if (this.editorSettings.template.recordType !== undefined) {
-          const tmplResource = this._routeCollectionService.getRoute(this.editorSettings.template.recordType);
+          const tmplResource = this.routeCollectionService.getRoute(this.editorSettings.template.recordType);
           const tmplConfiguration = tmplResource.getConfiguration();
           if (tmplConfiguration.hasOwnProperty('data')
             && tmplConfiguration.data.hasOwnProperty('types')) {
-            this._recordUiService.types = this._recordUiService.types.concat(tmplConfiguration.data.types);
+            this.recordUiService.types = this.recordUiService.types.concat(tmplConfiguration.data.types);
           }
         }
 
@@ -270,22 +273,22 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         this.saveAlternatives = [];
         if (this.editorSettings.template.saveAsTemplate) {
           this.saveAlternatives.push({
-            label: this._translateService.instant('Save as template') + '…',
+            label: this.translateService.instant('Save as template') + '…',
             action: this._saveAsTemplate
           });
         }
 
         this.pid = params.pid;
-        const schema$: Observable<any> = this._recordService.getSchemaForm(this.recordType);
+        const schema$: Observable<any> = this.recordService.getSchemaForm(this.recordType);
         let record$: Observable<any> = of({ record: {}, result: null });
         // load from template
         //   If the url contains query arguments 'source' and 'pid' and 'source'=='templates'
         //   then we need to use the data from this template as data source to fill the form.
         if (queryParams.source === 'templates' && queryParams.pid != null) {
-          record$ = this._recordService.getRecord('templates', queryParams.pid).pipe(
+          record$ = this.recordService.getRecord('templates', queryParams.pid).pipe(
             map((record: any) => {
-              this._toastrService.success(
-                this._translateService.instant('Template loaded')
+              this.toastrService.success(
+                this.translateService.instant('Template loaded')
               );
               return {
                 result: true,
@@ -297,11 +300,11 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           //   If the parsed url contains a 'pid' value, then user try to edit a record. Then
           //   we need to load this record and use it as data source to fill the form.
         } else if (this.pid) {
-          record$ = this._recordService
+          record$ = this.recordService
             .getRecord(this.recordType, this.pid)
             .pipe(
               switchMap((record: any) => {
-                return this._recordUiService.canUpdateRecord$(record, this.recordType).pipe(
+                return this.recordUiService.canUpdateRecord$(record, this.recordType).pipe(
                   map((result) => {
                     return {
                       result,
@@ -324,21 +327,19 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
             // Check permissions and set record
             if (data.result && data.result.can === false) {
-              this._toastrService.error(
-                this._translateService.instant('You cannot update this record'),
-                this._translateService.instant(this.recordType)
+              this.toastrService.error(
+                this.translateService.instant('You cannot update this record'),
+                this.translateService.instant(this.recordType)
               );
-              this._location.back();
+              this.location.back();
             } else {
               this._setModel(data.record);
             }
 
-            this._spinner.hide();
             this.loadingChange.emit(false);
           },
           (error) => {
             this.error = error;
-            this._spinner.hide();
             this.loadingChange.emit(false);
           }
         );
@@ -348,7 +349,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
   /** onDestroy hook */
   ngOnDestroy(): void {
-    this._subscribers.forEach(s => s.unsubscribe());
+    this._subscribers.unsubscribe();
   }
 
   /**
@@ -388,7 +389,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Record object to preprocess
    */
   private preprocessRecord(record: any): any {
-    const config = this._recordUiService.getResourceConfig(this.recordType);
+    const config = this.recordUiService.getResourceConfig(this.recordType);
 
     if (config.preprocessRecordEditor) {
       return config.preprocessRecordEditor(record);
@@ -401,7 +402,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Record object to postprocess
    */
   private postprocessRecord(record: any): any {
-    const config = this._recordUiService.getResourceConfig(this.recordType);
+    const config = this.recordUiService.getResourceConfig(this.recordType);
 
     if (config.postprocessRecordEditor) {
       return config.postprocessRecordEditor(record);
@@ -414,7 +415,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Record object
    */
   private preCreateRecord(record: any): any {
-    const config = this._recordUiService.getResourceConfig(this.recordType);
+    const config = this.recordUiService.getResourceConfig(this.recordType);
 
     if (config.preCreateRecord) {
       return config.preCreateRecord(record);
@@ -427,7 +428,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Record object
    */
   private preUpdateRecord(record: any): any {
-    const config = this._recordUiService.getResourceConfig(this.recordType);
+    const config = this.recordUiService.getResourceConfig(this.recordType);
 
     if (config.preUpdateRecord) {
       return config.preUpdateRecord(record);
@@ -441,7 +442,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   setSchema(schema: any): void {
     // reorder all object properties
-    this.schema = orderedJsonSchema(formToWidget(schema, this._loggerService));
+    this.schema = orderedJsonSchema(formToWidget(schema, this.loggerService));
     this.options = {};
 
     // remove hidden field list in case of a previous setSchema call
@@ -449,7 +450,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
     // form configuration
     const fields = [
-      this._formlyJsonschema.toFieldConfig(this.schema, {
+      this.formlyJsonschema.toFieldConfig(this.schema, {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
           /**** additionnal JSONSchema configurations *******/
@@ -499,16 +500,16 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Save the data on the server.
    */
   submit(): void {
+    this._canDeactivate();
     this.form.updateValueAndValidity();
 
     if (this.form.valid === false) {
-      this._toastrService.error(
-        this._translateService.instant('The form contains errors.')
+      this.toastrService.error(
+        this.translateService.instant('The form contains errors.')
       );
       return;
     }
 
-    this._spinner.show();
     this.loadingChange.emit(true);
 
     let data = removeEmptyValues(this.model);
@@ -526,34 +527,33 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
 
     let recordAction$: Observable<any>;
     if (this.pid != null) {
-      recordAction$ = this._recordService.update(this.recordType, this.pid, this.preUpdateRecord(data)).pipe(
+      recordAction$ = this.recordService.update(this.recordType, this.pid, this.preUpdateRecord(data)).pipe(
         catchError((error) => this._handleError(error)),
         map(record => {
-          return { record, action: 'update', message: this._translateService.instant('Record updated.') };
+          return { record, action: 'update', message: this.translateService.instant('Record updated.') };
         })
       );
     } else {
-      recordAction$ = this._recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
+      recordAction$ = this.recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
         catchError((error) => this._handleError(error)),
         map(record => {
-          return { record, action: 'create', message: this._translateService.instant('Record created.') };
+          return { record, action: 'create', message: this.translateService.instant('Record created.') };
         })
       );
     }
 
     recordAction$.subscribe(result => {
-      this._toastrService.success(
-        this._translateService.instant(result.message),
-        this._translateService.instant(this.recordType)
+      this.toastrService.success(
+        this.translateService.instant(result.message),
+        this.translateService.instant(this.recordType)
       );
-      this._recordUiService.redirectAfterSave(
+      this.recordUiService.redirectAfterSave(
         result.record.id,
         result.record,
         this.recordType,
         result.action,
-        this._route
+        this.route
       );
-      this._spinner.hide();
       this.loadingChange.emit(true);
     });
   }
@@ -568,14 +568,13 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
     //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
     //   loop value, not the current component. We need to pass this component as parameter of
     //   the function to use it.
-    const saveAsTemplateModalRef = component._modalService.show(SaveTemplateFormComponent, {
+    const saveAsTemplateModalRef = component.modalService.show(SaveTemplateFormComponent, {
       ignoreBackdropClick: true,
     });
     // if the modal is closed by clicking the 'save' button, the `saveEvent` is fired.
     // Subscribe to this event know when creating a model
-    component._subscribers.push(saveAsTemplateModalRef.content.saveEvent.subscribe(
+    component._subscribers.add(saveAsTemplateModalRef.content.saveEvent.subscribe(
       (data) => {
-        component._spinner.show();
         let modelData = removeEmptyValues(component.model);
         modelData = component.postprocessRecord(modelData);
 
@@ -584,28 +583,27 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           data: modelData,
           template_type: component.recordType,
         };
-        const tmplConfig = component._recordUiService.getResourceConfig(component.editorSettings.template.recordType);
+        const tmplConfig = component.recordUiService.getResourceConfig(component.editorSettings.template.recordType);
         if (tmplConfig.preCreateRecord) {
           record = tmplConfig.preCreateRecord(record);
         }
 
         // create template
-        component._recordService.create(component.editorSettings.template.recordType, record).subscribe(
+        component.recordService.create(component.editorSettings.template.recordType, record).subscribe(
           (createdRecord) => {
-            component._toastrService.success(
-              component._translateService.instant('Record created.'),
-              component._translateService.instant(component.editorSettings.template.recordType)
+            component.toastrService.success(
+              component.translateService.instant('Record created.'),
+              component.translateService.instant(component.editorSettings.template.recordType)
             );
-            component._recordUiService.redirectAfterSave(
+            component.recordUiService.redirectAfterSave(
               createdRecord.id,
               createdRecord,
               component.editorSettings.template.recordType,
               'create',
-              component._route
+              component.route
             );
           }
         );
-        component._spinner.hide();
         component.loadingChange.emit(true);
       }
     ));
@@ -626,7 +624,8 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * Cancel editing and back to previous page
    */
   cancel(): void {
-    this._location.back();
+    this._canDeactivate();
+    this.location.back();
   }
 
   /**
@@ -634,7 +633,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    */
   showLoadTemplateDialog(): void {
     const templateResourceType = this.editorSettings.template.recordType;
-    this._modalService.show(LoadTemplateFormComponent, {
+    this.modalService.show(LoadTemplateFormComponent, {
       ignoreBackdropClick: true,
       initialState: {
         templateResourceType,
@@ -773,7 +772,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
         afterContentInit: (f: FormlyFieldConfig) => {
           const recordType = formOptions.remoteOptions.type;
           const query = formOptions.remoteOptions.query ? formOptions.remoteOptions.query : '';
-          f.templateOptions.options = this._recordService
+          f.templateOptions.options = this.recordService
             .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
             .pipe(
               map((data: Record) =>
@@ -782,7 +781,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
                     label: formOptions.remoteOptions.labelField && formOptions.remoteOptions.labelField in record.metadata
                       ? record.metadata[formOptions.remoteOptions.labelField]
                       : record.metadata.name,
-                    value: this._apiService.getRefEndpoint(
+                    value: this.apiService.getRefEndpoint(
                       recordType,
                       record.id
                     )
@@ -837,7 +836,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
           field.validation.messages[key.replace(/Message$/, '')] = (error, f: FormlyFieldConfig) =>
             // translate the validation messages coming from the JSONSchema
             // TODO: need to remove `as any` once it is fixed in ngx-formly v.5.7.2
-            this._translateService.stream(msg) as any;
+            this.translateService.stream(msg) as any;
         }
       }
 
@@ -864,7 +863,7 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
             const validatorExpression = {
               expression: (fc: UntypedFormControl) => expressionFn(fc),
               // translate the validation message coming form the JSONSchema
-              message: this._translateService.stream(validator.message)
+              message: this.translateService.stream(validator.message)
             };
             field.validators = field.validators !== undefined ? field.validators : {};
             field.validators[validatorKey] = validatorExpression;
@@ -896,8 +895,12 @@ export class EditorComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable<Error>
    */
   private _handleError(error: { status: number, title: string }): Observable<Error> {
-    this._spinner.hide();
     this.form.setErrors({ formError: error });
     return throwError({ status: error.status, title: error.title });
+  }
+
+  private _canDeactivate(activate: boolean = true) {
+    this.canDeactivate = activate;
+    this.canDeactivateChange.next(activate);
   }
 }

@@ -44,6 +44,7 @@ import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 
 @NgModule({
     declarations: [
@@ -106,6 +107,9 @@ import { AutofocusDirective } from './directives/autofocus.directive';
         NgVarDirective,
         MarkdownPipe,
         AutofocusDirective
+    ],
+    providers: [
+      ComponentCanDeactivateGuard
     ]
 })
 export class CoreModule { }
