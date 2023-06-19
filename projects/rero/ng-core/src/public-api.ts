@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export * from './lib/ILogger';
 export * from './lib/api/api.service';
+export * from './lib/component/abstract-can-deactivate.component';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
 export * from './lib/dialog/dialog.component';
@@ -24,7 +26,7 @@ export * from './lib/directives/autofocus.directive';
 export * from './lib/directives/ng-var.directive';
 export * from './lib/error/error';
 export * from './lib/error/error.component';
-export * from './lib/ILogger';
+export * from './lib/guard/component-can-deactivate.guard';
 export * from './lib/menu/menu-factory';
 export * from './lib/menu/menu-item';
 export * from './lib/menu/menu-item-interface';
@@ -44,6 +46,7 @@ export * from './lib/record/detail/detail.component';
 export * from './lib/record/editor/editor.component';
 export * from './lib/record/editor/extensions';
 export * from './lib/record/editor/type/array-type/array-type.component';
+export * from './lib/record/editor/type/date-time-picker-type.component';
 export * from './lib/record/editor/type/datepicker-type.component';
 export * from './lib/record/editor/type/multischema/multischema.component';
 export * from './lib/record/editor/type/object-type/object-type.component';
@@ -51,7 +54,6 @@ export * from './lib/record/editor/type/password-generator-type.component';
 export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.component';
 export * from './lib/record/editor/type/remote-typeahead/remote-typeahead.service';
 export * from './lib/record/editor/type/switch/switch.component';
-export * from './lib/record/editor/type/date-time-picker-type.component';
 export * from './lib/record/editor/utils';
 export * from './lib/record/editor/widgets/add-field-editor/add-field-editor.component';
 export * from './lib/record/editor/widgets/dropdown-label-editor/dropdown-label-editor.component';
