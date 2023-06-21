@@ -90,11 +90,11 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
     'checksum',
     'file_id',
     'size',
-    'version_id',
+    'version_id'
   ];
 
   // Observable resolving if files metadata can be updated.
-  updateMetadata: ActionStatus = { can: false, message: '' };
+  canAdd: ActionStatus = { can: false, message: '' };
 
   // Configuration for record type.
   private _config: any;
@@ -156,16 +156,6 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       );
     }
 
-    // Check if metadata can be updated.
-    const canUpdateMetadata$ = this._config.files.canUpdateMetadata
-      ? this._config.files.canUpdateMetadata()
-      : of({ can: false, message: '' });
-    this._subscriptions.add(
-      canUpdateMetadata$.subscribe((result: ActionStatus) => {
-        this.updateMetadata = result;
-      })
-    );
-
     this._spinner.show();
 
     // Load files
@@ -226,7 +216,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    *
    * @param file File object to delete
    */
-  delete(file: RecordFile) {
+  deleteFile(file: RecordFile) {
     this._dialogService
       .show({
         ignoreBackdropClick: true,
@@ -419,7 +409,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @param file File object.
    * @returns void
    */
-  editMetadata(file: RecordFile): void {
+  editMetadataFile(file: RecordFile): void {
     if (!file.metadata) {
       return;
     }
@@ -487,6 +477,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         files = files.map((item: RecordFile) => {
           // By default, show info about the file.
           item.showInfo = true;
+          item.url = this.getFileUrl(item);
 
           // By default, hide other versions of the file.
           item.showChildren = false;
@@ -507,7 +498,16 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         }
 
         this.files = files;
-      }),
+       }),
+       tap(() => {
+          // Check if a file can be added.
+          const canAdd$ = this._config.files.canAdd
+            ? this._config.files.canAdd()
+            : of({ can: false, message: '' });
+          this._subscriptions.add(
+            canAdd$.subscribe((result: ActionStatus) => this.canAdd = result)
+          );
+       }),
       catchError(() => {
         this.hasError = true;
         return of([]);

@@ -46,6 +46,7 @@
       <i class="fa fa-pencil"></i>
       {{ 'Edit' | translate }}
     </a>
+
     <ng-container *ngIf="deleteStatus">
       <button id="detail-delete-button" class="btn btn-sm btn-outline-danger ml-1" [title]="'Delete'|translate" (click)="deleteRecord(record)"
         *ngIf="deleteStatus.can; else deleteMessageLink">
