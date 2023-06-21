@@ -75,6 +75,7 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { FileComponent } from './files/file/file.component';
 
 @NgModule({
     declarations: [
@@ -118,7 +119,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         BucketNamePipe,
         DateTimepickerTypeComponent,
         PasswordGeneratorTypeComponent,
-        MulticheckboxComponent
+        MulticheckboxComponent,
+        FileComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.

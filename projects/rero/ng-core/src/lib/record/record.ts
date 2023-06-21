@@ -32,6 +32,7 @@ export class SearchResult {
 export interface File {
   updated: string;
   size: string;
+  url?: string;
   mimetype: string;
   version_id: string;
   is_head: boolean;

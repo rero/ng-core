@@ -165,7 +165,6 @@ export class DetailComponent implements OnInit, OnDestroy {
               this._location.back();
             }
           });
-
           this._recordUiService.canDeleteRecord$(this.record, this._type).subscribe(result => {
             this.deleteStatus = result;
           });
