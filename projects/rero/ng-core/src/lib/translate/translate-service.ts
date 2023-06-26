@@ -17,6 +17,7 @@
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeEnGB from '@angular/common/locales/en-GB';
+import localeEs from '@angular/common/locales/es';
 import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
 import { Injectable } from '@angular/core';
@@ -24,12 +25,13 @@ import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
 import moment from 'moment';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
+import { deLocale, enGbLocale, esLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
 import { PrimeNGConfig } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CoreConfigService } from '../core-config.service';
 import primeNgDe from './primeng/de.json';
 import primeNgEn from './primeng/en.json';
+import primeNgEs from './primeng/es.json';
 import primeNgFr from './primeng/fr.json';
 import primeNgIt from './primeng/it.json';
 
@@ -40,6 +42,7 @@ export class TranslateService {
   languages = {
     de: { ngx: deLocale, angular: localeDe, primeng: primeNgDe },
     en: { ngx: enGbLocale, angular: localeEnGB, primeng: primeNgEn },
+    es: { ngx: esLocale, angular: localeEs, primeng: primeNgEs },
     fr: { ngx: frLocale, angular: localeFr, primeng: primeNgFr },
     it: { ngx: itLocale, angular: localeIt, primeng: primeNgIt }
   };
