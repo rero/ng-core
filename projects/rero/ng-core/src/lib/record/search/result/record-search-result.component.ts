@@ -1,6 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -113,7 +114,7 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Event emitted when a record is deleted
    */
-  @Output() deletedRecord = new EventEmitter<string>();
+  @Output() deletedRecord = new EventEmitter<{pid: string, type?: string | undefined | null }>();
 
   /**
    * Directive for displaying search results
@@ -190,17 +191,19 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Delete a record
    * @param pid - string, pid to delete
+   * @param type - string, resource type
    */
-  deleteRecord(pid: string) {
-    return this.deletedRecord.emit(pid);
+  deleteRecord(pid: string, type?: string) {
+    return this.deletedRecord.emit({ pid, type });
   }
 
   /**
    * Edit a record
    * @param pid - string: the pid to edit
    */
-  editRecord(pid: string) {
-    this._router.navigate(['/', 'records', this.type, 'edit', pid]);
+  editRecord(pid: string, url?: string[]) {
+    const params = url ?? ['/', 'records', this.type, 'edit', pid];
+    this._router.navigate(params);
   }
 
   /**

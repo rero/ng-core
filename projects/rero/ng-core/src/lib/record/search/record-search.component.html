@@ -1,7 +1,7 @@
 <!--
   RERO angular core
-  Copyright (C) 2022 RERO
-  Copyright (C) 2022 UCLouvain
+  Copyright (C) 2019-2023 RERO
+  Copyright (C) 2019-2023 UCLouvain
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -36,7 +36,7 @@
     </h5>
     <ng-container *ngIf="hasNoRecord; else results">
       <div class="alert alert-info my-4">{{ emptyRecordMessage }}</div>
-      <a class="btn btn-primary" routerLink="new" *ngIf="adminMode.can && addStatus.can">
+      <a class="btn btn-primary" [routerLink]="addStatus.routerLink || ['new']" *ngIf="adminMode.can && addStatus.can">
         <i class="fa fa-plus mr-0 mr-sm-1"></i>
         <span class="d-none d-sm-inline" translate>Add</span>
       </a>
@@ -56,7 +56,7 @@
           <strong>{{ resultsText }}</strong>
         </div>
         <div class="col ml-auto text-right">
-          <a class="btn btn-primary" [routerLink]="addStatus?.url || ['new']" *ngIf="adminMode.can && addStatus.can">
+          <a id="search-add-button" class="btn btn-primary" [routerLink]="addStatus.routerLink || ['new']" *ngIf="adminMode.can && addStatus.can">
             <i class="fa fa-plus mr-0 mr-sm-1"></i>
             <span class="d-none d-sm-inline" translate>Add</span>
           </a>

@@ -231,7 +231,7 @@ describe('RecordSearchComponent', () => {
     component.types[0].total = 2;
 
     expect(component.types[0].total).toBe(2);
-    component.deleteRecord('1');
+    component.deleteRecord({ pid: '1' });
     expect(component.types[0].total).toBe(2);
   });
 
@@ -242,7 +242,7 @@ describe('RecordSearchComponent', () => {
     component['_config'].total = 2;
 
     expect(component['_config'].total).toBe(2);
-    component.deleteRecord('1');
+    component.deleteRecord({ pid: '1' });
     tick(10000); // wait for refreshing records
     expect(component['_config'].total).toBe(1);
   }));
