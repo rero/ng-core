@@ -543,10 +543,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Delete a record by its PID.
-   * @param pid - string, PID to delete
+   * @param event - object
    */
-  deleteRecord(pid: string) {
-    this._recordUiService.deleteRecord(this.currentType, pid).pipe(
+  deleteRecord(event: { pid: string, type?: string }) {
+    const type = event.type ?? this.currentType;
+    this._recordUiService.deleteRecord(type, event.pid).pipe(
       switchMap(result => {
         if (result === true) {
           this.page = 1;

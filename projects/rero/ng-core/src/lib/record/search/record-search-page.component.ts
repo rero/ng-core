@@ -246,9 +246,9 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const defaulSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
+    const defaultSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
     config.sortOptions.forEach((option: SortOption) => {
-      if (option[defaulSortValue] === true) {
+      if (option[defaultSortValue] === true) {
         this.sort = option.value;
       }
     });

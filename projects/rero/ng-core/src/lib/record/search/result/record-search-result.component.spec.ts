@@ -79,8 +79,8 @@ describe('RecordSearchResultComponent', () => {
   });
 
   it('should delete record', () => {
-    component.deletedRecord.subscribe((pid: string) => {
-      expect(pid).toBe('1');
+    component.deletedRecord.subscribe((result: { pid: string, type: string | undefined | null }) => {
+      expect(result.pid).toBe('1');
     });
     component.deleteRecord('1');
   });

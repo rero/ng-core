@@ -1,6 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -202,6 +203,10 @@ export class RecordUiService {
    */
   canUpdateRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
+    // The canUpdate function takes precedence over permissions
+    if (config.canUpdate) {
+      return config.canUpdate(record).pipe(first());
+    }
     if (config.permissions) {
       const permissions = config.permissions(record);
       return permissions.pipe(
@@ -214,9 +219,7 @@ export class RecordUiService {
         })
       );
     }
-    return (config.canUpdate)
-      ? config.canUpdate(record).pipe(first())
-      : of({ can: true, message: '' });
+    return of({ can: true, message: '' });
   }
 
   /**
@@ -227,6 +230,10 @@ export class RecordUiService {
    */
   canDeleteRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
+    // The canDelete function takes precedence over permissions
+    if (config.canDelete) {
+      return config.canDelete(record).pipe(first());
+    }
     if (config.permissions) {
       const permissions = config.permissions(record);
       return permissions.pipe(
@@ -239,9 +246,7 @@ export class RecordUiService {
         })
       );
     }
-    return (config.canDelete)
-      ? config.canDelete(record).pipe(first())
-      : of({ can: true, message: '' });
+    return of({ can: true, message: '' });
   }
 
   /**
@@ -252,6 +257,10 @@ export class RecordUiService {
    */
   canReadRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
+    // The canRead function takes precedence over permissions
+    if (config.canRead) {
+      return config.canRead(record).pipe(first());
+    }
     if (config.permissions) {
       const permissions = config.permissions(record);
       return permissions.pipe(
@@ -264,9 +273,7 @@ export class RecordUiService {
         })
       );
     }
-    return (config.canRead)
-      ? config.canRead(record).pipe(first())
-      : of({ can: true, message: '' });
+    return of({ can: true, message: '' });
   }
 
   /**
@@ -277,14 +284,16 @@ export class RecordUiService {
    */
    canUseRecord$(record: object, type: string): Observable<ActionStatus> {
     const config = this.getResourceConfig(type);
+    // The canUse function takes precedence over permissions
+    if (config.canUse) {
+      return config.canUse(record).pipe(first());
+    }
     if (config.permissions) {
       const permissions = config.permissions(record);
       if ('canUse' in permissions) {
         return permissions.canUse;
       }
     }
-    return (config.canUse)
-        ? config.canUse(record).pipe(first())
-        : of({ can: false, message: '' });
+    return of({ can: false, message: '' });
    }
 }
