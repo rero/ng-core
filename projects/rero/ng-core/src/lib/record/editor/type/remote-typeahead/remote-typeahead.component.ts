@@ -1,6 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,29 +26,29 @@ import { RemoteTypeaheadService } from './remote-typeahead.service';
 
 @Component({
   selector: 'ng-core-remote-typeahead',
+  styles: ['.dropdown-item:hover{ cursor:pointer;}'],
   templateUrl: './remote-typeahead.component.html'
 })
 export class RemoteTypeaheadComponent extends FieldType implements OnInit {
 
+  // COMPONENT ATTRIBUTES =====================================================
   /** Input search string */
   search: string;
-
   /** Loading data */
   typeaheadLoading: boolean;
 
   /** Observable on Suggestions Metadata */
   suggestions$: Observable<Array<SuggestionMetadata | string>>;
-
   /** Template representation of the formControl value. */
   valueAsHTML$: Observable<string>;
-
-  /** Filters options */
-  get filters(): remoteTypeaheadFilters | null {
-    return this.field.templateOptions.remoteTypeahead?.filters;
-  };
-
   /** Number of result in suggestions list */
   private _numberOfSuggestions = 10;
+
+  // GETTER & SETTER ==========================================================
+  /** Filters options */
+  get filters(): remoteTypeaheadFilters | null {
+    return this._rtOptions?.filters;
+  };
 
   /** Remote Typeahead options from the JONSchema */
   private get _rtOptions(): remoteTypeahead {
@@ -55,11 +56,23 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   }
 
   /**
+   * Return the group field when the suggestion as grouped by category.
+   * @returns string - the name of the field in suggestion list containing the group category. null for disabled.
+   */
+  get groupField(): string | null {
+    return (this._remoteTypeaheadService.enableGroupField(this._rtOptions)) ? 'group' : null;
+  }
+
+  // CONSTRUCTOR & HOOKS ======================================================
+  /**
    * Constructor
    * @param _remoteTypeaheadService - RemoteTypeaheadService
    * @param _route - Activated route
    */
-  constructor(private _remoteTypeaheadService: RemoteTypeaheadService, private _route: ActivatedRoute) {
+  constructor(
+    private _remoteTypeaheadService: RemoteTypeaheadService,
+    private _route: ActivatedRoute
+  ) {
     super();
   }
 
@@ -67,38 +80,28 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   ngOnInit() {
     this._assignRemoteTypeaheadSelectedOptions();
     // get the list of suggestions based on input search changes
-    this.suggestions$ = new Observable((observer: Observer<string>) => {
-      observer.next(this.search);
-    }).pipe(
-      switchMap((query: string) => {
-        return this._remoteTypeaheadService.getSuggestions(
-          this._rtOptions,
-          query,
-          this._numberOfSuggestions,
-          this._route.snapshot.params.pid || null
+    this.suggestions$ = new Observable((observer: Observer<string>) => observer
+        .next(this.search))
+        .pipe(
+          switchMap((query: string) => {
+            return this._remoteTypeaheadService.getSuggestions(
+              this._rtOptions,
+              query,
+              this._numberOfSuggestions,
+              this._route.snapshot.params.pid || null
+            );
+          })
         );
-      })
-    );
 
     // get the template version of the formControl value
-    this.valueAsHTML$ = new Observable((observer: Observer<string>) => {
-      observer.next(this.formControl.value);
-    }).pipe(
-      switchMap((value: string) => {
-        return this._remoteTypeaheadService.getValueAsHTML(this._rtOptions, value);
-      })
-    );
+    this.valueAsHTML$ = new Observable((observer: Observer<string>) => observer
+        .next(this.formControl.value))
+        .pipe(
+          switchMap((value: string) => this._remoteTypeaheadService.getValueAsHTML(this._rtOptions, value))
+        );
   }
 
-  /**
-   * Return the group field when the suggestion as grouped by category.
-   * @returns string - the name of the field in suggestion list containing the group category. null for disabled.
-   */
-  get groupField(): string | null {
-    const enableGF = this._remoteTypeaheadService.enableGroupField(this._rtOptions);
-    return enableGF ? 'group' : null;
-  }
-
+  // COMPONENT FUNCTIONS ======================================================
   /**
    * Change Typeahead loading.
    * @param e boolean
@@ -151,10 +154,12 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
 
 /** Suggestion Metadata Interface */
 export interface SuggestionMetadata {
-  label: string;
-  value: string;
-  externalLink?: string;
-  group?: string;
+  label: string;          // The master label of the suggestion
+  description?:string;    // A small description to specify the suggestion label
+  value: string;          // The value of the suggestion ($ref)
+  externalLink?: string;  // (Optional) URL describing the suggestion
+  group?: string;         // (Optional) The key to group suggestions
+  column?: number;        // (Optional) The column number where to display the suggestion
 }
 
 /** remoteTypeahead interface */

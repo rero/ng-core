@@ -56,9 +56,9 @@
           <strong>{{ resultsText }}</strong>
         </div>
         <div class="col ml-auto text-right">
-          <a id="search-add-button" class="btn btn-primary" routerLink="new" *ngIf="adminMode.can && addStatus.can">
+          <a class="btn btn-primary" [routerLink]="addStatus?.url || ['new']" *ngIf="adminMode.can && addStatus.can">
             <i class="fa fa-plus mr-0 mr-sm-1"></i>
-            <span class="d-none d-sm-inline">{{ 'Add' | translate }}</span>
+            <span class="d-none d-sm-inline" translate>Add</span>
           </a>
           <!-- Sorting -->
           <div class="btn-group ml-2" dropdown *ngIf="sortOptions.length > 0">
