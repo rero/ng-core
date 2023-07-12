@@ -1,5 +1,17 @@
 # Changelog
 
+## [v14.4.0](https://github.com/rero/ng-core/tree/v14.4.0) (2023-07-12)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.3.0...v14.4.0)
+
+**Changes:**
+* editor: fix groupable custom select [\#553](https://github.com/rero/ng-core/pull/553) (by @zannkukai)
+* typeahead: allow more options for typeahead suggestion. [\#558](https://github.com/rero/ng-core/pull/558) (by @zannkukai)
+* editor: confirmation message when leaving [\#554](https://github.com/rero/ng-core/pull/554) (by @Garfield-fr)
+* formly: add a set default value [\#548](https://github.com/rero/ng-core/pull/548) (by @Garfield-fr)
+* translate: change locale en by en-GB [\#552](https://github.com/rero/ng-core/pull/552) (by @Garfield-fr)
+* search: fix number facets behavior [\#550](https://github.com/rero/ng-core/pull/550) (by @zannkukai)
+
 ## [v14.3.0](https://github.com/rero/ng-core/tree/v14.3.0) (2023-05-08)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.2.1...v14.3.0)
