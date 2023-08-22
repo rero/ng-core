@@ -1,5 +1,12 @@
 # Changelog
 
+## [v14.5.0](https://github.com/rero/ng-core/tree/v14.5.0) (2023-08-22)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.4.0...v14.5.0)
+
+**Changes:**
+* files: add permissions [\#555](https://github.com/rero/ng-core/pull/555) (by @jma)
+
 ## [v14.4.0](https://github.com/rero/ng-core/tree/v14.4.0) (2023-07-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.3.0...v14.4.0)
