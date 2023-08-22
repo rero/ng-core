@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CoreConfigService } from '../core-config.service';
+import { ICache } from '../interface/icache';
 import de from './i18n/de.json';
 import en from './i18n/en.json';
 import fr from './i18n/fr.json';
@@ -36,25 +37,32 @@ export class TranslateLoader implements BaseTranslateLoader {
   // with angular<9 assets are not available for libraries
   // See: https://angular.io/guide/creating-libraries#managing-assets-in-a-library
   private _coreTranslations = { de, en, fr, it };
+
   /**
    * Constructor.
    *
    * @param _coreConfigService Configuration service.
+   * @param _http HttpClient
+   * @param _cache ICache
    */
   constructor(
     private _coreConfigService: CoreConfigService,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _cache?: ICache
   ) { }
 
   /**
    * Return observable used by ngx-translate to get translations.
-   * @param lang - string, language to rerieve translations from.
+   * @param lang - string, language to retrieve translations from.
    */
   getTranslation(lang: string): Observable<any> {
-    // Already in cache
-    if (this._translations[lang] != null) {
-      return of(this._translations[lang]);
+    if (this._cache) {
+      const translateCacheData = this._cache.get(lang);
+      if (translateCacheData) {
+        return translateCacheData;
+      }
     }
+
     const urls = this._coreConfigService.translationsURLs;
     // create the list of http requests
     const observers = urls.map(
@@ -82,6 +90,9 @@ export class TranslateLoader implements BaseTranslateLoader {
             ...trans
           }
         );
+        if (this._cache) {
+          this._cache.set(lang, this._translations[lang]);
+        }
         return this._translations[lang];
       })
     );

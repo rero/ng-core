@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,7 @@ import { Injectable } from '@angular/core';
  * Interface for configuration.
  */
 export interface Config {
+  appVersion?: string;
   production?: boolean;
   prefixWindow?: string;
   apiBaseUrl?: string;
@@ -39,6 +40,7 @@ export interface Config {
   providedIn: 'root'
 })
 export class CoreConfigService implements Config {
+  appVersion = undefined;
   production = false;
   prefixWindow = undefined;
   apiBaseUrl = '';

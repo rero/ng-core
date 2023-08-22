@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,8 +25,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { ErrorComponent } from './error/error.component';
+import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
@@ -43,8 +45,6 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
-import { AutofocusDirective } from './directives/autofocus.directive';
-import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 
 @NgModule({
     declarations: [
