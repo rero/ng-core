@@ -1,5 +1,12 @@
 # Changelog
 
+## [v14.6.0](https://github.com/rero/rero-mef/tree/v14.6.0) (2023-09-06)
+
+[Full Changelog](https://github.com/rero/rero-mef/compare/v14.5.0...v14.6.0)
+
+**New features:**
+* general: Managing multiple resources in a route [\#557](https://github.com/rero/ng-core/pull/557) (by @Garfield-fr)
+
 ## [v14.5.0](https://github.com/rero/ng-core/tree/v14.5.0) (2023-08-22)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.4.0...v14.5.0)
