@@ -20,7 +20,7 @@
       <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
       <a class="form-check-label">
         <ng-container *ngIf="bucket.name; else filterKey">{{ bucket.name }}</ng-container>
-        <ng-template #filterKey>{{ bucket.key | bucketName: aggregationKey | translate }}</ng-template>
+        <ng-template #filterKey>{{ bucket.key | bucketName: aggregationKey | async }}</ng-template>
       </a>
       <span class="ml-auto bucket-count">
         <span class="bucket-count-badge">{{ bucket.doc_count }}</span>

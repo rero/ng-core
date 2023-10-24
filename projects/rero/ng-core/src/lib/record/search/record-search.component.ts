@@ -403,6 +403,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
       )
     );
+    // Add default filters on aggregations filters if not exist.
+    if (this._config && this._config.defaultSearchInputFilters) {
+      this._config.defaultSearchInputFilters.map((filter: {key: string, values: string[]}) => {
+        if (!this.aggregationsFilters.some((e: any) => e.key === filter.key)) {
+          this.aggregationsFilters.push(filter);
+        }
+      });
+    }
   }
 
   /**
@@ -513,9 +521,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this.q = event;
-    this.aggregationsFilters = this._config.defaultSearchInputFilters
-        ? this._config.defaultSearchInputFilters
-        : [];
     this._setDefaultSort();
     this._searchParamsHasChanged();
 
@@ -892,6 +897,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // load export options
     this.exportOptions = this._exportFormats();
+
+    // Update filters with default search filters
+    if (this._config.defaultSearchInputFilters) {
+      this._config.defaultSearchInputFilters.forEach((filter: { key: string, values: any[]}) => {
+        this._recordSearchService.updateAggregationFilter(filter.key, filter.values);
+      });
+    }
   }
 
   /**
@@ -974,9 +986,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (this._config == null) {
       return null;
     }
-    return this._config.index
-      ? this._config.index
-      : this._config.key;
+    return this._config.index || this._config.key;
   }
 
   /**

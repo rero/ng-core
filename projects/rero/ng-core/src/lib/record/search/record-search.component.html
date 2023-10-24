@@ -34,6 +34,21 @@
     <h5 *ngIf="typesInTabs.length === 1 && showLabel">
       {{ typesInTabs[0].label | translate }}
     </h5>
+    <ng-content select="[header]"></ng-content>
+    <div class="row mt-3">
+      <div class="col">
+        <ng-core-search-input
+        *ngIf="showSearchInput"
+        class="pt-0"
+        [placeholder]="'search' | translate | ucfirst"
+        [searchText]="q"
+        [displayLabel]="false"
+        (search)="searchByQuery($event)"
+        [focus]="true"
+      ></ng-core-search-input>
+      </div>
+      <ng-content select="[afterInputSearch]"></ng-content>
+    </div>
     <ng-container *ngIf="hasNoRecord; else results">
       <div class="alert alert-info my-4">{{ emptyRecordMessage }}</div>
       <a class="btn btn-primary" [routerLink]="addStatus.routerLink || ['new']" *ngIf="adminMode.can && addStatus.can">
@@ -43,15 +58,6 @@
     </ng-container>
     <ng-template #results>
       <div class="row align-items-start my-3">
-        <ng-core-search-input
-          *ngIf="showSearchInput"
-          class="col-sm-3 mb-3 mb-sm-0"
-          [placeholder]="'search' | translate | ucfirst"
-          [searchText]="q"
-          [displayLabel]="false"
-          (search)="searchByQuery($event)"
-          [focus]="true"
-        ></ng-core-search-input>
         <div *ngIf="resultsText$ | async as resultsText" class="col-6 col-sm-3">
           <strong>{{ resultsText }}</strong>
         </div>
@@ -102,6 +108,7 @@
           </div>
         </div>
       </div>
+      <ng-content select="[beforeResult]"></ng-content>
       <div class="row">
         <ng-core-list-filters
           class="col-12"
