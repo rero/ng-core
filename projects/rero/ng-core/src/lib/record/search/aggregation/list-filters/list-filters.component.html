@@ -21,7 +21,7 @@
         title="{{ filter.aggregationKey | translate }}"
         >
         <ng-container *ngIf="filter.name; else filterKey">{{ filter.name }}</ng-container>
-        <ng-template #filterKey>{{ filter.key | bucketName: filter.aggregationKey | translate }}</ng-template>
+        <ng-template #filterKey>{{ filter.key | bucketName: filter.aggregationKey | async }}</ng-template>
         <i class="fa fa-close ml-1"></i>
         </button>
     </li>

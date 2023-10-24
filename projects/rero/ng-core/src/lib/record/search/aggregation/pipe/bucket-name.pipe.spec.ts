@@ -14,21 +14,44 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TestBed } from '@angular/core/testing';
 import { BucketNamePipe } from './bucket-name.pipe';
+import { BucketNameService } from '../service/bucket-name.service';
+import { RecordModule } from '@rero/ng-core';
+import { TranslateModule } from '@ngx-translate/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BucketNamePipe', () => {
+  let pipe: BucketNamePipe;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        BucketNamePipe,
+        BucketNameService
+      ],
+      imports: [
+        RecordModule,
+        TranslateModule.forRoot({}),
+        HttpClientTestingModule
+      ]
+    });
+    pipe = TestBed.inject(BucketNamePipe);
+  });
+
   it('create an instance', () => {
-    const pipe = new BucketNamePipe();
     expect(pipe).toBeTruthy();
   });
 
-  it('should return the value', () => {
-    const pipe = new BucketNamePipe();
-    expect(pipe.transform('book', 'document_type')).toEqual('book');
+  it('should return the default value', () => {
+    pipe.transform('book', 'document_type').subscribe((data: any) => {
+      expect(data).toEqual('book');
+    });
   });
 
   it('should return the modified value for the language', () => {
-    const pipe = new BucketNamePipe();
-    expect(pipe.transform('fre', 'language')).toEqual('lang_fre');
+    pipe.transform('fre', 'language').subscribe((data: any) => {
+      expect(data).toEqual('lang_fre');
+    });
   });
 });

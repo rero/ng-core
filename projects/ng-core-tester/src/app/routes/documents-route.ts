@@ -67,7 +67,7 @@ export class DocumentsRoute implements RouteInterface {
             },
             defaultSearchInputFilters: [{
               'key': 'organisation',
-              'values': [1]
+              'values': ["1"]
             }],
             aggregationsOrder: [
               'document_type',
