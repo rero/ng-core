@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -55,6 +55,12 @@ export class NgCoreFormlyExtension {
       field.id = this._getKey(field);
     }
     this._setCustomValidators(field);
+    // Set default value from expression.
+    if (field.templateOptions?.defaultValueExpression) {
+      const expression = field.templateOptions.defaultValueExpression;
+      const expressionFn = Function('expression', `return ${expression};`);
+      field.defaultValue = expressionFn();
+    }
   }
 
   /**
@@ -78,12 +84,6 @@ export class NgCoreFormlyExtension {
         }
       });
     }
-
-    field.options.fieldChanges.subscribe((changes) => {
-      if (changes.type === 'hidden' && changes.value === false) {
-        this._setDefaultValue(field);
-      }
-    });
   }
 
   /**
@@ -402,22 +402,6 @@ export class NgCoreFormlyExtension {
           },
         },
       };
-    }
-  }
-
-  /**
-   * Assigns the default value on the field if it has
-   * a defaultValueExpression definition in the jsonschema.
-   * @param field - FormlyFieldConfig
-   */
-  private _setDefaultValue(field: FormlyFieldConfig): void {
-    if (field.templateOptions?.defaultValueExpression) {
-      const key = String(field.key);
-      if (!(key in field.model && field.model[key] !== null)) {
-        const expression = field.templateOptions.defaultValueExpression;
-        const expressionFn = Function('expression', `return ${expression};`);
-        field.formControl.setValue(expressionFn());
-      }
     }
   }
 }
