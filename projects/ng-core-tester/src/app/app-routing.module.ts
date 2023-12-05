@@ -310,7 +310,7 @@ const routes: Routes = [
               url: {
                 routerLink: ['/record', 'search', 'documents'],
                 title: 'Link to search document'
-              }
+              },
             },
             {
               label: 'Open access',
@@ -321,12 +321,30 @@ const routes: Routes = [
                 link: 'https://sonar.rero.ch',
                 target: '_blank',
                 title: 'Link to Sonar interface'
-              }
+              },
+              showIfQuery: true
             },
             {
               label: 'Another filter',
               filter: 'other',
               value: '1'
+            },
+            {
+              label: 'Show Only',
+              filters: [
+                {
+                  label: 'Online resources',
+                  filter: 'online',
+                  value: 'true',
+                  showIfQuery: true
+                },
+                {
+                  label: 'Physical resources',
+                  filter: 'not_online',
+                  value: 'true',
+                  showIfQuery: true
+                }
+              ]
             }
           ],
           allowEmptySearch: true,

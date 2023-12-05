@@ -68,10 +68,17 @@ export class ListFiltersComponent implements OnChanges {
    */
   ngOnChanges(changes: SimpleChanges): void {
     // hide searchFilters defined on route config from list of filters
-    this.filtersToHide = [...new Set<string>([
-      ...this.filtersToHide,
-      ...this.searchFilters.map((filter: any) => filter.filter)
-    ])];
+    const filterSet = [];
+    this.searchFilters.forEach((filter: any) => {
+      if (!filter.filters) {
+        filterSet.push(filter.filter);
+      } else {
+        filter.filters.forEach((fSection: any) => {
+          filterSet.push(fSection.filter);
+        });
+      }
+    });
+    this.filtersToHide = [...new Set<string>([...this.filtersToHide, ...filterSet])];
 
     if (changes?.aggregationsFilters) {
       this._ref.detach();

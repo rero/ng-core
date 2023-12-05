@@ -141,54 +141,51 @@
 
           <ng-container *ngIf="searchFilters">
             <div class="mb-2">
-              <div *ngFor="let searchfilter of searchFilters">
-                <!-- filters online and not_online -->
-                <div class="mt-2" *ngIf="showSearchFilters() && searchfilter.filter === 'online'">{{ 'Show only:' | translate }}</div>
-                <ng-container  *ngIf="searchfilter.filter === 'online' || searchfilter.filter === 'not_online'; else otherSearchFilters">
-                  <div class="custom-control custom-switch" *ngIf="showSearchFilters()">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customSwitch-{{ searchfilter.filter }}"
-                      (click)="searchFilter(searchfilter)"
-                      [checked]="isFilterActive(searchfilter)"
-                    >
-                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label | translate }}</label>
-                  </div>
+              <ng-container *ngFor="let searchFilter of searchFilters">
+                <ng-container *ngIf="!searchFilter.filters; else searchFilterWithSection">
+                  <ng-container *ngIf="showFilter(searchFilter)" [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"></ng-container>
                 </ng-container>
-                <!-- other types of filters -->
-                <ng-template #otherSearchFilters>
-                  <div class="custom-control custom-switch">
-                    <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="customSwitch-{{ searchfilter.filter }}"
-                      (click)="searchFilter(searchfilter)"
-                      [checked]="isFilterActive(searchfilter)"
-                    >
-                    <label class="custom-control-label" for="customSwitch-{{ searchfilter.filter }}">{{ searchfilter.label | translate }}</label>
-                    <ng-container *ngIf="searchfilter.url">
-                      <ng-container *ngIf="searchfilter.url.external; else internal">
-                        <a
-                          class="ml-1 text-dark"
-                          [title]="searchfilter.url.title"
-                          [href]="searchfilter.url.link"
-                          [target]="searchfilter.url.target"
-                        >
-                          <i class="fa fa-info-circle" aria-hidden="true"></i>
-                        </a>
-                      </ng-container>
-                      <ng-template #internal>
-                        <a class="ml-1 text-dark" [title]="searchfilter.url.title" [routerLink]="searchfilter.url.routerLink">
-                          <i class="fa fa-info-circle" aria-hidden="true"></i>
-                        </a>
-                      </ng-template>
+                <ng-template #searchFilterWithSection>
+                  <ng-container *ngIf="showFilterSection(searchFilter)">
+                    <div class="mt-2" translate>{{ searchFilter.label }}</div>
+                    <ng-container *ngFor="let searchFilterSection of searchFilter.filters">
+                      <ng-container *ngIf="showFilter(searchFilterSection)" [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"></ng-container>
                     </ng-container>
-                  </div>
+                  </ng-container>
                 </ng-template>
-              </div>
+              </ng-container>
             </div>
           </ng-container>
+          <ng-template #searchFilterTemplate let-filter="filter">
+            <div class="custom-control custom-switch">
+              <input
+                type="checkbox"
+                class="custom-control-input"
+                id="customSwitch-{{ filter.filter }}"
+                (click)="searchFilter(filter)"
+                [checked]="isFilterActive(filter)"
+              >
+              <label class="custom-control-label" for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>
+              <ng-container *ngIf="filter.url">
+                <ng-container *ngIf="filter.url.external; else internal">
+                  <a
+                    class="ml-1 text-dark"
+                    [title]="filter.url.title"
+                    [href]="filter.url.link"
+                    [target]="filter.url.target"
+                  >
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  </a>
+                </ng-container>
+                <ng-template #internal>
+                  <a class="ml-1 text-dark" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                  </a>
+                </ng-template>
+              </ng-container>
+            </div>
+          </ng-template>
+
           <ng-container *ngIf="!showEmptySearchMessage || q">
             <ng-content select="[top-facets]"></ng-content>
             <div *ngFor="let item of aggregations">

@@ -1,20 +1,20 @@
 {
   "/api/*": {
-    "target": "https://l985g.mocklab.io",
+    "target": "https://l985g.wiremockapi.cloud",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/api": "https://l985g.mocklab.io/api"
+      "^/api": "https://l985g.wiremockapi.cloud/api"
     }
   },
   "/schemas/*": {
-    "target": "https://l985g.mocklab.io",
+    "target": "https://l985g.wiremockapi.cloud",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/schemas": "https://l985g.mocklab.io/schemas"
+      "^/schemas": "https://l985g.wiremockapi.cloud/schemas"
     }
   }
 }
