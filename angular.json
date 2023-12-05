@@ -113,8 +113,8 @@
             "localhost": {
               "proxyConfig": "proxies/localhost.json"
             },
-            "mocklab": {
-              "proxyConfig": "proxies/mocklab.json"
+            "wiremockapi": {
+              "proxyConfig": "proxies/wiremockapi.json"
             },
             "production": {
               "browserTarget": "ng-core-tester:build:production"

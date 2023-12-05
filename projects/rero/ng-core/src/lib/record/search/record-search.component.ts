@@ -27,10 +27,11 @@ import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
-import { Aggregation, Record, SearchField, SearchFilter, SearchResult } from '../record';
+import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
+import { createTrue } from 'typescript';
 
 export interface SearchParams {
   currentType: string;
@@ -41,7 +42,7 @@ export interface SearchParams {
   aggregationsFilters: Array<AggregationsFilter>;
   sort: string;
   searchFields: Array<SearchField>;
-  searchFilters: Array<SearchFilter>;
+  searchFilters: Array<SearchFilter|SearchFilterSection>;
 }
 
 export interface SortOption {
@@ -126,7 +127,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** List of fields on which we can do a specific search. */
   searchFields: Array<SearchField> = [];
   /** List of fields on which we can filter. */
-  searchFilters: Array<SearchFilter> = [];
+  searchFilters: Array<SearchFilter|SearchFilterSection> = [];
   /** If we need to show the empty search message info. */
   showEmptySearchMessage = false;
   /** Export formats configuration. */
@@ -567,7 +568,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Get component view for the current resource type.
-   * @retun A component for displaying result item.
+   * @return A component for displaying result item.
    */
   getResultItemComponentView() {
     return (this._config.component)
@@ -888,7 +889,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._setDefaultSort();
 
     // load search filters
-    this.searchFilters = this._config.searchFilters ? this._config.searchFilters : [];
+    this.searchFilters = this._config.searchFilters || [];
 
     // load export options
     this.exportOptions = this._exportFormats();
@@ -996,8 +997,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   private _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
     const persistent = [];
-    this.searchFilters
-        .filter(filter => filter.persistent === true)
+    this._flatSearchFilters().filter(filter => filter.persistent === true)
         .forEach((filter: SearchFilter) => {
           if (this._activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
             const data = this._activatedRoute.snapshot.queryParams[filter.filter];
@@ -1008,6 +1008,22 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           }
         });
     return persistent;
+  }
+
+  /**
+   * Make all search filters on same array level
+   * @returns - A filters array
+   */
+  private _flatSearchFilters(): SearchFilter[] {
+    const flatFilters = [];
+    this.searchFilters.forEach((searchFilter: any) => {
+      if (searchFilter.filters) {
+        searchFilter.filters.forEach((filter: any) => flatFilters.push(filter))
+      } else {
+        flatFilters.push(searchFilter);
+      }
+    });
+    return flatFilters;
   }
 
   /**
@@ -1047,7 +1063,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     bucket.aggregationKey = aggregationKey;
     for (const k of Object.keys(bucket).filter(key => bucket[key].buckets)) {
       for (const childBucket of bucket[k].buckets) {
-          // store the parent: usefull to remove parent filters
+          // store the parent: useful to remove parent filters
           childBucket.parent = bucket;
           // store the aggregation key as we re-organize the bucket structure
           bucket.indeterminate ||= this._recordSearchService.hasFilter(k, childBucket.key);
@@ -1089,10 +1105,31 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Check if to show search filters.
-   * @returns boolean
+   * Show the filter's section
+   * @param searchFilterSection - Collection of filter
+   * @returns true if the filter's section is show
    */
-  showSearchFilters(): boolean {
-    return !(this._config.allowEmptySearch === false && !this.q);
+  showFilterSection(searchFilterSection: SearchFilterSection): boolean {
+    return searchFilterSection.filters.some(
+      (filter: SearchFilter) => {
+        return this._config.allowEmptySearch ? true : (this.q && filter.showIfQuery === true) || !filter?.showIfQuery;
+      }
+    );
+  }
+
+  /**
+   * Show the filter
+   * @param searchFilter - search Filter
+   * @returns true if the filter is show
+   */
+  showFilter(searchFilter: SearchFilter) {
+    if (this._config.allowEmptySearch) {
+      return true;
+    }
+    if (!this.q) {
+      return !(searchFilter.showIfQuery === true);
+    } else {
+      return (searchFilter.showIfQuery === true || !searchFilter?.showIfQuery);
+    }
   }
 }

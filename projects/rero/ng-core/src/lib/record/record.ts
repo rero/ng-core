@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
  */
 
 /**
- * Class representing a record set retured by API.
+ * Class representing a record set returned by API.
  */
 export class Record {
   aggregations: any;
@@ -61,13 +61,15 @@ export interface SearchField {
   selected?: boolean;
 }
 
-/**
- * Interface representing a search filter.
- */
+/** Interface representing a search filter */
 export interface SearchFilter {
   filter: string;
   label: string;
   value: string;
+  /* Display filter only if there is a query.
+  This is overridden by the allowEmptySearch parameter
+  in the resource configuration. */
+  showIfQuery?: boolean;
   /* If you set this value, the url parameter will still be present,
   but with different values */
   disabledValue?: string;
@@ -79,6 +81,22 @@ export interface SearchFilter {
     target?: string;
     title?: string;
   };
+}
+
+/**
+ * Interface representing a collection of SearchFilters with label.
+ * The label adds a title to the interface.
+ *
+ * Example on the interface:
+ *
+ * Show only (label):
+ * Filter 1
+ * Filter 2
+ * etc…
+ */
+export interface SearchFilterSection {
+  label: string;
+  filters: SearchFilter[];
 }
 
 /** Interfaces for an aggregation */

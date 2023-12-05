@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "ng": "ng",
-    "serve": "ng serve --configuration mocklab",
+    "serve": "ng serve --configuration wiremockapi",
     "build-lib": "ng build --configuration production @rero/ng-core",
     "pack": "ng build --configuration production @rero/ng-core; npm pack dist/rero/ng-core",
     "test-lib": "ng test @rero/ng-core",
