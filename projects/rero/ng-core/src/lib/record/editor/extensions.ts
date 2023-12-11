@@ -542,9 +542,9 @@ export function registerNgCoreFormlyExtension(
                 ? translate.instant(_('strictly {{counter}}'), { counter: min })
                 : translate.instant(_('between {{min}} and {{max}}'), { min, max });
           } else if (min > 0) {
-            counterMessage = translate.instant('minimum {{min}}', { min });
+            counterMessage = translate.instant(_('minimum {{min}}'), { min });
           } else if (max < Infinity) {
-            counterMessage = translate.instant('maximum {{max}}', { max });
+            counterMessage = translate.instant(_('maximum {{max}}'), { max });
           }
 
           // Combine string to return a full sentence

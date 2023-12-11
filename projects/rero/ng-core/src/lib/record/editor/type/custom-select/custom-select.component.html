@@ -19,15 +19,18 @@
     <button id="button-basic" dropdownToggle type="button"
             class="btn btn-outline-primary btn-block dropdown-toggle px-3 text-left d-flex align-items-center"
             aria-controls="dropdown-basic">
-      {{ selectedOptions.length ? selectedValuesAsString : ('Select an option' | translate) }}
+      {{ selectedOptions.length ? selectedValuesAsString : ('Select an option…' | translate) }}
       <span class="caret ml-auto"></span>
     </button>
     <div id="dropdown-basic" *dropdownMenu class="dropdown-menu w-100" role="menu" aria-labelledby="button-basic">
       <div class="px-4 py-2" *ngIf="filter || filteredOptions.length > to.minItemsToDisplaySearch">
         <input type="text" ngCoreAutofocus class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
-          [value]="filter" [placeholder]="'Filter...' | translate" />
+          [value]="filter" [placeholder]="'Filter…' | translate" />
       </div>
       <ng-container *ngIf="filteredOptions.length; else noResult">
+        <a *ngIf="selectedOptions.length" class="dropdown-item"
+          (click)="$event.preventDefault(); selectOption(); dropdown.hide()" translate
+        >Select an option…</a>
         <ng-container *ngFor="let option of filteredOptions">
           <a class="dropdown-item" [ngClass]="{ active: isOptionSelected(option), disabled: option.disabled }" href="#"
             (click)="$event.preventDefault(); selectOption(option); dropdown.hide()"
