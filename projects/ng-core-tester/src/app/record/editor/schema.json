@@ -27,6 +27,7 @@
     "select",
     "selectGroup",
     "selectMultiple",
+    "selectMultipleWithLabelTranslation",
     "markdown",
     "textarea",
     "email",
@@ -792,6 +793,45 @@
               {
                 "label": "Value 3",
                 "value": "value3"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "selectMultipleWithLabelTranslation": {
+      "title": "Multiple select with label translation",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "library",
+          "deutsch",
+          "createdYear",
+          "location"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "templateOptions": {
+            "options": [
+              {
+                "label": "library",
+                "value": "library"
+              },
+              {
+                "label": "created year",
+                "value": "createdYear"
+              },
+              {
+                "label": "German",
+                "value": "deutsch"
+              },
+              {
+                "label": "location",
+                "value": "location"
               }
             ]
           }

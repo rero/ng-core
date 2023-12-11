@@ -34,7 +34,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
   defaultOptions = {
     templateOptions: {
       minItemsToDisplaySearch: 10,
-      sort: true,
+      sort: true
     },
   };
 
@@ -54,7 +54,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * Constructor
    *
    * @param _changeDetectorRef Change detector reference.
-   * @param _translateService Translate servive.
+   * @param _translateService Translate service.
    */
   constructor(private _changeDetectorRef: ChangeDetectorRef, private _translateService: TranslateService) {
     super();
@@ -140,6 +140,19 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * @returns The selected values as string.
    */
   get selectedValuesAsString(): string {
+    if (Array.isArray(this.formControl.value)) {
+      // Keeps selected items in order
+      const data = [];
+      let selectedOption: SelectOption;
+      const selectedValue = this.formControl.value.filter((v: string) => v !== undefined);
+      selectedValue.forEach((val: string) => {
+        selectedOption = this.selectedOptions
+          .filter((option: any) => option.value === val).pop();
+        data.push(selectedOption.translatedLabel);
+      });
+      return data.join(', ');
+    }
+
     return this.selectedOptions
       .map((option: SelectOption) => option.translatedLabel)
       .filter((value: string, index: number, self) => self.indexOf(value) === index)
@@ -160,21 +173,27 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    *
    * @param option The clicked option.
    */
-  selectOption(option: SelectOption): void {
-    let value = this.formControl.value;
+  selectOption(option?: SelectOption): void {
+    let { value } = this.formControl;
 
-    if (this.to.multiple === true) {
-      const index = value.indexOf(option.value, 0);
-      // Option is not yet selected, we add it.
-      if (index === -1) {
-        value.push(option.value);
+    if (option) {
+      if (this.to.multiple === true) {
+        const index = value.indexOf(option.value, 0);
+        // Option is not yet selected, we add it.
+        if (index === -1) {
+          value.push(option.value);
+        }
+        // Option is selected, we delete it.
+        else {
+          value.splice(index, 1);
+        }
+      } else {
+        value = option.value;
       }
-      // Option is selected, we delete it.
-      else {
-        value.splice(index, 1);
-      }
+    } else if (this.to.multiple === true) {
+      value = [];
     } else {
-      value = option.value;
+      value = undefined;
     }
 
     this.formControl.patchValue(value);
