@@ -36,7 +36,8 @@
     "array_with_multicheckbox",
     "remoteTypeaheadWithoutFilters",
     "remoteTypeaheadWithFilters",
-    "input_with_default_value"
+    "input_with_default_value",
+    "name_with_definition"
   ],
   "required": [
     "required"
@@ -995,6 +996,33 @@
         "formlyConfig": {
           "templateOptions": {
             "defaultValueExpression": "(Math.random() + 1).toString(36).substring(2)"
+          }
+        }
+      }
+    },
+    "name_with_definition": {
+      "title":"With definition reference",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "title": "Name",
+          "$ref": "#/definitions/name_definition"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "name_definition": {
+      "title": "Name (def)",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "textarea",
+          "templateOptions": {
+            "rows": 5
           }
         }
       }

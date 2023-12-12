@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,6 +29,37 @@ function createFormConfig(schema: any) {
   if (!schema.widget.formlyConfig) {
     schema.widget.formlyConfig = {};
   }
+}
+
+/**
+ * Resolve $ref definition and set properties on field
+ * @param schema - json schema all properties
+ * @param schemaProperties - json schema level
+ * @returns the updated schema
+ */
+export function resolve$ref(schema: any, schemaProperties: any): any {
+  Object.keys(schemaProperties).forEach((property: any) => {
+    let field = schemaProperties[property];
+    if (field.properties) {
+      resolve$ref(schema, field.properties);
+    }
+    // The field contains a $ref definition
+    if (field.$ref) {
+      const paths = field.$ref.replace('#/', '').split('/');
+      let def = schema;
+      paths.forEach((path: string) => {
+        def = def[path];
+      });
+      // Populate field with new definition
+      Object.keys(def).forEach((defKey: string) => {
+        field[defKey] = def[defKey];
+      });
+      // Delete reference
+      delete field.$ref;
+    }
+  });
+
+  return schema;
 }
 
 /**
@@ -72,7 +103,7 @@ export function formToWidget(schema: any, logger: ILogger): any {
   if (!schema.form) {
     return schema;
   }
-  // create the subproperties if not exists
+  // create the sub properties if not exists
   createFormConfig(schema);
 
   /* Template options */
@@ -143,7 +174,7 @@ function templateOptionsCreateIfNotExist(formlyConfig: FormlyFieldConfig): void 
  * This re-order the object properties given a local defined
  * `propertiesOrder` property.
  * @param schema - object, the JSONSchema
- * @returns object, a fresh copy of the ordred JSONSchema
+ * @returns object, a fresh copy of the ordered JSONSchema
  */
 export function orderedJsonSchema(schema: any) {
   if (schema.properties) {
