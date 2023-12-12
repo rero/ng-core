@@ -35,7 +35,7 @@ import { LoggerService } from '../../service/logger.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { formToWidget, orderedJsonSchema, removeEmptyValues } from './utils';
+import { formToWidget, orderedJsonSchema, removeEmptyValues, resolve$ref } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
@@ -70,7 +70,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   // angular formGroup root
   form: UntypedFormGroup;
 
-  // additionnal form options
+  // additional form options
   options: FormlyFormOptions;
 
   // form configuration
@@ -149,7 +149,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     return this.rootFormlyConfig;
   }
 
-  // Editor fonction
+  // Editor function
   public get editorComponent(): () => EditorComponent {
     return () => this;
   }
@@ -358,7 +358,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    */
   private _setModel(model: any): void {
     if (this._resourceConfig != null) {
-      // the parent dont know that we are editing a record
+      // the parent don't know that we are editing a record
 
       // /!\ This will probably not work anymore with resources managed by
       // invenio-records-resources, a fix will be necessary to make it work
@@ -438,11 +438,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
 
   /**
    * Preprocess the record before passing it to the editor
-   * @param schema - object, JOSNSchemag
+   * @param schema - object, JSONSchema
    */
   setSchema(schema: any): void {
     // reorder all object properties
-    this.schema = orderedJsonSchema(formToWidget(schema, this.loggerService));
+    this.schema = orderedJsonSchema(resolve$ref(formToWidget(schema, this.loggerService), schema.properties));
     this.options = {};
 
     // remove hidden field list in case of a previous setSchema call
@@ -453,7 +453,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       this.formlyJsonschema.toFieldConfig(this.schema, {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
-          /**** additionnal JSONSchema configurations *******/
+          /**** additional JSONSchema configurations *******/
 
           // initial population of arrays with a minItems constraints
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
@@ -466,7 +466,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
           }
 
           if (jsonSchema.widget && jsonSchema.widget.formlyConfig) {
-            const templateOptions = jsonSchema.widget.formlyConfig.templateOptions;
+            const { templateOptions } = jsonSchema.widget.formlyConfig;
 
             if (templateOptions) {
               this._setSimpleOptions(field, templateOptions);

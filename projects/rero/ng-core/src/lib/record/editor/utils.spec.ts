@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022 RERO
+ * Copyright (C) 2022-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,7 +17,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { LoggerService } from '../../service/logger.service';
-import { formToWidget } from './utils';
+import { formToWidget, resolve$ref } from './utils';
 
 describe('EditorUtils', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -680,5 +680,124 @@ describe('EditorUtils', () => {
 
   it('Transfer of the jsonschema form tag to the widget entry', () => {
     expect(formToWidget(schema, new LoggerService())).toEqual(schemaWidget);
+  });
+
+  it('Resolve $ref definition in jsonschema', () => {
+    const schema = {
+      schema: 'http://json-schema.org/draft-07/schema#',
+      title: 'Bibliographic Document',
+      type: 'object',
+      properties: {
+        simpleDef: {
+          title: 'simple field',
+          type: 'string',
+          $ref: '#/definition/simple_field'
+        },
+        objectField: {
+          title: 'Object field',
+          properties: {
+            objectDef: {
+              title: 'Object field def',
+              type: 'string',
+              $ref: '#/definition/simple_field'
+            },
+            address: {
+              type: 'object',
+              properties: {
+                object2Def: {
+                  title: 'Object 2 field def',
+                  type: 'string',
+                  $ref: '#/definition/simple_field'
+                }
+              }
+            }
+          }
+        }
+      },
+      definition: {
+        simple_field: {
+          title: 'simple field (def)',
+          type: 'string',
+          widget: {
+            formlyConfig: {
+              type: 'textarea',
+              templateOptions: {
+                rows: 5
+              }
+            }
+          }
+        }
+      }
+    };
+
+    const schemaResult = {
+      schema: 'http://json-schema.org/draft-07/schema#',
+      title: 'Bibliographic Document',
+      type: 'object',
+      properties: {
+        simpleDef: {
+          title: 'simple field (def)',
+          type: 'string',
+          widget: {
+            formlyConfig: {
+              type: 'textarea',
+              templateOptions: {
+                rows: 5
+              }
+            }
+          }
+        },
+        objectField: {
+          title: 'Object field',
+          properties: {
+            objectDef: {
+              title: 'simple field (def)',
+              type: 'string',
+              widget: {
+                formlyConfig: {
+                  type: 'textarea',
+                  templateOptions: {
+                    rows: 5
+                  }
+                }
+              }
+            },
+            address: {
+              type: 'object',
+              properties: {
+                object2Def: {
+                  title: 'simple field (def)',
+                  type: 'string',
+                  widget: {
+                    formlyConfig: {
+                      type: 'textarea',
+                      templateOptions: {
+                        rows: 5
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      definition: {
+        simple_field: {
+          title: 'simple field (def)',
+          type: 'string',
+          widget: {
+            formlyConfig: {
+              type: 'textarea',
+              templateOptions: {
+                rows: 5
+              }
+            }
+          }
+        }
+      }
+    };
+
+    expect(resolve$ref(schema, schema.properties)).toEqual(schemaResult);
   });
 });
