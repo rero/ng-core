@@ -126,7 +126,7 @@
                     class="btn btn-outline-primary btn-sm text-left"
                     [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
                     (click)="searchInField(searchFields[0])">
-            {{ 'Search in' | translate }} {{ searchFields[0].label | lowercase }}
+            {{ 'Search in' | translate }} {{ searchFields[0].label }}
             </button>
             <ng-template #fieldsDropdown>
               <button dropdownToggle type="button"
