@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -124,11 +124,6 @@ describe('RecordDetailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
     expect(component.record).toEqual(detailRecord);
-  });
-
-  it('should go back', () => {
-    component.goBack();
-    expect(loc.back).toHaveBeenCalledTimes(1);
   });
 
   it('should raise exception when configuration not found for type', () => {

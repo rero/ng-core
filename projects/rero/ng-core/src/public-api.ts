@@ -42,7 +42,11 @@ export * from './lib/pipe/truncate-text.pipe';
 export * from './lib/pipe/ucfirst.pipe';
 export * from './lib/record/action-status';
 export * from './lib/record/autocomplete/autocomplete.component';
+export * from './lib/record/detail/detail-button/IRecordEvent.interface';
+export * from './lib/record/detail/detail-button/detail-button.component';
 export * from './lib/record/detail/detail.component';
+export * from './lib/record/detail/detail.directive';
+export * from './lib/record/detail/view/detail-record';
 export * from './lib/record/editor/editor.component';
 export * from './lib/record/editor/extensions';
 export * from './lib/record/editor/type/array-type/array-type.component';
@@ -87,4 +91,3 @@ export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/widget/menu/menu.component';
 export * from './lib/widget/sort-list/sort-list.component';
-

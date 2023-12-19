@@ -1,0 +1,59 @@
+<!--
+  RERO angular core
+  Copyright (C) 2020-2023 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<a href class="d-inline-block mb-2" (click)="$event.preventDefault(); goBack()">
+  <i class="fa fa-arrow-left mr-1"></i> {{ 'Back' | translate }}
+</a>
+<div class="float-right ml-4 mt-2 mb-4" >
+  <ng-content select="[beforeButton]"></ng-content>
+  <ng-container *ngIf="record && adminMode.can">
+    <button *ngIf="useStatus && useStatus.can && useStatus.url"
+      id="detail-use-button"
+      class="btn btn-sm btn-primary ml-1"
+      [title]="'Use'|translate"
+      [ngClass]="{
+        'btn-outline-primary': !isPrimaryAction('use'),
+        'btn-primary': isPrimaryAction('use')
+      }"
+      (click)="useRecord()"
+    ><i class="fa fa-hand-o-right"></i> {{ 'Use' | translate }}</button>
+    <button *ngIf="updateStatus && updateStatus.can"
+      id="detail-edit-button"
+      class="btn btn-sm ml-1"
+      [title]="'Edit'|translate"
+      [ngClass]="{
+        'btn-outline-primary': !isPrimaryAction('edit'),
+        'btn-primary': isPrimaryAction('edit')
+      }"
+      (click)="updateRecord(record)"
+    ><i class="fa fa-pencil"></i> {{ 'Edit' | translate }}</button>
+    <button *ngIf="deleteStatus.can; else deleteMessageLink"
+      id="detail-delete-button"
+      class="btn btn-sm btn-outline-danger ml-1"
+      [title]="'Delete'|translate"
+      (click)="deleteRecord(record)"
+    ><i class="fa fa-trash"></i> {{ 'Delete' | translate }}</button>
+    <ng-template #deleteMessageLink>
+      <button *ngIf="deleteStatus.message"
+        id="detail-delete-button"
+        class="btn btn-sm btn-outline-danger ml-1 disabled"
+        [title]="'Delete'|translate"
+        (click)="showDeleteMessage(deleteStatus.message)"
+      ><i class="fa fa-trash mr-1"></i> {{ 'Delete' | translate }}</button>
+    </ng-template>
+  </ng-container>
+  <ng-content select="[afterButton]"></ng-content>
+</div>
