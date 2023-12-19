@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,11 +20,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { isObservable, Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription, isObservable, of } from 'rxjs';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
+import { IRecordEvent } from './detail-button/IRecordEvent.interface';
 import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
 
@@ -33,159 +34,120 @@ import { JsonComponent } from './view/json.component';
   templateUrl: './detail.component.html'
 })
 export class DetailComponent implements OnInit, OnDestroy {
-  /**
-   * Object for checking record deletion permission.
-   */
-  deleteStatus: ActionStatus = {
-    can: true,
-    message: ''
-  };
 
-  /**
-   * Record can be updated ?
-   */
-  updateStatus: ActionStatus = {
-    can: true,
-    message: ''
-  };
+  /** View component for displaying record */
+  @Input() viewComponent: any = null;
 
-  /**
-   * Record can be used ?
-   */
-  useStatus: ActionStatus = {
-    can: false,
-    message: '',
-    url: ''
-  };
+  /** Record can be used ? */
+  useStatus: ActionStatus = { can: false, message: '', url: '' };
 
-  /**
-   * Observable resolving record data
-   */
+  /** Record can be updated ? */
+  updateStatus: ActionStatus = { can: false, message: '' };
+
+  /** Record can be deleted ? */
+  deleteStatus: ActionStatus = { can: false, message: '' };
+
+  /** Observable resolving record data */
   record$: Observable<any> = null;
 
-  /**
-   * Record data
-   */
+  /** Record data */
   record: any = null;
 
-  /**
-   * Error message
-   */
+  /** Error message */
   error: Error;
 
-  /**
-   * Admin mode for CRUD operations
-   */
-  adminMode: ActionStatus = {
-    can: true,
-    message: ''
-  };
+  /** Admin mode for CRUD operations */
+  adminMode: ActionStatus = { can: true, message: '' };
 
-  /**
-   * View component for displaying record
-   */
-  @Input()
-  viewComponent: any = null;
+  /** Type of record */
+  type: string;
 
-  /**
-   * Subscription to route parameters observables
-   */
-  private _routeParametersSubscription: Subscription;
+  /**Subscription to route parameters observables */
+  private routeParametersSubscription: Subscription;
 
-  /**
-   * Object type route config
-   */
-  private _config: any = null;
-
-  /**
-   * Object type
-   */
-  private _type: string;
+  /** Object type route config */
+  private config: any = null;
 
   // Subscription to detail component view observable.
-  private _detailComponentSubscription: Subscription;
+  private detailComponentSubscription: Subscription;
 
-  /**
-   * Directive for displaying record
-   */
+  /** Directive for displaying record */
   @ViewChild(RecordDetailDirective, { static: true })
   recordDetail: RecordDetailDirective;
 
   /**
-   *
-   * @param _route Current route.
-   * @param _router Router service.
-   * @param _location Location.
-   * @param _componentFactoryResolver Component factory resolver.
-   * @param _recordService Record service.
-   * @param _recordUiService Record UI service.
-   * @param _toastrService Toastr service.
-   * @param _translate Translate service.
-   * @param _spinner Spinner service.
+   * Constructor
+   * @param route Current route.
+   * @param router Router service.
+   * @param location Location.
+   * @param componentFactoryResolver Component factory resolver.
+   * @param recordService Record service.
+   * @param recordUiService Record UI service.
+   * @param toastrService Toastr service.
+   * @param translate Translate service.
+   * @param spinner Spinner service.
    */
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _location: Location,
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _recordService: RecordService,
-    private _recordUiService: RecordUiService,
-    private _toastrService: ToastrService,
-    private _translate: TranslateService,
-    private _spinner: NgxSpinnerService
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected location: Location,
+    protected componentFactoryResolver: ComponentFactoryResolver,
+    protected recordService: RecordService,
+    protected recordUiService: RecordUiService,
+    protected toastrService: ToastrService,
+    protected translate: TranslateService,
+    protected spinner: NgxSpinnerService
   ) { }
 
-  /**
-   * On init hook
-   */
+  /** On init hook */
   ngOnInit() {
-    this._routeParametersSubscription = this._route.paramMap.subscribe(() => {
-      this._spinner.show();
+    this.routeParametersSubscription = this.route.paramMap.subscribe(() => {
+      this.spinner.show();
 
       this.loadViewComponentRef();
 
-      const pid = this._route.snapshot.paramMap.get('pid');
-      this._type = this._route.snapshot.paramMap.get('type');
+      const pid = this.route.snapshot.paramMap.get('pid');
+      this.type = this.route.snapshot.paramMap.get('type');
 
-      this._recordUiService.types = this._route.snapshot.data.types;
-      this._config = this._recordUiService.getResourceConfig(this._type);
+      this.recordUiService.types = this.route.snapshot.data.types;
+      this.config = this.recordUiService.getResourceConfig(this.type);
 
-      const type = this._config.index ? this._config.index : this._config.key;
-      this.record$ = this._recordService.getRecord(type, pid, 1, this._config.itemHeaders || null);
+      const type = this.config.index || this.config.key;
+      this.record$ = this.recordService.getRecord(type, pid, 1, this.config.itemHeaders || null);
       this.record$.subscribe(
         (record) => {
           this.record = record;
 
-          this._recordUiService.canReadRecord$(this.record, this._type).subscribe(result => {
+          this.recordUiService.canReadRecord$(this.record, this.type).subscribe(result => {
             if (result.can === false) {
-              this._toastrService.error(
-                this._translate.instant('You cannot read this record'),
-                this._translate.instant(this._type)
+              this.toastrService.error(
+                this.translate.instant('You cannot read this record'),
+                this.translate.instant(this.type)
               );
-              this._location.back();
+              this.location.back();
             }
           });
-          this._recordUiService.canDeleteRecord$(this.record, this._type).subscribe(result => {
+          this.recordUiService.canDeleteRecord$(this.record, this.type).subscribe(result => {
             this.deleteStatus = result;
           });
 
-          this._recordUiService.canUpdateRecord$(this.record, this._type).subscribe(result => {
+          this.recordUiService.canUpdateRecord$(this.record, this.type).subscribe(result => {
             this.updateStatus = result;
           });
 
-          this._recordUiService.canUseRecord$(this.record, this._type).subscribe(result => {
+          this.recordUiService.canUseRecord$(this.record, this.type).subscribe(result => {
             this.useStatus = result;
           });
 
-          if (this._route.snapshot.data.adminMode) {
-            this._route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
+          if (this.route.snapshot.data.adminMode) {
+            this.route.snapshot.data.adminMode().subscribe((am: ActionStatus) => this.adminMode = am);
           }
 
-          this._spinner.hide();
+          this.spinner.hide();
         },
         (error) => {
           this.error = error;
-          this._spinner.hide();
+          this.spinner.hide();
         }
       );
 
@@ -200,62 +162,43 @@ export class DetailComponent implements OnInit, OnDestroy {
    * Unsubscribes from the observable for detail view.
    */
   ngOnDestroy(): void {
-    this._routeParametersSubscription.unsubscribe();
+    this.routeParametersSubscription.unsubscribe();
 
-    if (this._detailComponentSubscription) {
-      this._detailComponentSubscription.unsubscribe();
+    if (this.detailComponentSubscription) {
+      this.detailComponentSubscription.unsubscribe();
     }
   }
 
   /**
-   * Getter for type of resource.
-   *
-   * @returns Type of resource as string.
+   * Record event
+   * @param event - Record event message
    */
-  get type(): string {
-    return this._type;
+  recordEvent(event: IRecordEvent): void {
+    switch(event.action) {
+      case 'use':
+        this.router.navigateByUrl(event.url);
+      break;
+      case 'update':
+        this.router.navigate(
+          ['../../edit', event.record.id],
+          { relativeTo: this.route, replaceUrl: true }
+        );
+      break;
+      case 'delete':
+        this.deleteRecord(event.record);
+      break;
+      default:
+        throw new Error('Missing record event action.');
+    }
   }
 
   /**
    * Getter giving the information if file management is enabled.
-   *
    * @returns True if file management is enabled.
    */
   get filesEnabled(): boolean {
-    return this._config.files && this._config.files.enabled ? this._config.files.enabled : false;
+    return this.config.files && this.config.files.enabled ? this.config.files.enabled : false;
   }
-
-  /**
-   * Go back to previous page
-   */
-  goBack() {
-    this._location.back();
-  }
-
-  /**
-   * Use the record
-   */
-  useRecord() {
-    this._router.navigateByUrl(this.useStatus.url);
-  }
-
-  /**
-   * define if an action is the primary action for the resource
-   * @param actionName - string: the action name to check
-   * @return boolean
-   */
-  isPrimaryAction(actionName: string): boolean {
-    switch (actionName) {
-      case 'edit':
-      case 'update':
-        return this.updateStatus && this.updateStatus.can && (!this.useStatus || !this.useStatus.can);
-      case 'use':
-        return this.useStatus && this.useStatus.can;
-      default:
-        return false;
-    }
-  }
-
 
   /**
    * Delete the record and go back to previous page.
@@ -264,56 +207,51 @@ export class DetailComponent implements OnInit, OnDestroy {
    */
   deleteRecord(element: any) {
     const pid = typeof element === 'object' ? element.id : element;
-    return this._recordUiService.deleteRecord(this._type, pid).subscribe((result: any) => {
+    return this.recordUiService.deleteRecord(this.type, pid).subscribe((result: any) => {
       if (result === true) {
         let redirectUrl = '../..';
-        const navigateOptions = { relativeTo: this._route };
-        if (typeof element === 'object' && this._config.redirectUrl) {
-          this._config.redirectUrl(element, 'delete').subscribe((redirect: string) => {
+        const navigateOptions = { relativeTo: this.route };
+        if (typeof element === 'object' && this.config.redirectUrl) {
+          this.config.redirectUrl(element, 'delete').subscribe((redirect: string) => {
             if (redirect !== null) {
               redirectUrl = redirect;
             }
-            this._router.navigate([redirectUrl], navigateOptions);
+            this.router.navigate([redirectUrl], navigateOptions);
           });
         }
-        this._router.navigate([redirectUrl], navigateOptions);
+        this.router.navigate([redirectUrl], navigateOptions);
       }
     });
   }
 
   /**
    * Show a modal containing message given in parameter.
-   * @param event - DOM event
    * @param message - message to display into modal
    */
-  showDeleteMessage(message: string) {
-    this._recordUiService.showDeleteMessage(message);
+  showDeleteMessage(message: string): void {
+    this.recordUiService.showDeleteMessage(message);
   }
 
-  /**
-   * Dynamically load component depending on selected resource type.
-   */
-  private loadRecordView() {
-    const componentFactory = this._componentFactoryResolver
-      .resolveComponentFactory(this.viewComponent ? this.viewComponent : JsonComponent);
-    const viewContainerRef = this.recordDetail.viewContainerRef;
+  /** Dynamically load component depending on selected resource type. */
+  private loadRecordView(): void {
+    const componentFactory = this.componentFactoryResolver
+      .resolveComponentFactory(this.viewComponent || JsonComponent);
+    const { viewContainerRef } = this.recordDetail;
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
     (componentRef.instance as JsonComponent).record$ = this.record$;
-    (componentRef.instance as JsonComponent).type = this._route.snapshot.paramMap.get('type');
+    (componentRef.instance as JsonComponent).type = this.route.snapshot.paramMap.get('type');
   }
 
-  /**
-   * Load component view corresponding to type
-   */
+  /** Load component view corresponding to type */
   private loadViewComponentRef() {
-    if (!this._route.snapshot.data.types || this._route.snapshot.data.types.length === 0) {
+    if (!this.route.snapshot.data.types || this.route.snapshot.data.types.length === 0) {
       throw new Error('Configuration types not passed to component');
     }
 
-    const type = this._route.snapshot.paramMap.get('type');
-    const types = this._route.snapshot.data.types;
+    const type = this.route.snapshot.paramMap.get('type');
+    const { types } = this.route.snapshot.data;
     const index = types.findIndex((item: any) => item.key === type);
 
     if (index === -1) {
@@ -327,7 +265,7 @@ export class DetailComponent implements OnInit, OnDestroy {
         detailComponent$ = of(detailComponent$);
       }
 
-      this._detailComponentSubscription = detailComponent$.subscribe(
+      this.detailComponentSubscription = detailComponent$.subscribe(
         (component: any) => {
           this.viewComponent = component;
         }

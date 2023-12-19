@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,6 +76,7 @@ import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
 import { FileComponent } from './files/file/file.component';
+import { DetailButtonComponent } from './detail/detail-button/detail-button.component';
 
 @NgModule({
     declarations: [
@@ -120,7 +121,8 @@ import { FileComponent } from './files/file/file.component';
         DateTimepickerTypeComponent,
         PasswordGeneratorTypeComponent,
         MulticheckboxComponent,
-        FileComponent
+        FileComponent,
+        DetailButtonComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -201,7 +203,9 @@ import { FileComponent } from './files/file/file.component';
         FormlyModule,
         FormlyBootstrapModule,
         FormlySelectModule,
-        ExportButtonComponent
+        ExportButtonComponent,
+        DetailButtonComponent,
+        RecordDetailDirective
     ],
     providers: [
         {
