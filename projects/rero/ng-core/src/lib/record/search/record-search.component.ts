@@ -21,8 +21,8 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, isObservable, Observable, of, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, NEVER, Observable, Subscription, isObservable, of } from 'rxjs';
+import { catchError, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
@@ -31,7 +31,6 @@ import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, Se
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
-import { createTrue } from 'typescript';
 
 export interface SearchParams {
   currentType: string;
@@ -375,6 +374,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
             })
           );
         }),
+        tap(() => this.hits = []),
         switchMap(() => this._getRecords())
       ).subscribe(
         (records: Record) => {
