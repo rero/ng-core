@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,12 +23,13 @@ import {
 import { Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { catchError, debounceTime, map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
 import { Error } from '../error/error';
 import { resolveRefs } from './editor/utils';
 import { Record } from './record';
+import { RecordHandleErrorService } from './record.handle-error.service';
 
 @Injectable({
   providedIn: 'root',
@@ -78,14 +79,16 @@ export class RecordService {
 
   /**
    * Constructor
-   * @param _http HttpClient
-   * @param _apiService ApiService
-   * @param _translateService Translate service.
+   * @param http HttpClient
+   * @param apiService ApiService
+   * @param translateService Translate service.
+   * @param recordHandleErrorService RecordHandleErrorService
    */
   constructor(
-    private _http: HttpClient,
-    private _apiService: ApiService,
-    private _translateService: TranslateService
+    private http: HttpClient,
+    private apiService: ApiService,
+    private translateService: TranslateService,
+    private recordHandleErrorService: RecordHandleErrorService
   ) {}
 
   /**
@@ -147,12 +150,12 @@ export class RecordService {
     httpParams = httpParams.append('facets', facets.join(','));
 
     // http request with headers
-    return this._http
-      .get<Record>(this._apiService.getEndpointByType(type, true) + '/', {
+    return this.http
+      .get<Record>(this.apiService.getEndpointByType(type, true) + '/', {
         params: httpParams,
         headers: this._createRequestHeaders(headers),
       })
-      .pipe(catchError((error) => this._handleError(error)));
+      .pipe(catchError((error) => this._handleError(error, type)));
   }
 
   /**
@@ -161,10 +164,10 @@ export class RecordService {
    * @param pid - string, PID to remove
    */
   delete(type: string, pid: string): Observable<void | Error> {
-    return this._http
-      .delete<void>(this._apiService.getEndpointByType(type, true) + '/' + pid)
+    return this.http
+      .delete<void>(this.apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(
-        catchError((error) => this._handleError(error)),
+        catchError((error) => this._handleError(error, type)),
         tap(() => this.onDelete.next(this._createEvent(type, { pid })))
       );
   }
@@ -180,9 +183,9 @@ export class RecordService {
     resolve = 0,
     headers: any = {}
   ): Observable<any | Error> {
-    return this._http
+    return this.http
       .get<Record>(
-        `${this._apiService.getEndpointByType(
+        `${this.apiService.getEndpointByType(
           type,
           true
         )}/${pid}?resolve=${resolve}`,
@@ -190,7 +193,7 @@ export class RecordService {
           headers: this._createRequestHeaders(headers),
         }
       )
-      .pipe(catchError((error) => this._handleError(error)));
+      .pipe(catchError((error) => this._handleError(error, type)));
   }
 
   /**
@@ -200,8 +203,8 @@ export class RecordService {
   getSchemaForm(recordType: string) {
     let recType = recordType.replace(/ies$/, 'y');
     recType = recType.replace(/s$/, '');
-    const url = this._apiService.getSchemaFormEndpoint(recordType, true);
-    return this._http.get<any>(url).pipe(
+    const url = this.apiService.getSchemaFormEndpoint(recordType, true);
+    return this.http.get<any>(url).pipe(
       catchError((e) => {
         if (e.status === 404) {
           return of(null);
@@ -220,10 +223,10 @@ export class RecordService {
    */
   create(recordType: string, record: object): Observable<any> {
 
-    return this._http
-      .post(this._apiService.getEndpointByType(recordType, true) + '/', record)
+    return this.http
+      .post(this.apiService.getEndpointByType(recordType, true) + '/', record)
       .pipe(
-        catchError((error) => this._handleError(error)),
+        catchError((error) => this._handleError(error, recordType)),
         tap(() => this.onCreate.next(this._createEvent(recordType, { record })))
       );
   }
@@ -235,12 +238,12 @@ export class RecordService {
    * @param record - object, record to update
    */
   update(recordType: string, pid: string, record: any) {
-    const url = `${this._apiService.getEndpointByType(recordType, true)}/${pid}`;
+    const url = `${this.apiService.getEndpointByType(recordType, true)}/${pid}`;
 
-    return this._http
+    return this.http
         .put(url, record)
         .pipe(
-          catchError((error) => this._handleError(error)),
+          catchError((error) => this._handleError(error, recordType)),
           tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
         );
   }
@@ -275,9 +278,9 @@ export class RecordService {
    * @param field - FormlyFieldConfig, field to check
    * @param recordType - string, type of record
    * @param excludePid - string, PID to ignore (normally the current record we are checking)
-   * @param term - string, the elaticsearch term to check the uniqueness, use field.key if not given
+   * @param term - string, the elasticsearch term to check the uniqueness, use field.key if not given
    * @param limitToValues - string[], limit the test to a given list of values
-   * @param filter - string, additionnal es query filters
+   * @param filter - string, additional es query filters
    */
   uniqueValue(
     field: FormlyFieldConfig,
@@ -331,7 +334,7 @@ export class RecordService {
     switch (typeof total) {
       case 'object':
         if (relation) {
-          return `${this._translateService.instant(
+          return `${this.translateService.instant(
             total.relation
           )} ${total.value.toString()}`;
         }
@@ -360,7 +363,7 @@ export class RecordService {
     field: string,
     q: string
   ): Observable<Array<string>> {
-    return this._http.get<Array<string>>(`${this._apiService.baseUrl}${url}`, {
+    return this.http.get<Array<string>>(`${this.apiService.baseUrl}${url}`, {
       params: { resource, field, q },
     });
   }
@@ -368,40 +371,11 @@ export class RecordService {
   /**
    * Error handling during api call process.
    * @param error - HttpErrorResponse
+   * @param resourceName- Name of current resource
    * @return throwError
    */
-  private _handleError(error: HttpErrorResponse): Observable<Error> {
-
-    // handle Marshmallow errors
-    //   Python marshmallow library can raise ValidationError. In this case, the message is simply 'Validation error'
-    //   but list of errors are passed into the `errors` fields.
-    if (error.error?.errors) {
-      const message = error.error.errors
-          .map(err => this._translateService.instant(err.message))
-          .join(' ; ');
-      return throwError({ status: error.status, title: message});
-    }
-
-    // check if we have possible custom error message to display
-    if (error.status === 400 && error.error.hasOwnProperty('message')) {
-      let message = error.error.message;
-      message = message.replace(/^Validation error: /, '').trim();  // Remove Invenio `ValidationError` header
-      return throwError({ status: error.status, title: this._translateService.instant(message) });
-    }
-
-    // If not, then return default message
-    switch (error.status) {
-      case 400:
-        return throwError({ status: error.status, title: this._translateService.instant('Bad request') });
-      case 401:
-        return throwError({ status: error.status, title: this._translateService.instant('Unauthorized') });
-      case 403:
-        return throwError({ status: error.status, title: this._translateService.instant('Forbidden') });
-      case 404:
-        return throwError({ status: error.status, title: this._translateService.instant('Not found') });
-      default:
-        return throwError({ status: 500, title: this._translateService.instant('An error occurred') });
-    }
+  private _handleError(error: HttpErrorResponse, resourceName?: string): Observable<never> {
+    return this.recordHandleErrorService.handleError(error, resourceName);
   }
 
   /**

@@ -61,6 +61,7 @@ export * from './lib/record/editor/wrappers/toggle-wrapper/toggle-wrappers.compo
 export * from './lib/record/export-button/export-button.component';
 export * from './lib/record/record';
 export * from './lib/record/record-ui.service';
+export * from './lib/record/record.handle-error.service';
 export * from './lib/record/record.module';
 export * from './lib/record/record.service';
 export * from './lib/record/search/aggregation/service/bucket-name.service';
@@ -87,4 +88,3 @@ export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/widget/menu/menu.component';
 export * from './lib/widget/sort-list/sort-list.component';
-
