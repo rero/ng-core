@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
  */
 import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldConfig, FormlyTemplateOptions } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
@@ -454,7 +454,7 @@ export class TranslateExtension {
     }
     // Options
     if (to.options) {
-      // Process only if the array options is observable or contains a dictionnary with label/value
+      // Process only if the array options is observable or contains a dictionary with label/value
       if (isObservable(to.options) || to.options.some((o: any) => 'label' in o && 'value' in o)) {
         to.options = !isObservable(to.options) ? of(to.options) : to.options;
         to.options = to.options.pipe(
@@ -479,6 +479,19 @@ export class TranslateExtension {
           })
         );
       }
+    }
+    // AddonRight or AddonLeft
+    if (to.addonRight?.text) {
+      // Store original text to the new key
+      to.addonRight.originalText = to.addonRight.text;
+      to.addonRight.text = this._translate.instant(to.addonRight.originalText);
+      this._translate.onLangChange.subscribe(() => to.addonRight.text = this._translate.instant(to.addonRight.originalText));
+    }
+    if (to.addonLeft?.text) {
+      // Store original text to the new key
+      to.addonLeft.originalText = to.addonLeft.text;
+      this._translate.instant(to.addonLeft.originalText);
+      this._translate.onLangChange.subscribe(() => to.addonLeft.text = this._translate.instant(to.addonLeft.originalText));
     }
   }
 }

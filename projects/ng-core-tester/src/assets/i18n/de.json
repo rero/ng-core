@@ -3,5 +3,7 @@
   "location": "Standort",
   "created year": "Erstellungsjahr",
   "library": "Bibliothek",
-  "German": "Deutsch"
+  "German": "Deutsch",
+  "from": "Von",
+  "day(s)": "Tag(e)"
 }
