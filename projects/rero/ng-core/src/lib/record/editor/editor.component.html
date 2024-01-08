@@ -48,7 +48,9 @@
                 <div class="btn-group" dropdown>
                     <button type="submit"
                             id="editor-save-button"
-                            class="btn btn-primary btn-sm ml-1">
+                            class="btn btn-primary btn-sm ml-1"
+                            [disabled]="isSaveButtonDisabled"
+                    >
                         <i class="fa fa-save"></i>
                         {{ 'Save' | translate }}
                     </button>

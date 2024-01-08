@@ -26,7 +26,7 @@ import { cloneDeep } from 'lodash-es';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { BehaviorSubject, Observable, Subscription, combineLatest, of, throwError } from 'rxjs';
-import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
+import { catchError, debounceTime, finalize, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { AbstractCanDeactivateComponent } from '../../component/abstract-can-deactivate.component';
 import { Error } from '../../error/error';
@@ -107,6 +107,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
 
   // If an error occurred, it is stored, to display in interface.
   error: Error;
+
+  /** Disables the save button during the action */
+  isSaveButtonDisabled = false;
 
   // subscribers
   private _subscribers: Subscription = new Subscription();
@@ -500,6 +503,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Save the data on the server.
    */
   submit(): void {
+    this.isSaveButtonDisabled = true;
     this._canDeactivate();
     this.form.updateValueAndValidity();
 
@@ -507,6 +511,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       this.toastrService.error(
         this.translateService.instant('The form contains errors.')
       );
+      this.isSaveButtonDisabled = false;
       return;
     }
 
@@ -531,14 +536,16 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         catchError((error) => this._handleError(error)),
         map(record => {
           return { record, action: 'update', message: this.translateService.instant('Record updated.') };
-        })
+        }),
+        finalize(() => this.isSaveButtonDisabled = false)
       );
     } else {
       recordAction$ = this.recordService.create(this.recordType, this.preCreateRecord(data)).pipe(
         catchError((error) => this._handleError(error)),
         map(record => {
           return { record, action: 'create', message: this.translateService.instant('Record created.') };
-        })
+        }),
+        finalize(() => this.isSaveButtonDisabled = false)
       );
     }
 
