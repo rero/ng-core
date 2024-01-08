@@ -37,7 +37,8 @@
     "remoteTypeaheadWithoutFilters",
     "remoteTypeaheadWithFilters",
     "input_with_default_value",
-    "name_with_definition"
+    "name_with_definition",
+    "field_with_addon_left_right"
   ],
   "required": [
     "required"
@@ -1010,6 +1011,21 @@
         "name": {
           "title": "Name",
           "$ref": "#/definitions/name_definition"
+        }
+      }
+    },
+    "field_with_addon_left_right": {
+      "title": "Field with addon left and right",
+      "type": "integer",
+      "minimum": 0,
+      "form": {
+        "templateOptions": {
+          "addonRight": {
+            "text": "day(s)"
+          },
+          "addonLeft": {
+            "text": "from"
+          }
         }
       }
     }
