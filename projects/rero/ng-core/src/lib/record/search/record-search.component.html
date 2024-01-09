@@ -126,7 +126,7 @@
                     class="btn btn-outline-primary btn-sm text-left"
                     [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
                     (click)="searchInField(searchFields[0])">
-            {{ 'Search in' | translate }} {{ searchFields[0].label }}
+            {{ 'Search in' | translate }} {{ searchFields[0].label | translate }}
             </button>
             <ng-template #fieldsDropdown>
               <button dropdownToggle type="button"
@@ -139,7 +139,7 @@
                 <li *ngFor="let field of searchFields">
                   <a href="#" class="dropdown-item" [ngClass]="{ 'active': field.selected }"
                     (click)="$event.preventDefault(); searchInField(field)">
-                    {{ field.label }}
+                    {{ field.label | translate }}
                   </a>
                 </li>
               </ul>
@@ -154,7 +154,7 @@
                 </ng-container>
                 <ng-template #searchFilterWithSection>
                   <ng-container *ngIf="showFilterSection(searchFilter)">
-                    <div class="mt-2" translate>{{ searchFilter.label }}</div>
+                    <div class="mt-2">{{ searchFilter.label | translate }}</div>
                     <ng-container *ngFor="let searchFilterSection of searchFilter.filters">
                       <ng-container *ngIf="showFilter(searchFilterSection)" [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"></ng-container>
                     </ng-container>
