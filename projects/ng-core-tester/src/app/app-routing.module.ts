@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2023 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,6 @@ import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { EditorNewEditComponent } from './record/editor-new-edit/editor-new-edit.component';
 import { EditorComponent } from './record/editor/editor.component';
 import { RouteService } from './routes/route.service';
 
@@ -196,10 +195,6 @@ const routes: Routes = [
   {
     path: 'editor',
     component: EditorComponent
-  },
-  {
-    path: 'editor-new-edit',
-    component: EditorNewEditComponent
   },
   {
     matcher: documentsMatcher,
@@ -393,14 +388,14 @@ const routes: Routes = [
  * Routing module for application.
  */
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, {})],
   exports: [RouterModule]
 })
 export class AppRoutingModule {
   /**
    * Constructor
    *
-   * Intializes routes.
+   * Initializes routes.
    *
    * @param _routeService Route service
    */

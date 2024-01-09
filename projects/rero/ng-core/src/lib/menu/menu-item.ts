@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2020 RERO
+ * RERO angular core
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,55 +20,55 @@ import { MenuFactoryInterface } from './menu-factory-interface';
 export class MenuItem implements MenuItemInterface {
 
   /** Menu name */
-  private _name: string;
+  private name: string;
 
   /** Prefix */
-  private _prefix: {
+  private prefix: {
     name: string,
     class: string
   };
 
   /** Suffix */
-  private _suffix: {
+  private suffix: {
     name: string,
     class: string
   };
 
   /** Factory */
-  private _factory: MenuFactoryInterface;
+  private factory: MenuFactoryInterface;
 
   /** Parent menuItem */
-  private _parent?: MenuItemInterface;
+  private parent?: MenuItemInterface;
 
   /** Children of menuItem */
-  private _children = [];
+  private children = [];
 
   /** Uri */
-  private _uri?: string;
+  private uri?: string;
 
   /** Uri params */
-  private _queryParams = {};
+  private queryParams = {};
 
   /** Angular router link */
-  private _routerLink: string[];
+  private routerLink: string[];
 
   /** Label of menu */
-  private _label?: string;
+  private label?: string;
 
   /** Attributes */
-  private _attributes = {};
+  private attributes = {};
 
   /** Label attributes */
-  private _labelAttributes = {};
+  private labelAttributes = {};
 
   /** Extra attributes */
-  private _extras = {};
+  private extras = {};
 
   /** Active menu */
-  private _active = false;
+  private active = false;
 
   /** Is the menu is enabled */
-  private _enabled = true;
+  private enabled = true;
 
 
   /**
@@ -77,7 +77,7 @@ export class MenuItem implements MenuItemInterface {
    * @param factory - MenuFactoryInterface or null
    */
   constructor(name: string, factory?: MenuFactoryInterface) {
-    this._name = name;
+    this.name = name;
     if (factory) {
       this.setFactory(factory);
     }
@@ -89,7 +89,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setFactory(factory: MenuFactoryInterface): this {
-    this._factory = factory;
+    this.factory = factory;
     return this;
   }
 
@@ -98,7 +98,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasFactory() {
-    return !!this._factory;
+    return !!this.factory;
   }
 
   /**
@@ -106,7 +106,7 @@ export class MenuItem implements MenuItemInterface {
    * @return string, name of menu
    */
   getName() {
-    return this._name;
+    return this.name;
   }
 
   /**
@@ -115,10 +115,10 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setName(name: string): this {
-    if (this._name === name) {
+    if (this.name === name) {
       return this;
     }
-    this._name = name;
+    this.name = name;
     return this;
   }
 
@@ -127,7 +127,7 @@ export class MenuItem implements MenuItemInterface {
    * @return Object with name and class properties
    */
   getPrefix() {
-    return this._prefix;
+    return this.prefix;
   }
 
   /**
@@ -137,7 +137,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setPrefix(name: string, htmlClasses?: string): this {
-    this._prefix = this._setPrefixSuffix(name, htmlClasses);
+    this.prefix = this._setPrefixSuffix(name, htmlClasses);
     return this;
   }
 
@@ -146,7 +146,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   removePrefix(): this {
-    this._prefix = undefined;
+    this.prefix = undefined;
     return this;
   }
 
@@ -155,7 +155,7 @@ export class MenuItem implements MenuItemInterface {
    * @return Object with name and class properties
    */
   getSuffix() {
-    return this._suffix;
+    return this.suffix;
   }
 
   /**
@@ -165,7 +165,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setSuffix(name: string, htmlClasses?: string): this {
-    this._suffix = this._setPrefixSuffix(name, htmlClasses);
+    this.suffix = this._setPrefixSuffix(name, htmlClasses);
     return this;
   }
 
@@ -174,7 +174,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   removeSuffix(): this {
-    this._suffix = undefined;
+    this.suffix = undefined;
     return this;
   }
 
@@ -183,7 +183,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasUri(): boolean {
-    return (this._uri) ? true : false;
+    return !!this.uri;
   }
 
   /**
@@ -191,7 +191,7 @@ export class MenuItem implements MenuItemInterface {
    * @return string, uri
    */
   getUri() {
-    return this._uri;
+    return this.uri;
   }
 
   /**
@@ -200,7 +200,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setUri(uri?: string): this {
-    this._uri = uri;
+    this.uri = uri;
     return this;
   }
 
@@ -210,7 +210,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasQueryParam(name: string): boolean {
-    return name in this._queryParams;
+    return name in this.queryParams;
   }
 
   /**
@@ -218,7 +218,7 @@ export class MenuItem implements MenuItemInterface {
    * @return Object
    */
   getQueryParams(): {} {
-    return this._queryParams;
+    return this.queryParams;
   }
 
   /**
@@ -228,7 +228,7 @@ export class MenuItem implements MenuItemInterface {
    */
   getQueryParam(name: string, defaultValue?: null | string): null | any {
     if (this.hasQueryParam(name)) {
-      return this._queryParams[name];
+      return this.queryParams[name];
     }
     return defaultValue;
   }
@@ -240,7 +240,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setQueryParam(param: string, value: any): this {
-    this._queryParams[param] = value;
+    this.queryParams[param] = value;
     return this;
   }
 
@@ -250,7 +250,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setQueryParams(params: {}): this {
-    this._queryParams = params;
+    this.queryParams = params;
     return this;
   }
 
@@ -259,7 +259,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasRouterLink(): boolean {
-    return Array.isArray(this._routerLink) && this._routerLink.length > 0;
+    return Array.isArray(this.routerLink) && this.routerLink.length > 0;
   }
 
   /**
@@ -267,7 +267,7 @@ export class MenuItem implements MenuItemInterface {
    * @return []
    */
   getRouterLink() {
-    return this._routerLink;
+    return this.routerLink;
   }
 
   /**
@@ -276,7 +276,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setRouterLink(routerLink?: string[]): this {
-    this._routerLink = routerLink;
+    this.routerLink = routerLink;
     return this;
   }
 
@@ -285,7 +285,7 @@ export class MenuItem implements MenuItemInterface {
    * @return string, return label if defined or name
    */
   getLabel() {
-    return this._label ? this._label : this.getName();
+    return this.label || this.getName();
   }
 
   /**
@@ -294,7 +294,7 @@ export class MenuItem implements MenuItemInterface {
    * @return string
    */
   setLabel(label?: string): this {
-    this._label = label;
+    this.label = label;
     return this;
   }
 
@@ -304,24 +304,24 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasAttribute(name: string) {
-    return name in this._attributes;
+    return name in this.attributes;
   }
 
   /**
    * Get attributes
-   * @return dictionnary of attributes
+   * @return dictionary of attributes
    */
   getAttributes() {
-    return this._attributes;
+    return this.attributes;
   }
 
   /**
    * set attributes
-   * @param attributes - dictionnary of attributes
+   * @param attributes - dictionary of attributes
    * @return MenuItem
    */
   setAttributes(attributes: {}): this {
-    this._attributes = attributes;
+    this.attributes = attributes;
     return this;
   }
 
@@ -331,8 +331,8 @@ export class MenuItem implements MenuItemInterface {
    * @param defaultValue - string | null
    */
   getAttribute(name: string, defaultValue?: null | string): null | string {
-    return (name in this._attributes)
-      ? this._attributes[name]
+    return (name in this.attributes)
+      ? this.attributes[name]
       : defaultValue;
   }
 
@@ -343,7 +343,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setAttribute(name: string, value: string): this {
-    this._attributes[name] = value;
+    this.attributes[name] = value;
     return this;
   }
 
@@ -353,21 +353,21 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   deleteAttribute(name: string): boolean {
-    return this._deleteAttr(name, this._attributes);
+    return this._deleteAttr(name, this.attributes);
   }
 
   /**
    * Add child
    * @param child - MenuItem or string
-   * @param options - dictionnary of options
+   * @param options - dictionary of options
    * @return MenuItem
    */
   addChild(child: MenuItemInterface | string, options?: {}): MenuItemInterface {
     if (typeof(child) === 'string') {
-      child = this._factory.createItem(child, options);
+      child = this.factory.createItem(child, options);
     }
     child.setParent(this);
-    this._children.push(child);
+    this.children.push(child);
     return child;
   }
 
@@ -376,7 +376,7 @@ export class MenuItem implements MenuItemInterface {
    * @return array of children
    */
   getChildren(): Array<MenuItemInterface> {
-    return this._children;
+    return this.children;
   }
 
   /**
@@ -385,8 +385,8 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem or null
    */
   getChild(name: string): MenuItemInterface {
-    return (name in this._children)
-      ? this._children[name]
+    return (name in this.children)
+      ? this.children[name]
       : null;
   }
 
@@ -396,7 +396,7 @@ export class MenuItem implements MenuItemInterface {
    */
   hasChildren(): boolean {
     let hasChildren = false;
-    this._children.forEach(() => {
+    this.children.forEach(() => {
       if (!hasChildren) {
         hasChildren = true;
       }
@@ -409,7 +409,7 @@ export class MenuItem implements MenuItemInterface {
    * @return integer, level of menu
    */
   getLevel(): number {
-    return this._parent ? this._parent.getLevel() + 1 : 0;
+    return this.parent ? this.parent.getLevel() + 1 : 0;
   }
 
   /**
@@ -417,7 +417,7 @@ export class MenuItem implements MenuItemInterface {
    * @return parent MenuItem
    */
   getParent(): MenuItemInterface {
-    return this._parent;
+    return this.parent;
   }
 
   /**
@@ -429,7 +429,7 @@ export class MenuItem implements MenuItemInterface {
     if (parent === this) {
       throw new Error('Item cannot be a child of itself');
     }
-    this._parent = parent;
+    this.parent = parent;
     return this;
   }
 
@@ -439,24 +439,24 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasLabelAttribute(name: string): boolean {
-    return name in this._labelAttributes;
+    return name in this.labelAttributes;
   }
 
   /**
    * Get label attributes
-   * @return dictionnary of label attributes
+   * @return dictionary of label attributes
    */
   getLabelAttributes(): {} {
-    return this._labelAttributes;
+    return this.labelAttributes;
   }
 
   /**
    * Set label attributes
-   * @param labelAttributes - dictionnary of label attributes
+   * @param labelAttributes - dictionary of label attributes
    * @return MenuItem
    */
   setLabelAttributes(labelAttributes: {}): this {
-    this._labelAttributes = labelAttributes;
+    this.labelAttributes = labelAttributes;
     return this;
   }
 
@@ -468,7 +468,7 @@ export class MenuItem implements MenuItemInterface {
    */
   getLabelAttribute(name: string, defaultValue?: null | string): null | string {
     if (this.hasLabelAttribute(name)) {
-      return this._labelAttributes[name];
+      return this.labelAttributes[name];
     }
     return defaultValue;
   }
@@ -480,7 +480,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   setLabelAttribute(name: string, value: string): this {
-    this._labelAttributes[name] = value;
+    this.labelAttributes[name] = value;
     return this;
   }
 
@@ -490,7 +490,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   deleteLabelAttribute(name: string): boolean {
-    return this._deleteAttr(name, this._labelAttributes);
+    return this._deleteAttr(name, this.labelAttributes);
   }
 
   /**
@@ -499,24 +499,24 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   hasExtra(name: string): boolean {
-    return name in this._extras;
+    return name in this.extras;
   }
 
   /**
    * Get extras
-   * @return dictionnary of extra attributes
+   * @return dictionary of extra attributes
    */
   getExtras(): {} {
-    return this._extras;
+    return this.extras;
   }
 
   /**
    * Set extras
-   * @param extras - dictionnary of extra attributes
+   * @param extras - dictionary of extra attributes
    * @return MenuItem
    */
   setExtras(extras: {}): this {
-    this._extras = extras;
+    this.extras = extras;
     return this;
   }
 
@@ -528,7 +528,7 @@ export class MenuItem implements MenuItemInterface {
    */
   getExtra(name: string, defaultValue?: null | string): null | string {
     if (this.hasExtra(name)) {
-      return this._extras[name];
+      return this.extras[name];
     }
     return defaultValue;
   }
@@ -541,7 +541,7 @@ export class MenuItem implements MenuItemInterface {
    */
   setExtra(name: string, value: string): this {
     if (!(this.hasExtra(name))) {
-      this._extras[name] = value;
+      this.extras[name] = value;
     }
     return this;
   }
@@ -552,7 +552,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   deleteExtraAttribute(name: string): boolean {
-    return this._deleteAttr(name, this._extras);
+    return this._deleteAttr(name, this.extras);
   }
 
   /**
@@ -560,7 +560,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   isActive() {
-    return this._active;
+    return this.active;
   }
 
   /**
@@ -568,7 +568,7 @@ export class MenuItem implements MenuItemInterface {
    * @param active - boolean
    */
   setActive(active: boolean) {
-    this._active = active;
+    this.active = active;
     return this;
   }
 
@@ -577,7 +577,7 @@ export class MenuItem implements MenuItemInterface {
    * @return boolean
    */
   isEnabled(): boolean {
-    return this._enabled;
+    return this.enabled;
   }
 
   /**
@@ -585,7 +585,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   enable(): this {
-    this._enabled = true;
+    this.enabled = true;
     return this;
   }
 
@@ -594,7 +594,7 @@ export class MenuItem implements MenuItemInterface {
    * @return MenuItem
    */
   disable(): this {
-    this._enabled = false;
+    this.enabled = false;
     return this;
   }
 
@@ -604,13 +604,13 @@ export class MenuItem implements MenuItemInterface {
    * @return integer, number of children
    */
   count(): number {
-    return this._children.length;
+    return this.children.length;
   }
 
   /**
    * Delete
    * @param name - string, name of attribute
-   * @param attributes - dictionnary of attributes
+   * @param attributes - dictionary of attributes
    * @return boolean
    */
   private _deleteAttr(name: string, attributes: {}): boolean {
@@ -626,7 +626,7 @@ export class MenuItem implements MenuItemInterface {
    * @param htmlClasses - null or string
    * @return Object with name and class attributes
    */
-  private _setPrefixSuffix(name: string, htmlClasses: null | string) {
+  private _setPrefixSuffix(name: string, htmlClasses: null | string) {
     return {
       name,
       class: htmlClasses

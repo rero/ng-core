@@ -32,12 +32,14 @@
     "textarea",
     "email",
     "date_time",
+    "date_only",
     "password",
     "array_with_multicheckbox",
     "remoteTypeaheadWithoutFilters",
     "remoteTypeaheadWithFilters",
     "input_with_default_value",
     "name_with_definition",
+    "field_expressions",
     "field_with_addon_left_right"
   ],
   "required": [
@@ -47,7 +49,7 @@
     "oneOf": {
       "title": "oneOf",
       "type": "object",
-      "additionnalProperties": "false",
+      "additionalProperties": "false",
       "oneOf": [
         {
           "title": "Property 1",
@@ -64,22 +66,17 @@
               "title": "Name",
               "type": "string",
               "minLength": 3,
-              "widget": {
-                "formlyConfig": {
-                  "templateOptions": {
-                    "itemCssClass": "col-lg-6"
-                  }
-                }
-              }
+              "className": "col-lg-6"
             },
             "hidden": {
               "title": "Hidden name",
               "type": "string",
               "minLength": 3,
+              "className": "col-lg-6",
               "widget": {
                 "formlyConfig": {
                   "hide": true,
-                  "templateOptions": {
+                  "props": {
                     "itemCssClass": "col-lg-6"
                   }
                 }
@@ -102,7 +99,7 @@
           },
           "widget": {
             "formlyConfig": {
-              "templateOptions": {
+              "props": {
                 "containerCssClass": "row"
               }
             }
@@ -117,7 +114,7 @@
               "minLength": 3,
               "widget": {
                 "formlyConfig": {
-                  "templateOptions": {
+                  "props": {
                     "itemCssClass": "col-lg-6"
                   }
                 }
@@ -131,7 +128,7 @@
               "readOnly": true,
               "widget": {
                 "formlyConfig": {
-                  "templateOptions": {
+                  "props": {
                     "itemCssClass": "col-lg-6"
                   }
                 }
@@ -143,7 +140,7 @@
               "default": true,
               "widget": {
                 "formlyConfig": {
-                  "templateOptions": {
+                  "props": {
                     "itemCssClass": "col-lg-6"
                   }
                 }
@@ -152,7 +149,7 @@
           },
           "widget": {
             "formlyConfig": {
-              "templateOptions": {
+              "props": {
                 "containerCssClass": "row"
               }
             }
@@ -161,7 +158,7 @@
       ],
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "cssClass": "border border-info rounded p-2"
           }
         }
@@ -205,7 +202,7 @@
       "widget": {
         "formlyConfig": {
           "hide": true,
-          "templateOptions": {
+          "props": {
             "navigation": {
               "essential": true
             }
@@ -219,7 +216,7 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "cssClass": "w-md-50"
           }
         }
@@ -231,7 +228,7 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "doNotSubmitOnEnter": true
           }
         }
@@ -249,7 +246,7 @@
       ],
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "options": [
               {
                 "value": "val1",
@@ -286,7 +283,7 @@
           "minLength": 3,
           "widget": {
             "formlyConfig": {
-              "templateOptions": {
+              "props": {
                 "itemCssClass": "col-md-6"
               }
             }
@@ -296,16 +293,18 @@
           "title": "Property 2",
           "type": "string",
           "minLength": 3,
-          "form": {
-            "templateOptions": {
-              "itemCssClass": "col-md-6"
+          "widget": {
+            "formlyConfig": {
+              "props": {
+                "itemCssClass": "col-md-6"
+              }
             }
           }
         }
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "containerCssClass": "row",
             "hideLabel": true
           }
@@ -361,7 +360,7 @@
         "minLength": 3,
         "widget": {
           "formlyConfig": {
-            "templateOptions": {
+            "props": {
               "itemCssClass": "col-lg-6"
             }
           }
@@ -369,7 +368,7 @@
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "containerCssClass": "row"
           }
         }
@@ -383,15 +382,17 @@
         "title": "Values",
         "type": "string",
         "minLength": 3,
-        "form": {
-          "templateOptions": {
-            "itemCssClass": "col-lg-6"
+        "widget": {
+          "formlyConfig": {
+            "props": {
+              "itemCssClass": "col-lg-6"
+            }
           }
         }
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "containerCssClass": "row"
           }
         }
@@ -423,7 +424,7 @@
             "minLength": 3,
             "widget": {
               "formlyConfig": {
-                "templateOptions": {
+                "props": {
                   "itemCssClass": "col-6"
                 }
               }
@@ -436,7 +437,7 @@
             "widget": {
               "formlyConfig": {
                 "hide": true,
-                "templateOptions": {
+                "props": {
                   "itemCssClass": "col-6"
                 }
               }
@@ -445,7 +446,7 @@
         },
         "widget": {
           "formlyConfig": {
-            "templateOptions": {
+            "props": {
               "containerCssClass": "row"
             }
           }
@@ -453,7 +454,7 @@
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "validation": {
               "validators": {
                 "numberOfSpecificValuesInObject": {
@@ -494,7 +495,7 @@
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "navigation": {
               "essential": true
             }
@@ -555,7 +556,7 @@
       "widget": {
         "formlyConfig": {
           "hide": true,
-          "templateOptions": {
+          "props": {
             "navigation": {
               "essential": true
             }
@@ -585,7 +586,7 @@
       ],
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "cssClass": "w-md-25"
           }
         }
@@ -599,8 +600,8 @@
       "widget": {
         "formlyConfig": {
           "hide": true,
-          "expressionProperties": {
-            "templateOptions.required": "field.parent.model.hide_with_required_expression_control === 'required'"
+          "expressions": {
+            "props.required": "field.parent.model.hide_with_required_expression_control === 'required'"
           }
         }
       }
@@ -631,8 +632,8 @@
           "widget": {
             "formlyConfig": {
               "hide": true,
-              "expressionProperties": {
-                "templateOptions.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
+              "expressions": {
+                "props.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
               }
             }
           }
@@ -690,7 +691,7 @@
       ],
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "options": [
               {
                 "label": "3 Value",
@@ -742,7 +743,7 @@
       ],
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "options": [
               {
                 "label": "3 Value",
@@ -782,7 +783,7 @@
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "options": [
               {
                 "label": "Value 1",
@@ -810,14 +811,14 @@
         "type": "string",
         "enum": [
           "library",
-          "deutsch",
+          "german",
           "createdYear",
           "location"
         ]
       },
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "options": [
               {
                 "label": "library",
@@ -829,7 +830,7 @@
               },
               {
                 "label": "German",
-                "value": "deutsch"
+                "value": "german"
               },
               {
                 "label": "location",
@@ -857,7 +858,12 @@
       "widget": {
         "formlyConfig": {
           "type": "textarea",
-          "templateOptions": {
+          "props": {
+            "placeholder": "Type your text here",
+            "displayChars": true,
+            "displayWords": true,
+            "limitChars": 200,
+            "limitWords": 10,
             "rows": 5
           }
         }
@@ -869,7 +875,7 @@
       "minLength": 1,
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "type": "email"
           }
         }
@@ -880,8 +886,19 @@
       "type": "dateTimePicker",
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "showTime": true
+          }
+        }
+      }
+    },
+    "date_only": {
+      "title": "Date picker",
+      "type": "datepicker",
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "placement": "top"
           }
         }
       }
@@ -893,7 +910,7 @@
       "widget": {
         "formlyConfig": {
           "type": "passwordGenerator",
-          "templateOptions": {
+          "props": {
             "enabledEditMode": true
           }
         }
@@ -901,7 +918,7 @@
     },
     "array_with_multicheckbox": {
       "title": "Array with multiple checkbox",
-      "type": "array",
+      "type": "multicheckbox",
       "minItems": 1,
       "default": [
         "checkbox1",
@@ -918,8 +935,8 @@
       },
       "widget": {
         "formlyConfig": {
-          "type": "multicheckbox",
-          "templateOptions": {
+          "props": {
+            "type": "array",
             "options": [
               {
                 "label": "Checkbox 1",
@@ -949,7 +966,7 @@
       "widget": {
         "formlyConfig": {
           "type": "remoteTypeahead",
-          "templateOptions": {
+          "props": {
             "remoteTypeahead": {
               "enableGroupField": true,
               "filters": {
@@ -980,7 +997,7 @@
       "widget": {
         "formlyConfig": {
           "type": "remoteTypeahead",
-          "templateOptions": {
+          "props": {
             "remoteTypeahead": {
               "enableGroupField": true
             }
@@ -995,7 +1012,7 @@
       "minLength": 1,
       "widget": {
         "formlyConfig": {
-          "templateOptions": {
+          "props": {
             "defaultValueExpression": "(Math.random() + 1).toString(36).substring(2)"
           }
         }
@@ -1014,17 +1031,78 @@
         }
       }
     },
+    "field_expressions": {
+      "title": "Fields with expressions",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "title": "Field with expressions",
+        "type": "object",
+        "additionalProperties": false,
+        "propertiesOrder": [
+          "type",
+          "source"
+        ],
+        "properties": {
+          "type": {
+            "title": "Type",
+            "type": "string",
+            "enum": [
+              "type1",
+              "type2",
+              "type3"
+            ],
+            "default": "type1",
+            "widget": {
+              "formlyConfig": {
+                "props": {
+                  "options": [
+                    {
+                      "label": "Type 1",
+                      "value": "type1"
+                    },
+                    {
+                      "label": "Type 2",
+                      "value": "type2"
+                    },
+                    {
+                      "label": "Type 3",
+                      "value": "type3"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "source": {
+            "title": "Source",
+            "type": "string",
+            "minLength": 1,
+            "widget": {
+              "formlyConfig": {
+                "expressions": {
+                  "hide": "field.parent?.model?.type !== 'type1'"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "field_with_addon_left_right": {
       "title": "Field with addon left and right",
       "type": "integer",
       "minimum": 0,
-      "form": {
-        "templateOptions": {
-          "addonRight": {
-            "text": "day(s)"
-          },
-          "addonLeft": {
-            "text": "from"
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "addonRight": [
+              "day(s)",
+              "<i class=\"pi pi-user\"></i>"
+            ],
+            "addonLeft": [
+              "<i class=\"pi pi-user\"></i>"
+            ]
           }
         }
       }
@@ -1037,7 +1115,7 @@
       "widget": {
         "formlyConfig": {
           "type": "textarea",
-          "templateOptions": {
+          "props": {
             "rows": 5
           }
         }

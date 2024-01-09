@@ -1,6 +1,6 @@
 /*
- * Invenio angular core
- * Copyright (C) 2020 RERO
+ * RERO angular core
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,12 +24,12 @@ export class MenuFactory implements MenuFactoryInterface {
   /**
    * Extensions
    */
-  private _extensions = {};
+  private extensions = {};
 
   /**
    * Sorted extensions
    */
-  private _sorted: ExtensionInterface[] = [];
+  private sorted: ExtensionInterface[] = [];
 
   /**
    * Constructor
@@ -63,15 +63,15 @@ export class MenuFactory implements MenuFactoryInterface {
   /**
    * Add extension
    * @param extension - ExtensionInterface
-   * @param prioty - number
+   * @param priority - number
    * @return MenuFactory
    */
   addExtension(extension: ExtensionInterface, priority: number = 0) {
-    if (!(priority in Object.keys(this._extensions))) {
-      this._extensions[priority] = [];
+    if (!(priority in Object.keys(this.extensions))) {
+      this.extensions[priority] = [];
     }
-    this._extensions[priority].push(extension);
-    this._sorted = [];
+    this.extensions[priority].push(extension);
+    this.sorted = [];
 
     return this;
   }
@@ -81,11 +81,11 @@ export class MenuFactory implements MenuFactoryInterface {
    * @return ExtensionInterface[]
    */
   getExtensions(): ExtensionInterface[] {
-    if (this._sorted.length === 0) {
-      this._sorted = this.sortByKeys(this._extensions);
+    if (this.sorted.length === 0) {
+      this.sorted = this.sortByKeys(this.extensions);
     }
 
-    return this._sorted;
+    return this.sorted;
   }
 
   /**

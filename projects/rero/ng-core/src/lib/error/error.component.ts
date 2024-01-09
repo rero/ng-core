@@ -26,6 +26,5 @@ import { Error } from './error';
 })
 export class ErrorComponent {
   // Error object containing title, status and optionally a message.
-  @Input()
-  error: Error;
+  @Input() error: Error;
 }

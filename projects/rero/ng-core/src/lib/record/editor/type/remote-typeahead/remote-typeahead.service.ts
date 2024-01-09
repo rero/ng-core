@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,25 +16,26 @@
  */
 
 import { Injectable } from '@angular/core';
-import { RecordService } from '../../../record.service';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { of, Observable } from 'rxjs';
 import { ApiService } from '../../../../api/api.service';
-import { SuggestionMetadata } from './remote-typeahead.component';
 import { Record } from '../../../record';
+import { RecordService } from '../../../record.service';
+import { SuggestionMetadata } from './remote-typeahead.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RemoteTypeaheadService {
 
-  /** Constructor.
-   * @param _recordService - RecordService
-   * @param _apiService - APIService
+  /**
+   * Constructor.
+   * @param recordService - RecordService
+   * @param apiService - APIService
    */
   constructor(
-    protected _recordService: RecordService,
-    protected _apiService: ApiService
+    protected recordService: RecordService,
+    protected apiService: ApiService
   ) { }
 
   /**
@@ -44,7 +45,7 @@ export class RemoteTypeaheadService {
    * @returns Observable of string - html template representation of the value.
    */
   getValueAsHTML(options, value: string): Observable<string> {
-    // If value does not contain a $ref, we juste have to return the value,
+    // If value does not contain a $ref, we just have to return the value,
     // no need to search in backend.
     const $refExpression = new RegExp(
       `^https?:\/\/.*\/${options.type}\/[^\/]+$`
@@ -55,7 +56,7 @@ export class RemoteTypeaheadService {
 
     const url = value.split('/');
     const pid = url.pop();
-    return this._recordService
+    return this.recordService
       .getRecord(options.type, pid, 1)
       .pipe(
         map(result => {
@@ -94,7 +95,7 @@ export class RemoteTypeaheadService {
 
     let suggestions$ = null;
     if (options.suggest) {
-      suggestions$ = this._recordService
+      suggestions$ = this.recordService
         .suggestions(options.type, options.suggest, options.field, query)
         .pipe(
           map((results: Array<string>) => {
@@ -108,7 +109,7 @@ export class RemoteTypeaheadService {
       if (currentPid) {
         filters.currentPid = currentPid;
       }
-      suggestions$ = this._recordService
+      suggestions$ = this.recordService
         .getRecords(
           options.type,
           `${options.field}:${query}`,
@@ -127,7 +128,7 @@ export class RemoteTypeaheadService {
               const label = hit.metadata[options.label || options.field];
               const value = options.isNotRef
                 ? label
-                : this._apiService.getRefEndpoint(options.type, hit.id);
+                : this.apiService.getRefEndpoint(options.type, hit.id);
               names.push({
                 label,
                 value,

@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2023 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -15,19 +15,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="main-content">
-  <ng-core-detail-button
-    *ngIf="record"
-    [record]="record"
-    [type]="type"
-    [adminMode]="adminMode"
-    [useStatus]="useStatus"
-    [updateStatus]="updateStatus"
-    [deleteStatus]="deleteStatus"
-    (recordEvent)="recordEvent($event)"
-    (deleteMessageEvent)="showDeleteMessage($event)"
-  ></ng-core-detail-button>
-  <ng-core-error [error]="error" *ngIf="error"></ng-core-error>
+  @if (record) {
+    <ng-core-detail-button
+      [record]="record"
+      [type]="type"
+      [adminMode]="adminMode"
+      [useStatus]="useStatus"
+      [updateStatus]="updateStatus"
+      [deleteStatus]="deleteStatus"
+      (recordEvent)="recordEvent($event)"
+      (deleteMessageEvent)="showDeleteMessage($event)"
+    ></ng-core-detail-button>
+  }
+  @if (error) {
+    <ng-core-error [error]="error"></ng-core-error>
+  }
   <ng-template ngCoreRecordDetail></ng-template>
-  <ng-core-record-files [type]="type" [pid]="record.id"
-    *ngIf="record && filesEnabled && updateStatus && updateStatus.can"></ng-core-record-files>
+  @if (record && filesEnabled && updateStatus && updateStatus.can) {
+    <ng-core-record-files [type]="type" [pid]="record.id"></ng-core-record-files>
+  }
 </div>

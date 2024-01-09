@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,11 +35,11 @@ export class ApiService {
    *
    * Initializes base URL and endpoint API prefix.
    *
-   * @param _configService Configuration service.
+   * @param configService Configuration service.
    */
-  constructor(private _configService: CoreConfigService) {
-    this.baseUrl = this._configService.apiBaseUrl;
-    this.endpointPrefix = this._configService.apiEndpointPrefix;
+  constructor(private configService: CoreConfigService) {
+    this.baseUrl = this.configService.apiBaseUrl;
+    this.endpointPrefix = this.configService.apiEndpointPrefix;
   }
 
   /**
@@ -80,7 +80,7 @@ export class ApiService {
    * @return Ref endpoint as string.
    */
   getRefEndpoint(type: string, id: string): string {
-    return `${this._configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
+    return `${this.configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
   }
 
   /**
@@ -91,7 +91,7 @@ export class ApiService {
    * @return Schema form endpoint.
    */
   getSchemaFormEndpoint(type: string, absolute: boolean = false): string {
-    let endpoint = this._configService.schemaFormEndpoint + '/' + type;
+    let endpoint = this.configService.schemaFormEndpoint + '/' + type;
     if (absolute === true) {
       endpoint = this.baseUrl + endpoint;
     }

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021 RERO
+ * Copyright (C) 2021-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormlyFieldTextArea } from '@ngx-formly/bootstrap';
+import { FormlyFieldTextArea } from '@ngx-formly/primeng/textarea';
 import EasyMDE from 'easymde';
 
 /**
@@ -26,9 +26,11 @@ import EasyMDE from 'easymde';
   template: `
     <div class="my-2">
       <textarea #textarea></textarea>
-      <div *ngIf="showError" class="invalid-feedback d-block">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
+      @if (showError) {
+        <div class="invalid-feedback d-block">
+          <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
+      }
     </div>
   `,
 })

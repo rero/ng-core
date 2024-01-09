@@ -30,7 +30,7 @@ describe('CryptoJsService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should encypt and decrypt data', () => {
+  it('should encrypt and decrypt data', () => {
     const data = 'The weather is good';
     const encrypted = service.encrypt(data);
     expect(service.decrypt(encrypted)).toEqual(data);

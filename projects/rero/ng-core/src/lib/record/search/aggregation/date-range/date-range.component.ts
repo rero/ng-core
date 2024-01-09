@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021 RERO
+ * Copyright (C) 2021-2024 RERO
  * Copyright (C) 2021 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,12 +46,12 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   hasQueryParam = false;
 
   /** Subscription to search service. */
-  private _searchServiceSubscription: Subscription;
+  private searchServiceSubscription: Subscription;
 
   // CONSTRUCTOR & HOOKS ======================================================
   constructor(
-      private _recordSearchService: RecordSearchService,
-      private _translateService: TranslateService
+      private recordSearchService: RecordSearchService,
+      private translateService: TranslateService
   ) { }
 
   /** OnInit hook */
@@ -71,23 +71,23 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
     const today = new Date();
     this.bsConfig.ranges = [{
       value: [new Date(new Date().setDate(today.getDate() - 7)), today],
-      label: this._translateService.instant(_('Last 7 days'))
+      label: this.translateService.instant(_('Last 7 days'))
     }, {
       value: [new Date(new Date().setDate(today.getDate() - 31)), today],
-      label: this._translateService.instant(_('Last month'))
+      label: this.translateService.instant(_('Last month'))
     }, {
       value: [new Date(new Date().setDate(today.getDate() - 366)), today],
-      label: this._translateService.instant(_('Last year'))
+      label: this.translateService.instant(_('Last year'))
     }, {
       value: [new Date(today.getFullYear(), today.getMonth(), 1), new Date(today.getFullYear(), today.getMonth() + 1, 0)],
-      label: this._translateService.instant(_('This month'))
+      label: this.translateService.instant(_('This month'))
     }, {
       value: [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear() + 1, 0, 1)],
-      label: this._translateService.instant(_('This year'))
+      label: this.translateService.instant(_('This year'))
     }];
 
     this.dateRangeModel = [this.config.min, this.config.max];
-    this._searchServiceSubscription = this._recordSearchService.aggregationsFilters.subscribe((filters: any) => {
+    this.searchServiceSubscription = this.recordSearchService.aggregationsFilters.subscribe((filters: any) => {
       if (!filters) {
         return;
       }
@@ -101,14 +101,14 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   /** OnDestroy hook */
   ngOnDestroy(): void {
-    this._searchServiceSubscription.unsubscribe();
+    this.searchServiceSubscription.unsubscribe();
   }
 
   // COMPONENTS FUNCTIONS =====================================================
   /** Update aggregation filter. */
   updateFilter() {
     if (this.dateRangeModel && this.dateRangeModel[0] && this.dateRangeModel[1]) {
-      this._recordSearchService.updateAggregationFilter(this.key, [
+      this.recordSearchService.updateAggregationFilter(this.key, [
           `${this.dateRangeModel[0].getTime()}--${this.dateRangeModel[1].getTime()}`
       ]);
     }
@@ -116,7 +116,6 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   /** Clear aggregation filter. */
   clearFilter() {
-    this._recordSearchService.updateAggregationFilter(this.key, []);
+    this.recordSearchService.updateAggregationFilter(this.key, []);
   }
-
 }

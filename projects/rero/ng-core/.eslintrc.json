@@ -11,6 +11,7 @@
       "parserOptions": {
         "project": [
           "projects/rero/ng-core/tsconfig.lib.json",
+          "projects/rero/ng-core/tsconfig.lib.prod.json",
           "projects/rero/ng-core/tsconfig.spec.json"
         ],
         "createDefaultProgram": true

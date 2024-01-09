@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2023 RERO
+ * Copyright (C) 2023-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
+
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { AbstractCanDeactivateComponent } from '../component/abstract-can-deactivate.component';
@@ -42,11 +42,11 @@ import { DialogService } from '../dialog/dialog.service';
  */
 
 @Injectable()
-export class ComponentCanDeactivateGuard implements CanDeactivate<AbstractCanDeactivateComponent> {
+export class ComponentCanDeactivateGuard  {
   /**
    * Constructor
-   * @param _translateService - TranslateService
-   * @param _dialogService - DialogService
+   * @param translateService - TranslateService
+   * @param dialogService - DialogService
    */
   constructor(
     protected translateService: TranslateService,

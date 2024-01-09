@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 
 /**
  * Component for displaying an object in editor.
@@ -24,5 +24,5 @@ import { FieldType } from '@ngx-formly/core';
   selector: 'ng-core-editor-formly-object-type',
   templateUrl: './object-type.component.html'
 })
-export class ObjectTypeComponent extends FieldType {
+export class ObjectTypeComponent extends FieldType<FormlyFieldConfig> {
 }

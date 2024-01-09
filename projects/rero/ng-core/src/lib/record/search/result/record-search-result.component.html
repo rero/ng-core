@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2019-2023 RERO
+  Copyright (C) 2019-2024 RERO
   Copyright (C) 2019-2023 UCLouvain
 
   This program is free software: you can redistribute it and/or modify
@@ -15,52 +15,58 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="float-right ml-5 mb-2" *ngIf="adminMode.can">
+@if (adminMode.can) {
+  <div class="float-right ml-5 mb-2">
     <!-- use button -->
-    <button *ngIf="useStatus && useStatus.can && useStatus.url"
-            id="result-use-button"
-            class="btn btn-sm btn-outline-primary"
-            [title]="'Use' | translate"
-            [name]="'Use' | translate"
-            (click)="useRecord()"
-    >
-        <i class="fa fa-hand-o-right"></i>
-    </button>
+    @if (useStatus && useStatus.can && useStatus.url) {
+      <button id="result-use-button"
+              class="btn btn-sm btn-outline-primary"
+              [title]="'Use' | translate"
+              [name]="'Use' | translate"
+              (click)="useRecord()"
+      >
+          <i class="fa fa-hand-o-right"></i>
+      </button>
+    }
 
     <!-- edit button -->
-    <button *ngIf="updateStatus && updateStatus.can"
-            id="result-edit-button"
-            class="btn btn-sm btn-outline-primary ml-2"
-            [title]="'Edit' | translate"
-            [name]="'Edit' | translate"
-            (click)="editRecord(record.id, updateStatus?.routerLink)"
-            [routerLink]="updateStatus.routerLink || ['edit', record.id]">
-        <i class="fa fa-pencil"></i>
-    </button>
+    @if (updateStatus && updateStatus.can) {
+      <button id="result-edit-button"
+              class="btn btn-sm btn-outline-primary ml-2"
+              [title]="'Edit' | translate"
+              [name]="'Edit' | translate"
+              (click)="editRecord(record.id, updateStatus?.routerLink)"
+              [routerLink]="updateStatus.routerLink || ['edit', record.id]">
+          <i class="fa fa-pencil"></i>
+      </button>
+    }
 
     <!-- delete button -->
-    <span class="ml-2" *ngIf="deleteStatus">
-        <button *ngIf="deleteStatus.can; else deleteMessageLink"
-                id="result-delete-button"
-                class="btn btn-sm btn-outline-danger"
-                [title]="'Delete' | translate"
-                [name]="'Delete' | translate"
-                (click)="deleteRecord(record.id, deleteStatus?.type)">
-            <i class="fa fa-trash"></i>
-        </button>
-        <ng-template #deleteMessageLink>
-            <button *ngIf="deleteStatus.message"
-                    id="result-delete-button"
-                    class="btn btn-sm btn-outline-danger disabled"
-                    [title]="'Delete'|translate"
-                    [name]="'Delete'|translate"
-                    [popover]="tolTemplate" triggers="mouseenter:mouseleave">
-                <i class="fa fa-trash"></i>
-            </button>
-        </ng-template>
-        <ng-template #tolTemplate>
-          <div [innerHtml]="deleteInfoMessage | nl2br"></div>
-        </ng-template>
-    </span>
+    @if (deleteStatus) {
+      <span class="ml-2" *ngIf="deleteStatus">
+        @if (deleteStatus.can) {
+          <button id="result-delete-button"
+                  class="btn btn-sm btn-outline-danger"
+                  [title]="'Delete' | translate"
+                  [name]="'Delete' | translate"
+                  (click)="deleteRecord(record.id, deleteStatus?.type)">
+              <i class="fa fa-trash"></i>
+          </button>
+        } @else {
+          <button *ngIf="deleteStatus.message"
+                  id="result-delete-button"
+                  class="btn btn-sm btn-outline-danger disabled"
+                  [title]="'Delete'|translate"
+                  [name]="'Delete'|translate"
+                  [popover]="tolTemplate" triggers="mouseenter:mouseleave">
+              <i class="fa fa-trash"></i>
+          </button>
+        }
+      </span>
+    }
 </div>
+}
+<ng-template #tolTemplate>
+  <div [innerHtml]="deleteInfoMessage | nl2br"></div>
+</ng-template>
 <ng-template ngCoreRecordSearchResult></ng-template>

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,19 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { Component } from '@angular/core';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 
 @Component({
   selector: 'ng-core-editor-formly-multi-schema-type',
   template: `
-    <div class="{{field.parent.templateOptions.cssClass}}">
-      <legend *ngIf="to.label" [tooltip]="to.description">{{ to.label }}</legend>
-      <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
-      <formly-field *ngFor="let f of field.fieldGroup" [field]="f"></formly-field>
+    <div class="{{field.parent.props.cssClass}}">
+      @if (props.label) {
+        <legend [tooltip]="props.description">{{ props.label }}</legend>
+      }
+      @if (showError && formControl.errors) {
+        <div class="alert alert-danger" role="alert">
+          <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
+      }
+      @for (f of field.fieldGroup; track f) {
+        <formly-field [field]="f"></formly-field>
+      }
     </div>
   `,
 })
-export class MultiSchemaTypeComponent extends FieldType {}
+export class MultiSchemaTypeComponent extends FieldType<FormlyFieldConfig> {}

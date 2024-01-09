@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,6 +16,7 @@
  */
 import { Component } from '@angular/core';
 import JSONSchema from './schema.json';
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html'
@@ -31,9 +32,6 @@ export class EditorComponent {
       saveAsTemplate: false     // allow to save the record as a template
     }
   };
-
-  // TODO:
-  // hide as expression
 
   // JSONSchema
   schema = {};

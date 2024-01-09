@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022 RERO
+ * Copyright (C) 2022-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,42 +16,42 @@
  */
 import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+
+interface MultiCheckboxProps extends FormlyFieldProps {
+  style: 'stacked' | 'inline';
+}
 
 @Component({
   selector: 'ng-core-editor-formly-field-multicheckbox',
   template: `
     <div>
-      <div
-        *ngFor="let option of to.options | formlySelectOptions:field | async; let i = index;"
-        [ngClass]="{
-          'form-check': to.style === 'stacked',
-          'form-check-inline': to.style === 'inline'
-        }"
-      >
-        <input
-          type="checkbox"
-          class="form-check-input"
-          [id]="id + '_' + i"
-          [value]="option.value"
-          [checked]="isChecked(option)"
-          [disabled]="formControl.disabled || option.disabled"
-          (change)="onChange(option.value, $event.target.checked)"
-        >
-        <label class="form-check-label" [for]="id + '_' + i">{{ option.label }}</label>
+      @for (option of props.options | formlySelectOptions : field | async; track option; let i = $index;) {
+        <div [ngClass]="{'form-check': props.style === 'stacked', 'form-check-inline': props.style === 'inline'}">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [id]="id + '_' + i"
+            [value]="option.value"
+            [checked]="isChecked(option)"
+            [disabled]="formControl.disabled || option.disabled"
+            (change)="onChange(option.value, $event.target.checked)"
+          >
+          <label class="form-check-label" [for]="id + '_' + i">{{ option.label }}</label>
+          @if (showError && formControl.errors) {
+            <div class="invalid-feedback d-block mt-1" role="alert">
+              <formly-validation-message [field]="field"></formly-validation-message>
+            </div>
+          }
       </div>
-      <!--  validation error message -->
-      <div class="invalid-feedback d-block mt-1" role="alert" *ngIf="showError && formControl.errors">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
-    </div>
+      }
   `,
 })
-export class MulticheckboxComponent extends FieldType {
+export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<MultiCheckboxProps>> {
   /** Default options */
-  defaultOptions: Partial<FormlyFieldConfig> = {
-    templateOptions: {
-      options: [],
-      style: 'stacked' // 'stacked' | 'inline'
+  defaultOptions?: Partial<FormlyFieldConfig<MultiCheckboxProps>> = {
+    props: {
+      style: 'stacked'
     }
   };
 
@@ -62,24 +62,26 @@ export class MulticheckboxComponent extends FieldType {
    */
   onChange(value: any, checked: boolean): void {
     this.formControl.markAsDirty();
-    const formValue = (this.formControl.value || []);
-    if (checked) {
-      formValue.push(value);
+    if (Array.isArray(this.formControl.value)) {
+      this.formControl.patchValue(
+        checked
+          ? [...(this.formControl.value || []), value]
+          : [...(this.formControl.value || [])].filter((o) => o !== value),
+      );
     } else {
-      formValue.splice(formValue.indexOf(value), 1);
+      this.formControl.patchValue({ ...this.formControl.value, [value]: checked });
     }
-    this.formControl.patchValue(formValue);
     this.formControl.markAsTouched();
   }
 
   /**
    * Activates the checkbox if the value exists in the list.
-   * @param option - current ckeckbox
+   * @param option - current checkbox
    * @return True if the current checkbox value exists in the list of values
    */
   isChecked(option: any): boolean {
-    const value = this.formControl.value;
+    const { value } = this.formControl;
 
-    return value.includes(option.value);
+    return value && (Array.isArray(value) ? value.indexOf(option.value) !== -1 : value[option.value]);
   }
 }

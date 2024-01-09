@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -97,13 +97,13 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   canAdd: ActionStatus = { can: false, message: '' };
 
   // Configuration for record type.
-  private _config: any;
+  private config: any;
 
   // Subscriptions to observables.
-  private _subscriptions: Subscription = new Subscription();
+  private subscriptions: Subscription = new Subscription();
 
   // Default max file size in Mb.
-  private _defaultMaxSize = 500;
+  private defaultMaxSize = 500;
 
   // Reference on file input, used to reset value
   @ViewChild('file', { read: ElementRef })
@@ -118,26 +118,26 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   /**
    * Constructor.
    *
-   * @param _fileService FilesService.
-   * @param _dialogService Dialog service.
-   * @param _translateService Translate service.
-   * @param _toastrService Toastr service.
-   * @param _spinner Spinner service.
-   * @param _modalService Modal service.
-   * @param _recordService Record service.
-   * @param _recordUiService Record UI service.
-   * @param _formlyJsonschema JSON schema for formly.
+   * @param fileService FilesService.
+   * @param dialogService Dialog service.
+   * @param translateService Translate service.
+   * @param toastrService Toastr service.
+   * @param spinner Spinner service.
+   * @param modalService Modal service.
+   * @param recordService Record service.
+   * @param recordUiService Record UI service.
+   * @param formlyJsonschema JSON schema for formly.
    */
   constructor(
-    private _fileService: FilesService,
-    private _dialogService: DialogService,
-    private _translateService: TranslateService,
-    private _toastrService: ToastrService,
-    private _spinner: NgxSpinnerService,
-    private _modalService: BsModalService,
-    private _recordService: RecordService,
-    private _recordUiService: RecordUiService,
-    private _formlyJsonschema: FormlyJsonschema
+    private fileService: FilesService,
+    private dialogService: DialogService,
+    private translateService: TranslateService,
+    private toastrService: ToastrService,
+    private spinner: NgxSpinnerService,
+    private modalService: BsModalService,
+    private recordService: RecordService,
+    private recordUiService: RecordUiService,
+    private formlyJsonschema: FormlyJsonschema
   ) {}
 
   /**
@@ -147,44 +147,35 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    */
   ngOnInit() {
     // Load configuration
-    this._config = this._recordUiService.getResourceConfig(this.type);
+    this.config = this.recordUiService.getResourceConfig(this.type);
 
     // Configures properties that are not displayed in information.
-    if (this._config.files.infoExcludedFields) {
+    if (this.config.files.infoExcludedFields) {
       this.infoExcludedFields = this.infoExcludedFields.concat(
-        this._config.files.infoExcludedFields
+        this.config.files.infoExcludedFields
       );
     }
 
-    this._spinner.show();
+    this.spinner.show();
 
     // Load files
     this._getFiles$().subscribe(() => {
-      this._spinner.hide();
+      this.spinner.hide();
     });
 
     // Load JSON schema and initialize form.
-    this._recordService
+    this.recordService
       .getSchemaForm(this.type)
       .subscribe((jsonSchema: any) => {
         if (jsonSchema.schema.properties._files) {
           this.metadataForm.form = new UntypedFormGroup({});
           this.metadataForm.fields = [
-            this._formlyJsonschema.toFieldConfig(
+            this.formlyJsonschema.toFieldConfig(
               orderedJsonSchema(jsonSchema.schema.properties._files.items),
               {
                 map: (field: any, schema: any) => {
-                  if (schema.form) {
-                    // Hide expression
-                    if (schema.form.hideExpression) {
-                      field.hideExpression = schema.form.hideExpression;
-                    }
-
-                    // expression properties
-                    if (schema.form.expressionProperties) {
-                      field.expressionProperties =
-                        schema.form.expressionProperties;
-                    }
+                  if (schema.form && schema.form.expressions) {
+                    field.expressions = schema.form.expressions;
                   }
                   return field;
                 },
@@ -195,8 +186,8 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       });
 
     // Process when modal is hidden
-    this._subscriptions.add(
-      this._modalService.onHide.subscribe((reason: string | any) => {
+    this.subscriptions.add(
+      this.modalService.onHide.subscribe((reason: string | any) => {
         this.hideForm();
       })
     );
@@ -208,7 +199,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * Unsubscribe from all subscriptions.
    */
   ngOnDestroy() {
-    this._subscriptions.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -217,25 +208,25 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @param file File object to delete
    */
   deleteFile(file: RecordFile) {
-    this._dialogService
+    this.dialogService
       .show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this._translateService.instant('Confirmation'),
-          body: this._translateService.instant(
+          title: this.translateService.instant('Confirmation'),
+          body: this.translateService.instant(
             'Do you really want to remove this file?'
           ),
           confirmButton: true,
-          confirmTitleButton: this._translateService.instant('OK'),
-          cancelTitleButton: this._translateService.instant('Cancel'),
+          confirmTitleButton: this.translateService.instant('OK'),
+          cancelTitleButton: this.translateService.instant('Cancel'),
         },
       })
       .pipe(
         switchMap((confirm: boolean) => {
           if (confirm === true) {
-            this._spinner.hide();
+            this.spinner.hide();
 
-            return this._fileService
+            return this.fileService
               .delete(this.type, this.pid, file.key, file.version_id)
               .pipe(map(() => true));
           }
@@ -245,9 +236,9 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       .subscribe((removed: boolean) => {
         if (removed === true) {
           this._getFiles$().subscribe(() => {
-            this._spinner.hide();
-            this._toastrService.success(
-              this._translateService.instant('File removed successfully.')
+            this.spinner.hide();
+            this.toastrService.success(
+              this.translateService.instant('File removed successfully.')
             );
           });
         }
@@ -299,7 +290,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * Show form inside the modal.
    */
   showForm() {
-    this.formModalRef = this._modalService.show(this.formModalTemplate);
+    this.formModalRef = this.modalService.show(this.formModalTemplate);
   }
 
   /**
@@ -330,11 +321,11 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   upload() {
     // Iterate over FileList object to process each files.
     Array.from(this.filesToUpload).forEach((file) => {
-      this._spinner.show();
+      this.spinner.show();
 
       try {
-        if (file.size > this._defaultMaxSize * 1000 * 1000) {
-          throw new Error(`The maximum size for a file is ${this._defaultMaxSize}Mb, ${file.name} cannot be uploaded.`);
+        if (file.size > this.defaultMaxSize * 1000 * 1000) {
+          throw new Error(`The maximum size for a file is ${this.defaultMaxSize}Mb, ${file.name} cannot be uploaded.`);
         }
 
         const reader = new FileReader();
@@ -346,17 +337,17 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
             ? this.currentFile.key
             : this.fileKey;
 
-          this._fileService
+          this.fileService
             .put(this.type, this.pid, fileName, file)
             .subscribe(() => {
               this.hideForm();
 
-              this._toastrService.success(
-                this._translateService.instant('File uploaded successfully.')
+              this.toastrService.success(
+                this.translateService.instant('File uploaded successfully.')
               );
 
               this._getFiles$().subscribe(() => {
-                this._spinner.hide();
+                this.spinner.hide();
               });
             });
         };
@@ -364,9 +355,9 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         // Begin file read.
         reader.readAsBinaryString(file);
       } catch (error) {
-        this._spinner.hide();
-        this._toastrService.error(
-          this._translateService.instant(error.message)
+        this.spinner.hide();
+        this.toastrService.error(
+          this.translateService.instant(error.message)
         );
       }
     });
@@ -400,7 +391,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns URL of the file.
    */
   getFileUrl(file: RecordFile): string {
-    return this._fileService.getUrl(this.type, this.pid, file.key);
+    return this.fileService.getUrl(this.type, this.pid, file.key);
   }
 
   /**
@@ -418,7 +409,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
     this.metadataForm.model = file.metadata;
 
     // Show modal
-    this.formModalRef = this._modalService.show(this.metadataFormModalTemplate);
+    this.formModalRef = this.modalService.show(this.metadataFormModalTemplate);
   }
 
   /**
@@ -432,19 +423,19 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
 
     // Show a message if form has errors.
     if (this.metadataForm.form.valid === false) {
-      this._toastrService.error(
-        this._translateService.instant('The form contains errors.')
+      this.toastrService.error(
+        this.translateService.instant('The form contains errors.')
       );
       return;
     }
 
-    this._spinner.show();
+    this.spinner.show();
 
     // Clean empty data
     this.record._files = removeEmptyValues(this.record._files);
 
     // Update record
-    this._recordService
+    this.recordService
       .update(this.type, this.pid, this.record)
       .pipe(
         switchMap(() => {
@@ -452,10 +443,10 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe(() => {
-        this._spinner.hide();
+        this.spinner.hide();
         this.hideForm();
-        this._toastrService.success(
-          this._translateService.instant(
+        this.toastrService.success(
+          this.translateService.instant(
             'Metadata have been saved successfully.'
           )
         );
@@ -468,10 +459,10 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns Observable emitting files
    */
   private _getFiles$(): Observable<any> {
-    return this._recordService.getRecord(this.type, this.pid).pipe(
+    return this.recordService.getRecord(this.type, this.pid).pipe(
       switchMap((record: any) => {
         this.record = record.metadata;
-        return this._fileService.list(this.type, this.pid);
+        return this.fileService.list(this.type, this.pid);
       }),
       tap((files) => {
         files = files.map((item: RecordFile) => {
@@ -488,23 +479,23 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         });
 
         // If set in config, apply the function for filtering files.
-        if (this._config.files && this._config.files.filterList) {
-          files = files.filter(this._config.files.filterList);
+        if (this.config.files && this.config.files.filterList) {
+          files = files.filter(this.config.files.filterList);
         }
 
         // If set in config, apply the function for filtering files.
-        if (this._config.files && this._config.files.orderList) {
-          files.sort(this._config.files.orderList);
+        if (this.config.files && this.config.files.orderList) {
+          files.sort(this.config.files.orderList);
         }
 
         this.files = files;
        }),
        tap(() => {
           // Check if a file can be added.
-          const canAdd$ = this._config.files.canAdd
-            ? this._config.files.canAdd()
+          const canAdd$ = this.config.files.canAdd
+            ? this.config.files.canAdd()
             : of({ can: false, message: '' });
-          this._subscriptions.add(
+          this.subscriptions.add(
             canAdd$.subscribe((result: ActionStatus) => this.canAdd = result)
           );
        }),

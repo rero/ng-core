@@ -35,7 +35,7 @@ export class DropdownLabelEditorComponent {
   @Output() addClicked = new EventEmitter<boolean>();
 
   /**
-   * Emit a new Ouput event when the add button is clicked
+   * Emit a new Output event when the add button is clicked
    * @param event - Event, the click event.
    */
   addClick(event: any): void {

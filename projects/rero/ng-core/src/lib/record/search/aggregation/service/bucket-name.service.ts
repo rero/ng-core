@@ -46,7 +46,7 @@ export class BucketNameService {
   constructor(private translateService: TranslateService) {}
 
   /**
-   * Tranform aggregation name
+   * Transform aggregation name
    * @param aggregationKey - type of aggregation
    * @param value - value of current aggregation
    * @returns Observable of string
@@ -57,7 +57,7 @@ export class BucketNameService {
     switch (aggregationKey) {
       case 'language': data = `lang_${value}`; break;
     }
-    // End Legagy
+    // End Legacy
     return of(this.translateService.instant(data));
   }
 }

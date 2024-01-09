@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,7 @@ describe('LabelComponent', () => {
     editorComponent = TestBed.createComponent(EditorComponent);
     fixture = TestBed.createComponent(LabelComponent);
     component = fixture.componentInstance;
-    component.field = { templateOptions: {editorComponent: () => editorComponent.componentInstance}};
+    component.field = { props: {editorComponent: () => editorComponent.componentInstance}};
     fixture.detectChanges();
   });
 

@@ -26,19 +26,17 @@ export class RecordDetailDirective {
     /**
      * Record to display
      */
-    @Input()
-    record: object = {};
+    @Input() record: object = {};
 
     /**
      * Type of resource
      */
-    @Input()
-    type: string;
+    @Input() type: string;
 
     /**
      * Constructor.
      *
-     * @param _viewContainerRef View container reference
+     * @param viewContainerRef View container reference
      */
     constructor(private _viewContainerRef: ViewContainerRef) { }
 

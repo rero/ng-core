@@ -1,40 +1,41 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
   Copyright (C) 2020 UCLouvain
- 
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
   the Free Software Foundation, version 3 of the License.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU Affero General Public License for more details.
- 
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-<form *ngIf="isDataFormLoaded" [formGroup]="form" (ngSubmit)="onSubmitForm()">
-    <div class="modal-header">
-        <h5 class="modal-title" translate>Load from template</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true" data-dismiss="modal" (click)="closeModal()">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <div class="alert alert-warning">
-            <h4 class="alert-heading" translate>Warning!</h4>
-            <p translate>
-                Loading a template will reload the current form. All values previously encoded will be lost.
-            </p>
-        </div>
-        <div class="my-1 font-weight-bold" translate>Select a template</div>
-        <formly-form [form]="form" [fields]="formFields" [model]="model"></formly-form>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" (click)="closeModal()" translate>Cancel</button>
-        <button type="submit" class="btn btn-primary" [disabled]="this.form.status !== 'VALID'" translate>Load</button>
-    </div>
-</form>
+@if (isDataFormLoaded) {
+  <form [formGroup]="form" (ngSubmit)="onSubmitForm()">
+      <div class="modal-header">
+          <h5 class="modal-title" translate>Load from template</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" data-dismiss="modal" (click)="closeModal()">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+          <div class="alert alert-warning">
+              <h4 class="alert-heading" translate>Warning!</h4>
+              <p translate>
+                  Loading a template will reload the current form. All values previously encoded will be lost.
+              </p>
+          </div>
+          <div class="my-1 font-weight-bold" translate>Select a template</div>
+          <formly-form [form]="form" [fields]="formFields" [model]="model"></formly-form>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-outline-danger" (click)="closeModal()" translate>Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="this.form.status !== 'VALID'" translate>Load</button>
+      </div>
+  </form>
+}

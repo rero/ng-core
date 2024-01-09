@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2022 RERO
+  Copyright (C) 2022-2024 RERO
   Copyright (C) 2022 UCLouvain
 
   This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,18 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ng-container *ngIf="exportOptions && exportOptions.length > 0">
+@if (exportOptions && exportOptions.length > 0) {
   <!-- check single export format -->
-  <ng-container *ngIf="exportOptions.length === 1; else  multipleFormats">
+  @if (exportOptions.length === 1) {
     <!-- check if we can export list -->
-    <ng-container *ngIf="!exportOptions[0]?.disabled; else cannotExport">
+    @if (!exportOptions[0]?.disabled) {
       <a id="search-export-button"
-         role="button" [class]="cssClass"
-         [href]="exportOptions[0].url">
+          role="button" [class]="cssClass"
+          [href]="exportOptions[0].url">
         <i class="fa fa-download mr-0 mr-sm-1"></i>
         <span class="d-none d-sm-inline">{{ 'Export as' | translate }} {{ exportOptions[0].label }}</span>
       </a>
-    </ng-container>
-    <ng-template #cannotExport>
+    } @else {
       <button id="search-export-button"
               role="button"
               class="disabled"
@@ -37,10 +36,9 @@
         <i class="fa fa-download mr-0 mr-sm-1"></i>
         <span class="d-none d-sm-inline">{{ 'Export as' | translate }} {{ exportOptions[0].label }}</span>
       </button>
-    </ng-template>
-  </ng-container>
-  <!-- display multiple export formats as dropdown list -->
-  <ng-template #multipleFormats>
+    }
+  } @else {
+    <!-- display multiple export formats as dropdown list -->
     <div class="btn-group ml-2" dropdown>
       <button
         id="search-export-button-basic"
@@ -59,23 +57,23 @@
         role="menu"
         aria-labelledby="button-export-basic"
       >
-        <li role="menuitem" *ngFor="let format of exportOptions">
-          <!-- check if we can export list -->
-          <ng-container *ngIf="!format?.disabled; else cannotExport">
-            <a class="dropdown-item" [href]="format.url">{{ format.label }}</a>
-          </ng-container>
-          <ng-template #cannotExport>
-            <!-- use tooltip to display error message -->
-            <span [tooltip]="cannotExportMessage" placement="right">
-              <button disabled class="btn btn-link dropdown-item">{{ format.label }}</button>
-            </span>
-          </ng-template>
-          <ng-template #cannotExportMessage>
-            <div [innerHtml]="format?.disabled_message | nl2br"></div>
-          </ng-template>
-        </li>
+        @for (format of exportOptions; track format) {
+          <li role="menuitem">
+            <!-- check if we can export list -->
+            @if (!format?.disabled) {
+              <a class="dropdown-item" [href]="format.url">{{ format.label }}</a>
+            } @else {
+              <!-- use tooltip to display error message -->
+              <span [tooltip]="cannotExportMessage" placement="right">
+                <button disabled class="btn btn-link dropdown-item">{{ format.label }}</button>
+              </span>
+            }
+            <ng-template #cannotExportMessage>
+              <div [innerHtml]="format?.disabled_message | nl2br"></div>
+            </ng-template>
+          </li>
+        }
       </ul>
     </div>
-  </ng-template>
-
-</ng-container>
+  }
+}

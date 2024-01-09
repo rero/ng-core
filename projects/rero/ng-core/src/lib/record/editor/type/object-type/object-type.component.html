@@ -1,36 +1,42 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
- 
+  Copyright (C) 2020-2024 RERO
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
   the Free Software Foundation, version 3 of the License.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU Affero General Public License for more details.
- 
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="header">
-  <ng-core-label-editor *ngIf="field.templateOptions.hideLabel !== true" [field]="field"></ng-core-label-editor>
+  @if (props.hideLabel !== true) {
+    <ng-core-label-editor [field]="field"></ng-core-label-editor>
+  }
 </div>
 <div class="object">
   <!-- each object properties -->
-  <div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true, 'content': true}">
+  <div [ngClass]="{'content': true}">
     <!--  validation error message -->
-    <div class="alert alert-danger" role="alert" *ngIf="showError && formControl.errors">
-      <formly-validation-message [field]="field"></formly-validation-message>
-    </div>
-    <div class="{{ to.containerCssClass }}">
-      <ng-container *ngFor="let f of field.fieldGroup">
-        <div class="{{ f.templateOptions.itemCssClass }} mb-1" *ngIf="!f.hide" [id]="'field-' + f.id">
-          <!-- field -->
-          <formly-field [field]="f"></formly-field>
-        </div>
-      </ng-container>
+    @if (showError && formControl.errors) {
+      <div class="alert alert-danger" role="alert">
+        <formly-validation-message [field]="field"></formly-validation-message>
+      </div>
+    }
+    <div class="{{ props.containerCssClass }}">
+      @for (f of field.fieldGroup; track f) {
+        @if (!f.hide) {
+          <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
+            <!-- field -->
+            <formly-field [field]="f"></formly-field>
+          </div>
+        }
+      }
     </div>
   </div>
 </div>

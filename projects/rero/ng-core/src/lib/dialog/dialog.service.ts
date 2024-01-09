@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,9 +27,9 @@ import { DialogComponent } from './dialog.component';
 export class DialogService {
   /**
    *
-   * @param _modalService Bootstrap modal service.
+   * @param modalService Bootstrap modal service.
    */
-  constructor(private _modalService: BsModalService) { }
+  constructor(private modalService: BsModalService) { }
 
   /**
    * Show the dialog box configured by the given config.
@@ -37,7 +37,7 @@ export class DialogService {
    * @param config Configuration object.
    */
   show(config: any) {
-    const bsModalRef = this._modalService.show(DialogComponent, config);
+    const bsModalRef = this.modalService.show(DialogComponent, config);
     return bsModalRef.content.onClose;
   }
 }

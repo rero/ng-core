@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { ILogger } from '../../ILogger';
 import { extractIdOnRef } from '../../utils/utils';
 
 /**
@@ -38,134 +37,65 @@ function createFormConfig(schema: any) {
  * @returns the updated schema
  */
 export function resolve$ref(schema: any, schemaProperties: any): any {
-  Object.keys(schemaProperties).forEach((property: any) => {
-    let field = schemaProperties[property];
-    if (field.properties) {
-      resolve$ref(schema, field.properties);
-    }
-    // The field contains a $ref definition
-    if (field.$ref) {
-      const paths = field.$ref.replace('#/', '').split('/');
-      let def = schema;
-      paths.forEach((path: string) => {
-        def = def[path];
-      });
-      // Populate field with new definition
-      Object.keys(def).forEach((defKey: string) => {
-        field[defKey] = def[defKey];
-      });
-      // Delete reference
-      delete field.$ref;
-    }
-  });
+  if (schemaProperties) {
+    Object.keys(schemaProperties).forEach((property: any) => {
+      let field = schemaProperties[property];
+      if (field.properties) {
+        resolve$ref(schema, field.properties);
+      }
+      // The field contains a $ref definition
+      if (field.$ref) {
+        const paths = field.$ref.replace('#/', '').split('/');
+        let def = schema;
+        paths.forEach((path: string) => {
+          def = def[path];
+        });
+        // Populate field with new definition
+        Object.keys(def).forEach((defKey: string) => {
+          if (defKey === 'widget' && def[defKey].formlyConfig?.templateOptions) {
+            def[defKey].formlyConfig.props = def[defKey].formlyConfig.templateOptions;
+            delete def[defKey].formlyConfig.templateOptions;
+          }
+          field[defKey] = def[defKey];
+        });
+        // Delete reference
+        delete field.$ref;
+      }
+    });
+  }
 
   return schema;
 }
 
 /**
- * Convert form to widget definition in JSONSchema
+ * Process JSONSchema
  * @param schema - object, the JSONSchema
- * @param logger - Logger
  * @returns object, a converted JSONSchema
  */
-export function formToWidget(schema: any, logger: ILogger): any {
-  // we need to store if a field is required as the extension does not have yet this information processed
+export function processJsonSchema(schema: any): any {
   if (schema.required) {
     schema.required.map((key: string) => {
       const childSchema = schema.properties[key];
       if (childSchema) {
         createFormConfig(childSchema);
-        templateOptionsCreateIfNotExist(childSchema.widget.formlyConfig);
-        childSchema.widget.formlyConfig.templateOptions.initialRequired = true;
+        propsCreateIfNotExist(childSchema.widget.formlyConfig);
+        childSchema.widget.formlyConfig.props.initialRequired = true;
       }
     });
-  }
-
-  if (schema.properties) {
-    for (const property of Object.keys(schema.properties)) {
-      formToWidget(schema.properties[property], logger);
-    }
-  }
-
-  /* items */
-  if (schema.items) {
-    formToWidget(schema.items, logger);
-  }
-
-  /* oneOf, anyOf, allOf */
-  ['oneOf', 'anyOf', 'allOf'].map((type: string) => {
-    if (schema[type]) {
-      schema[type].map((element: any) => formToWidget(element, logger));
-    }
-  });
-
-  /* If the form tag does not exist, we simply return the schema. */
-  if (!schema.form) {
-    return schema;
-  }
-  // create the sub properties if not exists
-  createFormConfig(schema);
-
-  /* Template options */
-  if (schema.form.templateOptions) {
-    templateOptionsCreateIfNotExist(schema.widget.formlyConfig);
-    Object.keys(schema.form.templateOptions).map((key: string) => {
-      switch (key) {
-        case 'wrappers':
-          schema.widget.formlyConfig.wrappers = schema.form.templateOptions[key];
-          break;
-        default:
-          schema.widget.formlyConfig.templateOptions[key] = schema.form.templateOptions[key];
-      }
-    });
-    if (Object.keys(schema.widget.formlyConfig.templateOptions).length === 0) {
-      delete schema.widget.formlyConfig.templateOptions;
-    }
-    delete schema.form.templateOptions;
-  }
-
-  ['focus', 'expressionProperties', 'hideExpression', 'type'].map((option: string) => {
-    if (option in schema.form) {
-      schema.widget.formlyConfig[option] = schema.form[option];
-      delete schema.form[option];
-    }
-  });
-
-  [
-    'hide',
-    'helpURL',
-    'fieldMap',
-    'remoteOptions',
-    'selectWithSortOptions',
-    'remoteTypeahead',
-    'validation',
-    'navigation',
-    'placeholder',
-    'options',
-  ].map((option: string) => {
-    if (option in schema.form) {
-      templateOptionsCreateIfNotExist(schema.widget.formlyConfig);
-      schema.widget.formlyConfig.templateOptions[option] = schema.form[option];
-      delete schema.form[option];
-    }
-  });
-
-  if (Object.keys(schema.form).length !== 0) {
-    logger.error(schema.form, 'The form key definition in JSONSCHEMA is not empty.');
-  } else {
-    delete schema.form;
   }
 
   return schema;
 }
 
+
+
 /**
  * Create a templateOptions in formlyConfig if not exists.
  * @param formlyConfig - FormlyFieldConfig
  */
-function templateOptionsCreateIfNotExist(formlyConfig: FormlyFieldConfig): void {
-  if (!formlyConfig.templateOptions) {
-    formlyConfig.templateOptions = {};
+function propsCreateIfNotExist(formlyConfig: FormlyFieldConfig): void {
+  if (!formlyConfig.props) {
+    formlyConfig.props = {};
   }
 }
 

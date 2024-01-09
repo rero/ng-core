@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,7 @@ import { LoggerService } from '../../service/logger.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { formToWidget, orderedJsonSchema, removeEmptyValues, resolve$ref } from './utils';
+import { orderedJsonSchema, processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
@@ -63,6 +63,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
 
   // editor can deactivate change notification
   @Output() canDeactivateChange = new EventEmitter<boolean>();
+
+  // Resource title
+  title?: string;
+
+  // Resource description
+  description?: string;
 
   // Can Deactivate
   canDeactivate: boolean = false;
@@ -239,7 +245,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       ([params, queryParams]) => {
         // uncomment for debug
         // this.form.valueChanges.subscribe(v =>
-        //   console.log('model', this.model, 'v', v, 'form', this.form)
+        //   console.log('model', this.model, 'v', v, 'form', this.form, 'field', this.fields)
         // );
         this.loadingChange.emit(true);
         if (!params.type) {
@@ -445,7 +451,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    */
   setSchema(schema: any): void {
     // reorder all object properties
-    this.schema = orderedJsonSchema(resolve$ref(formToWidget(schema, this.loggerService), schema.properties));
+    this.schema = orderedJsonSchema(resolve$ref(processJsonSchema(schema), schema.properties));
     this.options = {};
 
     // remove hidden field list in case of a previous setSchema call
@@ -462,24 +468,24 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
             field.defaultValue = new Array(jsonSchema.minItems);
           }
-          // If 'format' is defined into the jsonSchema, use it as templateOptions to try a validation on this field.
+          // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
           // See: `email.validator.ts` file
           if (jsonSchema.format) {
-            field.templateOptions.type = jsonSchema.format;
+            field.props.type = jsonSchema.format;
           }
 
           if (jsonSchema.widget && jsonSchema.widget.formlyConfig) {
-            const { templateOptions } = jsonSchema.widget.formlyConfig;
+            const { props } = jsonSchema.widget.formlyConfig;
 
-            if (templateOptions) {
-              this._setSimpleOptions(field, templateOptions);
-              this._setValidation(field, templateOptions);
-              this._setRemoteSelectOptions(field, templateOptions);
-              this._setRemoteTypeahead(field, templateOptions);
+            if (props) {
+              this._setSimpleOptions(field, props);
+              this._setValidation(field, props);
+              this._setRemoteSelectOptions(field, props);
+              this._setRemoteTypeahead(field, props);
             }
           }
           // Add editor component function on the field
-          field.templateOptions.editorComponent = this.editorComponent;
+          field.props.editorComponent = this.editorComponent;
 
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
@@ -490,11 +496,14 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       })
     ];
     // mark the root field
-    fields[0].templateOptions.isRoot = true;
+    fields[0].props.isRoot = true;
 
     this.fields = fields;
+
     // set root element
     if (this.fields) {
+      this.title = this.fields[0].props?.label;
+      this.description = this.fields[0].props?.description;
       this.rootFormlyConfig = this.fields[0];
     }
   }
@@ -570,9 +579,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    *  @param entry: the entry to use to fire this function
    *  @param component: the parent editor component
    */
-  _saveAsTemplate(entry, component: EditorComponent): void {
+  _saveAsTemplate(_entry: any, component: EditorComponent): void {
     // NOTE about `component` param :
-    //   As we use `_saveAsTemplate` in a ngFor loop, the common `this` value equals to the current
+    //   As we use `_saveAsTemplate` in a @for loop, the common `this` value equals to the current
     //   loop value, not the current component. We need to pass this component as parameter of
     //   the function to use it.
     const saveAsTemplateModalRef = component.modalService.show(SaveTemplateFormComponent, {
@@ -731,7 +740,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     if (field == null) {
       return false;
     }
-    return field.templateOptions?.isRoot || false;
+    return field.props?.isRoot || false;
   }
 
   /**
@@ -744,9 +753,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       return false;
     }
     return (
-      !field.templateOptions.required &&
-      !field.hide &&
-      field.hideExpression == null
+      !field.props.required &&
+      !field.hide
     );
   }
 
@@ -778,8 +786,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         ...field.hooks,
         afterContentInit: (f: FormlyFieldConfig) => {
           const recordType = formOptions.remoteOptions.type;
-          const query = formOptions.remoteOptions.query ? formOptions.remoteOptions.query : '';
-          f.templateOptions.options = this.recordService
+          const query = formOptions.remoteOptions.query || '';
+          f.props.options = this.recordService
             .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
             .pipe(
               map((data: Record) =>
@@ -812,8 +820,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   ): void {
     if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
       field.type = 'remoteTypeahead';
-      field.templateOptions = {
-        ...field.templateOptions,
+      field.props = {
+        ...field.props,
         ...{ remoteTypeahead: formOptions.remoteTypeahead }
       };
     }
@@ -828,7 +836,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     if (formOptions.validation) {
       // custom validation messages
       // TODO: use widget instead
-      const messages = formOptions.validation.messages;
+      const { messages } = formOptions.validation;
       if (messages) {
         if (!field.validation) {
           field.validation = {};
@@ -839,7 +847,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         for (const key of Object.keys(messages)) {
           const msg = messages[key];
           // add support of key with or without Message suffix (required == requiredMessage),
-          // this is usefull for backend translation extraction
+          // this is useful for backend translation extraction
           field.validation.messages[key.replace(/Message$/, '')] = (error, f: FormlyFieldConfig) =>
             // translate the validation messages coming from the JSONSchema
             // TODO: need to remove `as any` once it is fixed in ngx-formly v.5.7.2
@@ -848,12 +856,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       }
 
       // store the custom validators config
-      field.templateOptions.customValidators = {};
+      field.props.customValidators = {};
       if (formOptions.validation && formOptions.validation.validators) {
         for (const customValidator of this._customValidators) {
           const validatorConfig = formOptions.validation.validators[customValidator];
           if (validatorConfig != null) {
-            field.templateOptions.customValidators[customValidator] = validatorConfig;
+            field.props.customValidators[customValidator] = validatorConfig;
           }
         }
       }
@@ -865,7 +873,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         validatorsKey.map(validatorKey => {
           const validator = formOptions.validation.validators[validatorKey];
           if ('expression' in validator && 'message' in validator) {
-            const expression = validator.expression;
+            const { expression } = validator;
             const expressionFn = Function('formControl', `return ${expression};`);
             const validatorExpression = {
               expression: (fc: UntypedFormControl) => expressionFn(fc),
@@ -887,8 +895,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    */
   private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any): void {
     // some fields should not submit the form when enter key is pressed
-    if (field.templateOptions.doNotSubmitOnEnter != null) {
-      field.templateOptions.keydown = (f: FormlyFieldConfig, event?: any) => {
+    if (field.props.doNotSubmitOnEnter != null) {
+      field.props.keydown = (f: FormlyFieldConfig, event?: any) => {
         if (event.key === 'Enter') {
           event.preventDefault();
         }

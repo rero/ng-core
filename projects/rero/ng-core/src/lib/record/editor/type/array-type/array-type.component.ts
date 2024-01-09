@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,10 +30,10 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * Component initialization
    */
   ngOnInit() {
-    this.field.templateOptions.remove = this.remove.bind(this);
-    this.field.templateOptions.add = this.add.bind(this);
-    this.field.templateOptions.canAdd = this.canAdd.bind(this);
-    this.field.templateOptions.canRemove = this.canRemove.bind(this);
+    this.props.remove = this.remove.bind(this);
+    this.props.add = this.add.bind(this);
+    this.props.canAdd = this.canAdd.bind(this);
+    this.props.canRemove = this.canRemove.bind(this);
   }
 
   /**
@@ -41,7 +41,7 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * @returns boolean, true if a new element can be inserted in the array
    */
   canAdd(): boolean {
-    const maxItems = this.field.templateOptions.maxItems;
+    const { maxItems } = this.field.props;
     if (maxItems === undefined) {
       return true;
     }
@@ -53,7 +53,7 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * @returns boolean, true if an element ca be removed
    */
   canRemove() {
-    const minItems = this.field.templateOptions.minItems;
+    const { minItems } = this.field.props;
     if (minItems === undefined) {
       return true;
     }

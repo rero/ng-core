@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -106,37 +106,38 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
   /**
    * Subscription to route parameters observables
    */
-  private _routeParametersSubscription: Subscription;
+  private routeParametersSubscription: Subscription;
 
   /**
    * Constructor.
    *
-   * @param _route Angular current route.
-   * @param _router Angular router.
-   * @param _recordSearchService Record search service.
+   * @param route Angular current route.
+   * @param router Angular router.
+   * @param recordSearchService Record search service.
+   * @param recordUiService Record ui service.
    */
   constructor(
-    protected _route: ActivatedRoute,
-    protected _router: Router,
-    protected _recordSearchService: RecordSearchService,
-    protected _recordUiService: RecordUiService
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected recordSearchService: RecordSearchService,
+    protected recordUiService: RecordUiService
   ) { }
 
   /**
-   * Component initialisation.
+   * Component initialization.
    *
    * Subscribes to changes of route parameters and query parameters for
    * updating the search parameters and sending them to child component
    * (RecordSearchComponent).
    */
   ngOnInit() {
-    this._routeParametersSubscription = combineLatest([this._route.paramMap, this._route.queryParamMap]).subscribe(
+    this.routeParametersSubscription = combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
       ([paramMap, queryParams]) => {
         // store current type of resource
         this.currentType = paramMap.get('type');
-        this._recordUiService.types = this._route.snapshot.data.types;
+        this.recordUiService.types = this.route.snapshot.data.types;
 
-        const config = this._recordUiService.getResourceConfig(this.currentType);
+        const config = this.recordUiService.getResourceConfig(this.currentType);
 
         // Stores query parameters
         this.q = queryParams.get('q') || '';
@@ -162,12 +163,12 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
           });
         }
         // update the facet filters given the URL params
-        this._recordSearchService.setAggregationsFilters(aggregationsFilters);
+        this.recordSearchService.setAggregationsFilters(aggregationsFilters);
       }
     );
 
     // Store configuration data
-    const data = this._route.snapshot.data;
+    const { data } = this.route.snapshot;
     if (data.types) {
       this.types = data.types;
     }
@@ -191,7 +192,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
    * Unsubscribes from the observables of the route parameters.
    */
   ngOnDestroy() {
-    this._routeParametersSubscription.unsubscribe();
+    this.routeParametersSubscription.unsubscribe();
   }
 
   /**
@@ -214,7 +215,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
         queryParams[filter.key].unshift(value);
       }
     }
-    this._router.navigate([this.getCurrentUrl(parameters.currentType)], { queryParams, relativeTo: this._route });
+    this.router.navigate([this.getCurrentUrl(parameters.currentType)], { queryParams, relativeTo: this.route });
   }
 
   /**
@@ -223,7 +224,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
    * @returns Updated url without query string
    */
   protected getCurrentUrl(type: string): string {
-    const segments = this._router.parseUrl(this._router.url).root.children.primary.segments.map(it => it.path);
+    const segments = this.router.parseUrl(this.router.url).root.children.primary.segments.map(it => it.path);
     segments[segments.length - 1] = type;
 
     return '/' + segments.join('/');

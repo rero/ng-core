@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,11 +27,9 @@ export class TemplatesService {
 
   /**
    * constructor
-   * @param _recordService: RecordService
+   * @param recordService: RecordService
    */
-  constructor(
-      protected _recordService: RecordService
-  ) { }
+  constructor(protected recordService: RecordService) { }
 
   /**
    * Get all templates corresponding to a resource type
@@ -43,11 +41,10 @@ export class TemplatesService {
     const query = (resourceType !== undefined)
       ? `template_type:${resourceType}`
       : '';
-    return this._recordService.getRecords(templateResourceType, query, 1, RecordService.MAX_REST_RESULTS_SIZE).pipe(
+    return this.recordService.getRecords(templateResourceType, query, 1, RecordService.MAX_REST_RESULTS_SIZE).pipe(
         map((data: Record) => data.hits),
         map(hits => hits.total === 0 ? [] : hits.hits),
         map(hits => hits.map( hit => hit.metadata))
     );
   }
-
 }

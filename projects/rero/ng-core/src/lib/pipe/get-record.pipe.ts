@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -29,9 +29,9 @@ export class GetRecordPipe implements PipeTransform {
   /**
    * Constructor.
    *
-   * @param _recordService Record service.
+   * @param recordService Record service.
    */
-  constructor(private _recordService: RecordService) { }
+  constructor(private recordService: RecordService) { }
 
   /**
    * Return record data corresponding to PID.
@@ -52,7 +52,7 @@ export class GetRecordPipe implements PipeTransform {
       returnType = 'field';
     }
 
-    return this._recordService.getRecord(type, pid, 1, headers).pipe(map(data => {
+    return this.recordService.getRecord(type, pid, 1, headers).pipe(map(data => {
       if (!data) {
         return null;
       }

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,9 +25,9 @@ export class CryptoJsService {
   /**
    * Constructor.
    *
-   * @param _coreConfigService Configuration service.
+   * @param coreConfigService Configuration service.
    */
-  constructor(private _coreConfigService: CoreConfigService) { }
+  constructor(private coreConfigService: CoreConfigService) { }
 
   encrypt(value: string) {
     const _key = this.secretPassphrase();
@@ -40,6 +40,6 @@ export class CryptoJsService {
   }
 
   private secretPassphrase() {
-    return CryptoJS.enc.Utf8.parse(this._coreConfigService.secretPassphrase);
+    return CryptoJS.enc.Utf8.parse(this.coreConfigService.secretPassphrase);
   }
 }

@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2022 RERO
+  Copyright (C) 2022-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,15 +14,22 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ul id="filters" *ngIf="filters?.length > 0" class="pl-0">
-    <li *ngFor="let filter of filters" class="d-inline list-unstyled pr-2">
+@if (filters?.length > 0) {
+  <ul id="filters" class="pl-0">
+    @for (filter of filters; track filter) {
+      <li class="d-inline list-unstyled pr-2">
         <button (click)="remove(filter)" type="button" class="btn btn-outline-secondary btn-sm mb-2"
         data-toggle="button" aria-pressed="false" autocomplete="off"
         title="{{ filter.aggregationKey | translate }}"
         >
-        <ng-container *ngIf="filter.name; else filterKey">{{ filter.name }}</ng-container>
-        <ng-template #filterKey>{{ filter.key | bucketName: filter.aggregationKey | async }}</ng-template>
+        @if (filter.name) {
+          {{ filter.name }}
+        } @else {
+          {{ filter.key | bucketName: filter.aggregationKey | async }}
+        }
         <i class="fa fa-close ml-1"></i>
         </button>
-    </li>
-</ul>
+      </li>
+    }
+  </ul>
+}

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,55 +16,73 @@
  */
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, ValidatorFn } from '@angular/forms';
-import { FormlyFieldTextArea } from '@ngx-formly/bootstrap';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+
+interface ExtraTextAreaProps extends FormlyFieldProps {
+  displayChars: boolean;
+  displayWords: boolean;
+  limitWords?: number;
+  limitChars?: number;
+}
 
 @Component({
   selector: 'ng-core-editor-formly-field-textarea',
   template: `
     <textarea
       [formControl]="formControl"
-      [cols]="to.cols"
-      [rows]="to.rows"
+      [cols]="props.cols"
+      [rows]="props.rows"
       class="form-control"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
     ></textarea>
-    <ng-container
-      [ngTemplateOutlet]="counter"
-      [ngTemplateOutletContext]="{
-        limit: field.templateOptions.limitWords,
-        count: countWords,
-        label: 'Number of words' | translate
-      }"
-      *ngIf="field.templateOptions.limitWords || field.templateOptions.displayWords"
-    ></ng-container>
-    <ng-container
-      [ngTemplateOutlet]="counter"
-      [ngTemplateOutletContext]="{
-        limit: field.templateOptions.limitChars,
-        count: countChars,
-        label: 'Number of chars' | translate
-      }"
-      *ngIf="field.templateOptions.limitChars || field.templateOptions.displayChars"
-    ></ng-container>
+    @if (field.props.limitWords || field.props.displayWords) {
+      <ng-container
+        [ngTemplateOutlet]="counter"
+        [ngTemplateOutletContext]="{
+          limit: field.props.limitWords,
+          count: countWords,
+          label: 'Number of words' | translate
+        }"></ng-container>
+    }
+    @if (field.props.limitChars || field.props.displayChars) {
+      <ng-container
+        [ngTemplateOutlet]="counter"
+        [ngTemplateOutletContext]="{
+          limit: field.props.limitChars,
+          count: countChars,
+          label: 'Number of chars' | translate
+        }"></ng-container>
+    }
     <ng-template #counter let-limit="limit" let-count="count" let-label="label">
       <span class="small text-muted d-inline-block mr-3">
         {{ label }}: {{ count }}
-        <ng-container *ngIf="limit"> / {{ limit }} </ng-container>
+        @if (limit) {
+          / {{ limit }}
+        }
       </span>
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   // means change detection is triggered only when @input changed.
 })
-export class TextareaFieldComponent extends FormlyFieldTextArea implements OnInit {
+export class TextareaFieldComponent extends FieldType<FormlyFieldConfig<ExtraTextAreaProps>> implements OnInit {
+  /** Default properties */
+  defaultOptions?: Partial<FormlyFieldConfig<ExtraTextAreaProps>> = {
+    props: {
+      displayChars: false,
+      displayWords: false,
+    }
+  };
+
   /**
    * Get the number of chars.
    *
    * @returns The number of chars.
    */
   get countChars(): number {
-    return !this.formControl.value ? 0 : this.formControl.value.length;
+    return this.formControl.value ? this.formControl.value.length : 0;
   }
 
   /**
@@ -73,7 +91,7 @@ export class TextareaFieldComponent extends FormlyFieldTextArea implements OnIni
    * @returns The number of words.
    */
   get countWords(): number {
-    return !this.formControl.value ? 0 : this.formControl.value.split(/\s+/).length;
+    return this.formControl.value ? this.formControl.value.split(/\s+/).length : 0;
   }
 
   /**
@@ -83,7 +101,7 @@ export class TextareaFieldComponent extends FormlyFieldTextArea implements OnIni
    * Check if the current value does not exceed the limit value for chars or words.
    */
   ngOnInit(): void {
-    if (this.field.templateOptions.limitWords || this.field.templateOptions.limitChars) {
+    if (this.props.limitWords || this.props.limitChars) {
       this.formControl.setValidators([this.limitValidator(), this.formControl.validator]);
       this.formControl.updateValueAndValidity();
     }
@@ -96,11 +114,11 @@ export class TextareaFieldComponent extends FormlyFieldTextArea implements OnIni
    */
   limitValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      if (this.field.templateOptions.limitWords && this.countWords > this.field.templateOptions.limitWords) {
+      if (this.props.limitWords && this.countWords > this.props.limitWords) {
         return { limitWords: { value: control.value } };
       }
 
-      if (this.field.templateOptions.limitChars && this.countChars > this.field.templateOptions.limitChars) {
+      if (this.props.limitChars && this.countChars > this.props.limitChars) {
         return { limitChars: { value: control.value } };
       }
 

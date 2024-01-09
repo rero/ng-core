@@ -15,11 +15,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslateService } from '@ngx-translate/core';
-import { isObservable, of, Subscription } from 'rxjs';
+import { Subscription, isObservable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { SelectOption } from './interfaces';
+
+interface CustomSelectProps extends FormlyFieldProps {
+  hideLabelSelectOption: boolean;
+  minItemsToDisplaySearch: number;
+  sort: boolean;
+  multiple?: boolean;
+}
 
 /**
  * Component to display a custom select box, with additional features.
@@ -29,10 +37,10 @@ import { SelectOption } from './interfaces';
   templateUrl: './custom-select.component.html',
   styleUrls: ['./custom-select.component.scss'],
 })
-export class CustomSelectFieldComponent extends FieldType implements OnDestroy, OnInit {
+export class CustomSelectFieldComponent extends FieldType<FormlyFieldConfig<CustomSelectProps>> implements OnDestroy, OnInit {
   // Component default options
   defaultOptions = {
-    templateOptions: {
+    props: {
       hideLabelSelectOption: false,
       minItemsToDisplaySearch: 10,
       sort: true
@@ -49,15 +57,15 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
   filter: string = null;
 
   // Subscriptions to observables.
-  private _subscriptions: Subscription = new Subscription();
+  private subscriptions: Subscription = new Subscription();
 
   /**
    * Constructor
    *
-   * @param _changeDetectorRef Change detector reference.
-   * @param _translateService Translate service.
+   * @param changeDetectorRef Change detector reference.
+   * @param translateService Translate service.
    */
-  constructor(private _changeDetectorRef: ChangeDetectorRef, private _translateService: TranslateService) {
+  constructor(private changeDetectorRef: ChangeDetectorRef, private translateService: TranslateService) {
     super();
   }
 
@@ -66,13 +74,13 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    */
   ngOnInit(): void {
     // Convert options to observable if not the case.
-    if (!isObservable(this.to.options)) {
-      this.to.options = of(this.to.options);
+    if (!isObservable(this.props.options)) {
+      this.props.options = of(this.props.options);
     }
 
     // Process options by flatten the tree and translate labels.
-    this._subscriptions.add(
-      this.to.options.subscribe((options) => {
+    this.subscriptions.add(
+      this.props.options.subscribe((options) => {
         this._extract_groups(options);
         this.optionsList = this._prependPreferred(this._processOptions(options));
         this._updateSelectedOptions();
@@ -80,11 +88,11 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
     );
 
     // Re-translate options when language changes.
-    this._subscriptions.add(
-      this._translateService.onLangChange
+    this.subscriptions.add(
+      this.translateService.onLangChange
         .pipe(
           switchMap(() => {
-            return this.to.options;
+            return this.props.options;
           })
         )
         .subscribe((options) => {
@@ -95,7 +103,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
     );
 
     // If value externally changed, the selected option must be updated.
-    this._subscriptions.add(
+    this.subscriptions.add(
       this.formControl.valueChanges.subscribe(() => {
         this._updateSelectedOptions();
       })
@@ -106,7 +114,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * Component destruction.
    */
   ngOnDestroy(): void {
-    this._subscriptions.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   /**
@@ -178,7 +186,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
     let { value } = this.formControl;
 
     if (option) {
-      if (this.to.multiple === true) {
+      if (this.props.multiple === true) {
         const index = value.indexOf(option.value, 0);
         // Option is not yet selected, we add it.
         if (index === -1) {
@@ -191,7 +199,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
       } else {
         value = option.value;
       }
-    } else if (this.to.multiple === true) {
+    } else if (this.props.multiple === true) {
       value = [];
     } else {
       value = undefined;
@@ -208,7 +216,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
    * @returns True is option is in the selected values.
    */
   isOptionSelected(option: SelectOption): boolean {
-    if (this.to.multiple === true) {
+    if (this.props.multiple === true) {
       return this.formControl.value.includes(option.value);
     }
 
@@ -227,12 +235,12 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
 
     // Translate the options
     options = options.map((option) => {
-      option.translatedLabel = this._translateService.instant(option.label);
+      option.translatedLabel = this.translateService.instant(option.label);
       return option;
     });
 
     // Sort the items
-    if (this.to.sort) {
+    if (this.props.sort) {
       options.sort((a, b) => {
         return a.translatedLabel.localeCompare(b.translatedLabel);
       });
@@ -316,7 +324,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
       this.selectedOptions = [];
     } else {
       this.selectedOptions = this.optionsList.filter((option) => {
-        if (this.to.multiple === true) {
+        if (this.props.multiple === true) {
           return this.formControl.value.includes(option?.value);
         }
 
@@ -324,6 +332,6 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
       });
     }
     // Call this to refresh the selected option in template.
-    this._changeDetectorRef.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 }

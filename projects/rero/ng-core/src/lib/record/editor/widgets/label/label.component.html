@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,12 +14,12 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ng-container *ngIf="field">
+@if (field) {
   <!-- header and menu -->
-  <ng-container *ngIf="!isRoot()">
+  @if (!isRoot()) {
     <ng-container *ngTemplateOutlet="hasMenu(field) ? menu : title; context: { f: field }">
     </ng-container>
-  </ng-container>
+  }
 
   <!-- TEMPLATES -->
   <!-- dropdown menu -->
@@ -27,60 +27,75 @@
     <div class="header">
       <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
         <ng-container dropdown-list>
-          <ng-container *ngFor="
-          let fChildren of hiddenFieldGroup(getFieldGroup(f));
-          let first = first;
-          let last = last
-        ">
+          @for (fChildren of hiddenFieldGroup(getFieldGroup(f)); track fChildren; let first = $first; let last = $last) {
             <!-- header -->
-            <h6 *ngIf="first" class="dropdown-header" translate>Add fields</h6>
+            @if (first) {
+              <h6 class="dropdown-header" translate>Add fields</h6>
+            }
             <!-- dropdown items -->
             <button class="dropdown-item" (click)="show(fChildren)" type="button">
               {{ translateLabel(fChildren) | async }}
             </button>
-            <div *ngIf="last && f.templateOptions.helpURL" class="dropdown-divider"></div>
-          </ng-container>
+            @if (last && f.props.helpURL) {
+              <div class="dropdown-divider"></div>
+            }
+          }
           <!-- help link -->
-          <a *ngIf="f.templateOptions.helpURL" class="dropdown-item" [href]="f.templateOptions.helpURL" translate>
-            Help
-          </a>
+          @if (f.props.helpURL) {
+            <a class="dropdown-item" [href]="f.props.helpURL" translate>Help</a>
+          }
         </ng-container>
         <ng-container buttons>
-          <button type="button" *ngIf="canAddItem()" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
-            <i class="fa fa-plus"></i>
-          </button>
-          <button id="{{f.id}}-clone-button" type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
-            <i class="fa fa-clone"></i>
-          </button>
+          @if (canAddItem()) {
+            <button type="button" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
+              <i class="fa fa-plus"></i>
+            </button>
+          }
+          @if (canAdd()) {
+            <button id="{{f.id}}-clone-button" type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
+              <i class="fa fa-clone"></i>
+            </button>
+          }
           <!-- hide button -->
-          <button id="{{f.id}}-remove-button"  type="button" (click)="remove()" *ngIf="canRemove()"
-            class="btn btn-link text-secondary btn-sm align-baseline">
-            <i class="fa fa-trash"></i>
-          </button>
+          @if (canRemove()) {
+            <button id="{{f.id}}-remove-button"  type="button" (click)="remove()"
+              class="btn btn-link text-secondary btn-sm align-baseline">
+              <i class="fa fa-trash"></i>
+            </button>
+          }
         </ng-container>
       </ng-core-editor-dropdown-label-editor>
-
     </div>
   </ng-template>
 
   <!-- section title -->
   <ng-template #title let-f="f">
     <div class="header">
-      <label class="mb-0" *ngIf="f.templateOptions.label" [attr.for]="f.id" [tooltip]="f.templateOptions.description">
-        {{ f.templateOptions.label }}
-        <span *ngIf="f.templateOptions.required && f.templateOptions.hideRequiredMarker !== true">*</span>
-        <button type="button" *ngIf="canAddItem()" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-plus"></i>
-        </button>
-        <button id="{{f.id}}-clone-button" type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-clone"></i>
-        </button>
-        <!-- hide button -->
-        <button id="{{f.id}}-remove-button"  type="button" (click)="remove()" *ngIf="canRemove()"
-          class="btn btn-link text-secondary btn-sm align-baseline">
-          <i class="fa fa-trash"></i>
-        </button>
-      </label>
+      @if (f.props.label) {
+        <label class="mb-0" [attr.for]="f.id" [tooltip]="f.props.description">
+          {{ f.props.label }}
+          @if (f.props.required && f.props.hideRequiredMarker !== true) {
+            *
+          }
+          @if (canAddItem()) {
+            <button type="button" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
+              <i class="fa fa-plus"></i>
+            </button>
+          }
+          @if (canAdd()) {
+            <button id="{{f.id}}-clone-button" type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
+              <i class="fa fa-clone"></i>
+            </button>
+          }
+          <!-- hide button -->
+          @if (canRemove()) {
+            <button id="{{f.id}}-remove-button"  type="button" (click)="remove()"
+              class="btn btn-link text-secondary btn-sm align-baseline">
+              <i class="fa fa-trash"></i>
+            </button>
+          }
+        </label>
+      }
     </div>
   </ng-template>
-</ng-container>
+}

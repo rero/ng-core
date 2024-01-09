@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,9 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<label for="search" class="font-weight-bold" *ngIf="displayLabel">{{ placeholder }}</label>
+@if (displayLabel) {
+  <label for="search" class="font-weight-bold">{{ placeholder }}</label>
+}
 <div class="input-group px-0">
   <input #searchinput type="text" id="search" class="form-control"
     [attr.placeholder]="!displayLabel && placeholder ? placeholder : null" attr.aria-label="{{ placeholder }}"

@@ -1,6 +1,6 @@
 /*
- * RERO ILS UI
- * Copyright (C) 2020 RERO
+ * RERO angular core
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,16 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AfterViewInit, Directive, ElementRef } from '@angular/core';
+import { AfterContentChecked, Directive, ElementRef } from '@angular/core';
 
 @Directive({
   selector: '[ngCoreAutofocus]'
 })
-export class AutofocusDirective implements AfterViewInit {
+export class AutofocusDirective implements AfterContentChecked {
 
   constructor(private elementRef: ElementRef) {}
 
-  ngAfterViewInit(){
+  ngAfterContentChecked(){
     this.elementRef.nativeElement.focus();
   }
 }

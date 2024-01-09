@@ -1,35 +1,39 @@
 <!--
- RERO angular core
- Copyright (C) 2020 RERO
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as published by
- the Free Software Foundation, version 3 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU Affero General Public License for more details.
-
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  RERO angular core
+  Copyright (C) 2020-2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <h5>
-  <ng-container *ngIf="detailUrl; else titleWithoutLink">
-    <a [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
-      {{ record.metadata.title[0].mainTitle[0].value }}
-    </a>
-    <ng-template #hrefLink>
+  @if (detailUrl) {
+    @if (detailUrl.external === false) {
+      <a [routerLink]="detailUrl.link">
+        {{ record.metadata.title[0].mainTitle[0].value }}
+      </a>
+    } @else {
       <a [href]="detailUrl.link">
         {{ record.metadata.title[0].mainTitle[0].value }}
       </a>
-    </ng-template>
-  </ng-container>
-  <ng-template #titleWithoutLink>
+    }
+  } @else {
     {{ record.metadata.title[0].mainTitle[0].value }}
-  </ng-template>
+  }
 </h5>
 <p>
-  <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
+  @for (author of record.metadata.authors; track author) {
+    <span class="badge badge-primary mr-1">{{ author.name }}</span>
+  }
 </p>
-<div *ngIf="record.metadata.abstracts">{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>
+@if (record.metadata.abstracts) {
+  <div>{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>
+}

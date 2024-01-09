@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -18,36 +18,46 @@
   <div class="card-header">
     <h5 class="m-0" translate>Files</h5>
   </div>
-  <ng-container *ngIf="!hasError && files.length">
+  @if (!hasError && files.length) {
     <ul class="list-group list-group-flush">
-      <ng-container *ngFor="let file of files">
-        <li class="list-group-item" *ngIf="showItem(file)">
-          <ng-core-record-file
-            [type]=type
-            [record]=record
-            [file]=file
-            [hasChildren]=hasChildren(file)
-            [infoExcludedFields]=infoExcludedFields
-            (deleteFile)=deleteFile(file)
-            (editMetadataFile)=editMetadataFile(file)
-            (manageFile)=manageFile(file)
-          ></ng-core-record-file>
-        </li>
-      </ng-container>
+      @for (file of files; track file) {
+        @if (showItem(file)) {
+          <li class="list-group-item">
+            <ng-core-record-file
+              [type]=type
+              [record]=record
+              [file]=file
+              [hasChildren]=hasChildren(file)
+              [infoExcludedFields]=infoExcludedFields
+              (deleteFile)=deleteFile(file)
+              (editMetadataFile)=editMetadataFile(file)
+              (manageFile)=manageFile(file)
+            ></ng-core-record-file>
+          </li>
+        }
+      }
     </ul>
-  </ng-container>
+  }
 
-  <div class="card-body" *ngIf="hasError || files.length === 0">
-    <div class="alert alert-info m-0" *ngIf="!hasError && files.length === 0" translate>
-      No file found for this record.
+  @if (hasError || files.length === 0) {
+    <div class="card-body">
+      @if (!hasError && files.length === 0) {
+        <div class="alert alert-info m-0" translate>
+          No file found for this record.
+        </div>
+      }
+      @if (hasError) {
+        <div class="alert alert-danger m-0" translate>An error occurred, files cannot be loaded.</div>
+      }
     </div>
-    <div class="alert alert-danger m-0" *ngIf="hasError" translate>An error occurred, files cannot be loaded.</div>
-  </div>
-  <div *ngIf=canAdd.can class="card-footer text-center">
-    <button class="btn btn-sm btn-primary" (click)="manageFile(null)">
-      <i class="fa fa-plus mr-1"></i>{{ 'Add a new file' | translate }}
-    </button>
-  </div>
+  }
+  @if (canAdd.can) {
+    <div class="card-footer text-center">
+      <button class="btn btn-sm btn-primary" (click)="manageFile(null)">
+        <i class="fa fa-plus mr-1"></i>{{ 'Add a new file' | translate }}
+      </button>
+    </div>
+  }
 </div>
 
 <ng-template #formModal>
@@ -61,25 +71,27 @@
     <div class="form-group">
       <input #file type="file" id="file" (change)="handleFileInput($event.target.files)" />
     </div>
-    <div class="form-group" *ngIf="!currentFile && filesToUpload">
-      <label for="file-key" translate>File name</label>
-      <input type="text" id="file-key" class="form-control" [(ngModel)]="fileKey" />
-    </div>
+    @if (!currentFile && filesToUpload) {
+      <div class="form-group">
+        <label for="file-key" translate>File name</label>
+        <input type="text" id="file-key" class="form-control" [(ngModel)]="fileKey" />
+      </div>
+    }
     <div>
-      <ng-container *ngIf="filesToUpload && filesToUpload.length > 0">
+      @if (filesToUpload && filesToUpload.length > 0) {
         <button class="btn btn-sm btn-outline-primary mr-1" (click)="upload()">
           <i class="fa fa-upload mr-1"></i> {{ 'Upload' | translate }}
         </button>
         <button class="btn btn-sm btn-outline-danger" (click)="resetForm(); hideForm()">
           <i class="fa fa-times mr-1"></i> {{ 'Cancel' | translate }}
         </button>
-      </ng-container>
+      }
     </div>
   </div>
 </ng-template>
 
 <ng-template #metadataFormModal>
-  <ng-container *ngIf="metadataForm.model">
+  @if (metadataForm.model) {
     <div class="modal-header">
       <h4 class="modal-title pull-left">{{ metadataForm.model.key }}</h4>
       <button type="button" class="close pull-right" aria-label="Close" (click)="hideForm()">
@@ -98,5 +110,5 @@
         </div>
       </form>
     </div>
-  </ng-container>
+  }
 </ng-template>

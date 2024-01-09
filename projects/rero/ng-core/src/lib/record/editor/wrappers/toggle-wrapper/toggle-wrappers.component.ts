@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,7 +30,9 @@ import { isEmpty, removeEmptyValues } from '../../utils';
                  [tooltip]="tsOptions.description|translate">{{ tsOptions.label | translate }}</label>
         </div>
       </div>
-      <ng-container *ngIf="tsOptions.enabled" #fieldComponent></ng-container>
+      @if (tsOptions.enabled) {
+        <ng-container #fieldComponent></ng-container>
+      }
     </div>
   `
 })
@@ -43,8 +45,8 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
   };
 
   ngOnInit() {
-    if (this.to['toggle-switch']) {
-      this.tsOptions = {...this.tsOptions, ...this.to['toggle-switch']};
+    if (this.props['toggle-switch']) {
+      this.tsOptions = {...this.tsOptions, ...this.props['toggle-switch']};
     }
     /* For simple field the code below works fine to enable the toggle switch if needed */
     this.tsOptions.enabled = !isEmpty(removeEmptyValues(this.formControl.value));

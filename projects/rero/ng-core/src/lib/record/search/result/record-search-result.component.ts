@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2024 RERO
  * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,59 +57,47 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Record to display
    */
-  @Input()
-  record: { id: string, metadata: { pid: string } };
+  @Input() record: { id: string, metadata: { pid: string } };
 
   /**
    * Type of record
    */
-  @Input()
-  type: string;
+  @Input() type: string;
 
   /**
    * Component for displaying item view
    */
-  @Input()
-  itemViewComponent: any;
+  @Input() itemViewComponent: any;
 
   /**
    * Admin mode (edit, remove, add, ...)
    */
-  @Input()
-  adminMode: ActionStatus = {
-    can: false,
-    message: ''
-  };
+  @Input() adminMode: ActionStatus = { can: false, message: '' };
 
   /**
    * Record can be updated
    */
-  @Input()
-  canUpdate$: Observable<ActionStatus>;
+  @Input() canUpdate$: Observable<ActionStatus>;
 
   /**
    * Record can be removed
    */
-  @Input()
-  canDelete$: Observable<ActionStatus>;
+  @Input() canDelete$: Observable<ActionStatus>;
 
   /**
    * Record can be used (mainly for templates)
    */
-  @Input()
-  canUse$: Observable<ActionStatus>;
+  @Input() canUse$: Observable<ActionStatus>;
 
   /**
    * Aggregations
    */
-  @Input()
-  aggregations: Array<object>;
+  @Input() aggregations: Array<object>;
 
   /**
    * Observable emitting current value of record URL.
    */
-  @Input()
-  detailUrl$: Observable<{ link: string, external: boolean }> = null;
+  @Input() detailUrl$: Observable<{ link: string, external: boolean }> = null;
 
   /**
    * Event emitted when a record is deleted
@@ -132,12 +120,12 @@ export class RecordSearchResultComponent implements OnInit {
   /**
    * Constructor.
    *
-   * @param _componentFactoryResolver Component factory resolver.
-   * @param _router: Router
+   * @param componentFactoryResolver Component factory resolver.
+   * @param router: Router
    */
   constructor(
-    private _componentFactoryResolver: ComponentFactoryResolver,
-    private _router: Router
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private router: Router
   ) {
     this.currentUrl = window.location.href;
   }
@@ -177,9 +165,9 @@ export class RecordSearchResultComponent implements OnInit {
    * Dynamically load component depending on selected resource type.
    */
   loadItemView() {
-    const componentFactory = this._componentFactoryResolver
-      .resolveComponentFactory(this.itemViewComponent ? this.itemViewComponent : JsonComponent);
-    const viewContainerRef = this.searchResultItem.viewContainerRef;
+    const componentFactory = this.componentFactoryResolver
+      .resolveComponentFactory(this.itemViewComponent || JsonComponent);
+    const { viewContainerRef } = this.searchResultItem;
     viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
@@ -203,13 +191,13 @@ export class RecordSearchResultComponent implements OnInit {
    */
   editRecord(pid: string, url?: string[]) {
     const params = url ?? ['/', 'records', this.type, 'edit', pid];
-    this._router.navigate(params);
+    this.router.navigate(params);
   }
 
   /**
    * Use a record
    */
   useRecord() {
-    this._router.navigateByUrl(this.useStatus.url);
+    this.router.navigateByUrl(this.useStatus.url);
   }
 }

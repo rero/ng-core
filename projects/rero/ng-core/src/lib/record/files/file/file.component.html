@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2022 RERO
+  Copyright (C) 2022-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<ng-container *ngIf="file">
+@if (file) {
   <div class="row">
     <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
       <p class="m-0">
@@ -23,59 +23,66 @@
         <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showInfo = !file.showInfo">
           <i class="fa fa-info-circle"></i>
         </a>
-        <a
-          href="#"
-          class="ml-2"
-          (click)="$event.preventDefault(); file.showChildren = !file.showChildren"
-          *ngIf="hasChildren"
-        >
-          <i class="fa fa-history"></i>
-        </a>
+        @if (hasChildren) {
+          <a href="#" class="ml-2"
+            (click)="$event.preventDefault(); file.showChildren = !file.showChildren">
+            <i class="fa fa-history"></i>
+          </a>
+        }
       </p>
     </div>
     <div class="col text-right">
-      <button *ngIf="canUpdateMetadata.can" class="btn btn-sm btn-outline-primary" (click)="editMetadata()">
-        <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
-      </button>
-
-      <button *ngIf="canUpdate.can" class="btn btn-sm btn-outline-primary ml-1" (click)="manage()">
-        <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
-      </button>
+      @if (canUpdateMetadata.can) {
+        <button class="btn btn-sm btn-outline-primary" (click)="editMetadata()">
+          <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
+        </button>
+      }
+      @if (canUpdate.can) {
+        <button class="btn btn-sm btn-outline-primary ml-1" (click)="manage()">
+          <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
+        </button>
+      }
 
       <a [href]="file.url" target="_blank" class="btn btn-sm btn-outline-primary ml-1" download>
         <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
       </a>
 
-      <button *ngIf="canDelete.can" class="btn btn-sm btn-outline-danger ml-1" (click)="delete()">
-        <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
-      </button>
+      @if (canDelete.can) {
+        <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete()">
+          <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
+        </button>
+      }
     </div>
   </div>
-  <div class="row mt-2" *ngIf="file.showInfo">
-    <div class="col" *ngIf="file.is_head">
-      <dl class="row mt-2 mb-0">
-        <ng-container *ngFor="let item of file.metadata | keyvalue">
-          <ng-container *ngIf="!infoExcludedFields.includes(item.key) && item.value">
-            <dt class="col-lg-4">{{ item.key | translate }}</dt>
-            <dd class="col-lg-8">{{ item.value | translate }}</dd>
-          </ng-container>
-        </ng-container>
-      </dl>
+  @if (file.showInfo) {
+    <div class="row mt-2">
+      @if (file.is_head) {
+        <div class="col">
+          <dl class="row mt-2 mb-0">
+            @for (item of file.metadata | keyvalue; track item) {
+              @if (!infoExcludedFields.includes(item.key) && item.value) {
+                <dt class="col-lg-4">{{ item.key | translate }}</dt>
+                <dd class="col-lg-8">{{ item.value | translate }}</dd>
+              }
+            }
+          </dl>
+        </div>
+      }
+      <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+        <dl class="row mt-2 mb-0">
+          <dt class="col-lg-4" translate>Size</dt>
+          <dd class="col-lg-8">{{ file.size | filesize }}</dd>
+
+          <dt class="col-lg-4" translate>Mime type</dt>
+          <dd class="col-lg-8">{{ file.mimetype }}</dd>
+
+          <dt class="col-lg-4" translate>Checksum</dt>
+          <dd class="col-lg-8">{{ file.checksum }}</dd>
+
+          <dt class="col-lg-4" translate>Modified at</dt>
+          <dd class="col-lg-8">{{ file.updated | dateTranslate : 'medium' }}</dd>
+        </dl>
+      </div>
     </div>
-    <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
-      <dl class="row mt-2 mb-0">
-        <dt class="col-lg-4" translate>Size</dt>
-        <dd class="col-lg-8">{{ file.size | filesize }}</dd>
-
-        <dt class="col-lg-4" translate>Mime type</dt>
-        <dd class="col-lg-8">{{ file.mimetype }}</dd>
-
-        <dt class="col-lg-4" translate>Checksum</dt>
-        <dd class="col-lg-8">{{ file.checksum }}</dd>
-
-        <dt class="col-lg-4" translate>Modified at</dt>
-        <dd class="col-lg-8">{{ file.updated | dateTranslate : 'medium' }}</dd>
-      </dl>
-    </div>
-  </div>
-</ng-container>
+  }
+}

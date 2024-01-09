@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,7 +25,7 @@ export class RouteCollectionService {
   /**
    * Collection of routes
    */
-  private _collection = new Map();
+  private collection = new Map();
 
   /**
    * Add route on collection
@@ -35,7 +35,7 @@ export class RouteCollectionService {
   addRoute(route: RouteInterface): RouteCollectionService {
     const routeName = route.name;
     if (!this.hasRoute(routeName)) {
-      this._collection.set(routeName, route);
+      this.collection.set(routeName, route);
     }
     return this;
   }
@@ -47,7 +47,7 @@ export class RouteCollectionService {
    */
   deleteRoute(name: string): boolean {
     if (this.hasRoute(name)) {
-      this._collection.delete(name);
+      this.collection.delete(name);
       return true;
     }
     return false;
@@ -59,7 +59,7 @@ export class RouteCollectionService {
    * @return boolean
    */
   hasRoute(name: string): boolean {
-    return this._collection.has(name);
+    return this.collection.has(name);
   }
 
   /**
@@ -69,7 +69,7 @@ export class RouteCollectionService {
    */
   getRoute(name: string): RouteInterface | null {
     if (this.hasRoute(name)) {
-      return this._collection.get(name);
+      return this.collection.get(name);
     }
     return null;
   }
@@ -80,7 +80,7 @@ export class RouteCollectionService {
    */
   getRoutes() {
     const routes = [];
-    for (const value of this._collection.values()) {
+    for (const value of this.collection.values()) {
       routes.push(value.getConfiguration());
     }
     return routes;
@@ -92,7 +92,7 @@ export class RouteCollectionService {
    */
   availableRoutesName() {
     const routesName = [];
-    for (const route of this._collection.keys()) {
+    for (const route of this.collection.keys()) {
       routesName.push(route);
     }
     return routesName;
@@ -103,6 +103,6 @@ export class RouteCollectionService {
    * @return number;
    */
   size() {
-    return this._collection.size;
+    return this.collection.size;
   }
 }

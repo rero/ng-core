@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -38,9 +38,9 @@ export class TranslateLanguageService {
    * Subscribes to language changes and resets the stored options after a
    * change.
    *
-   * @param _translateService - TranslateService
+   * @param translateService - TranslateService
    */
-  constructor(private _translateService: TranslateService) {}
+  constructor(private translateService: TranslateService) {}
 
   /**
    * @param langCode - ISO 639-2 (3 characters)
@@ -48,7 +48,7 @@ export class TranslateLanguageService {
    * @return human language - string
    */
   translate(langCode: string, language?: string) {
-    const lang = language ? language : this._translateService.currentLang;
+    const lang = language ? language : this.translateService.currentLang;
     if (!(lang in this._availableLanguages)) {
       return langCode;
     }
