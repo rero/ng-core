@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed } from '@angular/core/testing';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { CoreConfigService } from '../core-config.service';
@@ -42,10 +41,6 @@ describe('DialogService', () => {
       providers: [
         { provide: CoreConfigService, useValue: {} }
       ]
-    }).overrideModule(BrowserDynamicTestingModule, {
-      set: {
-        entryComponents: [DialogComponent],
-      }
     }).compileComponents();
 
     service = TestBed.inject(DialogService);

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,25 +21,35 @@ import { EditorComponent } from '../../editor.component';
 @Component({
   selector: 'ng-core-form-field-wrapper',
   template: `
-    <div class="{{to.cssClass}} form-group" [class.has-error]="showError">
+    <div class="{{props.cssClass}} form-group" [class.has-error]="showError">
       <!-- label -->
-      <label [attr.for]="id" *ngIf="to.label && to.hideLabel !== true" [tooltip]="to.description">
-        {{ to.label }}
-        <ng-container *ngIf="to.required && to.hideRequiredMarker !== true">&nbsp;*</ng-container>
-      </label>
+      @if (props.label && props.hideLabel !== true) {
+        <label [attr.for]="id" [tooltip]="props.description">
+          {{ props.label }}
+          @if (props.required && props.hideRequiredMarker !== true) {
+            &nbsp;*
+          }
+        </label>
+      }
       <!-- clone button -->
-      <button type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
-        <i class="fa fa-clone"></i>
-      </button>
+      @if (canAdd()) {
+        <button type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
+          <i class="fa fa-clone"></i>
+        </button>
+      }
       <!-- trash button -->
-      <button type="button" (click)="remove()" *ngIf="canRemove() && to.hideLabel !== true" class="btn btn-link text-secondary btn-sm">
-        <i class="fa fa-trash"></i>
-      </button>
+      @if (canRemove() && props.hideLabel !== true) {
+        <button type="button" (click)="remove()" class="btn btn-link text-secondary btn-sm">
+          <i class="fa fa-trash"></i>
+        </button>
+      }
       <!-- field -->
       <ng-template #fieldComponent></ng-template>
-      <div *ngIf="showError" class="invalid-feedback d-block">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
+      @if (showError) {
+        <div class="invalid-feedback d-block">
+          <formly-validation-message [field]="field"></formly-validation-message>
+        </div>
+      }
    </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -49,8 +59,8 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
   private editorComponentInstance?: EditorComponent = null;
 
   ngOnInit(): void {
-    if (this.field?.templateOptions?.editorComponent) {
-      this.editorComponentInstance = (this.field.templateOptions.editorComponent)();
+    if (this.field?.props?.editorComponent) {
+      this.editorComponentInstance = (this.field.props.editorComponent)();
     }
   }
 
@@ -63,7 +73,7 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
         }
         break;
       case 'array':
-        this.field.parent.templateOptions.remove(Number(this.field.key));
+        this.field.parent.props.remove(Number(this.field.key));
         break;
     }
   }
@@ -77,7 +87,7 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
       case 'object':
         return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
       case 'array':
-        return this.field.parent.templateOptions.canRemove();
+        return this.field.parent.props.canRemove();
       default:
         return false;
     }
@@ -89,7 +99,7 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
    */
   canAdd(): boolean {
     if (this.field.parent.type === 'array') {
-      return this.field.parent.templateOptions.canAdd();
+      return this.field.parent.props.canAdd();
     }
     return false;
   }
@@ -98,7 +108,7 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
   add(): void {
     if (this.field.parent.type === 'array') {
       const index = Number(this.field.key) + 1;
-      this.field.parent.templateOptions.add(index);
+      this.field.parent.props.add(index);
     }
   }
 }

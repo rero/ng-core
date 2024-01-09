@@ -1,7 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
- * Copyright (C) 2020 UCLouvain
+ * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ToastrService } from 'ngx-toastr';
 import { RecordService } from '../../../record.service';
 import { TemplatesService } from '../../services/templates.service';
 
@@ -74,7 +74,7 @@ export class LoadTemplateFormComponent implements OnInit {
     this.formFields.push({
       key: 'template',
       type: 'select',
-      templateOptions: {
+      props: {
         required: true,
         options: [],
         attributes: {
@@ -99,7 +99,7 @@ export class LoadTemplateFormComponent implements OnInit {
             }
             return data;
           });
-          this.formFields[0].templateOptions.options = templates;
+          this.formFields[0].props.options = templates;
           this.isDataFormLoaded = true;
         }
     );

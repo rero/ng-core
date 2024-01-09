@@ -129,7 +129,7 @@ export class SearchBarComponent implements OnInit {
       }
       text = text.replace(new RegExp(query, 'gi'), `<b>${query}</b>`);
       if (truncate) {
-        text = text + ' ...';
+        text += ' ...';
       }
       values.push({
         text,

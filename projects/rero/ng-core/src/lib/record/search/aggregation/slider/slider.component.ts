@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,14 +43,14 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   hasQueryParam = false;
 
   /** Subscription to search service. */
-  private _searchServiceSubscription: Subscription;
+  private searchServiceSubscription: Subscription;
 
   // CONSTRUCTOR & HOOKS ======================================================
   /**
    * Constructor.
-   * @param _recordSearchService Record search service.
+   * @param recordSearchService Record search service.
    */
-  constructor(private _recordSearchService: RecordSearchService) {}
+  constructor(private recordSearchService: RecordSearchService) {}
 
   /**
    * OnInit hook
@@ -58,7 +58,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
    */
   ngOnInit() {
     this.range = [this.min, this.max];
-    this._searchServiceSubscription = this._recordSearchService
+    this.searchServiceSubscription = this.recordSearchService
         .aggregationsFilters
         .subscribe((filters: any) => {
           if (!filters) {
@@ -80,7 +80,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
    *   Unsubscribes from search service.
    */
   ngOnDestroy() {
-    this._searchServiceSubscription.unsubscribe();
+    this.searchServiceSubscription.unsubscribe();
   }
 
   // COMPONENT FUNCTIONS ======================================================
@@ -88,13 +88,13 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   updateFilter() {
     if (!this.range[0] || this.range[0] < this.min) { this.range[0] = this.min; }
     if (!this.range[1] || this.range[1] > this.max) { this.range[1] = this.max; }
-    this._recordSearchService.updateAggregationFilter(this.key, [
+    this.recordSearchService.updateAggregationFilter(this.key, [
       `${this.range[0]}--${this.range[1]}`,
     ]);
   }
 
   /** Clear aggregation filter. */
   clearFilter() {
-    this._recordSearchService.updateAggregationFilter(this.key, []);
+    this.recordSearchService.updateAggregationFilter(this.key, []);
   }
 }

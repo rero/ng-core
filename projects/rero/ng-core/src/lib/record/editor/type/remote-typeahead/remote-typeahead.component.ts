@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2024 RERO
  * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FieldType } from '@ngx-formly/core';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -29,7 +29,7 @@ import { RemoteTypeaheadService } from './remote-typeahead.service';
   styles: ['.dropdown-item:hover{ cursor:pointer;}'],
   templateUrl: './remote-typeahead.component.html'
 })
-export class RemoteTypeaheadComponent extends FieldType implements OnInit {
+export class RemoteTypeaheadComponent extends FieldType<FormlyFieldConfig> implements OnInit {
 
   // COMPONENT ATTRIBUTES =====================================================
   /** Input search string */
@@ -42,17 +42,17 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
   /** Template representation of the formControl value. */
   valueAsHTML$: Observable<string>;
   /** Number of result in suggestions list */
-  private _numberOfSuggestions = 10;
+  private numberOfSuggestions = 10;
 
   // GETTER & SETTER ==========================================================
   /** Filters options */
   get filters(): remoteTypeaheadFilters | null {
-    return this._rtOptions?.filters;
+    return this.rtOptions?.filters;
   };
 
   /** Remote Typeahead options from the JONSchema */
-  private get _rtOptions(): remoteTypeahead {
-    return this.field.templateOptions.remoteTypeahead;
+  private get rtOptions(): remoteTypeahead {
+    return this.props.remoteTypeahead;
   }
 
   /**
@@ -60,18 +60,18 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
    * @returns string - the name of the field in suggestion list containing the group category. null for disabled.
    */
   get groupField(): string | null {
-    return (this._remoteTypeaheadService.enableGroupField(this._rtOptions)) ? 'group' : null;
+    return (this.remoteTypeaheadService.enableGroupField(this.rtOptions)) ? 'group' : null;
   }
 
   // CONSTRUCTOR & HOOKS ======================================================
   /**
    * Constructor
-   * @param _remoteTypeaheadService - RemoteTypeaheadService
-   * @param _route - Activated route
+   * @param remoteTypeaheadService - RemoteTypeaheadService
+   * @param route - Activated route
    */
   constructor(
-    private _remoteTypeaheadService: RemoteTypeaheadService,
-    private _route: ActivatedRoute
+    private remoteTypeaheadService: RemoteTypeaheadService,
+    private route: ActivatedRoute
   ) {
     super();
   }
@@ -84,11 +84,11 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
         .next(this.search))
         .pipe(
           switchMap((query: string) => {
-            return this._remoteTypeaheadService.getSuggestions(
-              this._rtOptions,
+            return this.remoteTypeaheadService.getSuggestions(
+              this.rtOptions,
               query,
-              this._numberOfSuggestions,
-              this._route.snapshot.params.pid || null
+              this.numberOfSuggestions,
+              this.route.snapshot.params.pid || null
             );
           })
         );
@@ -97,7 +97,7 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
     this.valueAsHTML$ = new Observable((observer: Observer<string>) => observer
         .next(this.formControl.value))
         .pipe(
-          switchMap((value: string) => this._remoteTypeaheadService.getValueAsHTML(this._rtOptions, value))
+          switchMap((value: string) => this.remoteTypeaheadService.getValueAsHTML(this.rtOptions, value))
         );
   }
 
@@ -142,7 +142,7 @@ export class RemoteTypeaheadComponent extends FieldType implements OnInit {
 
   /** Set the filter.selected default value. */
   private _assignRemoteTypeaheadSelectedOptions(): void {
-    const rtOptions = this._rtOptions;
+    const { rtOptions } = this;
     if (rtOptions?.filters && rtOptions.filters?.default == null) {
       throw new Error('Default value is missing for filters.');
     }

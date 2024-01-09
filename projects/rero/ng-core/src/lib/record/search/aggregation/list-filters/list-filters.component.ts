@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022 RERO
+ * Copyright (C) 2022-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -51,14 +51,14 @@ export class ListFiltersComponent implements OnChanges {
   /**
    * Constructor.
    *
-   * @param _recordSearchService - RecordSearch service.
-   * @param _ref - ChangeDetectorRef.
-   * @param _translateService - TranslateService.
+   * @param recordSearchService - RecordSearch service.
+   * @param ref - ChangeDetectorRef.
+   * @param translateService - TranslateService.
    */
   constructor(
-    private _recordSearchService: RecordSearchService,
-    private _ref: ChangeDetectorRef,
-    private _translateService: TranslateService
+    private recordSearchService: RecordSearchService,
+    private ref: ChangeDetectorRef,
+    private translateService: TranslateService
   ){ }
 
   /**
@@ -81,7 +81,7 @@ export class ListFiltersComponent implements OnChanges {
     this.filtersToHide = [...new Set<string>([...this.filtersToHide, ...filterSet])];
 
     if (changes?.aggregationsFilters) {
-      this._ref.detach();
+      this.ref.detach();
       this.filters = [];
 
       changes.aggregationsFilters.currentValue.map((filter: any) => {
@@ -94,8 +94,8 @@ export class ListFiltersComponent implements OnChanges {
               if (regex.test(value)) {
                 const nameKey = 'name';
                 const [min, max] = value.split('--');
-                const dateMin = new Intl.DateTimeFormat(this._translateService.currentLang).format(min);
-                const dateMax = new Intl.DateTimeFormat(this._translateService.currentLang).format(max);
+                const dateMin = new Intl.DateTimeFormat(this.translateService.currentLang).format(min);
+                const dateMax = new Intl.DateTimeFormat(this.translateService.currentLang).format(max);
                 data[nameKey] = `${dateMin} - ${dateMax}`;
               }
               return data;
@@ -110,7 +110,7 @@ export class ListFiltersComponent implements OnChanges {
           this.getFilterNames(item.value.buckets);
       });
 
-      this._ref.reattach();
+      this.ref.reattach();
     }
 
   }
@@ -147,6 +147,6 @@ export class ListFiltersComponent implements OnChanges {
    * @param filter - the filter to remove
    */
   remove(filter: any): void {
-    this._recordSearchService.removeFilter(filter.aggregationKey, filter.key, true);
+    this.recordSearchService.removeFilter(filter.aggregationKey, filter.key, true);
   }
 }

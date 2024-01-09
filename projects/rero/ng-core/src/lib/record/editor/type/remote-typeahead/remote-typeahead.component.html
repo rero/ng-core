@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2023 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -16,56 +16,65 @@
 -->
 
 <!-- input field: empty ref -->
-<ng-container *ngIf="formControl">
-  <div *ngIf="!formControl.value; else metadataTemplate" class="input-group">
-    <ng-container *ngIf="filters?.options">
-      <div class="input-group-prepend">
-        <select class="form-control input-group-text" [class]="filters?.itemCssClass" (change)="changeFilter($event.target.value)">
-          <option
-            *ngFor="let option of filters.options"
-            [value]="option.value"
-            [selected]="filters?.default === option.value"
-          >{{ option.label | translate }}</option>
-        </select>
+@if (formControl) {
+  @if (!formControl.value) {
+    <div class="input-group">
+    @if (filters?.options) {
+        <div class="input-group-prepend">
+          <select class="form-control input-group-text" [class]="filters?.itemCssClass" (change)="changeFilter($event.target.value)">
+            @for (option of filters.options; track option) {
+              <option
+                [value]="option.value"
+                [selected]="filters?.default === option.value"
+              >{{ option.label | translate }}</option>
+            }
+          </select>
+        </div>
+      }
+      <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
+        [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
+        (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
+        [typeaheadLatinize]="true" [typeaheadGroupField]="groupField" typeaheadOptionField="label"
+        [class.is-invalid]="showError" [optionsListTemplate]="customListTemplate" />
+      <div class="input-group-append">
+        <span class="input-group-text" id="{{ field.id }}-search">
+          @if (!typeaheadLoading) {
+            <i class="fa fa-search"></i>
+          } @else {
+            <i class="fa fa-spinner fa-spin"></i>
+          }
+        </span>
       </div>
-    </ng-container>
-    <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
-      [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
-      (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
-      [typeaheadLatinize]="true" [typeaheadGroupField]="groupField" typeaheadOptionField="label"
-      [class.is-invalid]="showError" [optionsListTemplate]="customListTemplate" />
-    <div class="input-group-append">
-      <span class="input-group-text" id="{{ field.id }}-search">
-        <i *ngIf="!typeaheadLoading" class="fa fa-search"></i>
-        <i *ngIf="typeaheadLoading" class="fa fa-spinner fa-spin"></i>
-      </span>
     </div>
-  </div>
-
-  <!-- text representation of the value in ref -->
-  <ng-template #metadataTemplate>
-    <div class="py-1" *ngIf="valueAsHTML$ | async as valueAsHTML">
-      <span [innerHTML]="valueAsHTML"></span>
-      <button class="btn btn-link text-secondary btn-sm" type="button" (click)="clear()">
-        <i class="fa fa-trash"></i>
-      </button>
-    </div>
-  </ng-template>
-</ng-container>
+  } @else {
+    <!-- text representation of the value in ref -->
+    @if (valueAsHTML$ | async; as valueAsHTML) {
+      <div class="py-1">
+        <span [innerHTML]="valueAsHTML"></span>
+        <button class="btn btn-link text-secondary btn-sm" type="button" (click)="clear()">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    }
+  }
+}
 
 <ng-template #customListTemplate let-matches="matches" let-query="query" let-typeaheadTemplateMethods>
-  <ng-container *ngFor="let match of matches">
+  @for (match of matches; track match) {
     <div [ngClass]="{ 'disabled font-weight-bold': match.header }" class="dropdown-item d-flex flex-row"
       [class.active]="typeaheadTemplateMethods.isActive(match)">
       <div class='flex-grow-1' (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
         (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
-        <span *ngIf="match.item.currentSearch">{{ 'Add' | translate }}:&nbsp;</span>
+        @if (match.item.currentSearch) {
+          <span>{{ 'Add' | translate }}:&nbsp;</span>
+        }
         <span [innerHTML]="match.value"></span>
       </div>
-      <a class="ml-1" *ngIf="match.item.externalLink && typeaheadTemplateMethods.isActive(match)" target="_blank"
-        href="{{ match.item.externalLink }}">
-        <i class="fa fa-external-link text-light"></i>
-      </a>
+      @if (match.item.externalLink && typeaheadTemplateMethods.isActive(match)) {
+        <a class="ml-1" target="_blank" href="{{ match.item.externalLink }}">
+          <i class="fa fa-external-link text-light"></i>
+        </a>
+      }
     </div>
-  </ng-container>
+  }
 </ng-template>

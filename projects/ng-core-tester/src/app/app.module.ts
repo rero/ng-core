@@ -34,7 +34,6 @@ import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { EditorComponent } from './record/editor/editor.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
-import { EditorNewEditComponent } from './record/editor-new-edit/editor-new-edit.component';
 
 @NgModule({
     declarations: [
@@ -43,8 +42,7 @@ import { EditorNewEditComponent } from './record/editor-new-edit/editor-new-edit
         HomeComponent,
         DetailComponent,
         SearchBarComponent,
-        EditorComponent,
-        EditorNewEditComponent
+        EditorComponent
     ],
     imports: [
         BrowserModule,

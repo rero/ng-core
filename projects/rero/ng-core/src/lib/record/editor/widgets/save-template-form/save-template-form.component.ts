@@ -1,7 +1,7 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
- * Copyright (C) 2020 UCLouvain
+ * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,11 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import {UntypedFormGroup} from '@angular/forms';
-import {FormlyFieldConfig} from '@ngx-formly/core';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { FormlyFieldConfig } from '@ngx-formly/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'ng-core-save-template-form',
@@ -40,13 +40,13 @@ export class SaveTemplateFormComponent implements OnInit {
   saveEvent: EventEmitter<any> = new EventEmitter();
 
   /**
-   * constructor
-   * @param _translateService - TranslateService
-   * @param _bsModalRef - BsModalRef
+   * Constructor
+   * @param translateService - TranslateService
+   * @param bsModalRef - BsModalRef
    */
   constructor(
-      private _translateService: TranslateService,
-      private _bsModalRef: BsModalRef
+      private translateService: TranslateService,
+      private bsModalRef: BsModalRef
   ) { }
 
   /**
@@ -56,9 +56,9 @@ export class SaveTemplateFormComponent implements OnInit {
     this.formFields.push({
       key: 'name',
       type: 'string',
-      templateOptions: {
+      props: {
         required: true,
-        placeholder: this._translateService.instant('Choose a name for your template'),
+        placeholder: this.translateService.instant('Choose a name for your template'),
         minLength: 3,
       }
     });
@@ -76,11 +76,10 @@ export class SaveTemplateFormComponent implements OnInit {
    * Close the modal dialog box
    */
   closeModal() {
-    this._bsModalRef.hide();
+    this.bsModalRef.hide();
   }
 
 }
-
 
 /**
  * Interface to define fields on form

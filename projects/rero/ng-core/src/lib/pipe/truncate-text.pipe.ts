@@ -40,7 +40,7 @@ export class TruncateTextPipe implements PipeTransform {
         if (limit < 0) {
           limit *= -1;
           result =
-            trail + words.slice(words.length - limit, words.length).join(' ');
+            trail + words.slice(words.length - limit).join(' ');
         } else {
           result = words.slice(0, limit).join(' ') + trail;
         }

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,14 +19,14 @@ import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
- * Service for managin HTML meta and title.
+ * Service for managing HTML meta and title.
  */
 @Injectable({
   providedIn: 'root'
 })
 export class TitleMetaService {
   // Prefix.
-  private _prefix = null;
+  private prefix = null;
 
   /**
    * Constructor
@@ -35,9 +35,9 @@ export class TitleMetaService {
    * @param translateService - TranslateService
    */
   constructor(
-    private _titleService: Title,
-    private _metaService: Meta,
-    private _translateService: TranslateService
+    private titleService: Title,
+    private metaService: Meta,
+    private translateService: TranslateService
   ) { }
 
   /**
@@ -46,7 +46,7 @@ export class TitleMetaService {
    * @return this
    */
   setPrefix(prefix?: string) {
-    this._prefix = this._translateService.instant(prefix);
+    this.prefix = this.translateService.instant(prefix);
 
     return this;
   }
@@ -58,11 +58,11 @@ export class TitleMetaService {
    */
   setTitle(title: string) {
     let pageTitle = '';
-    if (this._prefix !== null) {
-      pageTitle += this._prefix + ': ';
+    if (this.prefix !== null) {
+      pageTitle += this.prefix + ': ';
     }
-    pageTitle += this._translateService.instant(title);
-    this._titleService.setTitle(pageTitle);
+    pageTitle += this.translateService.instant(title);
+    this.titleService.setTitle(pageTitle);
 
     return this;
   }
@@ -72,7 +72,7 @@ export class TitleMetaService {
    * @return string
    */
   getTitle() {
-    return this._titleService.getTitle();
+    return this.titleService.getTitle();
   }
 
   /**
@@ -82,7 +82,7 @@ export class TitleMetaService {
    * @return this
    */
   setMeta(name: string, content: string) {
-    this._metaService.updateTag({name, content});
+    this.metaService.updateTag({name, content});
 
     return this;
   }
@@ -93,6 +93,6 @@ export class TitleMetaService {
    * @return string
    */
   getMeta(name: string) {
-    return this._metaService.getTag(name);
+    return this.metaService.getTag(name);
   }
 }

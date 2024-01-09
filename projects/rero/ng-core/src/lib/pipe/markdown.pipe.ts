@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021 RERO
+ * Copyright (C) 2021-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,9 @@ export class MarkdownPipe implements PipeTransform {
   /**
    * Constructor.
    *
-   * @param _sanitizer Dom sanitizer.
+   * @param sanitizer Dom sanitizer.
    */
-  constructor(private _sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) {}
 
   /**
    * Transform markdown to HTML.
@@ -39,6 +39,6 @@ export class MarkdownPipe implements PipeTransform {
    * @returns HTML corresponding to markdown.
    */
   transform(value: string): SafeHtml {
-    return this._sanitizer.bypassSecurityTrustHtml(marked(value, { gfm: true, breaks: false }));
+    return this.sanitizer.bypassSecurityTrustHtml(marked(value, { gfm: true, breaks: false }));
   }
 }

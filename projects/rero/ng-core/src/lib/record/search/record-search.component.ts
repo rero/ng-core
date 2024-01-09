@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022 RERO
+ * Copyright (C) 2022-2024 RERO
  * Copyright (C) 2022 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,8 +21,8 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, NEVER, Observable, Subscription, isObservable, of } from 'rxjs';
-import { catchError, distinctUntilChanged, finalize, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, isObservable, of } from 'rxjs';
+import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
@@ -180,7 +180,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Total records number corresponding to the request. */
   get total(): number {
     return this.hits && this.hits.total
-        ? this._recordService.totalHits(this.hits.total)
+        ? this.recordService.totalHits(this.hits.total)
         : 0;
   }
 
@@ -190,8 +190,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       return this._config.resultsText(this.hits);
     }
     return (this.total <= 1)
-        ? this._translateService.stream('{{ total }} result', { total: this.total }) // O or 1 result
-        : this._translateService.stream('{{ total }} results', { total: this.total });
+        ? this.translateService.stream('{{ total }} result', { total: this.total }) // O or 1 result
+        : this.translateService.stream('{{ total }} results', { total: this.total });
   }
 
   /** Get showSearchInput value, given either by config or by local value. */
@@ -250,7 +250,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns A message indicating there's no record.
    */
   get emptyRecordMessage(): string {
-    return this._config.noRecordMessage || this._translateService.instant('There are no records in this section');
+    return this._config.noRecordMessage || this.translateService.instant('There are no records in this section');
   }
 
   /**
@@ -288,30 +288,30 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Return a message containing the reasons why record list cannot be exported. */
   get exportInfoMessage(): string {
     return (this.total === 0)
-        ? this._translateService.instant('Result list is empty.')
-        : this._translateService.instant('Too many items. Should be less than {{max}}.', { max: RecordService.MAX_REST_RESULTS_SIZE });
+        ? this.translateService.instant('Result list is empty.')
+        : this.translateService.instant('Too many items. Should be less than {{max}}.', { max: RecordService.MAX_REST_RESULTS_SIZE });
   }
 
   // CONSTRUCTOR & HOOKS ======================================================
   /**
    * Constructor.
    *
-   * @param _recordService Record service.
-   * @param _recordUiService Record UI service.
-   * @param _recordSearchService Record search service.
-   * @param _translateService Translate service.
-   * @param _spinner Spinner service.
-   * @param _apiService Api service.
-   * @param _activatedRoute Activated Route
+   * @param recordService Record service.
+   * @param recordUiService Record UI service.
+   * @param recordSearchService Record search service.
+   * @param translateService Translate service.
+   * @param spinner Spinner service.
+   * @param apiService Api service.
+   * @param activatedRoute Activated Route
    */
   constructor(
-    private _recordService: RecordService,
-    private _recordUiService: RecordUiService,
-    private _recordSearchService: RecordSearchService,
-    private _translateService: TranslateService,
-    private _spinner: NgxSpinnerService,
-    private _apiService: ApiService,
-    private _activatedRoute: ActivatedRoute
+    private recordService: RecordService,
+    private recordUiService: RecordUiService,
+    private recordSearchService: RecordSearchService,
+    private translateService: TranslateService,
+    private spinner: NgxSpinnerService,
+    private apiService: ApiService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   /**
@@ -333,7 +333,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this._subscriptions.add(
-      this._recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
+      this.recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
         // No aggregations filters are set at this time, we do nothing.
         if (aggregationsFilters === null) {
           return;
@@ -379,7 +379,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       ).subscribe(
         (records: Record) => {
           this.hits = records.hits;
-          this._spinner.hide();
+          this.spinner.hide();
           // Apply filters
           this.aggregations$(records.aggregations).subscribe((aggregations: any) => {
             for (const agg of this.aggregations) {
@@ -400,7 +400,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         },
         (error) => {
           this.error = error;
-          this._spinner.hide();
+          this.spinner.hide();
         }
       )
     );
@@ -443,7 +443,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.currentType) {
       if (changes.currentType.firstChange) {
         // Load all configuration types, only during the first change
-        this._recordUiService.types = this.types;
+        this.recordUiService.types = this.types;
       }
 
       // if the "type" property is changed in input, but the change is not
@@ -529,7 +529,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     //   This is a combination of `defaultSearchInputFilters` and persistent aggregation filters.
     const aggregations = new Set(this._extractPersistentAggregationsFilters());
     this.aggregationsFilters.forEach((aggregation) => aggregations.add(aggregation));
-    this._recordSearchService.setAggregationsFilters(Array.from(aggregations), true);
+    this.recordSearchService.setAggregationsFilters(Array.from(aggregations), true);
   }
 
   /**
@@ -544,7 +544,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
     this._searchParamsHasChanged();
-    this._recordSearchService.setAggregationsFilters([]);
+    this.recordSearchService.setAggregationsFilters([]);
   }
 
   /**
@@ -553,7 +553,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   deleteRecord(event: { pid: string, type?: string }) {
     const type = event.type ?? this.currentType;
-    this._recordUiService.deleteRecord(type, event.pid).pipe(
+    this.recordUiService.deleteRecord(type, event.pid).pipe(
       switchMap(result => {
         if (result === true) {
           this.page = 1;
@@ -564,7 +564,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe((records: Record) => {
       if (records != null) {
         this.hits = records.hits;
-        this._spinner.hide();
+        this.spinner.hide();
       }
     });
     // update main counter
@@ -608,7 +608,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // TODO: maybe we can use URLSerializer to build query string
     const baseUrl = format.endpoint
       ? format.endpoint
-      : this._apiService.getEndpointByType(this._currentIndex());
+      : this.apiService.getEndpointByType(this._currentIndex());
     let url = `${baseUrl}?q=${encodeURIComponent(this.q)}&format=${format.format}`;
 
     // check if max rest result size is disabled
@@ -653,7 +653,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable
    */
   canUpdateRecord$(record: object): Observable<ActionStatus> {
-    return this._recordUiService.canUpdateRecord$(record, this.currentType);
+    return this.recordUiService.canUpdateRecord$(record, this.currentType);
   }
 
   /**
@@ -662,7 +662,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable
    */
   canDeleteRecord$(record: object): Observable<ActionStatus> {
-    return this._recordUiService.canDeleteRecord$(record, this.currentType);
+    return this.recordUiService.canDeleteRecord$(record, this.currentType);
   }
 
   /**
@@ -671,7 +671,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable
    */
   canUseRecord$(record: object): Observable<ActionStatus> {
-    return this._recordUiService.canUseRecord$(record, this.currentType);
+    return this.recordUiService.canUseRecord$(record, this.currentType);
   }
 
   /**
@@ -706,7 +706,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       return of(url);
     }
 
-    return this._recordUiService.canReadRecord$(record, this.currentType).pipe(
+    return this.recordUiService.canReadRecord$(record, this.currentType).pipe(
       map((status: ActionStatus) => {
         if (status.can === false) {
           return null;
@@ -764,7 +764,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       values = [filter.value];
     }
 
-    this._recordSearchService.updateAggregationFilter(filter.filter, values);
+    this.recordSearchService.updateAggregationFilter(filter.filter, values);
   }
 
   /**
@@ -802,7 +802,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
         // Required to fire onChange event
         this.aggregations = [...this.aggregations];
-        this._spinner.hide();
+        this.spinner.hide();
       });
 
     });
@@ -825,7 +825,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this.showEmptySearchMessage = false;
     }
 
-    this._spinner.show();
+    this.spinner.show();
     // Check remove filter from preFilters if it is already present in
     // the aggs filters.
     const preFilters = {};
@@ -837,7 +837,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
 
-    return this._recordService.getRecords(
+    return this.recordService.getRecords(
       this._currentIndex(),
       q,
       this.page,
@@ -871,8 +871,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param type Type of resource
    */
   private _loadConfigurationForType(type: string) {
-    this._config = this._recordUiService.getResourceConfig(type);
-    this._recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
+    this._config = this.recordUiService.getResourceConfig(type);
+    this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
     });
 
@@ -902,7 +902,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // Update filters with default search filters
     if (this._config.defaultSearchInputFilters) {
       this._config.defaultSearchInputFilters.forEach((filter: { key: string, values: any[]}) => {
-        this._recordSearchService.updateAggregationFilter(filter.key, filter.values);
+        this.recordSearchService.updateAggregationFilter(filter.key, filter.values);
       });
     }
   }
@@ -1009,8 +1009,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     const persistent = [];
     this._flatSearchFilters().filter(filter => filter.persistent === true)
         .forEach((filter: SearchFilter) => {
-          if (this._activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
-            const data = this._activatedRoute.snapshot.queryParams[filter.filter];
+          if (this.activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
+            const data = this.activatedRoute.snapshot.queryParams[filter.filter];
             persistent.push({
               key: filter.filter,
               values: Array.isArray(data) ? data : [data]
@@ -1076,7 +1076,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           // store the parent: useful to remove parent filters
           childBucket.parent = bucket;
           // store the aggregation key as we re-organize the bucket structure
-          bucket.indeterminate ||= this._recordSearchService.hasFilter(k, childBucket.key);
+          bucket.indeterminate ||= this.recordSearchService.hasFilter(k, childBucket.key);
           // do not change the order of the boolean expression to force processBucket over all
           // recursion steps
           bucket.indeterminate = this.processBuckets(childBucket, k) || bucket.indeterminate;

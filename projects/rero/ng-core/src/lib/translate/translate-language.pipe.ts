@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,9 +25,9 @@ export class TranslateLanguagePipe implements PipeTransform {
   /**
    * Constructor.
    *
-   * @param _translateLanguage TranslateLanguageService
+   * @param translateLanguage TranslateLanguageService
    */
-  constructor(private _translateLanguage: TranslateLanguageService) { }
+  constructor(private translateLanguage: TranslateLanguageService) { }
 
   /**
    * transform language code to human language
@@ -35,6 +35,6 @@ export class TranslateLanguagePipe implements PipeTransform {
    * @param language - ISO 639-1 (2 characters)
    */
   transform(langCode: string, language?: string): string {
-    return this._translateLanguage.translate(langCode, language);
+    return this.translateLanguage.translate(langCode, language);
   }
 }

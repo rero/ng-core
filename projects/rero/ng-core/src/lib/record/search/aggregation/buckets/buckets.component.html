@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,29 +14,41 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ul *ngIf="buckets" class="list-unstyled m-0 bucket-group">
-  <li class="form-check bucket-item" *ngFor="let bucket of buckets|slice:0:bucketSize">
-    <div class="d-flex flex-row bucket-data align-items-start" *ngIf="bucket.doc_count" (click)="updateFilter(bucket)">
-      <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
-      <a class="form-check-label">
-        <ng-container *ngIf="bucket.name; else filterKey">{{ bucket.name }}</ng-container>
-        <ng-template #filterKey>{{ bucket.key | bucketName: aggregationKey | async }}</ng-template>
-      </a>
-      <span class="ml-auto bucket-count">
-        <span class="bucket-count-badge">{{ bucket.doc_count }}</span>
-      </span>
-    </div>
-    <ng-container *ngIf="displayChildren(bucket)">
-      <ng-core-record-search-aggregation-buckets
-      *ngFor="let aggregation of bucketChildren[bucket.key]"
-      [buckets]="aggregation.buckets"
-      [size]="aggregation.bucketSize"
-      [aggregationKey]="aggregation.key"
-      ></ng-core-record-search-aggregation-buckets>
-    </ng-container>
-  </li>
-</ul>
-<div *ngIf="displayMoreAndLessLink">
-  <button class="btn btn-link ml-2"
-    (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</button>
-</div>
+@if (buckets) {
+  <ul class="list-unstyled m-0 bucket-group">
+    @for (bucket of buckets|slice:0:bucketSize; track bucket) {
+      <li class="form-check bucket-item">
+        @if (bucket.doc_count) {
+          <div class="d-flex flex-row bucket-data align-items-start" (click)="updateFilter(bucket)">
+            <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
+            <a class="form-check-label">
+              @if (bucket.name) {
+                {{ bucket.name }}
+              } @else {
+                {{ bucket.key | bucketName: aggregationKey | async }}
+              }
+            </a>
+            <span class="ml-auto bucket-count">
+              <span class="bucket-count-badge">{{ bucket.doc_count }}</span>
+            </span>
+          </div>
+        }
+        @if (displayChildren(bucket)) {
+          @for (aggregation of bucketChildren[bucket.key]; track aggregation) {
+            <ng-core-record-search-aggregation-buckets
+              [buckets]="aggregation.buckets"
+              [size]="aggregation.bucketSize"
+              [aggregationKey]="aggregation.key"
+            ></ng-core-record-search-aggregation-buckets>
+          }
+        }
+      </li>
+    }
+  </ul>
+}
+@if (displayMoreAndLessLink) {
+  <div>
+    <button class="btn btn-link ml-2"
+      (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</button>
+  </div>
+}

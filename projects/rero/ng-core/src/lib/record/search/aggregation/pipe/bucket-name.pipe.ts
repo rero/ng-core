@@ -24,7 +24,7 @@ import { BucketNameService } from '../service/bucket-name.service';
 export class BucketNamePipe implements PipeTransform {
 
   /**
-   * Tranform value if the type of aggregation is language
+   * Transform value if the type of aggregation is language
    * @param value - aggregation value
    * @param aggregationKey - aggregation type
    * @returns Observable<string>

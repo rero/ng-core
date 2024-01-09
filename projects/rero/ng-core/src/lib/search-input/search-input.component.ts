@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,32 +25,25 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 })
 export class SearchInputComponent {
   /** Display label */
-  @Input()
-  displayLabel = true;
+  @Input() displayLabel = true;
 
   /** Placeholder */
-  @Input()
-  placeholder = 'search';
+  @Input() placeholder = 'search';
 
   /** Value to search */
-  @Input()
-  searchText = '';
+  @Input() searchText = '';
 
   /** Remove trailing and leading spaces if true */
-  @Input()
-  trimQueryString = true;
+  @Input() trimQueryString = true;
 
-  /** Disabled attritute of search input */
-  @Input()
-  disabled = false;
+  /** Disabled attribute of search input */
+  @Input() disabled = false;
 
   /** The current search input object from the template. */
-  @ViewChild('searchinput')
-  input: any;
+  @ViewChild('searchinput') input: any;
 
   /** Search output event emitter */
-  @Output()
-  search = new EventEmitter<string>();
+  @Output() search = new EventEmitter<string>();
 
   /** Set the focus on the input element */
   @Input()

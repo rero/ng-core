@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,25 +20,33 @@ import { FormFieldWrapperComponent } from '../form-field-wrapper/form-field-wrap
 @Component({
   selector: 'ng-core-horizontal-wrapper',
   template: `
-    <div class="{{to.cssClass}} form-group m-0 d-flex align-items-start">
+    <div class="{{props.cssClass}} form-group m-0 d-flex align-items-start">
       <!-- label -->
-      <label [attr.for]="id" class="mr-2 col-form-label" *ngIf="to.label && to.hideLabel !== true" [tooltip]="to.description">
-        {{ to.label }}<ng-container *ngIf="to.required && to.hideRequiredMarker !== true">&nbsp;*</ng-container>
-      </label>
+      @if (props.label && props.hideLabel !== true) {
+        <label [attr.for]="id" class="mr-2 col-form-label" [tooltip]="props.description">
+          {{ props.label }}<ng-container *ngIf="props.required && props.hideRequiredMarker !== true">&nbsp;*</ng-container>
+        </label>
+      }
       <!-- field -->
       <div class="flex-grow-1">
         <ng-template #fieldComponent></ng-template>
-        <div *ngIf="showError" class="invalid-feedback d-block">
-          <formly-validation-message [field]="field"></formly-validation-message>
-        </div>
+        @if (showError) {
+          <div class="invalid-feedback d-block">
+            <formly-validation-message [field]="field"></formly-validation-message>
+          </div>
+        }
       </div>
-      <button type="button" *ngIf="canAdd()" (click)="add()" class="btn btn-link text-secondary btn-sm">
-        <i class="fa fa-clone"></i>
-      </button>
+      @if (canAdd()) {
+        <button type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
+          <i class="fa fa-clone"></i>
+        </button>
+      }
       <!-- trash button -->
-      <button type="button" (click)="remove()" *ngIf="canRemove() && to.hideLabel !== true" class="btn btn-link text-secondary btn-sm">
-        <i class="fa fa-trash"></i>
-      </button>
+      @if (canRemove() && props.hideLabel !== true) {
+        <button type="button" (click)="remove()" class="btn btn-link text-secondary btn-sm">
+          <i class="fa fa-trash"></i>
+        </button>
+      }
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

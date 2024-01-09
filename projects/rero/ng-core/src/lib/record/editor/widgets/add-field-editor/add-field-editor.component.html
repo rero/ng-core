@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,42 +14,46 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!-- from ngx-boostrap -->
-<div class="w-100" *ngIf="hiddenFields$ | async as hiddenFields">
-  <div  class="form-group">
-    <label for="addField" translate>Add field</label>
-    <input
-      id="addField"
-      [(ngModel)]="value"
-      [typeahead]="typeaheadFields$"
-      [typeaheadAsync]="true"
-      [typeaheadItemTemplate]="itemTemplate"
-      [typeaheadScrollable]="true"
-      [typeaheadOptionsInScrollableView]="15"
-      [typeaheadOptionsLimit]="100"
-      typeaheadOptionField="name"
-      (typeaheadOnSelect)="itemSelected($event)"
-      class="form-control"
-      typeaheadMinLength="0"
-      [disabled]="hiddenFields.length < 1"
-      autocomplete="off"
-    />
-    <small id="addFieldHelp" class="form-text text-muted" translate>
-      Press space for all.
-    </small>
+<!-- from ngx-bootstrap -->
+@if (hiddenFields$ | async; as hiddenFields) {
+  <div class="w-100">
+    <div  class="form-group">
+      <label for="addField" translate>Add field</label>
+      <input
+        id="addField"
+        [(ngModel)]="value"
+        [typeahead]="typeaheadFields$"
+        [typeaheadAsync]="true"
+        [typeaheadItemTemplate]="itemTemplate"
+        [typeaheadScrollable]="true"
+        [typeaheadOptionsInScrollableView]="15"
+        [typeaheadOptionsLimit]="100"
+        typeaheadOptionField="name"
+        (typeaheadOnSelect)="itemSelected($event)"
+        class="form-control"
+        typeaheadMinLength="0"
+        [disabled]="hiddenFields.length < 1"
+        autocomplete="off"
+      />
+      <small id="addFieldHelp" class="form-text text-muted" translate>
+        Press space for all.
+      </small>
+    </div>
+    <ul class="list-unstyled">
+      @for ( field of essentialFields$ | async; track field; let i = $index) {
+        <li>
+          <button
+            id="{{'add-field-' + i}}"
+            (click)="$event.preventDefault(); showSelectedField(field)"
+            class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
+          >
+            {{ translateLabel(field) | async }}
+          </button>
+        </li>
+      }
+    </ul>
   </div>
-  <ul class="list-unstyled">
-    <li *ngFor="let field of essentialFields$ | async ; let i = index ">
-      <button
-        id="{{'add-field-' + i}}"
-        (click)="$event.preventDefault(); showSelectedField(field)"
-        class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
-      >
-        {{ translateLabel(field) | async }}
-      </button>
-    </li>
-  </ul>
-</div>
+}
 
 <ng-template #itemTemplate let-field="item">
   {{ translateLabel(field) | async }}

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ export class FilesService {
    * @param _http HttpClient.
    * @param _apiService ApiService.
    */
-  constructor(private _http: HttpClient, private _apiService: ApiService) {}
+  constructor(private http: HttpClient, private apiService: ApiService) {}
 
   /**
    * List files for the given record.
@@ -41,9 +41,9 @@ export class FilesService {
    * @returns Observable resolving the list of files.
    */
   list(type: string, pid: string): Observable<Array<File>> {
-    return this._http
+    return this.http
       .get(
-        `${this._apiService.getEndpointByType(
+        `${this.apiService.getEndpointByType(
           type,
           true
         )}/${pid}/files?versions`
@@ -74,8 +74,8 @@ export class FilesService {
     fileKey: string,
     fileData: any
   ): Observable<File> {
-    return this._http.put<File>(
-      `${this._apiService.getEndpointByType(
+    return this.http.put<File>(
+      `${this.apiService.getEndpointByType(
         type,
         true
       )}/${pid}/files/${fileKey}`,
@@ -98,8 +98,8 @@ export class FilesService {
     fileKey: string,
     versionId: string
   ): Observable<void> {
-    return this._http.delete<void>(
-      `${this._apiService.getEndpointByType(
+    return this.http.delete<void>(
+      `${this.apiService.getEndpointByType(
         type,
         true
       )}/${pid}/files/${fileKey}?versionId=${versionId}`
@@ -115,7 +115,7 @@ export class FilesService {
    * @returns URL of the file.
    */
   getUrl(type: string, pid: string, fileKey: string): string {
-    return `${this._apiService.getEndpointByType(
+    return `${this.apiService.getEndpointByType(
       type,
       true
     )}/${pid}/files/${fileKey}`;

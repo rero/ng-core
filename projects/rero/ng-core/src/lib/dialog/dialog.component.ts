@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -46,9 +46,9 @@ export class DialogComponent implements OnInit {
 
   /**
    * Constructor
-   * @param _bsModalRef - BsModalRef, reference to modal
+   * @param bsModalRef - BsModalRef, reference to modal
    */
-  constructor(private _bsModalRef: BsModalRef) { }
+  constructor(private bsModalRef: BsModalRef) { }
 
   /**
    * Component init
@@ -64,7 +64,7 @@ export class DialogComponent implements OnInit {
    */
   confirm() {
     this.onClose.next(true);
-    this._bsModalRef.hide();
+    this.bsModalRef.hide();
   }
 
   /**
@@ -72,6 +72,6 @@ export class DialogComponent implements OnInit {
    */
   decline() {
     this.onClose.next(false);
-    this._bsModalRef.hide();
+    this.bsModalRef.hide();
   }
 }

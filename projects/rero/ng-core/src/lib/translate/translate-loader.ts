@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,37 +30,37 @@ import it from './i18n/it.json';
 export class TranslateLoader implements BaseTranslateLoader {
 
   // translations
-  private _translations = {};
+  private translations = {};
 
   // locale translations
   // with angular<9 assets are not available for libraries
   // See: https://angular.io/guide/creating-libraries#managing-assets-in-a-library
-  private _coreTranslations = { de, en, fr, it };
+  private coreTranslations = { de, en, fr, it };
   /**
    * Constructor.
    *
    * @param _coreConfigService Configuration service.
    */
   constructor(
-    private _coreConfigService: CoreConfigService,
-    private _http: HttpClient
+    private coreConfigService: CoreConfigService,
+    private http: HttpClient
   ) { }
 
   /**
    * Return observable used by ngx-translate to get translations.
-   * @param lang - string, language to rerieve translations from.
+   * @param lang - string, language to retrieve translations from.
    */
   getTranslation(lang: string): Observable<any> {
     // Already in cache
-    if (this._translations[lang] != null) {
-      return of(this._translations[lang]);
+    if (this.translations[lang] != null) {
+      return of(this.translations[lang]);
     }
-    const urls = this._coreConfigService.translationsURLs;
+    const urls = this.coreConfigService.translationsURLs;
     // create the list of http requests
     const observers = urls.map(
       url => {
         const langURL = url.replace('${lang}', lang);
-        return this._http.get(langURL).pipe(
+        return this.http.get(langURL).pipe(
           catchError((err) => {
             console.log(`ERROR: Cannot load translation: ${langURL}`);
             return of([]);
@@ -72,17 +72,17 @@ export class TranslateLoader implements BaseTranslateLoader {
     return forkJoin(observers).pipe(
       map((translations) => {
         // copy local translations
-        if (this._coreTranslations[lang] != null) {
-          this._translations[lang] = { ...this._coreTranslations[lang] };
+        if (this.coreTranslations[lang] != null) {
+          this.translations[lang] = { ...this.coreTranslations[lang] };
         }
         // get remote translations
         translations.map(trans =>
-          this._translations[lang] = {
-            ...this._translations[lang],
+          this.translations[lang] = {
+            ...this.translations[lang],
             ...trans
           }
         );
-        return this._translations[lang];
+        return this.translations[lang];
       })
     );
   }

@@ -1,5 +1,5 @@
 /*
- * Invenio angular core
+ * RERO angular core
  * Copyright (C) 2020 RERO
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ export class MenuWidgetComponent {
    * Emit a event on click item menu
    * @param item - MenuItem
    */
-  doClick(item: MenuItem | MenuItemInterface) {
+  doClick(item: MenuItem | MenuItemInterface) {
     this.clickItem.emit(item);
   }
 }

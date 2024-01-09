@@ -1,25 +1,29 @@
 <!--
- RERO angular core
- Copyright (C) 2020 RERO
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU Affero General Public License as published by
- the Free Software Foundation, version 3 of the License.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- GNU Affero General Public License for more details.
-
- You should have received a copy of the GNU Affero General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  RERO angular core
+  Copyright (C) 2020-2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<ng-container *ngIf="record">
-    <h1>{{ record.metadata.title[0].mainTitle[0].value }}</h1>
-    <p>
-        <span class="badge badge-primary mr-1" *ngFor="let author of record.metadata.authors">{{ author.name }}</span>
-    </p>
-    <div class="text-justify" *ngIf="record.metadata.abstracts">
+@if (record) {
+  <h1>{{ record.metadata.title[0].mainTitle[0].value }}</h1>
+  <p>
+    @for (author of record.metadata.authors; track author) {
+      <span class="badge badge-primary mr-1">{{ author.name }}</span>
+    }
+  </p>
+  @if (record.metadata.abstracts) {
+    <div class="text-justify">
         {{ record.metadata.abstracts[0].value }}
     </div>
-</ng-container>
+  }
+}

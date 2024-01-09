@@ -1,37 +1,41 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
- 
+  Copyright (C) 2020-2024 RERO
+
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
   the Free Software Foundation, version 3 of the License.
- 
+
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
   GNU Affero General Public License for more details.
- 
+
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div *ngIf="field.templateOptions.label" class="d-block">
-  <span [tooltip]="field.templateOptions.description">
-    {{ field.templateOptions.label }}
-    <span *ngIf="field.templateOptions.required">*</span>
-  </span>
-  <!-- dropdown button with legend -->
-  <div class="btn-group" dropdown>
-    <!-- add subfield button -->
-    <button [id]="field.id" dropdownToggle type="button"
-      class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
-      aria-controls="dropdown-basic">
-      <i class="ml-2 caret"></i>
-    </button>
-    <!-- dropdown list -->
-    <div id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
-      <ng-content select="[dropdown-list]"></ng-content>
+@if (field.props.label) {
+  <div class="d-block">
+    <span [tooltip]="field.props.description">
+      {{ field.props.label }}
+      @if (field.props.required) {
+        &nbsp;*
+      }
+    </span>
+    <!-- dropdown button with legend -->
+    <div class="btn-group" dropdown>
+      <!-- add subfield button -->
+      <button [id]="field.id" dropdownToggle type="button"
+        class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
+        aria-controls="dropdown-basic">
+        <i class="ml-2 caret"></i>
+      </button>
+      <!-- dropdown list -->
+      <div id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
+        <ng-content select="[dropdown-list]"></ng-content>
+      </div>
+      <!-- clone button -->
+      <ng-content id="{field.id}-clone-button" select="[buttons]"></ng-content>
     </div>
-    <!-- clone button -->
-    <ng-content id="{field.id}-clone-button" select="[buttons]"></ng-content>
   </div>
-</div>
+}

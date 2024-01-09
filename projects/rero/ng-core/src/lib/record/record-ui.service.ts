@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2019-2023 RERO
+ * Copyright (C) 2019-2024 RERO
  * Copyright (C) 2019-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,20 +36,20 @@ export class RecordUiService {
   /**
    * Constructor.
    *
-   * @param _dialogService Dialog service.
-   * @param _toastService Toast service.
-   * @param _translateService Translate service.
-   * @param _recordService Record service.
-   * @param _router Router.
-   * @param _spinner Spinner service.
+   * @param dialogService Dialog service.
+   * @param toastService Toast service.
+   * @param translateService Translate service.
+   * @param recordService Record service.
+   * @param router Router.
+   * @param spinner Spinner service.
    */
   constructor(
-    private _dialogService: DialogService,
-    private _toastService: ToastrService,
-    private _translateService: TranslateService,
-    private _recordService: RecordService,
-    private _router: Router,
-    private _spinner: NgxSpinnerService
+    private dialogService: DialogService,
+    private toastService: ToastrService,
+    private translateService: TranslateService,
+    private recordService: RecordService,
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) { }
 
   /**
@@ -66,14 +66,14 @@ export class RecordUiService {
       });
       return translateMessages.join('\n');
     }), switchMap((message: string) => {
-      return this._dialogService.show({
+      return this.dialogService.show({
         ignoreBackdropClick: true,
         initialState: {
-          title: this._translateService.instant('Confirmation'),
+          title: this.translateService.instant('Confirmation'),
           body: message,
           confirmButton: true,
-          confirmTitleButton: this._translateService.instant('Delete'),
-          cancelTitleButton: this._translateService.instant('Cancel')
+          confirmTitleButton: this.translateService.instant('Delete'),
+          cancelTitleButton: this.translateService.instant('Cancel')
         }
       }).pipe(
         // return a new observable depending on confirm dialog result.
@@ -82,15 +82,15 @@ export class RecordUiService {
             return of(false);
           }
 
-          this._spinner.show();
+          this.spinner.show();
 
-          return this._recordService.delete(type, pid).pipe(
+          return this.recordService.delete(type, pid).pipe(
             map(() => {
               return true;
             }),
             tap(() => {
-              this._spinner.hide();
-              this._toastService.success(this._translateService.instant('Record deleted.'));
+              this.spinner.hide();
+              this.toastService.success(this.translateService.instant('Record deleted.'));
             })
           );
         })
@@ -105,12 +105,12 @@ export class RecordUiService {
    * @param message Message to display
    */
   showDeleteMessage(message: string) {
-    this._dialogService.show({
+    this.dialogService.show({
       initialState: {
-        title: this._translateService.instant('Information'),
+        title: this.translateService.instant('Information'),
         body: message,
         confirmButton: false,
-        cancelTitleButton: this._translateService.instant('OK')
+        cancelTitleButton: this.translateService.instant('OK')
       }
     }).subscribe();
   }
@@ -145,17 +145,17 @@ export class RecordUiService {
     if (config.redirectUrl) {
       config.redirectUrl(record, action).subscribe((result: string) => {
         if (result !== null) {
-          this._router.navigate([result]);
+          this.router.navigate([result]);
           return;
         }
       });
     } else {
-      // Default behaviour
+      // Default behavior
       if (action === 'update') {
-        this._router.navigate(['../../detail', pid], {relativeTo: route, replaceUrl: true});
+        this.router.navigate(['../../detail', pid], {relativeTo: route, replaceUrl: true});
         return;
       }
-      this._router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
+      this.router.navigate(['../detail', pid], {relativeTo: route, replaceUrl: true});
     }
   }
 
@@ -167,7 +167,7 @@ export class RecordUiService {
    */
     deleteMessage$(pid: string, type: string): Observable<string[]> {
       const defaultMessage = of([
-        this._translateService.instant('Do you really want to delete this record?')
+        this.translateService.instant('Do you really want to delete this record?')
       ]);
       try {
         const config = this.getResourceConfig(type);

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2023 RERO
+ * Copyright (C) 2023-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -60,9 +60,9 @@ export class FileComponent implements OnInit, OnDestroy {
   /**
    * Constructor.
    *
-   * @param _recordUiService RecordUiService.
+   * @param recordUiService RecordUiService.
    */
-  constructor(private _recordUiService: RecordUiService) {}
+  constructor(private recordUiService: RecordUiService) {}
 
   /**
    * hook OnInit
@@ -75,7 +75,7 @@ export class FileComponent implements OnInit, OnDestroy {
    * Loads the permissions.
    */
   loadPermission() {
-    const config = this._recordUiService.getResourceConfig(this.type);
+    const config = this.recordUiService.getResourceConfig(this.type);
     let obs$ = config.files.canUpdate
       ? config.files.canUpdate(this.record, this.file)
       : of({ can: false, message: '' });

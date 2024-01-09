@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@ import { EditorComponent } from '../../editor.component';
 
 @Component({
   selector: 'ng-core-label-editor',
-  templateUrl: './label.component.html'
+  templateUrl: './label.component.html',
 })
 export class LabelComponent implements OnInit {
 
@@ -34,22 +34,20 @@ export class LabelComponent implements OnInit {
 
   /**
    * Constructor
-   * @param _translateService - TranslateService, that translate the labels of the hidden fields
+   * @param translateService - TranslateService, that translate the labels of the hidden fields
    */
-  constructor(
-    private _translateService: TranslateService
-  ) { }
+  constructor(private translateService: TranslateService) {}
 
   /** onInit hook */
   ngOnInit(): void {
-    if (this.field.templateOptions.editorComponent) {
-      this.editorComponentInstance = (this.field.templateOptions.editorComponent)();
+    if (this.field.props.editorComponent) {
+      this.editorComponentInstance = (this.field.props.editorComponent)();
     }
   }
 
   /**
    * Is the dropdown menu displayed?
-   * @param field - FormlyFieldConfig, the correspondig form field config
+   * @param field - FormlyFieldConfig, the corresponding form field config
    * @returns boolean, true if the menu should be displayed
    */
   hasMenu(field: FormlyFieldConfig): boolean {
@@ -61,7 +59,7 @@ export class LabelComponent implements OnInit {
     }
     return (
       (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 ||
-        this.field.templateOptions.helpURL) && this.editorComponentInstance?.longMode
+        this.field.props.helpURL) && this.editorComponentInstance?.longMode
     );
   }
 
@@ -109,7 +107,8 @@ export class LabelComponent implements OnInit {
    * @returns FormlyFieldConfig[], the filtered list
    */
   hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fieldGroup.filter(f => f.hide && f.hideExpression == null);
+    return fieldGroup.filter(f => f.hide && f?.expressions?.hide !== null);
+    // return fieldGroup.filter(f => f.hide && f.hideExpression == null);
   }
 
   /**
@@ -118,7 +117,7 @@ export class LabelComponent implements OnInit {
    * @param field ngx-formly field
    */
   translateLabel(field: FormlyFieldConfig) {
-    return this._translateService.stream(field.templateOptions.untranslatedLabel);
+    return this.translateService.stream(field.props.untranslatedLabel);
   }
 
   /**
@@ -134,13 +133,11 @@ export class LabelComponent implements OnInit {
    * @param field - FormlyFieldConfig, the field to hide
    */
   remove(): void {
-    if (this.field.parent.type === 'object') {
-      if (this.editorComponentInstance) {
-        this.editorComponentInstance.hide(this.field);
-      }
+    if (this.field.parent.type === 'object' && this.editorComponentInstance) {
+      this.editorComponentInstance.hide(this.field);
     }
     if (this.field.parent.type === 'array') {
-      this.field.parent.templateOptions.remove(this.getIndex());
+      this.field.parent.props.remove(this.getIndex());
     }
   }
 
@@ -161,7 +158,7 @@ export class LabelComponent implements OnInit {
       return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
     }
     if (this.field.parent.type === 'array') {
-      return this.field.parent.templateOptions.canRemove();
+      return this.field.parent.props.canRemove();
     }
     return false;
   }
@@ -173,8 +170,8 @@ export class LabelComponent implements OnInit {
    * @returns boolean, true if a new item can be added
    */
   canAddItem(): boolean {
-    if (this.field.type === 'array' && this.field.templateOptions.canAdd) {
-      return this.field.templateOptions.canAdd() && this.field.fieldGroup.length === 0;
+    if (this.field.type === 'array' && this.field.props.canAdd) {
+      return this.field.props.canAdd() && this.field.fieldGroup.length === 0;
     }
     return false;
   }
@@ -185,7 +182,7 @@ export class LabelComponent implements OnInit {
    */
   addItem() {
     if (this.field.type === 'array') {
-      return this.field.templateOptions.add(0);
+      return this.field.props.add(0);
     }
   }
 
@@ -195,7 +192,7 @@ export class LabelComponent implements OnInit {
    */
   canAdd() {
     if (this.field.parent.type === 'array') {
-      return this.field.parent.templateOptions.canAdd();
+      return this.field.parent.props.canAdd();
     }
     return false;
   }
@@ -207,7 +204,7 @@ export class LabelComponent implements OnInit {
   add() {
     if (this.field.parent.type === 'array') {
       const index = this.getIndex() + 1;
-      return this.field.parent.templateOptions.add(index);
+      return this.field.parent.props.add(index);
     }
   }
 }

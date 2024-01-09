@@ -1,9 +1,25 @@
 {
+  "Always hidden": "Toujours caché",
+  "Hidden": "Caché",
+  "Default hidden": "Caché par défaut",
+  "Essential": "Essentiel",
   "search": "Rechercher une ressource",
   "location": "Localisation",
+  "[issue] Hidden with default": "[problème] Caché par défaut",
   "created year": "Année de création",
   "library": "Bibliothèque",
   "German": "Allemand",
   "from": "De",
-  "day(s)": "jour(s)"
+  "day(s)": "jour(s)",
+  "Example: Müller, Hans": "Exemple: Müller, Hans",
+  "Example: 1955": "Exemple: 1955",
+  "Example: 2012": "Exemple: 2012",
+  "Example: physicist": "Exemple: physicien",
+  "Record only years.": "Enregistrement année seulement.",
+  "Record only a number.": "Numéro de l'enregistrement seulement.",
+  "Not present in the form, not present in the model.": "Non présent dans le formulaire, non présent dans le modèle.",
+  "Hidden field with a default value.": "Champ caché avec une valeur par défaut.",
+  "Hidden field with a default value must not be added to the form.": "Les champs cachés avec une valeur par défaut ne doivent pas être ajoutés au formulaire.",
+  "Readonly values must not be changeable.": "Les valeurs en lecture seule ne doivent pas être modifiables.",
+  "Hidden Property with required expression control": "Propriété cachée avec contrôle de l'expression requise."
 }

@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div>
-  <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="to.readonly">
+  <div class="btn-group w-100" dropdown #dropdown="bs-dropdown" [insideClick]="true" [isDisabled]="props.readonly">
     <button dropdownToggle type="button"
             class="btn btn-outline-primary btn-block dropdown-toggle px-3 text-left d-flex align-items-center"
             aria-controls="dropdown-basic">
@@ -23,28 +23,31 @@
       <span class="caret ml-auto"></span>
     </button>
     <div id="dropdown-basic" *dropdownMenu class="dropdown-menu w-100" role="menu">
-      <div class="px-4 py-2" *ngIf="filter || filteredOptions.length > to.minItemsToDisplaySearch">
-        <input type="text" ngCoreAutofocus class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
-          [value]="filter" [placeholder]="'Filter…' | translate" />
-      </div>
-      <ng-container *ngIf="filteredOptions.length; else noResult">
-        <a *ngIf="!to.hideLabelSelectOption && selectedOptions.length" class="dropdown-item"
-          (click)="$event.preventDefault(); selectOption(); dropdown.hide()" translate
-        >Select an option…</a>
-        <ng-container *ngFor="let option of filteredOptions">
-          <a class="dropdown-item" [ngClass]="{ active: isOptionSelected(option), disabled: option.disabled }" href="#"
-            (click)="$event.preventDefault(); selectOption(option); dropdown.hide()"
-            *ngIf="option.value != null; else group">
-            {{ !filter ? '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(option.level) + ' ' : '' }}{{ option.translatedLabel }}
-          </a>
-          <ng-template #group>
+      @if (filter || filteredOptions.length > props.minItemsToDisplaySearch) {
+        <div class="px-4 py-2">
+          <input type="text" ngCoreAutofocus class="form-control form-control-sm" (input)="onFilterChange($event.target.value)"
+            [value]="filter" [placeholder]="'Filter…' | translate" />
+        </div>
+      }
+      @if (filteredOptions.length) {
+        @if (!props.hideLabelSelectOption && selectedOptions.length) {
+          <a class="dropdown-item"
+            (click)="$event.preventDefault(); selectOption(); dropdown.hide()" translate
+          >Select an option…</a>
+        }
+        @for (option of filteredOptions; track option) {
+          @if (option.value !== null) {
+            <a class="dropdown-item" [ngClass]="{ active: isOptionSelected(option), disabled: option.disabled }" href="#"
+              (click)="$event.preventDefault(); selectOption(option); dropdown.hide()">
+              {{ !filter ? '&nbsp;&nbsp;&nbsp;&nbsp;'.repeat(option.level) + ' ' : '' }}{{ option.translatedLabel }}
+            </a>
+          } @else {
             <h6 class="dropdown-header">{{ option.translatedLabel }}</h6>
-          </ng-template>
-        </ng-container>
-      </ng-container>
-      <ng-template #noResult>
+          }
+        }
+      } @else {
         <p class="m-0 px-4 py-2 text-muted" translate>No result</p>
-      </ng-template>
+      }
     </div>
   </div>
 </div>

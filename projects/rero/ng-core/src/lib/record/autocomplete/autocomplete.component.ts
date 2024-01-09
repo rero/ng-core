@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,36 +27,28 @@ import { RecordService } from '../record.service';
 })
 export class AutocompleteComponent implements OnInit {
   // The submit button css class.
-  @Input()
-  buttonCssClass = 'btn btn-light';
+  @Input() buttonCssClass = 'btn btn-light';
 
   // The form action i.e. '/search'
-  @Input()
-  action: string;
+  @Input() action: string;
 
   // The autocomplete record type configuration.
-  @Input()
-  recordTypes: Array<any> = [];
+  @Input() recordTypes: Array<any> = [];
 
   // The search input field size: small or large
-  @Input()
-  size: string;
+  @Input() size: string;
 
   // The search input field placeholder.
-  @Input()
-  placeholder: string;
+  @Input() placeholder: string;
 
   // The routing mode, angular for internal or href for external.
-  @Input()
-  internalRouting = true;
+  @Input() internalRouting = true;
 
   // The minimal number of characters that needs to be entered before typeahead kicks-in.
-  @Input()
-  typeaheadMinLength = 3;
+  @Input() typeaheadMinLength = 3;
 
   // The minimal wait time after last character typed before typeahead kicks-in.
-  @Input()
-  typeaheadWaitMs = 300;
+  @Input() typeaheadWaitMs = 300;
 
   // The maximum length of the total number of suggestions in the list. The default value is 10.
   @Input() typeaheadOptionsLimit = 10;
@@ -88,22 +80,22 @@ export class AutocompleteComponent implements OnInit {
   /**
    * Constructor.
    *
-   * @param _recordService - REST API record service
-   * @param _route - Angular current route
-   * @param _router - Angular router for navigation
+   * @param recordService - REST API record service
+   * @param route - Angular current route
+   * @param router - Angular router for navigation
    */
   constructor(
-    private _recordService: RecordService,
-    private _route: ActivatedRoute,
-    private _router: Router
+    private recordService: RecordService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   /**
    * On init hook
    */
   ngOnInit() {
-    this._route.queryParamMap.subscribe((params: any) => {
-      if (this.action === this._router.url.split('?')[0]) {
+    this.route.queryParamMap.subscribe((params: any) => {
+      if (this.action === this.router.url.split('?')[0]) {
         // get the query form the URL
         const query = params.get('q');
         if (query) {
@@ -141,7 +133,7 @@ export class AutocompleteComponent implements OnInit {
       event.preventDefault();
     }
     if (this.internalRouting) {
-      this._router.navigate([this.action], {
+      this.router.navigate([this.action], {
         queryParams: {
           ...this.extraQueryParams,
           q: this.asyncSelected.query
@@ -178,7 +170,7 @@ export class AutocompleteComponent implements OnInit {
         queryRecord += ` AND ${queryParams.join(' AND ')}`;
       }
       combineGetRecords.push(
-        this._recordService.getRecords(
+        this.recordService.getRecords(
           recordType.index ? recordType.index : recordType.type,
           queryRecord,
           1,
@@ -222,7 +214,7 @@ export class AutocompleteComponent implements OnInit {
   typeaheadOnSelect(e: TypeaheadMatch): void {
     if (e.item.href) {
       if (this.internalRouting) {
-        this._router.navigate([e.item.href]);
+        this.router.navigate([e.item.href]);
       } else {
         window.location.href = e.item.href;
       }

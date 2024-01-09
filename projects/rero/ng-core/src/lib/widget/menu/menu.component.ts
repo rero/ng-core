@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,14 +21,11 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   templateUrl: './menu.component.html'
 })
 export class MenuComponent {
-  @Input()
-  menu: any;
+  @Input() menu: any;
 
-  @Input()
-  isItemMenuVisible: (menuItem: any) => true;
+  @Input() isItemMenuVisible: (menuItem: any) => true;
 
-  @Output()
-  clickItem = new EventEmitter<object>();
+  @Output() clickItem = new EventEmitter<object>();
 
   itemType(item: any) {
     if (item.routerLink) {

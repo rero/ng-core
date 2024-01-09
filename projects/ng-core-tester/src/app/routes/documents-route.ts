@@ -1,7 +1,7 @@
 
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -103,7 +103,7 @@ export class DocumentsRoute implements RouteInterface {
             formFieldMap: (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
               // Populates each select with custom options
               if (field.type === 'enum') {
-                field.templateOptions.options = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
+                field.props.options = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
               }
               return field;
             },

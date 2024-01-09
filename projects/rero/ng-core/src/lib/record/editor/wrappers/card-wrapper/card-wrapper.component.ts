@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -43,9 +43,10 @@ import { FieldWrapper } from '@ngx-formly/core';
 })
 export class CardWrapperComponent extends FieldWrapper implements OnInit{
 
+  /** OnInit hook */
   ngOnInit() {
     // remove the field label as it is displayed by this wrapper
-    this.field.templateOptions.hideLabel = true;
+    this.field.props.hideLabel = true;
   }
 
 }

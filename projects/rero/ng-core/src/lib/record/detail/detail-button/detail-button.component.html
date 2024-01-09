@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2023 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -19,41 +19,44 @@
 </a>
 <div class="float-right ml-4 mt-2 mb-4" >
   <ng-content select="[beforeButton]"></ng-content>
-  <ng-container *ngIf="record && adminMode.can">
-    <button *ngIf="useStatus && useStatus.can && useStatus.url"
-      id="detail-use-button"
-      class="btn btn-sm btn-primary ml-1"
-      [title]="'Use'|translate"
-      [ngClass]="{
-        'btn-outline-primary': !isPrimaryAction('use'),
-        'btn-primary': isPrimaryAction('use')
-      }"
-      (click)="useRecord()"
-    ><i class="fa fa-hand-o-right"></i> {{ 'Use' | translate }}</button>
-    <button *ngIf="updateStatus && updateStatus.can"
-      id="detail-edit-button"
-      class="btn btn-sm ml-1"
-      [title]="'Edit'|translate"
-      [ngClass]="{
-        'btn-outline-primary': !isPrimaryAction('edit'),
-        'btn-primary': isPrimaryAction('edit')
-      }"
-      (click)="updateRecord(record)"
-    ><i class="fa fa-pencil"></i> {{ 'Edit' | translate }}</button>
-    <button *ngIf="deleteStatus.can; else deleteMessageLink"
-      id="detail-delete-button"
-      class="btn btn-sm btn-outline-danger ml-1"
-      [title]="'Delete'|translate"
-      (click)="deleteRecord(record)"
-    ><i class="fa fa-trash"></i> {{ 'Delete' | translate }}</button>
-    <ng-template #deleteMessageLink>
-      <button *ngIf="deleteStatus.message"
-        id="detail-delete-button"
-        class="btn btn-sm btn-outline-danger ml-1 disabled"
+  @if (record && adminMode.can) {
+    @if (useStatus && useStatus.can && useStatus.url) {
+      <button id="detail-use-button"
+        class="btn btn-sm btn-primary ml-1"
+        [title]="'Use'|translate"
+        [ngClass]="{
+          'btn-outline-primary': !isPrimaryAction('use'),
+          'btn-primary': isPrimaryAction('use')
+        }"
+        (click)="useRecord()"
+      ><i class="fa fa-hand-o-right"></i> {{ 'Use' | translate }}</button>
+    }
+    @if (updateStatus && updateStatus.can) {
+      <button id="detail-edit-button"
+        class="btn btn-sm ml-1"
+        [title]="'Edit'|translate"
+        [ngClass]="{
+          'btn-outline-primary': !isPrimaryAction('edit'),
+          'btn-primary': isPrimaryAction('edit')
+        }"
+        (click)="updateRecord(record)"
+      ><i class="fa fa-pencil"></i> {{ 'Edit' | translate }}</button>
+    }
+    @if (deleteStatus.can) {
+      <button id="detail-delete-button"
+        class="btn btn-sm btn-outline-danger ml-1"
         [title]="'Delete'|translate"
-        (click)="showDeleteMessage(deleteStatus.message)"
-      ><i class="fa fa-trash mr-1"></i> {{ 'Delete' | translate }}</button>
-    </ng-template>
-  </ng-container>
+        (click)="deleteRecord(record)"
+      ><i class="fa fa-trash"></i> {{ 'Delete' | translate }}</button>
+    } @else {
+      @if (deleteStatus.message) {
+        <button id="detail-delete-button"
+          class="btn btn-sm btn-outline-danger ml-1 disabled"
+          [title]="'Delete'|translate"
+          (click)="showDeleteMessage(deleteStatus.message)"
+        ><i class="fa fa-trash mr-1"></i> {{ 'Delete' | translate }}</button>
+      }
+    }
+  }
   <ng-content select="[afterButton]"></ng-content>
 </div>

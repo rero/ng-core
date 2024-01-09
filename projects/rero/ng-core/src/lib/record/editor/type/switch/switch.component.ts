@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component } from '@angular/core';
-import { FieldType } from '@ngx-formly/core';
+import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+
+interface SwitchProps extends FormlyFieldProps {
+  indeterminate: boolean;
+  hideLabel: boolean;
+}
 
 /**
  * Component for displaying a switcher in editor.
@@ -26,16 +32,17 @@ import { FieldType } from '@ngx-formly/core';
     <div class="custom-control custom-switch">
       <input class="custom-control-input" type="checkbox"
         [class.is-invalid]="showError"
-        [indeterminate]="to.indeterminate && formControl.value === null"
+        [indeterminate]="props.indeterminate && formControl.value === null"
         [formControl]="formControl"
         [formlyAttributes]="field">
-      <label class="custom-control-label" [for]="id" [tooltip]="to.description">{{ to.label }}</label>
+      <label class="custom-control-label" [for]="id" [tooltip]="props.description">{{ props.label }}</label>
     </div>
   `,
 })
-export class SwitchComponent extends FieldType {
-  defaultOptions = {
-    templateOptions: {
+export class SwitchComponent extends FieldType<FormlyFieldConfig<SwitchProps>> {
+  /** Default properties */
+  defaultOptions: Partial<FormlyFieldConfig<SwitchProps>> = {
+    props: {
       indeterminate: true,
       hideLabel: true,
     },

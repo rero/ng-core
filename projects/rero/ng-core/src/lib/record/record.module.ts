@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,9 +18,9 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
-import { FormlyModule, FORMLY_CONFIG } from '@ngx-formly/core';
+import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
+import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -33,17 +33,19 @@ import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { emailValidator } from '../validator/email.validator';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
+import { DetailButtonComponent } from './detail/detail-button/detail-button.component';
 import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
 import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
+import { NgCoreFormlyFieldInput, NgCoreFormlyInputModule } from './editor/formly/primeng/input';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-select.component';
 import { DateTimepickerTypeComponent } from './editor/type/date-time-picker-type.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
-import { MulticheckboxComponent } from './editor/type/multicheckbox.component';
+import { MultiCheckboxComponent } from './editor/type/multicheckbox.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
@@ -61,6 +63,7 @@ import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrappe
 import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { ExportButtonComponent } from './export-button/export-button.component';
+import { FileComponent } from './files/file/file.component';
 import { RecordFilesComponent } from './files/files.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
@@ -75,8 +78,6 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { FileComponent } from './files/file/file.component';
-import { DetailButtonComponent } from './detail/detail-button/detail-button.component';
 
 @NgModule({
     declarations: [
@@ -120,7 +121,7 @@ import { DetailButtonComponent } from './detail/detail-button/detail-button.comp
         BucketNamePipe,
         DateTimepickerTypeComponent,
         PasswordGeneratorTypeComponent,
-        MulticheckboxComponent,
+        MultiCheckboxComponent,
         FileComponent,
         DetailButtonComponent
     ],
@@ -145,29 +146,11 @@ import { DetailButtonComponent } from './detail/detail-button/detail-button.comp
                 { name: 'email', extension: { prePopulate: emailValidator } }
             ],
             extras: {
-                resetFieldOnHide: true,
-                lazyRender: true
+                checkExpressionOn: 'changeDetectionCheck',
+                resetFieldOnHide: true
             },
             types: [
-                { name: 'string', extends: 'input' },
-                {
-                    name: 'number',
-                    extends: 'input',
-                    defaultOptions: {
-                        templateOptions: {
-                            type: 'number'
-                        }
-                    }
-                },
-                {
-                    name: 'integer',
-                    extends: 'input',
-                    defaultOptions: {
-                        templateOptions: {
-                            type: 'number'
-                        }
-                    }
-                },
+                { name: 'input', component: NgCoreFormlyFieldInput },
                 { name: 'boolean', component: SwitchComponent },
                 { name: 'enum', extends: 'select' },
                 { name: 'array', component: ArrayTypeComponent },
@@ -181,7 +164,7 @@ import { DetailButtonComponent } from './detail/detail-button/detail-button.comp
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
-                { name: 'multicheckbox', component: MulticheckboxComponent }
+                { name: 'multicheckbox', component: MultiCheckboxComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },
@@ -191,8 +174,9 @@ import { DetailButtonComponent } from './detail/detail-button/detail-button.comp
                 { name: 'card', component: CardWrapperComponent }
             ]
         }),
-        FormlyBootstrapModule,
-        FormlySelectModule
+        FormlyPrimeNGModule,
+        FormlySelectModule,
+        NgCoreFormlyInputModule
     ],
     exports: [
         RecordSearchComponent,
@@ -201,7 +185,7 @@ import { DetailButtonComponent } from './detail/detail-button/detail-button.comp
         CoreModule,
         EditorComponent,
         FormlyModule,
-        FormlyBootstrapModule,
+        FormlyPrimeNGModule,
         FormlySelectModule,
         ExportButtonComponent,
         DetailButtonComponent,

@@ -100,7 +100,7 @@ export class RecordService {
    * @param itemsPerPage - number, number of records to return
    * @param aggregationsFilters - list, option list of filters; usually used by
    *                              the aggregation filters.
-   * @param preFilters - object, option list of additionnal filters.  The value can
+   * @param preFilters - object, option list of additional filters.  The value can
    *                     a string or a list of string to filter with multiple values.
    * @param headers - HttpHeaders optional http header for the backend call.
    * @param sort - parameter for sorting records (eg. 'mostrecent' or '-mostrecent')

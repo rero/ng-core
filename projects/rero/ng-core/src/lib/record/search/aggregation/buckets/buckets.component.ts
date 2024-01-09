@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,7 +42,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   bucketChildren: any = {};
 
   /** Subscription to aggregationsFilters observable */
-  private _aggregationsFiltersSubscription: Subscription;
+  private aggregationsFiltersSubscription: Subscription;
 
 
   // GETTERS & SETTERS =================================================================
@@ -77,14 +77,14 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   // CONSTRUCTOR & HOOKS ==============================================================
   /**
    * Constructor
-   * @param _translateService - TranslateService
-   * @param _recordSearchService - RecordSearchService
-   * @param _translateLanguage - TranslateLanguageService
+   * @param translateService - TranslateService
+   * @param recordSearchService - RecordSearchService
+   * @param translateLanguage - TranslateLanguageService
    */
   constructor(
-    private _translateService: TranslateService,
-    private _recordSearchService: RecordSearchService,
-    private _translateLanguage: TranslateLanguageService
+    private translateService: TranslateService,
+    private recordSearchService: RecordSearchService,
+    private translateLanguage: TranslateLanguageService
   ) {}
 
   /**
@@ -93,7 +93,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    *   they will change.
    */
   ngOnInit() {
-    this._aggregationsFiltersSubscription = this._recordSearchService
+    this.aggregationsFiltersSubscription = this.recordSearchService
         .aggregationsFilters
         .subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
           if (aggregationsFilters !== null) {
@@ -121,7 +121,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    *   Unsubscribes from the observable of aggregations filters.
    */
   ngOnDestroy() {
-    this._aggregationsFiltersSubscription.unsubscribe();
+    this.aggregationsFiltersSubscription.unsubscribe();
   }
 
   // COMPONENT F£UNCTIONS =====================================================
@@ -144,7 +144,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
       // not necessary but faster than hasChildrenFilter
       bucket.indeterminate ||
       // hasChildrenFilter is required to avoid blinks when a child is selected
-      this._recordSearchService.hasChildrenFilter(bucket)
+      this.recordSearchService.hasChildrenFilter(bucket)
     );
   }
 
@@ -158,20 +158,20 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
     if (index === -1) {
       // No filters exist for the aggregation.
-      this._recordSearchService.updateAggregationFilter(this.aggregationKey, [bucket.key], bucket);
+      this.recordSearchService.updateAggregationFilter(this.aggregationKey, [bucket.key], bucket);
     } else {
       const aggFilter = this.aggregationsFilters[index];
       if (!aggFilter.values.includes(bucket.key.toString())) {
         // Bucket value is not yet selected, we add value to selected values.
         this.aggregationsFilters[index].values.push(bucket.key.toString());
-        this._recordSearchService.updateAggregationFilter(
+        this.recordSearchService.updateAggregationFilter(
           this.aggregationKey,
           this.aggregationsFilters[index].values,
           bucket
         );
       } else {
         // Removes value from selected values and all children selected values.
-        this._recordSearchService.removeAggregationFilter(this.aggregationKey, bucket);
+        this.recordSearchService.removeAggregationFilter(this.aggregationKey, bucket);
       }
     }
   }

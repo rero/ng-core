@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,12 +26,12 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
   /**
    * Constructor.
    *
-   * @param _translateService Translate service.
+   * @param translateService Translate service.
    */
   constructor(
-    @Inject(TranslateService) private _translateService: TranslateService
+    @Inject(TranslateService) private translateService: TranslateService
   ) {
-    super(_translateService.currentLanguage);
+    super(translateService.currentLanguage);
   }
 
   transform(value: Date | string | number, format?: string, timezone?: string, locale?: string): string | null;
@@ -39,7 +39,7 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
   transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string): string | null
   {
     if (!locale) {
-      locale = this._translateService.currentLanguage;
+      locale = this.translateService.currentLanguage;
     }
 
     if (locale === 'en') {

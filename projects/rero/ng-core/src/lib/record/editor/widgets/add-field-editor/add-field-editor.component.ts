@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
-import { Observable, of, Subscriber } from 'rxjs';
+import { Observable, Subscriber, of } from 'rxjs';
 import { first, map, mergeMap } from 'rxjs/operators';
 
 /**
- * For big editor add the possiblity to display
+ * For big editor add the possibility to display
  */
 @Component({
   selector: 'ng-core-editor-add-field-editor',
@@ -48,15 +48,13 @@ export class AddFieldEditorComponent implements OnInit {
 
   /** Instance of EditorComponent */
   //TODO: add type
-  private editorComponentInstance;
+  private editorComponentInstance: any;
 
   /***
    * Constructor
-   * @param _translateService - TranslateService, that translate the labels of the hidden fields
+   * @param translateService - TranslateService, that translate the labels of the hidden fields
    */
-  constructor(
-    private _translateService: TranslateService
-  ) { }
+  constructor(private translateService: TranslateService) {}
 
   /** onInit hook */
   ngOnInit() {
@@ -90,8 +88,8 @@ export class AddFieldEditorComponent implements OnInit {
    * @param field2 value to compare to
    */
   sortFieldsByLabel(field1: FormlyFieldConfig, field2: FormlyFieldConfig) {
-    const f1 = field1.templateOptions.label;
-    const f2 = field2.templateOptions.label;
+    const f1 = field1.props.label;
+    const f2 = field2.props.label;
     if (f1 > f2) {
       return 1;
     }
@@ -124,7 +122,7 @@ export class AddFieldEditorComponent implements OnInit {
       map(
         (fields: any) => fields.filter(field => {
           // the label is not translated as the field is hidden
-          const f = this._translateService.instant(field.templateOptions.untranslatedLabel);
+          const f = this.translateService.instant(field.props.untranslatedLabel);
           // true if match
           return query.test(f);
         })
@@ -139,7 +137,7 @@ export class AddFieldEditorComponent implements OnInit {
    * @return the translated string
    */
   translateLabel(field: FormlyFieldConfig) {
-    return this._translateService.stream(field.templateOptions.untranslatedLabel);
+    return this.translateService.stream(field.props.untranslatedLabel);
   }
 
   /***
@@ -152,7 +150,7 @@ export class AddFieldEditorComponent implements OnInit {
 
   /***
    * Shows the selected field when it is selected
-   * @param match - TyepeaheadMath, the selected element
+   * @param match - TypeaheadMath, the selected element
    */
   showSelectedField(field: any) {
     // show the field in the form
@@ -173,7 +171,7 @@ export class AddFieldEditorComponent implements OnInit {
    * @param field - field to check
    */
   isFieldEssential(field: FormlyFieldConfig) {
-    return field.templateOptions.navigation &&
-      field.templateOptions.navigation.essential === true;
+    return field.props.navigation &&
+      field.props.navigation.essential === true;
   }
 }

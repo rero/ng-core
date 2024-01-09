@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,9 +25,9 @@ export class Nl2brPipe implements PipeTransform {
   /**
    * Constructor.
    *
-   * @param _sanitizer Dom sanitizer.
+   * @param sanitizer Dom sanitizer.
    */
-  constructor(private _sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   /**
    * Returns transformed value containing <br> entities.
@@ -37,9 +37,9 @@ export class Nl2brPipe implements PipeTransform {
    */
   transform(value: string): any {
     if (!value) {
-      return this._sanitizer.bypassSecurityTrustHtml('');
+      return this.sanitizer.bypassSecurityTrustHtml('');
     }
-    return this._sanitizer.bypassSecurityTrustHtml(
+    return this.sanitizer.bypassSecurityTrustHtml(
       value.replace(/\r\n?|\n/g, '<br>\n')
     );
   }

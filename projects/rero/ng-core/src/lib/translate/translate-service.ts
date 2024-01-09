@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -47,16 +47,16 @@ export class TranslateService {
   /**
    * Constructor.
    *
-   * @param _translateService Translate service.
-   * @param _coreConfigService Configuration service.
-   * @param _bsLocaleService Bootstrap locale service.
-   * @param _primeNgConfig PrimeNGConfig service.
+   * @param translateService Translate service.
+   * @param coreConfigService Configuration service.
+   * @param bsLocaleService Bootstrap locale service.
+   * @param primeNgConfig PrimeNGConfig service.
    */
   constructor(
-    private _translateService: NgxTranslateService,
-    private _coreConfigService: CoreConfigService,
-    private _bsLocaleService: BsLocaleService,
-    private _primeNgConfig: PrimeNGConfig
+    private translateService: NgxTranslateService,
+    private coreConfigService: CoreConfigService,
+    private bsLocaleService: BsLocaleService,
+    private primeNgConfig: PrimeNGConfig
   ) {
     this.init();
   }
@@ -69,9 +69,9 @@ export class TranslateService {
    */
   setLanguage(language: string): Observable<any> {
     moment.locale(language);
-    this._bsLocaleService.use(language);
-    this._primeNgConfig.setTranslation(this.languages[language].primeng);
-    return this._translateService.use(language);
+    this.bsLocaleService.use(language);
+    this.primeNgConfig.setTranslation(this.languages[language].primeng);
+    return this.translateService.use(language);
   }
 
   /**
@@ -82,16 +82,16 @@ export class TranslateService {
    * @return Translated value as string.
    */
   translate(key: string | Array<string>, interpolateParams: any = null): string {
-    return this._translateService.instant(key, interpolateParams);
+    return this.translateService.instant(key, interpolateParams);
   }
 
   getBrowserLang() {
-    return this._translateService.getBrowserLang();
+    return this.translateService.getBrowserLang();
   }
 
   get currentLanguage(): string {
-    return this._translateService.currentLang
-      || this._coreConfigService.defaultLanguage
+    return this.translateService.currentLang
+      || this.coreConfigService.defaultLanguage
       || 'en-GB';
   }
 
@@ -100,9 +100,9 @@ export class TranslateService {
       defineLocale(key, value.ngx);
       registerLocaleData(value.angular, key);
     }
-    const languages: Array<string> = this._coreConfigService.languages;
-    this._translateService.addLangs(languages);
-    this._translateService.setDefaultLang(this._coreConfigService.defaultLanguage);
-    this._primeNgConfig.setTranslation(this.languages[this._coreConfigService.defaultLanguage].primeng);
+    const languages: Array<string> = this.coreConfigService.languages;
+    this.translateService.addLangs(languages);
+    this.translateService.setDefaultLang(this.coreConfigService.defaultLanguage);
+    this.primeNgConfig.setTranslation(this.languages[this.coreConfigService.defaultLanguage].primeng);
   }
 }

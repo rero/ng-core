@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,103 +14,104 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<nav *ngIf="menu" class="navbar navbar-expand-lg navbar-light">
-  <div
-    [attr.id]="menu.getAttribute('id', 'navbarSupportedContent')"
-    [ngClass]="menu.getAttribute('class', 'collapse navbar-collapse')"
-  >
-    <ul [ngClass]="menu.getAttribute('class', 'navbar-nav')">
-      <ng-container *ngFor="let item of menu.getChildren()">
-        <li id="item.getAttribute('id')" class="nav-item" *ngIf="!item.hasChildren(); else withDropdown">
-          <a
-            *ngIf="item.hasUri(); else linkRouterLink"
-            class="nav-link"
-            [class.active]="item.isActive()"
-            [attr.id]="item.getAttribute('id')"
-            [attr.href]="item.getUri()"
-            [attr.target]="item.getAttribute('target')"
-            (click)="doClick(item)"
-          >
-            <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
-          </a>
-          <ng-template #linkRouterLink>
-            <a
-              class="nav-link"
-              [class.active]="item.isActive()"
-              [class.disabled]="!item.isEnabled()"
-              [attr.id]="item.getAttribute('id')"
-              [routerLink]="item.hasRouterLink() ? item.getRouterLink() : []"
-              [queryParams]="item.getQueryParams() ? item.getQueryParams() : {}"
-              (click)="doClick(item)"
-            >
-              <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
-            </a>
-          </ng-template>
-        </li>
-        <ng-template #withDropdown>
-          <li [attr.id]="item.getAttribute('id')" class="nav-item dropdown" dropdown placement="bottom right">
-            <a class="nav-link dropdown-toggle"
-               dropdownToggle
-               href
-               (click)="false"
-               [attr.aria-controls]="item.getAttribute('id')"
-            >
-              <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
-            </a>
-            <ul [attr.id]="item.getAttribute('id', 'default-dropdown-id')+'-dropdown'"
-                class="dropdown-menu"
-                [ngClass]="item.getAttribute('class')"
-                role="menu"
-                *dropdownMenu
-            >
-              <ng-container *ngFor="let child of item.getChildren()">
-                <li>
-                  <a *ngIf="child.hasUri(); else subLinkRouterLink"
-                     class="dropdown-item"
-                     [class.disabled]="!child.isEnabled()"
-                     [attr.id]="child.getAttribute('id')"
-                     [attr.href]="child.getUri()"
-                     [attr.target]="child.getAttribute('target')"
-                     (click)="doClick(child)"
+@if (menu) {
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div
+      [attr.id]="menu.getAttribute('id', 'navbarSupportedContent')"
+      [ngClass]="menu.getAttribute('class', 'collapse navbar-collapse')"
+    >
+      <ul [ngClass]="menu.getAttribute('class', 'navbar-nav')">
+        @for (item of menu.getChildren(); track item) {
+          @if (!item.hasChildren()) {
+            <li id="item.getAttribute('id')" class="nav-item">
+              @if (item.hasUri()) {
+                <a class="nav-link"
+                  [class.active]="item.isActive()"
+                  [attr.id]="item.getAttribute('id')"
+                  [attr.href]="item.getUri()"
+                  [attr.target]="item.getAttribute('target')"
+                  (click)="doClick(item)"
+                >
+                  <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
+                </a>
+              } @else {
+                  <a class="nav-link"
+                    [class.active]="item.isActive()"
+                    [class.disabled]="!item.isEnabled()"
+                    [attr.id]="item.getAttribute('id')"
+                    [routerLink]="item.hasRouterLink() ? item.getRouterLink() : []"
+                    [queryParams]="item.getQueryParams() ? item.getQueryParams() : {}"
+                    (click)="doClick(item)"
                   >
-                    <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:child}"></ng-container>
+                    <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
                   </a>
-                  <ng-template #subLinkRouterLink>
+              }
+            </li>
+          } @else {
+            <li [attr.id]="item.getAttribute('id')" class="nav-item dropdown" dropdown placement="bottom right">
+              <a class="nav-link dropdown-toggle"
+                  dropdownToggle
+                  href
+                  (click)="false"
+                  [attr.aria-controls]="item.getAttribute('id')"
+              >
+                <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:item}"></ng-container>
+              </a>
+              <ul [attr.id]="item.getAttribute('id', 'default-dropdown-id')+'-dropdown'"
+                  class="dropdown-menu"
+                  [ngClass]="item.getAttribute('class')"
+                  role="menu"
+                  *dropdownMenu
+              >
+              @for (child of item.getChildren(); track child) {
+                <li>
+                  @if (child.hasUri()) {
                     <a class="dropdown-item"
-                       [class.disabled]="!child.isEnabled()"
-                       [attr.id]="child.getAttribute('id')"
-                       [attr.target]="child.getAttribute('target')"
-                       [routerLink]="child.getRouterLink()"
-                       [queryParams]="child.getQueryParams() ? child.getQueryParams() : {}"
-                       (click)="doClick(child)"
+                    [class.disabled]="!child.isEnabled()"
+                    [attr.id]="child.getAttribute('id')"
+                    [attr.href]="child.getUri()"
+                    [attr.target]="child.getAttribute('target')"
+                    (click)="doClick(child)"
+                >
+                  <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:child}"></ng-container>
+                </a>
+                  } @else {
+                    <a class="dropdown-item"
+                        [class.disabled]="!child.isEnabled()"
+                        [attr.id]="child.getAttribute('id')"
+                        [attr.target]="child.getAttribute('target')"
+                        [routerLink]="child.getRouterLink()"
+                        [queryParams]="child.getQueryParams() ? child.getQueryParams() : {}"
+                        (click)="doClick(child)"
                     >
                       <ng-container [ngTemplateOutlet]="childMenuEntry" [ngTemplateOutletContext]="{item:child}"></ng-container>
                     </a>
-                  </ng-template>
+                  }
                 </li>
-                <ng-container *ngIf="child.hasExtra('divider')">
+                @if (child.hasExtra('divider')) {
                   <li [ngClass]="child.getExtra('divider')"></li>
-                </ng-container>
-              </ng-container>
-            </ul>
-          </li>
-        </ng-template>
-      </ng-container>
-    </ul>
-  </div>
-</nav>
+                }
+              }
+              </ul>
+            </li>
+          }
+        }
+      </ul>
+    </div>
+  </nav>
+}
 
 <ng-template #childMenuEntry let-item="item">
-  <ng-container *ngIf="item.hasExtra('iconClass')">
+  @if (item.hasExtra('iconClass')) {
     <i class="mr-2" [ngClass]="item.getExtra('iconClass')"></i>
-  </ng-container>
-  <ng-container *ngIf="!item.hasLabelAttribute('hideLabel')">
-    <ng-container *ngIf="item.getPrefix() as prefix">
+  }
+  @if (!item.hasLabelAttribute('hideLabel')) {
+    @if (item.getPrefix(); as prefix) {
       <span [ngClass]="prefix.class">{{ prefix.name }}</span>
-    </ng-container>
+    }
     <span [ngClass]="item.getExtra('label-class')">{{ item.getName() }}</span>
-    <ng-container *ngIf="item.getSuffix() as suffix">
+    @if (item.getSuffix(); as suffix) {
       <span [ngClass]="suffix.class">{{ suffix.name }}</span>
-    </ng-container>
-  </ng-container>
+    }
+  }
 </ng-template>

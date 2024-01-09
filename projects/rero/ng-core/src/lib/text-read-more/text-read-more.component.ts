@@ -52,10 +52,10 @@ export class TextReadMoreComponent implements OnInit {
   isLimitReached = true;
 
   /** The truncated text  */
-  private _sTruncateText: string;
+  private sTruncateText: string;
 
   ngOnInit() {
-    this.textToDisplay = this._sTruncateText = this._truncateText();
+    this.textToDisplay = this.sTruncateText = this._truncateText();
     if (this.text === this.textToDisplay) {
       this.isLimitReached = false;
     }
@@ -68,7 +68,7 @@ export class TextReadMoreComponent implements OnInit {
   toggleText(event: Event) {
     event.preventDefault();
     this.textToDisplay = (this.isExpanded)
-      ? this._sTruncateText
+      ? this.sTruncateText
       : this.text;
     this.isExpanded = !this.isExpanded;
   }

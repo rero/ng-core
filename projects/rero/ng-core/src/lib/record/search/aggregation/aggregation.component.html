@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- Aggregation with no bucket, containing only the count. -->
-<div class="mb-3" *ngIf="aggregation.doc_count != null; else cardAggregation">
-  <ng-core-record-search-aggregation-buckets
-    [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
-    [size]="aggregation.bucketSize">
-  </ng-core-record-search-aggregation-buckets>
-</div>
-<ng-template #cardAggregation>
+@if (aggregation.doc_count) {
+  <div class="mb-3">
+    <ng-core-record-search-aggregation-buckets
+      [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
+      [size]="aggregation.bucketSize">
+    </ng-core-record-search-aggregation-buckets>
+  </div>
+} @else {
   <div class="card mb-2">
     <div class="card-header p-0">
       <h5 class="mb-0">
@@ -54,18 +55,21 @@
           </ng-core-aggregation-date-range>
           <!-- Terms (default) -->
           <ng-container *ngSwitchDefault>
-            <ng-core-record-search-aggregation-buckets
-                    *ngIf="aggregation.value.buckets.length > 0; else noResult"
-                    [buckets]="aggregation.value.buckets"
-                    [aggregationKey]="aggregation.key"
-                    [size]="aggregation.bucketSize">
-            </ng-core-record-search-aggregation-buckets>
-            <ng-template #noResult>
-              <i class="small" translate *ngIf="aggregation.loaded">No result</i>
-            </ng-template>
+            @if (aggregation.value.buckets.length > 0) {
+              <ng-core-record-search-aggregation-buckets
+                      [buckets]="aggregation.value.buckets"
+                      [aggregationKey]="aggregation.key"
+                      [size]="aggregation.bucketSize">
+              </ng-core-record-search-aggregation-buckets>
+            } @else {
+              @if (aggregation.loaded) {
+                <i class="small" translate>No result</i>
+              }
+            }
           </ng-container>
         </ng-container>
       </div>
     </div>
   </div>
-</ng-template>
+}
+
