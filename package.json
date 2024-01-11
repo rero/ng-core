@@ -32,7 +32,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@types/marked": "^4.0.7",
     "bootstrap": "^4.6.2",
-    "crypto-js": "^4.1.1",
+    "crypto-js": "^4.2.0",
     "easymde": "^2.18.0",
     "font-awesome": "^4.7.0",
     "js-generate-password": "^0.1.7",
