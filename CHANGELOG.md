@@ -1,5 +1,29 @@
 # Changelog
 
+## [v14.7.0](https://github.com/rero/ng-core/tree/v14.7.0) (2024-01-11)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.6.0...v14.7.0)
+
+**New features:**
+* editor: disabled save button on first click [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
+* detail view: allow the addition of buttons [\#574](https://github.com/rero/ng-core/pull/574) (by @Garfield-fr)
+
+**Enhancements:**
+* search filters: refactoring to be more generic [\#571](https://github.com/rero/ng-core/pull/571) (by @Garfield-fr)
+* The select component in the editor should sort the values only in the suggestions [\#568](https://github.com/rero/ng-core/issues/568) (by @Garfield-fr)
+
+**Fixes:**
+* Form option does not work in definition. [\#547](https://github.com/rero/ng-core/issues/547) (by @Garfield-fr)
+* fix: search fields translations [\#581](https://github.com/rero/ng-core/pull/581) (by @PascalRepond)
+* fix: remove lowercase search field [\#575](https://github.com/rero/ng-core/pull/575) (by @PascalRepond)
+* formly: fix default value expression [\#569](https://github.com/rero/ng-core/pull/569) (by @Garfield-fr)
+* fix: default filter [\#567](https://github.com/rero/ng-core/pull/567) (by @Garfield-fr)
+
+**Other changes:**
+* chore: upgrade to node v16 [\#583](https://github.com/rero/ng-core/pull/583) (by @Garfield-fr)
+* chore: refactoring handle error [\#577](https://github.com/rero/ng-core/pull/577) (by @Garfield-fr)
+* chore: update github templates [\#566](https://github.com/rero/ng-core/pull/566) (by @PascalRepond)
+
 ## [v14.6.0](https://github.com/rero/rero-mef/tree/v14.6.0) (2023-09-06)
 
 [Full Changelog](https://github.com/rero/rero-mef/compare/v14.5.0...v14.6.0)
