@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021 RERO
+ * Copyright (C) 2021-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -33,6 +33,7 @@ export class CustomSelectFieldComponent extends FieldType implements OnDestroy, 
   // Component default options
   defaultOptions = {
     templateOptions: {
+      hideLabelSelectOption: false,
       minItemsToDisplaySearch: 10,
       sort: true
     },
