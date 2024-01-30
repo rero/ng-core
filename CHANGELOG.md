@@ -1,5 +1,15 @@
 # Changelog
 
+## [v14.8.0](https://github.com/rero/ng-core/tree/v14.8.0) (2024-01-30)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.7.0...v14.8.0)
+
+**New features:**
+* feat(editor): add option on custom-select [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
+
+**Other changes:**
+* chore: update dependencies [\#592](https://github.com/rero/ng-core/pull/592) (by @PascalRepond)
+
 ## [v14.7.0](https://github.com/rero/ng-core/tree/v14.7.0) (2024-01-11)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.6.0...v14.7.0)
