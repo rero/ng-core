@@ -1,5 +1,12 @@
 # Changelog
 
+## [v17.0.0](https://github.com/rero/ng-core/tree/v17.0.0) (2024-02-29)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v14.8.0...v17.0.0)
+
+**Breaking changes:**
+* chore: upgrade Angular v17 and Formly v6 [\#597](https://github.com/rero/ng-core/pull/597) (by @Garfield-fr)
+
 ## [v14.8.0](https://github.com/rero/ng-core/tree/v14.8.0) (2024-01-30)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.7.0...v14.8.0)
