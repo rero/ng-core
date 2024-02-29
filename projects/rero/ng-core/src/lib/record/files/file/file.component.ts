@@ -90,7 +90,7 @@ export class FileComponent implements OnInit, OnDestroy {
         this.canDelete = result;
       })
     );
-    obs$ = config.files.canUpdate
+    obs$ = config?.files?.canUpdate
       ? config.files.canUpdateMetadata(this.record, this.file)
       : of({ can: false, message: '' });
     this._subscriptions.add(

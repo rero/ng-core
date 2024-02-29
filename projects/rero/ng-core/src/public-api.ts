@@ -45,6 +45,8 @@ export * from './lib/record/autocomplete/autocomplete.component';
 export * from './lib/record/detail/detail-button/IRecordEvent.interface';
 export * from './lib/record/detail/detail-button/detail-button.component';
 export * from './lib/record/detail/detail.component';
+export * from './lib/record/files/files.component';
+export * from './lib/record/files/files.service';
 export * from './lib/record/detail/detail.directive';
 export * from './lib/record/detail/view/detail-record';
 export * from './lib/record/editor/editor.component';

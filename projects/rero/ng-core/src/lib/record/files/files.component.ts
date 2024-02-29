@@ -17,14 +17,14 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
-import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -33,10 +33,8 @@ import { Observable, of, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DialogService } from '../../dialog/dialog.service';
 import { ActionStatus } from '../action-status';
-import { orderedJsonSchema, removeEmptyValues } from '../editor/utils';
-import { File as RecordFile } from '../record';
+import { Record, File as RecordFile } from '../record';
 import { RecordUiService } from '../record-ui.service';
-import { RecordService } from '../record.service';
 import { FilesService } from './files.service';
 @Component({
   selector: 'ng-core-record-files',
@@ -50,6 +48,10 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   // Type of resource.
   @Input()
   type: string;
+
+  // card title
+  @Input()
+  title: string = 'Files';
 
   // List of files for the record.
   files: Array<RecordFile> = [];
@@ -69,8 +71,13 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   // File key to add
   fileKey: string;
 
-  // Record data
-  record: any;
+  /**
+   * Container record for files.
+   *
+   * It can be a resource record such as a document or
+   * a specific record resource as used by rero-invenio-files.
+   */
+  parentRecord: Record = null;
 
   // Object containing data to build the metadata editor.
   metadataForm: {
@@ -84,14 +91,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   };
 
   // Fields not to display in metadata info.
-  infoExcludedFields = [
-    'key',
-    'bucket',
-    'checksum',
-    'file_id',
-    'size',
-    'version_id'
-  ];
+  infoExcludedFields = ['key', 'bucket', 'checksum', 'file_id', 'size', 'version_id'];
 
   // Observable resolving if files metadata can be updated.
   canAdd: ActionStatus = { can: false, message: '' };
@@ -135,9 +135,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
     private toastrService: ToastrService,
     private spinner: NgxSpinnerService,
     private modalService: BsModalService,
-    private recordService: RecordService,
-    private recordUiService: RecordUiService,
-    private formlyJsonschema: FormlyJsonschema
+    private recordUiService: RecordUiService
   ) {}
 
   /**
@@ -151,9 +149,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
 
     // Configures properties that are not displayed in information.
     if (this.config.files.infoExcludedFields) {
-      this.infoExcludedFields = this.infoExcludedFields.concat(
-        this.config.files.infoExcludedFields
-      );
+      this.infoExcludedFields = this.infoExcludedFields.concat(this.config.files.infoExcludedFields);
     }
 
     this.spinner.show();
@@ -163,27 +159,9 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       this.spinner.hide();
     });
 
-    // Load JSON schema and initialize form.
-    this.recordService
-      .getSchemaForm(this.type)
-      .subscribe((jsonSchema: any) => {
-        if (jsonSchema.schema.properties._files) {
-          this.metadataForm.form = new UntypedFormGroup({});
-          this.metadataForm.fields = [
-            this.formlyJsonschema.toFieldConfig(
-              orderedJsonSchema(jsonSchema.schema.properties._files.items),
-              {
-                map: (field: any, schema: any) => {
-                  if (schema.form && schema.form.expressions) {
-                    field.expressions = schema.form.expressions;
-                  }
-                  return field;
-                },
-              }
-            ),
-          ];
-        }
-      });
+    this.fileService.getMetadataForm(this.type).subscribe((form) => {
+      return (this.metadataForm = form);
+    });
 
     // Process when modal is hidden
     this.subscriptions.add(
@@ -213,9 +191,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         ignoreBackdropClick: true,
         initialState: {
           title: this.translateService.instant('Confirmation'),
-          body: this.translateService.instant(
-            'Do you really want to remove this file?'
-          ),
+          body: this.translateService.instant('Do you really want to remove this file?'),
           confirmButton: true,
           confirmTitleButton: this.translateService.instant('OK'),
           cancelTitleButton: this.translateService.instant('Cancel'),
@@ -225,10 +201,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         switchMap((confirm: boolean) => {
           if (confirm === true) {
             this.spinner.hide();
-
-            return this.fileService
-              .delete(this.type, this.pid, file.key, file.version_id)
-              .pipe(map(() => true));
+            return this.fileService.delete(this.type, this.pid, this.parentRecord, file).pipe(map(() => true));
           }
           return of(false);
         })
@@ -237,9 +210,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         if (removed === true) {
           this._getFiles$().subscribe(() => {
             this.spinner.hide();
-            this.toastrService.success(
-              this.translateService.instant('File removed successfully.')
-            );
+            this.toastrService.success(this.translateService.instant('File removed successfully.'));
           });
         }
       });
@@ -258,11 +229,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
     }
 
     const found = this.files.find((item: RecordFile) => {
-      return (
-        item.key === file.key &&
-        item.is_head === true &&
-        item.showChildren === true
-      );
+      return item.key === file.key && item.is_head === true && item.showChildren === true;
     });
 
     return found !== undefined;
@@ -279,9 +246,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       return false;
     }
 
-    const sameFiles = this.files.filter(
-      (item: RecordFile) => item.key === file.key
-    );
+    const sameFiles = this.files.filter((item: RecordFile) => item.key === file.key);
 
     return sameFiles.length > 1;
   }
@@ -320,45 +285,59 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    */
   upload() {
     // Iterate over FileList object to process each files.
-    Array.from(this.filesToUpload).forEach((file) => {
+    Array.from(this.filesToUpload).forEach((fileStream) => {
+      if (this.currentFile == null && this.files.some((file) => file.key === this.fileKey)) {
+        this.toastrService.error(this.translateService.instant('A file with same name already exists.'));
+        return;
+      }
+      if (fileStream.size > this.defaultMaxSize * 1000 * 1000) {
+        this.toastrService.error(this.translateService.instant('Maximum Size exceeded.'));
+        return;
+      }
+
       this.spinner.show();
-
       try {
-        if (file.size > this.defaultMaxSize * 1000 * 1000) {
-          throw new Error(`The maximum size for a file is ${this.defaultMaxSize}Mb, ${file.name} cannot be uploaded.`);
-        }
-
         const reader = new FileReader();
 
         // This method is called when file is finished to read in client side.
         reader.onload = () => {
           // Update or create a new file
-          const fileName = this.currentFile
-            ? this.currentFile.key
-            : this.fileKey;
-
-          this.fileService
-            .put(this.type, this.pid, fileName, file)
-            .subscribe(() => {
-              this.hideForm();
-
-              this.toastrService.success(
-                this.translateService.instant('File uploaded successfully.')
+          var obs: Observable<any>;
+          if (this.currentFile) {
+            // already exists thus update the existing file
+            obs = this.fileService.update(this.type, this.pid, this.parentRecord, this.currentFile, fileStream);
+          } else {
+            if (this.parentRecord == null) {
+              // create the parent record
+              // should not happens when a document is used as parent record
+              obs = this.fileService.createParentRecord(this.type, this.pid).pipe(
+                map((record) => (this.parentRecord = record)),
+                switchMap(() =>
+                  this.fileService.create(this.type, this.pid, this.parentRecord, this.fileKey, fileStream)
+                )
               );
+            } else {
+              // the parent record already exists create only the new file
+              obs = this.fileService.create(this.type, this.pid, this.parentRecord, this.fileKey, fileStream);
+            }
+          }
 
-              this._getFiles$().subscribe(() => {
-                this.spinner.hide();
-              });
+          obs.subscribe(() => {
+            this.hideForm();
+
+            this.toastrService.success(this.translateService.instant('File uploaded successfully. The files uploaded here will be publicly available. Make sure that you are legally allowed to distribute a file before adding it to a document.'));
+
+            this._getFiles$().subscribe(() => {
+              this.spinner.hide();
             });
+          });
         };
 
         // Begin file read.
-        reader.readAsBinaryString(file);
+        reader.readAsBinaryString(fileStream);
       } catch (error) {
         this.spinner.hide();
-        this.toastrService.error(
-          this.translateService.instant(error.message)
-        );
+        this.toastrService.error(this.translateService.instant(error.message));
       }
     });
   }
@@ -391,7 +370,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns URL of the file.
    */
   getFileUrl(file: RecordFile): string {
-    return this.fileService.getUrl(this.type, this.pid, file.key);
+    return this.fileService.getUrl(this.type, this.pid, file);
   }
 
   /**
@@ -401,6 +380,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns void
    */
   editMetadataFile(file: RecordFile): void {
+    this.currentFile = file;
     if (!file.metadata) {
       return;
     }
@@ -420,23 +400,15 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   saveMetadata(): void {
     // Check if form has errors
     this.metadataForm.form.updateValueAndValidity();
-
     // Show a message if form has errors.
     if (this.metadataForm.form.valid === false) {
-      this.toastrService.error(
-        this.translateService.instant('The form contains errors.')
-      );
+      this.toastrService.error(this.translateService.instant('The form contains errors.'));
       return;
     }
-
     this.spinner.show();
-
-    // Clean empty data
-    this.record._files = removeEmptyValues(this.record._files);
-
-    // Update record
-    this.recordService
-      .update(this.type, this.pid, this.record)
+    // Update the file metadata
+    this.fileService
+      .updateMetadata(this.type, this.pid, this.parentRecord, this.currentFile)
       .pipe(
         switchMap(() => {
           return this._getFiles$();
@@ -445,11 +417,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       .subscribe(() => {
         this.spinner.hide();
         this.hideForm();
-        this.toastrService.success(
-          this.translateService.instant(
-            'Metadata have been saved successfully.'
-          )
-        );
+        this.toastrService.success(this.translateService.instant('Metadata have been saved successfully.'));
       });
   }
 
@@ -459,69 +427,40 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
    * @returns Observable emitting files
    */
   private _getFiles$(): Observable<any> {
-    return this.recordService.getRecord(this.type, this.pid).pipe(
-      switchMap((record: any) => {
-        this.record = record.metadata;
-        return this.fileService.list(this.type, this.pid);
-      }),
-      tap((files) => {
-        files = files.map((item: RecordFile) => {
+    return this.fileService.getParentRecord(this.type, this.pid).pipe(
+      map((record: Record) => (this.parentRecord = record)),
+      switchMap(() => this.fileService.list(this.type, this.pid, this.parentRecord)),
+      map((files) => {
+        return files.map((item: RecordFile) => {
           // By default, show info about the file.
           item.showInfo = true;
+          // download url
           item.url = this.getFileUrl(item);
-
           // By default, hide other versions of the file.
           item.showChildren = false;
-
-          // Store metadata (retrieved from record).
-          item.metadata = this._getFilesMetadata(item.key);
           return item;
         });
-
+      }),
+      map((files) => {
         // If set in config, apply the function for filtering files.
         if (this.config.files && this.config.files.filterList) {
           files = files.filter(this.config.files.filterList);
         }
-
         // If set in config, apply the function for filtering files.
         if (this.config.files && this.config.files.orderList) {
           files.sort(this.config.files.orderList);
         }
-
         this.files = files;
-       }),
-       tap(() => {
-          // Check if a file can be added.
-          const canAdd$ = this.config.files.canAdd
-            ? this.config.files.canAdd()
-            : of({ can: false, message: '' });
-          this.subscriptions.add(
-            canAdd$.subscribe((result: ActionStatus) => this.canAdd = result)
-          );
-       }),
+      }),
+      tap(() => {
+        // Check if a file can be added.
+        const canAdd$ = this.config.files.canAdd ? this.config.files.canAdd() : of({ can: false, message: '' });
+        this.subscriptions.add(canAdd$.subscribe((result: ActionStatus) => (this.canAdd = result)));
+      }),
       catchError(() => {
         this.hasError = true;
         return of([]);
       })
     );
-  }
-
-  /**
-   * Get files metadata corresponding to file key, stored in record.
-   *
-   * @param fileKey File key.
-   * @returns Metadata object for the file.
-   */
-  private _getFilesMetadata(fileKey: string): any {
-    if (!this.record._files) {
-      return null;
-    }
-
-    // Get metadata stored in record.
-    const metadata = this.record._files.filter(
-      (item: any) => fileKey === item.key
-    );
-
-    return metadata.length > 0 ? metadata[0] : null;
   }
 }

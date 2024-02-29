@@ -20,6 +20,7 @@
  */
 export class Record {
   aggregations: any;
+  id?: string;
   hits: any;
   links: any;
 }
@@ -41,8 +42,10 @@ export interface File {
   delete_marker: boolean;
   links: {
     self: string,
-    version: string,
-    uploads: string
+    version?: string,
+    uploads?: string,
+    commit?: string,
+    content?: string
   };
   checksum: string;
   key: string;

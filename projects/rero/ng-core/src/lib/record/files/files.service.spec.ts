@@ -17,10 +17,14 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FilesService } from './files.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('FilesService', () => {
   beforeEach(() =>
-    TestBed.configureTestingModule({ imports: [HttpClientTestingModule] })
+    TestBed.configureTestingModule({ imports: [
+      TranslateModule.forRoot(),
+      HttpClientTestingModule
+    ] })
   );
 
   it('should be created', () => {

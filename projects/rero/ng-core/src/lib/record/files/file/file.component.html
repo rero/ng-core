@@ -32,12 +32,12 @@
       </p>
     </div>
     <div class="col text-right">
-      @if (canUpdateMetadata.can) {
+      @if (canUpdateMetadata?.can) {
         <button class="btn btn-sm btn-outline-primary" (click)="editMetadata()">
           <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
         </button>
       }
-      @if (canUpdate.can) {
+      @if (canUpdate?.can) {
         <button class="btn btn-sm btn-outline-primary ml-1" (click)="manage()">
           <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
         </button>
@@ -47,14 +47,14 @@
         <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
       </a>
 
-      @if (canDelete.can) {
+      @if (canDelete?.can) {
         <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete()">
           <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
         </button>
       }
     </div>
   </div>
-  @if (file.showInfo) {
+  @if (file?.showInfo) {
     <div class="row mt-2">
       @if (file.is_head) {
         <div class="col">
