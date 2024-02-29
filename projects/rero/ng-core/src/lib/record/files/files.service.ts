@@ -16,22 +16,80 @@
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
-import { File } from '../record';
+import { File, Record } from '../record';
+import { UntypedFormGroup } from '@angular/forms';
+import { orderedJsonSchema, removeEmptyValues } from '../editor/utils';
+import { RecordService } from '../record.service';
+import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FilesService {
+
+  // Current file parent record.
+  currentParentRecord = new BehaviorSubject(null);
+
+  // Current file parent record observable.
+  currentParentRecord$ = this.currentParentRecord.asObservable();
+
   /**
    * Constructor.
    *
    * @param _http HttpClient.
-   * @param _apiService ApiService.
+   * @param apiService ApiService.
+   * @param recordService: RecordService
+   * @param formlyJsonschema: FormlyJsonschema
    */
-  constructor(private http: HttpClient, private apiService: ApiService) {}
+  constructor(
+    private http: HttpClient,
+    private apiService: ApiService,
+    private recordService: RecordService,
+    private formlyJsonschema: FormlyJsonschema
+  ) {}
+
+  /**
+   * Get the file parent record.
+   *
+   * It can be a resource such as document or a dedicated resource
+   * (rero-invenio-files).
+   *
+   * @param type Type of resource.
+   * @param pid PID of the record.
+   * @returns an observable of the parent record.
+   */
+  getParentRecord(type: string, pid: string): Observable<Record> {
+      return this.recordService.getRecord(type, pid);
+  }
+
+  /**
+   * Create the file parent record.
+   *
+   * It can be a resource such as document or a dedicated resource
+   * (rero-invenio-files). Here we assume the first case thus it should
+   * exists.
+   *
+   * @param type
+   * @param pid
+   */
+  createParentRecord(type: string, pid: string): Observable<Record> {
+    throw new Error('Not implemented');
+  }
+
+  /**
+   * Updates the parent record metadata.
+   *
+   * @param type Type of resource.
+   * @param pid PID of the record.
+   * @param metadata new metadata
+   * @returns the modified record
+   */
+  updateParentRecordMetadata(type: string, pid: string, metadata:any): Observable<Record> {
+    return of(null);
+  }
 
   /**
    * List files for the given record.
@@ -40,23 +98,17 @@ export class FilesService {
    * @param pid PID of the record.
    * @returns Observable resolving the list of files.
    */
-  list(type: string, pid: string): Observable<Array<File>> {
-    return this.http
-      .get(
-        `${this.apiService.getEndpointByType(
-          type,
-          true
-        )}/${pid}/files?versions`
-      )
-      .pipe(
-        map((result: any) => {
-          if (result.contents) {
-            return result.contents;
-          }
-
-          return [];
-        })
-      );
+  list(type: string, pid: string, parentRecord: Record): Observable<Array<File>> {
+    return this.http.get(`${this.apiService.getEndpointByType(type, true)}/${pid}/files?versions`)
+    .pipe(
+      map((result: any) => {
+        if (result.contents) {
+          result.contents.map(val => val.metadata = this._getFilesMetadata(parentRecord, val.key));
+          return result.contents;
+        }
+        return [];
+      })
+    );
   }
 
   /**
@@ -68,41 +120,85 @@ export class FilesService {
    * @param fileData File data.
    * @return Observable emitting the new created file object.
    */
-  put(
-    type: string,
-    pid: string,
-    fileKey: string,
-    fileData: any
-  ): Observable<File> {
-    return this.http.put<File>(
-      `${this.apiService.getEndpointByType(
-        type,
-        true
-      )}/${pid}/files/${fileKey}`,
-      fileData
+  private put(type: string, pid: string, fileKey: string, fileData: any): Observable<File> {
+    return this.http.put<File>(`${this.apiService.getEndpointByType(type, true)}/${pid}/files/${fileKey}`, fileData);
+  }
+
+  /**
+   * Upload a new file and create the corresponding data.
+   *
+   * @param type Type of resource.
+   * @param pid PID of the record.
+   * @param parentRecord resource to host the file
+   * @param fileKey File key.
+   * @param fileData File data.
+   * @returns the created file
+   */
+  create(type: string, pid: string, parentRecord: Record, fileKey: string, fileData: any): Observable<File> {
+    return this.put(type, pid, fileKey, fileData);
+  }
+
+  /**
+   * Replace an existing file.
+   *
+   * @param type Type of resource.
+   * @param pid PID of the record.
+   * @param parentRecord resource to host the file
+   * @param fileKey File key.
+   * @param fileData File data.
+   * @returns the updated file
+   */
+  update(type: string, pid: string, parentRecord: Record,  file: File, fileData: any): Observable<File> {
+    return this.put(type, pid, file.key, fileData);
+  }
+
+  /**
+   * Create the form to change the file metadata.
+   *
+   * @param type Type of resource.
+   * @returns an object with the form, the model and the formly params.
+   */
+  getMetadataForm(type: string) {
+    // Load JSON schema and initialize form.
+    return this.recordService.getSchemaForm(type).pipe(
+      map((jsonSchema: any) => {
+        if (jsonSchema.schema.properties._files) {
+          const metadataForm: {
+            fields: Array<any>;
+            model: any;
+            form: any;
+          } = {
+            fields: [
+              this.formlyJsonschema.toFieldConfig(orderedJsonSchema(jsonSchema.schema.properties._files.items), {
+                map: (field: any, schema: any) => {
+                  if (schema.form && schema.form.expressions) {
+                    field.expressions = schema.form.expressions;
+                  }
+                  return field;
+                },
+              }),
+            ],
+            model: null,
+            form: new UntypedFormGroup({}),
+          };
+          return metadataForm;
+        }
+      })
     );
   }
 
   /**
-   * Remove file specified by given ID.
+   * Remove a given file.
    *
    * @param type Type of resource.
    * @param pid PID of the record.
-   * @param fileKey File key.
-   * @param versionId ID of the version to remove.
-   * @return Observable emitting nothing when file is successfully removed.
+   * @param parentRecord resource to host the file
+   * @param file File to delete.
+   * @return Observable of the http response.
    */
-  delete(
-    type: string,
-    pid: string,
-    fileKey: string,
-    versionId: string
-  ): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiService.getEndpointByType(
-        type,
-        true
-      )}/${pid}/files/${fileKey}?versionId=${versionId}`
+  delete(type: string, pid: string, parentRecord: Record, file: File): Observable<any> {
+    return this.http.delete(
+      `${this.apiService.getEndpointByType(type, true)}/${pid}/files/${file.key}?versionId=${file.version_id}`
     );
   }
 
@@ -114,10 +210,47 @@ export class FilesService {
    * @param fileKey File key.
    * @returns URL of the file.
    */
-  getUrl(type: string, pid: string, fileKey: string): string {
-    return `${this.apiService.getEndpointByType(
-      type,
-      true
-    )}/${pid}/files/${fileKey}`;
+  getUrl(type: string, pid: string, file: File): string {
+    return `${this.apiService.getEndpointByType(type, true)}/${pid}/files/${file.key}`;
+  }
+
+  /**
+   * Update the file metadata.
+   *
+   * @param type Type of resource.
+   * @param pid PID of the record.
+   * @param parentRecord resource to host the file
+   * @param file File to delete.
+   * @return Observable of the updated data.
+   */
+  updateMetadata(type: string, pid: string, parentRecord: Record, file: File): Observable<any> {
+    return this.recordService.getRecord(type, pid).pipe(
+      switchMap((record) => {
+        record._files.map(val => {
+          if (val.key = file.key) {
+            val.metadata = removeEmptyValues(file.metadata);
+          }
+        })
+        return this.recordService.update(type, pid, record);
+      })
+    );
+  }
+
+   /**
+   * Get files metadata corresponding to file key, stored in record.
+   *
+   * @param record resource hosting the file.
+   * @param fileKey File key.
+   * @returns Metadata object for the file.
+   */
+   private _getFilesMetadata(record: any, fileKey: string): any {
+    if (!record._files) {
+      return null;
+    }
+
+    // Get metadata stored in record.
+    const metadata = record._files.filter((item: any) => fileKey === item.key);
+
+    return metadata.length > 0 ? metadata[0] : null;
   }
 }
