@@ -404,14 +404,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         }
       )
     );
-    // Add default filters on aggregations filters if not exist.
-    if (this._config && this._config.defaultSearchInputFilters) {
-      this._config.defaultSearchInputFilters.map((filter: {key: string, values: string[]}) => {
-        if (!this.aggregationsFilters.some((e: any) => e.key === filter.key)) {
-          this.aggregationsFilters.push(filter);
-        }
-      });
-    }
   }
 
   /**
@@ -871,6 +863,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param type Type of resource
    */
   private _loadConfigurationForType(type: string) {
+    const q = this._buildQueryString();
     this._config = this.recordUiService.getResourceConfig(type);
     this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
@@ -899,8 +892,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // load export options
     this.exportOptions = this._exportFormats();
 
-    // Update filters with default search filters
-    if (this._config.defaultSearchInputFilters) {
+    // Update filters with default search filters only if the q parameter is empty
+    if ((q === null || q.trim().length === 0) && this._config.defaultSearchInputFilters) {
       this._config.defaultSearchInputFilters.forEach((filter: { key: string, values: any[]}) => {
         this.recordSearchService.updateAggregationFilter(filter.key, filter.values);
       });
