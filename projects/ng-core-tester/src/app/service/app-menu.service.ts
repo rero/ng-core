@@ -91,7 +91,10 @@ export class AppMenuService {
     menu.addChild('Organisation records')
       .setRouterLink(['/records', 'organisations']);
     menu.addChild('Editor')
-      .setRouterLink(['/editor'])
+      .setRouterLink(['/editor', 'demo'])
+      .setExtra('iconClass', 'fa fa-edit');
+    menu.addChild('Editor mode edit')
+      .setRouterLink(['/editor', 'demo', '1'])
       .setExtra('iconClass', 'fa fa-edit');
   }
 }

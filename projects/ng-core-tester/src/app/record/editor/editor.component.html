@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020 RERO
+  Copyright (C) 2020-2024 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -17,11 +17,10 @@
 
 <div class="card mb-3">
   <div class="card-header">
-    Model
+    Model ({{ mode }})
   </div>
   <div class="card-body">
-    <pre>{{ model | json }}</pre>
+    <pre [innerHTML]="modelDisplay"></pre>
   </div>
 </div>
-<ng-core-editor [schema]="schema" [editorSettings]="editorSettings" (modelChange)="modelChanged($event)">
-</ng-core-editor>
+<ng-core-editor (modelChange)="modelChanged($event)"></ng-core-editor>

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,8 +21,8 @@ import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { EditorComponent } from './record/editor/editor.component';
 import { RouteService } from './routes/route.service';
+import { EditorComponent } from './record/editor/editor.component';
 
 /**
  * Disallows access to admin functionalities.
@@ -194,7 +194,22 @@ const routes: Routes = [
   },
   {
     path: 'editor',
-    component: EditorComponent
+    children: [
+      { path: ':type', component: EditorComponent },
+      { path: ':type/:pid', component: EditorComponent }
+    ],
+    data: {
+      types: [
+        {
+          key: 'demo',
+          label: 'Demo',
+          editorSettings: {
+            longMode: true
+          },
+          component: DocumentComponent
+        }
+      ]
+    }
   },
   {
     matcher: documentsMatcher,

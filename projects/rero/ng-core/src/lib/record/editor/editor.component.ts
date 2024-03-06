@@ -474,7 +474,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
             field.props.type = jsonSchema.format;
           }
 
-          if (jsonSchema.widget && jsonSchema.widget.formlyConfig) {
+          if (jsonSchema?.widget?.formlyConfig) {
             const { props } = jsonSchema.widget.formlyConfig;
 
             if (props) {

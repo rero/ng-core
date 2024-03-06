@@ -23,16 +23,19 @@ import { ResultItem } from './result-item';
 @Component({
   template: `
     {{ record|json }}
-    <div class="mt-3" *ngIf="detailUrl">
-      <a class="btn btn-primary btn-sm" [routerLink]="detailUrl.link" *ngIf="detailUrl.external === false; else hrefLink">
-        <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
-      </a>
-      <ng-template #hrefLink>
-        <a class="btn btn-primary btn-sm" [href]="detailUrl.link">
-          <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
-        </a>
-      </ng-template>
-    </div>
+    @if (detailUrl) {
+      <div class="mt-3">
+        @if (detailUrl.external === false) {
+          <a class="btn btn-primary btn-sm" [routerLink]="detailUrl.link">
+            <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
+          </a>
+        } @else {
+          <a class="btn btn-primary btn-sm" [href]="detailUrl.link">
+            <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
+          </a>
+        }
+      </div>
+    }
   `
 })
 export class JsonComponent implements ResultItem {

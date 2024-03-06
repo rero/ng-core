@@ -1,0 +1,26 @@
+{
+  "created": "2024-03-06T07:47:33.944191+00:00",
+  "id": "1",
+  "links": {
+      "self": "https://ilsdev.test.rero.ch/api/demo/1"
+  },
+  "metadata": {
+      "$schema": "https://bib.rero.ch/schemas/demo/demo.json",
+      "pid": "1",
+      "required": "value required",
+      "defaultHidden": "default value",
+      "array_of_array": [
+        ["value 1", "value 2"],
+        ["value 3"]
+      ],
+      "hidden_with_default": "Default hidden",
+      "readonly_changeable": "Value 1",
+      "hide_with_required_expression_control": "Optional",
+      "selectMultiple": ["value2", "value3"],
+      "markdown": "Hello **world**.\nGreat day.",
+      "array_with_multicheckbox": ["checkbox1", "checkbox2"],
+      "input_with_default_value": "slrofar6uh",
+      "enum": "val1"
+  },
+  "updated": "2024-03-06T07:47:33.944197+00:00"
+}

@@ -33,13 +33,16 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
               <p-inputGroupAddon [innerHTML]="prop"></p-inputGroupAddon>
             }
           }
-          <input
-            *ngIf="props.type !== 'number'; else numberTmp"
-            pInputText
-            [type]="props.type || 'text'"
-            [formControl]="formControl"
-            [formlyAttributes]="field"
-          />
+          @if (props.type !== 'number') {
+            <input
+              pInputText
+              [type]="props.type || 'text'"
+              [formControl]="formControl"
+              [formlyAttributes]="field"
+            />
+          } @else {
+            <input type="number" pInputText [formControl]="formControl" [formlyAttributes]="field" />
+          }
           @if (props.addonRight) {
             @for (prop of props.addonRight; track prop) {
               <p-inputGroupAddon [innerHTML]="prop"></p-inputGroupAddon>
@@ -47,17 +50,17 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           }
       </p-inputGroup>
     } @else {
-      <input
-      *ngIf="props.type !== 'number'; else numberTmp"
-      pInputText
-      [type]="props.type || 'text'"
-      [formControl]="formControl"
-      [formlyAttributes]="field"
-    />
+      @if (props.type !== 'number') {
+        <input
+          pInputText
+          [type]="props.type || 'text'"
+          [formControl]="formControl"
+          [formlyAttributes]="field"
+        />
+      } @else {
+        <input type="number" pInputText [formControl]="formControl" [formlyAttributes]="field" />
+      }
     }
-    <ng-template #numberTmp>
-      <input type="number" pInputText [formControl]="formControl" [formlyAttributes]="field" />
-    </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

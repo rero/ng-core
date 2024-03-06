@@ -14,34 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component } from '@angular/core';
-import JSONSchema from './schema.json';
+import { AfterContentChecked, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html'
 })
-export class EditorComponent {
+export class EditorComponent implements OnInit, AfterContentChecked {
 
-  // editor settings
-  editorSettings = {
-    longMode: true,  // editor long mode
-    template: {
-      recordType: undefined,    // the resource considerate as template
-      loadFromTemplate: false,  // enable load from template button
-      saveAsTemplate: false     // allow to save the record as a template
-    }
-  };
-
-  // JSONSchema
-  schema = {};
-
-  // form initial values
+  /* form initial values */
   model = {};
 
-  /** Constructor */
-  constructor() {
-    this.schema = JSONSchema;
+  /* Model to display on the top of the form */
+  modelDisplay = {};
+
+  /** Edit or New mode */
+  mode: 'Edit' | 'New' = 'New';
+
+  /**
+   * Constructor
+   * @param route - ActivatedRoute
+   */
+  constructor(private route: ActivatedRoute) {}
+
+  /** OnInit hook */
+  ngOnInit(): void {
+    this.mode = 'pid' in this.route.snapshot.params ? 'Edit' : 'New';
+  }
+
+  /** after content checked hook */
+  ngAfterContentChecked(): void {
+    this.modelDisplay = JSON.stringify(this.model, null, 2);
   }
 
   /** Callback when the model values has changed.
@@ -50,5 +54,4 @@ export class EditorComponent {
   modelChanged(value: object) {
     this.model = value;
   }
-
 }
