@@ -99,7 +99,7 @@
               <ul class="section-nav">
                 @for (f of tocFields$ | async; track f) {
                   <li class="toc-entry toc-h2 mb-1">
-                      <a href (click)="setFocus($event, f)">{{ f.props.label }}</a>
+                      <a href (click)="setFocus($event, f)">{{ f.props.label | translate }}</a>
                   </li>
                 }
               </ul>

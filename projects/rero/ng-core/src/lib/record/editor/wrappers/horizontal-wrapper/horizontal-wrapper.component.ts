@@ -24,7 +24,10 @@ import { FormFieldWrapperComponent } from '../form-field-wrapper/form-field-wrap
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
         <label [attr.for]="id" class="mr-2 col-form-label" [tooltip]="props.description">
-          {{ props.label }}<ng-container *ngIf="props.required && props.hideRequiredMarker !== true">&nbsp;*</ng-container>
+          {{ props.label }}
+          @if (props.required && props.hideRequiredMarker !== true) {
+            &nbsp;*
+          }
         </label>
       }
       <!-- field -->

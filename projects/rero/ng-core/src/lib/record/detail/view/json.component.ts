@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,10 +23,10 @@ import { DetailRecord } from './detail-record';
  */
 @Component({
   template: `
-    <ng-container *ngIf="record">
+    @if (record) {
       <h1>Record of type "{{ type }}" #{{ record.id }}</h1>
       {{ record|json }}
-    </ng-container>
+    }
   `
 })
 export class JsonComponent implements DetailRecord, OnInit {

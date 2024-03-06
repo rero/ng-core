@@ -3,6 +3,9 @@
   "type": "object",
   "title": "Test editor",
   "additionalProperties": false,
+  "required": [
+    "required"
+  ],
   "propertiesOrder": [
     "oneOf",
     "optional",
@@ -42,10 +45,18 @@
     "field_expressions",
     "field_with_addon_left_right"
   ],
-  "required": [
-    "required"
-  ],
   "properties": {
+    "$schema": {
+      "title": "Schema",
+      "type": "string",
+      "minLength": 9,
+      "default": "https://bib.rero.ch/schemas/demo/demo.json"
+    },
+    "pid": {
+      "title": "Demo ID",
+      "type": "string",
+      "minLength": 1
+    },
     "oneOf": {
       "title": "oneOf",
       "type": "object",
@@ -75,8 +86,8 @@
               "className": "col-lg-6",
               "widget": {
                 "formlyConfig": {
-                  "hide": true,
                   "props": {
+                    "hide": true,
                     "itemCssClass": "col-lg-6"
                   }
                 }
@@ -177,7 +188,12 @@
       "minLength": 1,
       "widget": {
         "formlyConfig": {
-          "hide": true
+          "props": {
+            "hide": true,
+            "navigation": {
+              "essential": true
+            }
+          }
         }
       }
     },
@@ -201,8 +217,8 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
-          "hide": true,
           "props": {
+            "hide": true,
             "navigation": {
               "essential": true
             }
@@ -436,8 +452,8 @@
             "minLength": 3,
             "widget": {
               "formlyConfig": {
-                "hide": true,
                 "props": {
+                  "hide": true,
                   "itemCssClass": "col-6"
                 }
               }
@@ -555,8 +571,8 @@
       "default": "Default hidden",
       "widget": {
         "formlyConfig": {
-          "hide": true,
           "props": {
+            "hide": true,
             "navigation": {
               "essential": true
             }
@@ -599,7 +615,9 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
-          "hide": true,
+          "props": {
+            "hide": true
+          },
           "expressions": {
             "props.required": "field.parent.model.hide_with_required_expression_control === 'required'"
           }
@@ -631,7 +649,9 @@
           "minLength": 3,
           "widget": {
             "formlyConfig": {
-              "hide": true,
+              "props": {
+                "hide": true
+              },
               "expressions": {
                 "props.required": "field.parent.parent.model.hide_with_required_expression_control === 'required'"
               }
@@ -1103,6 +1123,20 @@
             "addonLeft": [
               "<i class=\"pi pi-user\"></i>"
             ]
+          }
+        }
+      }
+    },
+    "field_hide_toc": {
+      "title": "Hide field",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "hide": true,
+            "navigation": {
+              "essential": true
+            }
           }
         }
       }

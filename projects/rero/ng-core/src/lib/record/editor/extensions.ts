@@ -246,8 +246,7 @@ export class NgCoreFormlyExtension {
           // only during the editor initialization
           && !rootField?.formControl?.touched)
       ) {
-        field.hide = true;
-        field.props.editorComponent().addHiddenField(field);
+        field.props.editorComponent().hide(field);
       }
     }
   }

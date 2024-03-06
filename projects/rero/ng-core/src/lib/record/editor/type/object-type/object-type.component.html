@@ -20,9 +20,7 @@
   }
 </div>
 <div class="object">
-  <!-- each object properties -->
   <div [ngClass]="{'content': true}">
-    <!--  validation error message -->
     @if (showError && formControl.errors) {
       <div class="alert alert-danger" role="alert">
         <formly-validation-message [field]="field"></formly-validation-message>
@@ -30,12 +28,9 @@
     }
     <div class="{{ props.containerCssClass }}">
       @for (f of field.fieldGroup; track f) {
-        @if (!f.hide) {
-          <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
-            <!-- field -->
-            <formly-field [field]="f"></formly-field>
-          </div>
-        }
+        <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
+          <formly-field [field]="f"></formly-field>
+        </div>
       }
     </div>
   </div>

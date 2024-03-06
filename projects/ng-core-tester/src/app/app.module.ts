@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { CoreConfigService, RecordModule, TranslateLoader } from '@rero/ng-core';
+import { CoreConfigService, RecordModule, RecordService, TranslateLoader } from '@rero/ng-core';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
@@ -34,6 +34,7 @@ import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { EditorComponent } from './record/editor/editor.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { RecordServiceMock } from './record/editor/record-service-mock';
 
 @NgModule({
     declarations: [
@@ -66,7 +67,11 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
             provide: CoreConfigService,
             useClass: AppConfigService
         },
-        BsLocaleService
+        BsLocaleService,
+        {
+            provide: RecordService,
+            useClass: RecordServiceMock
+        }
     ],
     bootstrap: [AppComponent]
 })
