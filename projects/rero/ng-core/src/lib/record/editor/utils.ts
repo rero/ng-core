@@ -14,19 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { FormlyFieldConfig } from '@ngx-formly/core';
 import { extractIdOnRef } from '../../utils/utils';
 
 /**
- * Initialize the widget key on JSONSchema
+ * Initialize the Formly widget on JSONSchema
  * @param schema - object, the JSONSchema
  */
-function createFormConfig(schema: any) {
+function createWidgetFormlyConfigProps(schema: any) {
   if (!schema.widget) {
     schema.widget = {};
   }
   if (!schema.widget.formlyConfig) {
     schema.widget.formlyConfig = {};
+  }
+  if (!schema.widget.formlyConfig.props) {
+    schema.widget.formlyConfig.props = {};
   }
 }
 
@@ -68,87 +70,89 @@ export function resolve$ref(schema: any, schemaProperties: any): any {
 }
 
 /**
- * Process JSONSchema
+ * Process required properties on the JSONSchema.
  * @param schema - object, the JSONSchema
- * @returns object, a converted JSONSchema
+ * @returns object, a processed required properties JSONSchema
  */
-export function processJsonSchema(schema: any): any {
-  if (schema.required) {
-    schema.required.map((key: string) => {
-      const childSchema = schema.properties[key];
+function processRequiredJsonSchema(schema: any): any {
+  schema.required.map((key: string) => {
+    const childSchema = schema.properties[key];
       if (childSchema) {
-        createFormConfig(childSchema);
-        propsCreateIfNotExist(childSchema.widget.formlyConfig);
+        createWidgetFormlyConfigProps(childSchema);
         childSchema.widget.formlyConfig.props.initialRequired = true;
       }
-    });
+  });
+
+  return schema;
+}
+
+/**
+ * Process order properties on the JSONSchema
+ * @param schema - object, the JSONSchema
+ * @returns object, a processed order properties JSONSchema
+ */
+function processPropertiesOder(schema: any): any {
+  // copy the data
+  schema._properties = { ...schema.properties };
+  // new ordered properties
+  schema.properties = {};
+  // copy in the right order
+  for (const property of schema.propertiesOrder) {
+    schema.properties[property] = schema._properties[property];
   }
 
   return schema;
 }
 
 
-
 /**
- * Create a templateOptions in formlyConfig if not exists.
- * @param formlyConfig - FormlyFieldConfig
- */
-function propsCreateIfNotExist(formlyConfig: FormlyFieldConfig): void {
-  if (!formlyConfig.props) {
-    formlyConfig.props = {};
-  }
-}
-
-/**
- * Fix order in JSONSchema
+ * Process JSONSchema
  * This re-order the object properties given a local defined
  * `propertiesOrder` property.
+ * The process the required properties given a local defined
+ * `required` property.
  * @param schema - object, the JSONSchema
- * @returns object, a fresh copy of the ordered JSONSchema
+ * @returns object, a converted JSONSchema
  */
-export function orderedJsonSchema(schema: any) {
+export function processJsonSchema(schema: any): any {
   if (schema.properties) {
     if (schema.propertiesOrder) {
-      // copy the data
-      schema._properties = { ...schema.properties };
-      // new ordered properties
-      schema.properties = {};
-      // copy in the right order
-      for (const property of schema.propertiesOrder) {
-        schema.properties[property] = schema._properties[property];
-      }
+      schema = processPropertiesOder(schema);
+    }
+    if (schema.required) {
+      schema = processRequiredJsonSchema(schema);
     }
     // recursion for objects
     for (const property of Object.keys(schema.properties)) {
-      orderedJsonSchema(schema.properties[property]);
+      processJsonSchema(schema.properties[property]);
     }
   }
   // recursion for array
   if (schema.items) {
-    orderedJsonSchema(schema.items);
+    processJsonSchema(schema.items);
   }
   // recursion for oneOf
   if (schema.oneOf) {
     for (const item of schema.oneOf) {
-      orderedJsonSchema(item);
+      processJsonSchema(item);
     }
   }
   // recursion for anyOf
   if (schema.anyOf) {
     for (const item of schema.anyOf) {
-      orderedJsonSchema(item);
+      processJsonSchema(item);
     }
   }
   // recursion for allOf
   if (schema.allOf) {
     for (const item of schema.allOf) {
-      orderedJsonSchema(item);
+      processJsonSchema(item);
     }
   }
   // recursion for definitions
   if (schema.definitions) {
     for (const property of Object.keys(schema.definitions)) {
-      orderedJsonSchema(schema.definitions[property]);
+      processJsonSchema(schema.definitions[property]);
     }
   }
   return schema;

@@ -21,7 +21,7 @@ import { map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { File, Record } from '../record';
 import { UntypedFormGroup } from '@angular/forms';
-import { orderedJsonSchema, removeEmptyValues } from '../editor/utils';
+import { processJsonSchema, removeEmptyValues } from '../editor/utils';
 import { RecordService } from '../record.service';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 
@@ -169,7 +169,7 @@ export class FilesService {
             form: any;
           } = {
             fields: [
-              this.formlyJsonschema.toFieldConfig(orderedJsonSchema(jsonSchema.schema.properties._files.items), {
+              this.formlyJsonschema.toFieldConfig(processJsonSchema(jsonSchema.schema.properties._files.items), {
                 map: (field: any, schema: any) => {
                   if (schema.form && schema.form.expressions) {
                     field.expressions = schema.form.expressions;
