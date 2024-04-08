@@ -35,7 +35,7 @@ import { LoggerService } from '../../service/logger.service';
 import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { orderedJsonSchema, processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
+import { processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
 
@@ -451,7 +451,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    */
   setSchema(schema: any): void {
     // reorder all object properties
-    this.schema = orderedJsonSchema(resolve$ref(processJsonSchema(schema), schema.properties));
+    this.schema = processJsonSchema(resolve$ref(schema, schema.properties));
     this.options = {};
 
     // remove hidden field list in case of a previous setSchema call
@@ -517,8 +517,21 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     this.form.updateValueAndValidity();
 
     if (this.form.valid === false) {
+      const fields = [];
+      Object.keys(this.form.controls).forEach((key: string) => {
+        if (this.form.controls[key].status !== 'VALID') {
+          fields.push(this.translateService.instant(key));
+        }
+      });
+      let errorMessage = '';
+      if (fields.length > 0) {
+        errorMessage += '<br>' + this.translateService.instant('Field(s) in error: ');
+        errorMessage += fields.join(', ');
+      }
       this.toastrService.error(
-        this.translateService.instant('The form contains errors.')
+        this.translateService.instant('The form contains errors.') + errorMessage,
+        undefined,
+        {enableHtml: true}
       );
       this.isSaveButtonDisabled = false;
       return;
