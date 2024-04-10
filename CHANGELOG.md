@@ -1,5 +1,20 @@
 # Changelog
 
+## [v17.1.0](https://github.com/rero/ng-core/tree/v17.1.0) (2024-04-10)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.0.0...v17.1.0)
+
+**New features:**
+* files: add invenio record resources support [\#601](https://github.com/rero/ng-core/pull/601) (by @jma)
+
+**Fixes:**
+* fix(editor): process json schema [\#608](https://github.com/rero/ng-core/pull/608) (by @Garfield-fr)
+* fix(search): add default filters [\#602](https://github.com/rero/ng-core/pull/602) (by @Garfield-fr)
+
+**Other changes:**
+* chore: update dependencies [\#604](https://github.com/rero/ng-core/pull/604) (by @Garfield-fr)
+* chore: editor demo with all functionalities [\#603](https://github.com/rero/ng-core/pull/603) (by @Garfield-fr)
+
 ## [v17.0.0](https://github.com/rero/ng-core/tree/v17.0.0) (2024-02-29)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.8.0...v17.0.0)
