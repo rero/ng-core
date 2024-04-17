@@ -16,73 +16,78 @@
 -->
 
 @if (file) {
-  <div class="row">
-    <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
-      <p class="m-0">
-        {{ file.key }}
-        <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showInfo = !file.showInfo">
-          <i class="fa fa-info-circle"></i>
-        </a>
-        @if (hasChildren) {
-          <a href="#" class="ml-2"
-            (click)="$event.preventDefault(); file.showChildren = !file.showChildren">
-            <i class="fa fa-history"></i>
-          </a>
-        }
-      </p>
-    </div>
-    <div class="col text-right">
-      @if (canUpdateMetadata?.can) {
-        <button class="btn btn-sm btn-outline-primary" (click)="editMetadata()">
-          <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
-        </button>
-      }
-      @if (canUpdate?.can) {
-        <button class="btn btn-sm btn-outline-primary ml-1" (click)="manage()">
-          <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
-        </button>
-      }
-
-      <a [href]="file.url" target="_blank" class="btn btn-sm btn-outline-primary ml-1" download>
-        <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
+<div class="row">
+  <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+    <p class="m-0">
+      <button
+        type="button"
+        class="btn-show-more"
+        (click)="file.showInfo = !file.showInfo"
+        [attr.aria-expanded]="file.showInfo"
+        aria-controls="collapse"
+      >
+        <i
+          [ngClass]="{ 'fa-caret-down': file.showInfo, 'fa-caret-right': !file.showInfo }"
+          class="fa"
+          aria-hidden="true"
+        ></i>
+      </button>
+      {{ file.label }}
+      @if (hasChildren) {
+      <a href="#" class="ml-2" (click)="$event.preventDefault(); file.showChildren = !file.showChildren">
+        <i class="fa fa-history"></i>
       </a>
-
-      @if (canDelete?.can) {
-        <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete()">
-          <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
-        </button>
       }
-    </div>
+    </p>
   </div>
-  @if (file?.showInfo) {
-    <div class="row mt-2">
-      @if (file.is_head) {
-        <div class="col">
-          <dl class="row mt-2 mb-0">
-            @for (item of file.metadata | keyvalue; track item) {
-              @if (!infoExcludedFields.includes(item.key) && item.value) {
-                <dt class="col-lg-4">{{ item.key | translate }}</dt>
-                <dd class="col-lg-8">{{ item.value | translate }}</dd>
-              }
-            }
-          </dl>
-        </div>
-      }
-      <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
-        <dl class="row mt-2 mb-0">
-          <dt class="col-lg-4" translate>Size</dt>
-          <dd class="col-lg-8">{{ file.size | filesize }}</dd>
+  <div class="col text-right">
+    @if (canUpdateMetadata?.can) {
+    <button class="btn btn-sm btn-outline-primary" (click)="editMetadata()">
+      <i class="fa fa-pencil mr-1"></i>{{ 'Edit' | translate }}
+    </button>
+    } @if (canUpdate?.can) {
+    <button class="btn btn-sm btn-outline-primary ml-1" (click)="manage()">
+      <i class="fa fa-upload mr-1"></i>{{ 'New version' | translate }}
+    </button>
+    }
 
-          <dt class="col-lg-4" translate>Mime type</dt>
-          <dd class="col-lg-8">{{ file.mimetype }}</dd>
+    <a [href]="file.url" target="_blank" class="btn btn-sm btn-outline-primary ml-1" download>
+      <i class="fa fa-download mr-1"></i>{{ 'Download' | translate }}
+    </a>
 
-          <dt class="col-lg-4" translate>Checksum</dt>
-          <dd class="col-lg-8">{{ file.checksum }}</dd>
-
-          <dt class="col-lg-4" translate>Modified at</dt>
-          <dd class="col-lg-8">{{ file.updated | dateTranslate : 'medium' }}</dd>
-        </dl>
-      </div>
-    </div>
+    @if (canDelete?.can) {
+    <button class="btn btn-sm btn-outline-danger ml-1" (click)="delete()">
+      <i class="fa fa-trash mr-1"></i>{{ 'Delete' | translate }}
+    </button>
+    }
+  </div>
+</div>
+@if (file?.showInfo) {
+<div class="row mt-2">
+  @if (file.is_head) {
+  <div class="col">
+    <dl class="row mt-2 mb-0">
+      @for (item of file.metadata | keyvalue; track item) { @if (!infoExcludedFields.includes(item.key) && item.value) {
+      <dt class="col-lg-4">{{ item.key | translate }}</dt>
+      <dd class="col-lg-8">{{ item.value | translate }}</dd>
+      } }
+    </dl>
+  </div>
   }
-}
+  <div class="col" [ngClass]="{ 'pl-5 text-muted': !file.is_head }">
+    <dl class="row mt-2 mb-0">
+      <dt class="col-lg-4" translate>Size</dt>
+      <dd class="col-lg-8">{{ file.size | filesize }}</dd>
+
+      <dt class="col-lg-4" translate>Mime type</dt>
+      <dd class="col-lg-8">{{ file.mimetype }}</dd>
+
+      <dt class="col-lg-4" translate>Checksum</dt>
+      <dd class="col-lg-8">{{ file.checksum }}</dd>
+
+      <dt class="col-lg-4" translate>Modified at</dt>
+      <dd class="col-lg-8">{{ file.updated | dateTranslate : 'medium' }}</dd>
+    </dl>
+  </div>
+</div>
+} }

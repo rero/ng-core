@@ -20,7 +20,7 @@ import { FormFieldWrapperComponent } from '../form-field-wrapper/form-field-wrap
 @Component({
   selector: 'ng-core-horizontal-wrapper',
   template: `
-    <div class="{{props.cssClass}} form-group m-0 d-flex align-items-start">
+    <div class="{{props.cssClass}} form-group m-0 d-flex align-items-center">
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
         <label [attr.for]="id" class="mr-2 col-form-label" [tooltip]="props.description">

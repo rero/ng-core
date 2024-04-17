@@ -21,18 +21,40 @@
   </div>
   }
   <div [ngClass]="{ 'card-body': title }">
-    @if (canAdd.can) {
     <div class="row">
+    @if(files.length > 1) {
+      <div class="col flex flex-column gap-2">
+        <div>
+          <span class="p-input-icon-right">
+            <i class="fa fa-filter"></i>
+            <input
+              class="p-inputtext"
+              id="filter"
+              type="text"
+              pInputText
+              [placeholder]="'filter' | translate"
+              [(ngModel)]="filterText"
+              (keyup)="onTextChange($event)"
+            />
+          </span>
+        </div>
+        <small *ngVar="filteredFiles.length as total" id="username-help">
+          {{ getResultsText() | async }}
+        </small>
+      </div>
+    }
+    @if (canAdd.can) {
       <div class="col">
         <button class="pull-right btn btn-sm btn-primary" (click)="manageFile(null)">
           <i class="fa fa-plus mr-1"></i>{{ 'Add a new file' | translate }}
         </button>
       </div>
-    </div>
     <hr />
-    } @if (!hasError && files.length) {
+    }
+  </div>
+    @if (!hasError && filteredFiles.length) {
     <ul class="list-group list-group-flush">
-      @for (file of files; track file) { @if (showItem(file)) {
+      @for (file of filteredFiles; track file) { @if (showItem(file)) {
       <li class="list-group-item">
         <ng-core-record-file
           [type]="type"

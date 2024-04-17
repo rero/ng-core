@@ -39,6 +39,7 @@ export interface File {
   is_head: boolean;
   created: string;
   tags: any;
+  label?: string;
   delete_marker: boolean;
   links: {
     self: string,

@@ -49,12 +49,18 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
   @Input()
   type: string;
 
+  // input text filter
+  filterText = '';
+
   // card title
   @Input()
   title: string = 'Files';
 
   // List of files for the record.
   files: Array<RecordFile> = [];
+
+  // filtered array of files
+  filteredFiles = [];
 
   // Current managed file
   currentFile: RecordFile = null;
@@ -201,7 +207,10 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         switchMap((confirm: boolean) => {
           if (confirm === true) {
             this.spinner.hide();
-            return this.fileService.delete(this.type, this.pid, this.parentRecord, file).pipe(map(() => true));
+            return this.fileService.delete(this.type, this.pid, this.parentRecord, file).pipe(map(() => {
+              this.resetFilter();
+              return true;
+            }));
           }
           return of(false);
         })
@@ -215,6 +224,42 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         }
       });
   }
+
+  resetFilter() {
+    this.filterText = '';
+    this.filteredFiles = this.files;
+  }
+    /**
+   * Fired when the text to filter the items changes.
+   *
+   * @param $event - standard event
+   */
+    onTextChange($event): void {
+      if (this.filterText.length > 0) {
+        this.filteredFiles = this.files.filter((value) => value.label.includes(this.filterText));
+      } else {
+        this.filteredFiles = this.files;
+      }
+    }
+
+  /**
+   * Get the string used to display the search result number.
+   * @param hits - list of hit results.
+   * @returns observable of the string representation of the number of results.
+   */
+    getResultsText(): Observable<string> {
+      const remoteTotal = this.files.filter(v => v.is_head == true).length;
+      const totalFiltered = this.filteredFiles.filter(v => v.is_head == true).length;
+      if (totalFiltered == this.files.length) {
+        return this.translateService.stream('{{ total }} results', { remoteTotal });
+      }
+      return totalFiltered === 0
+        ? this.translateService.stream('no result')
+        : this.translateService.stream('{{ total }} results of {{ remoteTotal }}', {
+            total: totalFiltered,
+            remoteTotal: remoteTotal,
+          });
+    }
 
   /**
    * Determine if the file is displayed in the list, as children are hidden by
@@ -328,6 +373,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
             this.toastrService.success(this.translateService.instant('File uploaded successfully. The files uploaded here will be publicly available. Make sure that you are legally allowed to distribute a file before adding it to a document.'));
 
             this._getFiles$().subscribe(() => {
+              this.resetFilter();
               this.spinner.hide();
             });
           });
@@ -415,6 +461,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe(() => {
+        this.resetFilter();
         this.spinner.hide();
         this.hideForm();
         this.toastrService.success(this.translateService.instant('Metadata have been saved successfully.'));
@@ -433,11 +480,14 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
       map((files) => {
         return files.map((item: RecordFile) => {
           // By default, show info about the file.
-          item.showInfo = true;
+          item.showInfo = false;
           // download url
           item.url = this.getFileUrl(item);
           // By default, hide other versions of the file.
           item.showChildren = false;
+          if (item?.label == null) {
+            item.label = item?.metadata?.label? item.metadata.label :item.key;
+          }
           return item;
         });
       }),
@@ -451,6 +501,7 @@ export class RecordFilesComponent implements OnDestroy, OnInit {
           files.sort(this.config.files.orderList);
         }
         this.files = files;
+        this.filteredFiles = files;
       }),
       tap(() => {
         // Check if a file can be added.
