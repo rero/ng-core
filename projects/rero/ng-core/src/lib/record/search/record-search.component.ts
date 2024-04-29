@@ -597,6 +597,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return formatted url for an export format.
    */
   getExportFormatUrl(format: any) {
+    const queryParams = Object.keys(this.activatedRoute.snapshot.queryParams);
     // TODO: maybe we can use URLSerializer to build query string
     const baseUrl = format.endpoint
       ? format.endpoint
@@ -613,7 +614,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         // force value to an array
         const values = (!Array.isArray(value)) ? [value] : value;
         values.map(v => {
-          url += `&${key}=${v}`;
+          // We check whether the parameter exists in the current url.
+          // If it does, we don't add the preFilter parameter.
+          if (!queryParams.includes(key)) {
+            url += `&${key}=${v}`;
+          }
         });
       }
     }
