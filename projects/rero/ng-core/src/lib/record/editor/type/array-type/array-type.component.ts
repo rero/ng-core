@@ -16,6 +16,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
+import { cloneDeep } from 'lodash-es';
 
 /**
  * Component for displaying array fields in editor.
@@ -73,7 +74,13 @@ export class ArrayTypeComponent extends FieldArrayType implements OnInit {
    * @param i - number, the position to add the element
    */
   add(i: number, initialModel?: any) {
+    // There is a bug in ngx-formly which does not correctly
+    // assign the model to the multiSchema.
+    // Solution: Copy the model and re-assign after adding.
+    const model = cloneDeep(this.model);
+    model.splice(i, 0, initialModel ? cloneDeep(initialModel) : undefined);
     super.add(i, initialModel);
+    this.formControl.patchValue(model, { onlySelf: true, emitEvent: false});
     this.setFocusInChildren(this.field.fieldGroup[i]);
   }
 
