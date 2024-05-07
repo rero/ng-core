@@ -2,5 +2,7 @@
   "location": "Location",
   "created year": "Creation year",
   "library": "Library",
+  "multiselect_group_a": "MultiSelect Group A",
+  "multiselect_group_b": "MultiSelect Group B",
   "German": "German"
 }

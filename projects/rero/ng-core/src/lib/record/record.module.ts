@@ -29,6 +29,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CalendarModule } from 'primeng/calendar';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
@@ -46,6 +47,7 @@ import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-s
 import { DateTimepickerTypeComponent } from './editor/type/date-time-picker-type.component';
 import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
+import { MultiSelectComponent } from './editor/type/multi-select/multi-select.component';
 import { MultiCheckboxComponent } from './editor/type/multicheckbox.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
@@ -126,7 +128,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         MultiCheckboxComponent,
         FileComponent,
         DetailButtonComponent,
-        RadioButtonComponent
+        RadioButtonComponent,
+        MultiSelectComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -145,6 +148,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         CalendarModule,
         ClipboardModule,
         RadioButtonModule,
+        MultiSelectModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }
@@ -169,7 +173,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
                 { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
                 { name: 'multicheckbox', component: MultiCheckboxComponent },
-                { name: 'radioButton', component: RadioButtonComponent }
+                { name: 'radioButton', component: RadioButtonComponent },
+                { name: 'multiSelect', component: MultiSelectComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },

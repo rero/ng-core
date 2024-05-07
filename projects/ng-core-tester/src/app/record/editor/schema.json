@@ -44,7 +44,10 @@
     "name_with_definition",
     "field_expressions",
     "field_with_addon_left_right",
-    "field_radio_button_inline"
+    "field_radio_button_inline",
+    "multiSelect",
+    "multiSelect_preferred",
+    "multiSelect_with_group"
   ],
   "properties": {
     "$schema": {
@@ -1163,6 +1166,164 @@
               {
                 "label": "Radio 3",
                 "value": "radio_3"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "multiSelect": {
+      "title": "Multiple select",
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "default": [
+        "value2",
+        "value3"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "value1",
+          "value2",
+          "value3",
+          "value4",
+          "value5"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multiSelect",
+          "props": {
+            "placeholder": "Select a value…",
+            "filterPlaceHolder": "Enter a term",
+            "options": [
+              {
+                "label": "Value 1",
+                "value": "value1"
+              },
+              {
+                "label": "Value 2",
+                "value": "value2"
+              },
+              {
+                "label": "Value 3",
+                "value": "value3"
+              },
+              {
+                "label": "Value 4",
+                "value": "value4"
+              },
+              {
+                "label": "Value 5",
+                "value": "value5"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "multiSelect_preferred": {
+      "title": "Multiple select with preferred values",
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "default": [
+        "value2",
+        "value3"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "value1",
+          "value2",
+          "value3",
+          "value4",
+          "value5"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multiSelect",
+          "props": {
+            "placeholder": "Select a value…",
+            "filterPlaceHolder": "Enter a term",
+            "options": [
+              {
+                "label": "Value 1",
+                "value": "value1",
+                "preferred": true
+              },
+              {
+                "label": "Value 2",
+                "value": "value2",
+                "preferred": true
+              },
+              {
+                "label": "Value 3",
+                "value": "value3"
+              },
+              {
+                "label": "Value 4",
+                "value": "value4"
+              },
+              {
+                "label": "Value 5",
+                "value": "value5"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "multiSelect_with_group": {
+      "title": "Multiple select with group",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "default": [
+        "value1"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "value1",
+          "value2",
+          "value3",
+          "value4",
+          "value5"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multiSelect",
+          "props": {
+            "placeholder": "Select a value…",
+            "filterPlaceHolder": "Enter a term",
+            "options": [
+              {
+                "label": "Value 1",
+                "value": "value1",
+                "group": "multiselect_group_a"
+              },
+              {
+                "label": "Value 2",
+                "value": "value2",
+                "group": "multiselect_group_a"
+              },
+              {
+                "label": "Value 3",
+                "value": "value3",
+                "group": "multiselect_group_b"
+              },
+              {
+                "label": "Value 4",
+                "value": "value4",
+                "group": "multiselect_group_b"
+              },
+              {
+                "label": "Value 5",
+                "value": "value5"
               }
             ]
           }

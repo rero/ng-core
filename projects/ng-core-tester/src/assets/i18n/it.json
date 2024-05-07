@@ -3,7 +3,12 @@
   "location": "Localizzazione",
   "created year": "Anno di creazione",
   "library": "Biblioteca",
+  "multiselect_group_a": "MultiSelect Gruppo A",
+  "multiselect_group_b": "MultiSelect Gruppo B",
   "German": "Tedesco",
   "from": "Da",
-  "day(s)": "giorni"
+  "day(s)": "giorni",
+  "Other": "Altro",
+  "Preferred value": "Valore preferenziale",
+  "Preferred values": "Valori preferiti"
 }

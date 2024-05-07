@@ -466,7 +466,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
 
           // initial population of arrays with a minItems constraints
           if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
-            field.defaultValue = new Array(jsonSchema.minItems);
+            const type = jsonSchema.widget?.formlyConfig?.type;
+            if(['multiSelect'].includes(type)) {
+              field.defaultValue = null;
+            } else {
+              field.defaultValue = new Array(jsonSchema.minItems);
+            }
           }
           // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
           // See: `email.validator.ts` file
