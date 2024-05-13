@@ -20,7 +20,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, merge, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RemoteTypeaheadService } from './remote-typeahead.service';
 
@@ -94,11 +94,15 @@ export class RemoteTypeaheadComponent extends FieldType<FormlyFieldConfig> imple
         );
 
     // get the template version of the formControl value
-    this.valueAsHTML$ = new Observable((observer: Observer<string>) => observer
-        .next(this.formControl.value))
-        .pipe(
-          switchMap((value: string) => this.remoteTypeaheadService.getValueAsHTML(this.rtOptions, value))
-        );
+    const obs = new Observable((observer: Observer<string>) => observer.next(this.formControl.value));
+    this.valueAsHTML$ = merge(obs, this.formControl.valueChanges).pipe(
+      switchMap((value: string) => {
+      if(value) {
+        return this.remoteTypeaheadService.getValueAsHTML(this.rtOptions, value)
+      }
+      return of(null);
+      })
+    );
   }
 
   // COMPONENT FUNCTIONS ======================================================
@@ -136,7 +140,7 @@ export class RemoteTypeaheadComponent extends FieldType<FormlyFieldConfig> imple
   /** Clear current value */
   clear(): void {
     this.search = null;
-    this.formControl.reset();
+    this.formControl.reset(null);
     this.field.focus = true;
   }
 
