@@ -29,6 +29,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { CalendarModule } from 'primeng/calendar';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { emailValidator } from '../validator/email.validator';
@@ -49,6 +50,7 @@ import { MultiCheckboxComponent } from './editor/type/multicheckbox.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
+import { RadioButtonComponent } from './editor/type/radio-button.component';
 import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
 import { TextareaFieldComponent } from './editor/type/textarea/textarea.component';
@@ -123,7 +125,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         PasswordGeneratorTypeComponent,
         MultiCheckboxComponent,
         FileComponent,
-        DetailButtonComponent
+        DetailButtonComponent,
+        RadioButtonComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -141,6 +144,7 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         BsDatepickerModule.forRoot(),
         CalendarModule,
         ClipboardModule,
+        RadioButtonModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }
@@ -164,7 +168,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
-                { name: 'multicheckbox', component: MultiCheckboxComponent }
+                { name: 'multicheckbox', component: MultiCheckboxComponent },
+                { name: 'radioButton', component: RadioButtonComponent }
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },
