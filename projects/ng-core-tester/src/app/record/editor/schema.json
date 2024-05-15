@@ -43,7 +43,8 @@
     "input_with_default_value",
     "name_with_definition",
     "field_expressions",
-    "field_with_addon_left_right"
+    "field_with_addon_left_right",
+    "field_radio_button_inline"
   ],
   "properties": {
     "$schema": {
@@ -1137,6 +1138,33 @@
             "navigation": {
               "essential": true
             }
+          }
+        }
+      }
+    },
+    "field_radio_button_inline": {
+      "title": "Inline Radio button",
+      "default": "radio_1",
+      "widget": {
+        "formlyConfig": {
+          "type": "radioButton",
+          "props": {
+            "style": "inline",
+            "options": [
+              {
+                "label": "Radio 1",
+                "value": "radio_1"
+              },
+              {
+                "label": "Radio 2",
+                "value": "radio_2",
+                "disabled": true
+              },
+              {
+                "label": "Radio 3",
+                "value": "radio_3"
+              }
+            ]
           }
         }
       }
