@@ -1,5 +1,16 @@
 # Changelog
 
+## [v17.2.0](https://github.com/rero/ng-core/tree/v17.2.0) (2024-05-16)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.1.0...v17.2.0)
+
+**New features:**
+* feat(editor): add new radio button type [\#618](https://github.com/rero/ng-core/pull/618) (by @Garfield-fr)
+
+**Fixes:**
+* fix(editor): remote typeahead clear value [\#617](https://github.com/rero/ng-core/pull/617) (by @Garfield-fr)
+* export: fix the url generation [\#613](https://github.com/rero/ng-core/pull/613) (by @Garfield-fr)
+
 ## [v17.1.0](https://github.com/rero/ng-core/tree/v17.1.0) (2024-04-10)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.0.0...v17.1.0)
