@@ -869,7 +869,10 @@
       "default": "Hello **world**",
       "widget": {
         "formlyConfig": {
-          "type": "markdown"
+          "type": "markdown",
+          "props": {
+            "minHeight": "300px"
+          }
         }
       }
     },
