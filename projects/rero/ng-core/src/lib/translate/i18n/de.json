@@ -51,7 +51,7 @@
   "Loading a template will reload the current form. All values previously encoded will be lost.": "Beim Laden einer Vorlage wird das aktuelle Formular neu geladen. Alle zuvor erfassten Werte gehen dabei verloren.",
   "maximum {{max}}": "maximal {{max}}",
   "Maximum Size exceeded.": "Maximale Größe überschritten.",
-  "Metadata have been saved successfully.": "Die Metadaten wurden erfolgreich gespeichert.",
+  "Metadata have been saved successfully.": "Metadaten erfolgreich gespeichert.",
   "Mime type": "MIME-Typ",
   "minimum {{min}}": "mindestens {{min}}",
   "Modified at": "Bearbeitet um",
