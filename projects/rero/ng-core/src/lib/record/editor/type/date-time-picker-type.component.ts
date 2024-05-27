@@ -19,7 +19,7 @@ import { Component, OnInit } from "@angular/core";
 import { FieldType, FormlyFieldConfig } from "@ngx-formly/core";
 import { FormlyFieldProps } from "@ngx-formly/primeng/form-field";
 
-// Calendar options: https://www.primefaces.org/primeng/calendar
+// Calendar options: https://primeng.org/calendar
 interface DateTimePickerProps extends FormlyFieldProps {
   styleClass?: string;
   inputStyleClass?: string;

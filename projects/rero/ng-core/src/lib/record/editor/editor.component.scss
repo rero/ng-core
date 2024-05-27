@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -199,5 +199,9 @@
   .p-radiobutton-label {
     margin-bottom: 0 !important;
     margin-right: 4px;
+  }
+
+  .p-multiselect {
+    width: 100%;
   }
 }
