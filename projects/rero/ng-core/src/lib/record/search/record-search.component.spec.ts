@@ -194,12 +194,6 @@ describe('RecordSearchComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should change size', () => {
-    expect(component.size).toBe(10);
-    component.changeSize(new Event('click'), 50);
-    expect(component.size).toBe(50);
-  });
-
   it('should change query', () => {
     expect(component.q).toBe('');
     component.searchByQuery('search');

@@ -99,30 +99,6 @@
           <!-- EXPORT BUTTON -->
           <ng-core-export-button [exportOptions]="exportOptions"></ng-core-export-button>
           <!-- END EXPORT BUTTON -->
-          <div class="btn-group ml-2" dropdown>
-            <button
-              id="button-basic"
-              dropdownToggle
-              type="button"
-              class="btn btn-light dropdown-toggle"
-              aria-controls="dropdown-basic"
-            >
-              {{ size }} <span class="caret"></span>
-            </button>
-            <ul
-              id="dropdown-basic"
-              *dropdownMenu
-              class="dropdown-menu"
-              role="menu"
-              aria-labelledby="button-basic"
-            >
-              @for (size of [10, 20, 50, 100]; track size) {
-                <li role="menuitem">
-                  <a class="dropdown-item" href="#" (click)="changeSize($event, size)">{{ size }}</a>
-                </li>
-              }
-            </ul>
-          </div>
         </div>
       </div>
       <ng-content select="[beforeResult]"></ng-content>
@@ -255,22 +231,17 @@
               </li>
             }
           </ul>
-          @if (showPagination) {
-            <pagination
-              [(ngModel)]="currentPage"
-              [totalItems]="total"
-              [itemsPerPage]="size"
-              [maxSize]="paginationMaxSize"
-              [boundaryLinks]="paginationBoundaryLinks"
-              (pageChanged)="pageChanged()"
-              class="justify-content-center mt-5"
-              previousText="&lsaquo;"
-              nextText="&rsaquo;"
-              firstText="&laquo;"
-              lastText="&raquo;"
-            >
-            </pagination>
-          }
+          <ng-core-paginator
+            (rowPageChange)="paginatorChange($event)"
+            [alwaysShow]="showPagination"
+            [currentPage]="currentPage"
+            [pageLinkSize]="paginationMaxSize"
+            [totalRecords]="total"
+            [rows]="size"
+            [rowsPerPageOptions]="rowsPerPageOptions"
+            [showCurrentPageReport]="pageReport"
+            [showFirstLastIcon]="paginationBoundaryLinks"
+          ></ng-core-paginator>
           <ng-content select="[footer-result]"></ng-content>
           <ng-content></ng-content>
         </div>
