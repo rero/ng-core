@@ -15,7 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
@@ -28,8 +27,6 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { CalendarModule } from 'primeng/calendar';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { emailValidator } from '../validator/email.validator';
@@ -80,6 +77,7 @@ import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
 import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
+import { PaginatorComponent } from './search/paginator/paginator.component';
 
 @NgModule({
     declarations: [
@@ -126,7 +124,8 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         MultiCheckboxComponent,
         FileComponent,
         DetailButtonComponent,
-        RadioButtonComponent
+        RadioButtonComponent,
+        PaginatorComponent,
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -142,9 +141,6 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         CollapseModule.forRoot(),
         PaginationModule.forRoot(),
         BsDatepickerModule.forRoot(),
-        CalendarModule,
-        ClipboardModule,
-        RadioButtonModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }

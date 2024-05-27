@@ -30,6 +30,7 @@ import { JSONSchema7 } from '../editor/editor.component';
 import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
+import { ChangeEvent } from './paginator/paginator.component';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
 
 export interface SearchParams {
@@ -100,7 +101,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     showSearchInput?: boolean,
     pagination?: {
       boundaryLinks?: boolean,
-      maxSize?: number
+      maxSize?: number,
+      pageReport?: boolean,
+      rowsPerPageOptions?: number[],
     },
     formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig,
     hideInTabs?: boolean
@@ -168,6 +171,18 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     return ('maxSize' in paginationConfig)
         ? paginationConfig.maxSize
         : 5;
+  }
+
+  /** Get the page report text (1 of 16) */
+  get pageReport(): boolean {
+    const paginationConfig = this._getResourceConfig('pagination', {});
+    return ('pageReport' in paginationConfig) ? paginationConfig.pageReport : false;
+  }
+
+  /** Rows per page (dropdown menu on the right) */
+  get rowsPerPageOptions(): number[] {
+    const paginationConfig = this._getResourceConfig('pagination', {});
+    return ('rowsPerPageOptions' in paginationConfig) ? paginationConfig.rowsPerPageOptions : [10, 20, 50, 100];
   }
 
   /** Request result record hits. */
@@ -480,17 +495,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Move to the top of the page if you change page */
   pageChanged() {
     this.topScroll.nativeElement.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  /**
-   * Change number of items per page value.
-   * @param event - Event, dom event triggered
-   * @param size - number, new page size
-   */
-  changeSize(event: Event, size: number) {
-    event.preventDefault();
-    this.size = size;
-    this._searchParamsHasChanged();
   }
 
   /**
@@ -1139,5 +1143,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       return (searchFilter.showIfQuery === true || !searchFilter?.showIfQuery);
     }
+  }
+
+  paginatorChange(event: ChangeEvent): void {
+    this.page = ++event.page;
+    this.size = event.rows;
+    this._searchParamsHasChanged(false);
   }
 }
