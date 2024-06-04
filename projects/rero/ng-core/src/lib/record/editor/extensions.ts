@@ -24,6 +24,7 @@ import { isObservable, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
+import { FormlyFieldConfigCache, FormlyValueChangeEvent } from '@ngx-formly/core/lib/models';
 
 export class NgCoreFormlyExtension {
   // Types to apply horizontal wrapper on
@@ -44,8 +45,8 @@ export class NgCoreFormlyExtension {
    * Constructor
    * @params _recordService - ng core record service
    */
-  constructor(private _recordService: RecordService) {}
-
+  constructor(private _recordService: RecordService) {
+  }
   /**
    * prePopulate Formly hook
    * @param field - FormlyFieldConfig
@@ -103,8 +104,7 @@ export class NgCoreFormlyExtension {
       ];
     }
 
-    const editorComponent = field.props?.editorComponent;
-    if (field.props && editorComponent && editorComponent().longMode) {
+    if (field?.props?.editorConfig?.longMode) {
       // add automatically a card wrapper for the first level fields
       const { parent } = field;
       if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card')) {
@@ -206,11 +206,10 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    */
   private _hideEmptyField(field: FormlyFieldConfig): void {
-    // find the root field in the form tree
-    if (!field.props?.editorComponent) {
+    if (!field.props?.editorConfig) {
       return;
     }
-    const {rootField, editMode, longMode} = field.props.editorComponent();
+    const {pid, longMode} = field.props?.editorConfig;
     if (
       // only in longMode else it will not be possible to unhide a field
       !longMode
@@ -241,11 +240,11 @@ export class NgCoreFormlyExtension {
           // do not hide field has been already manipulated
           && field.hide === undefined)
         // in edition empty fields should be hidden
-        || (editMode === true
+        || (pid != null
           // only during the editor initialization
-          && !rootField?.formControl?.touched)
+          && !field?.props?.getRoot()?.formControl?.touched)
       ) {
-        field.props.editorComponent().hide(field);
+        field.props.setHide ? field.props.setHide(field, true): field.hide = true;
       }
     }
   }
@@ -261,15 +260,14 @@ export class NgCoreFormlyExtension {
     const customValidators = field.props.customValidators ? field.props.customValidators : {};
     // asyncValidators: valueAlreadyExists
     if (customValidators.valueAlreadyExists) {
-      const { filter, limitToValues, remoteRecordType, term } = customValidators.valueAlreadyExists;
-      const { editorComponent } = field.props;
+      const { filter, limitToValues, term } = customValidators.valueAlreadyExists;
       field.asyncValidators = {
         validation: [
           (control: UntypedFormControl) => {
             return this._recordService.uniqueValue(
               field,
-              remoteRecordType ? remoteRecordType : editorComponent().recordType,
-              editorComponent().pid,
+              field.props.editorConfig.recordType,
+              field.props.editorConfig.pid,
               term ? term : null,
               limitToValues ? limitToValues : [],
               filter ? filter : null
@@ -413,6 +411,7 @@ export class TranslateExtension implements FormlyExtension {
    * It translates the label, the description and the placeholder.
    * @param field formly field config
    */
+
   prePopulate(field: FormlyFieldConfig): void {
     const props = field.props || {};
 

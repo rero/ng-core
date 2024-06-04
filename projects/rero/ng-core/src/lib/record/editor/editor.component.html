@@ -18,7 +18,7 @@
     <div class="row editor">
         <!-- Editor title and editor actions buttons -->
         <div class="header py-2 mb-3 col-12 border-bottom">
-          @if (rootFormlyConfig) {
+          @if (rootField) {
             <legend>
                 <span [tooltip]="description">
                   {{ title || recordType | ucfirst | translate }}
