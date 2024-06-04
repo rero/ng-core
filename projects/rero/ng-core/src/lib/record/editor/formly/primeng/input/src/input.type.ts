@@ -36,6 +36,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           @if (props.type !== 'number') {
             <input
               pInputText
+              class="w-full"
               [type]="props.type || 'text'"
               [formControl]="formControl"
               [formlyAttributes]="field"
@@ -53,6 +54,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
       @if (props.type !== 'number') {
         <input
           pInputText
+          class="w-full"
           [type]="props.type || 'text'"
           [formControl]="formControl"
           [formlyAttributes]="field"

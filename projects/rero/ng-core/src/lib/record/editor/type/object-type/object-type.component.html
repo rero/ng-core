@@ -20,7 +20,7 @@
   }
 </div>
 <div class="object">
-  <div [ngClass]="{'content': true}">
+  <div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true,  'content': true}">
     @if (showError && formControl.errors) {
       <div class="alert alert-danger" role="alert">
         <formly-validation-message [field]="field"></formly-validation-message>
