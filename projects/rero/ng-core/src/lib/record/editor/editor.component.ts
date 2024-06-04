@@ -16,7 +16,7 @@
  */
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { Form, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
@@ -32,9 +32,9 @@ import { AbstractCanDeactivateComponent } from '../../component/abstract-can-dea
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
 import { LoggerService } from '../../service/logger.service';
-import { Record } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
+import { JSONSchemaService } from './services/jsonschema.service';
 import { processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
@@ -83,7 +83,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   fields: FormlyFieldConfig[];
 
   // root element of the editor
-  rootFormlyConfig: FormlyFieldConfig;
+  rootField: FormlyFieldConfig;
 
   // list of fields to display in the TOC
   tocFields$: Observable<any>;
@@ -123,15 +123,6 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   // Config for resource
   private _resourceConfig: any;
 
-  // list of custom validators
-  private _customValidators = [
-    'valueAlreadyExists',
-    'uniqueValueKeysInObject',
-    'numberOfSpecificValuesInObject',
-    'dateMustBeGreaterThan',
-    'dateMustBeLessThan'
-  ];
-
   // list of fields to be hidden
   private _hiddenFields: FormlyFieldConfig[] = [];
 
@@ -146,16 +137,6 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   // Editor long mode
   public get longMode(): boolean {
     return this.editorSettings.longMode;
-  }
-
-  // Editor edit mode
-  public get editMode(): boolean {
-    return this.pid ? true : false;
-  }
-
-  // Editor root field
-  public get rootField(): FormlyFieldConfig {
-    return this.rootFormlyConfig;
   }
 
   // Editor function
@@ -188,7 +169,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     protected location: Location,
     protected modalService: BsModalService,
     protected routeCollectionService: RouteCollectionService,
-    protected loggerService: LoggerService
+    protected loggerService: LoggerService,
+    protected jsonschemaService: JSONSchemaService
   ) {
     super();
     this.form = new UntypedFormGroup({});
@@ -458,39 +440,23 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     this.clearHiddenFields();
 
     // form configuration
+    const editorConfig = {
+      pid: this.pid,
+      longMode: this.longMode,
+      recordType: this.recordType
+    }
     const fields = [
       this.formlyJsonschema.toFieldConfig(this.schema, {
         // post process JSONSChema7 to FormlyFieldConfig conversion
         map: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => {
           /**** additional JSONSchema configurations *******/
-
-          // initial population of arrays with a minItems constraints
-          if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
-            field.defaultValue = new Array(jsonSchema.minItems);
-          }
-          // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
-          // See: `email.validator.ts` file
-          if (jsonSchema.format) {
-            field.props.type = jsonSchema.format;
-          }
-
-          if (jsonSchema?.widget?.formlyConfig) {
-            const { props } = jsonSchema.widget.formlyConfig;
-
-            if (props) {
-              this._setSimpleOptions(field, props);
-              this._setValidation(field, props);
-              this._setRemoteSelectOptions(field, props);
-              this._setRemoteTypeahead(field, props);
-            }
-          }
-          // Add editor component function on the field
-          field.props.editorComponent = this.editorComponent;
-
+          field = this.jsonschemaService.processField(field, jsonSchema);
+          field.props.editorConfig = editorConfig;
+          field.props.getRoot = (() => this.rootField);
+          field.props.setHide = ((field: FormlyFieldConfig, value: boolean) => this.setHide(field, value));
           if (this._resourceConfig != null && this._resourceConfig.formFieldMap) {
             return this._resourceConfig.formFieldMap(field, jsonSchema);
           }
-
           return field;
         }
       })
@@ -504,7 +470,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     if (this.fields) {
       this.title = this.fields[0].props?.label;
       this.description = this.fields[0].props?.description;
-      this.rootFormlyConfig = this.fields[0];
+      this.rootField = this.fields[0];
     }
   }
 
@@ -775,147 +741,25 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Hide the given formly field.
    * @param field - FormlyFieldConfig, the field to hide
    */
-  hide(field: FormlyFieldConfig): void {
-    field.hide = true;
-    if (this.isRoot(field.parent)) {
-      this.addHiddenField(field);
+  setHide(field: FormlyFieldConfig, value: boolean): void {
+    if (value) {
+      if (field.parent.props.isRoot) {
+        this.addHiddenField(field);
+      }
+    } else {
+      this.removeHiddenField(field);
+      // scroll at the right position
+      // to avoid: Expression has changed after it was checked
+      // See: https://blog.angular-university.io/angular-debugging/
+      // wait that the component is present in the DOM
+      setTimeout(() => this.setFieldFocus(field, true));
     }
+    field.hide = value;
   }
 
   /********************* Private  ***************************************/
 
-  /**
-   * Populate a select options with a remote API call.
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  private _setRemoteSelectOptions(
-    field: FormlyFieldConfig,
-    formOptions: any
-  ): void {
-    if (formOptions.remoteOptions && formOptions.remoteOptions.type) {
-      field.type = 'select';
-      field.hooks = {
-        ...field.hooks,
-        afterContentInit: (f: FormlyFieldConfig) => {
-          const recordType = formOptions.remoteOptions.type;
-          const query = formOptions.remoteOptions.query || '';
-          f.props.options = this.recordService
-            .getRecords(recordType, query, 1, RecordService.MAX_REST_RESULTS_SIZE)
-            .pipe(
-              map((data: Record) =>
-                data.hits.hits.map((record: any) => {
-                  return {
-                    label: formOptions.remoteOptions.labelField && formOptions.remoteOptions.labelField in record.metadata
-                      ? record.metadata[formOptions.remoteOptions.labelField]
-                      : record.metadata.name,
-                    value: this.apiService.getRefEndpoint(
-                      recordType,
-                      record.id
-                    )
-                  };
-                })
-              )
-            );
-        }
-      };
-    }
-  }
 
-  /**
-   * Store the remote typeahead options.
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  private _setRemoteTypeahead(
-    field: FormlyFieldConfig,
-    formOptions: any
-  ): void {
-    if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
-      field.type = 'remoteTypeahead';
-      field.props = {
-        ...field.props,
-        ...{ remoteTypeahead: formOptions.remoteTypeahead }
-      };
-    }
-  }
-
-  /**
-   *
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  private _setValidation(field: FormlyFieldConfig, formOptions: any): void {
-    if (formOptions.validation) {
-      // custom validation messages
-      // TODO: use widget instead
-      const { messages } = formOptions.validation;
-      if (messages) {
-        if (!field.validation) {
-          field.validation = {};
-        }
-        if (!field.validation.messages) {
-          field.validation.messages = {};
-        }
-        for (const key of Object.keys(messages)) {
-          const msg = messages[key];
-          // add support of key with or without Message suffix (required == requiredMessage),
-          // this is useful for backend translation extraction
-          field.validation.messages[key.replace(/Message$/, '')] = (error, f: FormlyFieldConfig) =>
-            // translate the validation messages coming from the JSONSchema
-            // TODO: need to remove `as any` once it is fixed in ngx-formly v.5.7.2
-            this.translateService.stream(msg) as any;
-        }
-      }
-
-      // store the custom validators config
-      field.props.customValidators = {};
-      if (formOptions.validation && formOptions.validation.validators) {
-        for (const customValidator of this._customValidators) {
-          const validatorConfig = formOptions.validation.validators[customValidator];
-          if (validatorConfig != null) {
-            field.props.customValidators[customValidator] = validatorConfig;
-          }
-        }
-      }
-
-      if (formOptions.validation.validators) {
-        // validators: add validator with expressions
-        // TODO: use widget
-        const validatorsKey = Object.keys(formOptions.validation.validators);
-        validatorsKey.map(validatorKey => {
-          const validator = formOptions.validation.validators[validatorKey];
-          if ('expression' in validator && 'message' in validator) {
-            const { expression } = validator;
-            const expressionFn = Function('formControl', `return ${expression};`);
-            const validatorExpression = {
-              expression: (fc: UntypedFormControl) => expressionFn(fc),
-              // translate the validation message coming form the JSONSchema
-              message: this.translateService.stream(validator.message)
-            };
-            field.validators = field.validators !== undefined ? field.validators : {};
-            field.validators[validatorKey] = validatorExpression;
-          }
-        });
-      }
-    }
-  }
-
-  /**
-   * Convert JSONSchema form options to formly field options.
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  private _setSimpleOptions(field: FormlyFieldConfig, formOptions: any): void {
-    // some fields should not submit the form when enter key is pressed
-    if (field.props.doNotSubmitOnEnter != null) {
-      field.props.keydown = (f: FormlyFieldConfig, event?: any) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-        }
-      };
-    }
-  }
 
   /**
    * Handle form error
