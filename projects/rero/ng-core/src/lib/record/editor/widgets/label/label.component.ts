@@ -107,8 +107,7 @@ export class LabelComponent implements OnInit {
    * @returns FormlyFieldConfig[], the filtered list
    */
   hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fieldGroup.filter(f => f.hide && f?.expressions?.hide !== null);
-    // return fieldGroup.filter(f => f.hide && f.hideExpression == null);
+    return fieldGroup.filter(f => f.hide && !('hide' in f?.expressions));
   }
 
   /**
