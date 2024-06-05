@@ -68,10 +68,9 @@ export class NgCoreFormlyExtension {
    * @param field - FormlyFieldConfig
    */
   onPopulate(field: FormlyFieldConfig): void {
-    // TODO: Patch for type array
-    // String fields in an array parent are automatically required.
-    // This should not be the case, so we change them to not required.
-    if (field.parent?.type === 'array' && field.props.required) {
+    // Path of Array
+    // Bug issue: https://github.com/ngx-formly/ngx-formly/issues/3914
+    if (field?.parent?.type === 'array' && field.type !== 'object' && field.props.required) {
       field.props.required = false;
     }
     this._setWrappers(field);
