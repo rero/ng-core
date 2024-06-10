@@ -25,8 +25,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
+import { AutofocusDirective } from './directives/autofocus.directive';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { ErrorComponent } from './error/error.component';
+import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
@@ -36,6 +38,7 @@ import { Nl2brPipe } from './pipe/nl2br.pipe';
 import { SortByKeysPipe } from './pipe/sort-by-keys.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
+import { PrimeNgCoreModule } from './prime-ng-core-module';
 import { SearchInputComponent } from './search-input/search-input.component';
 import { TextReadMoreComponent } from './text-read-more/text-read-more.component';
 import { DateTranslatePipe } from './translate/date-translate-pipe';
@@ -43,8 +46,6 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
-import { AutofocusDirective } from './directives/autofocus.directive';
-import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 
 @NgModule({
     declarations: [
@@ -81,9 +82,11 @@ import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.gu
         ModalModule.forRoot(),
         BsDropdownModule.forRoot(),
         ToastrModule.forRoot(),
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        PrimeNgCoreModule
     ],
     exports: [
+        PrimeNgCoreModule,
         BsDropdownModule,
         CommonModule,
         TranslateModule,

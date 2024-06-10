@@ -98,7 +98,9 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     aggregationsBucketSize?: number,
     pagination?: {
       boundaryLinks?: boolean,
-      maxSize?: number
+      maxSize?: number,
+      pageReport?: boolean,
+      rowsPerPageOptions?: number[],
     },
     formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
   }[] = [{ key: 'documents', label: 'Documents' }];
