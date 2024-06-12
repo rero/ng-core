@@ -20,32 +20,34 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-form-field-wrapper',
   template: `
-    <div class="{{props.cssClass}} form-group" [class.has-error]="showError">
+    <div class="form-group mt-2" [ngClass]="props.cssClass" [class.has-error]="showError">
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
-        <label [attr.for]="id" [tooltip]="props.description">
+        <label [attr.for]="id" [pTooltip]="props.description" tooltipPosition="top">
           {{ props.label }}
           @if (props.required && props.hideRequiredMarker !== true) {
             &nbsp;*
           }
         </label>
       }
-      <!-- clone button -->
-      @if (canAdd()) {
-        <button type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-clone"></i>
-        </button>
-      }
-      <!-- trash button -->
-      @if (canRemove() && props.hideLabel !== true) {
-        <button type="button" (click)="remove()" class="btn btn-link text-secondary btn-sm">
-          <i class="fa fa-trash"></i>
-        </button>
-      }
-      <!-- field -->
-      <ng-template #fieldComponent></ng-template>
+      <div class="flex align-content-center w-full mt-2">
+        <div class="flex w-full align-items-center">
+          <!-- field -->
+          <ng-template #fieldComponent></ng-template>
+        </div>
+        <div class="flex align-items-center ml-1">
+          <!-- clone button -->
+          @if (canAdd()) {
+            <p-button icon="fa fa-clone" severity="secondary" [text]="true" (click)="add()" styleClass="mr-1" />
+          }
+          <!-- trash button -->
+          @if (canRemove() && props.hideLabel !== true) {
+            <p-button icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" styleClass="mr-1" />
+          }
+        </div>
+      </div>
       @if (showError) {
-        <div class="invalid-feedback d-block">
+        <div class="invalid-feedback mt-1">
           <formly-validation-message [field]="field"></formly-validation-message>
         </div>
       }

@@ -15,25 +15,17 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
-<div class="form-group">
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-        </div>
-        <input class="form-control"
-               [(ngModel)]="dateRangeModel"
-               [bsValue]="dateRangeModel"
-               [bsConfig]="bsConfig"
-               bsDaterangepicker>
-    </div>
+<p-calendar
+    [(ngModel)]="dateRangeModel"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    selectionMode="range"
+    [readonlyInput]="true" />
+<div class="flex mt-2">
+  <div class="flex flex-auto justify-content-center">
+    <p-button [label]="'Apply' | translate" [outlined]="true" (click)="$event.preventDefault(); updateFilter()" />
+    @if (hasQueryParam) {
+      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (click)="$event.preventDefault(); clearFilter()" />
+    }
+  </div>
 </div>
-<div class="text-center">
-    <small>
-        <a href class="mx-3" (click)="$event.preventDefault(); updateFilter()" translate>Filter</a>
-        @if (hasQueryParam) {
-          <a href class="mx-3" (click)="$event.preventDefault(); clearFilter()" translate>Clear filter</a>
-        }
-    </small>
-</div>
-

@@ -15,27 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (field.props.label) {
-  <div class="d-block">
-    <span [tooltip]="field.props.description">
+  <div class="flex">
+    <span [pTooltip]="field.props.description" tooltipPosition="top">
       {{ field.props.label }}
       @if (field.props.required) {
         &nbsp;*
       }
     </span>
-    <!-- dropdown button with legend -->
-    <div class="btn-group" dropdown>
-      <!-- add subfield button -->
-      <button [id]="field.id" dropdownToggle type="button"
-        class="btn btn-link dropdown-toggle text-decoration-none text-reset p-0 dropdown-toggle"
-        aria-controls="dropdown-basic">
-        <i class="ml-2 caret"></i>
-      </button>
-      <!-- dropdown list -->
-      <div id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu">
-        <ng-content select="[dropdown-list]"></ng-content>
-      </div>
-      <!-- clone button -->
-      <ng-content id="{field.id}-clone-button" select="[buttons]"></ng-content>
-    </div>
+    <ng-content select="[menu]"></ng-content>
+    <ng-content id="{field.id}-clone-button" select="[buttons]"></ng-content>
   </div>
 }

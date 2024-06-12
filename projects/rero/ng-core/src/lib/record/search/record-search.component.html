@@ -19,22 +19,7 @@
   <ng-core-error [error]="error"></ng-core-error>
 } @else {
   <span #topScrollAnchor></span>
-  @if (typesInTabs.length > 1) {
-    <ul class="nav nav-tabs">
-      @for (type of typesInTabs; track type) {
-        <li class="nav-item">
-          <a
-            href="#"
-            class="nav-link"
-            [class.active]="currentType === type.key"
-            (click)="changeType($event, type.key)"
-          >
-            {{ type.label | translate }}
-          </a>
-        </li>
-      }
-    </ul>
-  }
+  <ng-core-search-tabs [types]="types" (onChangeType)="changeType($event)" />
   <div class="main-content">
     @if (typesInTabs.length === 1 && showLabel) {
       <h5>{{ typesInTabs[0].label | translate }}</h5>
@@ -44,10 +29,8 @@
       <div class="col">
         @if (showSearchInput) {
           <ng-core-search-input
-            class="pt-0"
             [placeholder]="'search' | translate | ucfirst"
             [searchText]="q"
-            [displayLabel]="false"
             (search)="searchByQuery($event)"
             [focus]="true"
           ></ng-core-search-input>
@@ -56,46 +39,27 @@
       <ng-content select="[afterInputSearch]"></ng-content>
     </div>
     @if (hasNoRecord) {
-      <div class="alert alert-info my-4">{{ emptyRecordMessage }}</div>
+      <p-messages
+        [closable]="false"
+        [enableService]="false"
+        [value]="[{ severity: 'info', detail: emptyRecordMessage }]"
+      />
       @if (adminMode.can && addStatus.can) {
-        <a class="btn btn-primary" [routerLink]="addStatus.routerLink || ['new']">
-          <i class="fa fa-plus mr-0 mr-sm-1"></i>
-          <span class="d-none d-sm-inline" translate>Add</span>
-        </a>
+        <ng-container [ngTemplateOutlet]="addButtonTemplate" [ngTemplateOutletContext]="{status: addStatus}"></ng-container>
       }
     } @else {
-      <div class="row align-items-start my-3">
-        @if (resultsText$ | async; as resultsText) {
-          <div class="col-6 col-sm-3">
-            <strong>{{ resultsText }}</strong>
-          </div>
-        }
-        <div class="col ml-auto text-right">
+      <div class="flex justify-content-between align-items-stretch my-3">
+        <div class="flex align-items-center justify-content-center">
+          @if (resultsText$ | async; as resultsText) {
+            <span class="font-bold">{{ resultsText }}</span>
+          }
+        </div>
+        <div class="flex align-items-center justify-content-center">
           @if (adminMode.can && addStatus.can) {
-            <a id="search-add-button" class="btn btn-primary" [routerLink]="addStatus.routerLink || ['new']">
-              <i class="fa fa-plus mr-0 mr-sm-1"></i>
-              <span class="d-none d-sm-inline" translate>Add</span>
-            </a>
+            <ng-container [ngTemplateOutlet]="addButtonTemplate" [ngTemplateOutletContext]="{status: addStatus}"></ng-container>
           }
           <!-- Sorting -->
-          @if (sortOptions.length > 0) {
-            <div class="btn-group ml-2" dropdown>
-              <button dropdownToggle type="button" class="btn btn-light dropdown-toggle">
-                {{ 'Sort by' | translate }}{{ currentSortOption ? ': ' + (currentSortOption.label | translate) : '' }} <span class="caret"></span>
-              </button>
-              <ul *dropdownMenu class="dropdown-menu" role="menu">
-                @for (sortOption of sortOptions; track sortOption) {
-                  @if (!currentSortOption || currentSortOption.value !== sortOption.value) {
-                    <li role="menuitem">
-                      <a class="dropdown-item" href="#" (click)="$event.preventDefault(); changeSorting(sortOption)">
-                        {{ sortOption.label | translate }}
-                      </a>
-                    </li>
-                  }
-                }
-              </ul>
-            </div>
-          }
+          <ng-core-menu-sort [config]="config" (onChange)="changeSorting($event)"></ng-core-menu-sort>
           <!-- EXPORT BUTTON -->
           <ng-core-export-button [exportOptions]="exportOptions"></ng-core-export-button>
           <!-- END EXPORT BUTTON -->
@@ -126,120 +90,61 @@
         </div>
       </div>
       <ng-content select="[beforeResult]"></ng-content>
-      <div class="row">
-        <ng-core-list-filters
-          class="col-12"
-          [aggregations]="aggregations"
-          [aggregationsFilters]="aggregationsFilters"
-          [searchFilters]="searchFilters"
-          >
-        </ng-core-list-filters>
-        <ng-content select="[top-search-result]"></ng-content>
-        @if ((aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0) {
-          <div class="col-sm-12 col-md-5 col-lg-3 order-2 order-md-1">
-            @if (searchFields.length > 0 && q) {
-              <div class="btn-group btn-block mb-3" dropdown>
-                @if (searchFields.length === 1) {
-                  <button class="btn btn-outline-primary btn-sm text-left"
-                          [ngClass]="{ active: selectedSearchFields[0] === searchFields[0] }"
-                          (click)="searchInField(searchFields[0])">
-                  {{ 'Search in' | translate }} {{ searchFields[0].label | translate }}
-                  </button>
-                } @else {
-                  <button dropdownToggle type="button"
-                          class="btn btn-outline-primary btn-sm rounded text-left"
-                          [ngClass]="{ active: selectedSearchFields.length > 0 }">
-                    {{ 'Search in' | translate }}
-                    <span>{{ selectedSearchFields.length > 0 ? ' "' + selectedSearchFields[0].label + '"' : '...' }}</span>
-                  </button>
-                  <ul *dropdownMenu class="dropdown-menu" role="menu">
-                    @for (field of searchFields; track field) {
-                      <li>
-                        <a href="#" class="dropdown-item" [ngClass]="{ 'active': field.selected }"
-                          (click)="$event.preventDefault(); searchInField(field)">
-                          {{ field.label | translate }}
-                        </a>
-                      </li>
-                    }
-                  </ul>
-                }
-              </div>
-            }
-
-            @if (searchFilters) {
-              <div class="mb-2">
-                @for (searchFilter of searchFilters; track searchFilter) {
-                  @if (!$any(searchFilter).filters) {
-                    @if (showFilter($any(searchFilter))) {
-                      <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"></ng-container>
-                    }
-                  } @else {
-                    @if (showFilterSection($any(searchFilter))) {
-                      <div class="mt-2">{{ searchFilter.label | translate }}</div>
-                      @for (searchFilterSection of $any(searchFilter).filters; track searchFilterSection) {
-                        @if (showFilter(searchFilterSection)) {
-                          <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"></ng-container>
-                        }
-                      }
-                    }
-                  }
-                }
-              </div>
-            }
-            <ng-template #searchFilterTemplate let-filter="filter">
-              <div class="custom-control custom-switch">
-                <input type="checkbox"
-                  class="custom-control-input"
-                  id="customSwitch-{{ filter.filter }}"
-                  (click)="searchFilter(filter)"
-                  [checked]="isFilterActive(filter)"
-                >
-                <label class="custom-control-label" for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>
-                @if (filter.url) {
-                  @if (filter.url.external) {
-                    <a class="ml-1 text-dark"
-                    [title]="filter.url.title"
-                    [href]="filter.url.link"
-                    [target]="filter.url.target">
-                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                  </a>
-                  } @else {
-                    <a class="ml-1 text-dark" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
-                      <i class="fa fa-info-circle" aria-hidden="true"></i>
-                    </a>
-                  }
-                }
-              </div>
-            </ng-template>
-
-            @if (!showEmptySearchMessage || q) {
-              <ng-content select="[top-facets]"></ng-content>
-              @for (item of aggregations; track item) {
-                <div>
-                  @if (!aggregationsToHide.includes(item.key)) {
-                    <ng-core-record-search-aggregation
-                      [aggregation]="item"
-                      [aggregationsFilters]="aggregationsFilters"
-                      (aggregationClicked)="loadAggregationBuckets($event)"
-                    >
-                    </ng-core-record-search-aggregation>
-                  }
+      <ng-core-list-filters
+        [aggregationsFilters]="aggregationsFilters"
+        [searchFilters]="searchFilters"
+        (remove)="removeFilter($event)" />
+      <div class="grid mt-2">
+        <div class="col-3">
+          <ng-content select="[top-search-result]"></ng-content>
+          @if ((aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0) {
+            <div>
+              @if (searchFields.length > 0 && q) {
+                <div class="mb-2">
+                  <ng-core-search-fields
+                    [searchFields]="searchFields"
+                    (onChange)="onChangeSearchField($event)"
+                  ></ng-core-search-fields>
                 </div>
               }
-            }
-          </div>
-        }
-        <div id="recordlist" class="col-sm-12 col-md-7 col-lg-9 order-1 order-md-2">
-          @if (showEmptySearchMessage) {
-            <div class="alert alert-info m-0">
-              <i class="fa fa-info-circle"></i>
-              {{ 'Enter a query to get results.' | translate }}
+              @if (searchFilters) {
+                <ng-core-search-filters
+                  [searchFilters]="searchFilters"
+                  styleClassSection="mt-2 mb-1"
+                  [config]="config"
+                  [query]="q"
+                  (onChange)="onChangeSearchFilter($event)"
+                ></ng-core-search-filters>
+              }
+              @if (!showEmptySearchMessage || q) {
+                <ng-content select="[top-facets]"></ng-content>
+                @for (item of aggregations; track item) {
+                  <div>
+                    @if (!aggregationsToHide.includes(item.key)) {
+                      <ng-core-record-search-aggregation
+                        [aggregation]="item"
+                        [aggregationsFilters]="aggregationsFilters"
+                        (aggregationClicked)="loadAggregationBuckets($event)"
+                      >
+                      </ng-core-record-search-aggregation>
+                    }
+                  </div>
+                }
+              }
             </div>
           }
-          <ng-content select="[top-result]"></ng-content>
-          <ul class="list-group list-group-flush">
+          </div>
+          <div class="col list-result">
+            @if (showEmptySearchMessage) {
+              <p-messages
+                [closable]="false"
+                [enableService]="false"
+                [value]="[{ severity: 'info', detail: 'Enter a query to get results.' | translate }]"
+              />
+            }
+            <ng-content select="[top-result]"></ng-content>
             @for (record of records; track record) {
-              <li class="list-group-item px-0 py-4">
+              <div class="mb-2 list-record">
                 <ng-core-record-search-result
                   [adminMode]="adminMode"
                   [record]="record"
@@ -252,9 +157,8 @@
                   (deletedRecord)="deleteRecord($event)"
                 >
                 </ng-core-record-search-result>
-              </li>
+              </div>
             }
-          </ul>
           @if (showPagination) {
             <pagination
               [(ngModel)]="currentPage"
@@ -279,3 +183,10 @@
     }
   </div>
 }
+
+<ng-template #addButtonTemplate let-status="status">
+  <a class="p-button" [routerLink]="status.routerLink || ['new']">
+    <i class="pi pi-plus mr-1"></i>
+    <span translate>Add</span>
+  </a>
+</ng-template>

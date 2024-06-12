@@ -17,14 +17,13 @@
 <!-- array title only if the array is empty -->
 
 @if (props.label && field.props.hideLabel !== true) {
-  <ng-core-label-editor [field]="field">
-  </ng-core-label-editor>
+  <ng-core-label-editor [field]="field" />
 }
 
 <div class="array-item" [ngClass]="{'ml-3': field.props.hideLabel !== true}">
   <!--  validation error message -->
   @if (showError && formControl.errors) {
-    <div class="alert alert-danger" role="alert">
+    <div class="invalid-feedback d-block" role="alert">
       <formly-validation-message [field]="field"></formly-validation-message>
     </div>
   }

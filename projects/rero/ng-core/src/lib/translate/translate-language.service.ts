@@ -48,7 +48,7 @@ export class TranslateLanguageService {
    * @return human language - string
    */
   translate(langCode: string, language?: string) {
-    const lang = language ? language : this.translateService.currentLang;
+    const lang = language || this.translateService.currentLang;
     if (!(lang in this._availableLanguages)) {
       return langCode;
     }

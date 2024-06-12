@@ -207,7 +207,7 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should change type', () => {
-    component.changeType(new Event('click'), 'organisations');
+    component.changeType('organisations');
     expect(component.currentType).toBe('organisations');
     expect(component.aggregationsFilters.length).toBe(0);
   });
@@ -265,7 +265,7 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should resolve detail url', waitForAsync(() => {
-    component.changeType(new Event('click'), 'documents');
+    component.changeType('documents');
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 

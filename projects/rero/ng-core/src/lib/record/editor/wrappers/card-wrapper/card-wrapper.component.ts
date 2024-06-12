@@ -21,14 +21,12 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-card-wrapper',
   template: `
-  <div class="card wrapper">
-    <div class="card-header">
+  <p-card>
+    <ng-template pTemplate="header">
       <ng-core-label-editor [field]="field"></ng-core-label-editor>
-    </div>
-    <div class="card-body">
-      <ng-template #fieldComponent></ng-template>
-    </div>
-  </div>
+    </ng-template>
+    <ng-template #fieldComponent></ng-template>
+  </p-card>
   `,
   styles: [
     `

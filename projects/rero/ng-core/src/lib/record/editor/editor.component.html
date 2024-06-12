@@ -15,72 +15,59 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="row editor">
+    <div class="grid editor">
         <!-- Editor title and editor actions buttons -->
         <div class="header py-2 mb-3 col-12 border-bottom">
           @if (rootField) {
             <legend>
-                <span [tooltip]="description">
+                <span [pTooltip]="description" tooltipPosition="top">
                   {{ title || recordType | ucfirst | translate }}
                 </span>
             </legend>
           }
-            <!-- buttons -->
-            <div class="actions">
-                <!-- cancel button -->
-                <button type="button"
-                        id="editor-delete-button"
-                        class="btn btn-outline-danger btn-sm"
-                        (click)="cancel()">
-                    <i class="fa fa-times"></i>
-                    {{ 'Cancel' | translate }}
-                </button>
-                <!-- load from template button -->
-                @if (canLoadTemplate()) {
-                  <button type="button"
-                          id="editor-load-template-button"
-                          class="btn btn-outline-primary btn-sm ml-1"
-                          (click)="showLoadTemplateDialog()">
-                      <i class="fa fa-upload"></i>
-                      {{ 'Load template' | translate }} …
-                  </button>
+          <!-- buttons -->
+          <div class="actions">
+              <!-- cancel button -->
+              <p-button
+                id="editor-cancel-button"
+                [label]="'Cancel' | translate"
+                size="small"
+                icon="fa fa-times"
+                [outlined]="true"
+                severity="danger"
+                (click)="cancel()" />
+              <!-- load from template button -->
+              @if (canLoadTemplate()) {
+                <p-button
+                  id="editor-load-template-button"
+                  [label]="'Load template' | translate"
+                  [outlined]="true"
+                  icon="fa fa-upload"
+                  styleClass="ml-1"
+                  (click)="showLoadTemplateDialog()"
+                >
+                  {{ 'Load template' | translate }} …
+                </p-button>
+              }
+              <!-- save button -->
+                @if (saveAlternatives.length === 0) {
+                <p-button
+                  id="editor-save-button"
+                  [label]="'Save' | translate"
+                  size="small"
+                  styleClass="ml-1"
+                  [disabled]="isSaveButtonDisabled"
+                />
+                } @else {
+                <p-splitButton
+                  id="editor-save-button-split"
+                  [label]="'Save' | translate"
+                  size="small"
+                  styleClass="ml-1"
+                  [model]="saveAlternatives"
+                ></p-splitButton>
                 }
-                <!-- save button -->
-                <div class="btn-group" dropdown>
-                    <button type="submit"
-                            id="editor-save-button"
-                            class="btn btn-primary btn-sm ml-1"
-                            [disabled]="isSaveButtonDisabled"
-                    >
-                        <i class="fa fa-save"></i>
-                        {{ 'Save' | translate }}
-                    </button>
-                    @if (saveAlternatives.length > 0) {
-                      <ng-container *ngVar="this as component">
-                          <button type="button"
-                                  id="editor-save-button-split"
-                                  dropdownToggle
-                                  class="btn btn-sm btn-primary dropdown-toggle-split"
-                                  aria-controls="dropdown-split">
-                              <i class="fa fa-caret-down"></i>
-                          </button>
-                          <ul id="editor-save-button-dropdown-split"
-                              *dropdownMenu
-                              class="dropdown-menu dropdown-menu-right"
-                              role="menu"
-                              aria-labelledby="button-split">
-                              @for (entry of saveAlternatives; track entry) {
-                                <li role="menuitem">
-                                  <a class="dropdown-item" (click)="entry.action(entry, component)">
-                                    {{ entry.label }}
-                                  </a>
-                                </li>
-                              }
-                          </ul>
-                      </ng-container>
-                    }
-                </div>
-            </div>
+          </div>
         </div>
 
 

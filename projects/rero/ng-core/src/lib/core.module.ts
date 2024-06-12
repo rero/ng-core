@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { NgVarDirective } from './directives/ng-var.directive';
@@ -45,6 +46,7 @@ import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
+import { PrimeNgCoreModule } from './prime-ng-core-module';
 
 @NgModule({
     declarations: [
@@ -81,9 +83,11 @@ import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.gu
         ModalModule.forRoot(),
         BsDropdownModule.forRoot(),
         ToastrModule.forRoot(),
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        PrimeNgCoreModule,
     ],
     exports: [
+        PrimeNgCoreModule,
         BsDropdownModule,
         CommonModule,
         TranslateModule,
@@ -109,7 +113,9 @@ import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.gu
         AutofocusDirective
     ],
     providers: [
-      ComponentCanDeactivateGuard
+      ComponentCanDeactivateGuard,
+      ConfirmationService,
+      MessageService
     ]
 })
 export class CoreModule { }

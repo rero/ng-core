@@ -31,15 +31,17 @@ export class NgCoreFormlyExtension {
   private _horizontalWrapperTypes = [
     'enum',
     'string',
-    'remoteTypeahead',
-    'selectWithSort',
     'integer',
     'textarea',
-    'datepicker'
+    'datepicker',
+    'multi-checkbox',
+    'multi-select',
+    'remoteAutoComplete',
+    'tree-select'
   ];
 
   // Types to apply field wrapper on
-  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator', 'remoteTypeahead', 'selectWithSort'];
+  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator'];
 
   /**
    * Constructor
@@ -108,13 +110,14 @@ export class NgCoreFormlyExtension {
       // add automatically a card wrapper for the first level fields
       const { parent } = field;
       if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card')) {
-            field.wrappers.push('card');
+        field.wrappers.unshift('card');
+            // field.wrappers.push('card');
       }
       // Add an horizontal wrapper for all given field types
-      if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
-        field.wrappers = field.wrappers.filter((w) => w !== 'form-field');
-        field.wrappers.push('form-field-horizontal');
-      }
+      // if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
+      //   field.wrappers = field.wrappers.filter((w) => w !== 'form-field');
+      //   field.wrappers.push('form-field-horizontal');
+      // }
     } else {
       // adds form-fields for non standard field types
       if (this._fieldWrapperTypes.some((elem) => elem === field.type)) {
