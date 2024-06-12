@@ -1,0 +1,65 @@
+<!--
+  RERO angular core
+  Copyright (C) 2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+@if (searchFilters().length > 0) {
+  <div class="mb-2">
+    @for (searchFilter of searchFilters(); track searchFilter) {
+      @if (searchFilter.filters) {
+        @if (showFilterSection(searchFilter)) {
+          <div [ngClass]="styleClassSection()">{{ searchFilter.label | translate }}</div>
+          @for(searchFilterSection of searchFilter.filters; track searchFilterSection) {
+            @if (showFilter(searchFilterSection)) {
+              <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"></ng-container>
+            }
+          }
+        }
+      } @else {
+        @if (showFilter(searchFilter)) {
+          <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"></ng-container>
+        }
+      }
+    }
+  </div>
+}
+
+<ng-template #searchFilterTemplate let-filter="filter">
+  <div>
+    <div class="flex">
+      <div class="flex align-items-center mr-2">
+        <p-inputSwitch
+          [ngModel]="isChecked(filter)"
+          inputId="customSwitch-{{ filter.filter }}"
+          [ariaLabel]="filter.label | translate"
+          (onChange)="change($event, filter)"
+        />
+      </div>
+      <div class="flex align-items-center">
+        <label for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>
+        @if (filter.url) {
+          @if (filter.url.external) {
+            <a class="ml-1" [title]="filter.url.title" [href]="filter.url.link" [target]="filter.url.target">
+              <i class="pi pi-info-circle" aria-hidden="true"></i>
+            </a>
+          } @else {
+            <a class="ml-1" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
+              <i class="pi pi-info-circle" aria-hidden="true"></i>
+            </a>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>

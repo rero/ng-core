@@ -3,6 +3,11 @@
   "version": 1,
   "projects": {
     "@rero/ng-core": {
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        }
+      },
       "projectType": "library",
       "root": "projects/rero/ng-core",
       "sourceRoot": "projects/rero/ng-core/src",
@@ -40,7 +45,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": false
         }
       },
       "root": "projects/ng-core-tester",
@@ -66,13 +72,7 @@
               "projects/ng-core-tester/src/assets"
             ],
             "styles": [
-              "projects/ng-core-tester/src/styles.scss",
-              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-              "node_modules/primeng/resources/primeng.min.css",
-              "node_modules/primeflex/primeflex.min.css",
-              "node_modules/primeicons/primeicons.css",
-              "node_modules/ngx-spinner/animations/ball-zig-zag.css",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
+              "projects/ng-core-tester/src/styles.scss"
             ],
             "vendorChunk": true,
             "extractLicenses": false,
@@ -144,10 +144,6 @@
             "assets": [
               "projects/ng-core-tester/src/favicon.ico",
               "projects/ng-core-tester/src/assets"
-            ],
-            "styles": [
-              "projects/ng-core-tester/src/styles.scss",
-              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
             ]
           }
         },

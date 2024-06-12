@@ -14,10 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { TranslateLanguageService } from '../../../../translate/translate-language.service';
 import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
 
 @Component({
@@ -28,11 +26,11 @@ import { AggregationsFilter, RecordSearchService } from '../../record-search.ser
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   // COMPONENT ATTRIBUTES ============================================================
   /** Buckets list for aggregation */
-  @Input() buckets: Array<any>;
+  buckets = input.required<any[]>();
   /** Aggregation key */
-  @Input() aggregationKey: string;
+  aggregationKey = input.required<string>();
   /** Bucket size, if not null, reduce displayed items to this size. */
-  @Input() size: number;
+  size = input<number|null>();
 
   /** More and less on aggregation content (facet) */
   moreMode = true;
@@ -48,7 +46,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   // GETTERS & SETTERS =================================================================
   /** Returns selected filters for the aggregation key. */
   get aggregationFilters(): Array<string> {
-    const aggregationFilters = this.aggregationsFilters.find((item: AggregationsFilter) => item.key === this.aggregationKey);
+    const aggregationFilters = this.aggregationsFilters.find((item: AggregationsFilter) => item.key === this.aggregationKey());
     return aggregationFilters === undefined
         ? []
         : aggregationFilters.values;
@@ -56,36 +54,30 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
   /** Get bucket size. */
   get bucketSize(): number {
-    const size = this.buckets.length;
-    return this.size === null || this.moreMode === false
+    const size = this.buckets().length;
+    return this.size() === null || this.moreMode === false
         ? size
-        : this.size;
+        : this.size();
   }
 
   /** Get the number of bucket items with non-zero doc_count. */
   get bucketsLength(): number {
-    return this.buckets.reduce((acc, bucket) => (bucket.doc_count) ? acc+1 : acc, 0);
+    return this.buckets().reduce((acc, bucket) => (bucket.doc_count) ? acc+1 : acc, 0);
   }
 
   /** Should display more or less link for a bucket ? */
   get displayMoreAndLessLink(): boolean {
-    return (this.size === null)
+    return (this.size() === null)
         ? false
-        : this.bucketsLength > this.size;
+        : this.bucketsLength > this.size();
   }
 
   // CONSTRUCTOR & HOOKS ==============================================================
   /**
    * Constructor
-   * @param translateService - TranslateService
    * @param recordSearchService - RecordSearchService
-   * @param translateLanguage - TranslateLanguageService
    */
-  constructor(
-    private translateService: TranslateService,
-    private recordSearchService: RecordSearchService,
-    private translateLanguage: TranslateLanguageService
-  ) {}
+  constructor(private recordSearchService: RecordSearchService) {}
 
   /**
    * OnInit hook
@@ -110,7 +102,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes.buckets) {
-      for (const bucket of this.buckets) {
+      for (const bucket of this.buckets()) {
         this.bucketChildren[bucket.key] = this.getBucketChildren(bucket);
       }
     }
@@ -128,10 +120,10 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Check if a value is present in selected filters.
    * @param value: filter value (could be string, number, ...)
-   * @return `true` if value is present in the aggregation filters, `false` otherwise.
+   * @return `true` if value is present in the aggregation filters, `null` otherwise.
    */
-  isSelected(value: any): boolean {
-    return this.aggregationFilters.includes(value.toString());
+  isSelected(value: any): boolean|null {
+    return this.aggregationFilters.includes(value.toString()) ? true : null;
   }
 
   /**
@@ -154,24 +146,23 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @param bucket - string: the selected bucket value (checked OR unchecked)
    */
   updateFilter(bucket: any) {
-    const index = this.aggregationsFilters.findIndex((item: AggregationsFilter) => item.key === this.aggregationKey);
-
+    const index = this.aggregationsFilters.findIndex((item: AggregationsFilter) => item.key === this.aggregationKey());
     if (index === -1) {
       // No filters exist for the aggregation.
-      this.recordSearchService.updateAggregationFilter(this.aggregationKey, [bucket.key], bucket);
+      this.recordSearchService.updateAggregationFilter(this.aggregationKey(), [bucket.key], bucket);
     } else {
       const aggFilter = this.aggregationsFilters[index];
       if (!aggFilter.values.includes(bucket.key.toString())) {
         // Bucket value is not yet selected, we add value to selected values.
         this.aggregationsFilters[index].values.push(bucket.key.toString());
         this.recordSearchService.updateAggregationFilter(
-          this.aggregationKey,
+          this.aggregationKey(),
           this.aggregationsFilters[index].values,
           bucket
         );
       } else {
         // Removes value from selected values and all children selected values.
-        this.recordSearchService.removeAggregationFilter(this.aggregationKey, bucket);
+        this.recordSearchService.removeAggregationFilter(this.aggregationKey(), bucket);
       }
     }
   }

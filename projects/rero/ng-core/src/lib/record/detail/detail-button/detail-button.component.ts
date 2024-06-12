@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ActionStatus } from '../../action-status';
 import { IRecordEvent } from './IRecordEvent.interface';
 
@@ -25,35 +25,32 @@ import { IRecordEvent } from './IRecordEvent.interface';
 })
 export class DetailButtonComponent {
 
+  // Inject
+  location = inject(Location);
+
   /** Record */
-  @Input() record: any;
+  record = input<any>();
 
   /** Record type */
-  @Input() type: string;
+  type = input<string>();
 
   /** Admin mode for CRUD operations */
-  @Input() adminMode: ActionStatus = { can: false, message: '' };
+  adminMode = input<ActionStatus>({ can: false, message: '' });
 
   /** Record can be used ? */
-  @Input() useStatus: ActionStatus = { can: false, message: '', url: '' };
+  useStatus = input<ActionStatus>({ can: false, message: '', url: '' });
 
   /** Record can be updated ? */
-  @Input() updateStatus: ActionStatus = { can: false, message: '' };
+  updateStatus = input<ActionStatus>({ can: false, message: '' });
 
   /** Record can be deleted ? */
-  @Input() deleteStatus: ActionStatus = { can: false, message: '' };
+  deleteStatus = input<ActionStatus>({ can: false, message: '' });
 
   /** Record event */
-  @Output() recordEvent = new EventEmitter<IRecordEvent>();
+  recordEvent = output<IRecordEvent>();
 
   /** Delete record message event */
-  @Output() deleteMessageEvent = new EventEmitter<string>();
-
-  /**
-   * Constructor
-   * @param location - Location
-   */
-  constructor(private location: Location) { }
+  deleteMessageEvent = output<string>();
 
   /**
    * define if an action is the primary action for the resource
@@ -64,9 +61,9 @@ export class DetailButtonComponent {
     switch (actionName) {
       case 'edit':
       case 'update':
-        return this.updateStatus && this.updateStatus.can && (!this.useStatus || !this.useStatus.can);
+        return this.updateStatus() && this.updateStatus().can && (!this.useStatus() || !this.useStatus().can);
       case 'use':
-        return this.useStatus && this.useStatus.can;
+        return this.useStatus() && this.useStatus().can;
       default:
         return false;
     }
@@ -74,7 +71,7 @@ export class DetailButtonComponent {
 
   /** Use the record */
   useRecord(): void {
-    this.recordEvent.emit({ action: 'use', url: this.updateStatus.url })
+    this.recordEvent.emit({ action: 'use', url: this.updateStatus().url })
   }
 
   /**
@@ -98,7 +95,7 @@ export class DetailButtonComponent {
    * @param message - message to display into modal
    */
   showDeleteMessage(message: string) {
-    this.deleteMessageEvent.emit(message);
+    this.deleteMessageEvent.emit(message.replace(new RegExp('\n', 'g'), '<br>'));
   }
 
   /** Go back to previous page */

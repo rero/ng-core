@@ -15,14 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, of } from 'rxjs';
-import { first, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import { DialogService } from '../dialog/dialog.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 import { ActionStatus } from './action-status';
 import { RecordService } from './record.service';
 
@@ -30,27 +28,16 @@ import { RecordService } from './record.service';
   providedIn: 'root'
 })
 export class RecordUiService {
+
+  /** Injection */
+  translateService = inject(TranslateService);
+  recordService = inject(RecordService);
+  router = inject(Router);
+  confirmationService = inject(ConfirmationService);
+  messageService = inject(MessageService);
+
   /** Configuration for all resources. */
   types = [];
-
-  /**
-   * Constructor.
-   *
-   * @param dialogService Dialog service.
-   * @param toastService Toast service.
-   * @param translateService Translate service.
-   * @param recordService Record service.
-   * @param router Router.
-   * @param spinner Spinner service.
-   */
-  constructor(
-    private dialogService: DialogService,
-    private toastService: ToastrService,
-    private translateService: TranslateService,
-    private recordService: RecordService,
-    private router: Router,
-    private spinner: NgxSpinnerService
-  ) { }
 
   /**
    * Delete a record by its PID.
@@ -59,60 +46,54 @@ export class RecordUiService {
    * @returns Observable resolving as a boolean
    */
   deleteRecord(type: string, pid: string): Observable<boolean> {
-    const observable = this.deleteMessage$(pid, type).pipe(map((messages: string[]) => {
-      const translateMessages = [];
-      messages.forEach((message: string) => {
-        translateMessages.push(message);
-      });
-      return translateMessages.join('\n');
-    }), switchMap((message: string) => {
-      return this.dialogService.show({
-        ignoreBackdropClick: true,
-        initialState: {
-          title: this.translateService.instant('Confirmation'),
-          body: message,
-          confirmButton: true,
-          confirmTitleButton: this.translateService.instant('Delete'),
-          cancelTitleButton: this.translateService.instant('Cancel')
-        }
-      }).pipe(
-        // return a new observable depending on confirm dialog result.
-        mergeMap((confirm: boolean) => {
-          if (confirm === false) {
-            return of(false);
+    const delete$ = new BehaviorSubject(false);
+    this.confirmationService.confirm({
+      acceptLabel: this.translateService.instant('Delete'),
+      rejectLabel: this.translateService.instant('Cancel'),
+      message: this.deleteMessage(pid, type).join('<br>'),
+      header: this.translateService.instant('Confirmation'),
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon:"none",
+      rejectIcon:"none",
+      acceptButtonStyleClass: "bg-red-500 border-red-500",
+      rejectButtonStyleClass:"p-button-text",
+      accept: () => {
+        this.recordService.delete(type, pid).subscribe({
+          next: () => {
+            delete$.next(true);
+            this.messageService.add({
+              severity: 'info',
+              summary: this.translateService.instant('Confirmed'),
+              detail: this.translateService.instant('Record deleted.')
+            });
+          },
+          error: (error: any)  => {
+            delete$.next(false);
+            this.messageService.add({
+              severity: 'error',
+              summary: this.translateService.instant('Error'),
+              detail: this.translateService.instant(error.title)
+            });
           }
+        });
+      }
+    });
 
-          this.spinner.show();
-
-          return this.recordService.delete(type, pid).pipe(
-            map(() => {
-              return true;
-            }),
-            tap(() => {
-              this.spinner.hide();
-              this.toastService.success(this.translateService.instant('Record deleted.'));
-            })
-          );
-        })
-      );
-    }));
-
-    return observable;
+    return delete$.asObservable();
   }
 
   /**
    * Show dialog with the reason why record cannot be deleted.
    * @param message Message to display
    */
-  showDeleteMessage(message: string) {
-    this.dialogService.show({
-      initialState: {
-        title: this.translateService.instant('Information'),
-        body: message,
-        confirmButton: false,
-        cancelTitleButton: this.translateService.instant('OK')
-      }
-    }).subscribe();
+  showDeleteMessage(message: string): void {
+    this.confirmationService.confirm({
+      acceptLabel: this.translateService.instant('OK'),
+      rejectVisible: false,
+      header: this.translateService.instant('Information'),
+      message: message,
+      acceptIcon:"none",
+    });
   }
 
   /**
@@ -165,19 +146,19 @@ export class RecordUiService {
    * @param type - Type of resource
    * @returns  Observable array of string
    */
-    deleteMessage$(pid: string, type: string): Observable<string[]> {
-      const defaultMessage = of([
-        this.translateService.instant('Do you really want to delete this record?')
-      ]);
-      try {
-        const config = this.getResourceConfig(type);
-        return (config.deleteMessage)
-          ? config.deleteMessage(pid)
-          : defaultMessage;
-      } catch {
-        return defaultMessage;
-      }
+  deleteMessage(pid: string, type: string): string[] {
+    const defaultMessage = [
+      this.translateService.instant('Do you really want to delete this record?')
+    ];
+    try {
+      const config = this.getResourceConfig(type);
+      return (config.deleteMessage)
+        ? config.deleteMessage(pid)
+        : defaultMessage;
+    } catch {
+      return defaultMessage;
     }
+  }
 
   // ================================================================
   //    Permissions

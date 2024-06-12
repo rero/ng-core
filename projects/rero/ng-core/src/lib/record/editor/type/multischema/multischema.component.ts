@@ -22,7 +22,7 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
   template: `
     <div class="{{field.parent.props.cssClass}}">
       @if (props.label) {
-        <legend [tooltip]="props.description">{{ props.label }}</legend>
+        <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
       }
       @if (showError && formControl.errors) {
         <div class="alert alert-danger" role="alert">

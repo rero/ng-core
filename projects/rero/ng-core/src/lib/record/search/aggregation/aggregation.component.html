@@ -15,61 +15,48 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <!-- Aggregation with no bucket, containing only the count. -->
-@if (aggregation.doc_count) {
+@if (aggregation().doc_count) {
   <div class="mb-3">
     <ng-core-record-search-aggregation-buckets
-      [buckets]="[{key: '1', doc_count: aggregation.doc_count, name: aggregation.key | translate }]" [aggregationKey]="aggregation.key"
-      [size]="aggregation.bucketSize">
-    </ng-core-record-search-aggregation-buckets>
+      [buckets]="[{key: '1', doc_count: aggregation().doc_count, name: aggregation().key | translate }]"
+      [aggregationKey]="aggregation().key"
+      [size]="aggregation().bucketSize" />
   </div>
 } @else {
-  <div class="card mb-2">
-    <div class="card-header p-0">
-      <h5 class="mb-0">
-        <button class="btn btn-link text-decoration-none" type="button" (click)="toggleVisibility()">
-          <i class="fa pr-2 small" [ngClass]="{
-            'fa-chevron-up': aggregation.expanded && aggregationFilters.length === 0,
-            'fa-chevron-down': !aggregation.expanded && aggregationFilters.length === 0,
-            'fa-chevron-right': aggregationFilters.length > 0
-          }"></i>
-          {{ (aggregation.name || aggregation.key) | translate | ucfirst }}
-        </button>
-      </h5>
-    </div>
-    <div class="collapse" [class.show]="isAggregationDisplayed">
-      <div class="card-body pl-3 pr-2 py-3">
-        <ng-container [ngSwitch]="aggregation.type">
-          <!-- Range -->
-          <ng-core-aggregation-slider *ngSwitchCase="'range'"
-              [key]="aggregation.key"
-              [min]="aggregation.config.min || 1"
-              [max]="aggregation.config.max || 100"
-              [step]="aggregation.config.step || 1"
-              [buckets]="aggregation.value.buckets">
-          </ng-core-aggregation-slider>
-          <!-- Date range -->
-          <ng-core-aggregation-date-range *ngSwitchCase="'date-range'"
-              [key]="aggregation.key"
-              [config]="aggregation.config"
-              [buckets]="aggregation.value.buckets">
-          </ng-core-aggregation-date-range>
-          <!-- Terms (default) -->
-          <ng-container *ngSwitchDefault>
-            @if (aggregation.value.buckets.length > 0) {
-              <ng-core-record-search-aggregation-buckets
-                      [buckets]="aggregation.value.buckets"
-                      [aggregationKey]="aggregation.key"
-                      [size]="aggregation.bucketSize">
-              </ng-core-record-search-aggregation-buckets>
-            } @else {
-              @if (aggregation.loaded) {
-                <i class="small" translate>No result</i>
-              }
-            }
-          </ng-container>
-        </ng-container>
-      </div>
-    </div>
-  </div>
+  <p-panel
+    styleClass="mb-2"
+    [header]="(aggregation().name || aggregation().key) | translate | ucfirst"
+    [toggleable]="true"
+    [collapsed]="!isAggregationDisplayed"
+    (collapsedChange)="toggleVisibility()"
+  >
+  @switch (aggregation().type) {
+    @case ('range') {
+      <ng-core-aggregation-slider
+        [key]="aggregation().key"
+        [min]="aggregation().config.min || 1"
+        [max]="aggregation().config.max || 100"
+        [step]="aggregation().config.step || 1"
+        [buckets]="aggregation().value.buckets" />
+    }
+    @case ('date-range') {
+      <ng-core-aggregation-date-range
+        [key]="aggregation().key"
+        [config]="aggregation().config"
+        [buckets]="aggregation().value.buckets" />
+    }
+    @default {
+      @if (aggregation().value.buckets.length > 0) {
+        <ng-core-record-search-aggregation-buckets
+          [buckets]="aggregation().value.buckets"
+          [aggregationKey]="aggregation().key"
+          [size]="aggregation().bucketSize" />
+      } @else {
+        @if (aggregation().loaded) {
+          <span class="small" translate>No result</span>
+        }
+      }
+    }
+  }
+  </p-panel>
 }
-

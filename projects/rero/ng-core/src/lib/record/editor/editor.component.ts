@@ -106,7 +106,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   @Input() pid = null;
 
   // save alternatives
-  saveAlternatives: { label: string, action: any }[] = [];
+  saveAlternatives: { label: string, command: any }[] = [];
 
   // current record type from the url
   recordType = null;
@@ -265,7 +265,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         if (this.editorSettings.template.saveAsTemplate) {
           this.saveAlternatives.push({
             label: this.translateService.instant('Save as template') + '…',
-            action: this._saveAsTemplate
+            command: () => this._saveAsTemplate
           });
         }
 

@@ -18,10 +18,9 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '@rero/ng-core';
-
 import { EditorComponent } from './editor.component';
 
 describe('EditorComponent', () => {
@@ -34,7 +33,7 @@ describe('EditorComponent', () => {
         RecordModule,
         HttpClientTestingModule,
         TranslateModule.forRoot(),
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         BrowserAnimationsModule
       ],
       declarations: [ EditorComponent ]
