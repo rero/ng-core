@@ -38,6 +38,9 @@ import { RecordSearchAggregationComponent } from './aggregation/aggregation.comp
 import { RecordSearchComponent } from './record-search.component';
 import { RecordSearchService } from './record-search.service';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
+import { ConfirmationService } from 'primeng/api';
+import { TabViewModule } from 'primeng/tabview';
+import { ButtonModule } from 'primeng/button';
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({
@@ -107,6 +110,8 @@ describe('RecordSearchComponent', () => {
   const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
   dialogServiceSpy.show.and.returnValue(of(true));
 
+  const tabViewChangeEventMock = jasmine.createSpyObj('TabViewChangeEvent', ['']);
+
   const route = {
     snapshot: {
       data: {
@@ -134,11 +139,6 @@ describe('RecordSearchComponent', () => {
     queryParams: of({})
   };
 
-  const aggregations = {
-    author: { buckets: []},
-    language: { buckets: []}
-  };
-
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
@@ -153,6 +153,8 @@ describe('RecordSearchComponent', () => {
         TranslateLanguagePipe
       ],
       imports: [
+        TabViewModule,
+        ButtonModule,
         BrowserAnimationsModule,
         FormsModule,
         TranslateModule.forRoot({
@@ -164,6 +166,7 @@ describe('RecordSearchComponent', () => {
       ],
       providers: [
         RecordSearchService,
+        ConfirmationService,
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: RecordUiService, useValue: recordUiServiceSpy },
         { provide: Router, useValue: routerSpy },
@@ -180,7 +183,7 @@ describe('RecordSearchComponent', () => {
     component.aggregationsFilters = [];
     component.aggregations = [];
     /* tslint:disable:no-string-literal */
-    component['_config'] = {
+    component['config'] = {
       preFilters: {}
     };
     fixture.detectChanges();
@@ -201,8 +204,9 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should change type', () => {
-    component.changeType(new Event('click'), 'organisations');
-    expect(component.currentType).toBe('organisations');
+    tabViewChangeEventMock.index = 0;
+    component.changeType(tabViewChangeEventMock);
+    expect(component.currentType).toBe('documents');
     expect(component.aggregationsFilters.length).toBe(0);
   });
 
@@ -226,12 +230,12 @@ describe('RecordSearchComponent', () => {
     dialogServiceSpy.show.and.returnValue(of(true));
 
     /* tslint:disable:no-string-literal */
-    component['_config'].total = 2;
+    component['config'].total = 2;
 
-    expect(component['_config'].total).toBe(2);
+    expect(component['config'].total).toBe(2);
     component.deleteRecord({ pid: '1' });
     tick(10000); // wait for refreshing records
-    expect(component['_config'].total).toBe(1);
+    expect(component['config'].total).toBe(1);
   }));
 
   it('should have permission to update record', () => {
@@ -259,7 +263,8 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should resolve detail url', waitForAsync(() => {
-    component.changeType(new Event('click'), 'documents');
+    tabViewChangeEventMock.index = 0;
+    component.changeType(tabViewChangeEventMock);
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 

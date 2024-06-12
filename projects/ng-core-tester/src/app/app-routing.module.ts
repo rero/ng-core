@@ -21,8 +21,8 @@ import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
-import { RouteService } from './routes/route.service';
 import { EditorComponent } from './record/editor/editor.component';
+import { RouteService } from './routes/route.service';
 
 /**
  * Disallows access to admin functionalities.
@@ -207,6 +207,14 @@ const routes: Routes = [
             longMode: true
           },
           component: DocumentComponent
+        },
+        {
+          key: 'normal',
+          label: 'normal',
+          editorSettings: {
+            longMode: false
+          },
+          component: DocumentComponent
         }
       ]
     }
@@ -377,6 +385,16 @@ const routes: Routes = [
               label: 'Title',
               value: 'title'
             }
+          ],
+          exportFormats: [
+            {
+              label: 'CSV',
+              url: 'CSV'
+            },
+            {
+              label: 'TXT',
+              url: 'txt'
+            }
           ]
         },
         {
@@ -407,13 +425,7 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule {
-  /**
-   * Constructor
-   *
-   * Initializes routes.
-   *
-   * @param _routeService Route service
-   */
+
   constructor(private _routeService: RouteService) {
     this._routeService.initializeRoutes();
   }

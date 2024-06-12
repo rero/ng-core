@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { RouteCollectionService } from '@rero/ng-core';
@@ -27,27 +27,17 @@ import { DocumentsRoute } from './documents-route';
   providedIn: 'root'
 })
 export class RouteService {
-  /**
-   * Constructor.
-   *
-   * @param _routeCollectionService RouteCollectionService.
-   * @param _router Router.
-   */
-  constructor(
-    private _routeCollectionService: RouteCollectionService,
-    private _router: Router,
-    private _translateService: TranslateService
-  ) { }
+  // Inject
+  private routeCollectionService = inject(RouteCollectionService);
+  private router = inject(Router);
+  private translateService = inject(TranslateService);
 
-  /**
-   * Initialize routes.
-   */
   initializeRoutes() {
-    this._routeCollectionService
-      .addRoute(new DocumentsRoute(this._translateService));
+    this.routeCollectionService
+      .addRoute(new DocumentsRoute(this.translateService));
 
-    this._routeCollectionService.getRoutes().map((route: any) => {
-      this._router.config.push(route);
+    this.routeCollectionService.getRoutes().map((route: any) => {
+      this.router.config.push(route);
     });
   }
 }

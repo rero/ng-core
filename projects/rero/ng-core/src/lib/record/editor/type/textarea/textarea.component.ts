@@ -30,10 +30,11 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
   selector: 'ng-core-editor-formly-field-textarea',
   template: `
     <textarea
+      pInputTextarea
       [formControl]="formControl"
       [cols]="props.cols"
       [rows]="props.rows"
-      class="form-control"
+      class="form-control w-full"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
     ></textarea>

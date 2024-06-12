@@ -18,8 +18,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
@@ -37,6 +36,7 @@ import { RecordService } from '../record.service';
 import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
 import { RecordSearchPageComponent } from './record-search-page.component';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({
@@ -111,7 +111,7 @@ describe('RecordSearchPageComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
@@ -123,7 +123,9 @@ describe('RecordSearchPageComponent', () => {
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
-        { provide: DialogService, useValue: dialogServiceSpy }
+        { provide: DialogService, useValue: dialogServiceSpy },
+        ConfirmationService,
+        MessageService
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();

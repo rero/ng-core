@@ -14,23 +14,18 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container">
-    <a class="navbar-brand" routerLink="/">Invenio Core</a>
-    <button type="button" class="navbar-toggler" (click)="isCollapsed = !isCollapsed"
-    [attr.aria-expanded]="!isCollapsed" aria-controls="navbarSupportedContent">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent" [collapse]="isCollapsed" [isAnimated]="true">
-      <ng-core-menu-widget class="mr-auto" [menu]="appMenu"></ng-core-menu-widget>
-      <ng-core-menu-widget [menu]="languageMenu" (clickItem)="eventChangeLang($event)"></ng-core-menu-widget>
-      <app-search-bar class="ml-md-2" viewcode="sonar" size="small"></app-search-bar>
-    </div>
-  </div>
-</nav>
+<p-toast />
+<p-confirmDialog />
 
 <div class="container my-5">
+  <div class="flex align-items-center gap-2 mb-4">
+    <div class="flex flex-auto">
+      <app-menu />
+    </div>
+    <div class="flex flex-auto justify-content-end">
+      <app-search-bar class="w-full" viewcode="sonar"></app-search-bar>
+    </div>
+  </div>
   <router-outlet></router-outlet>
 </div>
 

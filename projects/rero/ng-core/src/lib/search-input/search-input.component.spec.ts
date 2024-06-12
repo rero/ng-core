@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SearchInputComponent } from './search-input.component';
 
 describe('SearchInputComponent', () => {
@@ -27,7 +29,11 @@ describe('SearchInputComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [SearchInputComponent]
+      declarations: [SearchInputComponent],
+      imports: [
+        InputGroupModule,
+        InputGroupAddonModule,
+      ],
     })
       .compileComponents();
   }));
@@ -38,7 +44,7 @@ describe('SearchInputComponent', () => {
     fixture.detectChanges();
 
     searchInput = fixture.nativeElement.querySelector('#search');
-    searchButton = fixture.nativeElement.querySelector('#button-search');
+    searchButton = fixture.nativeElement.querySelector('i.pi-search');
   });
 
   it('should create', () => {

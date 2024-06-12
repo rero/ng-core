@@ -31,6 +31,7 @@ import { DocumentComponent } from '../record/document/document.component';
  * Routes for document resources
  */
 export class DocumentsRoute implements RouteInterface {
+
   // Route name
   readonly name = 'documents';
 
@@ -127,12 +128,12 @@ export class DocumentsRoute implements RouteInterface {
                 message: ''
               });
             },
-            deleteMessage: (pid: string): Observable<string[]> => {
+            deleteMessage: (): string[] => {
               // If you want to translate the strings, you have to do it here
-              return of([
+              return [
                 this.translateService.instant('Document: Do you really want to delete this record?'),
                 this.translateService.instant('Attached items will also be deleted.')
-              ]);
+              ];
             }
           }
         ]

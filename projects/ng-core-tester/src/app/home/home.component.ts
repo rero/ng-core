@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,23 +14,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-import { ApiService, DialogService, MenuItem, RecordSearchService, TranslateLanguageService } from '@rero/ng-core';
+import { Component, inject, OnInit } from '@angular/core';
+import { RecordSearchService } from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
 import { DocumentComponent } from '../record/document/document.component';
-import { MenuService } from '../service/menu.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
-  // Object containing API paths.
-  apiData: any;
-
-  // Contains the full translated language of a language code.
-  testLanguageTranslation: string;
+  // Inject
+  private recordSearchService = inject(RecordSearchService);
+  private spinner = inject(NgxSpinnerService);
 
   // Configuration for resources.
   recordConfig: Array<any> = [
@@ -62,150 +58,21 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  // Menu
-  menuApplication: MenuItem;
-
-  // Menu click
-  menuClick: MenuItem;
-
   // Markdown text
   markdownText = '*Hello* **world**';
 
-  /**
-   * Component initialization
-   *
-   * - Initializes application menu
-   */
-  ngOnInit() {
-    this.menuApplication = this._menuService.generateApplicationMenu();
+  ngOnInit(): void {
+      // Initializes aggregations filters to launch the first search.
+    this.recordSearchService.setAggregationsFilters([]);
   }
-
-  /**
-   * Menu selected by user
-   * @param item - Menu Item
-   */
-  eventMenuClick(item: MenuItem) {
-    this._toastrService.success(`menu ${item.getName()} clicked`);
-  }
-
   /**
    * Show spinner for 5 seconds
    */
   showSpinner() {
-    this._spinner.show();
+    this.spinner.show();
 
     setTimeout(() => {
-      this._spinner.hide();
-    }, 5000);
-  }
-
-  /**
-   * Constructor.
-   *
-   * - Initializes API object paths.
-   * - Stores translated language.
-   * - Empties aggregations filters.
-   *
-   * @param _dialogService Dialog service.
-   * @param _apiService API service.
-   * @param _translateLanguageService Translate language service.
-   * @param _toastrService Toastr service.
-   * @param _recordSearchService Record search service.
-   * @param _spinner Spinner service
-   */
-  constructor(
-    private _dialogService: DialogService,
-    private _apiService: ApiService,
-    private _translateLanguageService: TranslateLanguageService,
-    private _toastrService: ToastrService,
-    private _recordSearchService: RecordSearchService,
-    private _spinner: NgxSpinnerService,
-    private _menuService: MenuService
-  ) {
-    this.apiData = {
-      relative: this._apiService.getEndpointByType('documents'),
-      absolute: this._apiService.getEndpointByType('documents', true),
-    };
-
-    this.testLanguageTranslation = this._translateLanguageService.translate('fr', 'fr');
-
-    // Initializes aggregations filters to launch the first search.
-    this._recordSearchService.setAggregationsFilters([]);
-  }
-
-  /**
-   * Show a confirmation dialog box.
-   */
-  showDialog() {
-    const config = {
-      ignoreBackdropClick: true,
-      initialState: {
-        title: 'Confirmation',
-        body: 'Exit without saving changes?',
-        confirmButton: true,
-        cancelTitleButton: 'Abort',
-        confirmTitleButton: 'Confirm'
-      }
-    };
-
-    this._dialogService.show(config).subscribe((confirm: boolean) => {
-      if (confirm) {
-        console.log('Confirmed !');
-      }
-    });
-  }
-
-  /**
-   * Simulates a search by only log infos.
-   *
-   * @param searchText String to search.
-   */
-  doSearch(searchText: string) {
-    console.log(`You search for: ${searchText}`);
-  }
-
-  /**
-   * Shows an alert message with toastr.
-   */
-  addAlert() {
-    const type = (document.getElementById('alert-type')) as HTMLSelectElement;
-    const message = (document.getElementById('alert-message')) as HTMLInputElement;
-    switch (type.value) {
-      // Checkbox controls
-      case 'success':
-        this._toastrService.success(message.value);
-        break;
-      case 'info':
-        this._toastrService.info(message.value);
-        break;
-      case 'warning':
-        this._toastrService.warning(message.value);
-        break;
-      case 'danger':
-        this._toastrService.error(message.value);
-        break;
-    }
-  }
-
-  /**
-   * Show a message when item menu is clicked.
-   *
-   * @param item Menu item.
-   */
-  clickLinkItemMenu(item: any) {
-    this._toastrService.success(`menu ${item.name} clicked`);
-  }
-
-  /**
-   * Whether a menu item is visible or not.
-   *
-   * @param itemMenu Menu item.
-   * @return True if the menu is visible.
-   */
-  isItemMenuVisible(itemMenu: any) {
-    if (itemMenu.name === 'Hidden') {
-      return false;
-    }
-    return true;
+      this.spinner.hide();
+    }, 3000);
   }
 }
