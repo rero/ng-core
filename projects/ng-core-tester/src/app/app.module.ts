@@ -26,15 +26,19 @@ import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { MenubarModule } from 'primeng/menubar';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DialogComponent } from './home/dialog/dialog.component';
 import { HomeComponent } from './home/home.component';
+import { ToastComponent } from './home/toast/toast.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { EditorComponent } from './record/editor/editor.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
 import { RecordServiceMock } from './record/editor/record-service-mock';
+import { SearchBarComponent } from './search-bar/search-bar.component';
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
     declarations: [
@@ -43,7 +47,10 @@ import { RecordServiceMock } from './record/editor/record-service-mock';
         HomeComponent,
         DetailComponent,
         SearchBarComponent,
-        EditorComponent
+        EditorComponent,
+        ToastComponent,
+        DialogComponent,
+        MenuComponent
     ],
     imports: [
         BrowserModule,
@@ -60,7 +67,8 @@ import { RecordServiceMock } from './record/editor/record-service-mock';
                 deps: [CoreConfigService, HttpClient]
             }
         }),
-        RecordModule
+        RecordModule,
+        MenubarModule
     ],
     providers: [
         {

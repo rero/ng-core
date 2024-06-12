@@ -14,24 +14,27 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="row mt-3">
-  <div class="col-12 col-sm-6">
-    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center"
-    (keyup.enter)="$event.preventDefault(); updateFilter()" [(ngModel)]="range[0]" #ctrl="ngModel">
+<div class="flex">
+  <div class="flex-auto mr-1">
+    <p-inputNumber
+      inputId="year-min"
+      [ngModel]="range[0]"
+      [min]="range[0]"
+      [max]="range[1]" />
   </div>
-  <div class="col-12 col-sm-6">
-    <input type="number" [min]="min" [max]="max" class="form-control form-control-sm text-center"
-    (keyup.enter)="$event.preventDefault(); updateFilter()" [(ngModel)]="range[1]" #ctrl="ngModel">
+  <div class="flex-auto">
+    <p-inputNumber
+      inputId="year-max"
+      [ngModel]="range[1]"
+      [min]="range[0]"
+      [max]="range[1]" />
   </div>
 </div>
-<div class="text-center mt-2">
-  <small>
-    <a href class="mx-1 btn btn-outline-primary btn-sm" (click)="$event.preventDefault(); updateFilter()"
-    translate>Apply</a>
+<div class="flex mt-2">
+  <div class="flex flex-auto justify-content-center">
+    <p-button [label]="'Apply' | translate" [outlined]="true" (click)="$event.preventDefault(); updateFilter()" />
     @if (hasQueryParam) {
-      <a href class="mx-1 btn btn-outline-primary btn-sm" (click)="$event.preventDefault(); clearFilter()"translate>
-        Clear filter
-      </a>
+      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (click)="$event.preventDefault(); clearFilter()" />
     }
-  </small>
+  </div>
 </div>

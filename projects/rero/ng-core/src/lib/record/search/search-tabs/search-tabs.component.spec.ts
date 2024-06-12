@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,17 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { TestBed, inject } from '@angular/core/testing';
-import { MenuService } from './menu.service';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-describe('Service: Menu', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [MenuService]
-    });
+import { SearchTabsComponent } from './search-tabs.component';
+
+describe('SearchTabsComponent', () => {
+  let component: SearchTabsComponent;
+  let fixture: ComponentFixture<SearchTabsComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [SearchTabsComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(SearchTabsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should ...', inject([MenuService], (service: MenuService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

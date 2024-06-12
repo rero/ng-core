@@ -2,5 +2,9 @@
   "location": "Location",
   "created year": "Creation year",
   "library": "Library",
-  "German": "German"
+  "German": "German",
+  "info": "Info",
+  "success": "Success",
+  "error": "Error",
+  "warn": "Warn"
 }

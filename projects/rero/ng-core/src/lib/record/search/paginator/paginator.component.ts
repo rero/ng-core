@@ -25,7 +25,7 @@ export interface PageEvent {
   pageCount: number;
 }
 
-export interface ChangeEvent {
+export interface PaginatorChangeEvent {
   page: number;
   rows: number;
 }
@@ -45,14 +45,15 @@ export class PaginatorComponent implements OnInit {
   showCurrentPageReport = input<boolean>(false);
   showFirstLastIcon = input<boolean>(false);
   totalRecords = input<number>(0);
+
   /** Output */
-  rowPageChange = output<ChangeEvent>();
+  rowPageChange = output<PaginatorChangeEvent>();
 
   /** Position for the current page */
   first: Signal<number> = computed(() => this.eventData.page * this.eventData.rows);
 
   /** Paginator Event */
-  private eventData: ChangeEvent = {
+  private eventData: PaginatorChangeEvent = {
     page: 0,
     rows: 10
   };
@@ -63,12 +64,13 @@ export class PaginatorComponent implements OnInit {
     this.eventData.rows = this.rows();
   }
 
-  /** Event on change page */
-  onPageChange(event: PageEvent) {
-    if (this.eventData.rows !== event.rows || this.eventData.page !== event.page) {
-      this.eventData.rows = event.rows;
-      this.eventData.page = event.page;
-      this.rowPageChange.emit(this.eventData);
-    }
+  /**
+   * Event on change page
+   * @param event PageEvent
+   */
+  onPageChange(event: PageEvent): void {
+    this.eventData.rows = event.rows;
+    this.eventData.page = event.page;
+    this.rowPageChange.emit(this.eventData);
   }
 }

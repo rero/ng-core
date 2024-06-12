@@ -76,6 +76,8 @@ export * from './lib/record/search/record-search-page.component';
 export * from './lib/record/search/record-search.component';
 export * from './lib/record/search/record-search.service';
 export * from './lib/record/search/result/item/result-item';
+export * from './lib/record/search/search-fields/search-fields.component';
+export * from './lib/record/search/search-filters/search-filters.component';
 export * from './lib/route/route-collection.service';
 export * from './lib/route/route-interface';
 export * from './lib/search-input/search-input.component';

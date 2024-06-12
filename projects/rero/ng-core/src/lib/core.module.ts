@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastrModule } from 'ngx-toastr';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -112,7 +113,9 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
         AutofocusDirective
     ],
     providers: [
-      ComponentCanDeactivateGuard
+      ComponentCanDeactivateGuard,
+      ConfirmationService,
+      MessageService
     ]
 })
 export class CoreModule { }
