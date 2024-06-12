@@ -18,13 +18,19 @@ import { Error, RecordService } from "@rero/ng-core";
 import { Observable, of } from "rxjs";
 import data from './recordData.json';
 import JSONSchema from './schema.json';
+import SimpleJSONSchema from './simple-schema.json';
+import simpleData from './simple-record-data.json';
+import { Injectable } from "@angular/core";
 
+@Injectable({
+  providedIn: 'root'
+})
 export class RecordServiceMock extends RecordService {
   getSchemaForm(recordType: string): Observable<any> {
-    return of({ schema: JSONSchema });
+    return of({ schema: recordType === 'demo' ? JSONSchema : SimpleJSONSchema });
   }
 
   getRecord(type: string, pid: string, resolve = 0, headers: any = {}): Observable<any | Error> {
-    return of(data);
+    return of(type === 'demo' ? data : simpleData);
   }
 }

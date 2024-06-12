@@ -26,42 +26,22 @@
   <ng-template #menu let-f="f">
     <div class="header">
       <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
-        <ng-container dropdown-list>
-          @for (fChildren of hiddenFieldGroup(getFieldGroup(f)); track fChildren; let first = $first; let last = $last) {
-            <!-- header -->
-            @if (first) {
-              <h6 class="dropdown-header" translate>Add fields</h6>
-            }
-            <!-- dropdown items -->
-            <button class="dropdown-item" (click)="show(fChildren)" type="button">
-              {{ translateLabel(fChildren) | async }}
-            </button>
-            @if (last && f.props.helpURL) {
-              <div class="dropdown-divider"></div>
-            }
-          }
-          <!-- help link -->
-          @if (f.props.helpURL) {
-            <a class="dropdown-item" [href]="f.props.helpURL" translate>Help</a>
-          }
+        <ng-container menu>
+          <div class="flex">
+            <p-button icon="fa fa-caret-down" [link]="true" (onClick)="menu.toggle($event)" />
+            <p-tieredMenu #menu [model]="items" [popup]="true" />
+          </div>
         </ng-container>
         <ng-container buttons>
           @if (canAddItem()) {
-            <button type="button" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
-              <i class="fa fa-plus"></i>
-            </button>
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (click)="addItem()" styleClass="mr-1" />
           }
           @if (canAdd()) {
-            <button id="{{f.id}}-clone-button" type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
-              <i class="fa fa-clone"></i>
-            </button>
+            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (click)="add()" />
           }
           <!-- hide button -->
           @if (canRemove()) {
-            <button id="{{f.id}}-remove-button"  type="button" (click)="remove()"
-              class="btn btn-link text-secondary btn-sm align-baseline">
-              <i class="fa fa-trash"></i>
-            </button>
+            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" />
           }
         </ng-container>
       </ng-core-editor-dropdown-label-editor>
@@ -72,27 +52,20 @@
   <ng-template #title let-f="f">
     <div class="header">
       @if (f.props.label) {
-        <label class="mb-0" [attr.for]="f.id" [tooltip]="f.props.description">
+        <label class="mb-0" [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
           {{ f.props.label }}
           @if (f.props.required && f.props.hideRequiredMarker !== true) {
             *
           }
           @if (canAddItem()) {
-            <button type="button" (click)="addItem()" class="btn btn-link text-secondary btn-sm">
-              <i class="fa fa-plus"></i>
-            </button>
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (click)="addItem()" styleClass="mr-1" />
           }
           @if (canAdd()) {
-            <button id="{{f.id}}-clone-button" type="button" (click)="add()" class="btn btn-link text-secondary btn-sm">
-              <i class="fa fa-clone"></i>
-            </button>
+            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (click)="add()" />
           }
           <!-- hide button -->
           @if (canRemove()) {
-            <button id="{{f.id}}-remove-button"  type="button" (click)="remove()"
-              class="btn btn-link text-secondary btn-sm align-baseline">
-              <i class="fa fa-trash"></i>
-            </button>
+            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" />
           }
         </label>
       }

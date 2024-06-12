@@ -77,37 +77,29 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
 @Component({
   selector: 'ng-core-editor-field-password-generator',
   template: `
-  <div>
-    <div class="input-group mb-2 mr-sm-2">
-      <input
-        id="password"
-        [type]="type"
-        class="form-control"
-        autocomplete="off"
-        [formControl]="formControl"
-        (change)="onChange($event.target.value)"
-        [readonly]="props.readonly"
-      >
-      <div class="input-group-prepend">
-        <div class="input-group-text" (click)="onClick()">
-          <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}"></i>
-        </div>
-        <div class="input-group-text" (click)="showHidePassword()">
-          <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}"></i>
-        </div>
-        @if (props.enabledEditMode) {
-          <div class="input-group-text" (click)="props.readonly = !props.readonly">
-            <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}"></i>
-          </div>
-        }
-      </div>
-    </div>
-    @if (!showError && hasBeenGenerated) {
-      <small class="form-text text-muted" translate>
-        The password has been copied to the clipboard.
-      </small>
+  <p-inputGroup>
+    <input
+      pInputText
+      id="password"
+      [type]="type"
+      class="form-control"
+      autocomplete="off"
+      [formControl]="formControl"
+      (change)="onChange($event.target.value)"
+      [readonly]="props.readonly"
+    >
+    <p-inputGroupAddon>
+      <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}" (click)="onClick()"></i>
+    </p-inputGroupAddon>
+    <p-inputGroupAddon>
+      <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}" (click)="showHidePassword()"></i>
+    </p-inputGroupAddon>
+    @if (props.enabledEditMode) {
+    <p-inputGroupAddon>
+      <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}" (click)="props.readonly = !props.readonly"></i>
+    </p-inputGroupAddon>
     }
-  </div>
+  </p-inputGroup>
   `
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {

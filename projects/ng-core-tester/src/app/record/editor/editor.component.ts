@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AfterContentChecked, Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterContentChecked, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -22,6 +22,8 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './editor.component.html'
 })
 export class EditorComponent implements OnInit, AfterContentChecked {
+  // Inject
+  private route = inject(ActivatedRoute);
 
   /* form initial values */
   model = {};
@@ -31,12 +33,6 @@ export class EditorComponent implements OnInit, AfterContentChecked {
 
   /** Edit or New mode */
   mode: 'Edit' | 'New' = 'New';
-
-  /**
-   * Constructor
-   * @param route - ActivatedRoute
-   */
-  constructor(private route: ActivatedRoute) {}
 
   /** OnInit hook */
   ngOnInit(): void {

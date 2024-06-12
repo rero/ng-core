@@ -14,47 +14,39 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<!-- from ngx-bootstrap -->
 @if (hiddenFields$ | async; as hiddenFields) {
   <div class="w-100">
-    <div  class="form-group">
-      <label for="addField" translate>Add field</label>
-      <input
+    <label for="addField" translate>Add field</label>
+    <div>
+      <p-autoComplete
         id="addField"
-        [(ngModel)]="value"
-        [typeahead]="typeaheadFields$"
-        [typeaheadAsync]="true"
-        [typeaheadItemTemplate]="itemTemplate"
-        [typeaheadScrollable]="true"
-        [typeaheadOptionsInScrollableView]="15"
-        [typeaheadOptionsLimit]="100"
-        typeaheadOptionField="name"
-        (typeaheadOnSelect)="itemSelected($event)"
-        class="form-control"
-        typeaheadMinLength="0"
+        optionLabel="props.label"
+        [(ngModel)]="currentValue"
+        [suggestions]="suggestions"
+        (completeMethod)="search($event)"
+        (onSelect)="onSelect($event)"
         [disabled]="hiddenFields.length < 1"
-        autocomplete="off"
       />
+    </div>
+    <div class="add-field-info">
       <small id="addFieldHelp" class="form-text text-muted" translate>
-        Press space for all.
+        Press * for all.
       </small>
     </div>
-    <ul class="list-unstyled">
+    <ul class="list-unstyled essential-fields">
       @for ( field of essentialFields$ | async; track field; let i = $index) {
-        <li>
-          <button
+        <li class="mb-1">
+          <p-button
             id="{{'add-field-' + i}}"
-            (click)="$event.preventDefault(); showSelectedField(field)"
-            class="btn btn-outline-secondary w-100 mb-1 text-truncate btn-sm"
-          >
-            {{ translateLabel(field) | async }}
-          </button>
+            [label]="translateLabel(field) | async"
+            size="small"
+            [outlined]="true"
+            severity="secondary"
+            styleClass="w-full"
+            (click)="addField(field)"
+          />
         </li>
       }
     </ul>
   </div>
 }
-
-<ng-template #itemTemplate let-field="item">
-  {{ translateLabel(field) | async }}
-</ng-template>

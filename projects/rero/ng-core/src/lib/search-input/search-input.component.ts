@@ -14,50 +14,46 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, input, output } from '@angular/core';
 
-/**
- * Component for displaying a search input.
- */
 @Component({
   selector: 'ng-core-search-input',
   templateUrl: './search-input.component.html'
 })
 export class SearchInputComponent {
+  /** Input Id */
+  inputId = input<string>('search');
+
   /** Display label */
-  @Input() displayLabel = true;
+  displayLabel = input<boolean>(false);
 
   /** Placeholder */
-  @Input() placeholder = 'search';
+  placeholder = input<string>('search');
 
   /** Value to search */
-  @Input() searchText = '';
+  searchText = input<string>('');
 
   /** Remove trailing and leading spaces if true */
-  @Input() trimQueryString = true;
+  trimQueryString = input<boolean>(true);
 
   /** Disabled attribute of search input */
-  @Input() disabled = false;
+  disabled = input<boolean>(false);
 
-  /** The current search input object from the template. */
-  @ViewChild('searchinput') input: any;
+  /** Make the focus on field */
+  focus = input<boolean>(false);
 
-  /** Search output event emitter */
-  @Output() search = new EventEmitter<string>();
+  /** Search value event */
+  search = output<string>();
 
-  /** Set the focus on the input element */
-  @Input()
-  set focus(value: boolean) {
-    if (value === true) {
-      setTimeout(() => this.input.nativeElement.focus());
-    }
-  }
+  /** Search input reference */
+  @ViewChild('searchInput') input: ElementRef;
 
-  doSearch(searchText: string) {
-    if (this.trimQueryString) {
-      this.search.emit(searchText.trim());
-    } else {
-      this.search.emit(searchText);
-    }
+  /**
+   * Start the search by pressing enter
+   * or clicking on the lens.
+   */
+  doSearch(): void {
+    const { value } = this.input.nativeElement;
+    this.search.emit(this.trimQueryString() ? value.trim() : value);
   }
 }
