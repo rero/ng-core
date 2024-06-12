@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
@@ -23,27 +24,30 @@ import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { CalendarModule } from 'primeng/calendar';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
 import { emailValidator } from '../validator/email.validator';
-import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { DetailButtonComponent } from './detail/detail-button/detail-button.component';
 import { DetailComponent } from './detail/detail.component';
 import { RecordDetailDirective } from './detail/detail.directive';
 import { JsonComponent as DetailJsonComponent } from './detail/view/json.component';
 import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
+import { NgCoreFormlyDatePickerModule } from './editor/formly/primeng/date-picker/date-picker';
 import { NgCoreFormlyFieldInput, NgCoreFormlyInputModule } from './editor/formly/primeng/input';
+import { NgCoreFormlyMultiCheckboxModule } from './editor/formly/primeng/multi-checkbox/multi-checkbox';
+import { NgCoreFormlyMultiSelectModule } from './editor/formly/primeng/multi-select/multi-select';
+import { NgCoreFormlyRemoteAutocompleteModule } from './editor/formly/primeng/remote-autocomplete/remote-autocomplete';
+import { NgCoreFormlySelectModule, SelectComponent } from './editor/formly/primeng/select/select';
+import { NgCoreFormlyTreeSelectModule } from './editor/formly/primeng/tree-select/tree-select';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
-import { CustomSelectFieldComponent } from './editor/type/custom-select/custom-select.component';
-import { DateTimepickerTypeComponent } from './editor/type/date-time-picker-type.component';
-import { DatepickerTypeComponent } from './editor/type/datepicker-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
-import { MultiCheckboxComponent } from './editor/type/multicheckbox.component';
 import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.component';
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
@@ -59,7 +63,6 @@ import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/s
 import { CardWrapperComponent } from './editor/wrappers/card-wrapper/card-wrapper.component';
 import { FormFieldWrapperComponent } from './editor/wrappers/form-field-wrapper/form-field-wrapper.component';
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
-import { HorizontalWrapperComponent } from './editor/wrappers/horizontal-wrapper/horizontal-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { ExportButtonComponent } from './export-button/export-button.component';
 import { FileComponent } from './files/file/file.component';
@@ -72,25 +75,27 @@ import { AggregationDateRangeComponent } from './search/aggregation/date-range/d
 import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
 import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
+import { MenuSortComponent } from './search/menu-sort/menu-sort.component';
+import { PaginatorComponent } from './search/paginator/paginator.component';
 import { RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
-import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { PaginatorComponent } from './search/paginator/paginator.component';
+import { SearchFieldsComponent } from './search/search-fields/search-fields.component';
+import { SearchFiltersComponent } from './search/search-filters/search-filters.component';
+import { SearchTabsComponent } from './search/search-tabs/search-tabs.component';
+import { SearchAutocompleteComponent } from './search-autocomplete/search-autocomplete.component';
 
 @NgModule({
     declarations: [
         RecordSearchPageComponent,
         RecordSearchComponent,
         RecordSearchResultComponent,
-        RecordSearchResultDirective,
         RecordSearchAggregationComponent,
         JsonComponent,
         DetailComponent,
         RecordDetailDirective,
         DetailJsonComponent,
-        AutocompleteComponent,
         GetRecordPipe,
         EditorComponent,
         AddFieldEditorComponent,
@@ -99,33 +104,32 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
         ObjectTypeComponent,
         SwitchComponent,
         MultiSchemaTypeComponent,
-        DatepickerTypeComponent,
         ToggleWrapperComponent,
         BucketsComponent,
-        HorizontalWrapperComponent,
         FormFieldWrapperComponent,
         HideWrapperComponent,
         AggregationSliderComponent,
-        RemoteTypeaheadComponent,
         RecordFilesComponent,
         LoadTemplateFormComponent,
         SaveTemplateFormComponent,
         CardWrapperComponent,
         LabelComponent,
         TextareaFieldComponent,
-        CustomSelectFieldComponent,
         MarkdownFieldComponent,
         AggregationDateRangeComponent,
         ExportButtonComponent,
         ListFiltersComponent,
         BucketNamePipe,
-        DateTimepickerTypeComponent,
         PasswordGeneratorTypeComponent,
-        MultiCheckboxComponent,
         FileComponent,
         DetailButtonComponent,
         RadioButtonComponent,
         PaginatorComponent,
+        MenuSortComponent,
+        SearchFiltersComponent,
+        SearchFieldsComponent,
+        SearchTabsComponent,
+        SearchAutocompleteComponent
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -137,10 +141,13 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
         TooltipModule.forRoot(),
         PopoverModule.forRoot(),
         TypeaheadModule.forRoot(),
-        PaginationModule.forRoot(),
         CollapseModule.forRoot(),
-        PaginationModule.forRoot(),
         BsDatepickerModule.forRoot(),
+        CalendarModule,
+        ClipboardModule,
+        RadioButtonModule,
+        AutoCompleteModule,
+        FormlySelectModule,
         FormlyModule.forRoot({
             extensions: [
                 { name: 'email', extension: { prePopulate: emailValidator } }
@@ -156,32 +163,32 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
                 { name: 'array', component: ArrayTypeComponent },
                 { name: 'object', component: ObjectTypeComponent },
                 { name: 'multischema', component: MultiSchemaTypeComponent },
-                { name: 'datepicker', component: DatepickerTypeComponent },
-                { name: 'selectWithSort', extends: 'select' },
-                { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
                 { name: 'textarea', component: TextareaFieldComponent },
-                { name: 'select', component: CustomSelectFieldComponent },
+                { name: 'select', component: SelectComponent },
                 { name: 'markdown', component: MarkdownFieldComponent },
-                { name: 'dateTimePicker', component: DateTimepickerTypeComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
-                { name: 'multicheckbox', component: MultiCheckboxComponent },
-                { name: 'radioButton', component: RadioButtonComponent }
+                { name: 'radioButton', component: RadioButtonComponent },
+                // Remove after refactoring
+                { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },
-                { name: 'form-field-horizontal', component: HorizontalWrapperComponent },
                 { name: 'form-field', component: FormFieldWrapperComponent },
                 { name: 'hide', component: HideWrapperComponent },
                 { name: 'card', component: CardWrapperComponent }
             ]
         }),
         FormlyPrimeNGModule,
-        FormlySelectModule,
-        NgCoreFormlyInputModule
+        NgCoreFormlyDatePickerModule,
+        NgCoreFormlyInputModule,
+        NgCoreFormlyMultiCheckboxModule,
+        NgCoreFormlyMultiSelectModule,
+        NgCoreFormlyRemoteAutocompleteModule,
+        NgCoreFormlySelectModule,
+        NgCoreFormlyTreeSelectModule
     ],
     exports: [
         RecordSearchComponent,
-        AutocompleteComponent,
         GetRecordPipe,
         CoreModule,
         EditorComponent,
@@ -193,7 +200,10 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
         RecordDetailDirective,
         RecordFilesComponent,
         ListFiltersComponent,
-        RecordSearchAggregationComponent
+        RecordSearchAggregationComponent,
+        SearchFiltersComponent,
+        SearchFieldsComponent,
+        SearchAutocompleteComponent,
     ],
     providers: [
         {

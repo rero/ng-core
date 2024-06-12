@@ -24,6 +24,9 @@
       ],
       "@rero/ng-core/*": [
         "dist/rero/ng-core/*"
+      ],
+      "@rero/prime/*": [
+        "dist/rero/ng-core/src/lib/record/editor/formly/primeng/*"
       ]
     },
     "resolveJsonModule": true,

@@ -46,7 +46,7 @@ export class JSONSchemaService {
 
   processField(field: FormlyFieldConfig, jsonSchema: JSONSchema7) {
     // initial population of arrays with a minItems constraints
-    if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
+    if (field.type === 'array' && jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
       field.defaultValue = new Array(jsonSchema.minItems);
     }
     // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
@@ -62,7 +62,8 @@ export class JSONSchemaService {
         this.setSimpleOptions(field, props);
         this.setValidation(field, props);
         this.setRemoteSelectOptions(field, props);
-        this.setRemoteTypeahead(field, props);
+        // TODO: Check with autocomplete
+        // this.setRemoteTypeahead(field, props);
       }
     }
 

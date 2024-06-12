@@ -15,58 +15,65 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (adminMode.can) {
-  <div class="float-right ml-5 mb-2">
-    <!-- use button -->
-    @if (useStatus && useStatus.can && useStatus.url) {
-      <button id="result-use-button"
-              class="btn btn-sm btn-outline-primary"
-              [title]="'Use' | translate"
-              [name]="'Use' | translate"
-              (click)="useRecord()"
-      >
-          <i class="fa fa-hand-o-right"></i>
-      </button>
-    }
-
-    <!-- edit button -->
-    @if (updateStatus && updateStatus.can) {
-      <button id="result-edit-button"
-              class="btn btn-sm btn-outline-primary ml-2"
-              [title]="'Edit' | translate"
-              [name]="'Edit' | translate"
-              (click)="editRecord(record.id, updateStatus?.routerLink)"
-              [routerLink]="updateStatus.routerLink || ['edit', record.id]">
-          <i class="fa fa-pencil"></i>
-      </button>
-    }
-
-    <!-- delete button -->
-    @if (deleteStatus) {
-      <span class="ml-2" *ngIf="deleteStatus">
-        @if (deleteStatus.can) {
-          <button id="result-delete-button"
-                  class="btn btn-sm btn-outline-danger"
-                  [title]="'Delete' | translate"
-                  [name]="'Delete' | translate"
-                  (click)="deleteRecord(record.id, deleteStatus?.type)">
-              <i class="fa fa-trash"></i>
-          </button>
-        } @else {
-          <button *ngIf="deleteStatus.message"
-                  id="result-delete-button"
-                  class="btn btn-sm btn-outline-danger disabled"
-                  [title]="'Delete'|translate"
-                  [name]="'Delete'|translate"
-                  [popover]="tolTemplate" triggers="mouseenter:mouseleave">
-              <i class="fa fa-trash"></i>
-          </button>
+<div class="flex align-items-start">
+  <div class="flex flex-auto">
+    <ng-container #item></ng-container>
+  </div>
+  <div class="flex flex-auto justify-content-end ml-2">
+    @if (adminMode.can) {
+        <!-- use button -->
+        @if (useStatus && useStatus.can && useStatus.url) {
+          <p-button
+            [outlined]="true"
+            size="small"
+            severity="danger"
+            [ariaLabel]="'Use' | translate"
+            (click)="useRecord()"
+          >
+            <i class="fa fa-hand-o-right"></i>
+          </p-button>
         }
-      </span>
+
+        <!-- edit button -->
+        @if (updateStatus && updateStatus.can) {
+          <p-button
+            [outlined]="true"
+            size="small"
+            [ariaLabel]="'Edit' | translate"
+            (click)="editRecord(record.id, updateStatus?.routerLink)"
+            [routerLink]="updateStatus.routerLink || ['edit', record.id]"
+          >
+            <i class="fa fa-pencil"></i>
+          </p-button>
+        }
+
+        <!-- delete button -->
+        @if (deleteStatus) {
+          <span class="ml-2">
+            @if (deleteStatus.can) {
+              <p-button
+                [outlined]="true"
+                size="small"
+                severity="danger"
+                [ariaLabel]="'Delete' | translate"
+                (click)="deleteRecord(record.id, deleteStatus?.type)"
+              >
+                <i class="fa fa-trash"></i>
+              </p-button>
+            } @else {
+              <p-button
+                [pTooltip]="deleteInfoMessage"
+                tooltipPosition="top"
+                [outlined]="true"
+                size="small"
+                severity="danger"
+                [ariaLabel]="'Delete' | translate"
+              >
+                <i class="fa fa-trash opacity-50"></i>
+              </p-button>
+            }
+          </span>
+        }
     }
+  </div>
 </div>
-}
-<ng-template #tolTemplate>
-  <div [innerHtml]="deleteInfoMessage | nl2br"></div>
-</ng-template>
-<ng-template ngCoreRecordSearchResult></ng-template>

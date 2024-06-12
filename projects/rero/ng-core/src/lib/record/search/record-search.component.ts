@@ -30,8 +30,11 @@ import { JSONSchema7 } from '../editor/editor.component';
 import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { ChangeEvent } from './paginator/paginator.component';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
+import { ChangeEvent } from './paginator/paginator.component';
+import { TabViewChangeEvent } from 'primeng/tabview';
+import { IChecked } from './search-filters/search-filters.component';
+import { DropdownChangeEvent } from 'primeng/dropdown';
 
 export interface SearchParams {
   currentType: string;
@@ -54,7 +57,8 @@ export interface SortOption {
 
 @Component({
   selector: 'ng-core-record-search',
-  templateUrl: './record-search.component.html'
+  templateUrl: './record-search.component.html',
+  styleUrl: './record-search.component.scss'
 })
 export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -150,8 +154,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Subscriptions to observables. */
   protected _subscriptions: Subscription = new Subscription();
   /** Store configuration for type. */
-  protected _config: any = null;
+  protected config: any = null;
 
+  availableTypes = [];
+
+  activeTypeIndex = 0;
 
   // GETTER & SETTER ==========================================================
   /** Check if pagination have to be displayed or not. */
@@ -173,18 +180,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         : 5;
   }
 
-  /** Get the page report text (1 of 16) */
-  get pageReport(): boolean {
-    const paginationConfig = this._getResourceConfig('pagination', {});
-    return ('pageReport' in paginationConfig) ? paginationConfig.pageReport : false;
-  }
-
-  /** Rows per page (dropdown menu on the right) */
-  get rowsPerPageOptions(): number[] {
-    const paginationConfig = this._getResourceConfig('pagination', {});
-    return ('rowsPerPageOptions' in paginationConfig) ? paginationConfig.rowsPerPageOptions : [10, 20, 50, 100];
-  }
-
   /** Request result record hits. */
   get records(): Array<any> {
     return this.hits && this.hits.hits
@@ -201,8 +196,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Get the text for displaying results text. */
   get resultsText$(): Observable<string> {
-    if (this._config.resultsText) {
-      return this._config.resultsText(this.hits);
+    if (this.config.resultsText) {
+      return this.config.resultsText(this.hits);
     }
     return (this.total <= 1)
         ? this.translateService.stream('{{ total }} result', { total: this.total }) // O or 1 result
@@ -211,8 +206,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Get showSearchInput value, given either by config or by local value. */
   get showSearchInput(): boolean {
-    if (this._config.showSearchInput != null) {
-      return this._config.showSearchInput;
+    if (this.config.showSearchInput != null) {
+      return this.config.showSearchInput;
     }
     return this._showSearchInput;
   }
@@ -224,8 +219,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Get showLabel value, given either by config or by local value. */
   get showLabel(): boolean {
-    if (this._config.showLabel != null) {
-      return this._config.showLabel;
+    if (this.config.showLabel != null) {
+      return this.config.showLabel;
     }
     return this._showLabel;
   }
@@ -265,7 +260,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns A message indicating there's no record.
    */
   get emptyRecordMessage(): string {
-    return this._config.noRecordMessage || this.translateService.instant('There are no records in this section');
+    return this.config.noRecordMessage || this.translateService.instant('There are no records in this section');
   }
 
   /**
@@ -273,31 +268,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns True if no record is found and no search query is done.
    */
   get hasNoRecord(): boolean {
-    return (this._config.showFacetsIfNoResults)
+    return (this.config.showFacetsIfNoResults)
         ? false
         : !this.q && this.records.length === 0 && !this.showEmptySearchMessage;
-  }
-
-  /**
-   * Returns the list of types that are displayed in tabs.
-   * @return List of types.
-   */
-  get typesInTabs(): Array<any> {
-    return this.types.filter((item) => item.hideInTabs !== true);
-  }
-
-  /** Return the sort options from config. */
-  get sortOptions(): Array<SortOption> {
-    return (this._config.sortOptions)
-      ? this._config.sortOptions.sort((a: SortOption, b: SortOption) => a.label.localeCompare(b.label))
-      : [];
-  }
-
-  /** Return the current sort object. */
-  get currentSortOption(): SortOption {
-    return (this.sort && this._config.sortOptions)
-      ? this._config.sortOptions.find((item: SortOption) => item.value === this.sort)
-      : null;
   }
 
   /** Return a message containing the reasons why record list cannot be exported. */
@@ -335,16 +308,21 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *   Loads total count of records for each resource.
    */
   ngOnInit() {
+    this._subscriptions.add(this.translateService.onLangChange.subscribe((lang: any) => {
+      this._loadSearchFields();
+    }));
+    this.availableTypes = this.types.filter((item) => item.hideInTabs !== true);
+    this.activeTypeIndex = this.availableTypes.findIndex((type: any) => type.key === this.currentType);
     // Subscribe on aggregation filters changes and do search.
     let first = true;
 
     // Load the possible aggregation asked to search engine and that always need to be hide.
     // DEV NOTE : These aggregation should be used by other components (using content injection)
     //            otherwise it doesn't matter to ask them.
-    if (this._config.aggregationsHide) {
-      this.aggregationsToHide = (typeof this._config.aggregationsHide === 'function')
-        ? this._config.aggregationsHide()
-        : this._config.aggregationsHide;
+    if (this.config.aggregationsHide) {
+      this.aggregationsToHide = (typeof this.config.aggregationsHide === 'function')
+        ? this.config.aggregationsHide()
+        : this.config.aggregationsHide;
     }
 
     this._subscriptions.add(
@@ -370,16 +348,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           if (this.aggregations != null) {
             return of(null);
           }
-          return this._config.aggregationsOrder.pipe(
+          return this.config.aggregationsOrder.pipe(
             tap((aggregations: string[]) => {
-              let aggregationsExpandCfg = this._config.aggregationsExpand;
+              let aggregationsExpandCfg = this.config.aggregationsExpand;
               if (typeof aggregationsExpandCfg === 'function') {
                 aggregationsExpandCfg = aggregationsExpandCfg();
               }
               this.aggregations = aggregations.map((key: any) => {
                 return {
                   key: key.key || key,
-                  bucketSize: this._config.aggregationsBucketSize || null,
+                  bucketSize: this.config.aggregationsBucketSize || null,
                   value: { buckets: [] },
                   expanded: (aggregationsExpandCfg || []).includes(key),
                   included: ([...aggregationsExpandCfg, ...this.aggregationsToHide] || []).includes(key),
@@ -457,7 +435,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       // triggered by clicking on a tab (which already load configuration),
       // we reload configuration.
       // If no configuration is loaded, we load it, too.
-      if (this._config === null || (changes.currentType.currentValue != null && (changes.currentType.currentValue !== this._config.key))) {
+      if (this.config === null || (changes.currentType.currentValue != null && (changes.currentType.currentValue !== this.config.key))) {
         this._loadConfigurationForType(this.currentType);
       }
     }
@@ -498,11 +476,22 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Change sorting.
-   * @param sortOption Sort option object.
+   * Change number of items per page value.
+   * @param event - Event, dom event triggered
+   * @param size - number, new page size
    */
-  changeSorting(sortOption: SortOption) {
-    this.sort = sortOption.value;
+  changeSize(event: Event, size: number) {
+    event.preventDefault();
+    this.size = size;
+    this._searchParamsHasChanged();
+  }
+
+  /**
+   * Change sorting.
+   * @param sort sort name.
+   */
+  changeSorting(sort: string) {
+    this.sort = sort;
     this._searchParamsHasChanged();
   }
 
@@ -512,7 +501,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   searchByQuery(event: string) {
     // If empty search is not allowed and query is empty, the search is not processed.
-    if (this._config.allowEmptySearch === false && !event) {
+    if (this.config.allowEmptySearch === false && !event) {
       this.showEmptySearchMessage = true;
       return;
     }
@@ -530,13 +519,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Change type of records.
-   * @param event - Event, dom event triggered
-   * @param type - string, type of resource
+   * @param TabViewChangeEvent - Defines the custom events used by the component's emitters.
    */
-  changeType(event: Event, type: string) {
-    event.preventDefault();
-
-    this.currentType = type;
+  changeType(event: TabViewChangeEvent) {
+    this.currentType = this.availableTypes[event.index].key;
     this._loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
     this._searchParamsHasChanged();
@@ -564,7 +550,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       }
     });
     // update main counter
-    this._config.total--;
+    this.config.total--;
   }
 
   /**
@@ -572,8 +558,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return A component for displaying result item.
    */
   getResultItemComponentView() {
-    return (this._config.component)
-      ? this._config.component
+    return (this.config.component)
+      ? this.config.component
       : null;
   }
 
@@ -581,11 +567,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
+<<<<<<< HEAD
   protected _exportFormats(): Array<any> {
     if (!this._config || !this._config.exportFormats) {
+=======
+  private _exportFormats(): Array<any> {
+    if (!this.config || !this.config.exportFormats) {
+>>>>>>> 06d34b1 (refactor: primeng)
       return [];
     }
-    return this._config.exportFormats.map((format) => {
+    return this.config.exportFormats.map((format) => {
       return {
         label: format.label,
         url: this.getExportFormatUrl(format),
@@ -613,8 +604,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       url += `&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
     }
     // preFilters
-    if (this._config && this._config.preFilters) {
-      for (const [key, value] of Object.entries(this._config.preFilters)) {
+    if (this.config && this.config.preFilters) {
+      for (const [key, value] of Object.entries(this.config.preFilters)) {
         // force value to an array
         const values = (!Array.isArray(value)) ? [value] : value;
         values.map(v => {
@@ -682,8 +673,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Observable containing aggregations corresponding to actual records.
    */
   aggregations$(aggregations: object): Observable<any> {
-    if (this._config.aggregations) {
-      return this._config.aggregations(aggregations);
+    if (this.config.aggregations) {
+      return this.config.aggregations(aggregations);
     } else {
       return of(aggregations);
     }
@@ -703,7 +694,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       url.external = true;
     }
 
-    if (!this._config.canRead) {
+    if (!this.config.canRead) {
       return of(url);
     }
 
@@ -718,16 +709,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /**
-   * Select or deselect a search field and launch a search if a query is specified.
-   *
-   * @param field SearchField
-   * @returns void
-   */
-  searchInField(field: SearchField): void {
-    // Toggle the current field and un-select others.
+  searchInField(event: DropdownChangeEvent): void {
+    const selectedField = event.value;
     this.searchFields = this.searchFields.map((item: SearchField) => {
-      if (item === field) {
+      if (selectedField && item.path === selectedField.path) {
         item.selected = !item.selected;
       } else {
         item.selected = false;
@@ -741,31 +726,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  /**
-   * Select or deselect a search filter.
-   *
-   * @param filter SearchFilter
-   * @returns void
-   */
-  searchFilter(filter: SearchFilter): void {
-    let values = [];
-    const agg = this.aggregationsFilters.filter((item: any) => {
-      return item.key === filter.filter;
-    });
-    if (agg.length > 0) {
-      const aggFilter = agg[0];
-      if (!aggFilter.values.includes(filter.value)) {
-        values = [filter.value];
-      } else {
-        if (filter.disabledValue) {
-          values = [filter.disabledValue];
+  onChangeSearchFilter(event: IChecked): void {
+    const values = [];
+    if (event.filterKey === 'simple') {
+          values.push(event.checked ? '0' : '1');
         }
-      }
-    } else {
-      values = [filter.value];
-    }
-
-    this.recordSearchService.updateAggregationFilter(filter.filter, values);
+    else if (event.checked) {
+            values.push(String(event.checked))
+          }
+    this.recordSearchService.updateAggregationFilter(event.filterKey, values);
   }
 
   /**
@@ -819,7 +788,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // Empty search is not allowed and query is empty, search in backend is not
     // processed.
-    if (this._config.allowEmptySearch === false && !q) {
+    if (this.config.allowEmptySearch === false && !q) {
       this.showEmptySearchMessage = true;
       return of({ hits: { hits: [], total: 0 }, aggregations: {} });
     } else {
@@ -832,7 +801,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     const preFilters = {};
     const aggsKeys = [];
     this.aggregationsFilters.map(agg => aggsKeys.push(agg.key));
-    for (const [key, value] of Object.entries(this._config.preFilters || {})) {
+    for (const [key, value] of Object.entries(this.config.preFilters || {})) {
       if (!(aggsKeys.includes(key))) {
         preFilters[key] = value;
       }
@@ -845,7 +814,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       size || this.size,
       this.aggregationsFilters || [],
       preFilters,
-      this._config.listHeaders || null,
+      this.config.listHeaders || null,
       this.sort,
       this._getFacetsParameter()
     );
@@ -860,8 +829,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       q: this.q,
       page: this.page,
       size: this.size,
-      currentType: this._config.key,
-      index: this._config.index,
+      currentType: this.config.key,
+      index: this.config.index,
       aggregationsFilters: this.aggregationsFilters,
       sort: this.sort
     });
@@ -873,7 +842,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   protected _loadConfigurationForType(type: string) {
     const q = this._buildQueryString();
-    this._config = this.recordUiService.getResourceConfig(type);
+    this.config = this.recordUiService.getResourceConfig(type);
     this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
       this.addStatus = result;
     });
@@ -881,12 +850,12 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._loadSearchFields();
 
     // Build aggregations.
-    if (this._config.aggregationsOrder) {
-      if (!isObservable(this._config.aggregationsOrder)) {
-        this._config.aggregationsOrder = of(this._config.aggregationsOrder);
+    if (this.config.aggregationsOrder) {
+      if (!isObservable(this.config.aggregationsOrder)) {
+        this.config.aggregationsOrder = of(this.config.aggregationsOrder);
       }
     } else {
-      this._config.aggregationsOrder = of([]);
+      this.config.aggregationsOrder = of([]);
     }
 
     // reset aggregations
@@ -896,14 +865,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._setDefaultSort();
 
     // load search filters
-    this.searchFilters = this._config.searchFilters || [];
+    this.searchFilters = this.config.searchFilters || [];
 
     // load export options
     this.exportOptions = this._exportFormats();
 
     // Update filters with default search filters only if the q parameter is empty
-    if ((q === null || q.trim().length === 0) && this._config.defaultSearchInputFilters) {
-      this._config.defaultSearchInputFilters.forEach((filter: { key: string, values: any[]}) => {
+    if ((q === null || q.trim().length === 0) && this.config.defaultSearchInputFilters) {
+      this.config.defaultSearchInputFilters.forEach((filter: { key: string, values: any[]}) => {
         this.recordSearchService.updateAggregationFilter(filter.key, filter.values);
       });
     }
@@ -915,8 +884,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param defaultValue - Default value is returned if the parameter is not defined
    * @return A config value or the given default value instead
    */
+<<<<<<< HEAD
   protected _getResourceConfig(paramName: string, defaultValue: any) {
     return (paramName in this._config) ? this._config[paramName] : defaultValue;
+=======
+  private _getResourceConfig(paramName: string, defaultValue: any) {
+    return (paramName in this.config) ? this.config[paramName] : defaultValue;
+>>>>>>> 06d34b1 (refactor: primeng)
   }
 
   /**
@@ -925,7 +899,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   protected _serializeSearchParameters(): SearchParams {
     return {
-      currentType: this._config.key,
+      currentType: this.config.key,
       index: this._currentIndex(),
       q: this.q,
       page: this.page,
@@ -945,13 +919,14 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   protected _loadSearchFields(): void {
     // No search fields, reset previous stored and return.
-    if (!this._config.searchFields) {
+    if (!this.config.searchFields) {
       this.searchFields = [];
       return;
     }
 
     // Store search fields.
-    this.searchFields = this._config.searchFields.map((field: SearchField) => {
+    this.searchFields = this.config.searchFields.map((field: SearchField) => {
+      field.label = this.translateService.instant(field.label);
       if (!field.selected) {
         field.selected = false;
       }
@@ -985,11 +960,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @return string, current index defined by keys index or key
    */
+<<<<<<< HEAD
   protected _currentIndex() {
     if (this._config == null) {
+=======
+  private _currentIndex() {
+    if (this.config == null) {
+>>>>>>> 06d34b1 (refactor: primeng)
       return null;
     }
-    return this._config.index || this._config.key;
+    return this.config.index || this.config.key;
   }
 
   /**
@@ -997,9 +977,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param key - string, aggregation key
    * @return string or null
    */
+<<<<<<< HEAD
   protected _aggregationName(key: string): string | null {
     return this._config.aggregationsName && key in this._config.aggregationsName
       ? this._config.aggregationsName[key]
+=======
+  private _aggregationName(key: string): string | null {
+    return this.config.aggregationsName && key in this.config.aggregationsName
+      ? this.config.aggregationsName[key]
+>>>>>>> 06d34b1 (refactor: primeng)
       : null;
   }
 
@@ -1106,9 +1092,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (this.sort != null) {
       return;
     }
-    if (this._config.sortOptions) {
+    if (this.config.sortOptions) {
       const defaultSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
-      this._config.sortOptions.forEach((option: SortOption) => {
+      this.config.sortOptions.forEach((option: SortOption) => {
         if (option[defaultSortValue] === true) {
           this.sort = option.value;
         }
@@ -1124,7 +1110,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   showFilterSection(searchFilterSection: SearchFilterSection): boolean {
     return searchFilterSection.filters.some(
       (filter: SearchFilter) => {
-        return this._config.allowEmptySearch ? true : (this.q && filter.showIfQuery === true) || !filter?.showIfQuery;
+        return this.config.allowEmptySearch ? true : (this.q && filter.showIfQuery === true) || !filter?.showIfQuery;
       }
     );
   }
@@ -1135,7 +1121,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @returns true if the filter is show
    */
   showFilter(searchFilter: SearchFilter) {
-    if (this._config.allowEmptySearch) {
+    if (this.config.allowEmptySearch) {
       return true;
     }
     if (!this.q) {

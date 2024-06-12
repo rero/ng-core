@@ -15,24 +15,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'ng-core-label-editor',
   templateUrl: './label.component.html',
 })
-export class LabelComponent {
+export class LabelComponent implements OnInit {
 
   // Current field
   @Input() field: FormlyFieldConfig;
+
+  items: MenuItem[] = [];
 
   /**
    * Constructor
    * @param translateService - TranslateService, that translate the labels of the hidden fields
    */
   constructor(private translateService: TranslateService) {}
+
+  ngOnInit(): void {
+    if (this.hasMenu(this.field)) {
+      this.hiddenFieldGroup(this.getFieldGroup(this.field)).map((field: any) => this.items.push({
+        label: field.props.label,
+        command: () => this.show(field)
+      }));
+    }
+  }
 
   /**
    * Is the dropdown menu displayed?
@@ -134,7 +146,7 @@ export class LabelComponent {
    * @param field - FormlyFieldConfig, the field to show
    */
   show(field: FormlyFieldConfig) {
-      this.field.props.setHide ? this.field.props.setHide(this.field, false): this.field.hide = false;
+    field.props.setHide ? field.props.setHide(field, false) : field.hide = false;
   }
 
   /**

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,12 +16,12 @@
  */
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
-import { of } from 'rxjs';
 import { RecordUiService } from './record-ui.service';
+import { RouterModule } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 describe('RecordUiService', () => {
 
@@ -34,7 +34,11 @@ describe('RecordUiService', () => {
         ModalModule.forRoot(),
         TranslateModule.forRoot(),
         HttpClientModule,
-        RouterTestingModule
+        RouterModule.forRoot([])
+      ],
+      providers: [
+        ConfirmationService,
+        MessageService
       ]
     });
     service = TestBed.inject(RecordUiService);
@@ -45,9 +49,7 @@ describe('RecordUiService', () => {
   });
 
   it('should return the default delete message', () => {
-    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
-      expect(messages[0]).toEqual('Do you really want to delete this record?');
-    });
+    expect(service.deleteMessage('1', 'holdings')[0]).toEqual('Do you really want to delete this record?');
   });
 
   it('Should return the default delete message with a defined type, but no message configuration', () => {
@@ -56,9 +58,7 @@ describe('RecordUiService', () => {
         key: 'holdings'
       }
     ];
-    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
-      expect(messages[0]).toEqual('Do you really want to delete this record?');
-    });
+    expect(service.deleteMessage('1', 'holdings')[0]).toEqual('Do you really want to delete this record?');
   });
 
   it('should return the custom delete message', () => {
@@ -67,12 +67,10 @@ describe('RecordUiService', () => {
       {
         key: 'holdings',
         deleteMessage: (pid: string) => {
-          return of(messagesType);
+          return messagesType;
         }
       }
     ];
-    service.deleteMessage$('1', 'holdings').subscribe((messages: string[]) => {
-      expect(messages).toEqual(messagesType);
-    });
+    expect(service.deleteMessage('1', 'holdings')).toEqual(messagesType);
   });
 });

@@ -15,15 +15,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (record) {
-  <h1>{{ record.metadata.title[0].mainTitle[0].value }}</h1>
-  <p>
-    @for (author of record.metadata.authors; track author) {
-      <span class="badge badge-primary mr-1">{{ author.name }}</span>
-    }
-  </p>
-  @if (record.metadata.abstracts) {
-    <div class="text-justify">
-        {{ record.metadata.abstracts[0].value }}
-    </div>
-  }
+  <h1>Record display</h1>
+  <pre>
+    <div style="white-space: pre-wrap;">{{ record.metadata | json }}</div>
+  </pre>
 }

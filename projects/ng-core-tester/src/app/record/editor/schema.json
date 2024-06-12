@@ -29,7 +29,7 @@
     "hide_with_required_expression",
     "hidden_sub_property_hide_expr",
     "array_of_objects_with_sub_objects",
-    "select",
+    "treeSelect",
     "selectGroup",
     "selectMultiple",
     "selectMultipleWithLabelTranslation",
@@ -38,10 +38,11 @@
     "email",
     "date_time",
     "date_only",
+    "date_range",
     "password",
     "array_with_multicheckbox",
-    "remoteTypeaheadWithoutFilters",
-    "remoteTypeaheadWithFilters",
+    "remoteAutoCompleteWithFilters",
+    "remoteAutocompleteWithoutFilters",
     "input_with_default_value",
     "name_with_definition",
     "field_expressions",
@@ -76,7 +77,6 @@
             "default": "staff_note",
             "widget": {
               "formlyConfig": {
-                "type": "selectWithSort",
                 "props": {
                   "options": [
                     {
@@ -702,14 +702,7 @@
       "enum": [
         "optional",
         "required"
-      ],
-      "widget": {
-        "formlyConfig": {
-          "props": {
-            "cssClass": "w-md-25"
-          }
-        }
-      }
+      ]
     },
     "hide_with_required_expression": {
       "title": "Hidden Property with required expression.",
@@ -804,7 +797,7 @@
         ]
       }
     },
-    "select": {
+    "treeSelect": {
       "title": "Select with option tree",
       "type": "string",
       "enum": [
@@ -814,50 +807,48 @@
       ],
       "widget": {
         "formlyConfig": {
+          "type": "tree-select",
           "props": {
             "options": [
               {
-                "label": "3 Value",
-                "value": "value3"
+                "label": "Node 1",
+                "data": "node1"
               },
               {
-                "label": "Group",
+                "label": "Node 2",
+                "selectable": false,
                 "children": [
                   {
-                    "label": "2 Value",
-                    "value": "value2"
+                    "label": "Node 3",
+                    "data": "node3"
                   },
                   {
-                    "label": "1 Value",
-                    "value": "value1",
+                    "label": "Node 4",
+                    "selectable": false,
                     "children": [
                       {
-                        "label": "3 Value",
-                        "value": "value3",
-                        "preferred": true
+                        "label": "Node 5",
+                        "data": "node5"
                       },
                       {
-                        "label": "2 Value",
-                        "value": "value2",
-                        "disabled": true
+                        "label": "Node 6",
+                        "data": "node6"
                       }
                     ]
                   }
                 ]
               },
               {
-                "label": "2 Value",
-                "value": "value2",
-                "preferred": true
+                "label": "Node 7",
+                "data": "node7"
               }
-            ],
-            "minItemsToDisplaySearch": 3
+            ]
           }
         }
       }
     },
     "selectGroup": {
-      "title": "Select group (compatibility)",
+      "title": "Select with group",
       "type": "string",
       "enum": [
         "value1",
@@ -867,20 +858,29 @@
       "widget": {
         "formlyConfig": {
           "props": {
+            "group": true,
             "options": [
               {
-                "label": "3 Value",
-                "value": "value3",
-                "group": "test"
+                "label": "Default",
+                "items": [
+                  {
+                    "label": "Value 1",
+                    "value": "value1"
+                  }
+                ]
               },
               {
-                "label": "1 Value",
-                "value": "value1"
-              },
-              {
-                "label": "2 Value",
-                "value": "value2",
-                "group": "test"
+                "label": "Test",
+                "items": [
+                  {
+                    "label": "Value 3",
+                    "value": "value3"
+                  },
+                  {
+                    "label": "Value 2",
+                    "value": "value2"
+                  }
+                ]
               }
             ]
           }
@@ -888,7 +888,7 @@
       }
     },
     "selectMultiple": {
-      "title": "Multiple select",
+      "title": "Select Multiple",
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
@@ -906,6 +906,7 @@
       },
       "widget": {
         "formlyConfig": {
+          "type": "multi-select",
           "props": {
             "options": [
               {
@@ -941,6 +942,7 @@
       },
       "widget": {
         "formlyConfig": {
+          "type": "multi-select",
           "props": {
             "options": [
               {
@@ -971,7 +973,10 @@
       "default": "Hello **world**",
       "widget": {
         "formlyConfig": {
-          "type": "markdown"
+          "type": "markdown",
+          "props": {
+            "minHeight": "300px"
+          }
         }
       }
     },
@@ -1032,14 +1037,32 @@
       "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$",
       "widget": {
         "formlyConfig": {
-          "type": "datepicker",
+          "type": "datePicker",
           "props": {
             "placement": "top",
             "validation": {
               "messages": {
                 "patternMessage": "Should be in the following format: 2022-12-31 (YYYY-MM-DD)."
               }
-            }
+            },
+            "disabledDates": [
+              "2024-08-10",
+              "2024-08-12"
+            ]
+          }
+        }
+      }
+    },
+    "date_range": {
+      "title": "Date picker range",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "datePicker",
+          "props": {
+            "selectionMode": "range",
+            "numberOfMonths": 2,
+            "showButtonBar": true
           }
         }
       }
@@ -1062,8 +1085,8 @@
       "type": "multicheckbox",
       "minItems": 1,
       "default": [
-        "checkbox1",
-        "checkbox2"
+        "checkbox2",
+        "checkbox3"
       ],
       "items": {
         "type": "string",
@@ -1076,8 +1099,9 @@
       },
       "widget": {
         "formlyConfig": {
+          "type": "multi-checkbox",
           "props": {
-            "type": "array",
+            "style": "inline",
             "options": [
               {
                 "label": "Checkbox 1",
@@ -1101,46 +1125,53 @@
         }
       }
     },
-    "remoteTypeaheadWithFilters": {
-      "title": "Remote typeahead with filters",
+    "remoteAutoCompleteWithFilters": {
+      "title": "Remote Autocomplete with filters",
       "type": "string",
       "widget": {
         "formlyConfig": {
-          "type": "remoteTypeahead",
+          "type": "remoteAutoComplete",
           "props": {
-            "remoteTypeahead": {
-              "enableGroupField": true,
-              "filters": {
-                "default": "value2",
-                "options": [
-                  {
-                    "label": "Value 1",
-                    "value": "value1"
-                  },
-                  {
-                    "label": "Value 2",
-                    "value": "value2"
-                  },
-                  {
-                    "label": "Value 3",
-                    "value": "value3"
-                  }
-                ]
-              }
+            "group": true,
+            "scrollHeight": "300px",
+            "queryOptions": {
+              "type": "documents",
+              "maxOfResult": 10
+            },
+            "filters": {
+              "selected": "value2",
+              "options": [
+                {
+                  "label": "Value 1",
+                  "value": "value1"
+                },
+                {
+                  "label": "Value 2",
+                  "value": "value2"
+                },
+                {
+                  "label": "Value 3",
+                  "value": "value3"
+                }
+              ]
             }
           }
         }
       }
     },
-    "remoteTypeaheadWithoutFilters": {
+
+    "remoteAutocompleteWithoutFilters": {
       "title": "Remote typeahead without filters",
       "type": "string",
       "widget": {
         "formlyConfig": {
-          "type": "remoteTypeahead",
+          "type": "remoteAutoComplete",
           "props": {
-            "remoteTypeahead": {
-              "enableGroupField": true
+            "group": true,
+            "scrollHeight": "300px",
+            "queryOptions": {
+              "type": "documents",
+              "maxOfResult": 10
             }
           }
         }

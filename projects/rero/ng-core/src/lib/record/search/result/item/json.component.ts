@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-20224 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,15 +24,11 @@ import { ResultItem } from './result-item';
   template: `
     {{ record|json }}
     @if (detailUrl) {
-      <div class="mt-3">
+      <div class="my-3">
         @if (detailUrl.external === false) {
-          <a class="btn btn-primary btn-sm" [routerLink]="detailUrl.link">
-            <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
-          </a>
+          <p-button outlined icon="pi pi-eye" [label]="'Show' | translate" [routerLink]="detailUrl.link" />
         } @else {
-          <a class="btn btn-primary btn-sm" [href]="detailUrl.link">
-            <i class="fa fa-file-o mr-2"></i>{{ 'Show' | translate }}
-          </a>
+          <p-button outlined icon="pi pi-eye" [label]="'Show' | translate" [href]="detailUrl.link" />
         }
       </div>
     }
@@ -40,14 +36,11 @@ import { ResultItem } from './result-item';
 })
 export class JsonComponent implements ResultItem {
   // Record data.
-  @Input()
-  record: any;
+  @Input() record: any;
 
   // Type of resource.
-  @Input()
-  type: string;
+  @Input() type: string;
 
   // Info for detail URL link.
-  @Input()
-  detailUrl: { link: string, external: boolean };
+  @Input() detailUrl: { link: string, external: boolean };
 }
