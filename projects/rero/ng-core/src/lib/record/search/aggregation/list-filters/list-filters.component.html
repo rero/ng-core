@@ -14,22 +14,17 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (filters?.length > 0) {
-  <ul id="filters" class="pl-0">
-    @for (filter of filters; track filter) {
-      <li class="d-inline list-unstyled pr-2">
-        <button (click)="remove(filter)" type="button" class="btn btn-outline-secondary btn-sm mb-2"
-        data-toggle="button" aria-pressed="false" autocomplete="off"
-        title="{{ filter.aggregationKey | translate }}"
-        >
+@if (filters()?.length > 0) {
+  <div class="flex flex-wrap mb-2">
+    @for (filter of filters(); track filter) {
+      <p-button class="mr-2 mb-2" [outlined]="true" severity="secondary" (click)="removeFilter(filter)">
         @if (filter.name) {
           {{ filter.name }}
         } @else {
           {{ filter.key | bucketName: filter.aggregationKey | async }}
         }
-        <i class="fa fa-close ml-1"></i>
-        </button>
-      </li>
+        <i class="ml-1 pi pi-times"></i>
+      </p-button>
     }
-  </ul>
+  </div>
 }

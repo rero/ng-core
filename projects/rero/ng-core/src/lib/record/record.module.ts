@@ -72,19 +72,21 @@ import { AggregationDateRangeComponent } from './search/aggregation/date-range/d
 import { ListFiltersComponent } from './search/aggregation/list-filters/list-filters.component';
 import { BucketNamePipe } from './search/aggregation/pipe/bucket-name.pipe';
 import { AggregationSliderComponent } from './search/aggregation/slider/slider.component';
+import { MenuSortComponent } from './search/menu-sort/menu-sort.component';
+import { PaginatorComponent } from './search/paginator/paginator.component';
 import { RecordSearchPageComponent } from './search/record-search-page.component';
 import { RecordSearchComponent } from './search/record-search.component';
 import { JsonComponent } from './search/result/item/json.component';
 import { RecordSearchResultComponent } from './search/result/record-search-result.component';
-import { RecordSearchResultDirective } from './search/result/record-search-result.directive';
-import { PaginatorComponent } from './search/paginator/paginator.component';
+import { SearchFieldsComponent } from './search/search-fields/search-fields.component';
+import { SearchFiltersComponent } from './search/search-filters/search-filters.component';
+import { SearchTabsComponent } from './search/search-tabs/search-tabs.component';
 
 @NgModule({
     declarations: [
         RecordSearchPageComponent,
         RecordSearchComponent,
         RecordSearchResultComponent,
-        RecordSearchResultDirective,
         RecordSearchAggregationComponent,
         JsonComponent,
         DetailComponent,
@@ -126,6 +128,10 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
         DetailButtonComponent,
         RadioButtonComponent,
         PaginatorComponent,
+        MenuSortComponent,
+        SearchFiltersComponent,
+        SearchFieldsComponent,
+        SearchTabsComponent,
     ],
     imports: [
         // NOTE : BrowserAnimationModule **should** be include in application core module.
@@ -191,7 +197,9 @@ import { PaginatorComponent } from './search/paginator/paginator.component';
         ExportButtonComponent,
         DetailButtonComponent,
         RecordDetailDirective,
-        RecordFilesComponent
+        RecordFilesComponent,
+        SearchFiltersComponent,
+        SearchFieldsComponent,
     ],
     providers: [
         {

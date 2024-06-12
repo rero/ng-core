@@ -14,25 +14,33 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (buckets) {
+@if (buckets()) {
   <ul class="list-unstyled m-0 bucket-group">
-    @for (bucket of buckets|slice:0:bucketSize; track bucket) {
-      <li class="form-check bucket-item">
+  @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
+    <li>
+      <div class="flex align-items-stretch mb-1">
         @if (bucket.doc_count) {
-          <div class="d-flex flex-row bucket-data align-items-start" (click)="updateFilter(bucket)">
-            <input class="form-check-input" [indeterminate]="bucket?.indeterminate" type="checkbox" [checked]="isSelected(bucket.key)"/>
-            <a class="form-check-label">
+          <div class="flex flex-grow-1 align-items-start">
+            <p-triStateCheckbox
+              inputId="{{ bucket.aggregationKey }}-{{ index }}"
+              class="mr-1"
+              [ngModel]="bucket.indeterminate ? false : isSelected(bucket.key)"
+              (onChange)="updateFilter(bucket)"
+            />
+            <label for="{{ bucket.aggregationKey }}-{{ index }}">
               @if (bucket.name) {
                 {{ bucket.name }}
               } @else {
-                {{ bucket.key | bucketName: aggregationKey | async }}
+                {{ bucket.key | bucketName: aggregationKey() | async }}
               }
-            </a>
-            <span class="ml-auto bucket-count">
-              <span class="bucket-count-badge">{{ bucket.doc_count }}</span>
-            </span>
+            </label>
+          </div>
+          <div class="flex flex-none align-items-start ml-2">
+            {{ bucket.doc_count }}
           </div>
         }
+      </div>
+      <div class="ml-4">
         @if (displayChildren(bucket)) {
           @for (aggregation of bucketChildren[bucket.key]; track aggregation) {
             <ng-core-record-search-aggregation-buckets
@@ -42,13 +50,11 @@
             ></ng-core-record-search-aggregation-buckets>
           }
         }
-      </li>
-    }
+      </div>
+    </li>
+  }
   </ul>
 }
 @if (displayMoreAndLessLink) {
-  <div>
-    <button class="btn btn-link ml-2"
-      (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</button>
-  </div>
+  <p-button class="ml-1" [link]="true" [label]="(moreMode ? 'more…' : 'less…') | translate" (click)="moreMode = !moreMode"></p-button>
 }

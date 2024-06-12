@@ -98,7 +98,7 @@ export class DetailButtonComponent {
    * @param message - message to display into modal
    */
   showDeleteMessage(message: string) {
-    this.deleteMessageEvent.emit(message);
+    this.deleteMessageEvent.emit(message.replace(new RegExp('\n', 'g'), '<br>'));
   }
 
   /** Go back to previous page */
