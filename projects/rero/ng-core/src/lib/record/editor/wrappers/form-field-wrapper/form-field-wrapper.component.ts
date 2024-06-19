@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
-import { EditorComponent } from '../../editor.component';
 
 @Component({
   selector: 'ng-core-form-field-wrapper',
@@ -54,23 +53,13 @@ import { EditorComponent } from '../../editor.component';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
-
-  private editorComponentInstance?: EditorComponent = null;
-
-  ngOnInit(): void {
-    if (this.field?.props?.editorComponent) {
-      this.editorComponentInstance = (this.field.props.editorComponent)();
-    }
-  }
+export class FormFieldWrapperComponent extends FieldWrapper {
 
   /** Hide the field */
   remove(): void {
     switch (this.field.parent.type) {
       case 'object':
-        if (this.editorComponentInstance) {
-          this.editorComponentInstance.hide(this.field);
-        }
+        this.field.props.setHide ? this.field.props.setHide(this.field, true): this.field.hide = true;
         break;
       case 'array':
         this.field.parent.props.remove(Number(this.field.key));
@@ -85,12 +74,18 @@ export class FormFieldWrapperComponent extends FieldWrapper implements OnInit {
   canRemove(): boolean {
     switch (this.field.parent.type) {
       case 'object':
-        return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
-      case 'array':
-        return this.field.parent.props.canRemove();
-      default:
-        return false;
-    }
+        if (!this.field.props?.editorConfig?.longMode) {
+          return false;
+        }
+        return (
+          !this.field.props.required &&
+          !this.field.hide
+        );
+        case 'array':
+          return this.field.parent.props.canRemove();
+        default:
+          return false;
+      }
   }
 
   /**

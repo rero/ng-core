@@ -15,35 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { EditorComponent } from '../../editor.component';
 
 @Component({
   selector: 'ng-core-label-editor',
   templateUrl: './label.component.html',
 })
-export class LabelComponent implements OnInit {
+export class LabelComponent {
 
   // Current field
   @Input() field: FormlyFieldConfig;
-
-  // Instance of Editor Component
-  private editorComponentInstance?: EditorComponent;
 
   /**
    * Constructor
    * @param translateService - TranslateService, that translate the labels of the hidden fields
    */
   constructor(private translateService: TranslateService) {}
-
-  /** onInit hook */
-  ngOnInit(): void {
-    if (this.field.props.editorComponent) {
-      this.editorComponentInstance = (this.field.props.editorComponent)();
-    }
-  }
 
   /**
    * Is the dropdown menu displayed?
@@ -59,7 +48,7 @@ export class LabelComponent implements OnInit {
     }
     return (
       (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 ||
-        this.field.props.helpURL) && this.editorComponentInstance?.longMode
+        this.field.props.helpURL) && field.props.editorConfig.longMode
     );
   }
 
@@ -124,7 +113,7 @@ export class LabelComponent implements OnInit {
    * @returns boolean, true if I'm the root
    */
   isRoot(): boolean {
-    return this.editorComponentInstance ? this.editorComponentInstance.isRoot(this.field) : false;
+    return this.field.props?.isRoot || false;
   }
 
   /**
@@ -132,8 +121,8 @@ export class LabelComponent implements OnInit {
    * @param field - FormlyFieldConfig, the field to hide
    */
   remove(): void {
-    if (this.field.parent.type === 'object' && this.editorComponentInstance) {
-      this.editorComponentInstance.hide(this.field);
+    if (this.field.parent.type === 'object') {
+      this.field.props.setHide ? this.field.props.setHide(this.field, true): this.field.hide = true;
     }
     if (this.field.parent.type === 'array') {
       this.field.parent.props.remove(this.getIndex());
@@ -145,7 +134,7 @@ export class LabelComponent implements OnInit {
    * @param field - FormlyFieldConfig, the field to show
    */
   show(field: FormlyFieldConfig) {
-    field.hide = false;
+      this.field.props.setHide ? this.field.props.setHide(this.field, false): this.field.hide = false;
   }
 
   /**
@@ -153,13 +142,20 @@ export class LabelComponent implements OnInit {
    * @returns boolean, true if the field can be hidden
    */
   canRemove(): boolean {
-    if (this.field.parent.type === 'object') {
-      return this.editorComponentInstance ? this.editorComponentInstance.canHide(this.field) : false;
-    }
-    if (this.field.parent.type === 'array') {
-      return this.field.parent.props.canRemove();
-    }
-    return false;
+    switch (this.field.parent.type) {
+      case 'object':
+        if (!this.field.props?.editorConfig?.longMode) {
+          return false;
+        }
+        return (
+          !this.field.props.required &&
+          !this.field.hide
+        );
+        case 'array':
+          return this.field.parent.props.canRemove();
+        default:
+          return false;
+      }
   }
 
   /**
