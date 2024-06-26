@@ -1,0 +1,67 @@
+/*
+ * RERO angular core
+ * Copyright (C) 2020-2024 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+import { ClipboardModule } from "@angular/cdk/clipboard";
+import { NgModule } from "@angular/core";
+import { AutoFocusModule } from 'primeng/autofocus';
+import { BadgeModule } from 'primeng/badge';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from "primeng/calendar";
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from "primeng/dropdown";
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessagesModule } from 'primeng/messages';
+import { PaginatorModule } from 'primeng/paginator';
+import { PanelModule } from 'primeng/panel';
+import { RadioButtonModule } from "primeng/radiobutton";
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TabViewModule } from 'primeng/tabview';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
+
+@NgModule({
+  exports: [
+    AutoFocusModule,
+    BadgeModule,
+    ButtonModule,
+    CalendarModule,
+    CheckboxModule,
+    ClipboardModule,
+    ConfirmDialogModule,
+    DropdownModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputSwitchModule,
+    InputTextModule,
+    MessagesModule,
+    PaginatorModule,
+    PanelModule,
+    RadioButtonModule,
+    SplitButtonModule,
+    TabViewModule,
+    TagModule,
+    ToastModule,
+    TooltipModule,
+    TriStateCheckboxModule,
+  ]
+})
+export class PrimeNgCoreModule { }

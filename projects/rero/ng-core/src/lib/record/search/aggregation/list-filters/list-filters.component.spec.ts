@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022 RERO
+ * Copyright (C) 2022-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,19 +16,23 @@
  */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ComponentRef } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
 import { BucketNamePipe } from '../pipe/bucket-name.pipe';
-import { ListFiltersComponent } from './list-filters.component';
+import { IFilter, ListFiltersComponent } from './list-filters.component';
 
 describe('ListFiltersComponent', () => {
   let component: ListFiltersComponent;
+  let componentRef: ComponentRef<ListFiltersComponent>;
   let fixture: ComponentFixture<ListFiltersComponent>;
   let translateService: TranslateService;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [
-        TranslateModule.forRoot()
+        TranslateModule.forRoot(),
+        ButtonModule
       ],
       declarations: [
         ListFiltersComponent,
@@ -42,13 +46,16 @@ describe('ListFiltersComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ListFiltersComponent);
     component = fixture.componentInstance;
-    component.filters = [
-      { key: 'on_shelf', aggregationKey: 'status' },
-      { key: 'docmaintype_serial', aggregationKey: 'document_type' }
-    ];
+    componentRef = fixture.componentRef;
+    componentRef.setInput('aggregationsFilters', [
+      { key: 'simple', values: ['1']},
+      { key: 'document_type', values: ['docmaintype_article', 'docmaintype_series'] },
+      { key: 'year', values: ['1745--2050'] },
+      { key: 'range', values: ['1704099600000--1714550400000'] }
+    ]);
     translateService.setTranslation('en', {
-      on_shelf: 'available',
-      docmaintype_serial: 'serial'
+      'docmaintype_article': 'Article',
+      'docmaintype_series': 'Serial'
     });
     translateService.use('en');
     fixture.detectChanges();
@@ -58,18 +65,41 @@ describe('ListFiltersComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display 2 buttons', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
-    expect(buttons.length).toBe(2);
+  it('should display 4 buttons', () => {
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
+    expect(buttons.length).toBe(4);
   });
 
-  it('should display button available', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
-    expect(buttons[0].innerHTML).toContain('available');
+  it('should have the button label translated', () => {
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
+    expect(buttons[0].innerHTML).toContain('Article');
+    expect(buttons[2].innerHTML).toContain('1745 - 2050');
+    expect(buttons[3].innerHTML).toContain('1/1/2024 - 5/1/2024');
   });
 
-  it('should display button serial', () => {
-    const buttons = fixture.debugElement.nativeElement.querySelectorAll('ul#filters li > button');
-    expect(buttons[1].innerHTML).toContain('serial');
+  it('should return an event when the filter is deleted', () => {
+    let event: IFilter = {
+      aggregationKey: 'document_type',
+      key: 'docmaintype_article'
+    };
+    let subscribe = component.remove.subscribe((filter: IFilter) => {
+      expect(filter).toEqual(event)
+    });
+    let buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
+    buttons[0].click();
+    subscribe.unsubscribe();
+
+    event = {
+      aggregationKey: 'year',
+      key: '1745--2050',
+      name: '1745 - 2050'
+    };
+    subscribe = component.remove.subscribe((filter: IFilter) => {
+      expect(filter).toEqual(event)
+    });
+
+    buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
+    buttons[2].click();
+    subscribe.unsubscribe();
   });
 });

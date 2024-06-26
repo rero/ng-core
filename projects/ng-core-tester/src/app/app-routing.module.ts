@@ -377,6 +377,16 @@ const routes: Routes = [
               label: 'Title',
               value: 'title'
             }
+          ],
+          exportFormats: [
+            {
+              label: 'CSV',
+              url: 'CSV'
+            },
+            {
+              label: 'TXT',
+              url: 'txt'
+            }
           ]
         },
         {
