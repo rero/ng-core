@@ -14,11 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-import { CoreConfigService, MenuItem, RecordEvent, RecordService, TitleMetaService, TranslateService } from '@rero/ng-core';
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { ToastrService } from 'ngx-toastr';
-import { AppMenuService } from './service/app-menu.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { CoreConfigService, RecordEvent, RecordService, TitleMetaService, TranslateService } from '@rero/ng-core';
+import { MenuItem, MessageService } from 'primeng/api';
 
 /**
  * Main component of the application.
@@ -28,6 +26,14 @@ import { AppMenuService } from './service/app-menu.service';
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
+
+  /** Service injection */
+  translateService = inject(TranslateService);
+  configService = inject(CoreConfigService);
+  titleMetaService = inject(TitleMetaService);
+  recordService = inject(RecordService);
+  messageService = inject(MessageService);
+
   // Current lang of the application
   lang: string = document.documentElement.lang;
 
@@ -42,28 +48,6 @@ export class AppComponent implements OnInit {
 
   // Application language menu
   languageMenu: MenuItem;
-
-  /**
-   * Constructor.
-   * @param _translateService Translate service.
-   * @param _configService Configuration service.
-   * @param _titleMetaService Meta service.
-   * @param _recordService Record service.
-   * @param _toastrService Toast service.
-   * @param _bsLocaleService Locale service for bootstrap.
-   * @param _menuService Interface menu
-   */
-  constructor(
-    private _translateService: TranslateService,
-    private _configService: CoreConfigService,
-    private _titleMetaService: TitleMetaService,
-    private _recordService: RecordService,
-    private _toastrService: ToastrService,
-    private _bsLocaleService: BsLocaleService,
-    private _appMenuService: AppMenuService
-  ) {
-  }
-
   /**
    * Component initialization.
    *
@@ -73,52 +57,30 @@ export class AppComponent implements OnInit {
    */
   ngOnInit() {
     this.initializeEvents();
-    this._translateService.setLanguage(this.lang);
-    this.appMenu = this._appMenuService.generateApplicationMenu();
-    this.languageMenu = this._appMenuService.generateLanguageMenu(
-      this._configService.languages,
-      this.lang
-    );
+    this.translateService.setLanguage(this.lang);
     // Set default title window when application start
-    const prefix = this._configService.prefixWindow;
+    const prefix = this.configService.prefixWindow;
     if (prefix) {
-      this._titleMetaService.setPrefix(prefix);
+      this.titleMetaService.setPrefix(prefix);
     }
-    this._titleMetaService.setTitle('Welcome');
-  }
-
-  /**
-   * Event change language
-   * @param item - MenuItem
-   */
-  eventChangeLang(item: MenuItem) {
-    this.languageMenu.getChildren().forEach((menu: MenuItem) => {
-      if (menu.isActive()) {
-        menu.deleteLabelAttribute('class');
-        menu.setActive(false);
-      }
-    });
-    item.setLabelAttribute('class', 'font-weight-bold')
-        .setActive(true);
-    this._translateService.setLanguage(item.getName());
-    this._bsLocaleService.use(item.getName());
+    this.titleMetaService.setTitle('Welcome');
   }
 
   /**
    * Initializes listening of events when a record is changed.
    */
   private initializeEvents() {
-    this._recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
-      const pid = recordEvent.data.record.pid;
-      this._toastrService.info(`Call Record Event on create (Record Pid: ${pid})`);
+    this.recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
+      const {pid} = recordEvent.data.record;
+      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on create (Record Pid: ${pid})`});
     });
-    this._recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
-      const pid = recordEvent.data.record.pid;
-      this._toastrService.info(`Call Record Event on update (Record Pid: ${pid})`);
+    this.recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
+      const {pid} = recordEvent.data.record;
+      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on update (Record Pid: ${pid})`});
     });
-    this._recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
-      const pid = recordEvent.data.pid;
-      this._toastrService.info(`Call Record Event on delete (Record Pid: ${pid})`);
+    this.recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
+      const {pid} = recordEvent.data.record;
+      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on delete (Record Pid: ${pid})`});
     });
   }
 }

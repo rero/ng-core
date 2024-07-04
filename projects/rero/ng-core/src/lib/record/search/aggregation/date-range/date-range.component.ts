@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {RecordSearchService} from '../../record-search.service';
-import {Subscription} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { RecordSearchService } from '../../record-search.service';
 
 @Component({
   selector: 'ng-core-aggregation-date-range',
@@ -28,20 +26,20 @@ import {TranslateService} from '@ngx-translate/core';
 export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   // COMPONENTS ATTRIBUTES ====================================================
-  /** Buckets list. */
-  @Input() buckets: Array<any>;
-  /** Aggregation key. */
-  @Input() key: string;
-  /** Components configuration. */
-  @Input() config: any;
+  // Buckets list
+  buckets = input.required<any[]>();
+  // Aggregation key
+  key = input.required<string>();
+  // Components configuration
+  config = input.required<any>();
 
-  /** model used for bsDatePicker field */
-  dateRangeModel: Date[];
-  /** bsDatePicker configuration. */
-  bsConfig: any = {
-    isAnimated: true,
-    containerClass: 'theme-dark-blue'
-  };
+  // Model used for Datepicker field.
+  dateRangeModel: Date[] | undefined;
+  // Date minimum
+  minDate: any = null;
+  // Date maximum
+  maxDate: any = null;
+
   /** True if route have aggregation query param. */
   hasQueryParam = false;
 
@@ -49,49 +47,23 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   private searchServiceSubscription: Subscription;
 
   // CONSTRUCTOR & HOOKS ======================================================
-  constructor(
-      private recordSearchService: RecordSearchService,
-      private translateService: TranslateService
-  ) { }
+  constructor(private recordSearchService: RecordSearchService) { }
 
   /** OnInit hook */
   ngOnInit(): void {
     // Define min/max values if not exists
-    if (!this.config.hasOwnProperty('min') || this.config.min < 0) {
-      this.config.min = 0;
+    if (this.config().min && this.config().min !== null) {
+      this.minDate = new Date(this.config().min);
     }
-    if (!this.config.hasOwnProperty('max')) {
-      this.config.max = new Date();
-      this.config.max.setFullYear(this.config.max.getFullYear() + 1).getTime();
+    if (this.config().max && this.config().max !== null) {
+      this.maxDate = new Date(this.config().max);
     }
 
-    // Build bsDateRangePicker configuration
-    this.bsConfig.maxDate = new Date(this.config.max);
-    this.bsConfig.minDate = new Date(this.config.min);
-    const today = new Date();
-    this.bsConfig.ranges = [{
-      value: [new Date(new Date().setDate(today.getDate() - 7)), today],
-      label: this.translateService.instant(_('Last 7 days'))
-    }, {
-      value: [new Date(new Date().setDate(today.getDate() - 31)), today],
-      label: this.translateService.instant(_('Last month'))
-    }, {
-      value: [new Date(new Date().setDate(today.getDate() - 366)), today],
-      label: this.translateService.instant(_('Last year'))
-    }, {
-      value: [new Date(today.getFullYear(), today.getMonth(), 1), new Date(today.getFullYear(), today.getMonth() + 1, 0)],
-      label: this.translateService.instant(_('This month'))
-    }, {
-      value: [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear() + 1, 0, 1)],
-      label: this.translateService.instant(_('This year'))
-    }];
-
-    this.dateRangeModel = [this.config.min, this.config.max];
     this.searchServiceSubscription = this.recordSearchService.aggregationsFilters.subscribe((filters: any) => {
       if (!filters) {
         return;
       }
-      const filter = filters.find((element: any) => element.key === this.key);
+      const filter = filters.find((element: any) => element.key === this.key());
       this.hasQueryParam = filter !== undefined;
       this.dateRangeModel = (filter)
         ? filter.values[0].split('--').map((item: string) => new Date(+item))  // split filter data and transform each part into Date
@@ -108,7 +80,7 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   /** Update aggregation filter. */
   updateFilter() {
     if (this.dateRangeModel && this.dateRangeModel[0] && this.dateRangeModel[1]) {
-      this.recordSearchService.updateAggregationFilter(this.key, [
+      this.recordSearchService.updateAggregationFilter(this.key(), [
           `${this.dateRangeModel[0].getTime()}--${this.dateRangeModel[1].getTime()}`
       ]);
     }
@@ -116,6 +88,6 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   /** Clear aggregation filter. */
   clearFilter() {
-    this.recordSearchService.updateAggregationFilter(this.key, []);
+    this.recordSearchService.updateAggregationFilter(this.key(), []);
   }
 }

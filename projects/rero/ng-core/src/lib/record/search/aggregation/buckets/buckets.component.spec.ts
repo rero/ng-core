@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,9 +20,11 @@ import { TranslateLanguagePipe } from '../../../../translate/translate-language.
 import { RecordSearchService } from '../../record-search.service';
 import { BucketNamePipe } from '../pipe/bucket-name.pipe';
 import { BucketsComponent } from './buckets.component';
+import { ComponentRef } from '@angular/core';
 
 describe('BucketsComponent', () => {
   let component: BucketsComponent;
+  let componentRef: ComponentRef<BucketsComponent>;
   let fixture: ComponentFixture<BucketsComponent>;
 
   beforeEach(waitForAsync(() => {
@@ -45,7 +47,8 @@ describe('BucketsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BucketsComponent);
     component = fixture.componentInstance;
-    component.buckets = [
+    componentRef = fixture.componentRef;
+    componentRef.setInput('buckets', [
       {
         doc_count: 30,
         key: 'Filippini, Massimo'
@@ -54,7 +57,7 @@ describe('BucketsComponent', () => {
         doc_count: 9,
         key: 'Botturi, Luca'
       }
-    ];
+    ]);
     fixture.detectChanges();
   });
 

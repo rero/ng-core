@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '../../record.module';
@@ -23,6 +24,7 @@ import { RecordSearchAggregationComponent } from './aggregation.component';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
+  let componentRef: ComponentRef<RecordSearchAggregationComponent>;
   let fixture: ComponentFixture<RecordSearchAggregationComponent>;
 
   beforeEach(waitForAsync(() => {
@@ -42,7 +44,8 @@ describe('RecordSearchAggregationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(RecordSearchAggregationComponent);
     component = fixture.componentInstance;
-    component.aggregation = {
+    componentRef = fixture.componentRef;
+    componentRef.setInput('aggregation', {
       key: 'author',
       bucketSize: 2,
       value: {
@@ -60,7 +63,7 @@ describe('RecordSearchAggregationComponent', () => {
       expanded: false,
       type: 'terms',
       config: {}
-    };
+    });
     fixture.detectChanges();
   });
 

@@ -14,28 +14,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { RecordSearchService } from '../../record-search.service';
+import { Component, OnDestroy, OnInit, input } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { RecordSearchService } from '../../record-search.service';
 
 @Component({
   selector: 'ng-core-aggregation-slider',
   templateUrl: './slider.component.html',
+  styleUrl: './slider.component.scss'
 })
 export class AggregationSliderComponent implements OnDestroy, OnInit {
 
   // COMPONENT ATTRIBUTES =====================================================
   /** The aggregation key. */
-  @Input() key: string;
+  key = input<string>();
   /** Buckets list */
-  @Input() buckets: Array<any>;
+  buckets = input<any[]>();
   /** The minimum value */
-  @Input() min = 1;
+  min = input<number>(1);
   /** The maximum value */
-  @Input() max = 1000;
+  max = input<number>(1000);
   /** gap between each value. */
-  @Input() step = 1;
+  step = input<number>(1);
 
   /** Range to search */
   range: Array<number> = null;
@@ -57,7 +57,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
    *   Subscribe to route changes for getting aggregation query parameter.
    */
   ngOnInit() {
-    this.range = [this.min, this.max];
+    this.range = [this.min(), this.max()];
     this.searchServiceSubscription = this.recordSearchService
         .aggregationsFilters
         .subscribe((filters: any) => {
@@ -70,7 +70,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
             this.hasQueryParam = true;
             this.range = filter;
           } else {
-            this.range = [this.min, this.max];
+            this.range = [this.min(), this.max()];
           }
         });
   }
@@ -86,15 +86,16 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   // COMPONENT FUNCTIONS ======================================================
   /** Update aggregation filter. */
   updateFilter() {
-    if (!this.range[0] || this.range[0] < this.min) { this.range[0] = this.min; }
-    if (!this.range[1] || this.range[1] > this.max) { this.range[1] = this.max; }
-    this.recordSearchService.updateAggregationFilter(this.key, [
+    if (!this.range[0] || this.range[0] < this.min()) { this.range[0] = this.min(); }
+    if (!this.range[1] || this.range[1] > this.max()) { this.range[1] = this.max(); }
+    this.recordSearchService.updateAggregationFilter(this.key(), [
       `${this.range[0]}--${this.range[1]}`,
     ]);
   }
 
   /** Clear aggregation filter. */
   clearFilter() {
-    this.recordSearchService.updateAggregationFilter(this.key, []);
+    this.hasQueryParam = false;
+    this.recordSearchService.updateAggregationFilter(this.key(), []);
   }
 }

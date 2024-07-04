@@ -97,8 +97,10 @@ export class DocumentsRoute implements RouteInterface {
               return record;
             },
             pagination: {
-              boundaryLinks: true,
-              maxSize: 5
+              boundaryLinks: false,
+              maxSize: 5,
+              pageReport: false,
+              rowsPerPageOptions: [10,20]
             },
             formFieldMap: (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
               // Populates each select with custom options
@@ -125,12 +127,12 @@ export class DocumentsRoute implements RouteInterface {
                 message: ''
               });
             },
-            deleteMessage: (pid: string): Observable<string[]> => {
+            deleteMessage: (): string[] => {
               // If you want to translate the strings, you have to do it here
-              return of([
+              return [
                 this.translateService.instant('Document: Do you really want to delete this record?'),
                 this.translateService.instant('Attached items will also be deleted.')
-              ]);
+              ];
             }
           }
         ]

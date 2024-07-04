@@ -21,8 +21,8 @@ import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
 import { RecordUiService } from '../record-ui.service';
-import { SortOption } from './record-search.component';
 import { RecordSearchService } from './record-search.service';
+import { ISortOption } from './menu-sort/menu-sort.component';
 
 @Component({
   selector: 'ng-core-record-search-page',
@@ -98,7 +98,9 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     aggregationsBucketSize?: number,
     pagination?: {
       boundaryLinks?: boolean,
-      maxSize?: number
+      maxSize?: number,
+      pageReport?: boolean,
+      rowsPerPageOptions?: number[],
     },
     formFieldMap?: (field: FormlyFieldConfig, jsonSchema: JSONSchema7) => FormlyFieldConfig
   }[] = [{ key: 'documents', label: 'Documents' }];
@@ -248,7 +250,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     }
 
     const defaultSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
-    config.sortOptions.forEach((option: SortOption) => {
+    config.sortOptions.forEach((option: ISortOption) => {
       if (option[defaultSortValue] === true) {
         this.sort = option.value;
       }

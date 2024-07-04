@@ -25,27 +25,39 @@
       [ngClass]="{'input-group-lg': size === 'large', 'input-group-sm': size === 'small'}"
       role="search" autocomplete="off">
 
-  <input
-  (keyup.enter)="doSearch($event)"
-  name="q"
-  [placeholder]="placeholder? placeholder: 'search' | translate | ucfirst"
-  [(ngModel)]="asyncSelected.query"
-  [typeaheadAsync]="true"
-  [typeahead]="dataSource"
-  (typeaheadLoading)="changeTypeaheadLoading($event)"
-  [typeaheadOptionsLimit]="typeaheadOptionsLimit"
-  typeaheadOptionField="query"
-  class="form-control"
-  [typeaheadWaitMs]="typeaheadWaitMs"
-  [typeaheadMinLength]="typeaheadMinLength"
-  [typeaheadItemTemplate]="customItemTemplate"
-  typeaheadGroupField="category"
-  (typeaheadOnSelect)="typeaheadOnSelect($event)"
-  [typeaheadIsFirstItemActive]="false"
-  >
+  <p-inputGroup>
+    <input
+    pInputText
+    (keyup.enter)="doSearch($event)"
+    name="q"
+    [placeholder]="placeholder? placeholder: 'search' | translate | ucfirst"
+    [(ngModel)]="asyncSelected.query"
+    [typeaheadAsync]="true"
+    [typeahead]="dataSource"
+    (typeaheadLoading)="changeTypeaheadLoading($event)"
+    [typeaheadOptionsLimit]="typeaheadOptionsLimit"
+    typeaheadOptionField="query"
+    class="form-control"
+    [typeaheadWaitMs]="typeaheadWaitMs"
+    [typeaheadMinLength]="typeaheadMinLength"
+    [typeaheadItemTemplate]="customItemTemplate"
+    typeaheadGroupField="category"
+    (typeaheadOnSelect)="typeaheadOnSelect($event)"
+    [typeaheadIsFirstItemActive]="false"
+    >
+    <button pButton type="button" pButton (click)="doSearch($event)" [ngClass]="buttonCssClass">
+      @if (!typeaheadLoading) {
+        <i class="fa fa-search"></i>
+      } @else {
+        <i class="fa fa-spinner fa-spin"></i>
+      }
+    </button>
+  </p-inputGroup>
+
   @for (queryParam of extraQueryParams | keyvalue; track queryParam) {
     <input type="hidden" [name]="queryParam.key" [value]="queryParam.value">
   }
+  <!--
   <div class="input-group-append">
     <button type="submit" (click)="doSearch($event)" [ngClass]="buttonCssClass">
       @if (!typeaheadLoading) {
@@ -55,4 +67,5 @@
       }
     </button>
   </div>
+-->
 </form>
