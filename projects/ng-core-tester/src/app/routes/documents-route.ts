@@ -97,8 +97,10 @@ export class DocumentsRoute implements RouteInterface {
               return record;
             },
             pagination: {
-              boundaryLinks: true,
-              maxSize: 5
+              boundaryLinks: false,
+              maxSize: 5,
+              pageReport: false,
+              rowsPerPageOptions: [10,20]
             },
             formFieldMap: (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
               // Populates each select with custom options
