@@ -1,5 +1,12 @@
 # Changelog
 
+## [v17.2.2](https://github.com/rero/ng-core/tree/v17.2.2) (2024-07-18)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.2.1...v17.2.2)
+
+**Other changes:**
+* fix: update ngx-formly [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
+
 ## [v17.2.1](https://github.com/rero/ng-core/tree/v17.2.1) (2024-06-06)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.0...v17.2.1)
