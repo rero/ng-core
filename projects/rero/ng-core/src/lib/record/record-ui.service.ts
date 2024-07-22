@@ -145,7 +145,7 @@ export class RecordUiService {
     if (config.redirectUrl) {
       config.redirectUrl(record, action).subscribe((result: string) => {
         if (result !== null) {
-          this.router.navigate([result]);
+          this.router.navigateByUrl(result);
           return;
         }
       });
