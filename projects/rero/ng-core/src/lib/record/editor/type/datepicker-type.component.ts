@@ -105,9 +105,9 @@ export class DatepickerTypeComponent extends FieldType<FormlyFieldConfig<DatePic
         } catch {
           patchDate = undefined;
         }
-      }
-      if (this.formControl.value !== patchDate) {
-        this.formControl.patchValue(patchDate);
+        if (this.formControl.value !== patchDate) {
+          this.formControl.patchValue(patchDate);
+        }
       }
     });
   }

@@ -38,6 +38,7 @@ interface DateTimePickerProps extends FormlyFieldProps {
   maxDate?: Date;
   disabledDates?: Date[];
   disabledDays?: number[];
+  dataType: string;
 }
 
 @Component({
@@ -65,6 +66,7 @@ interface DateTimePickerProps extends FormlyFieldProps {
         [minDate]="props.minDate"
         [maxDate]="props.maxDate"
         [disabledDates]="props.disabledDates"
+        [dataType]="props.dataType"
         [disabledDays]="props.disabledDays"
       ></p-calendar>
     </div>
@@ -86,7 +88,8 @@ export class DateTimepickerTypeComponent extends FieldType<FormlyFieldConfig<Dat
       stepHour: 1,
       stepMinute: 1,
       stepSecond: 1,
-      firstDayOfWeek: 0
+      firstDayOfWeek: 0,
+      dataType: "date"
     },
   };
 
