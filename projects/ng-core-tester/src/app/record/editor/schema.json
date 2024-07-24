@@ -904,22 +904,40 @@
     },
     "date_time": {
       "title": "Date Time picker",
-      "type": "dateTimePicker",
+      "type": "string",
+      "format": "datetime-local",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5][0-9]$",
       "widget": {
         "formlyConfig": {
+          "type": "dateTimePicker",
           "props": {
-            "showTime": true
+            "dataType": "string",
+            "styleClass": "w-full",
+            "showTime": true,
+            "validation": {
+              "messages": {
+                "patternMessage": "Should be in the following format: 2022-12-31 13:01 (YYYY-MM-DD hh:mm)."
+              }
+            }
           }
         }
       }
     },
     "date_only": {
       "title": "Date picker",
-      "type": "datepicker",
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$",
       "widget": {
         "formlyConfig": {
+          "type": "datepicker",
           "props": {
-            "placement": "top"
+            "placement": "top",
+            "validation": {
+              "messages": {
+                "patternMessage": "Should be in the following format: 2022-12-31 (YYYY-MM-DD)."
+              }
+            }
           }
         }
       }
