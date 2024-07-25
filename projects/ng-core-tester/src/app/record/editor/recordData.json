@@ -20,7 +20,13 @@
       "markdown": "Hello **world**.\nGreat day.",
       "array_with_multicheckbox": ["checkbox1", "checkbox2"],
       "input_with_default_value": "slrofar6uh",
-      "enum": "val1"
+      "enum": "val1",
+      "notes": [
+        {
+          "type": "staff_note",
+          "content": "test"
+        }
+      ]
   },
   "updated": "2024-03-06T07:47:33.944197+00:00"
 }

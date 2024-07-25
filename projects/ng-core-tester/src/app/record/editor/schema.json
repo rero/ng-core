@@ -7,9 +7,11 @@
     "required"
   ],
   "propertiesOrder": [
+    "notes",
     "oneOf",
     "optional",
     "required",
+    "optional_hide_expression_field",
     "essential",
     "hidden",
     "defaultHidden",
@@ -47,6 +49,91 @@
     "field_radio_button_inline"
   ],
   "properties": {
+    "notes": {
+      "title": "Notes",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "title": "Note",
+        "propertiesOrder": [
+          "type",
+          "content"
+        ],
+        "required": [
+          "type",
+          "content"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "enum": [
+              "staff_note",
+              "vendor_note"
+            ],
+            "default": "staff_note",
+            "widget": {
+              "formlyConfig": {
+                "type": "selectWithSort",
+                "props": {
+                  "options": [
+                    {
+                      "label": "vendor_note",
+                      "value": "vendor_note"
+                    },
+                    {
+                      "label": "staff_note",
+                      "value": "staff_note"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "maxLength": 2000,
+            "minLength": 1,
+            "widget": {
+              "formlyConfig": {
+                "type": "textarea",
+                "props": {
+                  "rows": 3
+                }
+              }
+            }
+          }
+        }
+      },
+      "widget": {
+        "formlyConfig": {
+          "wrappers": [
+            "card"
+          ],
+          "props": {
+            "validation": {
+              "validators": {
+                "uniqueValueKeysInObject": {
+                  "keys": [
+                    "type"
+                  ]
+                }
+              },
+              "messages": {
+                "uniqueValueKeysInObjectMessage": "Only one note per type is allowed"
+              }
+            },
+            "hide": true,
+            "navigation": {
+              "essential": true
+            }
+          }
+        }
+      }
+    },
     "$schema": {
       "title": "Schema",
       "type": "string",
@@ -245,6 +332,21 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
+          "props": {
+            "doNotSubmitOnEnter": true
+          }
+        }
+      }
+    },
+    "optional_hide_expression_field": {
+      "title": "Optional Field with Hide Expression",
+      "type": "string",
+      "minLength": 3,
+      "widget": {
+        "formlyConfig": {
+          "expressions": {
+            "hide": "!field.parent.model.required"
+          },
           "props": {
             "doNotSubmitOnEnter": true
           }

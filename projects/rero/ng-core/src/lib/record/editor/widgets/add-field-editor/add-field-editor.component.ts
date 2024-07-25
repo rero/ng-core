@@ -153,8 +153,6 @@ export class AddFieldEditorComponent implements OnInit {
    * @param match - TypeaheadMath, the selected element
    */
   showSelectedField(field: any) {
-    // show the field in the form
-    field.hide = false;
     // reset the input value
     this.value = undefined;
     // remove the the element from the list of hidden fields
@@ -164,6 +162,8 @@ export class AddFieldEditorComponent implements OnInit {
     // See: https://blog.angular-university.io/angular-debugging/
     // wait that the component is present in the DOM
     setTimeout(() => this.editorComponentInstance.setFieldFocus(field, true));
+    // show the field in the form
+    field.hide = false;
   }
 
   /**

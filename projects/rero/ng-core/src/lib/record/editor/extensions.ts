@@ -219,6 +219,8 @@ export class NgCoreFormlyExtension {
       // ignore array item which as key of the form "0"
       // TODO: find a better way to identify this case
       || !isNaN(Number(field.key))
+      // ignore field that has hide expression
+      || ('hide' in field?.expressions)
       // do not hide a field containing a 'hide' wrapper
       || this._hasHideWrapper(field)
       // do not hide a field that has a parent marked as hidden and a model is empty

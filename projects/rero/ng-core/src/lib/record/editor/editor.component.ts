@@ -767,7 +767,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     }
     return (
       !field.props.required &&
-      !field.hide
+      !field.hide &&
+      !('hide' in field?.expressions)
     );
   }
 
