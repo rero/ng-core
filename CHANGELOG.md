@@ -1,5 +1,17 @@
 # Changelog
 
+## [v17.2.3](https://github.com/rero/ng-core/tree/v17.2.3) (2024-07-29)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.2.2...v17.2.3)
+
+**Fixes:**
+* editor: fix can remove field when a hide expression exists [\#635](https://github.com/rero/ng-core/pull/635) (by @jma)
+* editor: fix wrong validation for the datepicker component [\#634](https://github.com/rero/ng-core/pull/634) (by @jma)
+* editor: add URL parameters support [\#632](https://github.com/rero/ng-core/pull/632) (by @jma)
+
+**Other changes:**
+* chore(dependencies): fix vulnerabilites [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
+
 ## [v17.2.2](https://github.com/rero/ng-core/tree/v17.2.2) (2024-07-18)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.1...v17.2.2)
