@@ -17,7 +17,7 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
@@ -138,6 +138,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   // Observable of hidden fields
   private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
 
+  // Previous Url for navigation
+  private previousUrl?: string = undefined;
+
   // current list of hidden fields
   public get hiddenFields$(): Observable<any[]> {
     return this._hiddenFieldsSubject.asObservable();
@@ -176,6 +179,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * @param modalService BsModalService.
    * @param routeCollectionService RouteCollectionService
    * @param loggerService LoggerService
+   * @param router Router
    */
   constructor(
     protected formlyJsonschema: FormlyJsonschema,
@@ -188,10 +192,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     protected location: Location,
     protected modalService: BsModalService,
     protected routeCollectionService: RouteCollectionService,
-    protected loggerService: LoggerService
+    protected loggerService: LoggerService,
+    protected router: Router
   ) {
     super();
     this.form = new UntypedFormGroup({});
+    this.previousUrl = this.router.getCurrentNavigation()?.previousNavigation?.extractedUrl?.toString();
   }
 
   /**
@@ -576,13 +582,17 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         this.translateService.instant(result.message),
         this.translateService.instant(this.recordType)
       );
-      this.recordUiService.redirectAfterSave(
-        result.record.id,
-        result.record,
-        this.recordType,
-        result.action,
-        this.route
-      );
+      if (this.previousUrl) {
+        this.router.navigateByUrl(this.previousUrl, { replaceUrl: true });
+      } else {
+        this.recordUiService.redirectAfterSave(
+          result.record.id,
+          result.record,
+          this.recordType,
+          result.action,
+          this.route
+        );
+      }
       this.loadingChange.emit(true);
     });
   }
