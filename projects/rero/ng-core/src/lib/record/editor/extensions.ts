@@ -37,7 +37,7 @@ export class NgCoreFormlyExtension {
     'multi-checkbox',
     'multi-select',
     'remoteAutoComplete',
-    'tree-select'
+    'tree-select',
   ];
 
   // Types to apply field wrapper on
@@ -47,8 +47,7 @@ export class NgCoreFormlyExtension {
    * Constructor
    * @params _recordService - ng core record service
    */
-  constructor(private _recordService: RecordService) {
-  }
+  constructor(private _recordService: RecordService) {}
   /**
    * prePopulate Formly hook
    * @param field - FormlyFieldConfig
@@ -85,8 +84,8 @@ export class NgCoreFormlyExtension {
           changes.type === 'expressionChanges' &&
           changes.property === 'props.required' &&
           changes.value === true &&
-          changes.field.hide === true)
-        {
+          changes.field.hide === true
+        ) {
           changes.field.hide = false;
         }
       });
@@ -100,10 +99,7 @@ export class NgCoreFormlyExtension {
   private _setWrappers(field: FormlyFieldConfig): void {
     // get wrappers from the props (JSONSchema)
     if (field.props) {
-      field.wrappers = [
-        ...(field.props.wrappers || []),
-        ...(field.wrappers || []),
-      ];
+      field.wrappers = [...(field.props.wrappers || []), ...(field.wrappers || [])];
     }
 
     if (field?.props?.editorConfig?.longMode) {
@@ -111,7 +107,7 @@ export class NgCoreFormlyExtension {
       const { parent } = field;
       if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card')) {
         field.wrappers.unshift('card');
-            // field.wrappers.push('card');
+        // field.wrappers.push('card');
       }
       // Add an horizontal wrapper for all given field types
       // if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
@@ -212,21 +208,21 @@ export class NgCoreFormlyExtension {
     if (!field.props?.editorConfig) {
       return;
     }
-    const {pid, longMode} = field.props?.editorConfig;
+    const { pid, longMode } = field.props?.editorConfig;
     if (
       // only in longMode else it will not be possible to unhide a field
-      !longMode
+      !longMode ||
       // system field has not key
-      || !field?.key
+      !field?.key ||
       // ignore array item which as key of the form "0"
       // TODO: find a better way to identify this case
-      || !isNaN(Number(field.key))
+      !isNaN(Number(field.key)) ||
       // ignore field that has hide expression
-      || ('hide' in field?.expressions)
+      'hide' in field?.expressions ||
       // do not hide a field containing a 'hide' wrapper
-      || this._hasHideWrapper(field)
+      this._hasHideWrapper(field) ||
       // do not hide a field that has a parent marked as hidden and a model is empty
-      || (this._hasHiddenParent(field?.parent) && field.props.hide !== true)
+      (this._hasHiddenParent(field?.parent) && field.props.hide !== true)
     ) {
       return;
     }
@@ -235,21 +231,21 @@ export class NgCoreFormlyExtension {
     const modelEmpty = this._modelIsEmpty(field);
     if (
       // do not hide field which has value in the model
-      modelEmpty
+      modelEmpty &&
       // do not hide required fields
-      && !field.props.initialRequired
+      !field.props.initialRequired
     ) {
       if (
         // hide field marked as hide
-        (field.props.hide === true
+        (field.props.hide === true &&
           // do not hide field has been already manipulated
-          && field.hide === undefined)
+          field.hide === undefined) ||
         // in edition empty fields should be hidden
-        || (pid != null
+        (pid != null &&
           // only during the editor initialization
-          && !field?.props?.getRoot()?.formControl?.touched)
+          !field?.props?.getRoot()?.formControl?.touched)
       ) {
-        field.props.setHide ? field.props.setHide(field, true): field.hide = true;
+        field.props.setHide ? field.props.setHide(field, true) : (field.hide = true);
       }
     }
   }
@@ -418,7 +414,7 @@ export class TranslateExtension implements FormlyExtension {
    */
 
   prePopulate(field: FormlyFieldConfig): void {
-    const props = field.props || {};
+    const props: any = field.props || {};
 
     // translate only once
     if (props._translated) {
@@ -466,34 +462,35 @@ export class TranslateExtension implements FormlyExtension {
       if (isObservable(props.options) || props.options.some((o: any) => 'label' in o && 'value' in o)) {
         props.options = isObservable(props.options) ? props.options : of(props.options);
         props.options = props.options.pipe(
-          switchMap((opts: any) => {
-            const labels = [];
-            const options = [];
-            opts.forEach((opt: any) => {
-              labels.push(opt.label);
-              options.push(opt);
-            });
-            return this._translate.stream(labels).pipe(
-              map((translations: any) => {
-                const output = [];
-                options.forEach((opt: any) => {
-                  const data = cloneDeep(opt);
-                  data.label = translations[opt.label];
-                  output.push(data);
-                });
-                return output;
-              })
-            );
+          map((options: any[]) => {
+            if (options?.length > 0) {
+              options.map((opt) => this.translateOptionsLabel(opt));
+            }
+            return options;
           })
         );
       }
     }
   }
 
+  private translateOptionsLabel(node) {
+    if (node?.label) {
+      node.label = this._translate.instant(node.label);
+    }
+    if (node?.children?.length > 0) {
+      node.children.map((child) => this.translateOptionsLabel(child));
+    }
+    if (node?.items?.length > 0) {
+      node.items.map((child) => this.translateOptionsLabel(child));
+    }
+    if (node?.value && !node?.data) {
+      node.data = node.value;
+    }
+  }
+
   private processAllAddon(props: any): void {
     if (props.addonLeft) {
       props.addonLeft = this.processAddon(props.addonLeftUntranslated);
-
     }
     if (props.addonRight) {
       props.addonRight = this.processAddon(props.addonRightUntranslated);
@@ -501,7 +498,7 @@ export class TranslateExtension implements FormlyExtension {
   }
 
   private processAddon(addon: string[]): any {
-    return addon.map((label: string) => label.startsWith('<') ? label : this._translate.instant(label));
+    return addon.map((label: string) => (label.startsWith('<') ? label : this._translate.instant(label)));
   }
 }
 
@@ -512,10 +509,7 @@ export class TranslateExtension implements FormlyExtension {
  * @param recordService - ng core record service
  * @returns FormlyConfig object configuration
  */
-export function registerNgCoreFormlyExtension(
-  translate: TranslateService,
-  recordService: RecordService
-) {
+export function registerNgCoreFormlyExtension(translate: TranslateService, recordService: RecordService) {
   return {
     // translate the default validators messages
     // widely inspired from ngx-formly example
@@ -649,8 +643,8 @@ export function registerNgCoreFormlyExtension(
         extension: new NgCoreFormlyExtension(recordService),
         // Execute Core Formly extension after formly processing (priority low)
         // https://main.formly.dev/docs/guide/custom-formly-extension#extension-priority
-        priority: 10
-      }
+        priority: 10,
+      },
     ],
   };
 }

@@ -31,8 +31,12 @@
           </select>
         </div>
       }
-      <input class="form-control" [(ngModel)]="search" autocomplete="off" [typeaheadAsync]="true"
-        [typeahead]="suggestions$" (typeaheadLoading)="changeTypeaheadLoading($event)"
+      <input class="form-control"
+        [(ngModel)]="search"
+        autocomplete="off"
+        [typeaheadAsync]="true"
+        [typeahead]="suggestions$"
+        (typeaheadLoading)="changeTypeaheadLoading($event)"
         (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadWaitMs]="300" [typeaheadMinLength]="2"
         [typeaheadLatinize]="true" [typeaheadGroupField]="groupField" typeaheadOptionField="label"
         [class.is-invalid]="showError" [optionsListTemplate]="customListTemplate" />

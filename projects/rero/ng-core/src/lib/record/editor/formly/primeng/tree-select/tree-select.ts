@@ -15,9 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit, Type } from '@angular/core';
+import { Component, NgModule, OnInit, Type, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule as PrimeNgTreeSelectModule } from 'primeng/treeselect';
@@ -58,7 +59,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [options]="selectOptions"
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder"
+      [placeholder]="props.placeholder | translate"
       [showClear]="props.showClear"
       [variant]="props.variant"
       (onNodeSelect)="onNodeSelect($event)"
@@ -79,12 +80,13 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       panelStyleClass: 'w-full',
       scrollHeight: '400px',
       showClear: false,
-      variant: 'outlined'
+      variant: 'outlined',
+      placeholder: 'Select an option…'
     }
   };
 
   nodeSelected: any = undefined;
-
+  // translateService = inject(TranslateService);
   // Doc for TreeNode https://primeng.org/treeselect#api.treeselect.interfaces.TreeNode
   selectOptions: TreeNode<any>[] = [];
 
@@ -104,7 +106,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   }
 
   onNodeSelect(event: TreeNodeSelectEvent): void {
-    this.formControl.patchValue(event.node.data);
+    this.formControl.setValue(event.node.data);
   }
 
   onNodeUnselect(): void {
@@ -132,6 +134,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     PrimeNgTreeSelectModule,
     FormlyModule.forChild({
       types: [
