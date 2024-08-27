@@ -31,6 +31,7 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   emptyFilterMessage?: string;
   emptyMessage?: string;
   filter: boolean;
+  filterBy: string;
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
   group: boolean;
   loadingIcon?: string;
@@ -65,6 +66,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [emptyFilterMessage]="props.emptyFilterMessage"
       [emptyMessage]="props.emptyMessage"
       [filter]="props.filter"
+      [filterBy]="props.filterBy"
       [filterMatchMode]="props.filterMatchMode"
       [formControl]="formControl"
       [formlyAttributes]="field"
@@ -97,6 +99,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       class: 'w-full',
       editable: false,
       filter: false,
+      filterBy: 'label',
       filterMatchMode: 'contains',
       group: false,
       optionGroupChildren: 'items',
@@ -107,7 +110,8 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       showClear: false,
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',
-      tooltipPositionStyle: 'absolute'
+      tooltipPositionStyle: 'absolute',
+      placeholder: 'Select an option...'
     }
   };
 
