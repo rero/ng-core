@@ -89,24 +89,16 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   }
 
   search(event: AutoCompleteCompleteEvent): void {
-    let filtered: any[] = [];
 
-    if (event.query.startsWith('*')) {
-      this.suggestions = this.items;
-    } else {
-      this.items.map((item: any) => {
-        if (item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0) {
-          filtered.push(item);
-        }
-      });
-
-      this.suggestions = filtered;
-    }
+    this.suggestions = this.items.filter((item: any) =>
+        item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0
+    );
   }
 
   onSelect(event: AutoCompleteSelectEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
-    this.currentValue = '';
+    // needed for the dropdown selection
+    setTimeout(() => this.currentValue = '');
   }
 
   addField(field: any): void {

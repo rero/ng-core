@@ -26,7 +26,7 @@
   </div>
   <div class="flex align-items-center justify-content-end w-full">
     <ng-content select="[beforeButton]"></ng-content>
-    @if (record && adminMode().can) {
+    @if (record() && adminMode().can) {
       @if (useStatus && useStatus.can && useStatus.url) {
         <p-button id="detail-use-button"
           class="ml-1"
@@ -43,7 +43,7 @@
           icon="fa fa-pencil"
           [label]="'Edit'|translate"
           [outlined]="!isPrimaryAction('use')"
-          (click)="updateRecord(record)"
+          (click)="updateRecord(record())"
           translate
         />
       }
@@ -54,7 +54,7 @@
           [outlined]="true"
           severity="danger"
           [label]="'Delete'|translate"
-          (click)="deleteRecord(record)"
+          (click)="deleteRecord(record())"
         />
       } @else {
         @if (deleteStatus().message) {
