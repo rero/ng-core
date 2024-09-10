@@ -34,15 +34,12 @@ export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectPr
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
   group: boolean;
   loadingIcon?: string;
-  optionDisabled?: string;
-  optionGroupChildren: string;
-  optionGroupLabel: string;
-  optionLabel?: string;
-  optionValue?: string;
   panelStyleClass?: string;
+  placeholder?: string;
   required: boolean;
   scrollHeight: string;
   showClear?: boolean;
+  sort: boolean;
   styleClass?: string;
   tooltip?: string;
   tooltipPosition: 'left' | 'top' | 'bottom' | 'right';
@@ -66,16 +63,14 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [emptyFilterMessage]="props.emptyFilterMessage"
       [emptyMessage]="props.emptyMessage"
       [filter]="props.filter"
+      filterBy="label"
       [formControl]="formControl"
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
       [options]="selectOptions"
-      [optionDisabled]="props.optionDisabled"
-      [optionGroupChildren]="props.optionGroupChildren"
-      [optionGroupLabel]="props.optionGroupLabel"
-      [optionLabel]="props.optionLabel"
-      [optionValue]="props.optionValue"
+      optionLabel="label"
+      optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [required]="props.required"
@@ -100,12 +95,11 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       filter: true,
       filterMatchMode: 'contains',
       group: false,
-      optionGroupChildren: 'items',
-      optionGroupLabel: 'label',
       panelStyleClass: 'w-full',
       required: false,
       scrollHeight: '250px',
       showClear: false,
+      sort: false,
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
@@ -119,7 +113,23 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     if (!isObservable(this.props.options)) {
       this.props.options = of(this.props.options);
     }
-    this.props.options.subscribe((options: any) => this.selectOptions = options);
+    this.props.options.subscribe((options: any) => this.selectOptions = this.props.sort
+      ? this.sortOptions(options)
+      : options
+    );
+  }
+
+  private sortOptions(options: any) {
+    options = options.sort((a: any, b: any) => a.label.localeCompare(b.label));
+    if (options.filter((option: any) => option.items).length > 0) {
+      options.forEach((option: any) => {
+        if (option.items) {
+          return this.sortOptions(option.items);
+        }
+      });
+    }
+
+    return options;
   }
 }
 
