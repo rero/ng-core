@@ -31,6 +31,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ListboxModule } from 'primeng/listbox';
 import { MessagesModule } from 'primeng/messages';
 import { PaginatorModule } from 'primeng/paginator';
 import { PanelModule } from 'primeng/panel';
@@ -64,6 +65,7 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
     InputSwitchModule,
     InputTextModule,
     InputTextareaModule,
+    ListboxModule,
     MessagesModule,
     PaginatorModule,
     PanelModule,
