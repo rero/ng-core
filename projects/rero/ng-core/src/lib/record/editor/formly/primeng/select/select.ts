@@ -31,19 +31,15 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   emptyFilterMessage?: string;
   emptyMessage?: string;
   filter: boolean;
-  filterBy: string;
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
   group: boolean;
   loadingIcon?: string;
-  optionDisabled?: string;
-  optionGroupChildren: string;
-  optionGroupLabel: string;
-  optionLabel?: string;
-  optionValue?: string;
   panelStyleClass?: string;
+  placeholder?: string;
   required: boolean;
   scrollHeight: string;
   showClear?: boolean;
+  sort: boolean;
   styleClass?: string;
   tooltip?: string;
   tooltipPosition: 'left' | 'top' | 'bottom' | 'right';
@@ -58,6 +54,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 @Component({
   selector: 'ng-core-primeng-select',
   template: `
+  <div class="card flex justify-content-center">
      <p-dropdown
       [appendTo]="props.appendTo"
       [class]="props.class"
@@ -66,18 +63,15 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [emptyFilterMessage]="props.emptyFilterMessage"
       [emptyMessage]="props.emptyMessage"
       [filter]="props.filter"
-      [filterBy]="props.filterBy"
+      filterBy="label"
       [filterMatchMode]="props.filterMatchMode"
       [formControl]="formControl"
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
       [options]="selectOptions"
-      [optionDisabled]="props.optionDisabled"
-      [optionGroupChildren]="props.optionGroupChildren"
-      [optionGroupLabel]="props.optionGroupLabel"
-      [optionLabel]="props.optionLabel"
-      [optionValue]="props.optionValue"
+      optionLabel="label"
+      optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [required]="props.required"
@@ -95,23 +89,21 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
+    defaultValue: null,
     props: {
       class: 'w-full',
       editable: false,
       filter: false,
-      filterBy: 'label',
       filterMatchMode: 'contains',
       group: false,
-      optionGroupChildren: 'items',
-      optionGroupLabel: 'label',
       panelStyleClass: 'w-full',
       required: false,
       scrollHeight: '250px',
       showClear: false,
+      sort: false,
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
-      placeholder: 'Select an option...'
     }
   };
 
@@ -121,7 +113,24 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
     if (!isObservable(this.props.options)) {
       this.props.options = of(this.props.options);
     }
-    this.props.options.subscribe((options: any) => this.selectOptions = options);
+
+    this.props.options.subscribe((options: any) => this.selectOptions = this.props.sort
+      ? this.sortOptions(options)
+      : options
+    );
+  }
+
+  private sortOptions(options: any) {
+    options = options.sort((a: any, b: any) => a.label.localeCompare(b.label));
+    if (options.filter((option: any) => option.items).length > 0) {
+      options.forEach((option: any) => {
+        if (option.items) {
+          return this.sortOptions(option.items);
+        }
+      });
+    }
+
+    return options;
   }
 }
 
