@@ -18,8 +18,9 @@ import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { DropdownChangeEvent } from 'primeng/dropdown';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 /**
  * For big editor add the possibility to display
@@ -44,43 +45,36 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
   suggestions: any[] | undefined;
 
-  // editor service hidden fields list
-  hiddenFields$: Observable<Array<FormlyFieldConfig>>;
-
-  // editor service essential fields list
-  essentialFields$: Observable<Array<FormlyFieldConfig>>;
-
   /** Instance of EditorComponent */
-  //TODO: add type
   private editorComponentInstance: any;
 
   // Subscriptions to observables.
   private subscriptions: Subscription = new Subscription();
 
+  essentialsOptions = [];
+
+  onAddField(event: DropdownChangeEvent): void {
+    this.editorComponentInstance.setHide(event.value, false);
+  }
+
   /** onInit hook */
   ngOnInit() {
     this.editorComponentInstance = (this.editorComponent)();
 
-    this.hiddenFields$ = this.editorComponentInstance.hiddenFields$.pipe(
+    this.subscriptions.add(this.editorComponentInstance.hiddenFields$.pipe(
       map((fields: any[]) => fields.sort(
-        (field1, field2) => this.sortFieldsByLabel(field1, field2)
-      ))
-    );
-
-    this.essentialFields$ = this.hiddenFields$.pipe(
-      map(fields =>
-        fields
+        (field1, field2) => field1.props.label.localeCompare(field2.props.label)
+      )),
+      tap((fields: any[]) => this.items = fields),
+      tap((fields: any[]) => {
+        this.essentialsOptions = fields
           .filter(f => this.isFieldEssential(f))
-      )
-    );
+          .map((field: any) => {
+            return { label: this.translateService.instant(field.props.untranslatedLabel), value: field }
+          });
 
-    this.subscriptions.add(
-      this.editorComponentInstance.hiddenFields$.pipe(
-        map((fields: any[]) => fields.sort(
-          (field1, field2) => this.sortFieldsByLabel(field1, field2)
-        ))
-      ).subscribe((fields: any[]) => this.items = fields)
-    );
+      })
+    ).subscribe());
   }
 
   /** onDestroy hook */
@@ -89,37 +83,18 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   }
 
   search(event: AutoCompleteCompleteEvent): void {
-
     this.suggestions = this.items.filter((item: any) =>
-        item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0
+      item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0
     );
   }
 
   onSelect(event: AutoCompleteSelectEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
-    // needed for the dropdown selection
-    setTimeout(() => this.currentValue = '');
+    this.currentValue = '';
   }
 
   addField(field: any): void {
     this.editorComponentInstance.setHide(field, false);
-  }
-
-  /**
-   *
-   * @param field1 first value to sort
-   * @param field2 value to compare to
-   */
-  sortFieldsByLabel(field1: FormlyFieldConfig, field2: FormlyFieldConfig): number {
-    const f1 = field1.props.label;
-    const f2 = field2.props.label;
-    if (f1 > f2) {
-      return 1;
-    }
-    if (f1 < f2) {
-      return -1;
-    }
-    return 0;
   }
 
   /**
@@ -137,7 +112,6 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
    * @param field - field to check
    */
   isFieldEssential(field: FormlyFieldConfig) {
-    return field.props.navigation &&
-      field.props.navigation.essential === true;
+    return field.props.navigation && field.props.navigation.essential === true;
   }
 }

@@ -749,11 +749,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       }
     } else {
       this.removeHiddenField(field);
-      // scroll at the right position
-      // to avoid: Expression has changed after it was checked
-      // See: https://blog.angular-university.io/angular-debugging/
-      // wait that the component is present in the DOM
-      setTimeout(() => this.setFieldFocus(field, true));
+      this.setFieldFocus(field, true);
     }
     field.hide = value;
   }
