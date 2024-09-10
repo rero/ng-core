@@ -31,7 +31,10 @@
     "array_of_objects_with_sub_objects",
     "treeSelect",
     "selectGroup",
+    "selectWithSort",
+    "selectGroupWithSort",
     "selectMultiple",
+    "selectMultipleWithGroup",
     "selectMultipleWithLabelTranslation",
     "markdown",
     "textarea",
@@ -809,6 +812,7 @@
         "formlyConfig": {
           "type": "tree-select",
           "props": {
+            "placeholder": "Select an option…",
             "options": [
               {
                 "label": "Node 1",
@@ -858,6 +862,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
+            "placeholder": "Select an option…",
             "group": true,
             "options": [
               {
@@ -887,6 +892,105 @@
         }
       }
     },
+    "selectWithSort": {
+      "title": "Select with sort",
+      "type": "string",
+      "enum": [
+        "baobab",
+        "cypress",
+        "epicea",
+        "larch",
+        "tree"
+      ],
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "placeholder": "Select an option…",
+            "sort": true,
+            "sortOrder": "asc",
+            "options": [
+              {
+                "label": "Tree",
+                "value": "tree"
+              },
+              {
+                "label": "Baobab",
+                "value": "baobab"
+              },
+              {
+                "label": "Cypress",
+                "value": "cypress"
+              },
+              {
+                "label": "Epicea",
+                "value": "epicea"
+              },
+              {
+                "label": "Larch",
+                "value": "larch"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "selectGroupWithSort": {
+      "title": "Select with group and sort",
+      "type": "string",
+      "enum": [
+        "Epicea",
+        "Baobab",
+        "Foxglove",
+        "Crocus",
+        "Heather",
+        "Daffodil"
+      ],
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "placeholder": "Select an option…",
+            "group": true,
+            "sort": true,
+            "options": [
+              {
+                "label": "Tree",
+                "items": [
+                  {
+                    "label": "Epicea",
+                    "value": "Epicea"
+                  },
+                  {
+                    "label": "Baobab",
+                    "value": "baobab"
+                  }
+                ]
+              },
+              {
+                "label": "Flower",
+                "items": [
+                  {
+                    "label": "Foxglove",
+                    "value": "foxglove"
+                  },
+                  {
+                    "label": "Crocus",
+                    "value": "crocus"
+                  },
+                  {
+                    "label": "Heather",
+                    "value": "heather"
+                  },
+                  {
+                    "label": "Daffodil",
+                    "value": "daffodil"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
     "selectMultiple": {
       "title": "Select Multiple",
       "type": "array",
@@ -908,18 +1012,82 @@
         "formlyConfig": {
           "type": "multi-select",
           "props": {
+            "sort": true,
             "options": [
-              {
-                "label": "Value 1",
-                "value": "value1"
-              },
               {
                 "label": "Value 2",
                 "value": "value2"
               },
               {
+                "label": "Value 1",
+                "value": "value1"
+              },
+              {
                 "label": "Value 3",
                 "value": "value3"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "selectMultipleWithGroup": {
+      "title": "Select Multiple with group",
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "Epicea",
+          "Baobab",
+          "Foxglove",
+          "Crocus",
+          "Heather",
+          "Daffodil"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multi-select",
+          "props": {
+            "placeholder": "Select an option…",
+            "group": true,
+            "sort": true,
+            "options": [
+              {
+                "label": "Tree",
+                "items": [
+                  {
+                    "label": "Epicea",
+                    "value": "Epicea"
+                  },
+                  {
+                    "label": "Baobab",
+                    "value": "baobab"
+                  }
+                ]
+              },
+              {
+                "label": "Flower",
+                "items": [
+                  {
+                    "label": "Foxglove",
+                    "value": "foxglove"
+                  },
+                  {
+                    "label": "Crocus",
+                    "value": "crocus"
+                  },
+                  {
+                    "label": "Heather",
+                    "value": "heather"
+                  },
+                  {
+                    "label": "Daffodil",
+                    "value": "daffodil"
+                  }
+                ]
               }
             ]
           }
@@ -944,6 +1112,7 @@
         "formlyConfig": {
           "type": "multi-select",
           "props": {
+            "placeholder": "Select an option…",
             "options": [
               {
                 "label": "library",
