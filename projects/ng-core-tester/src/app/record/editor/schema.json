@@ -33,6 +33,7 @@
     "selectGroup",
     "selectWithSort",
     "selectGroupWithSort",
+    "selectWithPreferredOptions",
     "selectMultiple",
     "selectMultipleWithGroup",
     "selectMultipleWithLabelTranslation",
@@ -928,6 +929,48 @@
               {
                 "label": "Larch",
                 "value": "larch"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "selectWithPreferredOptions": {
+      "title": "Select with preferred options",
+      "type": "string",
+      "enum": [],
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "placeholder": "Select an option…",
+            "sort": true,
+            "options": [
+              {
+                "label": "Czech",
+                "value": "cze"
+              },
+              {
+                "label": "French",
+                "value": "fre",
+                "preferred": true
+              },
+              {
+                "label": "Italian",
+                "value": "ita",
+                "preferred": true
+              },
+              {
+                "label": "English",
+                "value": "eng",
+                "preferred": true
+              },
+              {
+                "label": "Portuguese",
+                "value": "por"
+              },
+              {
+                "label": "Japanese",
+                "value": "jpn"
               }
             ]
           }
