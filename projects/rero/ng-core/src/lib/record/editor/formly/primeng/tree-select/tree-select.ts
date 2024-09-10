@@ -15,10 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit, Type, inject } from '@angular/core';
+import { Component, NgModule, OnInit, Type } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule as PrimeNgTreeSelectModule } from 'primeng/treeselect';
@@ -35,6 +34,7 @@ export interface ITreeSelectProps extends FormlyFieldProps {
   filterPlaceholder?: string;
   panelClass: string;
   panelStyleClass: string;
+  placeholder?: string;
   scrollHeight: string;
   showClear: boolean;
   variant: string;
@@ -59,7 +59,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [options]="selectOptions"
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder | translate"
+      [placeholder]="props.placeholder"
       [showClear]="props.showClear"
       [variant]="props.variant"
       (onNodeSelect)="onNodeSelect($event)"
@@ -80,8 +80,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       panelStyleClass: 'w-full',
       scrollHeight: '400px',
       showClear: false,
-      variant: 'outlined',
-      placeholder: 'Select an option…'
+      variant: 'outlined'
     }
   };
 
@@ -134,7 +133,6 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   imports: [
     CommonModule,
     FormsModule,
-    TranslateModule,
     PrimeNgTreeSelectModule,
     FormlyModule.forChild({
       types: [
