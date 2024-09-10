@@ -82,8 +82,32 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [tooltipPositionStyle]="props.tooltipPositionStyle"
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
-    />
+    >
+      <ng-template let-group pTemplate="group">
+        @if (group.label !== 'group-preferred' && group.label !== 'group-other') {
+          <div class="option-group">{{ group.label }}</div>
+        } @else if (group.label === 'group-other') {
+          <div class="option-group"><hr></div>
+        }
+      </ng-template>
+     </p-dropdown>
   `,
+  styles: `
+  :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
+    padding: 0 1.25rem;
+  }
+
+  :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group hr {
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    padding: 0;
+  }
+
+  .option-group {
+    padding: 0.5rem 0;
+  }
+  `
 })
 export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> implements OnInit {
 
@@ -114,10 +138,25 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       this.props.options = of(this.props.options);
     }
 
-    this.props.options.subscribe((options: any) => this.selectOptions = this.props.sort
-      ? this.sortOptions(options)
-      : options
-    );
+    this.props.options.subscribe((options: any) => {
+      const preferredOptions = options.filter((option: any) => option.preferred);
+      if (preferredOptions.length > 0) {
+        this.props.group = true;
+        const otherOptions = options.filter((option: any) => !option.preferred);
+        this.selectOptions = [
+          {
+            label: 'group-preferred',
+            items: this.props.sort ? this.sortOptions(preferredOptions) : preferredOptions
+          },
+          {
+            label: 'group-other',
+            items: this.props.sort ? this.sortOptions(otherOptions) : otherOptions
+          }
+        ];
+      } else {
+        this.selectOptions = this.props.sort ? this.sortOptions(options) : options;
+      }
+    });
   }
 
   private sortOptions(options: any) {
