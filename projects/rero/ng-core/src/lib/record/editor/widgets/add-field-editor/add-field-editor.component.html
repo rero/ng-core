@@ -14,32 +14,23 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (hiddenFields$ | async; as hiddenFields) {
-      <p-autoComplete
-        styleClass="mb-2"
-        id="addField"
-        optionLabel="props.label"
-        [(ngModel)]="currentValue"
-        [suggestions]="suggestions"
-        [dropdown]="true"
-        [placeholder]="'Add field' | translate"
-        (completeMethod)="search($event)"
-        (onSelect)="onSelect($event)"
-        [disabled]="hiddenFields.length < 1"
-      />
-    <ul class="list-unstyled essential-fields">
-      @for ( field of essentialFields$ | async; track field; let i = $index) {
-        <li class="mb-1">
-          <p-button
-            id="{{'add-field-' + i}}"
-            [label]="translateLabel(field) | async"
-            size="small"
-            [outlined]="true"
-            severity="secondary"
-            styleClass="w-full"
-            (click)="addField(field)"
-          />
-        </li>
-      }
-    </ul>
-}
+<p-autoComplete
+  [dropdown]="true"
+  id="addField"
+  optionLabel="props.label"
+  [(ngModel)]="currentValue"
+  [placeholder]="'Add field' | translate"
+  styleClass="mb-2 w-full"
+  [suggestions]="suggestions"
+  (completeMethod)="search($event)"
+  (onSelect)="onSelect($event)"
+  [disabled]="items.length < 1"
+/>
+
+<p-listbox
+  [options]="essentialsOptions"
+  scrollHeight=""
+  styleClass="mt-2"
+  (onChange)="onAddField($event)"
+></p-listbox>
+
