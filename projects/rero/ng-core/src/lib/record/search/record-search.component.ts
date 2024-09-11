@@ -158,7 +158,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   availableTypes = [];
 
-  activeTypeIndex = 0;
+  loaded: boolean = false;
 
   // GETTER & SETTER ==========================================================
   /** Check if pagination have to be displayed or not. */
@@ -312,7 +312,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this._loadSearchFields();
     }));
     this.availableTypes = this.types.filter((item) => item.hideInTabs !== true);
-    this.activeTypeIndex = this.availableTypes.findIndex((type: any) => type.key === this.currentType);
     // Subscribe on aggregation filters changes and do search.
     let first = true;
 
@@ -371,6 +370,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         switchMap(() => this._getRecords())
       ).subscribe(
         (records: Record) => {
+          this.loaded = true;
           this.hits = records.hits;
           this.spinner.hide();
           // Apply filters
@@ -567,13 +567,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-<<<<<<< HEAD
   protected _exportFormats(): Array<any> {
-    if (!this._config || !this._config.exportFormats) {
-=======
-  private _exportFormats(): Array<any> {
     if (!this.config || !this.config.exportFormats) {
->>>>>>> 06d34b1 (refactor: primeng)
       return [];
     }
     return this.config.exportFormats.map((format) => {
@@ -884,13 +879,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param defaultValue - Default value is returned if the parameter is not defined
    * @return A config value or the given default value instead
    */
-<<<<<<< HEAD
   protected _getResourceConfig(paramName: string, defaultValue: any) {
-    return (paramName in this._config) ? this._config[paramName] : defaultValue;
-=======
-  private _getResourceConfig(paramName: string, defaultValue: any) {
     return (paramName in this.config) ? this.config[paramName] : defaultValue;
->>>>>>> 06d34b1 (refactor: primeng)
   }
 
   /**
@@ -960,13 +950,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @return string, current index defined by keys index or key
    */
-<<<<<<< HEAD
   protected _currentIndex() {
-    if (this._config == null) {
-=======
-  private _currentIndex() {
     if (this.config == null) {
->>>>>>> 06d34b1 (refactor: primeng)
       return null;
     }
     return this.config.index || this.config.key;
@@ -977,15 +962,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param key - string, aggregation key
    * @return string or null
    */
-<<<<<<< HEAD
   protected _aggregationName(key: string): string | null {
-    return this._config.aggregationsName && key in this._config.aggregationsName
-      ? this._config.aggregationsName[key]
-=======
-  private _aggregationName(key: string): string | null {
     return this.config.aggregationsName && key in this.config.aggregationsName
       ? this.config.aggregationsName[key]
->>>>>>> 06d34b1 (refactor: primeng)
       : null;
   }
 

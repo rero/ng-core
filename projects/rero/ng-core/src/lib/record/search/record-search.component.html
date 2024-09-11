@@ -19,13 +19,7 @@
   <ng-core-error [error]="error"></ng-core-error>
 } @else {
   <span #topScrollAnchor></span>
-  @if (availableTypes.length > 1) {
-    <p-tabView [activeIndex]="activeTypeIndex" (onChange)="changeType($event)">
-      @for (type of availableTypes; track type) {
-        <p-tabPanel [header]="type.label | translate"></p-tabPanel>
-      }
-    </p-tabView>
-  }
+  <ng-core-search-tabs [types]="availableTypes" (onChangeType)="changeType($event)"></ng-core-search-tabs>
   <div class="main-content">
     @if (availableTypes.length === 1 && showLabel) {
       <h5>{{ availableTypes[0].label | translate }}</h5>
@@ -44,7 +38,7 @@
       }
       <ng-content select="[afterInputSearch]"></ng-content>
     </div>
-    @if (hasNoRecord) {
+    @if (loaded && total < 1) {
       <p-messages
         class="my-4"
         [value]="[{severity: 'info', detail: emptyRecordMessage}]"
