@@ -158,7 +158,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   availableTypes = [];
 
-  activeTypeIndex = 0;
+  loaded: boolean = false;
 
   // GETTER & SETTER ==========================================================
   /** Check if pagination have to be displayed or not. */
@@ -312,7 +312,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       this._loadSearchFields();
     }));
     this.availableTypes = this.types.filter((item) => item.hideInTabs !== true);
-    this.activeTypeIndex = this.availableTypes.findIndex((type: any) => type.key === this.currentType);
     // Subscribe on aggregation filters changes and do search.
     let first = true;
 
@@ -371,6 +370,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         switchMap(() => this._getRecords())
       ).subscribe(
         (records: Record) => {
+          this.loaded = true;
           this.hits = records.hits;
           this.spinner.hide();
           // Apply filters
@@ -778,6 +778,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param size - number : force the number of records to return. If `null` the default component `size` attribute will be used.
    */
   private _getRecords(size: number = null): Observable<any> {
+    this.loaded = false;
     // Build query string
     const q = this._buildQueryString();
 
