@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit, inject } from '@angular/core';
-import { CoreConfigService, RecordEvent, RecordService, TitleMetaService, TranslateService } from '@rero/ng-core';
+import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
 
 /**
@@ -28,14 +28,11 @@ import { MenuItem, MessageService } from 'primeng/api';
 export class AppComponent implements OnInit {
 
   /** Service injection */
-  translateService = inject(TranslateService);
+  // translateService = inject(TranslateService);
   configService = inject(CoreConfigService);
   titleMetaService = inject(TitleMetaService);
   recordService = inject(RecordService);
   messageService = inject(MessageService);
-
-  // Current lang of the application
-  lang: string = document.documentElement.lang;
 
   // Available languages
   languages: string[];
@@ -48,16 +45,15 @@ export class AppComponent implements OnInit {
 
   // Application language menu
   languageMenu: MenuItem;
+
   /**
    * Component initialization.
    *
    * - Initializes listener to record changes.
-   * - Initializes languages and current language.
    * - Sets title metadata.
    */
   ngOnInit() {
     this.initializeEvents();
-    this.translateService.setLanguage(this.lang);
     // Set default title window when application start
     const prefix = this.configService.prefixWindow;
     if (prefix) {
