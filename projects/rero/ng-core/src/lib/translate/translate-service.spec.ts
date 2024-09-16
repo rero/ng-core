@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,61 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { CoreConfigService } from '../core-config.service';
-import { TranslateService } from './translate-service';
-import { TranslateService as NgxTranslateService } from '@ngx-translate/core';
-import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { of } from 'rxjs';
-import { PrimeNGConfig } from 'primeng/api';
+import { TestBed } from "@angular/core/testing";
+import { NgCoreTranslateService } from "./translate-service";
+import { PrimeNGConfig } from "primeng/api";
+import { TranslateModule } from "@ngx-translate/core";
+import moment from "moment";
 
-class TranslateServiceMock {
-  private language;
+describe('NgCoreTranslateService', () => {
+  let service: NgCoreTranslateService;
+  let primeConfig: PrimeNGConfig;
 
-  use(lang: string) {
-    this.language = lang;
-    return of({});
-  }
-
-  getBrowserLang() {
-    return 'en';
-  }
-
-  get currentLang() {
-    return this.language;
-  }
-
-  addLangs(languages: Array<string>) {}
-
-  setDefaultLang(lang: string) {}
-}
-
-class BsLocaleServiceMock {
-  use(lang: string) {}
-}
-
-let appTranslateService;
-describe('AppTranslateService', () => {
   beforeEach(() => {
-    appTranslateService = new TranslateService(
-      new TranslateServiceMock() as unknown as NgxTranslateService,
-      new CoreConfigService(),
-      new BsLocaleServiceMock() as unknown as BsLocaleService,
-      new PrimeNGConfig()
-    );
-  });
-  it('should create an instance', () => {
-    expect(appTranslateService).toBeTruthy();
-  });
-
-  it('should set language on appTranslateService', () => {
-    appTranslateService.setLanguage('fr').subscribe((res) => expect(res).toBeTruthy());
-  });
-
-  it('should get Browser language on appTranslateService', () => {
-    expect(appTranslateService.getBrowserLang()).toBe('en');
+    TestBed.configureTestingModule({
+      imports: [
+        TranslateModule.forRoot()
+      ],
+      providers: [
+        NgCoreTranslateService,
+        PrimeNGConfig
+      ]
+    });
+    service = TestBed.inject(NgCoreTranslateService);
+    primeConfig = TestBed.inject(PrimeNGConfig);
+    service.initialize();
   });
 
-  it('should get Browser language on appTranslateService', () => {
-    expect(appTranslateService.currentLanguage).toBe('en');
+  it('should return the english translation (default)', () => {
+    expect(primeConfig.translation.today).toEqual('Today');
+  });
+
+  it('should have changed the local service', () => {
+    service.use('fr');
+    expect(primeConfig.translation.today).toEqual("Aujourd'hui");
+    expect(moment().locale()).toEqual('fr');
   });
 });

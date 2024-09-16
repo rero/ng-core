@@ -16,9 +16,9 @@
  */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -47,6 +47,15 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
+import { NgCoreTranslateService } from './translate/translate-service';
+import { Observable, of } from 'rxjs';
+
+function initializeAppFactory(translateService: NgCoreTranslateService): () => Observable<any> {
+  return () => {
+    translateService.initialize();
+    return of(true);
+  };
+}
 
 @NgModule({
     declarations: [
@@ -115,7 +124,14 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
     providers: [
       ComponentCanDeactivateGuard,
       ConfirmationService,
-      MessageService
+      MessageService,
+      { provide: TranslateService, useValue: NgCoreTranslateService },
+      {
+        provide: APP_INITIALIZER,
+        useFactory: initializeAppFactory,
+        deps: [NgCoreTranslateService],
+        multi: true
+      }
     ]
 })
 export class CoreModule { }
