@@ -43,7 +43,6 @@ describe('SelectComponent', () => {
         class: 'w-full',
         editable: false,
         filter: false,
-        filterBy: 'label',
         filterMatchMode: 'contains',
         group: false,
         options: [

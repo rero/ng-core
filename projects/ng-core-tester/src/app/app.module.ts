@@ -21,9 +21,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CoreConfigService, RecordModule, RecordService, RemoteAutocompleteService, TranslateLoader } from '@rero/ng-core';
-import { defineLocale } from 'ngx-bootstrap/chronos';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { deLocale, enGbLocale, frLocale, itLocale } from 'ngx-bootstrap/locale';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { MenubarModule } from 'primeng/menubar';
 import { AppConfigService } from './app-config.service';
@@ -32,12 +30,12 @@ import { AppComponent } from './app.component';
 import { AppDialogComponent } from './home/dialog/app-dialog.component';
 import { HomeComponent } from './home/home.component';
 import { ToastComponent } from './home/toast/toast.component';
+import { MenuComponent } from './menu/menu.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { EditorComponent } from './record/editor/editor.component';
 import { RecordServiceMock } from './record/editor/record-service-mock';
 import { SearchBarComponent } from './search-bar/search-bar.component';
-import { MenuComponent } from './menu/menu.component';
 import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 
 @NgModule({
@@ -86,16 +84,4 @@ import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-  availableLocales = {
-    de: deLocale,
-    en: enGbLocale,
-    fr: frLocale,
-    it: itLocale
-  };
-  constructor() {
-    Object.keys(this.availableLocales).forEach(locale => {
-      defineLocale(locale, this.availableLocales[locale]);
-    });
-  }
-}
+export class AppModule {}
