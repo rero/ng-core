@@ -21,8 +21,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { CoreConfigService, RecordModule, RecordService, RemoteAutocompleteService, TranslateLoader } from '@rero/ng-core';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { MenubarModule } from 'primeng/menubar';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -56,8 +54,6 @@ import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.
         HttpClientModule,
         AppRoutingModule,
         FormsModule,
-        CollapseModule.forRoot(),
-        TypeaheadModule.forRoot(),
         TranslateModule.forRoot({
             loader: {
                 provide: BaseTranslateLoader,

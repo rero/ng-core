@@ -19,7 +19,6 @@ import { HttpClient } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CoreConfigService } from './core-config.service';
@@ -87,7 +86,6 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
                 deps: [CoreConfigService, HttpClient]
             }
         }),
-        ModalModule.forRoot(),
         NgxSpinnerModule,
         PrimeNgCoreModule,
     ],
