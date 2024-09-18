@@ -18,11 +18,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SaveTemplateFormComponent } from './save-template-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import { RecordModule } from '@rero/ng-core';
-import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { RouterModule } from '@angular/router';
 
 describe('SaveTemplateFormComponent', () => {
   let component: SaveTemplateFormComponent;
@@ -33,15 +33,15 @@ describe('SaveTemplateFormComponent', () => {
       imports: [
         RecordModule,
         ReactiveFormsModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
       ],
       providers: [
-        BsModalRef,
-        TranslateService
+        TranslateService,
+        DynamicDialogRef
       ],
       declarations: [ SaveTemplateFormComponent ]
     })

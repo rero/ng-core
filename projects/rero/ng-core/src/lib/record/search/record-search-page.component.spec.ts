@@ -22,10 +22,8 @@ import { ActivatedRoute, Router, RouterModule, convertToParamMap } from '@angula
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ToastrModule } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
-import { DialogService } from '../../dialog/dialog.service';
 import { DefaultPipe } from '../../pipe/default.pipe';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { UpperCaseFirstPipe } from '../../pipe/ucfirst.pipe';
@@ -63,9 +61,6 @@ describe('RecordSearchPageComponent', () => {
   const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete']);
   recordServiceSpy.getRecords.and.returnValue(of(emptyRecords));
   recordServiceSpy.delete.and.returnValue(of({}));
-
-  const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
-  dialogServiceSpy.show.and.returnValue(of(true));
 
   const route = {
     snapshot: {
@@ -117,13 +112,11 @@ describe('RecordSearchPageComponent', () => {
         }),
         PaginationModule.forRoot(),
         ModalModule.forRoot(),
-        ToastrModule.forRoot()
       ],
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
-        { provide: DialogService, useValue: dialogServiceSpy },
         ConfirmationService,
         MessageService
       ],

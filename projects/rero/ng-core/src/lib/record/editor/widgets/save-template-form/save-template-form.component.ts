@@ -15,17 +15,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'ng-core-save-template-form',
   templateUrl: './save-template-form.component.html'
 })
 export class SaveTemplateFormComponent implements OnInit {
+
+  private dynamicDialogRef = inject(DynamicDialogRef);
+  private translateService = inject(TranslateService);
 
   /** form group */
   form: UntypedFormGroup = new UntypedFormGroup({});
@@ -36,22 +39,6 @@ export class SaveTemplateFormComponent implements OnInit {
   /** model of the form */
   model: FormModel;
 
-  /** event fired when use click on save */
-  saveEvent: EventEmitter<any> = new EventEmitter();
-
-  /**
-   * Constructor
-   * @param translateService - TranslateService
-   * @param bsModalRef - BsModalRef
-   */
-  constructor(
-      private translateService: TranslateService,
-      private bsModalRef: BsModalRef
-  ) { }
-
-  /**
-   * Hook init
-   */
   ngOnInit() {
     this.formFields.push({
       key: 'name',
@@ -68,17 +55,15 @@ export class SaveTemplateFormComponent implements OnInit {
    * Submit the form
    */
   onSubmitForm() {
-    this.saveEvent.emit(this.form.value);
-    this.closeModal();
+    this.closeDialog(this.form.value);
   }
 
   /**
    * Close the modal dialog box
    */
-  closeModal() {
-    this.bsModalRef.hide();
+  closeDialog(data?: FormModel) {
+    this.dynamicDialogRef.close(data);
   }
-
 }
 
 /**

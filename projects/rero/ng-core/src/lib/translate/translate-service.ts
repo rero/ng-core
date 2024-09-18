@@ -49,7 +49,7 @@ export class NgCoreTranslateService extends TranslateService {
     for (const [key, value] of Object.entries(this.locales)) {
       registerLocaleData(value.angular, key);
     }
-    const languages: Array<string> = this.coreConfigService.languages;
+    const languages: string[] = this.coreConfigService.languages;
     super.addLangs(languages);
 
     super.onLangChange.subscribe(translation => {

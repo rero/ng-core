@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { AbstractCanDeactivateComponent } from '../component/abstract-can-deactivate.component';
-import { DialogService } from '../dialog/dialog.service';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 /**
  * When this guard is configured, it intercepts the form output without
@@ -42,16 +43,12 @@ import { DialogService } from '../dialog/dialog.service';
  */
 
 @Injectable()
-export class ComponentCanDeactivateGuard  {
-  /**
-   * Constructor
-   * @param translateService - TranslateService
-   * @param dialogService - DialogService
-   */
-  constructor(
-    protected translateService: TranslateService,
-    protected dialogService: DialogService
-  ) {}
+export class ComponentCanDeactivateGuard {
+
+  translateService = inject(TranslateService);
+  dialogService = inject(DialogService);
+
+  ref: DynamicDialogRef | undefined;
 
   /**
    * Displays a confirmation modal if the user leaves the form without
@@ -61,18 +58,22 @@ export class ComponentCanDeactivateGuard  {
    */
   canDeactivate(component: AbstractCanDeactivateComponent): Observable<boolean> | boolean {
       if (!component.canDeactivate) {
-        return this.dialogService.show({
-          ignoreBackdropClick: false,
-          initialState: {
-            title: this.translateService.instant('Quit the page'),
+        this.ref = this.dialogService.open(DialogComponent, {
+          header: this.translateService.instant('Quit the page'),
+          data: {
             body: this.translateService.instant(
               'Do you want to quit the page? The changes made so far will be lost.'
             ),
             confirmButton: true,
             confirmTitleButton: this.translateService.instant('Quit'),
-            cancelTitleButton: this.translateService.instant('Stay')
-          }
+            cancelTitleButton: this.translateService.instant('Stay'),
+          },
+          dismissableMask: true,
+          modal: true,
+          style: { width: '25rem' }
         });
+
+        return this.ref.onClose;
       }
 
       return true;

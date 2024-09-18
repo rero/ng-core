@@ -15,21 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
 import { RecordService } from '../../../record.service';
 import { TemplatesService } from '../../services/templates.service';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'ng-core-load-template-form',
   templateUrl: './load-template-form.component.html'
 })
 export class LoadTemplateFormComponent implements OnInit {
+
+  private dynamicDialogRef = inject(DynamicDialogRef);
+  private dynamicDialogConfig = inject(DynamicDialogConfig);
+  private recordService = inject(RecordService);
+  private templateService = inject(TemplatesService);
+  private translateService = inject(TranslateService);
+  private router = inject(Router);
+  private messageService = inject(MessageService);
 
   /** form group */
   form: UntypedFormGroup = new UntypedFormGroup({});
@@ -40,37 +48,13 @@ export class LoadTemplateFormComponent implements OnInit {
   /** model of the form */
   model: FormModel;
 
-  /** BsModalService initialState Parameter */
-  templateResourceType: string;
-
-  /** BsModalService initialState Parameter */
-  resourceType: string;
-
   isDataFormLoaded = false;
 
-  /**
-   * constructor
-   * @param _modalService: BsModalService
-   * @param _recordService: RecordService
-   * @param _templateService: TemplateService
-   * @param _translateService: TranslateService
-   * @param _bsModalRef: BsModalRef
-   * @param _router: Router
-   * @param _toastrService: ToastrService
-   */
-  constructor(
-      private _recordService: RecordService,
-      private _templateService: TemplatesService,
-      private _translateService: TranslateService,
-      protected _bsModalRef: BsModalRef,
-      private _router: Router,
-      private _toastrService: ToastrService
-  ) { }
+  isVisible: boolean = true;
 
-  /**
-   * hook OnInit
-   */
   ngOnInit() {
+    const { data } = this.dynamicDialogConfig;
+
     this.formFields.push({
       key: 'template',
       type: 'select',
@@ -83,8 +67,8 @@ export class LoadTemplateFormComponent implements OnInit {
       }
     });
 
-    this._templateService.getTemplates(
-      this.templateResourceType, this.resourceType).subscribe(
+    this.templateService.getTemplates(
+      data.templateResourceType, data.resourceType).subscribe(
         (templates) => {
           templates = templates.map(hit => {
             const data = {
@@ -94,8 +78,8 @@ export class LoadTemplateFormComponent implements OnInit {
             };
             if (hit.hasOwnProperty('visibility')) {
               data.group = (hit.visibility === 'public')
-                  ? this._translateService.instant('Public templates')
-                  : this._translateService.instant('My private templates');
+                  ? this.translateService.instant('Public templates')
+                  : this.translateService.instant('My private templates');
             }
             return data;
           });
@@ -111,9 +95,9 @@ export class LoadTemplateFormComponent implements OnInit {
    */
   onSubmitForm() {
     const formValues = this.form.value;
-    this._recordService.getRecord('templates', formValues.template).subscribe(
+    this.recordService.getRecord('templates', formValues.template).subscribe(
         (template) => {
-          this._router.navigate([], {
+          this.router.navigate([], {
             queryParams: {
               source: 'templates',
               pid: template.id
@@ -121,21 +105,21 @@ export class LoadTemplateFormComponent implements OnInit {
             queryParamsHandling: 'merge',
             skipLocationChange: true
           });
-          this.closeModal();
+          this.closeDialog();
         },
         (error) => {
-          this._toastrService.error(error.message);
+          this.messageService.add({
+            severity: 'error',
+            summary: this.translateService.instant('Error'),
+            detail: error.message
+          });
         }
     );
   }
 
-  /**
-   * Close the modal dialog box
-   */
-  closeModal() {
-    this._bsModalRef.hide();
+  closeDialog(): void {
+    this.dynamicDialogRef.close();
   }
-
 }
 
 /**

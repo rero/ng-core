@@ -22,10 +22,8 @@ import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ToastrModule } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
-import { DialogService } from '../../dialog/dialog.service';
 import { DefaultPipe } from '../../pipe/default.pipe';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { UpperCaseFirstPipe } from '../../pipe/ucfirst.pipe';
@@ -107,9 +105,6 @@ describe('RecordSearchComponent', () => {
     }
   ];
 
-  const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
-  dialogServiceSpy.show.and.returnValue(of(true));
-
   const tabViewChangeEventMock = jasmine.createSpyObj('TabViewChangeEvent', ['']);
 
   const route = {
@@ -162,7 +157,6 @@ describe('RecordSearchComponent', () => {
         }),
         PaginationModule.forRoot(),
         ModalModule.forRoot(),
-        ToastrModule.forRoot()
       ],
       providers: [
         RecordSearchService,
@@ -171,7 +165,6 @@ describe('RecordSearchComponent', () => {
         { provide: RecordUiService, useValue: recordUiServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
-        { provide: DialogService, useValue: dialogServiceSpy },
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     }).compileComponents();
@@ -217,7 +210,6 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should cancel deleting record process', () => {
-    dialogServiceSpy.show.and.returnValue(of(false));
 
     component.types[0].total = 2;
 
@@ -227,7 +219,6 @@ describe('RecordSearchComponent', () => {
   });
 
   it('should delete record', fakeAsync(() => {
-    dialogServiceSpy.show.and.returnValue(of(true));
 
     /* tslint:disable:no-string-literal */
     component['config'].total = 2;

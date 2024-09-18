@@ -22,7 +22,6 @@ import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-tran
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ToastrModule } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
 import { CoreModule } from '../../../core.module';
 import { JsonComponent } from './item/json.component';
@@ -45,7 +44,6 @@ describe('RecordSearchResultComponent', () => {
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        ToastrModule.forRoot(),
         HttpClientModule,
         TooltipModule.forRoot(),
         PopoverModule.forRoot(),

@@ -15,17 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { Form, UntypedFormGroup } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
 import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, Observable, Subscription, combineLatest, of, throwError } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, debounceTime, finalize, map, switchMap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { AbstractCanDeactivateComponent } from '../../component/abstract-can-deactivate.component';
@@ -51,6 +51,9 @@ export interface JSONSchema7 extends JSONSchema7Base {
   encapsulation: ViewEncapsulation.None
 })
 export class EditorComponent extends AbstractCanDeactivateComponent implements OnInit, OnChanges, OnDestroy {
+
+  private dialogService = inject(DialogService);
+  private messageService = inject(MessageService);
 
   // form initial values
   @Input() model: any = null;
@@ -129,6 +132,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   // Observable of hidden fields
   private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
 
+  // Dialog Ref
+  ref: DynamicDialogRef | undefined;
+
   // current list of hidden fields
   public get hiddenFields$(): Observable<any[]> {
     return this._hiddenFieldsSubject.asObservable();
@@ -152,9 +158,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * @param route Route.
    * @param recordUiService Record UI service.
    * @param translateService Translate service.
-   * @param toastrService Toast service.
    * @param location Location.
-   * @param modalService BsModalService.
    * @param routeCollectionService RouteCollectionService
    * @param loggerService LoggerService
    */
@@ -165,9 +169,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     protected route: ActivatedRoute,
     protected recordUiService: RecordUiService,
     protected translateService: TranslateService,
-    protected toastrService: ToastrService,
     protected location: Location,
-    protected modalService: BsModalService,
     protected routeCollectionService: RouteCollectionService,
     protected loggerService: LoggerService,
     protected jsonschemaService: JSONSchemaService
@@ -265,7 +267,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         if (this.editorSettings.template.saveAsTemplate) {
           this.saveAlternatives.push({
             label: this.translateService.instant('Save as template') + '…',
-            command: () => this._saveAsTemplate
+            command: () => this.saveAsTemplate()
           });
         }
 
@@ -278,9 +280,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         if (queryParams.source === 'templates' && queryParams.pid != null) {
           record$ = this.recordService.getRecord('templates', queryParams.pid).pipe(
             map((record: any) => {
-              this.toastrService.success(
-                this.translateService.instant('Template loaded')
-              );
+              this.messageService.add({
+                severity: 'success',
+                summary: this.translateService.instant('Template'),
+                detail: this.translateService.instant('Template loaded')
+              });
               return {
                 result: true,
                 record: record.metadata.data
@@ -318,10 +322,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
 
             // Check permissions and set record
             if (data.result && data.result.can === false) {
-              this.toastrService.error(
-                this.translateService.instant('You cannot update this record'),
-                this.translateService.instant(this.recordType)
-              );
+              this.messageService.add({
+                severity: 'error',
+                summary: this.translateService.instant(this.recordType),
+                detail: this.translateService.instant('You cannot update this record')
+              });
               this.location.back();
             } else {
               this._setModel(data.record);
@@ -494,11 +499,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         errorMessage += '<br>' + this.translateService.instant('Field(s) in error: ');
         errorMessage += fields.join(', ');
       }
-      this.toastrService.error(
-        this.translateService.instant('The form contains errors.') + errorMessage,
-        undefined,
-        {enableHtml: true}
-      );
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translateService.instant(this.recordType),
+        detail: this.translateService.instant('The form contains errors.') + errorMessage
+      });
       this.isSaveButtonDisabled = false;
       return;
     }
@@ -538,10 +543,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     }
 
     recordAction$.subscribe(result => {
-      this.toastrService.success(
-        this.translateService.instant(result.message),
-        this.translateService.instant(this.recordType)
-      );
+      this.messageService.add({
+        severity: 'success',
+        summary: this.translateService.instant(this.recordType),
+        detail: this.translateService.instant(result.message)
+      });
       this.recordUiService.redirectAfterSave(
         result.record.id,
         result.record,
@@ -553,55 +559,53 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     });
   }
 
-  /**
-   *  Save the current editor content as a template
-   *  @param entry: the entry to use to fire this function
-   *  @param component: the parent editor component
-   */
-  _saveAsTemplate(_entry: any, component: EditorComponent): void {
-    // NOTE about `component` param :
-    //   As we use `_saveAsTemplate` in a @for loop, the common `this` value equals to the current
-    //   loop value, not the current component. We need to pass this component as parameter of
-    //   the function to use it.
-    const saveAsTemplateModalRef = component.modalService.show(SaveTemplateFormComponent, {
-      ignoreBackdropClick: true,
+  /** Save the current editor content as a template */
+  saveAsTemplate(): void {
+    this.ref = this.dialogService.open(SaveTemplateFormComponent, {
+      header: this.translateService.instant('Save as template'),
+      width: '40vw',
     });
-    // if the modal is closed by clicking the 'save' button, the `saveEvent` is fired.
-    // Subscribe to this event know when creating a model
-    component._subscribers.add(saveAsTemplateModalRef.content.saveEvent.subscribe(
-      (data) => {
-        let modelData = removeEmptyValues(component.model);
-        modelData = component.postprocessRecord(modelData);
-
+    this.ref.onClose.subscribe(data => {
+      if (data) {
+        let modelData = removeEmptyValues(this.model);
+        modelData = this.postprocessRecord(modelData);
+        console.log(modelData);
         let record = {
           name: data.name,
           data: modelData,
-          template_type: component.recordType,
+          template_type: this.recordType
         };
-        const tmplConfig = component.recordUiService.getResourceConfig(component.editorSettings.template.recordType);
+        const tmplConfig = this.recordUiService.getResourceConfig(this.editorSettings.template.recordType);
         if (tmplConfig.preCreateRecord) {
           record = tmplConfig.preCreateRecord(record);
         }
-
-        // create template
-        component.recordService.create(component.editorSettings.template.recordType, record).subscribe(
-          (createdRecord) => {
-            component.toastrService.success(
-              component.translateService.instant('Record created.'),
-              component.translateService.instant(component.editorSettings.template.recordType)
-            );
-            component.recordUiService.redirectAfterSave(
+        this.loadingChange.emit(true);
+        this.recordService.create(this.editorSettings.template.recordType, record).subscribe({
+          next: (createdRecord) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: this.translateService.instant(this.editorSettings.template.recordType),
+              detail: this.translateService.instant('Record created.')
+            });
+            this.recordUiService.redirectAfterSave(
               createdRecord.id,
               createdRecord,
-              component.editorSettings.template.recordType,
+              this.editorSettings.template.recordType,
               'create',
-              component.route
+              this.route
             );
+          },
+          error: (error) => {
+            this.loadingChange.emit(false);
+            this.messageService.add({
+              severity: 'error',
+              summary: this.translateService.instant(this.editorSettings.template.recordType),
+              detail: error.title
+            });
           }
-        );
-        component.loadingChange.emit(true);
+        })
       }
-    ));
+    });
   }
 
 
@@ -627,11 +631,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Open a modal dialog box to load a template.
    */
   showLoadTemplateDialog(): void {
-    const templateResourceType = this.editorSettings.template.recordType;
-    this.modalService.show(LoadTemplateFormComponent, {
-      ignoreBackdropClick: true,
-      initialState: {
-        templateResourceType,
+    this.dialogService.open(LoadTemplateFormComponent, {
+      header: this.translateService.instant('Load from template'),
+      width: '50vw',
+      dismissableMask: false,
+      data: {
+        templateResourceType: this.editorSettings.template.recordType,
         resourceType: this.recordType
       }
     });
