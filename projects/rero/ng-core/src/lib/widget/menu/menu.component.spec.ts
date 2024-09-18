@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { CallbackArrayFilterPipe } from '../../pipe/callback-array-filter.pipe';
 import { MenuComponent } from './menu.component';
@@ -27,7 +27,7 @@ describe('MenuComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot()
       ],
       declarations: [ MenuComponent, CallbackArrayFilterPipe ]

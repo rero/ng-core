@@ -16,8 +16,7 @@
  */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { RecordUiService } from '../record-ui.service';
@@ -79,7 +78,7 @@ describe('EditorComponent', () => {
       imports: [
         RecordModule,
         BrowserAnimationsModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot()
       ],
       providers: [
