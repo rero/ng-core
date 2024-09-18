@@ -20,7 +20,6 @@ export * from './lib/component/abstract-can-deactivate.component';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
 export * from './lib/dialog/dialog.component';
-export * from './lib/dialog/dialog.service';
 export * from './lib/directives/autofocus.directive';
 export * from './lib/directives/ng-var.directive';
 export * from './lib/error/error';
@@ -63,8 +62,6 @@ export * from './lib/record/editor/widgets/add-field-editor/add-field-editor.com
 export * from './lib/record/editor/widgets/dropdown-label-editor/dropdown-label-editor.component';
 export * from './lib/record/editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 export * from './lib/record/export-button/export-button.component';
-export * from './lib/record/files/files.component';
-export * from './lib/record/files/files.service';
 export * from './lib/record/record';
 export * from './lib/record/record-ui.service';
 export * from './lib/record/record.handle-error.service';

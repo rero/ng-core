@@ -18,15 +18,16 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RecordModule } from '@rero/ng-core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { LoadTemplateFormComponent } from './load-template-form.component';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { RouterModule } from '@angular/router';
 
 describe('LoadTemplateFormComponent', () => {
   let component: LoadTemplateFormComponent;
   let fixture: ComponentFixture<LoadTemplateFormComponent>;
+  let dynamicDialogConfig: DynamicDialogConfig
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -35,21 +36,27 @@ describe('LoadTemplateFormComponent', () => {
         BrowserAnimationsModule,
         RecordModule,
         ReactiveFormsModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
       ],
       providers: [
-          BsModalRef,
-          TranslateService
+          TranslateService,
+          DynamicDialogRef,
+          DynamicDialogConfig
       ]
     })
     .compileComponents();
+    dynamicDialogConfig = TestBed.inject(DynamicDialogConfig);
   }));
 
   beforeEach(() => {
+    dynamicDialogConfig.data = {
+      resourceType: 'documents',
+      templateResourceType: 'documents'
+    }
     fixture = TestBed.createComponent(LoadTemplateFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

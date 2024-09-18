@@ -17,11 +17,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AbstractCanDeactivateComponent } from '../component/abstract-can-deactivate.component';
-import { DialogService } from '../dialog/dialog.service';
 import { ComponentCanDeactivateGuard } from './component-can-deactivate.guard';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export class MockComponent extends AbstractCanDeactivateComponent {
   canDeactivate: boolean = true;
@@ -31,20 +30,15 @@ describe('ComponentCanDeactivateGuard', () => {
   let guard: ComponentCanDeactivateGuard;
   let component: MockComponent;
 
-  const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
-  dialogServiceSpy.show.and.returnValue(of(false));
-
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalModule.forRoot(),
         TranslateModule.forRoot()
       ],
       providers: [
         MockComponent,
         ComponentCanDeactivateGuard,
-        { provide: DialogService, useValue: dialogServiceSpy },
-        BsModalService
+        DialogService
       ]
     });
     guard = TestBed.inject(ComponentCanDeactivateGuard);
