@@ -17,8 +17,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MenuWidgetComponent } from './menu-widget.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
 
 describe('MenuWidgetComponent', () => {
   let component: MenuWidgetComponent;
@@ -27,7 +27,7 @@ describe('MenuWidgetComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot()
       ],
       declarations: [

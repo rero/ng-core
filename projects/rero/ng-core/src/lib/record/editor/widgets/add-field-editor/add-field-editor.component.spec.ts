@@ -14,15 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
-import { AddFieldEditorComponent } from './add-field-editor.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorComponent, RecordModule } from '@rero/ng-core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { AddFieldEditorComponent } from './add-field-editor.component';
 
 describe('AddFieldEditorComponent', () => {
   let component: AddFieldEditorComponent;
@@ -34,7 +34,7 @@ describe('AddFieldEditorComponent', () => {
       imports: [
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         RecordModule,
         FormsModule,
         TypeaheadModule.forRoot(),
