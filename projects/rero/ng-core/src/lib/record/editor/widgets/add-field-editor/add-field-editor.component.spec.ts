@@ -21,7 +21,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorComponent, RecordModule } from '@rero/ng-core';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AddFieldEditorComponent } from './add-field-editor.component';
 
 describe('AddFieldEditorComponent', () => {
@@ -37,7 +36,6 @@ describe('AddFieldEditorComponent', () => {
         RouterModule.forRoot([]),
         RecordModule,
         FormsModule,
-        TypeaheadModule.forRoot(),
         TranslateModule.forRoot()
       ],
       declarations: [AddFieldEditorComponent, EditorComponent]
