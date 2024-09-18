@@ -28,6 +28,7 @@ import { SuggestionMetadata } from './remote-typeahead.component';
 })
 export class RemoteTypeaheadService {
 
+  // TODO: TO REMOVE AFTER REMOVE TYPEAHEAD ON UI
   /**
    * Constructor.
    * @param recordService - RecordService

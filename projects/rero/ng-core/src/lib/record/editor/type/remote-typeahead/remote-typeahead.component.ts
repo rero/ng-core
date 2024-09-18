@@ -19,7 +19,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
-import { TypeaheadMatch } from 'ngx-bootstrap/typeahead';
 import { Observable, Observer, merge, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { RemoteTypeaheadService } from './remote-typeahead.service';
@@ -118,7 +117,7 @@ export class RemoteTypeaheadComponent extends FieldType<FormlyFieldConfig> imple
    * Set the field value with the selected suggestion.
    * @param e - TypeaheadMatch
    */
-  typeaheadOnSelect(e: TypeaheadMatch): void {
+  typeaheadOnSelect(e: any): void {
     if (e.item.value != null) {
       this.formControl.setValue(e.item.value);
     } else {

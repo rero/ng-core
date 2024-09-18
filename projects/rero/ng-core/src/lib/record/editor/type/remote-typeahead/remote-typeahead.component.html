@@ -15,7 +15,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<!-- input field: empty ref -->
+<!--
+TODO: TO REMOVE AFTER REMOVE TYPEAHEAD ON UI
+
 @if (formControl) {
   @if (!formControl.value) {
     <div class="input-group">
@@ -51,7 +53,6 @@
       </div>
     </div>
   } @else {
-    <!-- text representation of the value in ref -->
     @if (valueAsHTML$ | async; as valueAsHTML) {
       <div class="py-1">
         <span [innerHTML]="valueAsHTML"></span>
@@ -82,3 +83,4 @@
     </div>
   }
 </ng-template>
+-->
