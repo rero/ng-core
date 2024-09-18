@@ -14,9 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 /**
  * Show dialog modal
@@ -25,53 +24,16 @@ import { Subject } from 'rxjs';
   selector: 'ng-core-dialog',
   templateUrl: './dialog.component.html'
 })
-export class DialogComponent implements OnInit {
-  // Title of the modal.
-  title: string;
+export class DialogComponent {
 
-  // Content of the modal, can be html.
-  body: string;
+  config = inject(DynamicDialogConfig);
+  private ref = inject(DynamicDialogRef);
 
-  // Show button to confirm action.
-  confirmButton = true;
-
-  // Label of cancel button.
-  cancelTitleButton = 'Cancel';
-
-  // Label of confirmation button.
-  confirmTitleButton = 'OK';
-
-  // Event triggered when modal is closed.
-  onClose: Subject<boolean>;
-
-  /**
-   * Constructor
-   * @param bsModalRef - BsModalRef, reference to modal
-   */
-  constructor(private bsModalRef: BsModalRef) { }
-
-  /**
-   * Component init
-   *
-   * Initializes subject when the dialog is closed.
-   */
-  ngOnInit() {
-    this.onClose = new Subject();
+  confirm(): void {
+    this.ref.close(true);
   }
 
-  /**
-   * Confirm action.
-   */
-  confirm() {
-    this.onClose.next(true);
-    this.bsModalRef.hide();
-  }
-
-  /**
-   * Cancel action
-   */
-  decline() {
-    this.onClose.next(false);
-    this.bsModalRef.hide();
+  cancel(): void {
+    this.ref.close(false)
   }
 }

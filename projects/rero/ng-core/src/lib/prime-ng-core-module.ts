@@ -25,7 +25,9 @@ import { CalendarModule } from "primeng/calendar";
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from "primeng/dropdown";
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputSwitchModule } from 'primeng/inputswitch';
@@ -46,8 +48,9 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 
 @NgModule({
   providers: [
+    DialogService,
+    ConfirmationService,
     MessageService,
-    ConfirmationService
   ],
   exports: [
     AutoCompleteModule,
@@ -59,7 +62,9 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
     CheckboxModule,
     ClipboardModule,
     ConfirmDialogModule,
+    DialogModule,
     DropdownModule,
+    DynamicDialogModule,
     InputGroupModule,
     InputGroupAddonModule,
     InputSwitchModule,

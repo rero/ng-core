@@ -65,8 +65,6 @@ import { FormFieldWrapperComponent } from './editor/wrappers/form-field-wrapper/
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
 import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { ExportButtonComponent } from './export-button/export-button.component';
-import { FileComponent } from './files/file/file.component';
-import { RecordFilesComponent } from './files/files.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
@@ -109,7 +107,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         FormFieldWrapperComponent,
         HideWrapperComponent,
         AggregationSliderComponent,
-        RecordFilesComponent,
         LoadTemplateFormComponent,
         SaveTemplateFormComponent,
         CardWrapperComponent,
@@ -121,7 +118,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         ListFiltersComponent,
         BucketNamePipe,
         PasswordGeneratorTypeComponent,
-        FileComponent,
         DetailButtonComponent,
         RadioButtonComponent,
         PaginatorComponent,
@@ -198,7 +194,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         ExportButtonComponent,
         DetailButtonComponent,
         RecordDetailDirective,
-        RecordFilesComponent,
         ListFiltersComponent,
         RecordSearchAggregationComponent,
         SearchFiltersComponent,
