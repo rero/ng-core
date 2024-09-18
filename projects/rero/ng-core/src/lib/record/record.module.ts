@@ -22,11 +22,6 @@ import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TranslateService } from '@ngx-translate/core';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { PopoverModule } from 'ngx-bootstrap/popover';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -134,11 +129,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         FormsModule,
         ReactiveFormsModule,
         RecordRoutingModule,
-        TooltipModule.forRoot(),
-        PopoverModule.forRoot(),
-        TypeaheadModule.forRoot(),
-        CollapseModule.forRoot(),
-        BsDatepickerModule.forRoot(),
         CalendarModule,
         ClipboardModule,
         RadioButtonModule,
@@ -164,7 +154,7 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
                 { name: 'radioButton', component: RadioButtonComponent },
-                // Remove after refactoring
+                // TODO: Remove after refactoring
                 { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
             ],
             wrappers: [

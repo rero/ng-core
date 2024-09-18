@@ -17,7 +17,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { RecordUiService } from './record-ui.service';
 import { RouterModule } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -29,7 +28,6 @@ describe('RecordUiService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
-        ModalModule.forRoot(),
         TranslateModule.forRoot(),
         HttpClientModule,
         RouterModule.forRoot([])

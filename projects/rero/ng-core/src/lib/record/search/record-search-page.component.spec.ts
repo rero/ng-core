@@ -20,8 +20,6 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, Router, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { DefaultPipe } from '../../pipe/default.pipe';
@@ -110,8 +108,6 @@ describe('RecordSearchPageComponent', () => {
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        PaginationModule.forRoot(),
-        ModalModule.forRoot(),
       ],
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },

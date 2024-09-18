@@ -19,9 +19,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PopoverModule } from 'ngx-bootstrap/popover';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { CoreModule } from '../../../core.module';
 import { JsonComponent } from './item/json.component';
@@ -40,13 +37,10 @@ describe('RecordSearchResultComponent', () => {
       imports: [
         ButtonModule,
         RouterModule.forRoot([]),
-        ModalModule.forRoot(),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
         HttpClientModule,
-        TooltipModule.forRoot(),
-        PopoverModule.forRoot(),
         CoreModule
       ],
       schemas: [ NO_ERRORS_SCHEMA ]

@@ -39,7 +39,7 @@ Services:
 
 ## TranslateService
 
-TranslateService is a proxy service for configuring translations with ngx-translate, BsLocaleService (ngx-bootstrap) and momentjs. During initialization, it sets the default language defined in configuration for all of them. 
+TranslateService is a proxy service for configuring translations with ngx-translate and momentjs. During initialization, it sets the default language defined in configuration for all of them. 
 
 Language can be changed for all dependencies by calling : 
 

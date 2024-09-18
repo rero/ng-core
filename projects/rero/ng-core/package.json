@@ -25,7 +25,6 @@
     "@ngx-translate/core": "^15.0.0",
     "crypto-js": "^4.2.0",
     "font-awesome": "^4.7.0",
-    "ngx-bootstrap": "^12.0.0",
     "ngx-spinner": "^16.0.2",
     "easymde": "^2.18.0",
     "marked": "^10.0.0",
