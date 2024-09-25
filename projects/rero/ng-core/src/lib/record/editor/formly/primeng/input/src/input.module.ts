@@ -63,5 +63,6 @@ import { NgCoreFormlyFieldInput } from './input.type';
       ],
     }),
   ],
+  exports: [NgCoreFormlyFieldInput]
 })
 export class NgCoreFormlyInputModule {}

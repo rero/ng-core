@@ -135,7 +135,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
 
 
 @NgModule({
-  declarations: [ MultiSelectComponent ],
+  declarations: [MultiSelectComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -150,5 +150,6 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       ],
     }),
   ],
+  exports: [MultiSelectComponent]
 })
 export class NgCoreFormlyMultiSelectModule { }

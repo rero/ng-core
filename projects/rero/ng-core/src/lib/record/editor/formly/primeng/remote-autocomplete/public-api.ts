@@ -15,6 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { NgCoreFormlyRemoteAutocompleteModule } from './remote-autocomplete';
-export { IQueryOptions, IRemoteAutoCompleteFilter, IRemoteAutocomplete, ISuggestionItem } from './remote-autocomplete.interface';
-export { RemoteAutocompleteService } from './remote-autocomplete.service';
+export * from './remote-autocomplete';
+export * from './remote-autocomplete.interface';
+export * from './remote-autocomplete.service';
