@@ -66,7 +66,7 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
 }
 
 @NgModule({
-  declarations: [ MultiCheckboxComponent ],
+  declarations: [MultiCheckboxComponent],
   imports: [
     CommonModule,
     CheckboxModule,
@@ -82,5 +82,6 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
       ],
     }),
   ],
+  exports: [MultiCheckboxComponent]
 })
 export class NgCoreFormlyMultiCheckboxModule { }

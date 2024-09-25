@@ -156,7 +156,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
 
 
 @NgModule({
-  declarations: [ DatePickerComponent ],
+  declarations: [DatePickerComponent],
   imports: [
     CommonModule,
     CalendarModule,
@@ -175,5 +175,6 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       ],
     }),
   ],
+  exports: [DatePickerComponent]
 })
 export class NgCoreFormlyDatePickerModule { }

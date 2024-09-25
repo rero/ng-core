@@ -165,6 +165,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
         { name: 'remoteAutoComplete', component: RemoteAutocomplete }
       ]
     }),
-  ]
+  ],
+  exports: [RemoteAutocomplete]
 })
 export class NgCoreFormlyRemoteAutocompleteModule { }
