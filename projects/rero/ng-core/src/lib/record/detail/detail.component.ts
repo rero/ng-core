@@ -35,7 +35,16 @@ import { JsonComponent } from './view/json.component';
 })
 export class DetailComponent implements OnInit, OnDestroy {
 
-  private messageService = inject(MessageService);
+  protected route: ActivatedRoute = inject(ActivatedRoute);
+  protected router: Router = inject(Router);
+  protected location: Location = inject(Location);
+  protected componentFactoryResolver: ComponentFactoryResolver = inject(ComponentFactoryResolver);
+  protected recordService: RecordService = inject(RecordService);
+  protected recordUiService: RecordUiService = inject(RecordUiService);
+  protected translate: TranslateService = inject(TranslateService);
+  protected spinner: NgxSpinnerService = inject(NgxSpinnerService);
+  protected messageService: MessageService = inject(MessageService);
+
 
   /** View component for displaying record */
   @Input() viewComponent: any = null;
@@ -76,28 +85,6 @@ export class DetailComponent implements OnInit, OnDestroy {
   /** Directive for displaying record */
   @ViewChild(RecordDetailDirective, { static: true })
   recordDetail: RecordDetailDirective;
-
-  /**
-   * Constructor
-   * @param route Current route.
-   * @param router Router service.
-   * @param location Location.
-   * @param componentFactoryResolver Component factory resolver.
-   * @param recordService Record service.
-   * @param recordUiService Record UI service.
-   * @param translate Translate service.
-   * @param spinner Spinner service.
-   */
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected location: Location,
-    protected componentFactoryResolver: ComponentFactoryResolver,
-    protected recordService: RecordService,
-    protected recordUiService: RecordUiService,
-    protected translate: TranslateService,
-    protected spinner: NgxSpinnerService
-  ) { }
 
   /** On init hook */
   ngOnInit() {
