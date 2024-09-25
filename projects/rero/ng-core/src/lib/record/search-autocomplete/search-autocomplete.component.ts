@@ -62,7 +62,7 @@ export interface IAutoComplete {
     <ng-template let-item pTemplate="item">
       <div class="flex align-items-center">
         @if(item.iconClass) {
-          <i class="mr-1" [ngClass]="item.iconClass"></i>
+          <i class="mr-2" [ngClass]="item.iconClass"></i>
         }
         <div [innerHTML]="item.label" [title]="item.originalLabel ? item.originalLabel : ''"></div>
       </div>
@@ -124,7 +124,6 @@ export class SearchAutocompleteComponent {
               });
             }
           });
-
           return suggestions;
         } else {
           return data[0];
@@ -150,11 +149,11 @@ export class SearchAutocompleteComponent {
         recordType.index,
         queryRecord,
         1,
-        recordType.maxSuggestions ? recordType.maxSuggestions : 10,
+        recordType.maxSuggestions || 10,
         [],
-        recordType.preFilters ? recordType.preFilters : {},
+        recordType.preFilters || {},
         null,
-        recordType.sort ? recordType.sort : null,
+        recordType.sort || null,
       ).pipe(
         map((data: any) => recordType.processSuggestions(data, query))
       ));
