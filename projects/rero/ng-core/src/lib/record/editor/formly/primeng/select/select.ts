@@ -174,7 +174,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
 }
 
 @NgModule({
-  declarations: [ SelectComponent ],
+  declarations: [SelectComponent],
   imports: [
     CommonModule,
     DropdownModule,
@@ -191,5 +191,6 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       ],
     }),
   ],
+  exports: [SelectComponent]
 })
 export class NgCoreFormlySelectModule { }

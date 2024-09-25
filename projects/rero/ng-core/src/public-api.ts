@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -96,3 +96,12 @@ export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/widget/menu/menu.component';
 export * from './lib/widget/sort-list/sort-list.component';
+
+export * from './lib/record/editor/formly/primeng/date-picker/date-picker';
+export * from './lib/record/editor/formly/primeng/input/src/input.module';
+export * from './lib/record/editor/formly/primeng/input/src/input.type';
+export * from './lib/record/editor/formly/primeng/multi-checkbox/multi-checkbox';
+export * from './lib/record/editor/formly/primeng/multi-select/multi-select';
+export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete';
+export * from './lib/record/editor/formly/primeng/select/select';
+export * from './lib/record/editor/formly/primeng/tree-select/tree-select';

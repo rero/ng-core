@@ -189,6 +189,12 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         SearchFiltersComponent,
         SearchFieldsComponent,
         SearchAutocompleteComponent,
+        NgCoreFormlyDatePickerModule,
+        NgCoreFormlyInputModule,
+        NgCoreFormlyMultiCheckboxModule,
+        NgCoreFormlyRemoteAutocompleteModule,
+        NgCoreFormlySelectModule,
+        NgCoreFormlyTreeSelectModule
     ],
     providers: [
         {
