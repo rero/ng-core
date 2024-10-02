@@ -195,7 +195,9 @@ import { RecordSearchResultDirective } from './search/result/record-search-resul
         ExportButtonComponent,
         DetailButtonComponent,
         RecordDetailDirective,
-        RecordFilesComponent
+        RecordFilesComponent,
+        ListFiltersComponent,
+        RecordSearchAggregationComponent
     ],
     providers: [
         {

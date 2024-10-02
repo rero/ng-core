@@ -73,6 +73,8 @@ export * from './lib/record/record.service';
 export * from './lib/record/search/aggregation/service/bucket-name.service';
 export * from './lib/record/search/record-search-page.component';
 export * from './lib/record/search/record-search.component';
+export * from './lib/record/search/aggregation/list-filters/list-filters.component';
+export * from './lib/record/search/aggregation/aggregation.component';
 export * from './lib/record/search/record-search.service';
 export * from './lib/record/search/result/item/result-item';
 export * from './lib/route/route-collection.service';

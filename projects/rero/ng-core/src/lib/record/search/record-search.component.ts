@@ -139,15 +139,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
 
   /** JSON dumping of last search parameters (used for checking if we have to do a search or not).*/
-  private _searchParameters: BehaviorSubject<SearchParams> = new BehaviorSubject(null);
+  protected _searchParameters: BehaviorSubject<SearchParams> = new BehaviorSubject(null);
   /** Define if search input have to be displayed or not. */
-  private _showSearchInput = true;
+  protected _showSearchInput = true;
   /** Define if title have to be displayed or not. */
-  private _showLabel = true;
+  protected _showLabel = true;
   /** Subscriptions to observables. */
-  private _subscriptions: Subscription = new Subscription();
+  protected _subscriptions: Subscription = new Subscription();
   /** Store configuration for type. */
-  private _config: any = null;
+  protected _config: any = null;
 
 
   // GETTER & SETTER ==========================================================
@@ -305,13 +305,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param activatedRoute Activated Route
    */
   constructor(
-    private recordService: RecordService,
-    private recordUiService: RecordUiService,
-    private recordSearchService: RecordSearchService,
-    private translateService: TranslateService,
-    private spinner: NgxSpinnerService,
-    private apiService: ApiService,
-    private activatedRoute: ActivatedRoute
+    protected recordService: RecordService,
+    protected recordUiService: RecordUiService,
+    protected recordSearchService: RecordSearchService,
+    protected translateService: TranslateService,
+    protected spinner: NgxSpinnerService,
+    protected apiService: ApiService,
+    protected activatedRoute: ActivatedRoute
   ) { }
 
   /**
@@ -468,7 +468,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Internal notification that notify the search parameters has changed.
    * @param resetPage reset the pager to the first page
    */
-  private _searchParamsHasChanged(resetPage: boolean = true) {
+  protected _searchParamsHasChanged(resetPage: boolean = true) {
     if (resetPage) {
       this.page = 1;
     }
@@ -577,7 +577,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-  private _exportFormats(): Array<any> {
+  protected _exportFormats(): Array<any> {
     if (!this._config || !this._config.exportFormats) {
       return [];
     }
@@ -809,7 +809,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Search for records.
    * @param size - number : force the number of records to return. If `null` the default component `size` attribute will be used.
    */
-  private _getRecords(size: number = null): Observable<any> {
+  protected _getRecords(size: number = null): Observable<any> {
     // Build query string
     const q = this._buildQueryString();
 
@@ -851,7 +851,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Emit new parameters when a search is done.
    */
-  private _emitNewParameters() {
+  protected _emitNewParameters() {
     this.parametersChanged.emit({
       q: this.q,
       page: this.page,
@@ -867,7 +867,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get configuration for the current resource type.
    * @param type Type of resource
    */
-  private _loadConfigurationForType(type: string) {
+  protected _loadConfigurationForType(type: string) {
     const q = this._buildQueryString();
     this._config = this.recordUiService.getResourceConfig(type);
     this.recordUiService.canAddRecord$(type).subscribe((result: ActionStatus) => {
@@ -911,7 +911,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param defaultValue - Default value is returned if the parameter is not defined
    * @return A config value or the given default value instead
    */
-  private _getResourceConfig(paramName: string, defaultValue: any) {
+  protected _getResourceConfig(paramName: string, defaultValue: any) {
     return (paramName in this._config) ? this._config[paramName] : defaultValue;
   }
 
@@ -919,7 +919,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Serialize all the search parameters with JSON.stringify method.
    * @return The serialized string.
    */
-  private _serializeSearchParameters(): SearchParams {
+  protected _serializeSearchParameters(): SearchParams {
     return {
       currentType: this._config.key,
       index: this._currentIndex(),
@@ -939,7 +939,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @returns void
    */
-  private _loadSearchFields(): void {
+  protected _loadSearchFields(): void {
     // No search fields, reset previous stored and return.
     if (!this._config.searchFields) {
       this.searchFields = [];
@@ -960,7 +960,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @return Final query string.
    */
-  private _buildQueryString(): string {
+  protected _buildQueryString(): string {
     // If query is empty or no selected fields found, the initial query string
     // is returned.
     if (!this.q || this.selectedSearchFields.length === 0) {
@@ -981,7 +981,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @return string, current index defined by keys index or key
    */
-  private _currentIndex() {
+  protected _currentIndex() {
     if (this._config == null) {
       return null;
     }
@@ -993,7 +993,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param key - string, aggregation key
    * @return string or null
    */
-  private _aggregationName(key: string): string | null {
+  protected _aggregationName(key: string): string | null {
     return this._config.aggregationsName && key in this._config.aggregationsName
       ? this._config.aggregationsName[key]
       : null;
@@ -1003,7 +1003,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Extract persistent search filters on current url
    * @return Array of aggregations filter
    */
-  private _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
+  protected _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
     const persistent = [];
     this._flatSearchFilters().filter(filter => filter.persistent === true)
         .forEach((filter: SearchFilter) => {
@@ -1022,7 +1022,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Make all search filters on same array level
    * @returns - A filters array
    */
-  private _flatSearchFilters(): SearchFilter[] {
+  protected _flatSearchFilters(): SearchFilter[] {
     const flatFilters = [];
     this.searchFilters.forEach((searchFilter: any) => {
       if (searchFilter.filters) {
@@ -1040,7 +1040,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param aggregation Aggregation object.
    * @param recordsAggregation Aggregation retrieved from record.
    */
-  private _mapAggregation(aggregation: Aggregation, recordsAggregation: any): void {
+  protected _mapAggregation(aggregation: Aggregation, recordsAggregation: any): void {
     aggregation.doc_count = recordsAggregation.doc_count || null;
     aggregation.type = recordsAggregation.type || 'terms';
     aggregation.config = recordsAggregation.config || null;
@@ -1087,7 +1087,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Compile facets keys to get only 'included' facets or having a filter selected.
    * @returns List of facets.
    */
-  private _getFacetsParameter(): Array<string> {
+  protected _getFacetsParameter(): Array<string> {
     const facets = [];
     this.aggregations.forEach((agg: any) => {
       if (agg.included === true || agg.expanded || this.aggregationsFilters.some((filter: any) => filter.key === agg.key)) {
@@ -1098,7 +1098,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /** Set the default sort. */
-  private _setDefaultSort(): void {
+  protected _setDefaultSort(): void {
     if (this.sort != null) {
       return;
     }
