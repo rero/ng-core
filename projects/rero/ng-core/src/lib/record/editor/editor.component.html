@@ -35,7 +35,7 @@
         icon="fa fa-times"
         [outlined]="true"
         severity="danger"
-        (click)="cancel()" />
+        (onClick)="cancel()" />
       <!-- load from template button -->
       @if (canLoadTemplate()) {
         <p-button
@@ -44,7 +44,7 @@
           [outlined]="true"
           icon="fa fa-upload"
           styleClass="ml-1"
-          (click)="showLoadTemplateDialog()"
+          (onClick)="showLoadTemplateDialog()"
         />
       }
       <!-- save button -->
@@ -54,7 +54,7 @@
           [label]="'Save' | translate"
           size="small"
           styleClass="ml-1"
-          (click)="submit()"
+          (onClick)="submit()"
           [disabled]="isSaveButtonDisabled"
         />
         } @else {
@@ -63,6 +63,7 @@
           [label]="'Save' | translate"
           size="small"
           styleClass="ml-1"
+          (onClick)="submit()"
           [model]="saveAlternatives"
         />
         }

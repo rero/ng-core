@@ -17,7 +17,7 @@
 @if (filters()?.length > 0) {
   <div class="flex flex-wrap mb-2">
     @for (filter of filters(); track filter) {
-      <p-button class="mr-2 mb-2" [outlined]="true" severity="secondary" (click)="removeFilter(filter)">
+      <p-button class="mr-2 mb-2" [outlined]="true" severity="secondary" (onClick)="removeFilter(filter)">
         @if (filter.name) {
           {{ filter.name }}
         } @else {

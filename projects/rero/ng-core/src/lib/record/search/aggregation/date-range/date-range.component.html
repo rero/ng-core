@@ -23,9 +23,9 @@
     [readonlyInput]="true" />
 <div class="flex mt-2">
   <div class="flex flex-auto justify-content-center">
-    <p-button [label]="'Apply' | translate" [outlined]="true" (click)="$event.preventDefault(); updateFilter()" />
+    <p-button [label]="'Apply' | translate" [outlined]="true" (onClick)="$event.preventDefault(); updateFilter()" />
     @if (hasQueryParam) {
-      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (click)="$event.preventDefault(); clearFilter()" />
+      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (onClick)="$event.preventDefault(); clearFilter()" />
     }
   </div>
 </div>

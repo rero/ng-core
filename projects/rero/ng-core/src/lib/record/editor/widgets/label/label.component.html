@@ -34,14 +34,14 @@
         </ng-container>
         <ng-container buttons>
           @if (canAddItem()) {
-            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (click)="addItem()" styleClass="mr-1" />
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" styleClass="mr-1" />
           }
           @if (canAdd()) {
-            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (click)="add()" />
+            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (onClick)="add()" />
           }
           <!-- hide button -->
           @if (canRemove()) {
-            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" />
+            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" />
           }
         </ng-container>
       </ng-core-editor-dropdown-label-editor>
@@ -58,14 +58,14 @@
             *
           }
           @if (canAddItem()) {
-            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (click)="addItem()" styleClass="mr-1" />
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" styleClass="mr-1" />
           }
           @if (canAdd()) {
-            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (click)="add()" />
+            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (onClick)="add()" />
           }
           <!-- hide button -->
           @if (canRemove()) {
-            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" />
+            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" />
           }
         </label>
       }
