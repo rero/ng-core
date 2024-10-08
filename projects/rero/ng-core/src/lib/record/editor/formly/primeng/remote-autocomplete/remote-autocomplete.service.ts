@@ -16,7 +16,7 @@
  */
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from "./remote-autocomplete.interface";
+import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem, IValueSelect } from "./remote-autocomplete.interface";
 
 // Override this service in your application to implement your logic
 

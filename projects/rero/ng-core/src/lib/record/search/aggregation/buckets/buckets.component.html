@@ -56,5 +56,5 @@
   </ul>
 }
 @if (displayMoreAndLessLink) {
-  <p-button class="ml-1" [link]="true" [label]="(moreMode ? 'more…' : 'less…') | translate" (click)="moreMode = !moreMode"></p-button>
+  <p-button class="ml-1" [link]="true" [label]="(moreMode ? 'more…' : 'less…') | translate" (onClick)="moreMode = !moreMode"></p-button>
 }

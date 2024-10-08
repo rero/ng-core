@@ -31,7 +31,7 @@
     <div class="my-1 font-bold" translate>Select a template</div>
     <formly-form [form]="form" [fields]="formFields" [model]="model"></formly-form>
     <div class="flex justify-content-end gap-2">
-      <p-button label="Cancel" severity="secondary" (click)="closeDialog()" />
+      <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
       <p-button type="submit" label="Save" [disabled]="this.form.status !== 'VALID'" />
     </div>
   </form>

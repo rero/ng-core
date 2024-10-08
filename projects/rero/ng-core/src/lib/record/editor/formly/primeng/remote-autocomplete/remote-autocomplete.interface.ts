@@ -27,6 +27,7 @@ export interface IQueryOptions {
   filter?: string;
   isNotRef?: boolean;
   label?: string;
+  maxLengthSuggestion?: number;
   maxOfResult?: number;
   suggest?: string;
   type?: string;
@@ -36,6 +37,7 @@ export interface ISuggestionItem {
   label: string;
   value?: string,
   summary?: string;
+  link?: string;
 }
 
 export interface IRemoteAutoCompleteFilter {
@@ -44,4 +46,15 @@ export interface IRemoteAutoCompleteFilter {
     label: string;
     value: string;
   }[]
+}
+
+export interface IQuery {
+  query: string;
+  queryOptions: IQueryOptions;
+  recordPid: string | null;
+}
+
+export interface IValueSelect {
+  item: ISuggestionItem;
+  queryOptions: IQueryOptions;
 }

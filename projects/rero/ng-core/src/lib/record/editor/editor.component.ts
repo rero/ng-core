@@ -483,6 +483,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Save the data on the server.
    */
   submit(): void {
+    console.log('SUBMIT');
     this.isSaveButtonDisabled = true;
     this._canDeactivate();
     this.form.updateValueAndValidity();
