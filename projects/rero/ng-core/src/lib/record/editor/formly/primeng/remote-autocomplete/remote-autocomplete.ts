@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, NgModule } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -25,7 +25,7 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent 
 import { ButtonModule } from 'primeng/button';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { Subject, switchMap } from 'rxjs';
-import { IQueryOptions, IRemoteAutoCompleteFilter, ISuggestionItem } from './remote-autocomplete.interface';
+import { IQuery, IQueryOptions, IRemoteAutoCompleteFilter, IValueSelect } from './remote-autocomplete.interface';
 import { RemoteAutocompleteService } from './remote-autocomplete.service';
 
 export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
@@ -34,7 +34,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   group: boolean;
   minLength: number;
   maxLength?: number;
-  queryOptions: IQueryOptions;
+  queryOptions?: IQueryOptions;
   placeholder?: string;
   scrollHeight: string;
   summaryClass?: string
@@ -44,7 +44,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   selector: 'ng-core-remote-autocomplete',
   template: `
   <div class="flex w-full">
-    @if (!valueSelected()) {
+    @if (!field.formControl.value) {
       @if (props.filters?.options) {
         <div class="flex">
           <p-dropdown
@@ -60,19 +60,26 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           styleClass="w-full"
           inputStyleClass="w-full"
           [scrollHeight]="props.scrollHeight"
-          [autocomplete]="true"
           [minLength]="props.minLength"
           [maxlength]="props.maxLength"
           [(ngModel)]="value"
           [placeholder]="props.placeholder"
+          [group]="props.group"
           [suggestions]="suggestions()"
           (completeMethod)="search($event)"
           (onSelect)="onSelect($event)"
         >
           <ng-template let-data pTemplate="item">
-            <div>{{ data.label }}</div>
+            <div class="flex">
+              <div class="flex" [innerHTML]="data.label"></div>
+              @if (data.link) {
+                <a class="ml-2 text-700" [href]="data.link" target="_blank">
+                  <i class="fa fa-external-link"></i>
+                </a>
+              }
+            </div>
             @if (data.summary) {
-              <div [innerHTML]="data.summary" [ngClass]="summaryClass"></div>
+              <div [innerHTML]="data.summary" [ngClass]="props.summaryClass"></div>
             }
           </ng-template>
         </p-autoComplete>
@@ -80,33 +87,33 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
     } @else {
       <div class="py-1">
         <span [innerHtml]="valueSelected()"></span>
-        <p-button icon="fa fa-trash" severity="secondary" [text]="true" (click)="clear()" styleClass="ml-1" />
+        <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="clear()" styleClass="ml-1" />
       </div>
     }
   </div>
   `,
 })
-export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoCompleteProps>> implements OnInit {
+export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoCompleteProps>> implements AfterViewInit {
 
-  private remoteAutocompleteService = inject(RemoteAutocompleteService);
-  private route = inject(ActivatedRoute);
+  protected remoteAutocompleteService = inject(RemoteAutocompleteService);
+  protected route = inject(ActivatedRoute);
 
-  private query = new Subject<string>();
+  protected query = new Subject<any>();
 
-  private onValueSelect = new Subject<ISuggestionItem>();
+  protected onValueSelect = new Subject<IValueSelect>();
 
   suggestions = toSignal(this.query.pipe(
-    switchMap((query: string) => this.remoteAutocompleteService.getSuggestions(
-      query,
-      this.props.queryOptions,
-      this.route.snapshot.params.pid || null
+    switchMap((data: IQuery) => this.remoteAutocompleteService.getSuggestions(
+      data.query,
+      data.queryOptions,
+      data.recordPid
     ))
   ), { initialValue: []});
 
   valueSelected = toSignal(this.onValueSelect.pipe(
-    switchMap((selected?: ISuggestionItem) => this.remoteAutocompleteService.getValueAsHTML(
-      this.props.queryOptions,
-      selected
+    switchMap((data: IValueSelect) => this.remoteAutocompleteService.getValueAsHTML(
+      data.queryOptions,
+      data.item
     ))
   ));
 
@@ -115,32 +122,47 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     props: {
       delay: 300,
       group: false,
-      minLength: 1,
-      scrollHeight: '250px',
+      minLength: 3,
+      scrollHeight: '400px',
       queryOptions: {
         allowAdd: false,
+        maxOfResult: 100
       }
     }
   };
 
   value: string = '';
 
-  ngOnInit(): void {
-    if (this.props.filters) {
-      this.props.queryOptions.filter = this.props.filters.selected;
+  ngAfterViewInit(): void {
+    if (this.field.props.filters) {
+      this.field.props.queryOptions.filter = this.field.props.filters.selected;
+    }
+    if (this.field.formControl.value.length > 0) {
+      this.onValueSelect.next({
+        item: { label: this.field.formControl.value, value: this.field.formControl.value },
+        queryOptions: { ...this.field.props.queryOptions },
+      });
     }
   }
+
   changeFilter(filter: DropdownChangeEvent): void {
-    this.props.queryOptions.filter = filter.value;
+    this.field.props.queryOptions.filter = filter.value;
     this.value = '';
   }
 
   search(event: AutoCompleteCompleteEvent): void {
-    this.query.next(event.query);
+    this.query.next({
+      query: event.query,
+      queryOptions: { ...this.field.props.queryOptions },
+      recordPid: this.route.snapshot.params.pid || null
+    });
   }
 
   onSelect(event: AutoCompleteSelectEvent): void {
-    this.onValueSelect.next(event.value);
+    this.onValueSelect.next({
+      item: event.value,
+      queryOptions: { ...this.field.props.queryOptions },
+    });
     this.formControl.patchValue(event.value.value);
   }
 

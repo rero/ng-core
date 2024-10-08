@@ -38,11 +38,11 @@ import { FieldWrapper } from '@ngx-formly/core';
         <div class="flex align-items-center ml-1">
           <!-- clone button -->
           @if (canAdd()) {
-            <p-button icon="fa fa-clone" severity="secondary" [text]="true" (click)="add()" styleClass="mr-1" />
+            <p-button icon="fa fa-clone" severity="secondary" [text]="true" (onClick)="add()" styleClass="mr-1" />
           }
           <!-- trash button -->
           @if (canRemove() && props.hideLabel !== true) {
-            <p-button icon="fa fa-trash" severity="secondary" [text]="true" (click)="remove()" styleClass="mr-1" />
+            <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" styleClass="mr-1" />
           }
         </div>
       </div>
