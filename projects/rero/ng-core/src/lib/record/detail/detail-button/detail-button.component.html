@@ -21,7 +21,7 @@
       [label]="'Back'|translate"
       severity="secondary"
       [text]="true"
-      (click)="$event.preventDefault(); goBack()"
+      (onClick)="$event.preventDefault(); goBack()"
     />
   </div>
   <div class="flex align-items-center justify-content-end w-full">
@@ -33,7 +33,7 @@
           icon="fa fa-hand-o-right"
           [label]="'Use'|translate"
           [outlined]="!isPrimaryAction('use')"
-          (click)="useRecord()"
+          (onClick)="useRecord()"
           translate
         />
       }
@@ -43,7 +43,7 @@
           icon="fa fa-pencil"
           [label]="'Edit'|translate"
           [outlined]="!isPrimaryAction('use')"
-          (click)="updateRecord(record())"
+          (onClick)="updateRecord(record())"
           translate
         />
       }
@@ -54,7 +54,7 @@
           [outlined]="true"
           severity="danger"
           [label]="'Delete'|translate"
-          (click)="deleteRecord(record())"
+          (onClick)="deleteRecord(record())"
         />
       } @else {
         @if (deleteStatus().message) {
@@ -64,7 +64,7 @@
             [outlined]="true"
             severity="danger"
             [label]="'Delete'|translate"
-            (click)="showDeleteMessage(deleteStatus().message)"
+            (onClick)="showDeleteMessage(deleteStatus().message)"
           />
         }
       }

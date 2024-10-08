@@ -28,7 +28,7 @@
             size="small"
             severity="danger"
             [ariaLabel]="'Use' | translate"
-            (click)="useRecord()"
+            (onClick)="useRecord()"
           >
             <i class="fa fa-hand-o-right"></i>
           </p-button>
@@ -40,7 +40,7 @@
             [outlined]="true"
             size="small"
             [ariaLabel]="'Edit' | translate"
-            (click)="editRecord(record.id, updateStatus?.routerLink)"
+            (onClick)="editRecord(record.id, updateStatus?.routerLink)"
             [routerLink]="updateStatus.routerLink || ['edit', record.id]"
           >
             <i class="fa fa-pencil"></i>
@@ -56,7 +56,7 @@
                 size="small"
                 severity="danger"
                 [ariaLabel]="'Delete' | translate"
-                (click)="deleteRecord(record.id, deleteStatus?.type)"
+                (onClick)="deleteRecord(record.id, deleteStatus?.type)"
               >
                 <i class="fa fa-trash"></i>
               </p-button>
