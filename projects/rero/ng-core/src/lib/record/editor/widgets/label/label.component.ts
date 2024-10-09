@@ -14,8 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
@@ -26,16 +25,12 @@ import { MenuItem } from 'primeng/api';
 })
 export class LabelComponent implements OnInit {
 
+  protected translateService: TranslateService = inject(TranslateService);
+
   // Current field
   @Input() field: FormlyFieldConfig;
 
   items: MenuItem[] = [];
-
-  /**
-   * Constructor
-   * @param translateService - TranslateService, that translate the labels of the hidden fields
-   */
-  constructor(private translateService: TranslateService) {}
 
   ngOnInit(): void {
     if (this.hasMenu(this.field)) {

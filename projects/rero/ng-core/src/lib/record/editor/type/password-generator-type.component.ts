@@ -16,7 +16,7 @@
  */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { GeneratePassword } from "js-generate-password";
@@ -103,6 +103,11 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
   `
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {
+
+  protected httpClient: HttpClient = inject(HttpClient);
+  protected clipboard: Clipboard = inject(Clipboard);
+  protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   /** Default options */
   defaultOptions: Partial<FormlyFieldConfig<PasswordGeneratorProps>> = {
     props: {
@@ -129,20 +134,6 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
 
   /** Password Observable */
   private _password$: Subject<string> = new Subject();
-
-  /**
-   * Constructor
-   * @param httpClient - HttpClient
-   * @param clipboard - Clipboard
-   * @param cd - ChangeDetectorRef
-   */
-  constructor(
-    private httpClient: HttpClient,
-    private clipboard: Clipboard,
-    private cd: ChangeDetectorRef
-  ) {
-    super();
-  }
 
   /** OnInit hook */
   ngOnInit(): void {

@@ -52,8 +52,18 @@ export interface JSONSchema7 extends JSONSchema7Base {
 })
 export class EditorComponent extends AbstractCanDeactivateComponent implements OnInit, OnChanges, OnDestroy {
 
-  private dialogService = inject(DialogService);
-  private messageService = inject(MessageService);
+  protected formlyJsonschema: FormlyJsonschema = inject(FormlyJsonschema);
+  protected recordService: RecordService = inject(RecordService);
+  protected apiService: ApiService = inject(ApiService);
+  protected route: ActivatedRoute = inject(ActivatedRoute);
+  protected recordUiService: RecordUiService = inject(RecordUiService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected location: Location = inject(Location);
+  protected routeCollectionService: RouteCollectionService = inject(RouteCollectionService);
+  protected loggerService: LoggerService = inject(LoggerService);
+  protected jsonschemaService: JSONSchemaService
+  protected dialogService: DialogService = inject(DialogService);
+  protected messageService: MessageService = inject(MessageService);
 
   // form initial values
   @Input() model: any = null;
@@ -150,30 +160,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     return () => this;
   }
 
-  /**
-   * Constructor.
-   * @param formlyJsonschema Formly JSON schema.
-   * @param recordService Record service.
-   * @param apiService API service.
-   * @param route Route.
-   * @param recordUiService Record UI service.
-   * @param translateService Translate service.
-   * @param location Location.
-   * @param routeCollectionService RouteCollectionService
-   * @param loggerService LoggerService
-   */
-  constructor(
-    protected formlyJsonschema: FormlyJsonschema,
-    protected recordService: RecordService,
-    protected apiService: ApiService,
-    protected route: ActivatedRoute,
-    protected recordUiService: RecordUiService,
-    protected translateService: TranslateService,
-    protected location: Location,
-    protected routeCollectionService: RouteCollectionService,
-    protected loggerService: LoggerService,
-    protected jsonschemaService: JSONSchemaService
-  ) {
+  /** Constructor */
+  constructor() {
     super();
     this.form = new UntypedFormGroup({});
   }

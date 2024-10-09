@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { RecordService } from '../record/record.service';
 import { extractIdOnRef } from '../utils/utils';
@@ -26,12 +26,8 @@ import { extractIdOnRef } from '../utils/utils';
   name: 'getRecord'
 })
 export class GetRecordPipe implements PipeTransform {
-  /**
-   * Constructor.
-   *
-   * @param recordService Record service.
-   */
-  constructor(private recordService: RecordService) { }
+
+  protected recordService: RecordService = inject(RecordService);
 
   /**
    * Return record data corresponding to PID.

@@ -29,8 +29,8 @@ export interface IChecked {
   templateUrl: './search-filters.component.html'
 })
 export class SearchFiltersComponent {
-  // Inject
-  activatedRoute = inject(ActivatedRoute);
+
+  protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // Array of filters
   searchFilters = input<SearchFilter[]|SearchFilterSection[]>([]);

@@ -29,12 +29,11 @@ import { RecordService } from './record.service';
 })
 export class RecordUiService {
 
-  /** Injection */
-  translateService = inject(TranslateService);
-  recordService = inject(RecordService);
-  router = inject(Router);
-  confirmationService = inject(ConfirmationService);
-  messageService = inject(MessageService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected recordService: RecordService = inject(RecordService);
+  protected router: Router = inject(Router);
+  protected confirmationService: ConfirmationService = inject(ConfirmationService);
+  protected messageService: MessageService = inject(MessageService);
 
   /** Configuration for all resources. */
   types = [];

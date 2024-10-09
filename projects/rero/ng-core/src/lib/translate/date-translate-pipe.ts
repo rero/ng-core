@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class DateTranslatePipe extends DatePipe implements PipeTransform {
 
-  translateService = inject(TranslateService);
+  protected translateService: TranslateService = inject(TranslateService);
 
   transform(value: Date | string | number, format?: string, timezone?: string, locale?: string): string | null;
   transform(value: null | undefined, format?: string, timezone?: string, locale?: string): null;
