@@ -56,7 +56,7 @@ export class TranslateLoader implements BaseTranslateLoader {
       url => {
         const langURL = url.replace('${lang}', lang);
         return this.http.get(langURL).pipe(
-          catchError((err) => {
+          catchError(() => {
             console.log(`ERROR: Cannot load translation: ${langURL}`);
             return of([]);
           })

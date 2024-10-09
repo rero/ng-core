@@ -86,7 +86,8 @@ describe('ListFiltersComponent', () => {
       expect(filter).toEqual(event)
     });
     let buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
-    buttons[0].click();
+    console.log(buttons[0].querySelector('button'));
+    buttons[0].querySelector('button').click();
     subscribe.unsubscribe();
 
     event = {
@@ -99,7 +100,7 @@ describe('ListFiltersComponent', () => {
     });
 
     buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
-    buttons[2].click();
+    buttons[2].querySelector('button').click();
     subscribe.unsubscribe();
   });
 });

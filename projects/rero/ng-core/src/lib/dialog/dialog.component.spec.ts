@@ -19,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
 import { DialogComponent } from './dialog.component';
+import { ButtonModule } from 'primeng/button';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;
@@ -28,6 +29,7 @@ describe('DialogComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        ButtonModule,
         DynamicDialogModule,
         TranslateModule.forRoot()
       ],

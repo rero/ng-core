@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -72,11 +72,6 @@ describe('SearchInputComponent', () => {
       expect(text).toBe(query);
     });
 
-    const event = new KeyboardEvent('keyup', {
-      key: 'Enter'
-    });
-    searchInput.dispatchEvent(event);
-
-    fixture.detectChanges();
+    searchInput.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
   });
 });
