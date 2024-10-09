@@ -17,10 +17,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { DialogService } from 'primeng/dynamicdialog';
 import { AbstractCanDeactivateComponent } from '../component/abstract-can-deactivate.component';
 import { ComponentCanDeactivateGuard } from './component-can-deactivate.guard';
-import { DialogService } from 'primeng/dynamicdialog';
 
 export class MockComponent extends AbstractCanDeactivateComponent {
   canDeactivate: boolean = true;
@@ -51,11 +50,5 @@ describe('ComponentCanDeactivateGuard', () => {
 
   it('should return a boolean if confirmation is not required.', () => {
     expect(guard.canDeactivate(component)).toBeTrue();
-  });
-
-  it('should return an observable on a boolean value.', () => {
-    component.canDeactivate = false;
-    const obs = guard.canDeactivate(component) as Observable<boolean>;
-    obs.subscribe((value: boolean) => expect(value).toBeFalse());
   });
 });

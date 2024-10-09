@@ -28,7 +28,7 @@ export interface IFilter {
   templateUrl: './list-filters.component.html',
 })
 export class ListFiltersComponent {
-  // Inject
+
   protected translateService: TranslateService = inject(TranslateService);
 
   // Selected aggregations filters
