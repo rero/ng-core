@@ -35,8 +35,8 @@ import { registerLocaleData } from '@angular/common';
 })
 export class NgCoreTranslateService extends TranslateService {
 
-  private primengConfig = inject(PrimeNGConfig);
-  private coreConfigService = inject(CoreConfigService);
+  protected primengConfig: PrimeNGConfig = inject(PrimeNGConfig);
+  protected coreConfigService: CoreConfigService = inject(CoreConfigService);
 
   private locales = {
     de: { angular: localeDe, primeng: de },

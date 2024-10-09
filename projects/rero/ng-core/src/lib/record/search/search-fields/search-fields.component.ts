@@ -29,8 +29,8 @@ export interface searchFieldEvent {
   templateUrl: './search-fields.component.html'
 })
 export class SearchFieldsComponent implements OnInit {
-  // Inject
-  translate = inject(TranslateService);
+
+  protected translate: TranslateService = inject(TranslateService);
 
   // Input
   searchLabel = input<string>('Search in');

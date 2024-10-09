@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@ import { IRecordEvent } from './IRecordEvent.interface';
 export class DetailButtonComponent {
 
   // Inject
-  location = inject(Location);
+  location: Location = inject(Location);
 
   /** Record */
   record = input<any>();

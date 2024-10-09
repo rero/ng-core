@@ -37,9 +37,8 @@ interface IConfig {
 })
 export class MenuSortComponent {
 
-  /** Injection */
-  translateService = inject(TranslateService);
-  activatedRoute = inject(ActivatedRoute);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   /** Input */
   config = input.required<IConfig>();

@@ -31,13 +31,13 @@ import { MessageService } from 'primeng/api';
 })
 export class LoadTemplateFormComponent implements OnInit {
 
-  private dynamicDialogRef = inject(DynamicDialogRef);
-  private dynamicDialogConfig = inject(DynamicDialogConfig);
-  private recordService = inject(RecordService);
-  private templateService = inject(TemplatesService);
-  private translateService = inject(TranslateService);
-  private router = inject(Router);
-  private messageService = inject(MessageService);
+  protected dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef);
+  protected dynamicDialogConfig: DynamicDialogConfig = inject(DynamicDialogConfig);
+  protected recordService: RecordService = inject(RecordService);
+  protected templateService: TemplatesService = inject(TemplatesService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected router: Router = inject(Router);
+  protected messageService: MessageService = inject(MessageService);
 
   /** form group */
   form: UntypedFormGroup = new UntypedFormGroup({});

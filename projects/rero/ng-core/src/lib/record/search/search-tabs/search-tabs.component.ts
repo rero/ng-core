@@ -29,8 +29,8 @@ export interface ITabViewChangeEvent {
   templateUrl: './search-tabs.component.html'
 })
 export class SearchTabsComponent implements OnInit {
-  // Inject
-  activatedRoute = inject(ActivatedRoute);
+
+  protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   // Resources configuration
   types = input.required<any>();

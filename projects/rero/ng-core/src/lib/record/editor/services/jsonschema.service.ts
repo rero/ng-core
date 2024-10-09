@@ -29,11 +29,9 @@ import { JSONSchema7 } from '../editor.component';
 })
 export class JSONSchemaService {
 
-  private translateService =  inject(TranslateService)
-
-  private recordService =  inject(RecordService)
-
-  private apiService =  inject(ApiService)
+  protected translateService: TranslateService = inject(TranslateService);
+  protected recordService: RecordService = inject(RecordService);
+  protected apiService: ApiService = inject(ApiService);
 
   // list of custom validators
   private customValidators = [

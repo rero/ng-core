@@ -14,19 +14,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import { isObservable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
-import { FormlyFieldConfigCache, FormlyValueChangeEvent } from '@ngx-formly/core/lib/models';
 
 export class NgCoreFormlyExtension {
+
+  protected recordService: RecordService = inject(RecordService);
+
   // Types to apply horizontal wrapper on
   private _horizontalWrapperTypes = [
     'enum',
@@ -43,11 +45,6 @@ export class NgCoreFormlyExtension {
   // Types to apply field wrapper on
   private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator'];
 
-  /**
-   * Constructor
-   * @params _recordService - ng core record service
-   */
-  constructor(private _recordService: RecordService) {}
   /**
    * prePopulate Formly hook
    * @param field - FormlyFieldConfig
@@ -265,7 +262,7 @@ export class NgCoreFormlyExtension {
       field.asyncValidators = {
         validation: [
           (control: UntypedFormControl) => {
-            return this._recordService.uniqueValue(
+            return this.recordService.uniqueValue(
               field,
               field.props.editorConfig.recordType,
               field.props.editorConfig.pid,
@@ -399,12 +396,8 @@ export class NgCoreFormlyExtension {
 }
 
 export class TranslateExtension implements FormlyExtension {
-  /**
-   * Constructor.
-   *
-   *  @param translate ngx-translate service
-   */
-  constructor(private _translate: TranslateService) {}
+
+  protected translate: TranslateService = inject(TranslateService);
 
   /**
    * Translate some fields before populating the form.
@@ -417,10 +410,10 @@ export class TranslateExtension implements FormlyExtension {
     const props: any = field.props || {};
 
     // translate only once
-    if (props._translated) {
+    if (props.translated) {
       return;
     }
-    props._translated = true;
+    props.translated = true;
 
     // label / title
     if (props.label) {
@@ -428,21 +421,21 @@ export class TranslateExtension implements FormlyExtension {
       props.untranslatedLabel = props.label;
       field.expressions = {
         ...(field.expressions || {}),
-        'props.label': this._translate.stream(props.label),
+        'props.label': this.translate.stream(props.label),
       };
     }
     // description
     if (props.description) {
       field.expressions = {
         ...(field.expressions || {}),
-        'props.description': this._translate.stream(props.description),
+        'props.description': this.translate.stream(props.description),
       };
     }
     // placeholder
     if (props.placeholder) {
       field.expressions = {
         ...(field.expressions || {}),
-        'props.placeholder': this._translate.stream(props.placeholder),
+        'props.placeholder': this.translate.stream(props.placeholder),
       };
     }
 
@@ -454,28 +447,25 @@ export class TranslateExtension implements FormlyExtension {
       props.addonRightUntranslated = props.addonRight;
     }
     this.processAllAddon(props);
-    this._translate.onLangChange.subscribe(() => this.processAllAddon(props));
+    this.translate.onLangChange.subscribe(() => this.processAllAddon(props));
 
     // Options
-    if (props.options) {
-      // Process only if the array options is observable or contains a dictionnary with label/value
-      if (isObservable(props.options) || props.options.some((o: any) => 'label' in o && 'value' in o)) {
-        props.options = isObservable(props.options) ? props.options : of(props.options);
-        props.options = props.options.pipe(
-          map((options: any[]) => {
-            if (options?.length > 0) {
-              options.map((opt) => this.translateOptionsLabel(opt));
-            }
-            return options;
-          })
-        );
-      }
+    if (props.options && (isObservable(props.options) || props.options.some((o: any) => 'label' in o && 'value' in o))) {
+          props.options = isObservable(props.options) ? props.options : of(props.options);
+          props.options = props.options.pipe(
+            map((options: any[]) => {
+              if (options?.length > 0) {
+                options.map((opt) => this.translateOptionsLabel(opt));
+              }
+              return options;
+            })
+          );
     }
   }
 
   private translateOptionsLabel(node) {
     if (node?.label) {
-      node.label = this._translate.instant(node.label);
+      node.label = this.translate.instant(node.label);
     }
     if (node?.children?.length > 0) {
       node.children.map((child) => this.translateOptionsLabel(child));
@@ -498,7 +488,7 @@ export class TranslateExtension implements FormlyExtension {
   }
 
   private processAddon(addon: string[]): any {
-    return addon.map((label: string) => (label.startsWith('<') ? label : this._translate.instant(label)));
+    return addon.map((label: string) => (label.startsWith('<') ? label : this.translate.instant(label)));
   }
 }
 
@@ -636,11 +626,11 @@ export function registerNgCoreFormlyExtension(translate: TranslateService, recor
     extensions: [
       {
         name: 'translate',
-        extension: new TranslateExtension(translate),
+        extension: new TranslateExtension(),
       },
       {
         name: 'ng-core',
-        extension: new NgCoreFormlyExtension(recordService),
+        extension: new NgCoreFormlyExtension(),
         // Execute Core Formly extension after formly processing (priority low)
         // https://main.formly.dev/docs/guide/custom-formly-extension#extension-priority
         priority: 10,

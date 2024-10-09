@@ -45,8 +45,8 @@ import { DialogComponent } from '../dialog/dialog.component';
 @Injectable()
 export class ComponentCanDeactivateGuard {
 
-  translateService = inject(TranslateService);
-  dialogService = inject(DialogService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected dialogService: DialogService = inject(DialogService);
 
   ref: DynamicDialogRef | undefined;
 

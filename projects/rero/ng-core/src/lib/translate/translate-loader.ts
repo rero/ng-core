@@ -23,11 +23,15 @@ import de from './i18n/de.json';
 import en from './i18n/en.json';
 import fr from './i18n/fr.json';
 import it from './i18n/it.json';
+import { inject } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.
  */
 export class TranslateLoader implements BaseTranslateLoader {
+
+  protected coreConfigService: CoreConfigService = inject(CoreConfigService);
+  protected http: HttpClient = inject(HttpClient);
 
   // translations
   private translations = {};
@@ -36,15 +40,6 @@ export class TranslateLoader implements BaseTranslateLoader {
   // with angular<9 assets are not available for libraries
   // See: https://angular.io/guide/creating-libraries#managing-assets-in-a-library
   private coreTranslations = { de, en, fr, it };
-  /**
-   * Constructor.
-   *
-   * @param _coreConfigService Configuration service.
-   */
-  constructor(
-    private coreConfigService: CoreConfigService,
-    private http: HttpClient
-  ) { }
 
   /**
    * Return observable used by ngx-translate to get translations.

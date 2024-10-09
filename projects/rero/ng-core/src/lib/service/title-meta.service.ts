@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -25,20 +25,13 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root'
 })
 export class TitleMetaService {
+
+  protected titleService: Title = inject(Title);
+  protected metaService: Meta = inject(Meta);
+  protected translateService: TranslateService = inject(TranslateService);
+
   // Prefix.
   private prefix = null;
-
-  /**
-   * Constructor
-   * @param titleService - Title
-   * @param metaService - Meta
-   * @param translateService - TranslateService
-   */
-  constructor(
-    private titleService: Title,
-    private metaService: Meta,
-    private translateService: TranslateService
-  ) { }
 
   /**
    * Prefix of title window

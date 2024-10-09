@@ -1373,7 +1373,7 @@
     },
 
     "remoteAutocompleteWithoutFilters": {
-      "title": "Remote typeahead without filters",
+      "title": "Remote Autocomplete without filters",
       "type": "string",
       "widget": {
         "formlyConfig": {

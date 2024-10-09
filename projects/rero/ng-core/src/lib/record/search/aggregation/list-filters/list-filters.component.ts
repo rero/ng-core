@@ -29,7 +29,7 @@ export interface IFilter {
 })
 export class ListFiltersComponent {
   // Inject
-  translateService = inject(TranslateService);
+  protected translateService: TranslateService = inject(TranslateService);
 
   // Selected aggregations filters
   aggregationsFilters = input<any>();
