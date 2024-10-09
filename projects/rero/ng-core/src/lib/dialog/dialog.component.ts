@@ -17,12 +17,17 @@
 import { Component, inject } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-/**
- * Show dialog modal
- */
 @Component({
   selector: 'ng-core-dialog',
-  templateUrl: './dialog.component.html'
+  template: `
+    <div class="flex" [innerHtml]="config.data.body|nl2br"></div>
+    <div class="flex justify-content-end gap-2">
+      <p-button [label]="config.data.cancelTitleButton || 'Cancel' | translate" severity="secondary" (onClick)="cancel()" />
+      @if (config.data.confirmButton) {
+        <p-button [label]="config.data.confirmTitleButton || 'OK' | translate" (onClick)="confirm()" />
+      }
+    </div>
+  `
 })
 export class DialogComponent {
 

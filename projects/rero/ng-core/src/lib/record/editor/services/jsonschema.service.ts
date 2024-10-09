@@ -60,8 +60,6 @@ export class JSONSchemaService {
         this.setSimpleOptions(field, props);
         this.setValidation(field, props);
         this.setRemoteSelectOptions(field, props);
-        // TODO: Check with autocomplete
-        // this.setRemoteTypeahead(field, props);
       }
     }
 
@@ -102,24 +100,6 @@ export class JSONSchemaService {
               )
             );
         }
-      };
-    }
-  }
-
-  /**
-   * Store the remote typeahead options.
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  protected setRemoteTypeahead(
-    field: FormlyFieldConfig,
-    formOptions: any
-  ): void {
-    if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
-      field.type = 'remoteTypeahead';
-      field.props = {
-        ...field.props,
-        ...{ remoteTypeahead: formOptions.remoteTypeahead }
       };
     }
   }
