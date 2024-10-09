@@ -61,7 +61,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   protected location: Location = inject(Location);
   protected routeCollectionService: RouteCollectionService = inject(RouteCollectionService);
   protected loggerService: LoggerService = inject(LoggerService);
-  protected jsonschemaService: JSONSchemaService
+  protected jsonschemaService: JSONSchemaService = inject(JSONSchemaService);
   protected dialogService: DialogService = inject(DialogService);
   protected messageService: MessageService = inject(MessageService);
 

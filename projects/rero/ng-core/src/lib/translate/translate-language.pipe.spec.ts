@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,19 +14,32 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TestBed } from '@angular/core/testing';
 import { TranslateLanguagePipe } from './translate-language.pipe';
+import { TranslateModule } from '@ngx-translate/core';
 import { TranslateLanguageService } from './translate-language.service';
 
-class TranslateLanguageMock {
+class TranslateLanguageServiceMock {
   translate(langCode: string) {
     return langCode + '-translate';
   }
 }
 
 describe('TranslateLanguagePipe', () => {
-  const pipe = new TranslateLanguagePipe(
-    new TranslateLanguageMock() as TranslateLanguageService
-  );
+  let pipe: TranslateLanguagePipe;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        TranslateModule.forRoot()
+      ],
+      providers: [
+        TranslateLanguagePipe,
+        { provide: TranslateLanguageService, useClass: TranslateLanguageServiceMock }
+      ]
+    });
+    pipe = TestBed.inject(TranslateLanguagePipe);
+  });
 
   it('create an instance', () => {
     expect(pipe).toBeTruthy();
