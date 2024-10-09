@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, input } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
 
@@ -24,6 +24,9 @@ import { AggregationsFilter, RecordSearchService } from '../../record-search.ser
   styleUrls: ['./buckets.component.scss']
 })
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
+
+  protected recordSearchService: RecordSearchService = inject(RecordSearchService);
+
   // COMPONENT ATTRIBUTES ============================================================
   /** Buckets list for aggregation */
   buckets = input.required<any[]>();
@@ -71,13 +74,6 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
         ? false
         : this.bucketsLength > this.size();
   }
-
-  // CONSTRUCTOR & HOOKS ==============================================================
-  /**
-   * Constructor
-   * @param recordSearchService - RecordSearchService
-   */
-  constructor(private recordSearchService: RecordSearchService) {}
 
   /**
    * OnInit hook

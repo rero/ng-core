@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Directive, Input, ViewContainerRef } from '@angular/core';
+import { Directive, inject, Input, ViewContainerRef } from '@angular/core';
 
 /**
  * Directive for displaying a record detail.
@@ -23,27 +23,16 @@ import { Directive, Input, ViewContainerRef } from '@angular/core';
     selector: '[ngCoreRecordDetail]',
 })
 export class RecordDetailDirective {
-    /**
-     * Record to display
-     */
-    @Input() record: object = {};
 
-    /**
-     * Type of resource
-     */
-    @Input() type: string;
+  viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
-    /**
-     * Constructor.
-     *
-     * @param viewContainerRef View container reference
-     */
-    constructor(private _viewContainerRef: ViewContainerRef) { }
+  /**
+   * Record to display
+   */
+  @Input() record: object = {};
 
-    /**
-     * Returns view container reference.
-     */
-    get viewContainerRef(): ViewContainerRef {
-      return this._viewContainerRef;
-    }
+  /**
+   * Type of resource
+   */
+  @Input() type: string;
 }

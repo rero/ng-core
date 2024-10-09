@@ -71,8 +71,8 @@ export interface IAutoComplete {
   `,
 })
 export class SearchAutocompleteComponent {
-  // Inject
-  recordService = inject(RecordService);
+
+  protected recordService: RecordService = inject(RecordService);
 
   // Input
   delay = input<number>(300);

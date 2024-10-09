@@ -33,9 +33,8 @@ export interface IDeleteRecordEvent {
 })
 export class RecordSearchResultComponent implements OnInit, AfterViewInit {
 
-  // Injector
-  private changeDetectorRef = inject(ChangeDetectorRef);
-  private router = inject(Router);
+  protected changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+  protected router: Router = inject(Router);
 
   // Store current URL to come back to the same page
   currentUrl: string = null;

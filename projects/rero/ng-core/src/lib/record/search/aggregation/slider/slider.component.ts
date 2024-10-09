@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RecordSearchService } from '../../record-search.service';
 
@@ -24,6 +24,8 @@ import { RecordSearchService } from '../../record-search.service';
   styleUrl: './slider.component.scss'
 })
 export class AggregationSliderComponent implements OnDestroy, OnInit {
+
+  protected recordSearchService: RecordSearchService = inject(RecordSearchService);
 
   // COMPONENT ATTRIBUTES =====================================================
   /** The aggregation key. */
@@ -45,16 +47,9 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   /** Subscription to search service. */
   private searchServiceSubscription: Subscription;
 
-  // CONSTRUCTOR & HOOKS ======================================================
-  /**
-   * Constructor.
-   * @param recordSearchService Record search service.
-   */
-  constructor(private recordSearchService: RecordSearchService) {}
-
   /**
    * OnInit hook
-   *   Subscribe to route changes for getting aggregation query parameter.
+   * Subscribe to route changes for getting aggregation query parameter.
    */
   ngOnInit() {
     this.range = [this.min(), this.max()];
@@ -77,7 +72,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
 
   /**
    * OnDestroy hook
-   *   Unsubscribes from search service.
+   * Unsubscribes from search service.
    */
   ngOnDestroy() {
     this.searchServiceSubscription.unsubscribe();

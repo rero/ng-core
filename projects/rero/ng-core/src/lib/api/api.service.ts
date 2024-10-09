@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CoreConfigService } from '../core-config.service';
 
 /**
@@ -24,23 +24,14 @@ import { CoreConfigService } from '../core-config.service';
   providedIn: 'root'
 })
 export class ApiService {
+
+  protected configService: CoreConfigService = inject(CoreConfigService);
+
   // API base URL. Ex: https://localhost:5000.
   baseUrl = '';
 
   // API prefix. Ex: /api
   endpointPrefix = '/';
-
-  /**
-   * Constructor.
-   *
-   * Initializes base URL and endpoint API prefix.
-   *
-   * @param configService Configuration service.
-   */
-  constructor(private configService: CoreConfigService) {
-    this.baseUrl = this.configService.apiBaseUrl;
-    this.endpointPrefix = this.configService.apiEndpointPrefix;
-  }
 
   /**
    * Returns Invenio API Endpoint corresponding to type.
@@ -50,9 +41,9 @@ export class ApiService {
    * @return Endpoint as string.
    */
   getEndpointByType(type: string, absolute: boolean = false): string {
-    let endpoint = this.endpointPrefix + '/' + type;
+    let endpoint = this.configService.apiEndpointPrefix + '/' + type;
     if (absolute === true) {
-      endpoint = this.baseUrl + endpoint;
+      endpoint = this.configService.apiBaseUrl + endpoint;
     }
     return endpoint;
   }
@@ -65,9 +56,9 @@ export class ApiService {
    * @return Endpoint as string.
    */
   getExportEndpointByType(type: string, absolute: boolean = false): string {
-    let endpoint = this.endpointPrefix + '/export/' + type;
+    let endpoint = this.configService.apiEndpointPrefix + '/export/' + type;
     if (absolute === true) {
-      endpoint = this.baseUrl + endpoint;
+      endpoint = this.configService.apiBaseUrl + endpoint;
     }
     return endpoint;
   }
@@ -80,7 +71,7 @@ export class ApiService {
    * @return Ref endpoint as string.
    */
   getRefEndpoint(type: string, id: string): string {
-    return `${this.configService.$refPrefix}${this.endpointPrefix}/${type}/${id}`;
+    return `${this.configService.$refPrefix}${this.configService.apiEndpointPrefix}/${type}/${id}`;
   }
 
   /**
@@ -93,7 +84,7 @@ export class ApiService {
   getSchemaFormEndpoint(type: string, absolute: boolean = false): string {
     let endpoint = this.configService.schemaFormEndpoint + '/' + type;
     if (absolute === true) {
-      endpoint = this.baseUrl + endpoint;
+      endpoint = this.configService.apiBaseUrl + endpoint;
     }
     return endpoint;
   }
