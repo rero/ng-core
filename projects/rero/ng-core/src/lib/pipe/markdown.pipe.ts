@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked } from 'marked';
 
@@ -25,12 +25,8 @@ import { marked } from 'marked';
   name: 'markdown',
 })
 export class MarkdownPipe implements PipeTransform {
-  /**
-   * Constructor.
-   *
-   * @param sanitizer Dom sanitizer.
-   */
-  constructor(private sanitizer: DomSanitizer) {}
+
+  protected sanitizer: DomSanitizer = inject(DomSanitizer);
 
   /**
    * Transform markdown to HTML.

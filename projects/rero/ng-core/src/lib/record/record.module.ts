@@ -47,7 +47,6 @@ import { MultiSchemaTypeComponent } from './editor/type/multischema/multischema.
 import { ObjectTypeComponent } from './editor/type/object-type/object-type.component';
 import { PasswordGeneratorTypeComponent } from './editor/type/password-generator-type.component';
 import { RadioButtonComponent } from './editor/type/radio-button.component';
-import { RemoteTypeaheadComponent } from './editor/type/remote-typeahead/remote-typeahead.component';
 import { SwitchComponent } from './editor/type/switch/switch.component';
 import { TextareaFieldComponent } from './editor/type/textarea/textarea.component';
 import { AddFieldEditorComponent } from './editor/widgets/add-field-editor/add-field-editor.component';
@@ -154,8 +153,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
                 { name: 'radioButton', component: RadioButtonComponent },
-                // TODO: Remove after refactoring
-                { name: 'remoteTypeahead', component: RemoteTypeaheadComponent },
             ],
             wrappers: [
                 { name: 'toggle-switch', component: ToggleWrapperComponent },

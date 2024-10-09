@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RecordSearchService } from '../../record-search.service';
 
@@ -24,6 +24,8 @@ import { RecordSearchService } from '../../record-search.service';
   templateUrl: './date-range.component.html'
 })
 export class AggregationDateRangeComponent implements OnInit, OnDestroy {
+
+  protected recordSearchService: RecordSearchService = inject(RecordSearchService);
 
   // COMPONENTS ATTRIBUTES ====================================================
   // Buckets list
@@ -45,9 +47,6 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   /** Subscription to search service. */
   private searchServiceSubscription: Subscription;
-
-  // CONSTRUCTOR & HOOKS ======================================================
-  constructor(private recordSearchService: RecordSearchService) { }
 
   /** OnInit hook */
   ngOnInit(): void {

@@ -26,8 +26,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class DialogComponent {
 
-  config = inject(DynamicDialogConfig);
-  private ref = inject(DynamicDialogRef);
+  config: DynamicDialogConfig = inject(DynamicDialogConfig);
+  protected ref: DynamicDialogRef = inject(DynamicDialogRef);
 
   confirm(): void {
     this.ref.close(true);

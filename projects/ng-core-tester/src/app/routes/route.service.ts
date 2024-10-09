@@ -16,7 +16,6 @@
  */
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 import { RouteCollectionService } from '@rero/ng-core';
 import { DocumentsRoute } from './documents-route';
 
@@ -30,11 +29,10 @@ export class RouteService {
   // Inject
   private routeCollectionService = inject(RouteCollectionService);
   private router = inject(Router);
-  private translateService = inject(TranslateService);
 
   initializeRoutes() {
     this.routeCollectionService
-      .addRoute(new DocumentsRoute(this.translateService));
+      .addRoute(new DocumentsRoute());
 
     this.routeCollectionService.getRoutes().map((route: any) => {
       this.router.config.push(route);

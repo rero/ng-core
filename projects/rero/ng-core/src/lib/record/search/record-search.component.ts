@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -61,6 +61,14 @@ export interface SortOption {
   styleUrl: './record-search.component.scss'
 })
 export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
+
+  protected recordService: RecordService = inject(RecordService);
+  protected recordUiService: RecordUiService = inject(RecordUiService);
+  protected recordSearchService: RecordSearchService = inject(RecordSearchService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected spinner: NgxSpinnerService = inject(NgxSpinnerService);
+  protected apiService: ApiService = inject(ApiService);
+  protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   /** Page anchor to scroll on the top */
   @ViewChild('topScrollAnchor') topScroll: ElementRef;
@@ -280,27 +288,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         : this.translateService.instant('Too many items. Should be less than {{max}}.', { max: RecordService.MAX_REST_RESULTS_SIZE });
   }
 
-  // CONSTRUCTOR & HOOKS ======================================================
-  /**
-   * Constructor.
-   *
-   * @param recordService Record service.
-   * @param recordUiService Record UI service.
-   * @param recordSearchService Record search service.
-   * @param translateService Translate service.
-   * @param spinner Spinner service.
-   * @param apiService Api service.
-   * @param activatedRoute Activated Route
-   */
-  constructor(
-    protected recordService: RecordService,
-    protected recordUiService: RecordUiService,
-    protected recordSearchService: RecordSearchService,
-    protected translateService: TranslateService,
-    protected spinner: NgxSpinnerService,
-    protected apiService: ApiService,
-    protected activatedRoute: ActivatedRoute
-  ) { }
+  // HOOKS ======================================================
 
   /**
    * OnInit hook.

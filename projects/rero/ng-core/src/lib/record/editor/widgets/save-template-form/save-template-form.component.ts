@@ -27,8 +27,8 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class SaveTemplateFormComponent implements OnInit {
 
-  private dynamicDialogRef = inject(DynamicDialogRef);
-  private translateService = inject(TranslateService);
+  protected dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef);
+  protected translateService: TranslateService = inject(TranslateService);
 
   /** form group */
   form: UntypedFormGroup = new UntypedFormGroup({});

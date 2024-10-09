@@ -31,8 +31,7 @@ import { map, tap } from 'rxjs/operators';
 })
 export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
-  /** Service injection */
-  private translateService = inject(TranslateService);
+  protected translateService: TranslateService = inject(TranslateService);
 
   /** EditorComponent function */
   @Input() editorComponent: any;

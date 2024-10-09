@@ -89,7 +89,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
 })
 export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePickerProps>> implements OnInit {
 
-  private locale = inject(LOCALE_ID);
+  protected locale = inject(LOCALE_ID);
 
   defaultOptions: Partial<FormlyFieldConfig<IDateTimePickerProps>> = {
     props: {

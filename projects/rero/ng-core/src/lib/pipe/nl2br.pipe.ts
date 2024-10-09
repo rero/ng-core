@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
 /**
@@ -22,12 +22,8 @@ import { DomSanitizer } from '@angular/platform-browser';
  */
 @Pipe({ name: 'nl2br' })
 export class Nl2brPipe implements PipeTransform {
-  /**
-   * Constructor.
-   *
-   * @param sanitizer Dom sanitizer.
-   */
-  constructor(private sanitizer: DomSanitizer) { }
+
+  protected sanitizer: DomSanitizer = inject(DomSanitizer);
 
   /**
    * Returns transformed value containing <br> entities.
