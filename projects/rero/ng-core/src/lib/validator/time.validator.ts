@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,10 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {AbstractControl, UntypedFormArray, ValidationErrors, ValidatorFn} from '@angular/forms';
-import moment from 'moment';
+import { DateTime } from "luxon";
 
 // @dynamic
 export class TimeValidator {
+
+  static readonly FORMAT = 'hh:mm';
 
   /**
    * Allow to control if time interval limits are well formed : the end limit should be 'older' the start limit
@@ -31,9 +33,9 @@ export class TimeValidator {
         let isLessThan = false;
         const startTime = control.get(start);
         const endTime = control.get(end);
-        const startDate = moment(startTime.value, 'HH:mm');
-        const endDate = moment(endTime.value, 'HH:mm');
-        if (startDate.format('HH:mm') !== '00:00' || endDate.format('HH:mm') !== '00:00') {
+        const startDate = DateTime.fromFormat(startTime.value, TimeValidator.FORMAT);
+        const endDate = DateTime.fromFormat(endTime.value, TimeValidator.FORMAT);
+        if (startDate.toFormat(TimeValidator.FORMAT) !== '00:00' || endDate.toFormat(TimeValidator.FORMAT) !== '00:00') {
           isLessThan = startDate.diff(endDate) >= 0;
         }
         return (isLessThan)
@@ -49,10 +51,10 @@ export class TimeValidator {
         let isRangeLessThan = false;
         const times = control.get('times') as UntypedFormArray;
         if (control.get('is_open').value && times.value.length > 1) {
-          const firstStartDate = moment(times.at(0).get('start_time').value, 'HH:mm');
-          const firstEndDate = moment(times.at(0).get('end_time').value, 'HH:mm');
-          const lastStartDate = moment(times.at(1).get('start_time').value, 'HH:mm');
-          const lastEndDate = moment(times.at(1).get('end_time').value, 'HH:mm');
+          const firstStartDate = DateTime.fromFormat(times.at(0).get('start_time').value, TimeValidator.FORMAT);
+          const firstEndDate = DateTime.fromFormat(times.at(0).get('end_time').value, TimeValidator.FORMAT);
+          const lastStartDate = DateTime.fromFormat(times.at(1).get('start_time').value, TimeValidator.FORMAT);
+          const lastEndDate = DateTime.fromFormat(times.at(1).get('end_time').value, TimeValidator.FORMAT);
           if (firstStartDate > lastStartDate) {
             isRangeLessThan = firstStartDate.diff(lastStartDate) <= 0
               || firstStartDate.diff(lastEndDate) <= 0;
@@ -62,7 +64,7 @@ export class TimeValidator {
           }
         }
         return (isRangeLessThan)
-            ? ({ rangeLessThan: { value: isRangeLessThan}})
+            ? ({ rangeLessThan: { value: isRangeLessThan }})
             : null;
       }
     };
