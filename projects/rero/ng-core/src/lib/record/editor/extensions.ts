@@ -19,11 +19,11 @@ import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import moment from 'moment';
 import { isObservable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
+import { Validators } from '../../validator/validators';
 
 export class NgCoreFormlyExtension {
 
@@ -326,68 +326,16 @@ export class NgCoreFormlyExtension {
       };
     }
     // The start date must be less than the end date.
-    if (customValidators.dateMustBeLessThan) {
-      const startDate: string = customValidators.dateMustBeLessThan.startDate;
-      const endDate: string = customValidators.dateMustBeLessThan.endDate;
-      const strict: boolean = customValidators.dateMustBeLessThan.strict || false;
-      const updateOn: 'change' | 'blur' | 'submit' = customValidators.dateMustBeLessThan.strict || 'blur';
+    if (customValidators.dateGreaterThan) {
+      const dateFirst: string = customValidators.dateGreaterThan.dateFirst;
+      const dateLast: string = customValidators.dateGreaterThan.dateLast;
+      const strict: boolean = customValidators.dateGreaterThan.strict || false;
+      const updateOn: 'change' | 'blur' | 'submit' = customValidators.dateGreaterThan.strict || 'blur';
       field.validators = {
-        dateMustBeLessThan: {
+        dateGreaterThan: {
           updateOn,
           expression: (control: UntypedFormControl) => {
-            const startDateFc = control.parent.get(startDate);
-            const endDateFc = control.parent.get(endDate);
-            if (startDateFc.value !== null && endDateFc.value !== null) {
-              const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
-              const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
-              const isMustLessThan = strict
-                ? dateStart >= dateEnd
-                  ? false
-                  : true
-                : dateStart > dateEnd
-                ? false
-                : true;
-              if (isMustLessThan) {
-                endDateFc.setErrors(null);
-                endDateFc.markAsDirty();
-              }
-              return isMustLessThan;
-            }
-            return false;
-          },
-        },
-      };
-    }
-
-    // The end date must be greater than the start date.
-    if (customValidators.dateMustBeGreaterThan) {
-      const startDate: string = customValidators.dateMustBeGreaterThan.startDate;
-      const endDate: string = customValidators.dateMustBeGreaterThan.endDate;
-      const strict: boolean = customValidators.dateMustBeGreaterThan.strict || false;
-      const updateOn: 'change' | 'blur' | 'submit' = customValidators.dateMustBeGreaterThan.strict || 'blur';
-      field.validators = {
-        datesMustBeGreaterThan: {
-          updateOn,
-          expression: (control: UntypedFormControl) => {
-            const startDateFc = control.parent.get(startDate);
-            const endDateFc = control.parent.get(endDate);
-            if (startDateFc.value !== null && endDateFc.value !== null) {
-              const dateStart = moment(startDateFc.value, 'YYYY-MM-DD');
-              const dateEnd = moment(endDateFc.value, 'YYYY-MM-DD');
-              const isMustBeGreaterThan = strict
-                ? dateStart <= dateEnd
-                  ? true
-                  : false
-                : dateStart < dateEnd
-                ? true
-                : false;
-              if (isMustBeGreaterThan) {
-                startDateFc.setErrors(null);
-                startDateFc.markAsDirty();
-              }
-              return isMustBeGreaterThan;
-            }
-            return false;
+            return Validators.dateGreaterThan(dateFirst, dateLast, strict)(control)
           },
         },
       };
