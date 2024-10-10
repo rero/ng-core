@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, inject, LOCALE_ID, NgModule, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, NgModule, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -54,16 +54,15 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   selector: 'ng-core-date-picker',
   template: `
     <p-calendar
-      [(ngModel)]="model"
+      [formControl]="formControl"
+      [formlyAttributes]="field"
       [clearButtonStyleClass]="props.clearButtonStyleClass"
       [dataType]="props.dataType"
       [dateFormat]="props.dateFormat"
       [defaultDate]="props.defaultDate"
-      [disabled]="props.disabled"
       [disabledDates]="disabledDates"
       [disabledDays]="props.disabledDays"
       [firstDayOfWeek]="props.firstDayOfWeek"
-      [formlyAttributes]="field"
       [hourFormat]="props.hourFormat"
       [inline]="props.inline"
       [inputStyleClass]="props.inputStyleClass"
@@ -86,6 +85,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [view]="props.view"
     />
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePickerProps>> implements OnInit {
 
@@ -116,25 +116,12 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     },
   };
 
-  private fieldModel: Date | Date[];
-
-  set model(value: Date | Date[]) {
-    this.formControl.patchValue(value);
-  }
-
-  get model(): Date | Date[] {
-    return this.fieldModel;
-  }
-
   defaultDate: Date = undefined;
   disabledDates: Date[] = undefined;
   maxDate: Date = undefined;
   minDate: Date = undefined;
 
   ngOnInit(): void {
-    if (this.formControl.value) {
-      this.fieldModel = this.formControl.value;
-    }
     if (!this.formControl.value && this.props.defaultDate) {
       this.defaultDate = this.processDate(this.props.defaultDate);
     }
@@ -161,6 +148,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     CommonModule,
     CalendarModule,
     FormsModule,
+    ReactiveFormsModule,
     FormlyModule.forChild({
       types: [
         {
