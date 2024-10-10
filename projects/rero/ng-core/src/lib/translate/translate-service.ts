@@ -14,13 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeEn from '@angular/common/locales/en-GB';
 import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
-import moment from "moment";
+import { DateTime } from "luxon";
 import de from 'primelocale/de.json';
 import en from 'primelocale/en.json';
 import fr from 'primelocale/fr.json';
@@ -28,7 +29,6 @@ import it from 'primelocale/it.json';
 import { PrimeNGConfig } from "primeng/api";
 import { Observable } from "rxjs";
 import { CoreConfigService } from "../core-config.service";
-import { registerLocaleData } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -62,7 +62,7 @@ export class NgCoreTranslateService extends TranslateService {
   }
 
   use(lang: string): Observable<any> {
-    moment.locale(lang);
+    DateTime.locale = lang;
     this.primengConfig.setTranslation(this.locales[lang].primeng[lang]);
 
     return super.use(lang);
