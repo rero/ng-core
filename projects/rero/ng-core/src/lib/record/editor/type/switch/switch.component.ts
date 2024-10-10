@@ -35,7 +35,7 @@ interface SwitchProps extends FormlyFieldProps {
         [indeterminate]="props.indeterminate && formControl.value === null"
         [formControl]="formControl"
         [formlyAttributes]="field">
-      <label class="custom-control-label" [for]="id" [tooltip]="props.description">{{ props.label }}</label>
+      <label class="custom-control-label" [for]="id" [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</label>
     </div>
   `,
 })

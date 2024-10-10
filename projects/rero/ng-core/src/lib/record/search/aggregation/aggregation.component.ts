@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Aggregation } from '../../record';
 
 @Component({
@@ -24,12 +24,11 @@ import { Aggregation } from '../../record';
 export class RecordSearchAggregationComponent {
   // COMPONENT ATTRIBUTES =====================================================
   /** Aggregation data */
-  @Input() aggregation: Aggregation;
+  aggregation = input<Aggregation>();
   /** Current selected values */
-  @Input() aggregationsFilters = [];
-
+  aggregationsFilters = input.required<any[]>();
   /** Output event when aggregation is clicked. */
-  @Output() aggregationClicked = new EventEmitter<any>();
+  aggregationClicked = output<{ key: string, expanded: boolean }>();
 
   // GETTER & SETTER ==========================================================
   /**
@@ -37,13 +36,13 @@ export class RecordSearchAggregationComponent {
    * @return List of aggregation filters
    */
   get aggregationFilters(): Array<string> {
-    const aggregationFilters = this.aggregationsFilters.find((item: any) => item.key === this.aggregation.key);
+    const aggregationFilters = this.aggregationsFilters().find((item: any) => item.key === this.aggregation().key);
     return aggregationFilters === undefined ? [] : aggregationFilters.values;
   }
 
   /** Is the aggregation content should be displayed. */
   get isAggregationDisplayed(): boolean {
-    return this.aggregation.expanded || this.aggregationFilters.length > 0;
+    return this.aggregation().expanded || this.aggregationFilters.length > 0;
   }
 
   // PUBLIC COMPONENTS ========================================================
@@ -57,11 +56,11 @@ export class RecordSearchAggregationComponent {
       return;
     }
     // Toggle aggregation expanded attribute
-    this.aggregation.expanded = !this.aggregation.expanded;
+    this.aggregation().expanded = !this.aggregation().expanded;
     // Emit the value to parent.
     this.aggregationClicked.emit({
-      key: this.aggregation.key,
-      expanded: this.aggregation.expanded,
+      key: this.aggregation().key,
+      expanded: this.aggregation().expanded,
     });
   }
 }

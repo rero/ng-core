@@ -18,7 +18,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '../../../record.module';
 import { EditorComponent } from '../../editor.component';
@@ -36,7 +36,7 @@ describe('LabelComponent', () => {
       imports: [
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         RecordModule,
         TranslateModule.forRoot()
       ]

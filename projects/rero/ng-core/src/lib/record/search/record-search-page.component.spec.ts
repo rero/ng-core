@@ -18,15 +18,10 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, Router, convertToParamMap } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ToastrModule } from 'ngx-toastr';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
-import { DialogService } from '../../dialog/dialog.service';
 import { DefaultPipe } from '../../pipe/default.pipe';
 import { Nl2brPipe } from '../../pipe/nl2br.pipe';
 import { UpperCaseFirstPipe } from '../../pipe/ucfirst.pipe';
@@ -37,6 +32,7 @@ import { RecordService } from '../record.service';
 import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
 import { RecordSearchPageComponent } from './record-search-page.component';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({
@@ -63,9 +59,6 @@ describe('RecordSearchPageComponent', () => {
   const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecords', 'delete']);
   recordServiceSpy.getRecords.and.returnValue(of(emptyRecords));
   recordServiceSpy.delete.and.returnValue(of({}));
-
-  const dialogServiceSpy = jasmine.createSpyObj('DialogService', ['show']);
-  dialogServiceSpy.show.and.returnValue(of(true));
 
   const route = {
     snapshot: {
@@ -111,19 +104,17 @@ describe('RecordSearchPageComponent', () => {
       imports: [
         BrowserAnimationsModule,
         FormsModule,
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        PaginationModule.forRoot(),
-        ModalModule.forRoot(),
-        ToastrModule.forRoot()
       ],
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
-        { provide: DialogService, useValue: dialogServiceSpy }
+        ConfirmationService,
+        MessageService
       ],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();

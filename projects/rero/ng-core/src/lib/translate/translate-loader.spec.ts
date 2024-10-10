@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,36 +15,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed } from '@angular/core/testing';
-import { CoreConfigService } from '../core-config.service';
 import { TranslateLoader } from './translate-loader';
 import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateService, TranslateLoader as NgxTranslateLoader } from '@ngx-translate/core';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CoreConfigService } from '../core-config.service';
 
 describe('TranslateLoader', () => {
   let translate: TranslateService;
   let http: HttpTestingController;
-  let config = {};
 
   beforeEach(() => {
-    config = {
-      languages: ['fr'],
-      translationsURLs: [
-        '/assets/i18n/${lang}.json'
-      ]
-    };
     TestBed.configureTestingModule({
       imports: [
         HttpClientTestingModule,
         TranslateModule.forRoot({
           loader: {
             provide: NgxTranslateLoader,
-            useFactory: (httpClient: HttpClient) => new TranslateLoader(config as CoreConfigService, httpClient),
+            useFactory: () => new TranslateLoader(),
             deps: [HttpClient]
           }
         })
       ],
-      providers: [TranslateService]
+      providers: [
+        TranslateService,
+        { provide: CoreConfigService, useValue: {
+            languages: ['fr'],
+            translationsURLs: [
+              '/assets/i18n/${lang}.json'
+            ]
+          }
+        }
+      ]
     });
     translate = TestBed.inject(TranslateService);
     http = TestBed.inject(HttpTestingController);

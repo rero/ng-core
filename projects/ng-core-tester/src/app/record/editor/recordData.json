@@ -16,6 +16,7 @@
       "hidden_with_default": "Default hidden",
       "readonly_changeable": "Value 1",
       "hide_with_required_expression_control": "Optional",
+      "treeSelect": "node5",
       "selectMultiple": ["value2", "value3"],
       "markdown": "Hello **world**.\nGreat day.",
       "array_with_multicheckbox": ["checkbox1", "checkbox2"],
@@ -26,7 +27,9 @@
           "type": "staff_note",
           "content": "test"
         }
-      ]
+      ],
+      "date_only": "2024-08-06",
+      "date_range": ["2024-08-06", "2024-08-20"]
   },
   "updated": "2024-03-06T07:47:33.944197+00:00"
 }

@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, ComponentFactoryResolver, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ToastrService } from 'ngx-toastr';
-import { Observable, Subscription, isObservable, of } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { isObservable, Observable, of, Subscription } from 'rxjs';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
@@ -34,6 +34,17 @@ import { JsonComponent } from './view/json.component';
   templateUrl: './detail.component.html'
 })
 export class DetailComponent implements OnInit, OnDestroy {
+
+  protected route: ActivatedRoute = inject(ActivatedRoute);
+  protected router: Router = inject(Router);
+  protected location: Location = inject(Location);
+  protected componentFactoryResolver: ComponentFactoryResolver = inject(ComponentFactoryResolver);
+  protected recordService: RecordService = inject(RecordService);
+  protected recordUiService: RecordUiService = inject(RecordUiService);
+  protected translate: TranslateService = inject(TranslateService);
+  protected spinner: NgxSpinnerService = inject(NgxSpinnerService);
+  protected messageService: MessageService = inject(MessageService);
+
 
   /** View component for displaying record */
   @Input() viewComponent: any = null;
@@ -75,30 +86,6 @@ export class DetailComponent implements OnInit, OnDestroy {
   @ViewChild(RecordDetailDirective, { static: true })
   recordDetail: RecordDetailDirective;
 
-  /**
-   * Constructor
-   * @param route Current route.
-   * @param router Router service.
-   * @param location Location.
-   * @param componentFactoryResolver Component factory resolver.
-   * @param recordService Record service.
-   * @param recordUiService Record UI service.
-   * @param toastrService Toastr service.
-   * @param translate Translate service.
-   * @param spinner Spinner service.
-   */
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected location: Location,
-    protected componentFactoryResolver: ComponentFactoryResolver,
-    protected recordService: RecordService,
-    protected recordUiService: RecordUiService,
-    protected toastrService: ToastrService,
-    protected translate: TranslateService,
-    protected spinner: NgxSpinnerService
-  ) { }
-
   /** On init hook */
   ngOnInit() {
     this.routeParametersSubscription = this.route.paramMap.subscribe(() => {
@@ -114,16 +101,17 @@ export class DetailComponent implements OnInit, OnDestroy {
 
       const type = this.config.index || this.config.key;
       this.record$ = this.recordService.getRecord(type, pid, 1, this.config.itemHeaders || null);
-      this.record$.subscribe(
-        (record) => {
+      this.record$.subscribe({
+        next: (record) => {
           this.record = record;
 
           this.recordUiService.canReadRecord$(this.record, this.type).subscribe(result => {
             if (result.can === false) {
-              this.toastrService.error(
-                this.translate.instant('You cannot read this record'),
-                this.translate.instant(this.type)
-              );
+              this.messageService.add({
+                severity: 'error',
+                summary: this.translate.instant(this.type),
+                detail: this.translate.instant('You cannot read this record')
+              })
               this.location.back();
             }
           });
@@ -145,11 +133,11 @@ export class DetailComponent implements OnInit, OnDestroy {
 
           this.spinner.hide();
         },
-        (error) => {
+        error: (error) => {
           this.error = error;
           this.spinner.hide();
         }
-      );
+      });
 
       this.loadRecordView();
     });

@@ -14,9 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Type, ViewChild } from '@angular/core';
+import { FieldType, FieldTypeConfig, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { FormlyFieldTextArea } from '@ngx-formly/primeng/textarea';
 import EasyMDE from 'easymde';
+
+interface TextAreaProps extends FormlyFieldProps {
+  maxHeight?: string;
+  minHeight: string;
+  placeholder?: string;
+  promptURLs: boolean;
+  spellChecker: boolean;
+  status: boolean;
+  toolbar: any[];
+}
+
+export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaProps> {
+  type: 'textarea' | Type<FormlyFieldTextArea>;
+}
 
 /**
  * Component to display textarea as a markdown editor.
@@ -34,19 +50,17 @@ import EasyMDE from 'easymde';
     </div>
   `,
 })
-export class MarkdownFieldComponent extends FormlyFieldTextArea implements AfterViewInit {
+export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaProps>> implements AfterViewInit {
   // Reference to textarea element.
   @ViewChild('textarea') textarea: ElementRef;
 
-  /**
-   * Markdown editor initialization and listen for changes to update the model
-   * value.
-   */
-  ngAfterViewInit(): void {
-    const mde = new EasyMDE({
-      spellChecker: false,
+  /** Default options */
+  defaultOptions?: Partial<FieldTypeConfig<TextAreaProps>> = {
+    props: {
+      minHeight: '500px',
       promptURLs: true,
-      initialValue: this.formControl.value,
+      spellChecker: false,
+      status: false,
       toolbar: [
         'bold',
         'italic',
@@ -62,9 +76,24 @@ export class MarkdownFieldComponent extends FormlyFieldTextArea implements After
         'fullscreen',
         '|',
         'guide',
-      ],
+      ]
+    }
+  };
+
+  /**
+   * Markdown editor initialization and listen for changes to update the model
+   * value.
+   */
+  ngAfterViewInit(): void {
+    const mde = new EasyMDE({
+      spellChecker: this.props.spellChecker,
+      promptURLs: this.props.promptURLs,
+      initialValue: this.formControl.value,
+      maxHeight: this.props.maxHeight,
+      minHeight: this.props.minHeight,
+      toolbar: this.props.toolbar,
       element: this.textarea.nativeElement,
-      status: false,
+      status: this.props.status,
     });
 
     mde.codemirror.on('change', () => {

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ResultItem, TitleMetaService } from '@rero/ng-core';
 
 /**
@@ -24,31 +24,19 @@ import { ResultItem, TitleMetaService } from '@rero/ng-core';
   templateUrl: './document.component.html'
 })
 export class DocumentComponent implements OnInit, ResultItem {
+  // Inject
+  private titleMetaService = inject(TitleMetaService);
+
   // Record data.
-  @Input()
-  record: any;
+  @Input() record: any;
 
   // Type of resource.
-  @Input()
-  type: string;
+  @Input() type: string;
 
   // Object containing link to detail.
-  @Input()
-  detailUrl: { link: string, external: boolean };
+  @Input() detailUrl: { link: string, external: boolean };
 
-  /**
-   * Constructor
-   *
-   * @param _titleMetaService TitleMetaService
-   */
-  constructor(private _titleMetaService: TitleMetaService) { }
-
-  /**
-   * Component initialization.
-   *
-   * Set meta title.
-   */
   ngOnInit() {
-    this._titleMetaService.setTitle(this.type);
+    this.titleMetaService.setTitle(this.type);
   }
 }

@@ -26,19 +26,17 @@ import {
 import { Observable, of } from 'rxjs';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';
+import { inject } from '@angular/core';
 
 /**
  * Routes for document resources
  */
 export class DocumentsRoute implements RouteInterface {
+
+  protected translateService: TranslateService = inject(TranslateService);
+
   // Route name
   readonly name = 'documents';
-
-  /**
-   * Constructor
-   * @param translateService - TranslateService
-   */
-  constructor(protected translateService: TranslateService) {}
 
   /**
    * Get Configuration.
@@ -127,12 +125,12 @@ export class DocumentsRoute implements RouteInterface {
                 message: ''
               });
             },
-            deleteMessage: (pid: string): Observable<string[]> => {
+            deleteMessage: (): string[] => {
               // If you want to translate the strings, you have to do it here
-              return of([
+              return [
                 this.translateService.instant('Document: Do you really want to delete this record?'),
                 this.translateService.instant('Attached items will also be deleted.')
-              ]);
+              ];
             }
           }
         ]

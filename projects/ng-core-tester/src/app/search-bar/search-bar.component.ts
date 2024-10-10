@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,8 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { IAutoComplete, IRecordType, Record } from '@rero/ng-core';
+import { MessageService } from 'primeng/api';
 
 /**
  * Component showing the search bar for searching records.
@@ -25,120 +28,96 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './search-bar.component.html'
 })
 export class SearchBarComponent implements OnInit {
-  // Code of the organisation.
-  @Input() viewcode: string;
+  // Inject
+  private translateService = inject(TranslateService);
+  private messageService = inject(MessageService);
+  private router = inject(Router);
 
-  // Size.
-  @Input() size: string = undefined;
-
-  // Suggestions max length.
-  @Input() maxLengthSuggestion = 100;
+  viewcode = input<string>();
 
   // List of resource type
-  recordTypes = [];
+  recordTypes: IRecordType[] = [];
 
-  /**
-   * Returns person name for given metadata.
-   *
-   * @param metadata Metadata.
-   * @return Person name.
-   */
-  static getPersonName(metadata: string) {
-    for (const source of ['rero', 'bnf', 'gnd']) {
-      if (metadata[source] && metadata[source].preferred_name_for_person) {
-        return metadata[source].preferred_name_for_person;
+  value: string = undefined;
+
+  ngOnInit() {
+    this.recordTypes = [
+      {
+        index: 'documents',
+        field: 'title',
+        groupLabel: this.translateService.instant('Documents'),
+        processSuggestions: (data: any, query: string) => this.processDocuments(data, query),
+        preFilters: this.viewcode() ? { view: this.viewcode() } : {}
+      },
+      {
+        index: 'organisations',
+        field: 'name',
+        groupLabel: this.translateService.instant('Organisations'),
+        processSuggestions: (data: any) => this.processOrganisations(data),
+        preFilters: this.viewcode() ? { view: this.viewcode() } : {}
       }
+    ];
+  }
+
+  onSelect(event: IAutoComplete) {
+    const label = event.originalLabel ? event.originalLabel : event.label;
+    const doc = new DOMParser().parseFromString(label, 'text/html');
+    this.value = doc.body.textContent || '';
+    switch(event.index) {
+      case 'documents':
+        this.messageService.add({
+          severity: 'success',
+          summary: 'DOCUMENTS',
+          detail: 'navigate to document: ' + event.value
+        });
+        this.router.navigate(['/record', 'search', 'documents', 'detail', event.value]);
+        break;
+      case 'organisations':
+        this.messageService.add({
+          severity: 'success',
+          summary: 'ORGANISATIONS',
+          detail: 'navigate to organisation: ' + event.value
+        });
+        break;
     }
   }
 
-  /**
-   * Constructor.
-   *
-   * @param _translateService Translate service.
-   */
-  constructor(private _translateService: TranslateService) { }
-
-  /**
-   * Component initialization.
-   *
-   * Initializes record types.
-   */
-  ngOnInit() {
-    this.recordTypes = [{
-      type: 'documents',
-      field: 'title',
-      getSuggestions: (query: string, persons: any) => this.getDocumentsSuggestions(query, persons),
-      preFilters: this.viewcode ? { view: this.viewcode } : {}
-    }, {
-      type: 'organisations',
-      field: 'name',
-      getSuggestions: (query: string, persons: any) => this.getOrganisationsSuggestions(query, persons),
-      component: this,
-      preFilters: this.viewcode ? { view: this.viewcode } : {}
-    }];
-  }
-
-  /**
-   * Link to record search.
-   *
-   * @return Link to record search.
-   */
-  get action(): string {
-    return `/records/documents`;
-  }
-
-  /**
-   * Return a list of suggestions for organisations.
-   *
-   * @param query String query.
-   * @param organisations List of organisations.
-   * @return List of suggestions.
-   */
-  getOrganisationsSuggestions(query: string, organisations: any): Array<any> {
-    const values = [];
-    organisations.hits.hits.map((hit: any) => {
-      let text = hit.metadata.name;
-      text = text.replace(new RegExp(query, 'gi'), `<b>${query}</b>`);
+  private processDocuments(data: Record, query: string): any {
+    const values: IAutoComplete[] = [];
+    data.hits.hits.map((hit: any) => {
+      const title = hit.metadata.title[0].mainTitle[0].value.replace(/[:\-\[\]()/"]/g, ' ').replace(/\s\s+/g, ' ');
       values.push({
-        text,
-        query: '',
-        index: 'organisations',
-        category: this._translateService.instant('direct links'),
-        href: `/records/organisations/detail/${hit.id}`,
-        iconCssClass: 'fa fa-bank'
-      });
-    });
-    return values;
-  }
-
-  /**
-   * Return a list of suggestions for documents.
-   *
-   * @param query String query.
-   * @param documents List of documents.
-   * @return List of suggestions.
-   */
-  getDocumentsSuggestions(query: string, documents: any): Array<any> {
-    const values = [];
-    documents.hits.hits.map((hit: any) => {
-      let text = hit.metadata.title;
-      let truncate = false;
-      if (text.length > this.maxLengthSuggestion) {
-        truncate = true;
-        text = hit.metadata.title.substr(0, this.maxLengthSuggestion);
-      }
-      text = text.replace(new RegExp(query, 'gi'), `<b>${query}</b>`);
-      if (truncate) {
-        text += ' ...';
-      }
-      values.push({
-        text,
-        query: hit.metadata.title.replace(/[:\-\[\]()/"]/g, ' ').replace(/\s\s+/g, ' '),
+        iconClass: 'fa fa-book',
         index: 'documents',
-        category: this._translateService.instant('documents')
-        // href: `/${this.viewcode}/documents/${hit.id}`
+        label: this.processLabel(title, query, 80),
+        value: hit.metadata.pid,
+        originalLabel: title,
       });
     });
+
     return values;
+  }
+
+  private processOrganisations(data: Record): any {
+    const values: IAutoComplete[] = [];
+    data.hits.hits.map((hit: any) => {
+      values.push({
+        iconClass: 'fa fa-industry',
+        id: hit.metadata.pid,
+        index: 'organisations',
+        label: hit.metadata.name,
+        value: hit.metadata.pid,
+      });
+    });
+
+    return values;
+  }
+
+  private processLabel(label: string, query: string, truncateSize?: number): string {
+    if (truncateSize && label.length > truncateSize) {
+      label = label.substring(0, truncateSize) + '…';
+    }
+
+    return label.replace(new RegExp(query, 'gi'), `<b class="text-orange-600">${query}</b>`);
   }
 }

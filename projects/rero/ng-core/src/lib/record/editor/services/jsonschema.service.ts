@@ -29,11 +29,9 @@ import { JSONSchema7 } from '../editor.component';
 })
 export class JSONSchemaService {
 
-  private translateService =  inject(TranslateService)
-
-  private recordService =  inject(RecordService)
-
-  private apiService =  inject(ApiService)
+  protected translateService: TranslateService = inject(TranslateService);
+  protected recordService: RecordService = inject(RecordService);
+  protected apiService: ApiService = inject(ApiService);
 
   // list of custom validators
   private customValidators = [
@@ -46,7 +44,7 @@ export class JSONSchemaService {
 
   processField(field: FormlyFieldConfig, jsonSchema: JSONSchema7) {
     // initial population of arrays with a minItems constraints
-    if (jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
+    if (field.type === 'array' && jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
       field.defaultValue = new Array(jsonSchema.minItems);
     }
     // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
@@ -62,7 +60,6 @@ export class JSONSchemaService {
         this.setSimpleOptions(field, props);
         this.setValidation(field, props);
         this.setRemoteSelectOptions(field, props);
-        this.setRemoteTypeahead(field, props);
       }
     }
 
@@ -103,24 +100,6 @@ export class JSONSchemaService {
               )
             );
         }
-      };
-    }
-  }
-
-  /**
-   * Store the remote typeahead options.
-   * @param field formly field config
-   * @param formOptions JSONSchema object
-   */
-  protected setRemoteTypeahead(
-    field: FormlyFieldConfig,
-    formOptions: any
-  ): void {
-    if (formOptions.remoteTypeahead && formOptions.remoteTypeahead.type) {
-      field.type = 'remoteTypeahead';
-      field.props = {
-        ...field.props,
-        ...{ remoteTypeahead: formOptions.remoteTypeahead }
       };
     }
   }
