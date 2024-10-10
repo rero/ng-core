@@ -92,6 +92,7 @@ export * from './lib/utils/sort-by-keys';
 export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
+export * from './lib/validator/validators';
 export * from './lib/widget/menu/menu.component';
 export * from './lib/widget/sort-list/sort-list.component';
 
