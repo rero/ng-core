@@ -1,7 +1,7 @@
 {
   "{{ total }} result": "{{ total }} Ergebnis",
   "{{ total }} results": "{{ total }} Ergebnisse",
-  "A file with same name already exists.": "Eine Datei mit demselben Namen existiert bereits.",
+  "A file with same name already exists.": "Eine Datei mit diesem Namen existiert bereits.",
   "Add": "Hinzufügen",
   "Add a new file": "Neue Datei hinzufügen",
   "Add field": "Feld hinzufügen",
