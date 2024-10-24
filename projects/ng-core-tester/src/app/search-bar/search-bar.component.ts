@@ -17,7 +17,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { IAutoComplete, IRecordType, Record } from '@rero/ng-core';
+import { CONFIG, IAutoComplete, IRecordType, Record } from '@rero/ng-core';
 import { MessageService } from 'primeng/api';
 
 /**
@@ -68,7 +68,8 @@ export class SearchBarComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'DOCUMENTS',
-          detail: 'navigate to document: ' + event.value
+          detail: 'navigate to document: ' + event.value,
+          life: CONFIG.MESSAGE_LIFE
         });
         this.router.navigate(['/record', 'search', 'documents', 'detail', event.value]);
         break;
@@ -76,7 +77,8 @@ export class SearchBarComponent implements OnInit {
         this.messageService.add({
           severity: 'success',
           summary: 'ORGANISATIONS',
-          detail: 'navigate to organisation: ' + event.value
+          detail: 'navigate to organisation: ' + event.value,
+          life: CONFIG.MESSAGE_LIFE
         });
         break;
     }

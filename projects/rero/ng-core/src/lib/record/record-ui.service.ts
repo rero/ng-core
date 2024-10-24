@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { CONFIG } from '../utils/config';
 import { ActionStatus } from './action-status';
 import { RecordService } from './record.service';
 
@@ -63,7 +64,8 @@ export class RecordUiService {
             this.messageService.add({
               severity: 'info',
               summary: this.translateService.instant('Confirmed'),
-              detail: this.translateService.instant('Record deleted.')
+              detail: this.translateService.instant('Record deleted.'),
+              life: CONFIG.MESSAGE_LIFE
             });
           },
           error: (error: any)  => {
@@ -71,7 +73,9 @@ export class RecordUiService {
             this.messageService.add({
               severity: 'error',
               summary: this.translateService.instant('Error'),
-              detail: this.translateService.instant(error.title)
+              detail: this.translateService.instant(error.title),
+              sticky: true,
+              closable: true
             });
           }
         });

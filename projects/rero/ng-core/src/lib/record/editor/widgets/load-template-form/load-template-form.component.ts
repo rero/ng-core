@@ -111,7 +111,9 @@ export class LoadTemplateFormComponent implements OnInit {
           this.messageService.add({
             severity: 'error',
             summary: this.translateService.instant('Error'),
-            detail: error.message
+            detail: error.message,
+            sticky: true,
+            closable: true
           });
         }
     );
