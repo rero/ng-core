@@ -14,7 +14,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 export * from './lib/api/api.service';
 export * from './lib/component/abstract-can-deactivate.component';
 export * from './lib/core-config.service';
@@ -48,7 +47,15 @@ export * from './lib/record/detail/detail.directive';
 export * from './lib/record/detail/view/detail-record';
 export * from './lib/record/editor/editor.component';
 export * from './lib/record/editor/extensions';
+export * from './lib/record/editor/formly/primeng/date-picker/date-picker';
+export * from './lib/record/editor/formly/primeng/input/src/input.module';
+export * from './lib/record/editor/formly/primeng/input/src/input.type';
+export * from './lib/record/editor/formly/primeng/multi-checkbox/multi-checkbox';
+export * from './lib/record/editor/formly/primeng/multi-select/multi-select';
+export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete';
 export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.service';
+export * from './lib/record/editor/formly/primeng/select/select';
+export * from './lib/record/editor/formly/primeng/tree-select/tree-select';
 export * from './lib/record/editor/services/jsonschema.service';
 export * from './lib/record/editor/type/array-type/array-type.component';
 export * from './lib/record/editor/type/multischema/multischema.component';
@@ -88,6 +95,7 @@ export * from './lib/translate/translate-language.pipe';
 export * from './lib/translate/translate-language.service';
 export * from './lib/translate/translate-loader';
 export * from './lib/translate/translate-service';
+export * from './lib/utils/config';
 export * from './lib/utils/sort-by-keys';
 export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
@@ -95,12 +103,3 @@ export * from './lib/validator/unique.validator';
 export * from './lib/validator/validators';
 export * from './lib/widget/menu/menu.component';
 export * from './lib/widget/sort-list/sort-list.component';
-
-export * from './lib/record/editor/formly/primeng/date-picker/date-picker';
-export * from './lib/record/editor/formly/primeng/input/src/input.module';
-export * from './lib/record/editor/formly/primeng/input/src/input.type';
-export * from './lib/record/editor/formly/primeng/multi-checkbox/multi-checkbox';
-export * from './lib/record/editor/formly/primeng/multi-select/multi-select';
-export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete';
-export * from './lib/record/editor/formly/primeng/select/select';
-export * from './lib/record/editor/formly/primeng/tree-select/tree-select';

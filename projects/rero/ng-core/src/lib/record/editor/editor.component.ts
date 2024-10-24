@@ -32,6 +32,7 @@ import { AbstractCanDeactivateComponent } from '../../component/abstract-can-dea
 import { Error } from '../../error/error';
 import { RouteCollectionService } from '../../route/route-collection.service';
 import { LoggerService } from '../../service/logger.service';
+import { CONFIG } from '../../utils/config';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { JSONSchemaService } from './services/jsonschema.service';
@@ -271,7 +272,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
               this.messageService.add({
                 severity: 'success',
                 summary: this.translateService.instant('Template'),
-                detail: this.translateService.instant('Template loaded')
+                detail: this.translateService.instant('Template loaded'),
+                life: CONFIG.MESSAGE_LIFE
               });
               return {
                 result: true,
@@ -313,7 +315,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
               this.messageService.add({
                 severity: 'error',
                 summary: this.translateService.instant(this.recordType),
-                detail: this.translateService.instant('You cannot update this record')
+                detail: this.translateService.instant('You cannot update this record'),
+                sticky: true,
+                closable: true
               });
               this.location.back();
             } else {
@@ -491,7 +495,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       this.messageService.add({
         severity: 'error',
         summary: this.translateService.instant(this.recordType),
-        detail: this.translateService.instant('The form contains errors.') + errorMessage
+        detail: this.translateService.instant('The form contains errors.') + errorMessage,
+        sticky: true,
+        closable: true
       });
       this.isSaveButtonDisabled = false;
       return;
@@ -535,7 +541,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       this.messageService.add({
         severity: 'success',
         summary: this.translateService.instant(this.recordType),
-        detail: this.translateService.instant(result.message)
+        detail: this.translateService.instant(result.message),
+        life: CONFIG.MESSAGE_LIFE
       });
       this.recordUiService.redirectAfterSave(
         result.record.id,
@@ -574,7 +581,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
             this.messageService.add({
               severity: 'success',
               summary: this.translateService.instant(this.editorSettings.template.recordType),
-              detail: this.translateService.instant('Record created.')
+              detail: this.translateService.instant('Record created.'),
+              life: CONFIG.MESSAGE_LIFE
             });
             this.recordUiService.redirectAfterSave(
               createdRecord.id,
@@ -589,7 +597,9 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
             this.messageService.add({
               severity: 'error',
               summary: this.translateService.instant(this.editorSettings.template.recordType),
-              detail: error.title
+              detail: error.title,
+              sticky: true,
+              closable: true
             });
           }
         })
