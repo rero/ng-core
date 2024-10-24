@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit, inject } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { CoreConfigService } from '@rero/ng-core';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
+import { CONFIG, CoreConfigService } from '@rero/ng-core';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-menu',
@@ -42,7 +42,7 @@ export class MenuComponent implements OnInit {
         icon: 'pi pi-home',
         command: () => {
           this.router.navigate(['/']);
-          this.messageService.add({ severity: 'success', detail: 'Home menu selected', life: 2000 });
+          this.messageService.add({ severity: 'success', detail: 'Home menu selected', life: CONFIG.MESSAGE_LIFE });
         }
       },
       {
@@ -165,7 +165,7 @@ export class MenuComponent implements OnInit {
         styleClass: undefined,
         command: () => {
           this.translateService.use(language);
-          this.messageService.add({ severity: 'info', detail: `Language change to ${language}`, life: 2000 });
+          this.messageService.add({ severity: 'info', detail: `Language change to ${language}`, life: CONFIG.MESSAGE_LIFE });
         }
       }
       languageMenu.items.push(lang);

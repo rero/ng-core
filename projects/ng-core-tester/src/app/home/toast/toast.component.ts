@@ -66,6 +66,12 @@ export class ToastComponent implements OnInit {
       message.summary = this.toastType.name;
       message.detail = this.toastMessage;
     }
+    if (message.severity === 'error') {
+      message.sticky = true;
+      message.closable = true;
+    } else {
+      message.life = 5000;
+    }
     this.messageService.add(message);
   }
 }
