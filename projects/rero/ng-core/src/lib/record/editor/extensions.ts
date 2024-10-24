@@ -60,6 +60,10 @@ export class NgCoreFormlyExtension {
       const expressionFn = Function('expression', `return ${expression};`);
       field.defaultValue = expressionFn();
     }
+    // Set default placeholder for select if it doesn't exist.
+    if (field.type === 'select' && !field.props.placeholder) {
+      field.props.placeholder = 'Select an option…';
+    }
   }
 
   /**
@@ -575,6 +579,8 @@ export function registerNgCoreFormlyExtension(translate: TranslateService, recor
       {
         name: 'translate',
         extension: new TranslateExtension(),
+        // Execute Translate extension after ng-core extension
+        priority: 11,
       },
       {
         name: 'ng-core',

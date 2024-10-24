@@ -16,6 +16,7 @@
  */
 import { Component, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { CONFIG } from '@rero/ng-core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -42,7 +43,8 @@ export class AppDialogComponent {
           this.messageService.add({
             severity: 'info',
             summary: this.translate.instant('Confirmed'),
-            detail: this.translate.instant('You have accepted')
+            detail: this.translate.instant('You have accepted'),
+            life: CONFIG.MESSAGE_LIFE
           });
       },
       reject: () => {
@@ -50,7 +52,8 @@ export class AppDialogComponent {
             severity: 'error',
             summary: this.translate.instant('Rejected'),
             detail: this.translate.instant('You have rejected'),
-            life: 3000
+            sticky: true,
+            closable: true
           });
       }
     });

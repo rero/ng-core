@@ -110,7 +110,9 @@ export class DetailComponent implements OnInit, OnDestroy {
               this.messageService.add({
                 severity: 'error',
                 summary: this.translate.instant(this.type),
-                detail: this.translate.instant('You cannot read this record')
+                detail: this.translate.instant('You cannot read this record'),
+                sticky: true,
+                closable: true
               })
               this.location.back();
             }
