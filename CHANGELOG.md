@@ -1,5 +1,12 @@
 # Changelog
 
+## [v17.3.0](https://github.com/rero/ng-core/tree/v17.3.0) (2024-10-24)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.2.3...v17.3.0)
+
+**New features:**
+* search: export search components to other modules [\#643](https://github.com/rero/ng-core/pull/643) (by @jma)
+
 ## [v17.2.3](https://github.com/rero/ng-core/tree/v17.2.3) (2024-07-29)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.2...v17.2.3)
