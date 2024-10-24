@@ -25,7 +25,9 @@ import { DetailRecord } from './detail-record';
   template: `
     @if (record) {
       <h1>Record of type "{{ type }}" #{{ record.id }}</h1>
-      {{ record|json }}
+      <pre>
+        <div style="white-space: pre-wrap;">{{ record|json }}</div>
+      </pre>
     }
   `
 })

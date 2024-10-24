@@ -16,8 +16,7 @@
  */
 import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, ParamMap, convertToParamMap } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, ParamMap, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { ActionStatus } from '../action-status';
@@ -84,7 +83,7 @@ describe('RecordDetailComponent', () => {
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        RouterTestingModule,
+        RouterModule.forRoot([]),
         RecordModule
       ],
       providers: [

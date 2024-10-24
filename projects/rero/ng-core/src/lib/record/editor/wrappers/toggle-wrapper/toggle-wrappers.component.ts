@@ -24,10 +24,11 @@ import { isEmpty, removeEmptyValues } from '../../utils';
     <div class='toggle-wrapper'>
       <div class='form-group'>
         <div class="custom-control custom-switch">
-          <input class="custom-control-input" type="checkbox" id="toggle-switch-{{ field.id }}" \
-                 (change)="toggle($event)" [checked]="tsOptions.enabled">
-          <label class="custom-control-label" for="toggle-switch-{{ field.id }}" \
-                 [tooltip]="tsOptions.description|translate">{{ tsOptions.label | translate }}</label>
+          <input class="custom-control-input" type="checkbox" id="toggle-switch-{{ field.id }}"
+            (change)="toggle($event)" [checked]="tsOptions.enabled">
+          <label class="custom-control-label" for="toggle-switch-{{ field.id }}"
+            [pTooltip]="tsOptions.description|translate" tooltipPosition="top"
+          >{{ tsOptions.label | translate }}</label>
         </div>
       </div>
       @if (tsOptions.enabled) {

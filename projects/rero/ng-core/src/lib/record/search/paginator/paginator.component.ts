@@ -65,10 +65,8 @@ export class PaginatorComponent implements OnInit {
 
   /** Event on change page */
   onPageChange(event: PageEvent) {
-    if (this.eventData.rows !== event.rows || this.eventData.page !== event.page) {
-      this.eventData.rows = event.rows;
-      this.eventData.page = event.page;
-      this.rowPageChange.emit(this.eventData);
-    }
+    this.eventData.rows = event.rows;
+    this.eventData.page = event.page;
+    this.rowPageChange.emit(this.eventData);
   }
 }

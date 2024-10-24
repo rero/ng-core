@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,25 +14,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 // eslint-disable-next-line @angular-eslint/directive-selector
 @Directive({ selector: '[ngVar]' })
 export class NgVarDirective {
 
+  protected vcRef: ViewContainerRef = inject(ViewContainerRef);
+  protected templateRef: TemplateRef<any> = inject(TemplateRef);
+
   /** Context */
   public context: any = {};
-
-  /**
-   * Constructor
-   * @param vcRef - ViewContainerRef
-   * @param templateRef - TemplateRef
-   */
-  constructor(
-      private vcRef: ViewContainerRef,
-      private templateRef: TemplateRef<any>,
-  ) {}
 
   @Input()
   set ngVar(context: any) {

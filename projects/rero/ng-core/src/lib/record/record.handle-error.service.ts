@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, throwError } from 'rxjs';
 
@@ -23,11 +23,8 @@ import { Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class RecordHandleErrorService {
-  /**
-   * Constructor
-   * @param translateService - TranslateService
-   */
-  constructor(protected translateService: TranslateService) { }
+
+  protected translateService: TranslateService = inject(TranslateService);
 
   /**
    * handle http error

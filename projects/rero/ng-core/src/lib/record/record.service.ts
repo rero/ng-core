@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2023 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,7 @@ import {
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subject, of } from 'rxjs';
@@ -35,6 +35,12 @@ import { RecordHandleErrorService } from './record.handle-error.service';
   providedIn: 'root',
 })
 export class RecordService {
+
+  protected http: HttpClient = inject(HttpClient);
+  protected apiService: ApiService = inject(ApiService);
+  protected translateService: TranslateService = inject(TranslateService);
+  protected recordHandleErrorService: RecordHandleErrorService = inject(RecordHandleErrorService);
+
   static readonly DEFAULT_REST_RESULTS_SIZE = 10;
   static readonly MAX_REST_RESULTS_SIZE = 9999;
 
@@ -76,20 +82,6 @@ export class RecordService {
   get onDelete$() {
     return this.onDelete.asObservable();
   }
-
-  /**
-   * Constructor
-   * @param http HttpClient
-   * @param apiService ApiService
-   * @param translateService Translate service.
-   * @param recordHandleErrorService RecordHandleErrorService
-   */
-  constructor(
-    private http: HttpClient,
-    private apiService: ApiService,
-    private translateService: TranslateService,
-    private recordHandleErrorService: RecordHandleErrorService
-  ) {}
 
   /**
    * Get records filtered by given parameters.

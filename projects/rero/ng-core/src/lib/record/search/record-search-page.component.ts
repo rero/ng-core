@@ -14,14 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
 import { RecordUiService } from '../record-ui.service';
-import { SortOption } from './record-search.component';
+import { ISortOption } from './menu-sort/menu-sort.component';
 import { RecordSearchService } from './record-search.service';
 
 @Component({
@@ -29,6 +29,12 @@ import { RecordSearchService } from './record-search.service';
   templateUrl: './record-search-page.component.html'
 })
 export class RecordSearchPageComponent implements OnInit, OnDestroy {
+
+  protected route: ActivatedRoute = inject(ActivatedRoute);
+  protected router: Router = inject(Router);
+  protected recordSearchService: RecordSearchService = inject(RecordSearchService);
+  protected recordUiService: RecordUiService = inject(RecordUiService)
+
   /**
    * Current selected resource type
    */
@@ -109,21 +115,6 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
    * Subscription to route parameters observables
    */
   private routeParametersSubscription: Subscription;
-
-  /**
-   * Constructor.
-   *
-   * @param route Angular current route.
-   * @param router Angular router.
-   * @param recordSearchService Record search service.
-   * @param recordUiService Record ui service.
-   */
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected recordSearchService: RecordSearchService,
-    protected recordUiService: RecordUiService
-  ) { }
 
   /**
    * Component initialization.
@@ -250,7 +241,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     }
 
     const defaultSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
-    config.sortOptions.forEach((option: SortOption) => {
+    config.sortOptions.forEach((option: ISortOption) => {
       if (option[defaultSortValue] === true) {
         this.sort = option.value;
       }

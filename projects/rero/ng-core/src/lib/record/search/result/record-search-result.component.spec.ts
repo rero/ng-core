@@ -17,16 +17,12 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterModule } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ModalModule } from 'ngx-bootstrap/modal';
-import { PopoverModule } from 'ngx-bootstrap/popover';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ToastrModule } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 import { CoreModule } from '../../../core.module';
 import { JsonComponent } from './item/json.component';
 import { RecordSearchResultComponent } from './record-search-result.component';
-import { RecordSearchResultDirective } from './record-search-result.directive';
 
 describe('RecordSearchResultComponent', () => {
   let component: RecordSearchResultComponent;
@@ -36,19 +32,15 @@ describe('RecordSearchResultComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
         JsonComponent,
-        RecordSearchResultDirective,
         RecordSearchResultComponent
       ],
       imports: [
-        RouterTestingModule,
-        ModalModule.forRoot(),
+        ButtonModule,
+        RouterModule.forRoot([]),
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        ToastrModule.forRoot(),
         HttpClientModule,
-        TooltipModule.forRoot(),
-        PopoverModule.forRoot(),
         CoreModule
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
@@ -63,12 +55,6 @@ describe('RecordSearchResultComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should have a custom component view', () => {
-    component.itemViewComponent = JsonComponent;
-    component.loadItemView();
-    expect(component.searchResultItem).toBeDefined();
   });
 
   it('should delete record', () => {

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TitleMetaService } from '@rero/ng-core';
 import { DetailRecord } from '@rero/ng-core/lib/record/detail/view/detail-record';
 import { Observable } from 'rxjs';
@@ -27,6 +27,9 @@ import { Observable } from 'rxjs';
   templateUrl: './detail.component.html'
 })
 export class DetailComponent implements DetailRecord, OnInit {
+  // Inject
+  private titleMetaService = inject(TitleMetaService);
+
   // Observable resolving record data
   record$: Observable<any>;
 
@@ -36,21 +39,8 @@ export class DetailComponent implements DetailRecord, OnInit {
   // Record data
   record: any;
 
-  /**
-   * Constructor
-   *
-   * @param _titleMetaService Title meta service.
-   */
-  constructor(private _titleMetaService: TitleMetaService) { }
-
-  /**
-   * Component initialization.
-   *
-   * Set meta title.
-   * Subscribe to record observable.
-   */
   ngOnInit(): void {
-    this._titleMetaService.setTitle('Detail of ' + this.type);
+    this.titleMetaService.setTitle('Detail of ' + this.type);
 
     this.record$.subscribe((record) => {
       this.record = record;

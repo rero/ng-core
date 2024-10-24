@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,37 +14,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { SecurityContext } from '@angular/core';
-import { inject, TestBed } from '@angular/core/testing';
-import { BrowserModule, DomSanitizer, ɵDomSanitizerImpl } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing';
+import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
 import { Nl2brPipe } from './nl2br.pipe';
 
 describe('Nl2brPipe', () => {
-  const sanitizer: DomSanitizer = new ɵDomSanitizerImpl(null);
+  let pipe: Nl2brPipe;
+  let domSanitizer: DomSanitizer;
 
   beforeEach(() => {
     TestBed
       .configureTestingModule({
         imports: [
           BrowserModule
+        ],
+        providers: [
+          Nl2brPipe,
+          { provide: DomSanitizer, useValue: { bypassSecurityTrustHtml: (val: string) => val } }
         ]
       });
+    pipe = TestBed.inject(Nl2brPipe);
+    domSanitizer = TestBed.inject(DomSanitizer);
   });
 
-  it('convert carriage return to <br> html tags', inject([DomSanitizer], (domSanitizer: DomSanitizer) => {
-    const pipe = new Nl2brPipe(domSanitizer);
+  it('convert carriage return to <br> html tags', () => {
     const safeText = pipe.transform('Text with\ncarriage return');
-    const sanitizedValue = sanitizer.sanitize(SecurityContext.HTML, safeText);
+    expect(safeText).toBe('Text with<br>\ncarriage return')
+  });
 
-    expect(sanitizedValue).toBe('Text with<br>\ncarriage return');
-  }));
-
-  it('should return empty string', inject([DomSanitizer], (domSanitizer: DomSanitizer) => {
-    const text: string = null;
-    const pipe = new Nl2brPipe(domSanitizer);
-    const safeText = pipe.transform(text);
-    const sanitizedValue = sanitizer.sanitize(SecurityContext.HTML, safeText);
-
-    expect(sanitizedValue).toBe('');
-  }));
+  it('should return empty string', () => {
+    const safeText = pipe.transform(null);
+    expect(safeText).toBe('');
+  });
 });

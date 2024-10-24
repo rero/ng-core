@@ -14,15 +14,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { AfterContentChecked, Directive, ElementRef } from '@angular/core';
+import { AfterContentChecked, Directive, ElementRef, inject } from '@angular/core';
 
 @Directive({
   selector: '[ngCoreAutofocus]'
 })
 export class AutofocusDirective implements AfterContentChecked {
 
-  constructor(private elementRef: ElementRef) {}
+  protected elementRef: ElementRef = inject(ElementRef);
 
   ngAfterContentChecked(){
     this.elementRef.nativeElement.focus();

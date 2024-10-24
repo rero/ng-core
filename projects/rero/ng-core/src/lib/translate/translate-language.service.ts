@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 // TODO: Search for a better solution for dynamic file loading
 import de from './languages/de.json';
@@ -26,6 +26,9 @@ import it from './languages/it.json';
   providedIn: 'root',
 })
 export class TranslateLanguageService {
+
+  protected translateService: TranslateService = inject(TranslateService);
+
   // List of preferred languages
   static PREFERRED_LANGUAGES = ['eng', 'fre', 'ger', 'ita'];
 
@@ -33,22 +36,12 @@ export class TranslateLanguageService {
   private _availableLanguages = { de, en, fr, it };
 
   /**
-   * Constructor.
-   *
-   * Subscribes to language changes and resets the stored options after a
-   * change.
-   *
-   * @param translateService - TranslateService
-   */
-  constructor(private translateService: TranslateService) {}
-
-  /**
    * @param langCode - ISO 639-2 (3 characters)
    * @param language - ISO 639-1 (2 characters)
    * @return human language - string
    */
   translate(langCode: string, language?: string) {
-    const lang = language ? language : this.translateService.currentLang;
+    const lang = language || this.translateService.currentLang;
     if (!(lang in this._availableLanguages)) {
       return langCode;
     }

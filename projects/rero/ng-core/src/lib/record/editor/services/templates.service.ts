@@ -14,22 +14,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from '@angular/core';
-import { RecordService } from '../../record.service';
-import { Record } from '../../record';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Record } from '../../record';
+import { RecordService } from '../../record.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TemplatesService {
 
-  /**
-   * constructor
-   * @param recordService: RecordService
-   */
-  constructor(protected recordService: RecordService) { }
+  protected recordService: RecordService = inject(RecordService);
 
   /**
    * Get all templates corresponding to a resource type

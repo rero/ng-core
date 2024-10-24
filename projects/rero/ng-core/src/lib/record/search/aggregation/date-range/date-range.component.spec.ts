@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021 RERO
+ * Copyright (C) 2021-2024 RERO
  * Copyright (C) 2021 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,18 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TranslateModule } from '@ngx-translate/core';
 import { AggregationDateRangeComponent } from './date-range.component';
-import {TranslateModule} from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
 
 describe('AggregationDateRangeComponent', () => {
   let component: AggregationDateRangeComponent;
+  let componentRef : ComponentRef<AggregationDateRangeComponent>;
   let fixture: ComponentFixture<AggregationDateRangeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        CalendarModule,
+        FormsModule,
         TranslateModule.forRoot()
       ],
       declarations: [ AggregationDateRangeComponent ]
@@ -37,10 +42,11 @@ describe('AggregationDateRangeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AggregationDateRangeComponent);
     component = fixture.componentInstance;
-    component.config = {
+    componentRef = fixture.componentRef;
+    componentRef.setInput('config', {
       min: new Date(),
       max: new Date(),
-    };
+    });
     fixture.detectChanges();
   });
 

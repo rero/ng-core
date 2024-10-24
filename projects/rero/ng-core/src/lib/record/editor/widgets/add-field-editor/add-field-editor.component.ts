@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { TypeaheadMatch } from 'ngx-bootstrap/typeahead/public_api';
-import { Observable, Subscriber, of } from 'rxjs';
-import { first, map, mergeMap } from 'rxjs/operators';
+import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { DropdownChangeEvent } from 'primeng/dropdown';
+import { Observable, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 /**
  * For big editor add the possibility to display
@@ -29,105 +29,71 @@ import { first, map, mergeMap } from 'rxjs/operators';
   selector: 'ng-core-editor-add-field-editor',
   templateUrl: './add-field-editor.component.html'
 })
-export class AddFieldEditorComponent implements OnInit {
+export class AddFieldEditorComponent implements OnInit, OnDestroy {
+
+  protected translateService: TranslateService = inject(TranslateService);
 
   /** EditorComponent function */
   @Input() editorComponent: any;
 
-  // current input value
-  value: string;
+  currentValue: string = '';
 
-  // current observables list of object suggestion for autocomplete
-  typeaheadFields$: Observable<Array<FormlyFieldConfig>>;
+  searchValue: string | undefined;
 
-  // editor service hidden fields list
-  hiddenFields$: Observable<Array<FormlyFieldConfig>>;
+  items: any[] = [];
 
-  // editor service essential fields list
-  essentialFields$: Observable<Array<FormlyFieldConfig>>;
+  suggestions: any[] | undefined;
 
   /** Instance of EditorComponent */
-  //TODO: add type
   private editorComponentInstance: any;
 
-  /***
-   * Constructor
-   * @param translateService - TranslateService, that translate the labels of the hidden fields
-   */
-  constructor(private translateService: TranslateService) {}
+  // Subscriptions to observables.
+  private subscriptions: Subscription = new Subscription();
+
+  essentialsOptions = [];
+
+  onAddField(event: DropdownChangeEvent): void {
+    this.editorComponentInstance.setHide(event.value, false);
+  }
 
   /** onInit hook */
   ngOnInit() {
     this.editorComponentInstance = (this.editorComponent)();
-    this.typeaheadFields$ = new Observable((observer: Subscriber<string>) => {
-      // Runs on every search
-      observer.next(this.value);
-    })
-      .pipe(
-        mergeMap((token: string) => this.getSuggestionsList(token))
-      );
 
-    this.hiddenFields$ = this.editorComponentInstance.hiddenFields$.pipe(
+    this.subscriptions.add(this.editorComponentInstance.hiddenFields$.pipe(
       map((fields: any[]) => fields.sort(
-        (field1, field2) => this.sortFieldsByLabel(field1, field2)
-      )
-      )
-    );
-
-    this.essentialFields$ = this.hiddenFields$.pipe(
-      map(fields =>
-        fields
+        (field1, field2) => field1.props.label.localeCompare(field2.props.label)
+      )),
+      tap((fields: any[]) => this.items = fields),
+      tap((fields: any[]) => {
+        this.essentialsOptions = fields
           .filter(f => this.isFieldEssential(f))
-      )
+          .map((field: any) => {
+            return { label: this.translateService.instant(field.props.untranslatedLabel), value: field }
+          });
+
+      })
+    ).subscribe());
+  }
+
+  /** onDestroy hook */
+  ngOnDestroy(): void {
+      this.subscriptions.unsubscribe();
+  }
+
+  search(event: AutoCompleteCompleteEvent): void {
+    this.suggestions = this.items.filter((item: any) =>
+      item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0
     );
   }
 
-  /**
-   *
-   * @param field1 first value to sort
-   * @param field2 value to compare to
-   */
-  sortFieldsByLabel(field1: FormlyFieldConfig, field2: FormlyFieldConfig) {
-    const f1 = field1.props.label;
-    const f2 = field2.props.label;
-    if (f1 > f2) {
-      return 1;
-    }
-    if (f1 < f2) {
-      return -1;
-    }
-    return 0;
+  onSelect(event: AutoCompleteSelectEvent): void {
+    this.editorComponentInstance.setHide(event.value, false);
+    this.currentValue = '';
   }
 
-  /**
-   * Generate the suggestion list for the autocomplete component.
-   *
-   * @param token string to filter the autocomplete list
-   * @return an array of formly fields filtered by the current query
-   */
-  getSuggestionsList(token: string): Observable<Array<FormlyFieldConfig>> {
-    // regex to filter the list
-    if (token == null) {
-      return of([]);
-    }
-    const spaceRegexp = new RegExp(/^\s+$/);
-    const query = new RegExp(token, 'i');
-    // take only the first value to avoid the selection still open after selection
-    // const hiddenFieldsFirst$ = this.hiddenFields$.pipe(first());
-    const hiddenFieldsFirst$ = this.editorComponentInstance.hiddenFields$.pipe(first());
-    if (spaceRegexp.test(token)) {
-      return hiddenFieldsFirst$;
-    }
-    return hiddenFieldsFirst$.pipe(
-      map(
-        (fields: any) => fields.filter(field => {
-          // the label is not translated as the field is hidden
-          const f = this.translateService.instant(field.props.untranslatedLabel);
-          // true if match
-          return query.test(f);
-        })
-      )
-    );
+  addField(field: any): void {
+    this.editorComponentInstance.setHide(field, false);
   }
 
   /**
@@ -136,25 +102,8 @@ export class AddFieldEditorComponent implements OnInit {
    * @param field ngx-formly field
    * @return the translated string
    */
-  translateLabel(field: FormlyFieldConfig) {
+  translateLabel(field: FormlyFieldConfig): Observable<string | any> {
     return this.translateService.stream(field.props.untranslatedLabel);
-  }
-
-  /***
-   * Shows the selected field when it is selected
-   * @param match - TypeaheadMatch, the selected element
-   */
-  itemSelected(match: TypeaheadMatch) {
-    this.showSelectedField(match.item);
-  }
-
-  /***
-   * Shows the selected field when it is selected
-   * @param match - TypeaheadMath, the selected element
-   */
-  showSelectedField(field: any) {
-    this.editorComponentInstance.setHide(field, false);
-    this.value = null;
   }
 
   /**
@@ -162,7 +111,6 @@ export class AddFieldEditorComponent implements OnInit {
    * @param field - field to check
    */
   isFieldEssential(field: FormlyFieldConfig) {
-    return field.props.navigation &&
-      field.props.navigation.essential === true;
+    return field.props.navigation && field.props.navigation.essential === true;
   }
 }

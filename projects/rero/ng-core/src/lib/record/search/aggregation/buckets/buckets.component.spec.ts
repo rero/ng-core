@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,10 +20,15 @@ import { TranslateLanguagePipe } from '../../../../translate/translate-language.
 import { RecordSearchService } from '../../record-search.service';
 import { BucketNamePipe } from '../pipe/bucket-name.pipe';
 import { BucketsComponent } from './buckets.component';
+import { ComponentRef } from '@angular/core';
+import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
+import { FormsModule } from '@angular/forms';
 
 describe('BucketsComponent', () => {
   let component: BucketsComponent;
+  let componentRef: ComponentRef<BucketsComponent>;
   let fixture: ComponentFixture<BucketsComponent>;
+  let recordSearchService: RecordSearchService;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -33,6 +38,8 @@ describe('BucketsComponent', () => {
         BucketNamePipe
       ],
       imports: [
+        FormsModule,
+        TriStateCheckboxModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
@@ -43,22 +50,31 @@ describe('BucketsComponent', () => {
   }));
 
   beforeEach(() => {
+    recordSearchService = TestBed.inject(RecordSearchService);
     fixture = TestBed.createComponent(BucketsComponent);
     component = fixture.componentInstance;
-    component.buckets = [
+    componentRef = fixture.componentRef;
+    componentRef.setInput('buckets', [
       {
-        doc_count: 30,
-        key: 'Filippini, Massimo'
+        doc_count: 90,
+        key: 'docmaintype_article'
       },
       {
-        doc_count: 9,
-        key: 'Botturi, Luca'
+        doc_count: 18,
+        key: 'docmaintype_audio'
       }
-    ];
+    ]);
+    componentRef.setInput('aggregationKey', 'type');
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should assign the new filter', () => {
+    const checkbox = fixture.debugElement.nativeElement.querySelectorAll('input.p-element')[0];
+    checkbox.click();
+    expect(recordSearchService.hasFilter('type', 'docmaintype_article')).toBeTrue();
   });
 });

@@ -15,12 +15,12 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div class="card mb-3">
-  <div class="card-header">
-    Model ({{ mode }})
-  </div>
+
+<p-card class="w-full" header="Model ({{ mode }})">
   <div class="card-body">
     <pre [innerHTML]="modelDisplay"></pre>
   </div>
+</p-card>
+<div class="mt-4">
+  <ng-core-editor (modelChange)="modelChanged($event)"></ng-core-editor>
 </div>
-<ng-core-editor (modelChange)="modelChanged($event)"></ng-core-editor>

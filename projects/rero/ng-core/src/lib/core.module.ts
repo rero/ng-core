@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2024 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,13 +16,11 @@
  */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { ModalModule } from 'ngx-bootstrap/modal';
+import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { ToastrModule } from 'ngx-toastr';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { AutofocusDirective } from './directives/autofocus.directive';
@@ -46,6 +44,15 @@ import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
 import { SortListComponent } from './widget/sort-list/sort-list.component';
+import { NgCoreTranslateService } from './translate/translate-service';
+import { Observable, of } from 'rxjs';
+
+function initializeAppFactory(translateService: NgCoreTranslateService): () => Observable<any> {
+  return () => {
+    translateService.initialize();
+    return of(true);
+  };
+}
 
 @NgModule({
     declarations: [
@@ -67,7 +74,7 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
         SortListComponent,
         NgVarDirective,
         MarkdownPipe,
-        AutofocusDirective
+        AutofocusDirective,
     ],
     imports: [
         CommonModule,
@@ -79,15 +86,11 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
                 deps: [CoreConfigService, HttpClient]
             }
         }),
-        ModalModule.forRoot(),
-        BsDropdownModule.forRoot(),
-        ToastrModule.forRoot(),
         NgxSpinnerModule,
-        PrimeNgCoreModule
+        PrimeNgCoreModule,
     ],
     exports: [
         PrimeNgCoreModule,
-        BsDropdownModule,
         CommonModule,
         TranslateModule,
         Nl2brPipe,
@@ -109,10 +112,19 @@ import { SortListComponent } from './widget/sort-list/sort-list.component';
         SortListComponent,
         NgVarDirective,
         MarkdownPipe,
-        AutofocusDirective
+        AutofocusDirective,
     ],
     providers: [
-      ComponentCanDeactivateGuard
+      ComponentCanDeactivateGuard,
+      ConfirmationService,
+      MessageService,
+      { provide: TranslateService, useClass: NgCoreTranslateService },
+      {
+        provide: APP_INITIALIZER,
+        useFactory: initializeAppFactory,
+        deps: [NgCoreTranslateService],
+        multi: true
+      }
     ]
 })
 export class CoreModule { }

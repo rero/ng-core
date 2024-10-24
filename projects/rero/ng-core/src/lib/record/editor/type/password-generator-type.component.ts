@@ -16,7 +16,7 @@
  */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { GeneratePassword } from "js-generate-password";
@@ -77,40 +77,37 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
 @Component({
   selector: 'ng-core-editor-field-password-generator',
   template: `
-  <div>
-    <div class="input-group mb-2 mr-sm-2">
-      <input
-        id="password"
-        [type]="type"
-        class="form-control"
-        autocomplete="off"
-        [formControl]="formControl"
-        (change)="onChange($event.target.value)"
-        [readonly]="props.readonly"
-      >
-      <div class="input-group-prepend">
-        <div class="input-group-text" (click)="onClick()">
-          <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}"></i>
-        </div>
-        <div class="input-group-text" (click)="showHidePassword()">
-          <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}"></i>
-        </div>
-        @if (props.enabledEditMode) {
-          <div class="input-group-text" (click)="props.readonly = !props.readonly">
-            <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}"></i>
-          </div>
-        }
-      </div>
-    </div>
-    @if (!showError && hasBeenGenerated) {
-      <small class="form-text text-muted" translate>
-        The password has been copied to the clipboard.
-      </small>
+  <p-inputGroup>
+    <input
+      pInputText
+      id="password"
+      [type]="type"
+      class="form-control"
+      autocomplete="off"
+      [formControl]="formControl"
+      (change)="onChange($event.target.value)"
+      [readonly]="props.readonly"
+    >
+    <p-inputGroupAddon>
+      <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}" (click)="onClick()"></i>
+    </p-inputGroupAddon>
+    <p-inputGroupAddon>
+      <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}" (click)="showHidePassword()"></i>
+    </p-inputGroupAddon>
+    @if (props.enabledEditMode) {
+    <p-inputGroupAddon>
+      <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}" (click)="props.readonly = !props.readonly"></i>
+    </p-inputGroupAddon>
     }
-  </div>
+  </p-inputGroup>
   `
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {
+
+  protected httpClient: HttpClient = inject(HttpClient);
+  protected clipboard: Clipboard = inject(Clipboard);
+  protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
   /** Default options */
   defaultOptions: Partial<FormlyFieldConfig<PasswordGeneratorProps>> = {
     props: {
@@ -137,20 +134,6 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
 
   /** Password Observable */
   private _password$: Subject<string> = new Subject();
-
-  /**
-   * Constructor
-   * @param httpClient - HttpClient
-   * @param clipboard - Clipboard
-   * @param cd - ChangeDetectorRef
-   */
-  constructor(
-    private httpClient: HttpClient,
-    private clipboard: Clipboard,
-    private cd: ChangeDetectorRef
-  ) {
-    super();
-  }
 
   /** OnInit hook */
   ngOnInit(): void {
