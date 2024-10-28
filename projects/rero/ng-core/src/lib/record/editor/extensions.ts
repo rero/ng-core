@@ -30,17 +30,17 @@ export class NgCoreFormlyExtension {
   protected recordService: RecordService = inject(RecordService);
 
   // Types to apply horizontal wrapper on
-  private _horizontalWrapperTypes = [
-    'enum',
-    'string',
-    'integer',
-    'textarea',
-    'datepicker',
-    'multi-checkbox',
-    'multi-select',
-    'remoteAutoComplete',
-    'tree-select',
-  ];
+  // private _horizontalWrapperTypes = [
+  //   'enum',
+  //   'string',
+  //   'integer',
+  //   'textarea',
+  //   'datepicker',
+  //   'multi-checkbox',
+  //   'multi-select',
+  //   'remoteAutoComplete',
+  //   'tree-select',
+  // ];
 
   // Types to apply field wrapper on
   private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator'];
@@ -106,9 +106,8 @@ export class NgCoreFormlyExtension {
     if (field?.props?.editorConfig?.longMode) {
       // add automatically a card wrapper for the first level fields
       const { parent } = field;
-      if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card')) {
+      if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card') && !field.wrappers.includes('hide')) {
         field.wrappers.unshift('card');
-        // field.wrappers.push('card');
       }
       // Add an horizontal wrapper for all given field types
       // if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
