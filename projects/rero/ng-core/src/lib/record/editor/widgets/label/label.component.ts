@@ -22,6 +22,7 @@ import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'ng-core-label-editor',
   templateUrl: './label.component.html',
+  styleUrl: './label.component.scss'
 })
 export class LabelComponent implements OnInit {
 

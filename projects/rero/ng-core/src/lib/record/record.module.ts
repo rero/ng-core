@@ -20,6 +20,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
+import { DataViewModule } from 'primeng/dataview';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -129,6 +130,7 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         ReactiveFormsModule,
         RecordRoutingModule,
         CalendarModule,
+        DataViewModule,
         ClipboardModule,
         RadioButtonModule,
         AutoCompleteModule,
@@ -189,6 +191,7 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         NgCoreFormlyMultiCheckboxModule,
         NgCoreFormlyRemoteAutocompleteModule,
         NgCoreFormlySelectModule,
+        MenuSortComponent,
         NgCoreFormlyTreeSelectModule
     ],
     providers: [

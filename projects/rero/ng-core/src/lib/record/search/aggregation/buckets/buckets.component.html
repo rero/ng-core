@@ -15,19 +15,20 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (buckets()) {
-  <ul class="list-unstyled m-0 bucket-group">
+  <ul class="list-none m-0 bucket-group">
   @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
-    <li>
-      <div class="flex align-items-stretch mb-1">
+    <li class="bucket-item">
+      <div class="flex align-items-stretch mb-1 bucket-data">
         @if (bucket.doc_count) {
-          <div class="flex flex-grow-1 align-items-start">
+          <div class="flex flex-grow-1 align-items-center">
             <p-triStateCheckbox
               inputId="{{ bucket.aggregationKey }}-{{ index }}"
+              variant="outlined"
               class="mr-1"
               [ngModel]="bucket.indeterminate ? false : isSelected(bucket.key)"
               (onChange)="updateFilter(bucket)"
             />
-            <label for="{{ bucket.aggregationKey }}-{{ index }}">
+            <label class="bucket-label mb-0" for="{{ bucket.aggregationKey }}-{{ index }}">
               @if (bucket.name) {
                 {{ bucket.name }}
               } @else {
@@ -35,7 +36,7 @@
               }
             </label>
           </div>
-          <div class="flex flex-none align-items-start ml-2">
+          <div class="bucket-count flex flex-none align-items-center ml-2">
             {{ bucket.doc_count }}
           </div>
         }

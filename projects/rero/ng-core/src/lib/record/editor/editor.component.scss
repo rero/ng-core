@@ -14,75 +14,39 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/variables";
-
-// add w-xx-100, w-xx-50 for bootstrap
-// TODO: add to global
-@each $breakpoint in map-keys($grid-breakpoints) {
-  @include media-breakpoint-up($breakpoint) {
-    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
-    @each $prop, $abbrev in (width: w, height: h) {
-      @each $size, $length in $sizes {
-        .#{$abbrev}#{$infix}-#{$size} { #{$prop}: $length !important; }
-      }
-    }
-  }
-}
+@import 'primeflex/primeflex';
+@import '../../../../assets/scss/typography';
 
 .editor {
-
   > .header {
     @supports (position: sticky) {
-      position: sticky;
-      top: 0rem;
+      @extend .sticky, .top-0, .bg-white, .h-full;
       z-index: 500;
-      background: white;
-      height: 100%;
-    }
-    border-color: $text-muted;
-
-    .actions {
-      position: absolute;
-      right: 2rem;
-      top: 0.75rem;
     }
   }
 
   .bd-toc {
     @supports (position: sticky) {
-      position: sticky;
+      @extend .sticky, .overflow-y-auto;
       top: 4rem;
-      height: subtract(100vh, 4rem);
-      overflow-y: auto;
+      height: 100vh - 10vh;
     }
-    order: 2;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    @include font-size(0.875rem);
+    @extend .flex-order-2, .py-2, .text-sm;
   }
 
-  .section-nav {
-    padding-left: 0;
-    border-left: 1px solid #eee;
-
-    ul {
-      padding-left: 1rem;
-    }
+  ul.section-nav {
+    // bug of primeflex?
+    border-width: 0;
+    @extend .pl-0, .border-solid, .surface-border, .border-left-1;
   }
 
-  .toc-entry {
-    display: block;
-
+  li.toc-entry {
+    @extend .mb-2, .ml-1, .mr-1, .list-none;
     a {
-      display: block;
-      padding: 0.125rem 1.5rem;
-      color: #77757a;
+      @extend .text-color-secondary;
 
       &:hover {
-        color: $blue;
-        text-decoration: none;
+        @extend .text-link-color, .no-underline;
       }
     }
   }
@@ -93,111 +57,9 @@
 
   .bd-sidebar {
     @supports (position: sticky) {
-      position: sticky;
+      @extend .sticky, .bg-white, .h-full;
       top: 4rem;
       z-index: 500;
-      background: white;
-      height: 100%;
     }
-  }
-
-  .bd-links {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-right: -15px;
-    margin-left: -15px;
-
-    @include media-breakpoint-up(md) {
-      @supports (position: sticky) {
-        max-height: subtract(100vh, 9rem);
-        overflow-y: auto;
-      }
-    }
-
-    // Override collapse behaviors
-    @include media-breakpoint-up(md) {
-      display: block !important;
-    }
-  }
-
-  .bd-search {
-    position: relative; // To contain the Algolia search
-    padding: 0 15px;
-    margin-right: -15px;
-    margin-left: -15px;
-  }
-
-  .bd-search-docs-toggle {
-    line-height: 1;
-    color: $gray-900;
-  }
-
-  .bd-sidenav {
-    display: none;
-  }
-
-  .bd-toc-link {
-    display: block;
-    padding: 0.25rem 1.5rem;
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.65);
-
-    &:hover {
-      color: rgba(0, 0, 0, 0.85);
-      text-decoration: none;
-    }
-  }
-
-  .bd-toc-item {
-    &.active {
-      margin-bottom: 1rem;
-
-      &:not(:first-child) {
-        margin-top: 1rem;
-      }
-
-      > .bd-toc-link {
-        color: rgba(0, 0, 0, 0.85);
-
-        &:hover {
-          background-color: transparent;
-        }
-      }
-
-      > .bd-sidenav {
-        display: block;
-      }
-    }
-  }
-
-  // All levels of nav
-  .bd-sidebar .nav > li > a {
-    display: block;
-    padding: 0.25rem 1.5rem;
-    @include font-size(90%);
-    color: rgba(0, 0, 0, 0.65);
-  }
-
-  .bd-sidebar .nav > li > a:hover {
-    color: rgba(0, 0, 0, 0.85);
-    text-decoration: none;
-    background-color: transparent;
-  }
-
-  .bd-sidebar .nav > .active > a,
-  .bd-sidebar .nav > .active:hover > a {
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.85);
-    background-color: transparent;
-  }
-
-  .header:hover ~ .content {
-    background-color: $gray-200;
-  }
-
-  // Radio button
-  .p-radiobutton-label {
-    margin-bottom: 0 !important;
-    margin-right: 4px;
   }
 }

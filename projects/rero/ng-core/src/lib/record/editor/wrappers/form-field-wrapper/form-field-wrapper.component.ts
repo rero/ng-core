@@ -47,8 +47,8 @@ import { FieldWrapper } from '@ngx-formly/core';
         </div>
       </div>
       @if (showError) {
-        <div class="invalid-feedback mt-1">
-          <formly-validation-message [field]="field"></formly-validation-message>
+        <div class="text-error mt-1">
+          <formly-validation-message [field]="field"/>
         </div>
       }
    </div>

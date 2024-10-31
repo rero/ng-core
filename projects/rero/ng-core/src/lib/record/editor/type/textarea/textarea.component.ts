@@ -34,7 +34,7 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
       [formControl]="formControl"
       [cols]="props.cols"
       [rows]="props.rows"
-      class="form-control w-full"
+      class="w-full"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
     ></textarea>
@@ -57,7 +57,7 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
         }"></ng-container>
     }
     <ng-template #counter let-limit="limit" let-count="count" let-label="label">
-      <span class="small text-muted d-inline-block mr-3">
+      <span class="text-sm text-color-secondary inline-block mr-3">
         {{ label }}: {{ count }}
         @if (limit) {
           / {{ limit }}

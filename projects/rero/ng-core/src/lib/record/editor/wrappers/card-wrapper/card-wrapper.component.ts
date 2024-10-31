@@ -21,30 +21,19 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-card-wrapper',
   template: `
-  <p-card>
-    <ng-template pTemplate="header">
-      <ng-core-label-editor [field]="field"></ng-core-label-editor>
-    </ng-template>
-    <ng-template #fieldComponent></ng-template>
-  </p-card>
+    <p-fieldset>
+      <ng-template pTemplate="header">
+        <ng-core-label-editor [field]="field"></ng-core-label-editor>
+      </ng-template>
+      <ng-template #fieldComponent></ng-template>
+    </p-fieldset>
   `,
-  styles: [
-    `
-      .card-header {
-        padding: .25rem 1rem;
-      }
-      .card-body {
-        padding: .25rem 1rem;
-      }
-    `
-  ]
+  styleUrl: './card-wrapper.component.scss',
 })
-export class CardWrapperComponent extends FieldWrapper implements OnInit{
-
+export class CardWrapperComponent extends FieldWrapper implements OnInit {
   /** OnInit hook */
   ngOnInit() {
     // remove the field label as it is displayed by this wrapper
     this.field.props.hideLabel = true;
   }
-
 }

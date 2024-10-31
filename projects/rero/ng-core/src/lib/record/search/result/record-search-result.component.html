@@ -25,52 +25,35 @@
         @if (useStatus && useStatus.can && useStatus.url) {
           <p-button
             [outlined]="true"
-            size="small"
             severity="danger"
             [ariaLabel]="'Use' | translate"
             (onClick)="useRecord()"
-          >
-            <i class="fa fa-hand-o-right"></i>
-          </p-button>
+            icon="fa fa-hand-o-right"
+          />
         }
 
         <!-- edit button -->
         @if (updateStatus && updateStatus.can) {
           <p-button
             [outlined]="true"
-            size="small"
             [ariaLabel]="'Edit' | translate"
             (onClick)="editRecord(record.id, updateStatus?.routerLink)"
             [routerLink]="updateStatus.routerLink || ['edit', record.id]"
-          >
-            <i class="fa fa-pencil"></i>
-          </p-button>
+            icon="fa fa-pencil"
+          />
         }
 
         <!-- delete button -->
         @if (deleteStatus) {
           <span class="ml-2">
-            @if (deleteStatus.can) {
+            @if (deleteStatus) {
               <p-button
                 [outlined]="true"
-                size="small"
                 severity="danger"
                 [ariaLabel]="'Delete' | translate"
                 (onClick)="deleteRecord(record.id, deleteStatus?.type)"
-              >
-                <i class="fa fa-trash"></i>
-              </p-button>
-            } @else {
-              <p-button
-                [pTooltip]="deleteInfoMessage"
-                tooltipPosition="top"
-                [outlined]="true"
-                size="small"
-                severity="danger"
-                [ariaLabel]="'Delete' | translate"
-              >
-                <i class="fa fa-trash opacity-50"></i>
-              </p-button>
+                icon="fa fa-trash"
+              />
             }
           </span>
         }

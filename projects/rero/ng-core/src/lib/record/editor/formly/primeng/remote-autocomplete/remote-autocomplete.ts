@@ -51,7 +51,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
             [options]="props.filters.options"
             [ngModel]="props.filters.selected"
             (onChange)="changeFilter($event)"
-          ></p-dropdown>
+          />
         </div>
       }
       <div class="flex ml-1 w-full">
@@ -137,7 +137,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     if (this.field.props.filters) {
       this.field.props.queryOptions.filter = this.field.props.filters.selected;
     }
-    if (this.field.formControl.value.length > 0) {
+    if (this.field.formControl?.value?.length > 0) {
       this.onValueSelect.next({
         item: { label: this.field.formControl.value, value: this.field.formControl.value },
         queryOptions: { ...this.field.props.queryOptions },

@@ -26,8 +26,7 @@ import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem, IValueSelect } fro
 export class RemoteAutocompleteService implements IRemoteAutocomplete {
 
   public getSuggestions(query: string, queryOptions: IQueryOptions, currentPid: string): Observable<ISuggestionItem[]> {
-    return of([]);
-
+    return of([{label: "test"}]);
   }
 
   getValueAsHTML(queryOptions: IQueryOptions, item: ISuggestionItem): Observable<string> {

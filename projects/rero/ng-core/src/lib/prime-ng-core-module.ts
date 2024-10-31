@@ -45,6 +45,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
+import { FieldsetModule } from 'primeng/fieldset';
+
 
 @NgModule({
   providers: [
@@ -65,6 +67,7 @@ import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
     DialogModule,
     DropdownModule,
     DynamicDialogModule,
+    FieldsetModule,
     InputGroupModule,
     InputGroupAddonModule,
     InputSwitchModule,

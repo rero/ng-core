@@ -16,162 +16,164 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (error) {
-  <ng-core-error [error]="error"></ng-core-error>
+<ng-core-error [error]="error"></ng-core-error>
 } @else {
-  <span #topScrollAnchor></span>
-  <ng-core-search-tabs [types]="availableTypes" (onChangeType)="changeType($event)"></ng-core-search-tabs>
-  <div class="main-content">
-    @if (availableTypes.length === 1 && showLabel) {
-      <h5>{{ availableTypes[0].label | translate }}</h5>
+<span #topScrollAnchor></span>
+<ng-core-search-tabs [types]="availableTypes" (onChangeType)="changeType($event)"/>
+<div>
+  @if (availableTypes.length === 1 && showLabel) {
+  <h5>{{ availableTypes[0].label | translate }}</h5>
+  }
+  <ng-content select="[header]"></ng-content>
+  <div class="mt-3">
+    @if (showSearchInput) {
+    <ng-core-search-input
+      class="pt-0"
+      [placeholder]="'search' | translate | ucfirst"
+      [searchText]="q"
+      [displayLabel]="false"
+      (search)="searchByQuery($event)"
+      [focus]="true"
+    ></ng-core-search-input>
     }
-    <ng-content select="[header]"></ng-content>
-    <div class="mt-3">
-      @if (showSearchInput) {
-        <ng-core-search-input
-          class="pt-0"
-          [placeholder]="'search' | translate | ucfirst"
-          [searchText]="q"
-          [displayLabel]="false"
-          (search)="searchByQuery($event)"
-          [focus]="true"
-        ></ng-core-search-input>
-      }
-      <ng-content select="[afterInputSearch]"></ng-content>
+    <ng-content select="[afterInputSearch]"/>
+  </div>
+  @if (loaded && total < 1) {
+  <p-messages
+    class="my-4"
+    [value]="[{ severity: 'info', detail: emptyRecordMessage }]"
+    [enableService]="false"
+    [closable]="false"
+  />
+  @if (adminMode.can && addStatus.can) {
+  <p-button
+    id="search-add-button"
+    [label]="'Add' | translate"
+    icon="fa fa-plus"
+    [routerLink]="addStatus.routerLink || ['new']"
+  />
+  } } @else {
+  <div class="flex align-items-stretch w-full my-3">
+    @if (resultsText$ | async; as resultsText) {
+    <div class="flex align-items-center w-full">
+      <strong>{{ resultsText }}</strong>
     </div>
-    @if (loaded && total < 1) {
+    }
+    <div class="flex align-items-center justify-content-end w-full">
+      @if (adminMode.can && addStatus.can) {
+      <p-button
+        id="search-add-button"
+        [label]="'Add' | translate"
+        icon="fa fa-plus"
+        [routerLink]="addStatus.routerLink || ['new']"
+      />
+      }
+      <!-- Sorting -->
+      @if (config.sortOptions && config.sortOptions.length > 0) {
+      <ng-core-menu-sort class="ml-1" [config]="config" (onChange)="changeSorting($event)" />
+      }
+      <!-- EXPORT BUTTON -->
+      <ng-core-export-button class="ml-1"[exportOptions]="exportOptions"/>
+      <!-- END EXPORT BUTTON -->
+    </div>
+  </div>
+  <ng-content select="[beforeResult]"></ng-content>
+  <div class="grid">
+    <ng-core-list-filters
+      class="col-12"
+      [aggregations]="aggregations"
+      [aggregationsFilters]="aggregationsFilters"
+      [searchFilters]="searchFilters"
+      (remove)="removeFilter($event)"
+    />
+    <ng-content select="[top-search-result]"></ng-content>
+    @if ((aggregations && aggregations.length) || searchFields.length > 0 || searchFilters.length > 0) {
+    <div class="col-2">
+      @if (searchFields.length > 0 && q) {
+      <div class="mb-3">
+        <span class="mr-1" translate>Search in</span>
+        <p-dropdown
+          class="w-full"
+          placeholder="…"
+          [optionValue]="path"
+          [options]="searchFields"
+          [showClear]="true"
+          (onChange)="searchInField($event)"
+        />
+      </div>
+      }
+
+      <ng-core-search-filters
+        [searchFilters]="searchFilters"
+        [config]="config"
+        [query]="query"
+        styleClassSection="my-2"
+        (onChange)="onChangeSearchFilter($event)"
+      />
+
+      @if (!showEmptySearchMessage || q) {
+      <ng-content select="[top-facets]"/>
+      @for (item of aggregations; track item) {
+      <div>
+        @if (!aggregationsToHide.includes(item.key)) {
+        <ng-core-record-search-aggregation
+          [aggregation]="item"
+          [aggregationsFilters]="aggregationsFilters"
+          (aggregationClicked)="loadAggregationBuckets($event)"
+        />
+        }
+      </div>
+      } }
+    </div>
+    }
+    <div id="recordlist" class="col-10">
+      @if (showEmptySearchMessage) {
       <p-messages
-        class="my-4"
-        [value]="[{severity: 'info', detail: emptyRecordMessage}]"
+        [value]="[{ severity: 'info', detail: 'Enter a query to get results.' | translate }]"
         [enableService]="false"
         [closable]="false"
       />
-      @if (adminMode.can && addStatus.can) {
-        <p-button
-          id="search-add-button"
-          [label]="'Add'|translate"
-          icon="fa fa-plus"
-          [routerLink]="addStatus.routerLink || ['new']"
-        />
       }
-    } @else {
-      <div class="flex align-items-stretch w-full my-3">
-        @if (resultsText$ | async; as resultsText) {
-          <div class="flex align-items-center w-full">
-            <strong>{{ resultsText }}</strong>
-          </div>
-        }
-        <div class="flex align-items-center justify-content-end w-full">
-          @if (adminMode.can && addStatus.can) {
-            <p-button
-              id="search-add-button"
-              [label]="'Add'|translate"
-              icon="fa fa-plus"
-              [routerLink]="addStatus.routerLink || ['new']"
-            />
-          }
-          <!-- Sorting -->
-          @if (config.sortOptions && config.sortOptions.length > 0) {
-            <ng-core-menu-sort [config]="config" (onChange)="changeSorting($event)" />
-          }
-          <!-- EXPORT BUTTON -->
-          <ng-core-export-button [exportOptions]="exportOptions"></ng-core-export-button>
-          <!-- END EXPORT BUTTON -->
-        </div>
-      </div>
-      <ng-content select="[beforeResult]"></ng-content>
-      <div class="grid">
-        <ng-core-list-filters
-          class="col-12"
-          [aggregations]="aggregations"
-          [aggregationsFilters]="aggregationsFilters"
-          [searchFilters]="searchFilters"
-          >
-        </ng-core-list-filters>
-        <ng-content select="[top-search-result]"></ng-content>
-        @if ((aggregations && aggregations.length) || searchFields.length > 0  || searchFilters.length > 0) {
-          <div class="col-2">
-            @if (searchFields.length > 0 && q) {
-              <div class="mb-3">
-                <span class="mr-1" translate>Search in</span>
-                <p-dropdown
-                  class="w-full"
-                  placeholder="…"
-                  [optionValue]="path"
-                  [options]="searchFields"
-                  [showClear]="true"
-                  (onChange)="searchInField($event)"
-                />
-              </div>
-            }
-
-            <ng-core-search-filters
-              [searchFilters]="searchFilters"
-              [config]="config"
-              [query]="query"
-              styleClassSection="my-2"
-              (onChange)="onChangeSearchFilter($event)"
-            />
-
-            @if (!showEmptySearchMessage || q) {
-              <ng-content select="[top-facets]"></ng-content>
-              @for (item of aggregations; track item) {
-                <div>
-                  @if (!aggregationsToHide.includes(item.key)) {
-                    <ng-core-record-search-aggregation
-                      [aggregation]="item"
-                      [aggregationsFilters]="aggregationsFilters"
-                      (aggregationClicked)="loadAggregationBuckets($event)"
-                    >
-                    </ng-core-record-search-aggregation>
-                  }
-                </div>
-              }
-            }
-          </div>
-        }
-        <div id="recordlist" class="col-10">
-          @if (showEmptySearchMessage) {
-            <p-messages
-              [value]="[{severity: 'info', detail: 'Enter a query to get results.' | translate}]"
-              [enableService]="false"
-              [closable]="false"
-            />
-          }
-          <ng-content select="[top-result]"></ng-content>
-          <ul class="list-result">
-            @for (record of records; track record) {
-              <li class="list-unstyled py-2">
-                <ng-core-record-search-result
-                  [adminMode]="adminMode"
-                  [record]="record"
-                  [type]="currentType"
-                  [itemViewComponent]="getResultItemComponentView()"
-                  [canUpdate$]="canUpdateRecord$(record)"
-                  [canDelete$]="canDeleteRecord$(record)"
-                  [canUse$]="canUseRecord$(record)"
-                  [detailUrl$]="resolveDetailUrl$(record)"
-                  (deletedRecord)="deleteRecord($event)"
-                >
-                </ng-core-record-search-result>
-              </li>
+      <ng-content select="[top-result]"/>
+      <p-dataView [value]="records">
+        <ng-template pTemplate="list" let-records>
+          <ul class="p-0 m-0">
+            @for (record of records; track record ; let first = $first) {
+            <li class="list-none py-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
+              <ng-core-record-search-result
+                [adminMode]="adminMode"
+                [record]="record"
+                [type]="currentType"
+                [itemViewComponent]="getResultItemComponentView()"
+                [canUpdate$]="canUpdateRecord$(record)"
+                [canDelete$]="canDeleteRecord$(record)"
+                [canUse$]="canUseRecord$(record)"
+                [detailUrl$]="resolveDetailUrl$(record)"
+                (deletedRecord)="deleteRecord($event)"
+                (deleteMessageEvent)="showDeleteMessage($event)"
+              />
+            </li>
             }
           </ul>
-          <ng-core-paginator
-            [alwaysShow]="showPagination"
-            [currentPage]="currentPage"
-            [pageLinkSize]="paginationMaxSize"
-            [totalRecords]="total"
-            [rows]="size"
-            [rowsPerPageOptions]="config?.pagination?.rowsPerPageOptions || [10, 20, 50]"
-            [showCurrentPageReport]="config?.pagination?.pageReport || false"
-            [showFirstLastIcon]="paginationBoundaryLinks"
-            (rowPageChange)="paginatorChange($event)"
-          ></ng-core-paginator>
-          <ng-content select="[footer-result]"></ng-content>
-          <ng-content></ng-content>
-        </div>
-      </div>
-      <ng-content select="[footer-search-result]"></ng-content>
-    }
+        </ng-template>
+      </p-dataView>
+
+      <ng-core-paginator
+        [alwaysShow]="showPagination"
+        [currentPage]="currentPage"
+        [pageLinkSize]="paginationMaxSize"
+        [totalRecords]="total"
+        [rows]="size"
+        [rowsPerPageOptions]="config?.pagination?.rowsPerPageOptions || [10, 20, 50]"
+        [showCurrentPageReport]="config?.pagination?.pageReport || false"
+        [showFirstLastIcon]="paginationBoundaryLinks"
+        (rowPageChange)="paginatorChange($event)"
+      />
+      <ng-content select="[footer-result]"/>
+      <ng-content/>
+    </div>
   </div>
+  <ng-content select="[footer-search-result]"/>
+  }
+</div>
 }

@@ -24,6 +24,7 @@ export interface ISortOption {
   label: string;
   defaultQuery?: boolean;
   defaultNoQuery?: boolean;
+  icon?: string;
 }
 
 interface IConfig {
