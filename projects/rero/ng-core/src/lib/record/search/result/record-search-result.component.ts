@@ -81,6 +81,8 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
   // Event emitted when a record is deleted
   @Output() deletedRecord = new EventEmitter<IDeleteRecordEvent>();
 
+  @Output() deleteMessageEvent = new EventEmitter<string>();
+
   // Location for component item creation
   @ViewChild('item', { read: ViewContainerRef }) container!: ViewContainerRef;
 
@@ -133,7 +135,11 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
    * @param type - string, resource type
    */
   deleteRecord(pid: string, type?: string): void {
-    this.deletedRecord.emit({ pid, type });
+    if (this.deleteStatus.can) {
+      this.deletedRecord.emit({ pid, type });
+    } else {
+      this.deleteMessageEvent.emit(this.deleteStatus.message.replace(new RegExp('\n', 'g'), '<br>'));
+    }
   }
 
   /**

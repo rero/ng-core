@@ -15,14 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Color
-$gray-300: #dee2e6 !default;
-$color-white: #fff;
-
-// Border
-$border-width:                1px !default;
-$border-color:                $gray-300 !default;
-
-// Button
-$button-disabled-background-color:  #198754;
-$button-disabled-opacity:           0.65;
+:host ::ng-deep {
+  .p-button.p-button-icon-only {
+    width: 1.5rem;
+  }
+}

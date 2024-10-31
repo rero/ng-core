@@ -22,13 +22,13 @@
           <div [ngClass]="styleClassSection()">{{ searchFilter.label | translate }}</div>
           @for(searchFilterSection of searchFilter.filters; track searchFilterSection) {
             @if (showFilter(searchFilterSection)) {
-              <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"></ng-container>
+              <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"/>
             }
           }
         }
       } @else {
         @if (showFilter(searchFilter)) {
-          <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"></ng-container>
+          <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"/>
         }
       }
     }
@@ -36,7 +36,6 @@
 }
 
 <ng-template #searchFilterTemplate let-filter="filter">
-  <div>
     <div class="flex">
       <div class="flex align-items-center mr-2">
         <p-inputSwitch
@@ -61,5 +60,4 @@
         }
       </div>
     </div>
-  </div>
 </ng-template>

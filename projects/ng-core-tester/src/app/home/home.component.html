@@ -42,3 +42,62 @@
   <input pInputText class="w-full" type="text" id="markdown" value="*Hello* **world**" [(ngModel)]="markdownText">
   <div class="my-3" [innerHTML]="markdownText | markdown"></div>
 </p-panel>
+
+<p-panel header="Text Read More" styleClass="mt-3">
+<ng-core-text-read-more
+text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. "
+[unit]="'character'"
+[limit]="10"
+[showMoreLabel]="'Show more' | translate"
+[showLessLabel]="'Show less' | translate"
+/>
+</p-panel>
+
+<p-panel header="Error" styleClass="mt-3">
+  <ng-core-error [error]="{title: 'title', status: 'error'}"/>
+</p-panel>
+
+<p-panel header="Typography" styleClass="mt-3">
+  <h1>Heading 1</h1>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+
+  <h2>Heading 2</h2>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+  <h3>Heading 3</h3>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+  <h4>Heading 4</h4>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+  <h5>Heading 5</h5>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+  <h6>Heading 6</h6>
+  <p>
+    Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
+    fermentum felis. Vivamus tincidunt arcu ut lacus hendrerit, eget mattis dui finibus.
+  </p>
+  <ul>
+    <li><span>Base Text</span></li>
+    <li><span class="text-primary">Primary Text</span></li>
+    <li><span class="text-color-secondary">Secondary Text</span></li>
+    <li><a href="#">Home Link</a></li>
+    <li><span class="text-link">Text Link</span></li>
+    <li><span class="text-info">Text Info</span></li>
+    <li><span class="text-success">Text Success</span></li>
+    <li><span class="text-warning">Text Warning</span></li>
+    <li><span class="text-error">Text Error</span></li>
+  </ul>
+</p-panel>

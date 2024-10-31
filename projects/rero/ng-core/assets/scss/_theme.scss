@@ -14,8 +14,34 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-.border         { border: $border-width solid $border-color !important; }
-.border-top     { border-top: $border-width solid $border-color !important; }
-.border-right   { border-right: $border-width solid $border-color !important; }
-.border-bottom  { border-bottom: $border-width solid $border-color !important; }
-.border-left    { border-left: $border-width solid $border-color !important; }
+@import 'primeflex/primeflex';
+:root {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html,
+body {
+  @extend .line-height-1, .text-sm;
+}
+
+a {
+  @extend .text-blue-500, .no-underline;
+}
+
+a:hover {
+  @extend .text-blue-600, .underline;
+}
+
+.p-submenu-list {
+  z-index: 1000;
+}
+
+.p-menuitem {
+  a {
+    @extend .text-color;
+  }
+  a:hover {
+    @extend .no-underline;
+  }
+}

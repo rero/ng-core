@@ -22,8 +22,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrl: './menu.component.scss'
+  templateUrl: './menu.component.html'
 })
 export class MenuComponent implements OnInit {
 

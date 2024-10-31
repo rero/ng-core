@@ -20,17 +20,15 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-editor-formly-multi-schema-type',
   template: `
-    <div class="{{field.parent.props.cssClass}}">
+    <div class="{{ field.parent.props.cssClass }}">
       @if (props.label) {
-        <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
-      }
-      @if (showError && formControl.errors) {
-        <div class="alert alert-danger" role="alert">
-          <formly-validation-message [field]="field"></formly-validation-message>
+      <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
+      } @if (showError && formControl.errors) {
+        <div class="text-error mt-1">
+          <formly-validation-message [field]="field" />
         </div>
-      }
-      @for (f of field.fieldGroup; track f) {
-        <formly-field [field]="f"></formly-field>
+      } @for (f of field.fieldGroup; track f) {
+      <formly-field [field]="f"></formly-field>
       }
     </div>
   `,

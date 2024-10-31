@@ -17,7 +17,7 @@
 @if (isLimitReached && limit<0) {
   <a class="pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
 }
-<div class="d-inline" [innerHTML]="textToDisplay | nl2br"></div>
+<span [innerHTML]="textToDisplay | nl2br"></span>
 @if (isLimitReached && limit>=0) {
   <a class="pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
 }

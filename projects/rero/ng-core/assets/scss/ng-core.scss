@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./variables";
-@import "./border";
-@import "./button";
-@import "./style";
-@import "./typography";
+@import "./_editor";
+@import "./_theme";
+@import "./_typography";

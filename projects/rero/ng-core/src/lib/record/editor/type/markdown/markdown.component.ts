@@ -43,8 +43,8 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
     <div class="my-2">
       <textarea #textarea></textarea>
       @if (showError) {
-        <div class="invalid-feedback d-block">
-          <formly-validation-message [field]="field"></formly-validation-message>
+        <div class="text-error mt-1">
+          <formly-validation-message [field]="field"/>
         </div>
       }
     </div>

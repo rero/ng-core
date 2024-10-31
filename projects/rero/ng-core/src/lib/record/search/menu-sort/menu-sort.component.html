@@ -15,11 +15,23 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (sortOptions.length > 0) {
-  <span class="mx-2" translate>Sort by</span>
-  <p-dropdown
-    [placeholder]="'select…' | translate"
-    [options]="sortOptions"
-    [ngModel]="currentSortOption?.value"
-    (onChange)="changeSorting($event)"
-  ></p-dropdown>
+<p-dropdown
+  [placeholder]="'select…' | translate"
+  [options]="sortOptions"
+  [ngModel]="currentSortOption?.value"
+  (onChange)="changeSorting($event)"
+>
+  <ng-template pTemplate="selectedItem" let-item>
+    @if(item.icon) {
+    <i class="fa {{ item.icon }} mr-2"></i>
+    }
+    {{ item.label }}
+  </ng-template>
+  <ng-template let-item pTemplate="item">
+    @if(item.icon) {
+    <i class="fa {{ item.icon }} mr-2"></i>
+    }
+    {{item.label }}
+  </ng-template>
+</p-dropdown>
 }
