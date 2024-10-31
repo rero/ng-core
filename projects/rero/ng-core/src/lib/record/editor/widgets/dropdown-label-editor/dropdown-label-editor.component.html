@@ -15,14 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (field.props.label) {
-  <div class="flex">
+  <div class="flex gap-1 align-items-center">
     <span [pTooltip]="field.props.description" tooltipPosition="top">
       {{ field.props.label }}
       @if (field.props.required) {
         &nbsp;*
       }
     </span>
-    <ng-content select="[menu]"></ng-content>
-    <ng-content id="{field.id}-clone-button" select="[buttons]"></ng-content>
+    <ng-content select="[menu]"/>
+    <ng-content id="{field.id}-clone-button" select="[buttons]"/>
   </div>
 }

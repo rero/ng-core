@@ -14,24 +14,20 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="header">
-  @if (props.hideLabel !== true) {
-    <ng-core-label-editor [field]="field"></ng-core-label-editor>
+@if (props.hideLabel !== true) {
+<ng-core-label-editor [field]="field" />
+}
+<div [ngClass]="{ 'ml-3': field.templateOptions.hideLabel !== true, content: true }">
+  @if (showError && formControl.errors) {
+  <div class="text-error mt-1">
+    <formly-validation-message [field]="field" />
+  </div>
   }
-</div>
-<div class="object">
-  <div [ngClass]="{'ml-3': field.templateOptions.hideLabel !== true,  'content': true}">
-    @if (showError && formControl.errors) {
-      <div class="invalid-feedback d-block" role="alert">
-        <formly-validation-message [field]="field"></formly-validation-message>
-      </div>
-    }
-    <div class="{{ props.containerCssClass }}">
-      @for (f of field.fieldGroup; track f) {
-        <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
-          <formly-field [field]="f"></formly-field>
-        </div>
-      }
+  <div class="{{ props.containerCssClass }}">
+    @for (f of field.fieldGroup; track f) {
+    <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
+      <formly-field [field]="f" />
     </div>
+    }
   </div>
 </div>

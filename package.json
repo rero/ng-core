@@ -28,7 +28,6 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@types/marked": "^4.0.8",
-    "bootstrap": "^4.6.2",
     "crypto-js": "^4.2.0",
     "easymde": "^2.18.0",
     "font-awesome": "^4.7.0",

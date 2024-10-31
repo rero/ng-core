@@ -16,58 +16,19 @@
  */
 $fa-font-path: "~font-awesome/fonts";
 
-// @import "bootstrap/scss/bootstrap.scss";
 @import "font-awesome/scss/font-awesome.scss";
 
-@import "../../rero/ng-core/assets/scss/ng-core.scss";
-@import "node_modules/primeng/resources/themes/lara-light-blue/theme.css";
 @import "node_modules/primeng/resources/primeng.min.css";
-@import "node_modules/primeflex/primeflex.min.css";
+@import "node_modules/primeflex/primeflex";
 @import "node_modules/primeicons/primeicons.css";
+@import "node_modules/primeng/resources/themes/aura-light-blue/theme.css";
+@import "../../rero/ng-core/assets/scss/ng-core.scss";
 @import "easymde/dist/easymde.min";
 
 .p-menubar {
-  background-color: white;
-  border: none;
-  margin-bottom: 0;
+  @extend .mb-0, .border-none, .bg-white;
 }
 
 .container {
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  @extend .p-4, .border-1, .surface-border, .border-round-md;
 }
-
-// .CodeMirror, .CodeMirror-scroll {
-// 	min-height: 120px;
-// }
-
-// ng-core-formly-field-primeng-input > input,
-// formly-field > input {
-//   width: 100%;
-// }
-
-// input {
-//   padding: 0.5em;
-// }
-
-// input[type="number"] {
-//   padding: 0.1em;
-// }
-
-
-// // ADJUST BOOTSTRAP / PRIMENG -------------------
-// .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
-//   padding-top: 0;
-//   padding-bottom: 0;
-// }
-
-// dt, dl, dd {
-//   margin-bottom: 0;
-//   padding-bottom: 0;
-// }
-
-// div.object .row {
-//   margin-left: 4px !important;
-//   margin-top: 0.4rem;
-// }

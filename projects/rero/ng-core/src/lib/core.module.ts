@@ -27,7 +27,6 @@ import { AutofocusDirective } from './directives/autofocus.directive';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { ErrorComponent } from './error/error.component';
 import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
-import { MenuWidgetComponent } from './menu/menu-widget/menu-widget.component';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
 import { DefaultPipe } from './pipe/default.pipe';
 import { FilesizePipe } from './pipe/filesize.pipe';
@@ -43,7 +42,6 @@ import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { MenuComponent } from './widget/menu/menu.component';
-import { SortListComponent } from './widget/sort-list/sort-list.component';
 import { NgCoreTranslateService } from './translate/translate-service';
 import { Observable, of } from 'rxjs';
 
@@ -70,8 +68,6 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
         SortByKeysPipe,
         ErrorComponent,
         FilesizePipe,
-        MenuWidgetComponent,
-        SortListComponent,
         NgVarDirective,
         MarkdownPipe,
         AutofocusDirective,
@@ -108,8 +104,6 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
         ErrorComponent,
         SortByKeysPipe,
         NgxSpinnerModule,
-        MenuWidgetComponent,
-        SortListComponent,
         NgVarDirective,
         MarkdownPipe,
         AutofocusDirective,

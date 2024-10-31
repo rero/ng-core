@@ -87,15 +87,11 @@ export class DetailButtonComponent {
    * @param record - the current record
    */
   deleteRecord(record: any): void {
-    this.recordEvent.emit({ action: 'delete', record });
-  }
-
-  /**
-   * Show a modal containing message given in parameter.
-   * @param message - message to display into modal
-   */
-  showDeleteMessage(message: string) {
-    this.deleteMessageEvent.emit(message.replace(new RegExp('\n', 'g'), '<br>'));
+    if (this.deleteStatus().can) {
+      this.recordEvent.emit({ action: 'delete', record });
+    } else {
+      this.deleteMessageEvent.emit(this.deleteStatus().message.replace(new RegExp('\n', 'g'), '<br>'));
+    }
   }
 
   /** Go back to previous page */

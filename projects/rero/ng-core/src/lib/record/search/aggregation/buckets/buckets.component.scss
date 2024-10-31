@@ -15,41 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "bootstrap/scss/functions";
-@import "bootstrap/scss/mixins";
-@import "bootstrap/scss/variables";
+@import '../../../../../../assets/scss/typography';
 
 .bucket-group {
-
   .bucket-item {
-    font-size: 0.9rem;
-
     .bucket-data {
-
-      .form-check-label {
-        color: $body-color;
-        padding: 0 map-get($spacers, 2) 0 map-get($spacers, 1);
-      }
-
       &:hover {
-        cursor: pointer;
-        .form-check-label {
-          color: $link-color;
-          text-decoration: underline;
+        @extend .text-link-color-hover;
+        .bucket-label {
+          cursor: pointer;
         }
-        .bucket-count {
-          font-weight: bold;
-        }
-      }
-
-      .bucket-count {
-        font-size: 0.8rem;
-        padding-left: map-get($spacers, 2);
-        color: $primary;
       }
     }
-
   }
 }
-
-

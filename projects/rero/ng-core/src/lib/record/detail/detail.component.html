@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="main-content">
+<div>
   @if (record) {
     <ng-core-detail-button
       [record]="record"
@@ -25,10 +25,10 @@
       [deleteStatus]="deleteStatus"
       (recordEvent)="recordEvent($event)"
       (deleteMessageEvent)="showDeleteMessage($event)"
-    ></ng-core-detail-button>
+    />
   }
   @if (error) {
-    <ng-core-error [error]="error"></ng-core-error>
+    <ng-core-error [error]="error"/>
   }
-  <ng-template ngCoreRecordDetail></ng-template>
+  <ng-template ngCoreRecordDetail/>
 </div>
