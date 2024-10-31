@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="flex align-items-stretch w-full button-bar">
+<div class="flex align-items-stretch w-full">
   <div class="flex align-items-center w-full">
     <p-button
       icon="fa fa-arrow-left"
@@ -47,8 +47,9 @@
           translate
         />
       }
-      @if (deleteStatus().can) {
+      @if (deleteStatus()) {
         <p-button id="detail-delete-button"
+          disabled
           class="ml-1"
           icon="fa fa-trash"
           [outlined]="true"
@@ -56,19 +57,8 @@
           [label]="'Delete'|translate"
           (onClick)="deleteRecord(record())"
         />
-      } @else {
-        @if (deleteStatus().message) {
-          <p-button id="detail-delete-button"
-            class="ml-1 disabled"
-            icon="fa fa-trash"
-            [outlined]="true"
-            severity="danger"
-            [label]="'Delete'|translate"
-            (onClick)="showDeleteMessage(deleteStatus().message)"
-          />
-        }
       }
     }
-    <ng-content select="[afterButton]"></ng-content>
+    <ng-content select="[afterButton]"/>
   </div>
 </div>

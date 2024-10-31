@@ -22,7 +22,6 @@ import { isEmpty, removeEmptyValues } from '../../utils';
   selector: 'ng-core-editor-formly-toggle-wrapper',
   template: `
     <div class='toggle-wrapper'>
-      <div class='form-group'>
         <div class="custom-control custom-switch">
           <input class="custom-control-input" type="checkbox" id="toggle-switch-{{ field.id }}"
             (change)="toggle($event)" [checked]="tsOptions.enabled">
@@ -30,7 +29,6 @@ import { isEmpty, removeEmptyValues } from '../../utils';
             [pTooltip]="tsOptions.description|translate" tooltipPosition="top"
           >{{ tsOptions.label | translate }}</label>
         </div>
-      </div>
       @if (tsOptions.enabled) {
         <ng-container #fieldComponent></ng-container>
       }

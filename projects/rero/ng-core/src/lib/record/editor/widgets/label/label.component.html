@@ -17,24 +17,22 @@
 @if (field) {
   <!-- header and menu -->
   @if (!isRoot()) {
-    <ng-container *ngTemplateOutlet="hasMenu(field) ? menu : title; context: { f: field }">
-    </ng-container>
+    <ng-container *ngTemplateOutlet="hasMenu(field) ? menu : title; context: { f: field }"/>
   }
 
   <!-- TEMPLATES -->
   <!-- dropdown menu -->
   <ng-template #menu let-f="f">
-    <div class="header">
       <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
         <ng-container menu>
           <div class="flex">
-            <p-button icon="fa fa-caret-down" [link]="true" (onClick)="menu.toggle($event)" />
+            <p-button icon="fa fa-caret-down" severity="secondary" [text]="true" (onClick)="menu.toggle($event)" />
             <p-tieredMenu #menu [model]="items" [popup]="true" />
           </div>
         </ng-container>
         <ng-container buttons>
           @if (canAddItem()) {
-            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" styleClass="mr-1" />
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" />
           }
           @if (canAdd()) {
             <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (onClick)="add()" />
@@ -45,29 +43,28 @@
           }
         </ng-container>
       </ng-core-editor-dropdown-label-editor>
-    </div>
   </ng-template>
 
   <!-- section title -->
   <ng-template #title let-f="f">
-    <div class="header">
+    <div class="flex gap-1 align-items-center">
       @if (f.props.label) {
-        <label class="mb-0" [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
+        <label [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top" >
           {{ f.props.label }}
+          </label>
           @if (f.props.required && f.props.hideRequiredMarker !== true) {
             *
           }
           @if (canAddItem()) {
-            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" styleClass="mr-1" />
+            <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" />
           }
           @if (canAdd()) {
-            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" severity="secondary" [text]="true" styleClass="mr-1" (onClick)="add()" />
+            <p-button id="{{ f.id }}-clone-button" icon="fa fa-clone" [text]="true" severity="secondary" (onClick)="add()" />
           }
           <!-- hide button -->
           @if (canRemove()) {
-            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" />
+            <p-button id="{{f.id}}-remove-button" icon="fa fa-trash" [text]="true" severity="secondary" (onClick)="remove()" />
           }
-        </label>
       }
     </div>
   </ng-template>

@@ -38,18 +38,17 @@ interface Option {
         [formControl]="option.disabled ? disabledControl : formControl"
         [label]="option.label"
         [value]="option.value"
-      >
-      </p-radioButton>
+      />
     </div>
   </ng-template>
   @if (props.style === 'stacked') {
     @for (option of props.options | formlySelectOptions : field | async; track option; let i = $index;) {
-      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button'}"></ng-container>
+      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button'}"/>
     }
   } @else {
     <div class="flex flex-wrap">
     @for (option of props.options | formlySelectOptions : field | async; track option; let i = $index;) {
-      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button-label'}"></ng-container>
+      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button-label'}"/>
     }
     </div>
   }

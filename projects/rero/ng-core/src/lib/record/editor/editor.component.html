@@ -16,10 +16,10 @@
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="grid editor">
-    <div class="flex align-items-stretch w-full mb-2 pb-2 border-bottom">
+    <div class="flex header align-items-stretch w-full my-2 p-2 border-bottom-1 surface-border">
       <div class="flex align-items-center w-full">
         @if (rootField) {
-          <legend>
+          <legend class="text-2xl">
               <span [pTooltip]="description" tooltipPosition="top">
                 {{ title || recordType | ucfirst | translate }}
               </span>
@@ -31,7 +31,6 @@
         <p-button
         id="editor-cancel-button"
         [label]="'Cancel' | translate"
-        size="small"
         icon="fa fa-times"
         [outlined]="true"
         severity="danger"
@@ -52,7 +51,6 @@
         <p-button
           id="editor-save-button"
           [label]="'Save' | translate"
-          size="small"
           styleClass="ml-1"
           (onClick)="submit()"
           [disabled]="isSaveButtonDisabled"
@@ -61,7 +59,6 @@
         <p-splitButton
           id="editor-save-button-split"
           [label]="'Save' | translate"
-          size="small"
           styleClass="ml-1"
           (onClick)="submit()"
           [model]="saveAlternatives"
@@ -76,11 +73,11 @@
         <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
       </div>
       <!-- TOC navigation -->
-      <nav class="col-2 bd-toc" aria-label="Secondary navigation">
+      <nav class="col-2 bd-toc hidden lg:block" aria-label="Secondary navigation">
           <label for="addField" translate>Jump to</label>
           <ul class="section-nav">
             @for (f of tocFields$ | async; track f) {
-              <li class="toc-entry toc-h2 mb-1">
+              <li class="toc-entry mb-1">
                 <a href (click)="setFocus($event, f)">{{ f.props.label | translate }}</a>
               </li>
             }
@@ -89,7 +86,7 @@
     }
 
     <!-- editor itself -->
-    <div class="col" [ngClass]="{ 'col-md-9 col-xl-8': editorSettings.longMode }" role="main">
+    <div class="col" [ngClass]="{ 'col-10 lg:col-8': editorSettings.longMode }" role="main">
         <!-- ngx-formly -->
         <formly-form
           [model]="model"

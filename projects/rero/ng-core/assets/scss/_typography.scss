@@ -14,60 +14,69 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+@import "primeflex/primeflex";
 
-h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-}
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  line-height: 1.2;
+  @extend .mt-0, .mb-2, .font-medium, .line-height-2;
 }
 
 h1, .h1 {
-  font-size: 2.5rem;
+  @extend .text-5xl;
 }
 
 h2, .h2 {
-  font-size: 2rem;
+  @extend .text-4xl;
 }
 
 h3, .h3 {
-  font-size: 1.75rem;
+  @extend .text-3xl;
 }
 
 h4, .h4 {
-  font-size: 1.5rem;
+  @extend .text-2xl;
 }
 
 h5, .h5 {
-  font-size: 1.25rem;
+  @extend .text-xl;
 }
 
 h6, .h6 {
-  font-size: 1rem;
+  @extend .text-lg;
 }
 
-label {
-  display: inline-block;
-  margin-bottom: .5rem;
+// from aura-light-blue message theme
+.text-info {
+  color: #2563eb;
 }
 
-legend {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
-  margin-bottom: .5rem;
-  font-size: 1.5rem;
-  line-height: inherit;
-  color: inherit;
-  white-space: normal;
+.text-success {
+  color: #16a34a;
 }
 
-.border-bottom {
-  border-bottom: 1px solid #dee2e6 !important;
+.text-warning {
+  color: #ca8a04;
 }
+
+.text-error {
+  color: #dc2626;
+}
+
+.text-link-color {
+  @extend .text-blue-500;
+}
+
+.text-link-color-hover {
+  @extend .text-blue-600;
+}
+
+.text-link {
+  @extend .text-link-color;
+  &:hover {
+    @extend .text-link-color-hover;
+    @extend .underline;
+  }
+}
+
+
