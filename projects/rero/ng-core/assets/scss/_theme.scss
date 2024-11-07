@@ -14,34 +14,51 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'primeflex/primeflex';
-:root {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
 
-html,
-body {
-  @extend .line-height-1, .text-sm;
-}
+@layer ng-core {
+  :root {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
+      sans-serif;
+    --font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
+      sans-serif;
 
-a {
-  @extend .text-blue-500, .no-underline;
-}
+    @extend .text-sm;
 
-a:hover {
-  @extend .text-blue-600, .underline;
-}
+    a {
+      @extend .text-blue-500, .no-underline;
+    }
 
-.p-submenu-list {
-  z-index: 1000;
-}
+    a:hover {
+      @extend .text-blue-600, .underline;
+    }
 
-.p-menuitem {
-  a {
-    @extend .text-color;
-  }
-  a:hover {
-    @extend .no-underline;
+    .p-submenu-list {
+      z-index: 1000;
+    }
+
+    .p-menuitem {
+      a {
+        @extend .text-color;
+      }
+      a:hover {
+        @extend .no-underline;
+      }
+    }
+
+    dl.metadata {
+      @extend .grid, .my-0, .w-full;
+      dt {
+        @extend .font-bold, .col-12, .py-0;
+        @include styleclass('md:col-4');
+      }
+      dd {
+        @extend .col-12, .py-0;
+        @include styleclass('md:col-8');
+        margin-inline-start: 0;
+      }
+    }
+    .p-menubar {
+      @extend .mb-0, .border-none, .bg-white;
+    }
   }
 }

@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -36,8 +36,6 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   /** EditorComponent function */
   @Input() editorComponent: any;
 
-  currentValue: string = '';
-
   searchValue: string | undefined;
 
   items: any[] = [];
@@ -51,6 +49,8 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription = new Subscription();
 
   essentialsOptions = [];
+
+  @ViewChild("addField") autocomplete: AutoComplete;
 
   onAddField(event: DropdownChangeEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
@@ -89,11 +89,8 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
   onSelect(event: AutoCompleteSelectEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
-    this.currentValue = '';
-  }
-
-  addField(field: any): void {
-    this.editorComponentInstance.setHide(field, false);
+    console.log('clear');
+    this.autocomplete.clear();
   }
 
   /**

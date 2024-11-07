@@ -14,21 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$fa-font-path: "~font-awesome/fonts";
 
 @import "font-awesome/scss/font-awesome.scss";
-
-@import "node_modules/primeng/resources/primeng.min.css";
-@import "node_modules/primeflex/primeflex";
-@import "node_modules/primeicons/primeicons.css";
-@import "node_modules/primeng/resources/themes/aura-light-blue/theme.css";
-@import "../../rero/ng-core/assets/scss/ng-core.scss";
+@import "primeng/resources/primeng";
+@import "primeicons/primeicons.css";
+@import "primeng/resources/themes/aura-light-blue/theme.css";
 @import "easymde/dist/easymde.min";
-
-.p-menubar {
-  @extend .mb-0, .border-none, .bg-white;
-}
-
-.container {
-  @extend .p-4, .border-1, .surface-border, .border-round-md;
-}
+@import "node_modules/ngx-spinner/animations/ball-zig-zag.css";
+@import "primeflex/primeflex";
+@import "projects/rero/ng-core/assets/scss/ng-core.scss";

@@ -15,9 +15,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="grid editor">
-    <div class="flex header align-items-stretch w-full my-2 p-2 border-bottom-1 surface-border">
-      <div class="flex align-items-center w-full">
+  <div class="grid">
+    <div class="col-12 flex header sticky top-0 bg-white h-full z-5 justify-content-between align-items-center my-2 p-2 border-bottom-1 surface-border">
+      <div class="">
         @if (rootField) {
           <legend class="text-2xl">
               <span [pTooltip]="description" tooltipPosition="top">
@@ -26,7 +26,7 @@
           </legend>
         }
       </div>
-      <div class="flex align-items-center justify-content-end w-full">
+      <div class="flex align-items-center justify-content-end">
         <!-- cancel button -->
         <p-button
         id="editor-cancel-button"
@@ -69,20 +69,9 @@
 
     <!-- add fields section -->
     @if (editorSettings.longMode) {
-      <div class="col-2 bd-sidebar">
+      <div class="col-2 bd-sidebar overflow-y-auto sticky">
         <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
       </div>
-      <!-- TOC navigation -->
-      <nav class="col-2 bd-toc hidden lg:block" aria-label="Secondary navigation">
-          <label for="addField" translate>Jump to</label>
-          <ul class="section-nav">
-            @for (f of tocFields$ | async; track f) {
-              <li class="toc-entry mb-1">
-                <a href (click)="setFocus($event, f)">{{ f.props.label | translate }}</a>
-              </li>
-            }
-          </ul>
-      </nav>
     }
 
     <!-- editor itself -->
@@ -96,6 +85,20 @@
           (modelChange)="modelChanged($event)"
         />
     </div>
+
+    @if (editorSettings.longMode) {
+      <!-- TOC navigation -->
+      <nav class="col-2 py-2 text-sm bd-toc sticky overflow-y-auto hidden lg:block" aria-label="Secondary navigation">
+          <label for="addField" translate>Jump to</label>
+          <ul class="ml-2 pl-0 list-none">
+            @for (f of tocFields$ | async; track f) {
+              <li class="mb-1">
+                <span class="text-link-secondary" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
+              </li>
+            }
+          </ul>
+      </nav>
+    }
   </div>
 </form>
 @if (error) {

@@ -15,16 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'primeflex/primeflex';
-
-:host ::ng-deep {
-  ng-core-label-editor > div {
-    @extend .px-2;
-  }
-  span.p-fieldset-legend-text {
-    @extend .hidden;
-  }
-  .p-fieldset .p-fieldset-legend span {
-    @extend .p-0;
+@layer ng-core {
+  ng-core-card-wrapper {
+    // primeng bug?
+    span.p-fieldset-legend-text {
+      @extend .hidden;
+    }
+    .p-fieldset .p-fieldset-legend {
+      @extend .m-0;
+      span {
+        @extend .p-0;
+      }
+      ng-core-label-editor > div, ng-core-editor-dropdown-label-editor > div {
+        @extend .ml-2;
+      }
+    }
   }
 }

@@ -46,10 +46,7 @@ export interface JSONSchema7 extends JSONSchema7Base {
 
 @Component({
   selector: 'ng-core-editor',
-  templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.scss'],
-  // make the style global: required by JSONSchema cssClass
-  encapsulation: ViewEncapsulation.None
+  templateUrl: './editor.component.html'
 })
 export class EditorComponent extends AbstractCanDeactivateComponent implements OnInit, OnChanges, OnDestroy {
 

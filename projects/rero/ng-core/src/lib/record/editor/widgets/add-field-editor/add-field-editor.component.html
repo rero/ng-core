@@ -16,9 +16,8 @@
 -->
 <p-autoComplete
   [dropdown]="true"
-  id="addField"
+  #addField
   optionLabel="props.label"
-  [(ngModel)]="currentValue"
   [placeholder]="'Add field' | translate"
   styleClass="mb-2 w-full"
   [suggestions]="suggestions"

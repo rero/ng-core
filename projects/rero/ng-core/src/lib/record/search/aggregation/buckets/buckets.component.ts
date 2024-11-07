@@ -20,8 +20,7 @@ import { AggregationsFilter, RecordSearchService } from '../../record-search.ser
 
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',
-  templateUrl: './buckets.component.html',
-  styleUrls: ['./buckets.component.scss']
+  templateUrl: './buckets.component.html'
 })
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 

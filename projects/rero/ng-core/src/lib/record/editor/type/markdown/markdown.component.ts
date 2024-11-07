@@ -43,7 +43,7 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
     <div class="my-2">
       <textarea #textarea></textarea>
       @if (showError) {
-        <div class="text-error mt-1">
+        <div class="text-error my-2">
           <formly-validation-message [field]="field"/>
         </div>
       }

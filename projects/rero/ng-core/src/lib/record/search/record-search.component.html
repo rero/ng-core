@@ -69,8 +69,8 @@
       />
       }
       <!-- Sorting -->
-      @if (config.sortOptions && config.sortOptions.length > 0) {
-      <ng-core-menu-sort class="ml-1" [config]="config" (onChange)="changeSorting($event)" />
+      @if (config?.sortOptions?.length > 0) {
+      <ng-core-menu-sort class="ml-1" [selectedValue]="selectedSortValue" [config]="config.sortOptions" (onChange)="changeSorting($event)" />
       }
       <!-- EXPORT BUTTON -->
       <ng-core-export-button class="ml-1"[exportOptions]="exportOptions"/>

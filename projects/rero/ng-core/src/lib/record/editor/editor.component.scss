@@ -14,52 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@import 'primeflex/primeflex';
-@import '../../../../assets/scss/typography';
 
-.editor {
-  > .header {
-    @supports (position: sticky) {
-      @extend .sticky, .top-0, .bg-white, .h-full;
-      z-index: 500;
-    }
-  }
-
-  .bd-toc {
-    @supports (position: sticky) {
-      @extend .sticky, .overflow-y-auto;
-      top: 4rem;
-      height: 100vh - 10vh;
-    }
-    @extend .flex-order-2, .py-2, .text-sm;
-  }
-
-  ul.section-nav {
-    // bug of primeflex?
-    border-width: 0;
-    @extend .pl-0, .border-solid, .surface-border, .border-left-1;
-  }
-
-  li.toc-entry {
-    @extend .mb-2, .ml-1, .mr-1, .list-none;
-    a {
-      @extend .text-color-secondary;
-
-      &:hover {
-        @extend .text-link-color, .no-underline;
-      }
-    }
-  }
-
-  //
-  // Left side navigation
-  //
-
-  .bd-sidebar {
-    @supports (position: sticky) {
-      @extend .sticky, .bg-white, .h-full;
-      top: 4rem;
-      z-index: 500;
+@layer ng-core {
+  ng-core-editor {
+    .bd-toc, .bd-sidebar {
+        top: 4rem;
+        height: 100vh - 10vh;
     }
   }
 }
