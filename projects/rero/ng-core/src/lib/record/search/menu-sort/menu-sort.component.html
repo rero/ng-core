@@ -14,11 +14,11 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (sortOptions.length > 0) {
+@if (options().length > 0) {
 <p-dropdown
   [placeholder]="'select…' | translate"
-  [options]="sortOptions"
-  [ngModel]="currentSortOption?.value"
+  [options]="options()"
+  [ngModel]="selectedOption()?.value"
   (onChange)="changeSorting($event)"
 >
   <ng-template pTemplate="selectedItem" let-item>

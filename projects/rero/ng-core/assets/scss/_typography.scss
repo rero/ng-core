@@ -14,69 +14,76 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-@import "primeflex/primeflex";
 
+@layer ng-core {
+  :root {
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+      @extend .mt-0, .mb-2, .font-medium, .line-height-2;
+    }
 
-h1, h2, h3, h4, h5, h6,
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  @extend .mt-0, .mb-2, .font-medium, .line-height-2;
-}
+    h1, .h1 {
+      @extend .text-5xl;
+    }
 
-h1, .h1 {
-  @extend .text-5xl;
-}
+    h2, .h2 {
+      @extend .text-4xl;
+    }
 
-h2, .h2 {
-  @extend .text-4xl;
-}
+    h3, .h3 {
+      @extend .text-3xl;
+    }
 
-h3, .h3 {
-  @extend .text-3xl;
-}
+    h4, .h4 {
+      @extend .text-2xl;
+    }
 
-h4, .h4 {
-  @extend .text-2xl;
-}
+    h5, .h5 {
+      @extend .text-xl;
+    }
 
-h5, .h5 {
-  @extend .text-xl;
-}
+    h6, .h6 {
+      @extend .text-lg;
+    }
 
-h6, .h6 {
-  @extend .text-lg;
-}
+    // from aura-light-blue message theme
+    .text-info {
+      color: #2563eb;
+    }
 
-// from aura-light-blue message theme
-.text-info {
-  color: #2563eb;
-}
+    .text-success {
+      color: #16a34a;
+    }
 
-.text-success {
-  color: #16a34a;
-}
+    .text-warning {
+      color: #ca8a04;
+    }
 
-.text-warning {
-  color: #ca8a04;
-}
+    .text-error {
+      color: #dc2626;
+    }
 
-.text-error {
-  color: #dc2626;
-}
+    .border-info {
+      border-color: #2563eb;
+    }
 
-.text-link-color {
-  @extend .text-blue-500;
-}
+    .border-success {
+      border-color: #16a34a;
+    }
 
-.text-link-color-hover {
-  @extend .text-blue-600;
-}
+    .border-warning {
+      border-color: #ca8a04;
+    }
 
-.text-link {
-  @extend .text-link-color;
-  &:hover {
-    @extend .text-link-color-hover;
-    @extend .underline;
+    .border-error {
+      border-color: #dc2626;
+    }
+
+    .text-link {
+      @include styleclass('text-blue-500 hover:text-blue-600 hover:underline cursor-pointer');
+    }
+
+    .text-link-secondary {
+      @include styleclass('text-color-secondary hover:text-blue-600 cursor-pointer');
+    }
   }
 }
-
-

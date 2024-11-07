@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
 

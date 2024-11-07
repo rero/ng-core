@@ -15,32 +15,29 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (buckets()) {
-  <ul class="list-none m-0 bucket-group">
+  <ul class="list-none m-0 p-0">
   @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
-    <li class="bucket-item">
-      <div class="flex align-items-stretch mb-1 bucket-data">
+    <li>
         @if (bucket.doc_count) {
-          <div class="flex flex-grow-1 align-items-center">
+          <div class="flex gap-1 align-items-center text-link-secondary mb-1">
             <p-triStateCheckbox
               inputId="{{ bucket.aggregationKey }}-{{ index }}"
-              variant="outlined"
-              class="mr-1"
+              variant="filled"
               [ngModel]="bucket.indeterminate ? false : isSelected(bucket.key)"
               (onChange)="updateFilter(bucket)"
             />
-            <label class="bucket-label mb-0" for="{{ bucket.aggregationKey }}-{{ index }}">
+            <label class="flex-grow-1 overflow-hidden" for="{{ bucket.aggregationKey }}-{{ index }}">
               @if (bucket.name) {
                 {{ bucket.name }}
               } @else {
                 {{ bucket.key | bucketName: aggregationKey() | async }}
               }
             </label>
-          </div>
-          <div class="bucket-count flex flex-none align-items-center ml-2">
-            {{ bucket.doc_count }}
+              <div class="pl-2">
+                {{ bucket.doc_count }}
+              </div>
           </div>
         }
-      </div>
       <div class="ml-4">
         @if (displayChildren(bucket)) {
           @for (aggregation of bucketChildren[bucket.key]; track aggregation) {
@@ -57,5 +54,7 @@
   </ul>
 }
 @if (displayMoreAndLessLink) {
-  <p-button class="ml-1" [link]="true" [label]="(moreMode ? 'more…' : 'less…') | translate" (onClick)="moreMode = !moreMode"></p-button>
+  <div class="flex justify-content-end">
+    <span class="text-link" (onClick)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
+  </div>
 }

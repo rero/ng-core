@@ -47,6 +47,7 @@ import { ChangeEvent } from './paginator/paginator.component';
 import { TabViewChangeEvent } from 'primeng/tabview';
 import { IChecked } from './search-filters/search-filters.component';
 import { DropdownChangeEvent } from 'primeng/dropdown';
+import { ISortOption } from './menu-sort/menu-sort.component';
 
 export interface SearchParams {
   currentType: string;
@@ -294,6 +295,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         });
   }
 
+  get selectedSortValue(): ISortOption {
+    const sortParam = this.activatedRoute.snapshot?.queryParamMap?.get('sort');
+    return (sortParam && this.config.sortOptions)
+      ? this.config.sortOptions.find((item: ISortOption) => item.value === sortParam)?.value
+      : null;
+  }
+
   // HOOKS ======================================================
 
   /**
@@ -497,6 +505,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this.sort = sort;
     this._searchParamsHasChanged();
   }
+
 
   /**
    * Change query text.
