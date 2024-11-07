@@ -27,8 +27,7 @@ import { FieldWrapper } from '@ngx-formly/core';
       </ng-template>
       <ng-template #fieldComponent></ng-template>
     </p-fieldset>
-  `,
-  styleUrl: './card-wrapper.component.scss',
+  `
 })
 export class CardWrapperComponent extends FieldWrapper implements OnInit {
   /** OnInit hook */

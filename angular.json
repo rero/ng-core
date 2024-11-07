@@ -59,8 +59,7 @@
             "allowedCommonJsDependencies": [
               "crypto-js",
               "easymde",
-              "js-generate-password",
-              "moment"
+              "js-generate-password"
             ],
             "outputPath": "dist/ng-core-tester",
             "index": "projects/ng-core-tester/src/index.html",

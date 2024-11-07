@@ -20,8 +20,7 @@ import { RecordSearchService } from '../../record-search.service';
 
 @Component({
   selector: 'ng-core-aggregation-slider',
-  templateUrl: './slider.component.html',
-  styleUrl: './slider.component.scss'
+  templateUrl: './slider.component.html'
 })
 export class AggregationSliderComponent implements OnDestroy, OnInit {
 

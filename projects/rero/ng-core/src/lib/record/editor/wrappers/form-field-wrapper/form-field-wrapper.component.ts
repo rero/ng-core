@@ -30,24 +30,26 @@ import { FieldWrapper } from '@ngx-formly/core';
           }
         </label>
       }
-      <div class="flex align-content-center w-full mt-2">
-        <div class="flex w-full align-items-center">
+      <div class="flex align-content-center w-full gap-1">
+        <div class="flex gap-1 w-full align-items-center">
           <!-- field -->
           <ng-template #fieldComponent></ng-template>
         </div>
-        <div class="flex align-items-center ml-1">
-          <!-- clone button -->
-          @if (canAdd()) {
-            <p-button icon="fa fa-clone" severity="secondary" [text]="true" (onClick)="add()" styleClass="mr-1" />
-          }
-          <!-- trash button -->
-          @if (canRemove() && props.hideLabel !== true) {
-            <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" styleClass="mr-1" />
+          @if (canAdd() || canRemove()) {
+          <div class="flex gap-1 align-items-center">
+            <!-- clone button -->
+            @if (canAdd()) {
+              <p-button icon="fa fa-clone" severity="secondary" [text]="true" (onClick)="add()" />
+            }
+            <!-- trash button -->
+            @if (canRemove()) {
+              <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" />
+            }
+          </div>
           }
         </div>
-      </div>
       @if (showError) {
-        <div class="text-error mt-1">
+        <div class="text-error my-2">
           <formly-validation-message [field]="field"/>
         </div>
       }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DropdownChangeEvent } from 'primeng/dropdown';
@@ -27,11 +27,6 @@ export interface ISortOption {
   icon?: string;
 }
 
-interface IConfig {
-  sortOptions: ISortOption[],
-  [key:string]: any
-};
-
 @Component({
   selector: 'ng-core-menu-sort',
   templateUrl: './menu-sort.component.html'
@@ -42,16 +37,18 @@ export class MenuSortComponent {
   protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   /** Input */
-  config = input.required<IConfig>();
-  sortParamName = input<string>('sort');
+  config = input.required<ISortOption[]>();
+  selectedValue = input<string>();
+  selectedOption = computed(() => this.config().find((conf: ISortOption) => conf.value === this.selectedValue()));
+  options = computed(() => this.sortOptions());
 
   /** Change event */
   onChange = output<string>();
 
   /** Return the sort options from config. */
-  get sortOptions(): ISortOption[] {
-    return (this.config().sortOptions)
-      ? this.config().sortOptions
+  sortOptions(): ISortOption[] {
+    return (this.config())
+      ? this.config()
           .map((option: ISortOption) => {
             option.label = this.translateService.instant(option.label);
             return option;
@@ -60,16 +57,16 @@ export class MenuSortComponent {
       : [];
   }
 
-  /**
-   * Return the current sort object.
-   * @returns SortOption
-   */
-  get currentSortOption(): ISortOption {
-    const sortParam = this.activatedRoute.snapshot?.queryParamMap?.get(this.sortParamName());
-    return (sortParam && this.config().sortOptions)
-      ? this.config().sortOptions.find((item: ISortOption) => item.value === sortParam)
-      : null;
-  }
+  // /**
+  //  * Return the current sort object.
+  //  * @returns SortOption
+  //  */
+  // get currentSortOption(): ISortOption {
+  //   const sortParam = this.activatedRoute.snapshot?.queryParamMap?.get(this.sortParamName());
+  //   return (sortParam && this.config().sortOptions)
+  //     ? this.config().sortOptions.find((item: ISortOption) => item.value === sortParam)
+  //     : null;
+  // }
 
   /**
    * Change sorting with select a new value in dropdown menu

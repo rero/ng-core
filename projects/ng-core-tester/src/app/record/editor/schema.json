@@ -262,7 +262,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "cssClass": "border border-info rounded p-2"
+            "cssClass": "p-2"
           }
         }
       }
