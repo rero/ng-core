@@ -16,16 +16,26 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <p-calendar
+    styleClass="w-full"
+    inputStyleClass="text-center"
     [(ngModel)]="dateRangeModel"
-    [minDate]="minDate"
-    [maxDate]="maxDate"
     selectionMode="range"
-    [readonlyInput]="true" />
-<div class="flex mt-2">
-  <div class="flex flex-auto justify-content-center">
-    <p-button [label]="'Apply' | translate" [outlined]="true" (onClick)="$event.preventDefault(); updateFilter()" />
-    @if (hasQueryParam) {
-      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (onClick)="$event.preventDefault(); clearFilter()" />
-    }
-  </div>
+    [showIcon]="true"
+    [readonlyInput]="true" >
+    <ng-template pTemplate="footer">
+      <p-divider/>
+      <div class="grid grid-nogutter">
+        @for (cfg of buttonConfig; track cfg) {
+          <div class="col-6 flex justify-content-center">
+            <p-button (onClick)="setRange(cfg.value)" styleClass="w-full" class="flex-grow-1 p-1" [outlined]="true" size="small" [label]="cfg.label"></p-button>
+          </div>
+        }
+      </div>
+    </ng-template>
+    </p-calendar>
+<div class="flex justify-content-end mt-2 gap-2">
+  <p-button size="small" [label]="'Apply' | translate" [outlined]="true" (onClick)="$event.preventDefault(); updateFilter()" />
+  @if (hasQueryParam) {
+    <p-button size="small" class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (onClick)="$event.preventDefault(); clearFilter()" />
+  }
 </div>

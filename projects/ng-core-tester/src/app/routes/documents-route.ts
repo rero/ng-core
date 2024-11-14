@@ -70,12 +70,17 @@ export class DocumentsRoute implements RouteInterface {
             aggregationsOrder: [
               'document_type',
               'author',
+              'year',
+              'acquisition',
               'library',
               'organisation',
               'language',
               'subject',
               'status'
             ],
+            listHeaders: {
+              Accept: 'application/rero+json, application/json'
+            },
             aggregationsExpand: ['document_type'],
             aggregationsBucketSize: 5,
             preprocessRecordEditor: (record: any): any => {

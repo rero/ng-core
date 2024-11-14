@@ -14,11 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, input, output } from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, input, output, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { RecordService } from '../record.service';
+import { DomHandler } from 'primeng/dom';
+import { OverlayOptions } from 'primeng/api';
 
 export interface IRecordType {
   field: string;
@@ -44,6 +46,11 @@ export interface IAutoComplete {
   selector: 'ng-core-search-autocomplete',
   template: `
     <p-autoComplete
+      #autoComplete
+      [overlayOptions]="overlayOptions"
+      dropdownIcon="pi pi-search"
+      [dropdown]="true"
+      dropdownMode="none"
       [styleClass]="styleClass()"
       [inputStyleClass]="inputStyleClass()"
       [delay]="delay()"
@@ -51,26 +58,27 @@ export interface IAutoComplete {
       [minLength]="minLength()"
       [placeholder]="placeholder()"
       [ngModel]="value()"
+      (ngModelChange)="currentValue = $event"
       [scrollHeight]="scrollHeight()"
       [suggestions]="suggestions()"
-      (completeMethod)="search($event)"
+      (completeMethod)="setSuggestionQuery($event)"
       (onSelect)="onSelectValue($event)"
+      (onKeyUp)="search($event)"
+      (onDropdownClick)="buttonClick($event)"
     >
     <ng-template let-item pTemplate="group">
       <div class="flex align-items-center" [ngClass]="groupClass()" [innerHTML]="item.label"></div>
     </ng-template>
     <ng-template let-item pTemplate="item">
-      <div class="flex align-items-center">
         @if(item.iconClass) {
-          <i class="mr-2" [ngClass]="item.iconClass"></i>
+          <i [ngClass]="item.iconClass"></i>&nbsp;
         }
-        <div [innerHTML]="item.label" [title]="item.originalLabel ? item.originalLabel : ''"></div>
-      </div>
+        <span [innerHTML]="item.label" [title]="item.originalLabel ? item.originalLabel : ''"></span>
     </ng-template>
     </p-autoComplete>
   `,
 })
-export class SearchAutocompleteComponent {
+export class SearchAutocompleteComponent implements AfterViewInit{
 
   protected recordService: RecordService = inject(RecordService);
 
@@ -84,26 +92,59 @@ export class SearchAutocompleteComponent {
   scrollHeight = input<string>('250px');
   styleClass = input<string>('w-full');
   value = input<string>();
+  currentValue: string = '';
 
   // Output
   onSelect = output();
+  onSearch = output<string>();
 
   // Whether to display options as grouped when nested options are provided.
   group = false;
+  overlayOptions: OverlayOptions = {};
+
+  @ViewChild('autoComplete') autoComplete: AutoComplete;
 
   // User Query
   private query = new Subject<string>();
+
+  buttonClick(event) {
+    this.onSearch.emit(this.currentValue);
+  }
 
   suggestions = toSignal(this.query.pipe(
     switchMap((query: string) => this.getSuggestions(query))
   ), { initialValue: []});
 
-  search(event: AutoCompleteCompleteEvent): void {
+  setSuggestionQuery(event: AutoCompleteCompleteEvent): void {
     this.query.next(event.query);
   }
 
   onSelectValue(event: AutoCompleteSelectEvent) {
     this.onSelect.emit(event.value);
+  }
+
+  search(event) {
+    if(event?.code === 'Enter') {
+      this.onSearch.emit(event.srcElement.value);
+    }
+  }
+  calculateWidth() {
+    let width = 200;
+    if (this.autoComplete) {
+      width = DomHandler.getOuterWidth(this.autoComplete.el.nativeElement);
+    }
+    this.overlayOptions = {
+      contentStyle: { width: width * 1 + 'px' }
+    };
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.calculateWidth();
+  }
+
+  ngAfterViewInit() {
+    this.calculateWidth();
   }
 
   private getSuggestions(query: string): any {
