@@ -44,19 +44,26 @@ export class SearchBarComponent implements OnInit {
     this.recordTypes = [
       {
         index: 'documents',
-        field: 'title',
+        field: 'autocomplete_title',
         groupLabel: this.translateService.instant('Documents'),
         processSuggestions: (data: any, query: string) => this.processDocuments(data, query),
         preFilters: this.viewcode() ? { view: this.viewcode() } : {}
       },
       {
-        index: 'organisations',
-        field: 'name',
-        groupLabel: this.translateService.instant('Organisations'),
-        processSuggestions: (data: any) => this.processOrganisations(data),
+        index: 'entities',
+        field: 'autocomplete_name',
+        groupLabel: this.translateService.instant('Entities'),
+        processSuggestions: (data: any) => this.processEntities(data),
         preFilters: this.viewcode() ? { view: this.viewcode() } : {}
       }
     ];
+  }
+  onSearch(query) {
+    this.router.navigate(['/record', 'search', 'documents'], {
+      queryParams: {
+        q: query
+      }
+    });
   }
 
   onSelect(event: IAutoComplete) {
@@ -73,11 +80,11 @@ export class SearchBarComponent implements OnInit {
         });
         this.router.navigate(['/record', 'search', 'documents', 'detail', event.value]);
         break;
-      case 'organisations':
+      case 'entities':
         this.messageService.add({
           severity: 'success',
-          summary: 'ORGANISATIONS',
-          detail: 'navigate to organisation: ' + event.value,
+          summary: 'ENTITIES',
+          detail: 'navigate to entity: ' + event.value,
           life: CONFIG.MESSAGE_LIFE
         });
         break;
@@ -100,14 +107,14 @@ export class SearchBarComponent implements OnInit {
     return values;
   }
 
-  private processOrganisations(data: Record): any {
+  private processEntities(data: Record): any {
     const values: IAutoComplete[] = [];
     data.hits.hits.map((hit: any) => {
       values.push({
-        iconClass: 'fa fa-industry',
+        iconClass: 'fa fa-user',
         id: hit.metadata.pid,
-        index: 'organisations',
-        label: hit.metadata.name,
+        index: 'entities',
+        label: hit.metadata.authorized_access_point_en,
         value: hit.metadata.pid,
       });
     });

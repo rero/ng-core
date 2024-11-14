@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@layer ng-core {
-  ng-core-editor {
-    .bd-toc, .bd-sidebar {
-        top: 4rem;
-        height: 100vh - 10vh;
-    }
+ng-core-editor {
+  .bd-toc,
+  .bd-sidebar {
+    top: 4rem;
+    height: 100vh - 10vh;
   }
 }

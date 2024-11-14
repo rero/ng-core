@@ -15,11 +15,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (buckets()) {
-  <ul class="list-none m-0 p-0">
+  <ul class="list-none text-sm m-0 p-0">
   @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
     <li>
         @if (bucket.doc_count) {
-          <div class="flex gap-1 align-items-center text-link-secondary mb-1">
+          <div class="flex gap-1 align-items-top text-link-secondary mb-1">
             <p-triStateCheckbox
               inputId="{{ bucket.aggregationKey }}-{{ index }}"
               variant="filled"
@@ -55,6 +55,6 @@
 }
 @if (displayMoreAndLessLink) {
   <div class="flex justify-content-end">
-    <span class="text-link" (onClick)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
+    <span class="text-link" (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
   </div>
 }

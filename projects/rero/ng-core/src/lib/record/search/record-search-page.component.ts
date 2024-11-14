@@ -17,11 +17,11 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
+import { MenuItem } from 'primeng/api';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/editor.component';
 import { RecordUiService } from '../record-ui.service';
-import { ISortOption } from './menu-sort/menu-sort.component';
 import { RecordSearchService } from './record-search.service';
 
 @Component({
@@ -241,7 +241,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     }
 
     const defaultSortValue = this.q ? 'defaultQuery' : 'defaultNoQuery';
-    config.sortOptions.forEach((option: ISortOption) => {
+    config.sortOptions.forEach((option: MenuItem) => {
       if (option[defaultSortValue] === true) {
         this.sort = option.value;
       }

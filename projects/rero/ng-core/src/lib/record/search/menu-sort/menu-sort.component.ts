@@ -17,15 +17,7 @@
 import { Component, computed, inject, input, output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DropdownChangeEvent } from 'primeng/dropdown';
-
-export interface ISortOption {
-  value: string;
-  label: string;
-  defaultQuery?: boolean;
-  defaultNoQuery?: boolean;
-  icon?: string;
-}
+import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 
 @Component({
   selector: 'ng-core-menu-sort',
@@ -37,42 +29,25 @@ export class MenuSortComponent {
   protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   /** Input */
-  config = input.required<ISortOption[]>();
+  config = input.required<MenuItem[]>();
   selectedValue = input<string>();
-  selectedOption = computed(() => this.config().find((conf: ISortOption) => conf.value === this.selectedValue()));
+  selectedOption = computed(() => this.config().find((conf: MenuItem) => conf.value === this.selectedValue()));
   options = computed(() => this.sortOptions());
 
   /** Change event */
   onChange = output<string>();
 
   /** Return the sort options from config. */
-  sortOptions(): ISortOption[] {
+  sortOptions(): MenuItem[] {
     return (this.config())
       ? this.config()
-          .map((option: ISortOption) => {
+          .map((option: MenuItem) => {
             option.label = this.translateService.instant(option.label);
+            option.command = (event: MenuItemCommandEvent) => this.onChange.emit(event.item.value);
             return option;
           })
-          .sort((a: ISortOption, b: ISortOption) => a.label.localeCompare(b.label))
+          .sort((a: MenuItem, b: MenuItem) => a.label.localeCompare(b.label))
       : [];
   }
 
-  // /**
-  //  * Return the current sort object.
-  //  * @returns SortOption
-  //  */
-  // get currentSortOption(): ISortOption {
-  //   const sortParam = this.activatedRoute.snapshot?.queryParamMap?.get(this.sortParamName());
-  //   return (sortParam && this.config().sortOptions)
-  //     ? this.config().sortOptions.find((item: ISortOption) => item.value === sortParam)
-  //     : null;
-  // }
-
-  /**
-   * Change sorting with select a new value in dropdown menu
-   * @param dropdownEvent - DropdownChangeEvent
-   */
-  changeSorting(dropdownEvent: DropdownChangeEvent): void {
-    this.onChange.emit(dropdownEvent.value);
-  }
 }

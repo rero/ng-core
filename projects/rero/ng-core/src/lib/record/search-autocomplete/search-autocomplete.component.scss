@@ -15,19 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-ng-core-card-wrapper {
-  // primeng bug?
-  span.p-fieldset-legend-text {
-    @extend .hidden;
+ng-core-search-autocomplete p-Autocomplete {
+  button {
+  @extend .text-gray-500, .bg-white, .border-300;
   }
-  .p-fieldset .p-fieldset-legend {
-    @extend .m-0;
-    span {
-      @extend .p-0;
-    }
-    ng-core-label-editor > div,
-    ng-core-editor-dropdown-label-editor > div {
-      @extend .ml-2;
-    }
+  li.p-autocomplete-item {
+    @extend .text-overflow-ellipsis;
   }
 }

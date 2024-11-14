@@ -47,7 +47,7 @@ import { ChangeEvent } from './paginator/paginator.component';
 import { TabViewChangeEvent } from 'primeng/tabview';
 import { IChecked } from './search-filters/search-filters.component';
 import { DropdownChangeEvent } from 'primeng/dropdown';
-import { ISortOption } from './menu-sort/menu-sort.component';
+import { MenuItem } from 'primeng/api';
 
 export interface SearchParams {
   currentType: string;
@@ -295,10 +295,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         });
   }
 
-  get selectedSortValue(): ISortOption {
+  get selectedSortValue(): MenuItem {
     const sortParam = this.activatedRoute.snapshot?.queryParamMap?.get('sort');
     return (sortParam && this.config.sortOptions)
-      ? this.config.sortOptions.find((item: ISortOption) => item.value === sortParam)?.value
+      ? this.config.sortOptions.find((item: MenuItem) => item.value === sortParam)?.value
       : null;
   }
 
