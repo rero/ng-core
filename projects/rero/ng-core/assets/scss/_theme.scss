@@ -15,50 +15,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@layer ng-core {
-  :root {
-    font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
-      sans-serif;
-    --font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial,
-      sans-serif;
+a {
+  @extend .no-underline;
+ }
 
-    @extend .text-sm;
+a:not(.p-button):not(.p-element):not([role=button]):not([role=tab]) {
+  color: var(--blue-500);
+}
 
-    a {
-      @extend .text-blue-500, .no-underline;
-    }
+a:hover:not(.p-button):not(.p-element):not([role=button]):not([role=tab]) {
+  color: var(--blue-600);
+  @extend .text-blue-600, .underline;
+}
 
-    a:hover {
-      @extend .text-blue-600, .underline;
-    }
+.p-submenu-list {
+  z-index: 1000;
+}
 
-    .p-submenu-list {
-      z-index: 1000;
-    }
-
-    .p-menuitem {
-      a {
-        @extend .text-color;
-      }
-      a:hover {
-        @extend .no-underline;
-      }
-    }
-
-    dl.metadata {
-      @extend .grid, .my-0, .w-full;
-      dt {
-        @extend .font-bold, .col-12, .py-0;
-        @include styleclass('md:col-4');
-      }
-      dd {
-        @extend .col-12, .py-0;
-        @include styleclass('md:col-8');
-        margin-inline-start: 0;
-      }
-    }
-    .p-menubar {
-      @extend .mb-0, .border-none, .bg-white;
-    }
+.p-menuitem {
+  a {
+    @extend .text-color;
   }
+  a:hover {
+    @extend .no-underline;
+  }
+}
+
+dl.metadata {
+  @extend .grid, .my-0, .w-full;
+  dt {
+    @extend .font-bold, .col-12, .py-0;
+    @include styleclass('md:col-4');
+  }
+  dd {
+    @extend .col-12, .py-0, .m-0;
+    @include styleclass('md:col-8');
+  }
+}
+
+.p-menubar {
+  @extend .mb-0, .border-none, .bg-white;
+}
+
+// bootstrap patches
+label {
+  @extend .m-0;
+}
+
+legend {
+  @extend .text-base;
+  width: auto;
 }

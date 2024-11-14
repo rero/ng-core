@@ -371,23 +371,23 @@ const routes: Routes = [
               label: 'Relevance',
               value: 'relevance',
               defaultQuery: true,
-              icon: 'fa-sort-amount-desc'
+              icon: 'fa fa-sort-amount-desc'
             },
             {
               label: 'Date descending',
               value: 'newest',
               defaultNoQuery: true,
-              icon: 'fa-sort-amount-desc'
+              icon: 'fa fa-sort-amount-desc'
             },
             {
               label: 'Date ascending',
               value: 'oldest',
-              icon: 'fa-sort-amount-asc'
+              icon: 'fa fa-sort-amount-asc'
             },
             {
               label: 'Title',
               value: 'title',
-              icon: 'fa-sort-alpha-asc'
+              icon: 'fa fa-sort-alpha-asc'
             }
           ],
           exportFormats: [

@@ -23,13 +23,13 @@
       [size]="aggregation().bucketSize" />
   </div>
 } @else {
-  <p-panel
-    styleClass="mb-2"
-    [header]="(aggregation().name || aggregation().key) | translate | ucfirst"
+  <p-fieldset
+    [legend]="(aggregation().name || aggregation().key) | translate | ucfirst"
     [toggleable]="true"
     [collapsed]="!isAggregationDisplayed"
     (collapsedChange)="toggleVisibility()"
   >
+  <div class="p-2">
   @switch (aggregation().type) {
     @case ('range') {
       <ng-core-aggregation-slider
@@ -58,5 +58,6 @@
       }
     }
   }
-  </p-panel>
+</div>
+</p-fieldset>
 }

@@ -54,7 +54,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 @Component({
   selector: 'ng-core-primeng-select',
   template: `
-  <div class="card flex justify-content-center">
+  <div class="flex justify-content-center">
      <p-dropdown
       [appendTo]="props.appendTo"
       [class]="props.class"

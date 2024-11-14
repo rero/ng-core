@@ -14,27 +14,23 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="flex">
-  <div class="flex-auto mr-1">
+<p-inputGroup>
     <p-inputNumber
-      styleClass="w-full"
-      [ngModel]="range[0]"
+      class="mr-1"
+      inputId="integeronly"
+      [(ngModel)]="range[0]"
       [min]="range[0]"
       [max]="range[1]" />
-  </div>
-  <div class="flex-auto">
     <p-inputNumber
-      styleClass="w-full"
-      [ngModel]="range[1]"
+      class="ml-1"
+      inputId="integeronly"
+      [(ngModel)]="range[1]"
       [min]="range[0]"
       [max]="range[1]" />
-  </div>
-</div>
-<div class="flex mt-2">
-  <div class="flex flex-auto justify-content-center">
-    <p-button [label]="'Apply' | translate" [outlined]="true" (onClick)="$event.preventDefault(); updateFilter()" />
+</p-inputGroup>
+<div class="flex justify-content-end mt-2 gap-2">
+    <p-button size="small" [label]="'Apply' | translate" [outlined]="true" (onClick)="$event.preventDefault(); updateFilter()" />
     @if (hasQueryParam) {
-      <p-button class="ml-1" [label]="'Clear filter' | translate" [outlined]="true" (onClick)="$event.preventDefault(); clearFilter()" />
+      <p-button size="small" [label]="'Clear filter' | translate" [outlined]="true" (onClick)="$event.preventDefault(); clearFilter()" />
     }
-  </div>
 </div>

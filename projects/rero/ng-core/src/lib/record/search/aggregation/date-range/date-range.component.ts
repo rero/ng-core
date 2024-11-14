@@ -18,6 +18,7 @@
 import { Component, OnDestroy, OnInit, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RecordSearchService } from '../../record-search.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'ng-core-aggregation-date-range',
@@ -26,6 +27,7 @@ import { RecordSearchService } from '../../record-search.service';
 export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   protected recordSearchService: RecordSearchService = inject(RecordSearchService);
+  protected translateService: TranslateService = inject(TranslateService);
 
   // COMPONENTS ATTRIBUTES ====================================================
   // Buckets list
@@ -44,6 +46,7 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 
   /** True if route have aggregation query param. */
   hasQueryParam = false;
+  buttonConfig = [];
 
   /** Subscription to search service. */
   private searchServiceSubscription: Subscription;
@@ -53,10 +56,15 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
     // Define min/max values if not exists
     if (this.config().min && this.config().min !== null) {
       this.minDate = new Date(this.config().min);
+    } else{
+      this.minDate = new Date(1900, 0, 0);
     }
     if (this.config().max && this.config().max !== null) {
       this.maxDate = new Date(this.config().max);
+    } else {
+      this.maxDate = new Date();
     }
+    this.dateRangeModel = [this.minDate, this.maxDate];
 
     this.searchServiceSubscription = this.recordSearchService.aggregationsFilters.subscribe((filters: any) => {
       if (!filters) {
@@ -66,10 +74,30 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
       this.hasQueryParam = filter !== undefined;
       this.dateRangeModel = (filter)
         ? filter.values[0].split('--').map((item: string) => new Date(+item))  // split filter data and transform each part into Date
-        : [];
+        :  [this.minDate, this.maxDate];
     });
+    const today = new Date();
+    this.buttonConfig = [
+    {
+      value: [new Date(new Date().setDate(today.getDate() - 31)), today],
+      label: this.translateService.instant('Last month')
+    }, {
+      value: [new Date(new Date().setDate(today.getDate() - 366)), today],
+      label: this.translateService.instant('Last year')
+    }, {
+      value: [new Date(today.getFullYear(), today.getMonth(), 1), new Date(today.getFullYear(), today.getMonth() + 1, 0)],
+      label: this.translateService.instant('This month')
+    },
+    {
+      value: [new Date(today.getFullYear(), 0, 1), new Date(today.getFullYear() + 1, 0, 1)],
+      label: this.translateService.instant('This year')
+    }
+  ];
   }
-
+  setRange(value) {
+    this.dateRangeModel = value;
+    this.updateFilter();
+  }
   /** OnDestroy hook */
   ngOnDestroy(): void {
     this.searchServiceSubscription.unsubscribe();

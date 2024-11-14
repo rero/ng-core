@@ -16,10 +16,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div class="flex align-items-start">
-  <div class="flex flex-auto">
+  <div class="flex-grow-1">
     <ng-container #item></ng-container>
   </div>
-  <div class="flex flex-auto justify-content-end ml-2">
+  <div class="flex flex-none gap-2 justify-content-end ml-2">
     @if (adminMode.can) {
         <!-- use button -->
         @if (useStatus && useStatus.can && useStatus.url) {
@@ -45,17 +45,13 @@
 
         <!-- delete button -->
         @if (deleteStatus) {
-          <span class="ml-2">
-            @if (deleteStatus) {
-              <p-button
-                [outlined]="true"
-                severity="danger"
-                [ariaLabel]="'Delete' | translate"
-                (onClick)="deleteRecord(record.id, deleteStatus?.type)"
-                icon="fa fa-trash"
-              />
-            }
-          </span>
+          <p-button
+            [outlined]="true"
+            severity="danger"
+            [ariaLabel]="'Delete' | translate"
+            (onClick)="deleteRecord(record.id, deleteStatus?.type)"
+            icon="fa fa-trash"
+          />
         }
     }
   </div>

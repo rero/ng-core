@@ -15,23 +15,14 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (options().length > 0) {
-<p-dropdown
-  [placeholder]="'select…' | translate"
-  [options]="options()"
-  [ngModel]="selectedOption()?.value"
-  (onChange)="changeSorting($event)"
->
-  <ng-template pTemplate="selectedItem" let-item>
-    @if(item.icon) {
-    <i class="fa {{ item.icon }} mr-2"></i>
+<p-menu #menu [model]="options()" [popup]="true" />
+<p-button severity="secondary" outlined (onClick)="menu.toggle($event)">
+  <div class="flex gap-3 align-items-center">
+    @if (selectedOption()?.icon) {
+      <i [ngClass]="selectedOption().icon"></i>
     }
-    {{ item.label }}
-  </ng-template>
-  <ng-template let-item pTemplate="item">
-    @if(item.icon) {
-    <i class="fa {{ item.icon }} mr-2"></i>
-    }
-    {{item.label }}
-  </ng-template>
-</p-dropdown>
+  {{ selectedOption()?.label | translate }}&nbsp;…
+  <i class="fa fa-caret-down"></i>
+</div>
+</p-button>
 }

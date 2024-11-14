@@ -26,6 +26,7 @@ import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from "primeng/dropdown";
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -46,6 +47,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { FieldsetModule } from 'primeng/fieldset';
+import { MenuModule } from 'primeng/menu';
 
 
 @NgModule({
@@ -65,6 +67,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     ClipboardModule,
     ConfirmDialogModule,
     DialogModule,
+    DividerModule,
     DropdownModule,
     DynamicDialogModule,
     FieldsetModule,
@@ -85,6 +88,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     ToastModule,
     TooltipModule,
     TriStateCheckboxModule,
+    MenuModule
   ]
 })
 export class PrimeNgCoreModule { }

@@ -88,7 +88,7 @@
     />
     <ng-content select="[top-search-result]"></ng-content>
     @if ((aggregations && aggregations.length) || searchFields.length > 0 || searchFilters.length > 0) {
-    <div class="col-2">
+    <div class="md:col-5 lg:col-3 col-12">
       @if (searchFields.length > 0 && q) {
       <div class="mb-3">
         <span class="mr-1" translate>Search in</span>
@@ -126,7 +126,7 @@
       } }
     </div>
     }
-    <div id="recordlist" class="col-10">
+    <div id="recordlist" class="md:col-7 lg:col-9 col-12">
       @if (showEmptySearchMessage) {
       <p-messages
         [value]="[{ severity: 'info', detail: 'Enter a query to get results.' | translate }]"
@@ -135,7 +135,7 @@
       />
       }
       <ng-content select="[top-result]"/>
-      <p-dataView [value]="records">
+      <p-dataView [value]="records" [emptyMessage]="' '">
         <ng-template pTemplate="list" let-records>
           <ul class="p-0 m-0">
             @for (record of records; track record ; let first = $first) {

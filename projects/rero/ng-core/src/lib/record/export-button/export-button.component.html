@@ -40,15 +40,13 @@
     }
   } @else {
     <!-- display multiple export formats as dropdown list -->
-    <p-splitButton
-      [model]="exportOptions()"
-      styleClass="mx-1"
-      outlined
-    >
-      <ng-template pTemplate="content">
-        <i class="pi pi-cloud-download mr-2"></i>
-        {{ 'Export as' | translate }} …
-      </ng-template>
-    </p-splitButton>
+      <p-menu #menu [model]="exportOptions()" [popup]="true" />
+      <p-button severity="secondary" outlined (onClick)="menu.toggle($event)">
+        <div class="flex gap-3 align-items-center">
+        <i class="fa fa-download"></i>
+        {{ 'Export as' | translate }}&nbsp;…
+        <i class="fa fa-caret-down"></i>
+      </div>
+      </p-button>
   }
 }

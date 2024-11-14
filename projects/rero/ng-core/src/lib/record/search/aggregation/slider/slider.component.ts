@@ -58,7 +58,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
           if (!filters) {
             return;
           }
-          let filter = filters.find((element: any) => element.key === this.key);
+          let filter = filters.find((element: any) => element.key === this.key());
           if (filter) {
             filter = filter.values[0].split('--').map((item: string) => +item);
             this.hasQueryParam = true;
