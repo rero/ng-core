@@ -81,7 +81,6 @@
   <div class="grid">
     <ng-core-list-filters
       class="col-12"
-      [aggregations]="aggregations"
       [aggregationsFilters]="aggregationsFilters"
       [searchFilters]="searchFilters"
       (remove)="removeFilter($event)"
@@ -95,7 +94,7 @@
         <p-dropdown
           class="w-full"
           placeholder="…"
-          [optionValue]="path"
+          [optionValue]="'path'"
           [options]="searchFields"
           [showClear]="true"
           (onChange)="searchInField($event)"
@@ -106,7 +105,7 @@
       <ng-core-search-filters
         [searchFilters]="searchFilters"
         [config]="config"
-        [query]="query"
+        [query]="q"
         styleClassSection="my-2"
         (onChange)="onChangeSearchFilter($event)"
       />
