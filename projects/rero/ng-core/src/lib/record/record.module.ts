@@ -194,7 +194,9 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         NgCoreFormlyRemoteAutocompleteModule,
         NgCoreFormlySelectModule,
         MenuSortComponent,
-        NgCoreFormlyTreeSelectModule
+        NgCoreFormlyTreeSelectModule,
+        SearchTabsComponent,
+        PaginatorComponent
     ],
     providers: [
         {
