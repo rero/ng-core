@@ -118,8 +118,7 @@ h6,
 }
 
 .alternate-color > * {
-  @extend .block;
-
+  display: block;
   &:nth-child(even) {
     @extend .surface-100;
   }

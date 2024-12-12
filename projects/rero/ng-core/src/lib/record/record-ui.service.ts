@@ -90,7 +90,6 @@ export class RecordUiService {
    * @param message Message to display
    */
   showDeleteMessage(message: string): void {
-    console.log('delete');
     this.confirmationService.confirm({
       acceptLabel: this.translateService.instant('OK'),
       rejectVisible: false,

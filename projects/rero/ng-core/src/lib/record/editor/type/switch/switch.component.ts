@@ -19,7 +19,6 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 
 interface SwitchProps extends FormlyFieldProps {
-  indeterminate: boolean;
   hideLabel: boolean;
 }
 
@@ -29,13 +28,13 @@ interface SwitchProps extends FormlyFieldProps {
 @Component({
   selector: 'ng-core-editor-formly-field-switch',
   template: `
-    <div class="custom-control custom-switch">
-      <input class="custom-control-input" type="checkbox"
-        [class.is-invalid]="showError"
-        [indeterminate]="props.indeterminate && formControl.value === null"
+    <div class="flex gap-2 align-items-center">
+      <p-inputSwitch
+      [ngClass]="{'ng-invalid ng-dirty': showError }"
         [formControl]="formControl"
-        [formlyAttributes]="field">
-      <label class="custom-control-label" [for]="id" [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</label>
+        [formlyAttributes]="field"
+      />
+      <label [for]="id" [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</label>
     </div>
   `,
 })
@@ -43,7 +42,6 @@ export class SwitchComponent extends FieldType<FormlyFieldConfig<SwitchProps>> {
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<SwitchProps>> = {
     props: {
-      indeterminate: true,
       hideLabel: true,
     },
   };
