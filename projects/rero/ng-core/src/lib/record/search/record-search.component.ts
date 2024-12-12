@@ -843,7 +843,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       page: this.page,
       size: this.size,
       currentType: this.config.key,
-      index: this.config.index,
       aggregationsFilters: this.aggregationsFilters,
       sort: this.sort,
     });

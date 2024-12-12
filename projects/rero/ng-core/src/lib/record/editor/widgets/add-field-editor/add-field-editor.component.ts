@@ -89,7 +89,6 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
   onSelect(event: AutoCompleteSelectEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
-    console.log('clear');
     this.autocomplete.clear();
   }
 
