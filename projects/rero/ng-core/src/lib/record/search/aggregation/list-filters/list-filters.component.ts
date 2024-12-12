@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, OnChanges, output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface IFilter {
@@ -30,6 +30,11 @@ export interface IFilter {
 export class ListFiltersComponent {
 
   protected translateService: TranslateService = inject(TranslateService);
+
+  /**
+   * All aggregations
+   */
+  aggregations = input<any[]>();
 
   // Selected aggregations filters
   aggregationsFilters = input<any>();
@@ -83,9 +88,38 @@ export class ListFiltersComponent {
         });
       }
     });
+    this.aggregations().map((item: any) => {
+        this.getFilterNames(item.value.buckets, filters);
+    });
 
     return filters;
   }
+
+    /**
+   * Get displayed name of bucket
+   * and fill in filters list.
+   *
+   * @param buckets - Bucket to get the name from.
+   */
+    getFilterNames(buckets: any, filters) {
+      if (!buckets || buckets.length === 0) {
+        return;
+      }
+      buckets.map((bucket: any) => {
+        for (const k in bucket) {
+          if (bucket[k].buckets) {
+            this.getFilterNames(bucket[k].buckets, filters);
+          }
+        }
+        if (bucket.name) {
+          const index = filters.findIndex((filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
+          if (index > -1) {
+            filters[index].name = bucket.name;
+            filters[index] = {...filters[index]};
+          }
+        }
+      });
+    }
 
   /**
    * Remove filter.

@@ -20,7 +20,7 @@
 <ng-core-label-editor [field]="field" />
 }
 
-<div [ngClass]="{ 'ml-3': field.props.hideLabel !== true }">
+<div>
   <!--  validation error message -->
   @if (showError && formControl.errors) {
   <div class="text-error my-2">

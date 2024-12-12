@@ -20,7 +20,7 @@ import { FieldWrapper } from '@ngx-formly/core';
 @Component({
   selector: 'ng-core-form-field-wrapper',
   template: `
-    <div [ngClass]="props.cssClass" [class.has-error]="showError">
+    <div class="py-2 flex flex-column gap-2" [ngClass]="props.cssClass" [class.has-error]="showError">
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
         <label [attr.for]="id" [pTooltip]="props.description" tooltipPosition="top">

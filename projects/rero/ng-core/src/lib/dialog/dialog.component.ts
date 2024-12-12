@@ -20,6 +20,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Component({
   selector: 'ng-core-dialog',
   template: `
+  <div class="flex flex-column gap-2">
     <div class="flex" [innerHtml]="config.data.body|nl2br"></div>
     <div class="flex justify-content-end gap-2">
       <p-button [label]="config.data.cancelTitleButton || 'Cancel' | translate" severity="secondary" (onClick)="cancel()" />
@@ -27,6 +28,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
         <p-button [label]="config.data.confirmTitleButton || 'OK' | translate" (onClick)="confirm()" />
       }
     </div>
+  </div>
   `
 })
 export class DialogComponent {

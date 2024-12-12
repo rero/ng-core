@@ -54,7 +54,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           />
         </div>
       }
-      <div class="flex ml-1 w-full">
+      <div class="flex w-full">
         <p-autoComplete
           class="w-full"
           styleClass="w-full"
@@ -70,10 +70,10 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           (onSelect)="onSelect($event)"
         >
           <ng-template let-data pTemplate="item">
-            <div class="flex">
+            <div class="flex gap-1">
               <div class="flex" [innerHTML]="data.label"></div>
               @if (data.link) {
-                <a class="ml-2 text-700" [href]="data.link" target="_blank">
+                <a class="text-color-secondary" [href]="data.link" target="_blank">
                   <i class="fa fa-external-link"></i>
                 </a>
               }
@@ -85,9 +85,9 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
         </p-autoComplete>
       </div>
     } @else {
-      <div class="py-1">
+      <div class="flex gap-1 align-items-center">
         <span [innerHtml]="valueSelected()"></span>
-        <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="clear()" styleClass="ml-1" />
+        <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="clear()" />
       </div>
     }
   </div>

@@ -21,15 +21,14 @@
       [label]="'Back'|translate"
       severity="secondary"
       [text]="true"
-      (onClick)="$event.preventDefault(); goBack()"
+      (onClick)="goBack()"
     />
   </div>
-  <div class="flex align-items-center justify-content-end w-full">
+  <div class="flex align-items-center gap-1 justify-content-end w-full">
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode().can) {
       @if (useStatus && useStatus.can && useStatus.url) {
         <p-button id="detail-use-button"
-          class="ml-1"
           icon="fa fa-hand-o-right"
           [label]="'Use'|translate"
           [outlined]="!isPrimaryAction('use')"
@@ -39,7 +38,6 @@
       }
       @if (updateStatus() && updateStatus().can) {
         <p-button id="detail-edit-button"
-          class="ml-1"
           icon="fa fa-pencil"
           [label]="'Edit'|translate"
           [outlined]="!isPrimaryAction('use')"
@@ -50,7 +48,6 @@
       @if (deleteStatus()) {
         <p-button id="detail-delete-button"
           disabled
-          class="ml-1"
           icon="fa fa-trash"
           [outlined]="true"
           severity="danger"
