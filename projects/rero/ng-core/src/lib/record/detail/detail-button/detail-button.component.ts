@@ -52,23 +52,6 @@ export class DetailButtonComponent {
   /** Delete record message event */
   deleteMessageEvent = output<string>();
 
-  /**
-   * define if an action is the primary action for the resource
-   * @param actionName - string: the action name to check
-   * @return boolean
-   */
-  isPrimaryAction(actionName: string): boolean {
-    switch (actionName) {
-      case 'edit':
-      case 'update':
-        return this.updateStatus() && this.updateStatus().can && (!this.useStatus() || !this.useStatus().can);
-      case 'use':
-        return this.useStatus() && this.useStatus().can;
-      default:
-        return false;
-    }
-  }
-
   /** Use the record */
   useRecord(): void {
     this.recordEvent.emit({ action: 'use', url: this.updateStatus().url })
