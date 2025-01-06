@@ -27,11 +27,10 @@
   <div class="flex align-items-center gap-1 justify-content-end w-full">
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode().can) {
-      @if (useStatus && useStatus.can && useStatus.url) {
+      @if (useStatus() && useStatus().can && useStatus().url) {
         <p-button id="detail-use-button"
           icon="fa fa-hand-o-right"
           [label]="'Use'|translate"
-          [outlined]="!isPrimaryAction('use')"
           (onClick)="useRecord()"
           translate
         />
@@ -40,20 +39,27 @@
         <p-button id="detail-edit-button"
           icon="fa fa-pencil"
           [label]="'Edit'|translate"
-          [outlined]="!isPrimaryAction('use')"
+          [outlined]="useStatus()?.can"
           (onClick)="updateRecord(record())"
           translate
         />
       }
       @if (deleteStatus()) {
-        <p-button id="detail-delete-button"
-          disabled
+        <p-button
           icon="fa fa-trash"
-          [outlined]="true"
           severity="danger"
-          [label]="'Delete'|translate"
+          class="pointer-events-auto"
+          outlined
           (onClick)="deleteRecord(record())"
+          [pTooltip]="tooltipContent"
+          tooltipPosition="bottom"
+          [disabled]="!deleteStatus().can"
+          [label]="'Delete'|translate"
+          [tooltipDisabled]="deleteStatus().can"
         />
+        <ng-template #tooltipContent>
+          <span [innerHTML]="deleteStatus().message"></span>
+        </ng-template>
       }
     }
     <ng-content select="[afterButton]"/>

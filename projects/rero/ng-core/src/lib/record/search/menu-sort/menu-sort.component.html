@@ -20,8 +20,14 @@
   <div class="flex gap-3 align-items-center">
     @if (selectedOption()?.icon) {
       <i [ngClass]="selectedOption().icon"></i>
+    } @else if (selectedOption()) {
+      {{'Sort by' | translate }}&nbsp;:
     }
-  {{ selectedOption()?.label | translate }}&nbsp;…
+    @if (selectedOption()?.label) {
+      {{ selectedOption()?.label | translate }}
+    } @else {
+      {{'Sort by' | translate }}&nbsp;…
+    }
   <i class="fa fa-caret-down"></i>
 </div>
 </p-button>

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit, Type } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, NgModule, OnInit, Type } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule as FormlyCoreSelectModule, FormlyFieldSelectProps } from '@ngx-formly/core/select';
@@ -53,9 +53,10 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 
 @Component({
   selector: 'ng-core-primeng-select',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-  <div class="flex justify-content-center">
-     <p-dropdown
+  @if(selectOptions) {
+    <p-dropdown
       [appendTo]="props.appendTo"
       [class]="props.class"
       [dropdownIcon]="props.dropdownIcon"
@@ -90,7 +91,8 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
           <div class="option-group"><hr></div>
         }
       </ng-template>
-     </p-dropdown>
+    </p-dropdown>
+  }
   `,
   styles: `
   :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
@@ -111,6 +113,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 })
 export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> implements OnInit {
 
+  protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
     defaultValue: null,
@@ -131,7 +134,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
     }
   };
 
-  selectOptions: any[] = [];
+  selectOptions: any[];
 
   ngOnInit(): void {
     if (!isObservable(this.props.options)) {
@@ -156,6 +159,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       } else {
         this.selectOptions = this.props.sort ? this.sortOptions(options) : options;
       }
+      this.cd.markForCheck();
     });
   }
 

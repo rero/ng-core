@@ -25,9 +25,9 @@
         @if (useStatus && useStatus.can && useStatus.url) {
           <p-button
             [outlined]="true"
-            severity="danger"
             [ariaLabel]="'Use' | translate"
             (onClick)="useRecord()"
+            [title]="'Use' | translate"
             icon="fa fa-hand-o-right"
           />
         }
@@ -37,7 +37,6 @@
           <p-button
             [outlined]="true"
             [ariaLabel]="'Edit' | translate"
-            (onClick)="editRecord(record.id, updateStatus?.routerLink)"
             [routerLink]="updateStatus.routerLink || ['edit', record.id]"
             icon="fa fa-pencil"
           />
@@ -46,12 +45,20 @@
         <!-- delete button -->
         @if (deleteStatus) {
           <p-button
-            [outlined]="true"
-            severity="danger"
-            [ariaLabel]="'Delete' | translate"
-            (onClick)="deleteRecord(record.id, deleteStatus?.type)"
-            icon="fa fa-trash"
-          />
+          icon="fa fa-trash"
+          severity="danger"
+          class="pointer-events-auto"
+          outlined
+          [title]="'Delete'|translate"
+          (onClick)="deleteRecord(record.id, deleteStatus?.type)"
+          [pTooltip]="tooltipContent"
+          tooltipPosition="top"
+          [disabled]="!deleteStatus.can"
+          [tooltipDisabled]="deleteStatus.can"
+        />
+        <ng-template #tooltipContent>
+          <span [innerHTML]="deleteStatus.message"></span>
+        </ng-template>
         }
     }
   </div>

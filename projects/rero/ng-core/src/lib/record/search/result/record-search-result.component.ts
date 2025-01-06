@@ -143,15 +143,6 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Edit a record
-   * @param pid - string: the pid to edit
-   */
-  editRecord(pid: string, url?: string[]): void {
-    const params = url ?? ['/', 'records', this.type, 'edit', pid];
-    this.router.navigate(params);
-  }
-
-  /**
    * Use a record
    */
   useRecord() {
