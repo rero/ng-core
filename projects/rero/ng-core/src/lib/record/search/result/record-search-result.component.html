@@ -22,7 +22,7 @@
   <div class="flex flex-none gap-2 justify-content-end ml-2">
     @if (adminMode.can) {
         <!-- use button -->
-        @if (useStatus && useStatus.can && useStatus.url) {
+        @if (useStatus?.can && useStatus?.url) {
           <p-button
             [outlined]="true"
             [ariaLabel]="'Use' | translate"
@@ -33,7 +33,7 @@
         }
 
         <!-- edit button -->
-        @if (updateStatus && updateStatus.can) {
+        @if (updateStatus?.can) {
           <p-button
             [outlined]="true"
             [ariaLabel]="'Edit' | translate"
@@ -43,7 +43,7 @@
         }
 
         <!-- delete button -->
-        @if (deleteStatus) {
+        @if (deleteStatus?.can || deleteStatus?.message) {
           <p-button
           icon="fa fa-trash"
           severity="danger"
