@@ -14,17 +14,16 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="flex align-items-stretch w-full">
-  <div class="flex align-items-center w-full">
-    <p-button
-      icon="fa fa-arrow-left"
-      [label]="'Back'|translate"
-      severity="secondary"
-      [text]="true"
-      (onClick)="goBack()"
-    />
-  </div>
-  <div class="flex align-items-center gap-1 justify-content-end w-full">
+<div class="flex justify-content-between flex-wrap mb-3">
+  <p-button
+    styleClass="flex-grow-1"
+    icon="fa fa-arrow-left"
+    [label]="'Back'|translate"
+    severity="secondary"
+    [text]="true"
+    (onClick)="goBack()"
+  />
+  <div class="flex flex-wrap align-items-center gap-1">
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode().can) {
       @if (useStatus() && useStatus().can && useStatus().url) {
