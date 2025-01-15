@@ -21,10 +21,9 @@ import { isEmpty, removeEmptyValues } from '../../utils';
 @Component({
   selector: 'ng-core-editor-formly-toggle-wrapper',
   template: `
-    <div class='toggle-wrapper'>
-        <div class="custom-control custom-switch">
-          <input class="custom-control-input" type="checkbox" id="toggle-switch-{{ field.id }}"
-            (change)="toggle($event)" [checked]="tsOptions.enabled">
+        <div class="flex gap-2">
+          <p-inputSwitch  id="toggle-switch-{{ field.id }}"
+            (onChange)="toggle($event)" [ngModel]="tsOptions.enabled" />
           <label class="custom-control-label" for="toggle-switch-{{ field.id }}"
             [pTooltip]="tsOptions.description|translate" tooltipPosition="top"
           >{{ tsOptions.label | translate }}</label>
@@ -32,7 +31,6 @@ import { isEmpty, removeEmptyValues } from '../../utils';
       @if (tsOptions.enabled) {
         <ng-container #fieldComponent></ng-container>
       }
-    </div>
   `
 })
 export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
@@ -75,7 +73,8 @@ export class ToggleWrapperComponent extends FieldWrapper implements OnInit {
       // toggle switch will became 'false', so just reset the field.
       //   Resetting the field will change its value and so the `valueChanges` Observer will be called. The toggle `enabled` value will
       //   be update (to false) by this method.
-      this.field.formControl.reset();  // reset all children fields
+      this.field.formControl.setErrors(null);
+      this.field.formControl.reset(this.field.defaultValue);  // reset all children fields
     } else {
       this.tsOptions.enabled = true;
       this.field.formControl.enable({emitEvent: false});
