@@ -45,7 +45,7 @@ export class JSONSchemaService {
   processField(field: FormlyFieldConfig, jsonSchema: JSONSchema7) {
     // initial population of arrays with a minItems constraints
     if (field.type === 'array' && jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
-      field.defaultValue = new Array(jsonSchema.minItems);
+      field.defaultValue = new Array(jsonSchema.minItems).fill(null);
     }
     // If 'format' is defined into the jsonSchema, use it as props to try a validation on this field.
     // See: `email.validator.ts` file
