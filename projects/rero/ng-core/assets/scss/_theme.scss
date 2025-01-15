@@ -44,11 +44,11 @@ a:hover:not(.p-button):not(.p-element):not([role=button]):not([role=tab]) {
 dl.metadata {
   @extend .grid, .my-0, .w-full, .p-2;
   dt {
-    @extend .font-bold, .col-12, .py-0;
+    @extend .font-bold, .col-12, .py-0, .mx-0, .my-1;
     @include styleclass('md:col-4');
   }
   dd {
-    @extend .col-12, .py-0, .m-0;
+    @extend .col-12, .py-0, .mx-0, .my-1;
     @include styleclass('md:col-8');
   }
 }
