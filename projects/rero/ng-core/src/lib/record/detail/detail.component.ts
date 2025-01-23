@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { isObservable, Observable, of, Subscription } from 'rxjs';
+import { catchError, isObservable, map, Observable, of, Subscription, tap } from 'rxjs';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
@@ -100,11 +100,14 @@ export class DetailComponent implements OnInit, OnDestroy {
       this.config = this.recordUiService.getResourceConfig(this.type);
 
       const type = this.config.index || this.config.key;
-      this.record$ = this.recordService.getRecord(type, pid, 1, this.config.itemHeaders || null);
-      this.record$.subscribe({
-        next: (record) => {
+      this.record$ = this.recordService.getRecord(type, pid, 1, this.config.itemHeaders || null).pipe(
+        catchError((error) => {
+          this.error = error;
+          this.spinner.hide();
+          return of(null);
+        }),
+        tap(record => {
           this.record = record;
-
           this.recordUiService.canReadRecord$(this.record, this.type).subscribe(result => {
             if (result.can === false) {
               this.messageService.add({
@@ -134,13 +137,8 @@ export class DetailComponent implements OnInit, OnDestroy {
           }
 
           this.spinner.hide();
-        },
-        error: (error) => {
-          this.error = error;
-          this.spinner.hide();
-        }
-      });
-
+        })
+      );
       this.loadRecordView();
     });
   }

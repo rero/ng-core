@@ -30,8 +30,8 @@ import { FieldWrapper } from '@ngx-formly/core';
           }
         </label>
       }
-      <div class="flex align-content-center w-full gap-1">
-        <div class="flex gap-1 w-full align-items-center">
+      <div class="flex align-content-center flex-grow-1 gap-1">
+        <div class="flex-grow-1">
           <!-- field -->
           <ng-template #fieldComponent></ng-template>
         </div>
