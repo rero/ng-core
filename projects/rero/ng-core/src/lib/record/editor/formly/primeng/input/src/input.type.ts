@@ -21,6 +21,8 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
   type: 'input' | Type<NgCoreFormlyFieldInput>;
   addonRight?: string[];
   addonLeft?: string[];
+  class?: string;
+  styleClass?: string;
 }
 
 @Component({
@@ -36,13 +38,21 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           @if (props.type !== 'number') {
             <input
               pInputText
-              class="w-full"
+              [class]="props.class"
+              [styleClass]="props.class"
               [type]="props.type || 'text'"
               [formControl]="formControl"
               [formlyAttributes]="field"
             />
           } @else {
-            <input type="number" pInputText [formControl]="formControl" [formlyAttributes]="field" />
+            <input
+              [class]="props.class"
+              [styleClass]="props.class"
+              type="number"
+              pInputText
+              [formControl]="formControl"
+              [formlyAttributes]="field"
+            />
           }
           @if (props.addonRight) {
             @for (prop of props.addonRight; track prop) {
@@ -54,16 +64,34 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
       @if (props.type !== 'number') {
         <input
           pInputText
-          class="w-full"
+          [class]="props.class"
+          [styleClass]="props.class"
           [type]="props.type || 'text'"
           [formControl]="formControl"
           [formlyAttributes]="field"
         />
       } @else {
-        <input type="number" pInputText [formControl]="formControl" [formlyAttributes]="field" />
+        <input
+          [class]="props.class"
+          [styleClass]="props.class"
+          type="number"
+          pInputText
+          [formControl]="formControl"
+          [formlyAttributes]="field"
+        />
       }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NgCoreFormlyFieldInput extends FieldType<NgCoreFormlyInputFieldConfig> {}
+export class NgCoreFormlyFieldInput extends FieldType<NgCoreFormlyInputFieldConfig> {
+
+  defaultOptions?: any = {
+    props: {
+      type: 'input',
+      styleClass: 'w-full',
+      class: 'w-full'
+    }
+  };
+
+}
