@@ -22,6 +22,7 @@ import { CalendarModule } from 'primeng/calendar';
 
 // Calendar options: https://primeng.org/calendar
 export interface IDateTimePickerProps extends FormlyFieldProps {
+  appendTo: string;
   clearButtonStyleClass: string;
   dataType: 'date' | 'string';
   dateFormat?: string;
@@ -54,6 +55,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   selector: 'ng-core-date-picker',
   template: `
     <p-calendar
+      [appendTo]="props.appendTo"
       [formControl]="formControl"
       [formlyAttributes]="field"
       [clearButtonStyleClass]="props.clearButtonStyleClass"
@@ -93,6 +95,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
 
   defaultOptions: Partial<FormlyFieldConfig<IDateTimePickerProps>> = {
     props: {
+      appendTo: 'body',
       clearButtonStyleClass: 'p-button-text',
       dataType: 'string',
       dateFormat: 'yy-mm-dd',
