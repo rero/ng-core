@@ -34,7 +34,7 @@ export class FilesizePipe implements PipeTransform {
     let i = -1;
     const byteUnits = ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
     do {
-        size = size / 1024;
+        size /= 1024;
         i++;
     } while (size > 1024);
 

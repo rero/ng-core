@@ -24,6 +24,7 @@ export class AutofocusDirective implements AfterContentChecked {
   protected elementRef: ElementRef = inject(ElementRef);
 
   ngAfterContentChecked(){
+    this.elementRef.nativeElement.autofocus = true;
     this.elementRef.nativeElement.focus();
   }
 }

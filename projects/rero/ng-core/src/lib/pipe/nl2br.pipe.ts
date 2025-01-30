@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,7 +31,7 @@ export class Nl2brPipe implements PipeTransform {
    * @param value Value to transform.
    * @return Transformed value.
    */
-  transform(value: string): any {
+  transform(value?: string): any {
     if (!value) {
       return this.sanitizer.bypassSecurityTrustHtml('');
     }

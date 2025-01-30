@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,15 +20,18 @@ import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'prim
 import { Nl2brPipe } from '../pipe/nl2br.pipe';
 import { DialogComponent } from './dialog.component';
 import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
 
 describe('DialogComponent', () => {
   let component: DialogComponent;
   let fixture: ComponentFixture<DialogComponent>;
   let config: DynamicDialogConfig;
+  let dialogRef: DynamicDialogRef;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
+        CommonModule,
         ButtonModule,
         DynamicDialogModule,
         TranslateModule.forRoot()
@@ -44,6 +47,7 @@ describe('DialogComponent', () => {
     config.data = {
       body: 'Would you like to quit?'
     }
+    dialogRef = TestBed.inject(DynamicDialogRef);
   }));
 
   beforeEach(() => {
@@ -54,5 +58,20 @@ describe('DialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('Should display the confirmation message', () => {
+    const element = fixture.debugElement.nativeElement.querySelectorAll('div.flex')[1];
+    expect(element.innerHTML).toContain(config.data.body);
+  });
+
+  it('Should return true on confirmation', () => {
+    dialogRef.onClose.subscribe((flag: boolean) => expect(flag).toBeTrue());
+    component.confirm();
+  });
+
+  it('Should return false on cancel', () => {
+    dialogRef.onClose.subscribe((flag: boolean) => expect(flag).toBeFalse());
+    component.cancel();
   });
 });

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,7 @@ import { ButtonModule } from 'primeng/button';
 import { CoreModule } from '../../../core.module';
 import { JsonComponent } from './item/json.component';
 import { RecordSearchResultComponent } from './record-search-result.component';
+import { ActionStatus } from '../../action-status';
 
 describe('RecordSearchResultComponent', () => {
   let component: RecordSearchResultComponent;
@@ -58,9 +59,14 @@ describe('RecordSearchResultComponent', () => {
   });
 
   it('should delete record', () => {
-    component.deletedRecord.subscribe((result: { pid: string, type: string | undefined | null }) => {
-      expect(result.pid).toBe('1');
-    });
+    component.deleteStatus = { can: true, message: 'Delete record'};
+    component.deletedRecord.subscribe(({
+      next: (info: { pid: string, type?: string }) => expect(info.pid).toEqual('1')
+    }));
+    component.deleteRecord('1');
+
+    component.deleteMessageEvent.subscribe((message: string) => expect(message).toEqual('Delete record'));
+    component.deleteStatus.can = false;
     component.deleteRecord('1');
   });
 });

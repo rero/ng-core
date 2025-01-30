@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021-2024 RERO
+ * Copyright (C) 2021-2025 RERO
  * Copyright (C) 2021 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,8 +30,6 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   protected translateService: TranslateService = inject(TranslateService);
 
   // COMPONENTS ATTRIBUTES ====================================================
-  // Buckets list
-  buckets = input.required<any[]>();
   // Aggregation key
   key = input.required<string>();
   // Components configuration
@@ -54,12 +52,12 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   /** OnInit hook */
   ngOnInit(): void {
     // Define min/max values if not exists
-    if (this.config().min && this.config().min !== null) {
+    if (this.config().min) {
       this.minDate = new Date(this.config().min);
     } else{
       this.minDate = new Date(1900, 0, 0);
     }
-    if (this.config().max && this.config().max !== null) {
+    if (this.config().max) {
       this.maxDate = new Date(this.config().max);
     } else {
       this.maxDate = new Date();
@@ -94,10 +92,11 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
     }
   ];
   }
-  setRange(value) {
+  setRange(value: Date[]) {
     this.dateRangeModel = value;
     this.updateFilter();
   }
+
   /** OnDestroy hook */
   ngOnDestroy(): void {
     this.searchServiceSubscription.unsubscribe();
@@ -114,7 +113,7 @@ export class AggregationDateRangeComponent implements OnInit, OnDestroy {
   }
 
   /** Clear aggregation filter. */
-  clearFilter() {
+  clearFilter(): void {
     this.recordSearchService.updateAggregationFilter(this.key(), []);
   }
 }

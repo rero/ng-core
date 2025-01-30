@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,21 +18,21 @@ import { TestBed } from '@angular/core/testing';
 import { CoreConfigService } from '../core-config.service';
 import { ApiService } from './api.service';
 
-let apiService: ApiService;
-
 describe('ApiService', () => {
+  let apiService: ApiService;
+  let coreConfigService: CoreConfigService;
+
   beforeEach(() => {
-    const config = {
-      apiEndpointPrefix: '/api',
-      apiBaseUrl: 'https://localhost:5000'
-    };
     TestBed.configureTestingModule({
       providers: [
         ApiService,
-        { provide: CoreConfigService, useValue: config }
+        CoreConfigService
       ]
     });
     apiService = TestBed.inject(ApiService);
+    coreConfigService = TestBed.inject(CoreConfigService);
+    coreConfigService.apiEndpointPrefix = '/api';
+    coreConfigService.apiBaseUrl = 'https://localhost:5000';
   });
 
   it('should be created', () => {
@@ -54,5 +54,16 @@ describe('ApiService', () => {
 
   it('#getExportEndpointByType should return endpoint with absolute URL', () => {
     expect(apiService.getExportEndpointByType('documents', true)).toBe('https://localhost:5000/api/export/documents');
+  });
+
+  it('getRefEndpoint should return endpoint with ou without prefix', () => {
+    expect(apiService.getRefEndpoint('documents', '1')).toBe('/api/documents/1');
+    coreConfigService.$refPrefix = '/elements';
+    expect(apiService.getRefEndpoint('documents', '1')).toBe('/elements/api/documents/1');
+  });
+
+  it('getSchemaFormEndpoint should return endpoint for schema', () => {
+    expect(apiService.getSchemaFormEndpoint('documents')).toBe('/api/schemaform/documents');
+    expect(apiService.getSchemaFormEndpoint('documents', true)).toBe('https://localhost:5000/api/schemaform/documents');
   });
 });

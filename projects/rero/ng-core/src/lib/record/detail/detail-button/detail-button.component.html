@@ -16,6 +16,7 @@
 -->
 <div class="flex justify-content-between flex-wrap mb-3">
   <p-button
+    id="detail-back-button"
     styleClass="flex-grow-1"
     icon="fa fa-arrow-left"
     [label]="'Back'|translate"
@@ -27,7 +28,8 @@
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode().can) {
       @if (useStatus() && useStatus().can && useStatus().url) {
-        <p-button id="detail-use-button"
+        <p-button
+          id="detail-use-button"
           icon="fa fa-hand-o-right"
           [label]="'Use'|translate"
           (onClick)="useRecord()"
@@ -35,7 +37,8 @@
         />
       }
       @if (updateStatus() && updateStatus().can) {
-        <p-button id="detail-edit-button"
+        <p-button
+          id="detail-edit-button"
           icon="fa fa-pencil"
           [label]="'Edit'|translate"
           [outlined]="useStatus()?.can"
@@ -45,6 +48,7 @@
       }
       @if (deleteStatus()) {
         <p-button
+          id="detail-delete-button"
           icon="fa fa-trash"
           severity="danger"
           class="pointer-events-auto"
