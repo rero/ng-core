@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2023 RERO
+ * Copyright (C) 2023-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogService } from 'primeng/dynamicdialog';
 import { AbstractCanDeactivateComponent } from '../component/abstract-can-deactivate.component';
 import { ComponentCanDeactivateGuard } from './component-can-deactivate.guard';
+import { DialogComponent } from '../dialog/dialog.component';
 
 export class MockComponent extends AbstractCanDeactivateComponent {
   canDeactivate: boolean = true;
@@ -37,7 +38,8 @@ describe('ComponentCanDeactivateGuard', () => {
       providers: [
         MockComponent,
         ComponentCanDeactivateGuard,
-        DialogService
+        DialogService,
+        DialogComponent
       ]
     });
     guard = TestBed.inject(ComponentCanDeactivateGuard);

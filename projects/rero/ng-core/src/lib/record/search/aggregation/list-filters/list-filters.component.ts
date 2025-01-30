@@ -34,10 +34,10 @@ export class ListFiltersComponent {
   /**
    * All aggregations
    */
-  aggregations = input<any[]>();
+  aggregations = input<any[]>([]);
 
   // Selected aggregations filters
-  aggregationsFilters = input<any>();
+  aggregationsFilters = input<any>([]);
 
   // Search filters
   searchFilters = input<any[]>([]);
@@ -95,31 +95,31 @@ export class ListFiltersComponent {
     return filters;
   }
 
-    /**
+  /**
    * Get displayed name of bucket
    * and fill in filters list.
    *
    * @param buckets - Bucket to get the name from.
    */
-    getFilterNames(buckets: any, filters) {
-      if (!buckets || buckets.length === 0) {
-        return;
-      }
-      buckets.map((bucket: any) => {
-        for (const k in bucket) {
-          if (bucket[k].buckets) {
-            this.getFilterNames(bucket[k].buckets, filters);
-          }
-        }
-        if (bucket.name) {
-          const index = filters.findIndex((filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
-          if (index > -1) {
-            filters[index].name = bucket.name;
-            filters[index] = {...filters[index]};
-          }
-        }
-      });
+  getFilterNames(buckets: any, filters) {
+    if (!buckets || buckets.length === 0) {
+      return;
     }
+    buckets.map((bucket: any) => {
+      for (const k in bucket) {
+        if (bucket[k].buckets) {
+          this.getFilterNames(bucket[k].buckets, filters);
+        }
+      }
+      if (bucket.name) {
+        const index = filters.findIndex((filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
+        if (index > -1) {
+          filters[index].name = bucket.name;
+          filters[index] = {...filters[index]};
+        }
+      }
+    });
+  }
 
   /**
    * Remove filter.

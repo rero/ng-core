@@ -31,6 +31,7 @@ export class MenuSortComponent {
   /** Input */
   config = input.required<MenuItem[]>();
   selectedValue = input<string>();
+
   selectedOption = computed(() => this.config().find((conf: MenuItem) => conf.value === this.selectedValue()));
   options = computed(() => this.sortOptions());
 

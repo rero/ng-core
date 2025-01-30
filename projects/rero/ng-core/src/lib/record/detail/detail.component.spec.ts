@@ -18,7 +18,7 @@ import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { ActionStatus } from '../action-status';
 import { RecordModule } from '../record.module';
 import { RecordService } from '../record.service';
@@ -62,7 +62,7 @@ export class ActivatedRouteStub {
   }
 }
 
-describe('RecordDetailComponent', () => {
+describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
   const recordServiceSpy = jasmine.createSpyObj('RecordService', ['getRecord']);
@@ -89,7 +89,7 @@ describe('RecordDetailComponent', () => {
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Location, useValue: loc },
-        { provide: ActivatedRoute, useClass: ActivatedRouteStub }
+        { provide: ActivatedRoute, useClass: ActivatedRouteStub },
       ]
     });
 
@@ -116,7 +116,10 @@ describe('RecordDetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.record).toEqual(detailRecord);
+  });
+
+  it('should return false if file configuration is not enabled', () => {
+    expect(component.filesEnabled).toBeFalsy();
   });
 
   it('should raise exception when configuration not found for type', () => {
@@ -164,7 +167,7 @@ describe('RecordDetailComponent', () => {
   });
 
   it('should store an error message when API is not available', () => {
-    recordServiceSpy.getRecord.and.returnValue(throwError('error'));
+    recordServiceSpy.getRecord.and.throwError('error');
 
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;

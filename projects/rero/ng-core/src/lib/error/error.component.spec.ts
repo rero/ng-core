@@ -45,4 +45,14 @@ describe('ErrorComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should display values on html', () => {
+    expect(fixture.debugElement.nativeElement.querySelector('span').innerHTML).toContain(component.error.status);
+    expect(fixture.debugElement.nativeElement.querySelector('p').innerHTML).toContain(component.error.title);
+    expect(fixture.debugElement.nativeElement.querySelector('h5').innerHTML).toContain('You cannot access this page.');
+
+    component.error.message = 'Error message';
+    fixture.detectChanges();
+    expect(fixture.debugElement.nativeElement.querySelector('h5').innerHTML).toContain(component.error.message);
+  });
 });

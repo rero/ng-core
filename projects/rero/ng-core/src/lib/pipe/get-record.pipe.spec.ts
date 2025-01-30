@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,19 +42,19 @@ describe('GetRecordPipe', () => {
   });
 
   it('transform with $ref return object', () => {
-    pipe.transform('http://foo/1', 'resource').subscribe((result: object) => {
+    pipe.transform('http://foo/1', 'documents').subscribe((result: object) => {
       expect(result).toEqual({metadata: { pid: '1', name: 'foo' }});
     });
   });
 
   it('transform with id return name', () => {
-    pipe.transform('10', 'resource', 'field', 'name').subscribe((result: string) => {
+    pipe.transform('10', 'documents', 'field', 'name').subscribe((result: string) => {
       expect(result).toEqual('foo');
     });
   });
 
   it('transform return null', () => {
-    pipe.transform('12', 'resource', 'field', 'foo').subscribe((result: string) => {
+    pipe.transform('12', 'documents', 'field', 'foo').subscribe((result: string) => {
       expect(result).toBeNull();
     });
   });

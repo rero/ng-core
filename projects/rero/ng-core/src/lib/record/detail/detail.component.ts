@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, ComponentFactoryResolver, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { catchError, isObservable, map, Observable, of, Subscription, tap } from 'rxjs';
+import { catchError, isObservable, Observable, of, Subscription, tap } from 'rxjs';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
 import { RecordUiService } from '../record-ui.service';
@@ -38,12 +38,13 @@ export class DetailComponent implements OnInit, OnDestroy {
   protected route: ActivatedRoute = inject(ActivatedRoute);
   protected router: Router = inject(Router);
   protected location: Location = inject(Location);
-  protected componentFactoryResolver: ComponentFactoryResolver = inject(ComponentFactoryResolver);
   protected recordService: RecordService = inject(RecordService);
   protected recordUiService: RecordUiService = inject(RecordUiService);
   protected translate: TranslateService = inject(TranslateService);
   protected spinner: NgxSpinnerService = inject(NgxSpinnerService);
   protected messageService: MessageService = inject(MessageService);
+
+  protected viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
 
 
   /** View component for displaying record */
@@ -222,12 +223,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   /** Dynamically load component depending on selected resource type. */
   private loadRecordView(): void {
-    const componentFactory = this.componentFactoryResolver
-      .resolveComponentFactory(this.viewComponent || JsonComponent);
-    const { viewContainerRef } = this.recordDetail;
-    viewContainerRef.clear();
-
-    const componentRef = viewContainerRef.createComponent(componentFactory);
+    const componentRef = this.viewContainerRef.createComponent(this.viewComponent || JsonComponent);
     (componentRef.instance as JsonComponent).record$ = this.record$;
     (componentRef.instance as JsonComponent).type = this.route.snapshot.paramMap.get('type');
   }

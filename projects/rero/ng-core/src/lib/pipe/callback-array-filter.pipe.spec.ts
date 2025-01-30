@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,8 +17,23 @@
 import { CallbackArrayFilterPipe } from './callback-array-filter.pipe';
 
 describe('CallbackArrayFilterPipe', () => {
-  it('create an instance', () => {
-    const pipe = new CallbackArrayFilterPipe();
-    expect(pipe).toBeTruthy();
+  const pipe = new CallbackArrayFilterPipe();
+
+  it('Should return an empty array if there are no items', () => {
+    expect(pipe.transform()).toEqual([]);
+  });
+
+  it('Should return the original array if the callback function is not defined', () => {
+    const items = [{ title: 'foo', value: 'foo'}];
+    expect(pipe.transform(items)).toEqual(items);
+  });
+
+  it('Should return a filtered array', () => {
+    const items = [
+      { title: 'foo', value: 'foo'},
+      { title: 'bar', value: 'bar'}
+    ];
+    const callback = ((item: any) => item.value === 'bar');
+    expect(pipe.transform(items, callback)).toEqual([{ title: 'bar', value: 'bar'}]);
   });
 });

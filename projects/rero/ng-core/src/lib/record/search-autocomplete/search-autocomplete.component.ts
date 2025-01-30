@@ -16,11 +16,11 @@
  */
 import { AfterViewInit, Component, HostListener, inject, input, output, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { OverlayOptions } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { DomHandler } from 'primeng/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { RecordService } from '../record.service';
-import { DomHandler } from 'primeng/dom';
-import { OverlayOptions } from 'primeng/api';
 
 export interface IRecordType {
   field: string;
@@ -92,11 +92,13 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   scrollHeight = input<string>('250px');
   styleClass = input<string>('w-full');
   value = input<string>();
-  currentValue: string = '';
 
   // Output
-  onSelect = output();
+  onSelect = output<string>();
   onSearch = output<string>();
+
+  // Current value
+  currentValue: string = '';
 
   // Whether to display options as grouped when nested options are provided.
   group = false;
@@ -123,9 +125,9 @@ export class SearchAutocompleteComponent implements AfterViewInit{
     this.onSelect.emit(event.value);
   }
 
-  search(event) {
+  search(event: KeyboardEvent) {
     if(event?.code === 'Enter') {
-      this.onSearch.emit(event.srcElement.value);
+      this.onSearch.emit(this.currentValue);
     }
   }
   calculateWidth() {

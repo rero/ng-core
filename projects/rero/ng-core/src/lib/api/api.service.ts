@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -71,7 +71,11 @@ export class ApiService {
    * @return Ref endpoint as string.
    */
   getRefEndpoint(type: string, id: string): string {
-    return `${this.configService.$refPrefix}${this.configService.apiEndpointPrefix}/${type}/${id}`;
+    let prefix = '';
+    if (this.configService.$refPrefix) {
+      prefix += this.configService.$refPrefix;
+    }
+    return `${prefix}${this.configService.apiEndpointPrefix}/${type}/${id}`;
   }
 
   /**
