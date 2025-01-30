@@ -120,3 +120,8 @@ $grid-column-right-offsets: (
 .#{$prefix}grid-nogutter-y > [class*="#{$prefix}col-"] {
   @extend .py-0;
 }
+
+
+.p-timeline-event {
+  min-height: 40px !important;
+}
