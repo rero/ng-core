@@ -35,15 +35,14 @@ describe('Validators', () => {
   });
 
   it('should return the value of the validator dateGreaterThan', () => {
-    const validatorResponse = { dateGreaterThan: { value: true }};
     let formControl = new FormControl();
     let formGroup = formBuilder.group({
       start_date: new FormControl('2024-10-01'),
       end_date: new FormControl('2024-10-02')
     });
     formControl.setParent(formGroup);
-    let result = Validators.dateGreaterThan('start_date', 'end_date')(formControl);
-    expect(result).toBeNull();
+    let result = Validators.datesGreaterThan('start_date', 'end_date', 'target')(formControl);
+    expect(result).toBeTruthy();
 
     formControl = new FormControl();
     formGroup = formBuilder.group({
@@ -51,18 +50,18 @@ describe('Validators', () => {
       end_date: new FormControl('2024-10-11')
     });
     formControl.setParent(formGroup);
-    result = Validators.dateGreaterThan('start_date', 'end_date')(formControl);
-    expect(result).toBeNull();
+    result = Validators.datesGreaterThan('start_date', 'end_date', 'target')(formControl);
+    expect(result).toBeTruthy();
 
-    formControl = new FormControl();
-    formGroup = formBuilder.group({
-      start_date: new FormControl('2024-10-11'),
-      end_date: new FormControl('2024-10-11')
-    });
-    formControl.setParent(formGroup);
     // With strict mode
-    result = Validators.dateGreaterThan('start_date', 'end_date', true)(formControl);
-    expect(result).toEqual(validatorResponse);
+    formControl = new FormControl();
+    formGroup = formBuilder.group({
+      start_date: new FormControl('2024-10-11'),
+      end_date: new FormControl('2024-10-11')
+    });
+    formControl.setParent(formGroup);
+    result = Validators.datesGreaterThan('start_date', 'end_date', 'target', true)(formControl);
+    expect(result).toBeFalsy();
 
     formControl = new FormControl();
     formGroup = formBuilder.group({
@@ -70,7 +69,7 @@ describe('Validators', () => {
       end_date: new FormControl('2024-10-01')
     });
     formControl.setParent(formGroup);
-    result = Validators.dateGreaterThan('start_date', 'end_date')(formControl);
-    expect(result).toEqual(validatorResponse);
+    result = Validators.datesGreaterThan('start_date', 'end_date', 'target')(formControl);
+    expect(result).toBeFalsy();
   });
 });

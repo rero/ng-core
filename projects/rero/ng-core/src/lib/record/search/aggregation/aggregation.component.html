@@ -42,8 +42,7 @@
     @case ('date-range') {
       <ng-core-aggregation-date-range
         [key]="aggregation().key"
-        [config]="aggregation().config"
-        [buckets]="aggregation().value.buckets" />
+        [config]="aggregation().config" />
     }
     @default {
       @if (aggregation().value.buckets.length > 0) {

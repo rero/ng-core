@@ -41,6 +41,6 @@ export class DialogComponent {
   }
 
   cancel(): void {
-    this.ref.close(false)
+    this.ref.close(false);
   }
 }

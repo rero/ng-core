@@ -30,10 +30,14 @@ export class CallbackArrayFilterPipe implements PipeTransform {
    * @param callback Callback function to apply.
    * @return List of filtered values.
    */
-  transform(items: any[], callback: (item: any) => boolean): Array<any> {
-    if (!items || !callback) {
+  transform(items?: any[], callback?: (item: any) => boolean): any[] {
+    if (!items && !callback) {
+      return [];
+    }
+    if (items && !callback) {
       return items;
     }
+
     return items.filter(item => callback(item));
   }
 }

@@ -43,6 +43,7 @@ describe('DatePickerComponent', () => {
       key: 'name',
       type: 'datePicker',
       props: {
+        appendTo: 'body',
         clearButtonStyleClass: 'p-button-text',
         dataType: 'string',
         dateFormat: 'yy-mm-dd',

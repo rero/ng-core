@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,6 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
   addonRight?: string[];
   addonLeft?: string[];
   class?: string;
-  styleClass?: string;
 }
 
 @Component({
@@ -39,7 +38,6 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
             <input
               pInputText
               [class]="props.class"
-              [styleClass]="props.class"
               [type]="props.type || 'text'"
               [formControl]="formControl"
               [formlyAttributes]="field"
@@ -47,7 +45,6 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           } @else {
             <input
               [class]="props.class"
-              [styleClass]="props.class"
               type="number"
               pInputText
               [formControl]="formControl"
@@ -65,7 +62,6 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
         <input
           pInputText
           [class]="props.class"
-          [styleClass]="props.class"
           [type]="props.type || 'text'"
           [formControl]="formControl"
           [formlyAttributes]="field"
@@ -73,7 +69,6 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
       } @else {
         <input
           [class]="props.class"
-          [styleClass]="props.class"
           type="number"
           pInputText
           [formControl]="formControl"
@@ -89,7 +84,6 @@ export class NgCoreFormlyFieldInput extends FieldType<NgCoreFormlyInputFieldConf
   defaultOptions?: any = {
     props: {
       type: 'input',
-      styleClass: 'w-full',
       class: 'w-full'
     }
   };
