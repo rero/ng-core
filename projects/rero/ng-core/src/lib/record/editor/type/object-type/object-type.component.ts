@@ -25,4 +25,9 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
   templateUrl: './object-type.component.html'
 })
 export class ObjectTypeComponent extends FieldType<FormlyFieldConfig> {
+  defaultOptions: Partial<FormlyFieldConfig<any>> = {
+    props: {
+      containerCssClass: 'flex flex-column gap-2'
+    }
+  };
 }
