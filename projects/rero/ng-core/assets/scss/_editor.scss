@@ -15,11 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-ng-core-editor-formly-field-textarea,
-ng-core-formly-field-primeng-input,
-ng-core-tree-select,
-ng-core-multi-select,
-ng-core-primeng-select,
-ng-core-date-picker {
-  @extend .w-full;
-}
+ ng-core-editor {
+  ng-core-editor-formly-field-textarea,
+  ng-core-formly-field-primeng-input,
+  ng-core-tree-select,
+  ng-core-multi-select,
+  ng-core-primeng-select,
+  ng-core-date-picker {
+    @extend .w-full;
+  }
+ }
