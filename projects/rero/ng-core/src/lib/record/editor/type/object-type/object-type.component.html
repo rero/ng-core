@@ -14,20 +14,10 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="py-2 flex flex-column gap-2">
-  @if (props.hideLabel !== true) {
-    <ng-core-label-editor [field]="field" />
-  }
-  @if (showError && formControl.errors) {
-  <div class="text-error my-2">
-    <formly-validation-message [field]="field" />
-  </div>
-  }
-  <div class="{{ props.containerCssClass }}">
-    @for (f of field.fieldGroup; track f) {
-    <div class="{{ f.props.itemCssClass }}" [id]="'field-' + f.id">
+<div [class]="props.containerCssClass">
+  @for (f of field.fieldGroup; track f) {
+    <div [hidden]="f.hide" [class]="f.props.itemCssClass" [id]="'field-' + f.id">
       <formly-field [field]="f" />
     </div>
-    }
-  </div>
+  }
 </div>

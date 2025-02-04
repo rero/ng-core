@@ -21,13 +21,6 @@
 }
 
 <div>
-  <!--  validation error message -->
-  @if (showError && formControl.errors) {
-  <div class="text-error my-2">
-    <formly-validation-message [field]="field" />
-  </div>
-  }
-
   <!-- for each item -->
   <div class="{{ props.containerCssClass }} ">
     @for (f of field.fieldGroup; track f) { @if (!f.hide) {

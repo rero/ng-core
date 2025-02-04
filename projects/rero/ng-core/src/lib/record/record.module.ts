@@ -58,7 +58,6 @@ import { SaveTemplateFormComponent } from './editor/widgets/save-template-form/s
 import { CardWrapperComponent } from './editor/wrappers/card-wrapper/card-wrapper.component';
 import { FormFieldWrapperComponent } from './editor/wrappers/form-field-wrapper/form-field-wrapper.component';
 import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrapper.component';
-import { ToggleWrapperComponent } from './editor/wrappers/toggle-wrapper/toggle-wrappers.component';
 import { ExportButtonComponent } from './export-button/export-button.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
@@ -97,7 +96,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         ObjectTypeComponent,
         SwitchComponent,
         MultiSchemaTypeComponent,
-        ToggleWrapperComponent,
         BucketsComponent,
         FormFieldWrapperComponent,
         HideWrapperComponent,
@@ -147,9 +145,9 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
                 { name: 'input', component: NgCoreFormlyFieldInput },
                 { name: 'boolean', component: SwitchComponent },
                 { name: 'enum', extends: 'select' },
-                { name: 'array', component: ArrayTypeComponent },
-                { name: 'object', component: ObjectTypeComponent },
-                { name: 'multischema', component: MultiSchemaTypeComponent },
+                { name: 'array', component: ArrayTypeComponent, wrappers: ['form-field', 'card'] },
+                { name: 'object', component: ObjectTypeComponent,  wrappers: ['card'] },
+                { name: 'multischema', component: MultiSchemaTypeComponent},
                 { name: 'textarea', component: TextareaFieldComponent },
                 { name: 'select', component: SelectComponent },
                 { name: 'markdown', component: MarkdownFieldComponent },
@@ -157,7 +155,6 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
                 { name: 'radioButton', component: RadioButtonComponent },
             ],
             wrappers: [
-                { name: 'toggle-switch', component: ToggleWrapperComponent },
                 { name: 'form-field', component: FormFieldWrapperComponent },
                 { name: 'hide', component: HideWrapperComponent },
                 { name: 'card', component: CardWrapperComponent }
