@@ -53,6 +53,7 @@ import { tap } from 'rxjs/operators';
 
 interface PasswordGeneratorProps extends FormlyFieldProps {
   enabledEditMode: boolean;
+  class?: string;
   minLength: number;
   maxLength: number;
   specialChar: boolean;
@@ -82,12 +83,12 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       pInputText
       id="password"
       [type]="type"
-      class="form-control"
       autocomplete="off"
       [formControl]="formControl"
       (change)="onChange($event.target.value)"
       [readonly]="props.readonly"
-    >
+      [class]="props.class"
+    />
     <p-inputGroupAddon>
       <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}" (click)="onClick()"></i>
     </p-inputGroupAddon>
@@ -100,6 +101,11 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
     </p-inputGroupAddon>
     }
   </p-inputGroup>
+  @if (!showError && hasBeenGenerated) {
+    <div class="text-color-secondary my-3" translate>
+      The password has been copied to the clipboard.
+    </div>
+    }
   `
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {
