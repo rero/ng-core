@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -26,32 +26,31 @@
           </legend>
         }
       </div>
-      <div class="flex align-items-center justify-content-end">
+      <div class="flex align-items-center justify-content-end gap-1">
+        <!-- load from template button -->
+        @if (canLoadTemplate()) {
+          <p-button
+            id="editor-load-template-button"
+            [label]="'Load template…' | translate"
+            [outlined]="true"
+            icon="fa fa-upload"
+            (onClick)="showLoadTemplateDialog()"
+          />
+        }
         <!-- cancel button -->
         <p-button
-        id="editor-cancel-button"
-        [label]="'Cancel' | translate"
-        icon="fa fa-times"
-        [outlined]="true"
-        severity="danger"
-        (onClick)="cancel()" />
-      <!-- load from template button -->
-      @if (canLoadTemplate()) {
-        <p-button
-          id="editor-load-template-button"
-          [label]="'Load template…' | translate"
+          id="editor-cancel-button"
+          [label]="'Cancel' | translate"
+          icon="fa fa-times"
           [outlined]="true"
-          icon="fa fa-upload"
-          styleClass="ml-1"
-          (onClick)="showLoadTemplateDialog()"
+          severity="danger"
+          (onClick)="cancel()"
         />
-      }
       <!-- save button -->
         @if (saveAlternatives.length === 0) {
         <p-button
           id="editor-save-button"
           [label]="'Save' | translate"
-          styleClass="ml-1"
           (onClick)="submit()"
           [disabled]="isSaveButtonDisabled"
         />
@@ -59,7 +58,6 @@
         <p-splitButton
           id="editor-save-button-split"
           [label]="'Save' | translate"
-          styleClass="ml-1"
           (onClick)="submit()"
           [model]="saveAlternatives"
         />

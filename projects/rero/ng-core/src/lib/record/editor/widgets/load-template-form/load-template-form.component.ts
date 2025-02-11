@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  * Copyright (C) 2020-2023 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,6 +59,7 @@ export class LoadTemplateFormComponent implements OnInit {
       key: 'template',
       type: 'select',
       props: {
+        appendTo: 'body',
         required: true,
         options: [],
         attributes: {
