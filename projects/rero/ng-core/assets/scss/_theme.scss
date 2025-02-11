@@ -125,3 +125,14 @@ $grid-column-right-offsets: (
 .p-timeline-event {
   min-height: 40px !important;
 }
+
+p-accordiontab {
+  .p-accordion-header-link {
+    align-items: start;
+    @extend .pr-2;
+  }
+
+  .p-accordion-toggle-icon {
+    @extend .py-2;
+  }
+}
