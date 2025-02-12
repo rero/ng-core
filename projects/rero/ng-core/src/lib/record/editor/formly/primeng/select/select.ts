@@ -116,7 +116,6 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
-    defaultValue: null,
     props: {
       class: 'w-full',
       editable: false,
