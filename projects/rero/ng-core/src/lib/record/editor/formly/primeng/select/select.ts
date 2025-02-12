@@ -72,7 +72,6 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [loadingIcon]="props.loadingIcon"
       [options]="selectOptions"
       optionLabel="label"
-      optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [required]="props.required"
@@ -96,7 +95,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
   `,
   styles: `
   :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
-    padding: 0 1.25rem;
+    padding: 0 0.3rem;
   }
 
   :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group hr {
