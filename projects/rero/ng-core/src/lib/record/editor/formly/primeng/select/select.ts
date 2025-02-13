@@ -38,7 +38,6 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   placeholder?: string;
   required: boolean;
   scrollHeight: string;
-  showClear?: boolean;
   sort: boolean;
   styleClass?: string;
   tooltip?: string;
@@ -72,10 +71,11 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [loadingIcon]="props.loadingIcon"
       [options]="selectOptions"
       optionLabel="label"
+      optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [required]="props.required"
-      [showClear]="props.showClear"
+      [showClear]="!props.required"
       [styleClass]="props.styleClass"
       [tooltip]="props.tooltip"
       [tooltipPosition]="props.tooltipPosition"
@@ -122,9 +122,9 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       filterMatchMode: 'contains',
       group: false,
       panelStyleClass: 'w-full',
+      placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
-      showClear: false,
       sort: false,
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',

@@ -16,7 +16,7 @@
  */
 import { Location } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { UntypedFormGroup } from '@angular/forms';
+import { FormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
@@ -298,8 +298,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
             );
         }
 
-        combineLatest([schema$, record$]).subscribe(
-          ([schemaform, data]) => {
+        combineLatest([schema$, record$]).subscribe({
+          next: ([schemaform, data]) => {
             // Set schema
             this.setSchema(
               this._resourceConfig.recordResource
@@ -320,12 +320,12 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
             } else {
               this._setModel(data.record);
             }
-
             this.loadingChange.emit(false);
           },
-          (error) => {
+          error: (error) => {
             this.error = error;
             this.loadingChange.emit(false);
+          }
           }
         );
       }
@@ -763,8 +763,14 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * @return Observable<Error>
    */
   private _handleError(error: { status: number, title: string }): Observable<Error> {
-    this.form.setErrors({ formError: error });
-    return throwError({ status: error.status, title: error.title });
+    this.messageService.add({
+      severity: 'error',
+      summary: this.translateService.instant(error.title),
+      detail: this.translateService.instant('Server error.'),
+      sticky: true,
+      closable: true
+    });
+    return throwError(() => ({ status: error.status, title: error.title }));
   }
 
   private _canDeactivate(activate: boolean = true) {

@@ -813,7 +813,6 @@
         "formlyConfig": {
           "type": "tree-select",
           "props": {
-            "placeholder": "Select an option…",
             "options": [
               {
                 "label": "Node 1",
@@ -863,7 +862,6 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "placeholder": "Select an option…",
             "group": true,
             "options": [
               {
@@ -906,7 +904,6 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "placeholder": "Select an option…",
             "sort": true,
             "sortOrder": "asc",
             "options": [
@@ -942,7 +939,6 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "placeholder": "Select an option…",
             "sort": true,
             "options": [
               {
@@ -991,7 +987,6 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "placeholder": "Select an option…",
             "group": true,
             "sort": true,
             "options": [
@@ -1094,7 +1089,6 @@
         "formlyConfig": {
           "type": "multi-select",
           "props": {
-            "placeholder": "Select an option…",
             "group": true,
             "sort": true,
             "options": [
@@ -1155,7 +1149,6 @@
         "formlyConfig": {
           "type": "multi-select",
           "props": {
-            "placeholder": "Select an option…",
             "options": [
               {
                 "label": "library",

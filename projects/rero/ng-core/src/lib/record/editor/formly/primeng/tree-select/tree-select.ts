@@ -36,7 +36,6 @@ export interface ITreeSelectProps extends FormlyFieldProps {
   panelStyleClass: string;
   placeholder?: string;
   scrollHeight: string;
-  showClear: boolean;
   variant: string;
 }
 
@@ -60,7 +59,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
-      [showClear]="props.showClear"
+      [showClear]="!props.required"
       [variant]="props.variant"
       (onNodeSelect)="onNodeSelect($event)"
       (onNodeUnselect)="onNodeUnselect()"
@@ -78,8 +77,8 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       filterBy: 'label',
       panelClass: 'w-full',
       panelStyleClass: 'w-full',
+      placeholder: 'Select…',
       scrollHeight: '400px',
-      showClear: false,
       variant: 'outlined'
     }
   };
