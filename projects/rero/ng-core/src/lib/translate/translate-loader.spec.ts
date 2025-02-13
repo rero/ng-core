@@ -87,8 +87,9 @@ describe('TranslateLoader', () => {
 
     // mock response after the xhr request, otherwise it will be undefined
     http.expectOne('/assets/i18n/fr.json').flush({
-      search: 'Recherche avancée',
-      'does not exists': 'Existe pas'
+      'search': 'Recherche avancée',
+      'does not exists': 'Existe pas',
+      'Help': 'Aide'
     });
 
     // ng-core translations
