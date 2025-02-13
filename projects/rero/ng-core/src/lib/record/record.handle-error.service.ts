@@ -50,28 +50,28 @@ export class RecordHandleErrorService {
       : error.error.errors
           .map(err => this.translateService.instant(err.message))
           .join('; ');
-      return throwError({ status: error.status, title: message});
+      return throwError(() => ({ status: error.status, title: message}));
     }
 
     // check if we have possible custom error message to display
     if (error.status === 400 && error.error.hasOwnProperty('message')) {
       let { message } = error.error;
       message = message.replace(/^Validation error: /, '').trim();  // Remove Invenio `ValidationError` header
-      return throwError({ status: error.status, title: this.translateService.instant(message) });
+      return throwError(() => ({ status: error.status, title: this.translateService.instant(message) }));
     }
 
     // If not, then return default message
     switch (error.status) {
       case 400:
-        return throwError({ status: error.status, title: this.translateService.instant('Bad request') });
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Bad request') }));
       case 401:
-        return throwError({ status: error.status, title: this.translateService.instant('Unauthorized') });
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Unauthorized') }));
       case 403:
-        return throwError({ status: error.status, title: this.translateService.instant('Forbidden') });
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Forbidden') }));
       case 404:
-        return throwError({ status: error.status, title: this.translateService.instant('Not found') });
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Not found') }));
       default:
-        return throwError({ status: 500, title: this.translateService.instant('An error occurred') });
+        return throwError(() => ({ status: 500, title: this.translateService.instant('An error occurred') }));
     }
   }
 }

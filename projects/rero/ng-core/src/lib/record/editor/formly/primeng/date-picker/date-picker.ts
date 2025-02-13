@@ -104,6 +104,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       inline: false,
       numberOfMonths: 1,
       outputDateFormat: 'yyyy-MM-dd',
+      placeholder: 'Select…',
       required: false,
       selectionMode: 'single',
       showButtonBar: false,
