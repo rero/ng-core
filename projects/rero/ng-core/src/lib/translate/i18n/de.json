@@ -1,7 +1,7 @@
 {
   "{{ total }} result": "{{ total }} Ergebnis",
   "{{ total }} results": "{{ total }} Ergebnisse",
-  "A file with same name already exists.": "Eine Datei mit demselben Namen existiert bereits.",
+  "A file with same name already exists.": "Eine Datei mit diesem Namen existiert bereits.",
   "Add": "Hinzufügen",
   "Add a new file": "Neue Datei hinzufügen",
   "Add field": "Feld hinzufügen",
@@ -73,7 +73,7 @@
   "Result list is empty.": "Die Ergebnisliste ist leer.",
   "Save": "Speichern",
   "Save as template": "Als Vorlage speichern",
-  "search": "suchen",
+  "search": "Suche",
   "Search in": "Suchen in",
   "Select a template": "Eine Vorlage wählen",
   "Select an option…": "Eine Option wählen…",
