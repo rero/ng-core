@@ -60,10 +60,6 @@ export class NgCoreFormlyExtension {
       const expressionFn = Function('expression', `return ${expression};`);
       field.defaultValue = expressionFn();
     }
-    // Set default placeholder for select if it doesn't exist.
-    if (field.type === 'select' && !field.props.placeholder) {
-      field.props.placeholder = 'Select an option…';
-    }
   }
 
   /**
@@ -455,11 +451,6 @@ export function registerNgCoreFormlyExtension(translate: TranslateService, recor
     // translate the default validators messages
     // widely inspired from ngx-formly example
     validationMessages: [
-      {
-        name: 'formError',
-        // use a marker to force translation extraction due to a bad detection of ngx-translate-extract
-        message: (err) => translate.stream(err.title),
-      },
       {
         name: 'required',
         // use a marker to force translation extraction due to a bad detection of ngx-translate-extract

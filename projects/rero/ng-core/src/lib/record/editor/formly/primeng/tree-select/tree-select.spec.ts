@@ -58,7 +58,6 @@ describe('TreeSelectComponent', () => {
         panelClass: 'w-full',
         panelStyleClass: 'w-full',
         scrollHeight: '400px',
-        showClear: false,
         variant: 'outlined'
       }
     });

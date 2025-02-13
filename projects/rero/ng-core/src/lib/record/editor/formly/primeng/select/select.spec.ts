@@ -52,7 +52,6 @@ describe('SelectComponent', () => {
         panelStyleClass: 'w-full',
         required: false,
         scrollHeight: '250px',
-        showClear: false,
         sort: false,
         styleClass: 'w-full mb-1',
         tooltipPosition: 'top',

@@ -38,7 +38,6 @@ export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectPr
   placeholder?: string;
   required: boolean;
   scrollHeight: string;
-  showClear?: boolean;
   sort: boolean;
   styleClass?: string;
   tooltip?: string;
@@ -74,7 +73,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [required]="props.required"
-      [showClear]="props.showClear"
+      [showClear]="!props.required"
       [styleClass]="props.styleClass"
       [tooltip]="props.tooltip"
       [tooltipPosition]="props.tooltipPosition"
@@ -96,9 +95,9 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       filterMatchMode: 'contains',
       group: false,
       panelStyleClass: 'w-full',
+      placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
-      showClear: false,
       sort: false,
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',
