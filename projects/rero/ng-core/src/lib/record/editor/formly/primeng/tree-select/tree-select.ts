@@ -23,7 +23,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
-import { TreeSelectModule as PrimeNgTreeSelectModule } from 'primeng/treeselect';
+import { TreeSelectModule } from 'primeng/treeselect';
 import { Subscription } from 'rxjs';
 
 // Doc https://primeng.org/treeselect
@@ -64,8 +64,9 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [placeholder]="props.placeholder | translate"
       [showClear]="!props.required"
       [variant]="props.variant"
-      (onNodeSelect)="onNodeSelect($event)"
-      (onNodeUnselect)="onNodeUnselect()"
+      (onNodeSelect)="setFormValue($event)"
+      (onNodeUnselect)="clearFormValue()"
+      (onClear)="clearFormValue()"
     />
   `,
 })
@@ -104,12 +105,14 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
     this.subscription.unsubscribe();
   }
 
-  onNodeSelect(event: TreeNodeSelectEvent): void {
+  setFormValue(event: TreeNodeSelectEvent): void {
     this.formControl.setValue(event.node.data);
   }
 
-  onNodeUnselect(): void {
-    this.formControl.reset();
+  clearFormValue(): void {
+    this.formControl.reset(null);
+    const errors = this.formControl.errors;
+    this.formControl.setErrors(errors.required? {required: true}: null);
   }
 
   private findNodeByValue(node: TreeNode[], value: string, data?: TreeNode): any {
@@ -134,8 +137,8 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
     CommonModule,
     FormsModule,
     FormlySelectModule,
-    PrimeNgTreeSelectModule,
     TranslateModule.forRoot(),
+    TreeSelectModule,
     FormlyModule.forChild({
       types: [
         {

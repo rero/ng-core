@@ -82,6 +82,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [tooltipPositionStyle]="props.tooltipPositionStyle"
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
+      (onClear)="clearValidators()"
     >
       <ng-template let-items pTemplate="selectedItems">
         @for(option of items; track items; let last = $last) {
@@ -122,8 +123,8 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       styleClass: 'w-full mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
-      variant: 'outlined'
-    }
+      variant: 'outlined',
+    },
   };
 
   ngOnInit(): void {
@@ -133,11 +134,16 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     }));
   }
 
+  // Clear all validators except required.
+  clearValidators() {
+    const errors = this.formControl.errors;
+    this.formControl.setErrors(errors.required ? { required: true } : null);
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 }
-
 
 @NgModule({
   declarations: [MultiSelectComponent],
@@ -157,6 +163,6 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       ],
     }),
   ],
-  exports: [MultiSelectComponent]
+  exports: [MultiSelectComponent],
 })
-export class NgCoreFormlyMultiSelectModule { }
+export class NgCoreFormlyMultiSelectModule {}

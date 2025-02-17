@@ -14,30 +14,59 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { merge, Subscription } from 'rxjs';
 
 @Component({
   selector: 'ng-core-label-editor',
-  templateUrl: './label.component.html'
+  templateUrl: './label.component.html',
 })
-export class LabelComponent implements OnInit {
-
+export class LabelComponent implements OnInit, OnDestroy {
   protected translateService: TranslateService = inject(TranslateService);
 
   // Current field
   @Input() field: FormlyFieldConfig;
 
+  // Subscriptions to observables.
+  private subscriptions: Subscription = new Subscription();
+
   items: MenuItem[] = [];
 
   ngOnInit(): void {
+    this.updateItems();
+    // update items when the hidden state of the children change
+    const fields = this.getFieldGroup(this.field);
+    if (fields?.length > 0) {
+      this.subscriptions.add(
+        merge(...fields.map((child: any) => child.options.fieldChanges))
+          .subscribe(
+            (changes: any) => {
+            if (changes.type === 'hidden') {
+              this.updateItems();
+            }
+        })
+      );
+      // update translations
+      this.subscriptions.add(this.translateService.onLangChange.subscribe(() => this.updateItems()));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  updateItems() {
     if (this.hasMenu(this.field)) {
-      this.hiddenFieldGroup(this.getFieldGroup(this.field)).map((field: any) => this.items.push({
-        label: field.props.label,
-        command: () => this.show(field)
-      }));
+      this.items = [];
+      this.hiddenFieldGroup(this.getFieldGroup(this.field)).map((field: any) =>
+        this.items.push({
+          label: field.props.label,
+          command: () => this.show(field),
+        })
+      );
     }
   }
 
@@ -54,8 +83,8 @@ export class LabelComponent implements OnInit {
       return false;
     }
     return (
-      (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 ||
-        this.field.props.helpURL) && field.props.editorConfig.longMode
+      (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 || this.field.props.helpURL) &&
+      field.props.editorConfig.longMode
     );
   }
 
@@ -83,14 +112,14 @@ export class LabelComponent implements OnInit {
     let fieldGroup = [];
     // multischema has a nested structure object['enum', 'object'], enum is the oneOf select
     // and object['object'] are all the possible oneOf entries
-    if (field.fieldGroup.length > 0 && field.fieldGroup[0].type === 'multischema') {
+    if (field.fieldGroup?.length > 0 && field.fieldGroup[0].type === 'multischema') {
       const multischemaFieldGroup = field.fieldGroup[0];
       // [0] is the enum i.e. (select) for the oneOf
       const multischemaEntries = multischemaFieldGroup.fieldGroup[1];
       let activeGroups = multischemaEntries.fieldGroup;
       // only the active
-      activeGroups = activeGroups.filter(f => f.hide === false);
-      activeGroups.map(group => fieldGroup = [...group.fieldGroup, group]);
+      activeGroups = activeGroups.filter((f) => f.hide === false);
+      activeGroups.map((group) => (fieldGroup = [...group.fieldGroup, group]));
     } else {
       fieldGroup = field.fieldGroup;
     }
@@ -103,16 +132,7 @@ export class LabelComponent implements OnInit {
    * @returns FormlyFieldConfig[], the filtered list
    */
   hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fieldGroup.filter(f => f.hide && !('hide' in f?.expressions));
-  }
-
-  /**
-   * Translate the label of a given formly field.
-   *
-   * @param field ngx-formly field
-   */
-  translateLabel(field: FormlyFieldConfig) {
-    return this.translateService.stream(field.props.untranslatedLabel);
+    return fieldGroup.filter((f) => f.hide && !('hide' in f?.expressions));
   }
 
   /**
@@ -129,7 +149,7 @@ export class LabelComponent implements OnInit {
    */
   remove(): void {
     if (this.field.parent.type === 'object') {
-      this.field.props.setHide ? this.field.props.setHide(this.field, true): this.field.hide = true;
+      this.field.props.setHide ? this.field.props.setHide(this.field, true) : (this.field.hide = true);
     }
     if (this.field.parent.type === 'array') {
       this.field.parent.props.remove(this.getIndex());
@@ -141,7 +161,7 @@ export class LabelComponent implements OnInit {
    * @param field - FormlyFieldConfig, the field to show
    */
   show(field: FormlyFieldConfig) {
-    field.props.setHide ? field.props.setHide(field, false) : field.hide = false;
+    field.props.setHide ? field.props.setHide(field, false) : (field.hide = false);
   }
 
   /**
@@ -154,15 +174,12 @@ export class LabelComponent implements OnInit {
         if (!this.field.props?.editorConfig?.longMode) {
           return false;
         }
-        return (
-          !this.field.props.required &&
-          !this.field.hide
-        );
-        case 'array':
-          return this.field.parent.props.canRemove();
-        default:
-          return false;
-      }
+        return !this.field.props.required && !this.field.hide;
+      case 'array':
+        return this.field.parent.props.canRemove();
+      default:
+        return false;
+    }
   }
 
   /**

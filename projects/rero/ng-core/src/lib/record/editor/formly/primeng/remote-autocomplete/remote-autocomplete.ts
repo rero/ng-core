@@ -43,20 +43,17 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
 @Component({
   selector: 'ng-core-remote-autocomplete',
   template: `
-  <div class="flex w-full">
+  <div class="flex gap-1">
     @if (!field.formControl.value) {
       @if (props.filters?.options) {
-        <div class="flex">
           <p-dropdown
             [options]="props.filters.options"
             [ngModel]="props.filters.selected"
             (onChange)="changeFilter($event)"
           />
-        </div>
       }
-      <div class="flex w-full">
         <p-autoComplete
-          class="w-full"
+          class="flex-grow-1"
           styleClass="w-full"
           inputStyleClass="w-full"
           [scrollHeight]="props.scrollHeight"
@@ -83,7 +80,6 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
             }
           </ng-template>
         </p-autoComplete>
-      </div>
     } @else {
       <div class="flex gap-1 align-items-center">
         <span [innerHtml]="valueSelected()"></span>
@@ -169,7 +165,6 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
   clear(): void {
     this.value = '';
     this.formControl.reset(null);
-    this.onValueSelect.next(null);
     this.field.focus = true;
   }
 }

@@ -26,10 +26,15 @@
   [disabled]="items.length < 1"
 />
 
-<p-listbox
-  [options]="essentialsOptions"
-  scrollHeight=""
-  styleClass="mt-2"
-  (onChange)="onAddField($event)"
-/>
-
+@if(essentialsOptions?.length > 0) {
+  <p-listbox
+    [options]="essentialsOptions"
+    scrollHeight=""
+    styleClass="mt-2"
+    (onChange)="onAddField($event)"
+  >
+    <ng-template let-item pTemplate="item">
+      {{item.label|async}}
+    </ng-template>
+  </p-listbox>
+}
