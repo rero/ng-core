@@ -43,8 +43,8 @@ export interface IAutoComplete {
 }
 
 @Component({
-  selector: 'ng-core-search-autocomplete',
-  template: `
+    selector: 'ng-core-search-autocomplete',
+    template: `
     <p-autoComplete
       #autoComplete
       [overlayOptions]="overlayOptions"
@@ -65,11 +65,12 @@ export interface IAutoComplete {
       (onSelect)="onSelectValue($event)"
       (onKeyUp)="search($event)"
       (onDropdownClick)="buttonClick($event)"
+      [pAutoFocus]="true"
     >
-    <ng-template let-item pTemplate="group">
-      <div class="flex align-items-center" [ngClass]="groupClass()" [innerHTML]="item.label"></div>
+    <ng-template let-item #group>
+      <div class="core:flex core:items-center" [ngClass]="groupClass()" [innerHTML]="item.label"></div>
     </ng-template>
-    <ng-template let-item pTemplate="item">
+    <ng-template let-item #item>
         @if(item.iconClass) {
           <i [ngClass]="item.iconClass"></i>&nbsp;
         }
@@ -77,6 +78,7 @@ export interface IAutoComplete {
     </ng-template>
     </p-autoComplete>
   `,
+    standalone: false
 })
 export class SearchAutocompleteComponent implements AfterViewInit{
 
@@ -84,13 +86,13 @@ export class SearchAutocompleteComponent implements AfterViewInit{
 
   // Input
   delay = input<number>(300);
-  groupClass = input<string>('text-gray-400');
-  inputStyleClass = input<string>('w-full');
+  groupClass = input<string>('core:text-gray-400');
+  inputStyleClass = input<string>('core:w-full');
   minLength = input<number>(3);
   placeholder = input(null);
   recordTypes = input.required<IRecordType[]>();
   scrollHeight = input<string>('250px');
-  styleClass = input<string>('w-full');
+  styleClass = input<string>('core:w-full');
   value = input<string>();
 
   // Output

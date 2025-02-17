@@ -18,7 +18,7 @@ import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } fr
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { DropdownChangeEvent } from 'primeng/dropdown';
+import { SelectChangeEvent } from 'primeng/select';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -26,8 +26,9 @@ import { map, tap } from 'rxjs/operators';
  * For big editor add the possibility to display
  */
 @Component({
-  selector: 'ng-core-editor-add-field-editor',
-  templateUrl: './add-field-editor.component.html'
+    selector: 'ng-core-editor-add-field-editor',
+    templateUrl: './add-field-editor.component.html',
+    standalone: false
 })
 export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
@@ -52,7 +53,7 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
   @ViewChild("addField") autocomplete: AutoComplete;
 
-  onAddField(event: DropdownChangeEvent): void {
+  onAddField(event: SelectChangeEvent): void {
     this.editorComponentInstance.setHide(event.value, false);
   }
 

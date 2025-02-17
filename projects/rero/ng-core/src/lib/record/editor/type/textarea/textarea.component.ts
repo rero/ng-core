@@ -27,14 +27,14 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
 }
 
 @Component({
-  selector: 'ng-core-editor-formly-field-textarea',
-  template: `
+    selector: 'ng-core-editor-formly-field-textarea',
+    template: `
     <textarea
-      pInputTextarea
+      pTextarea
       [formControl]="formControl"
       [cols]="props.cols"
       [rows]="props.rows"
-      class="w-full"
+      class="core:w-full"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
     ></textarea>
@@ -57,7 +57,7 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
         }"></ng-container>
     }
     <ng-template #counter let-limit="limit" let-count="count" let-label="label">
-      <span class="text-sm text-color-secondary inline-block mr-3">
+      <span class="core:text-sm core:text-muted-color core:inline-block core:mr-4">
         {{ label }}: {{ count }}
         @if (limit) {
           / {{ limit }}
@@ -65,8 +65,8 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
       </span>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  // means change detection is triggered only when @input changed.
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class TextareaFieldComponent extends FieldType<FormlyFieldConfig<ExtraTextAreaProps>> implements OnInit {
   /** Default properties */

@@ -11,7 +11,8 @@
     "required",
     "essential",
     "textarea",
-    "select"
+    "select",
+    "password"
   ],
   "properties": {
     "$schema": {
@@ -86,6 +87,19 @@
               { "label": "Car", "value": "car" },
               { "label": "Window", "value": "window" }
             ]
+          }
+        }
+      }
+    },
+    "password": {
+      "title": "Password",
+      "type": "string",
+      "minLength": 20,
+      "widget": {
+        "formlyConfig": {
+          "type": "passwordGenerator",
+          "props": {
+            "enabledEditMode": true
           }
         }
       }

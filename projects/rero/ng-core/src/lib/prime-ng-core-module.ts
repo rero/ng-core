@@ -14,83 +14,76 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { ClipboardModule } from "@angular/cdk/clipboard";
-import { NgModule } from "@angular/core";
-import { ConfirmationService, MessageService } from "primeng/api";
+import { NgModule } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from "primeng/calendar";
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DividerModule } from 'primeng/divider';
-import { DropdownModule } from "primeng/dropdown";
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { FieldsetModule } from 'primeng/fieldset';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ListboxModule } from 'primeng/listbox';
 import { MenuModule } from 'primeng/menu';
-import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { PaginatorModule } from 'primeng/paginator';
 import { PanelModule } from 'primeng/panel';
-import { RadioButtonModule } from "primeng/radiobutton";
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
+import { SelectModule } from 'primeng/select';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { TabViewModule } from 'primeng/tabview';
-import { TagModule } from 'primeng/tag';
+import { TabsModule } from 'primeng/tabs';
+import { TextareaModule } from 'primeng/textarea';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
-import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
-
 
 @NgModule({
   providers: [
-    DialogService,
     ConfirmationService,
-    MessageService,
+    DialogService,
+    MessageService
   ],
   exports: [
     AutoCompleteModule,
     AutoFocusModule,
     BadgeModule,
     ButtonModule,
-    CalendarModule,
     CardModule,
     CheckboxModule,
-    ClipboardModule,
     ConfirmDialogModule,
-    DialogModule,
+    DatePickerModule,
     DividerModule,
-    DropdownModule,
     DynamicDialogModule,
     FieldsetModule,
-    InputGroupModule,
     InputGroupAddonModule,
-    InputSwitchModule,
+    InputGroupModule,
+    InputNumberModule,
     InputTextModule,
-    InputTextareaModule,
     ListboxModule,
-    MessagesModule,
+    MenuModule,
+    MessageModule,
     PaginatorModule,
     PanelModule,
     RadioButtonModule,
     RippleModule,
+    SelectModule,
     SplitButtonModule,
-    TabViewModule,
-    TagModule,
+    TabsModule,
+    TextareaModule,
     TieredMenuModule,
     ToastModule,
+    ToggleSwitchModule,
     TooltipModule,
-    TriStateCheckboxModule,
-    MenuModule
-  ]
+  ],
 })
-export class PrimeNgCoreModule { }
+export class PrimeNgCoreModule {}

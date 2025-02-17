@@ -50,3 +50,6 @@ Thumbs.db
 
 # cache
 .nx/
+
+# generated css file
+projects/rero/ng-core/assets/scss/ng-core-tailwind.css

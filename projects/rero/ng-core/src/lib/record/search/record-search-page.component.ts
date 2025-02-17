@@ -25,8 +25,9 @@ import { RecordUiService } from '../record-ui.service';
 import { RecordSearchService } from './record-search.service';
 
 @Component({
-  selector: 'ng-core-record-search-page',
-  templateUrl: './record-search-page.component.html'
+    selector: 'ng-core-record-search-page',
+    templateUrl: './record-search-page.component.html',
+    standalone: false
 })
 export class RecordSearchPageComponent implements OnInit, OnDestroy {
 

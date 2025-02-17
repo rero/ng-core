@@ -15,9 +15,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (typesInTabs.length > 1) {
-  <p-tabView [activeIndex]="typeIndex" (onChange)="changeType($event)">
+  <p-tabs [(value)]="currentType">
+    <p-tablist>
     @for (tab of typesInTabs; track tab) {
-      <p-tabPanel [header]="tab.label | translate"></p-tabPanel>
+      <p-tab [value]="tab.key">{{ tab.label | translate }}</p-tab>
     }
-  </p-tabView>
+    </p-tablist>
+  </p-tabs>
 }

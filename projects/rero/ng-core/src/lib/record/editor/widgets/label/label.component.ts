@@ -21,8 +21,9 @@ import { MenuItem } from 'primeng/api';
 import { merge, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'ng-core-label-editor',
-  templateUrl: './label.component.html',
+    selector: 'ng-core-label-editor',
+    templateUrl: './label.component.html',
+    standalone: false
 })
 export class LabelComponent implements OnInit, OnDestroy {
   protected translateService: TranslateService = inject(TranslateService);

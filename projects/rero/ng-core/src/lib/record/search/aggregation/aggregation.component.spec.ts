@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -22,8 +22,9 @@ import { RecordModule } from '../../record.module';
 import { RecordSearchService } from '../record-search.service';
 import { RecordSearchAggregationComponent } from './aggregation.component';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { PanelModule } from 'primeng/panel';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { CheckboxModule } from 'primeng/checkbox';
 
 describe('RecordSearchAggregationComponent', () => {
   let component: RecordSearchAggregationComponent;
@@ -32,19 +33,16 @@ describe('RecordSearchAggregationComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        PanelModule,
+    imports: [PanelModule,
         RecordModule,
-        HttpClientTestingModule,
         BrowserAnimationsModule,
         NoopAnimationsModule,
-        TriStateCheckboxModule,
+        CheckboxModule,
         TranslateModule.forRoot({
-          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
-        })
-      ],
-      providers: [RecordSearchService]
-    })
+            loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })],
+    providers: [RecordSearchService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
       .compileComponents();
   }));
 

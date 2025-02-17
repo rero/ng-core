@@ -20,12 +20,14 @@ import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ISelectProps, NgCoreFormlySelectModule } from './select';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 const renderComponent = (field: FormlyFieldConfig<ISelectProps>) => {
   return createFieldComponent(field, {
     imports: [
       NgCoreFormlySelectModule,
       NoopAnimationsModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent }
@@ -59,6 +61,6 @@ describe('SelectComponent', () => {
         tooltipPositionStyle: 'absolute'
       }
     });
-    expect(query('p-dropdown')).toHaveSize(1);
+    expect(query('p-select')).toHaveSize(1);
   });
 });

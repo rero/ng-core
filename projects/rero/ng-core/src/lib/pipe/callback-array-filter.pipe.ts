@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Pipe for applying a callback function to filter array items.
  */
 @Pipe({
-  name: 'callbackArrayFilter'
+    name: 'callbackArrayFilter',
+    standalone: false
 })
 export class CallbackArrayFilterPipe implements PipeTransform {
   /**

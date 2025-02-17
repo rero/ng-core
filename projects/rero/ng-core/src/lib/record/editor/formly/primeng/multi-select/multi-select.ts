@@ -55,8 +55,8 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
 }
 
 @Component({
-  selector: 'ng-core-multi-select',
-  template: `
+    selector: 'ng-core-multi-select',
+    template: `
     <p-multiSelect
       [appendTo]="props.appendTo"
       [class]="props.class"
@@ -85,9 +85,9 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       (onChange)="props.change && props.change(field, $event)"
       (onClear)="clearValidators()"
     >
-      <ng-template let-items pTemplate="selectedItems">
+      <ng-template #selectedItems let-items>
         @for(option of items; track items; let last = $last) {
-          <div class="inline-flex align-items-center gap-2 px-1">
+          <div class="core:inline-flex core:items-center core:gap-2 core:px-1">
             <div>
               {{ option.label }}@if(!last) {, }
             </div>
@@ -99,6 +99,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       </ng-template>
     </p-multiSelect>
   `,
+    standalone: false
 })
 export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSelectProps>> implements OnInit, OnDestroy {
 
@@ -111,18 +112,18 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<IMultiSelectProps>> = {
     props: {
-      class: 'w-full',
+      class: 'core:w-full',
       display: 'comma',
       editable: false,
       filter: true,
       filterMatchMode: 'contains',
       group: false,
-      panelStyleClass: 'w-full',
+      panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
       sort: false,
-      styleClass: 'w-full mb-1',
+      styleClass: 'core:w-full core:mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
       variant: 'outlined',
@@ -159,7 +160,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forChild(),
     FormlySelectModule,
     PrimeNgMultiSelectModule,
     FormlyModule.forChild({

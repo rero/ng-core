@@ -1,5 +1,5 @@
 {
-  "/api/*": {
+  "/api/**": {
     "target": "https://localhost:5000",
     "secure": false,
     "logLevel": "debug",
@@ -11,7 +11,7 @@
       "Connection": "keep-alive"
     }
   },
-  "/schemas/*": {
+  "/schemas/**": {
     "target": "https://localhost:5000",
     "secure": false,
     "logLevel": "debug",

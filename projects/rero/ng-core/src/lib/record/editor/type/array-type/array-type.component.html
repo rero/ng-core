@@ -17,17 +17,15 @@
 <!-- array title only if the array is empty -->
 
 @if (props.label && field.props.hideLabel !== true) {
-<ng-core-label-editor [field]="field" />
+  <ng-core-label-editor [field]="field" />
 }
 
 <div>
   <!-- for each item -->
   <div class="{{ props.containerCssClass }} ">
     @for (f of field.fieldGroup; track f) { @if (!f.hide) {
-    <div class="{{ f.props.itemCssClass }} mb-1" [id]="'field-' + f.id">
-      <div class="border-left pl-1">
-        <formly-field [field]="f" />
-      </div>
+    <div class="{{ f.props.itemCssClass }} core:mb-1" [id]="'field-' + f.id">
+      <formly-field [field]="f" />
     </div>
     } }
   </div>

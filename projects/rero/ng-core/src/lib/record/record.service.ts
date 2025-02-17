@@ -14,12 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
-  HttpParams,
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';

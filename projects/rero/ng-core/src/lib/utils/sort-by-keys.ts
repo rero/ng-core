@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Source code: https://dev.to/codephobia/using-typescript-to-sort-by-keys-35ob
+ * Source code: https://dev.to/codephobia/using-typescricore:pt-to-sort-by-keys-35ob
  */
 
 /**

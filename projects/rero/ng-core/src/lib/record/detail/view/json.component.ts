@@ -22,14 +22,15 @@ import { DetailRecord } from './detail-record';
  * Component to display a record by dumping its data to JSON.
  */
 @Component({
-  template: `
+    template: `
     @if (record) {
       <h1>Record of type "{{ type }}" #{{ record.id }}</h1>
       <pre>
         <div style="white-space: pre-wrap;">{{ record|json }}</div>
       </pre>
     }
-  `
+  `,
+    standalone: false
 })
 export class JsonComponent implements DetailRecord, OnInit {
   // Observable resolving record data

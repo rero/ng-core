@@ -18,18 +18,19 @@ import { Component, inject } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'ng-core-dialog',
-  template: `
-  <div class="flex flex-column gap-2">
-    <div class="flex" [innerHtml]="config.data.body|nl2br"></div>
-    <div class="flex justify-content-end gap-2">
+    selector: 'ng-core-dialog',
+    template: `
+  <div class="core:flex core:flex-col core:gap-2">
+    <div class="core:flex" [innerHtml]="config.data.body|nl2br"></div>
+    <div class="core:flex core:justify-end core:gap-2">
       <p-button [label]="config.data.cancelTitleButton || 'Cancel' | translate" severity="secondary" (onClick)="cancel()" />
       @if (config.data.confirmButton) {
         <p-button [label]="config.data.confirmTitleButton || 'OK' | translate" (onClick)="confirm()" />
       }
     </div>
   </div>
-  `
+  `,
+    standalone: false
 })
 export class DialogComponent {
 

@@ -14,36 +14,36 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<p-panel header="Toast" styleClass="mt-3">
+<p-panel header="Toast" styleClass="mt-4">
   <app-toast />
 </p-panel>
 
-<p-panel header="Dialog" styleClass="mt-3">
+<p-panel header="Dialog" styleClass="mt-4">
   <app-dialog />
 </p-panel>
 
-<p-panel header="Nl2br pipe" styleClass="mt-3">
+<p-panel header="Nl2br pipe" styleClass="mt-4">
   <div [innerHTML]="'Multiline
             text'|nl2br"></div>
 </p-panel>
 
-<p-panel header="Translate Language pipe" styleClass="mt-3">
+<p-panel header="Translate Language pipe" styleClass="mt-4">
   <p>Translate "fre" code in german: <strong>{{ 'fre' | translateLanguage: 'de' }}</strong></p>
   <p>Translate "zzz" code in italian: <strong>{{ 'zzz' | translateLanguage: 'it' }}</strong> (code not available)</p>
   <p>Translate "fre" code in not language loaded: <strong>{{ 'fre' | translateLanguage: 'pt' }}</strong> (return initial
     value)</p>
 </p-panel>
 
-<p-panel header="Spinner" styleClass="mt-3">
+<p-panel header="Spinner" styleClass="mt-4">
   <p-button label="Show spinner (for 3 seconds)" size="small" [outlined]="true" (onClick)="showSpinner()" />
 </p-panel>
 
-<p-panel header="Markdown pipe" styleClass="mt-3">
+<p-panel header="Markdown pipe" styleClass="mt-4">
   <input pInputText class="w-full" type="text" id="markdown" value="*Hello* **world**" [(ngModel)]="markdownText">
-  <div class="my-3" [innerHTML]="markdownText | markdown"></div>
+  <div class="my-4" [innerHTML]="markdownText | markdown"></div>
 </p-panel>
 
-<p-panel header="Text Read More" styleClass="mt-3">
+<p-panel header="Text Read More" styleClass="mt-4">
 <ng-core-text-read-more
 text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. "
 [unit]="'character'"
@@ -53,11 +53,11 @@ text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo l
 />
 </p-panel>
 
-<p-panel header="Error" styleClass="mt-3">
+<p-panel header="Error" styleClass="mt-4">
   <ng-core-error [error]="{title: 'title', status: 'error'}"/>
 </p-panel>
 
-<p-panel header="Typography" styleClass="mt-3">
+<p-panel header="Typography" styleClass="mt-4">
   <h1>Heading 1</h1>
   <p>
     Cras fermentum velit vitae auctor aliquet. Nunc non congue urna, at blandit nibh. Donec ac
@@ -92,7 +92,7 @@ text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo l
   <ul>
     <li><span>Base Text</span></li>
     <li><span class="text-primary">Primary Text</span></li>
-    <li><span class="text-color-secondary">Secondary Text</span></li>
+    <li><span class="text-muted-color">Secondary Text</span></li>
     <li><a href="#">Home Link</a></li>
     <li><span class="text-link">Text Link</span></li>
     <li><span class="text-info">Text Info</span></li>

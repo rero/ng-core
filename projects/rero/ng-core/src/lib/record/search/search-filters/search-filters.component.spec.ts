@@ -19,7 +19,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { InputSwitchModule } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { IChecked, SearchFiltersComponent } from './search-filters.component';
 
 describe('SearchFiltersComponent', () => {
@@ -53,7 +53,7 @@ describe('SearchFiltersComponent', () => {
       declarations: [SearchFiltersComponent],
       imports: [
         FormsModule,
-        InputSwitchModule,
+        ToggleSwitchModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([])
       ]
@@ -75,7 +75,7 @@ describe('SearchFiltersComponent', () => {
   });
 
   it('should only display the expert search', () => {
-    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-inputswitch');
+    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-toggleswitch');
     expect(inputs.length).toBe(1);
   });
 
@@ -83,7 +83,7 @@ describe('SearchFiltersComponent', () => {
     componentRef.setInput('styleClassSection', 'font-bold');
     componentRef.setInput('query', '*');
     fixture.detectChanges();
-    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-inputswitch');
+    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-toggleswitch');
     expect(inputs.length).toBe(3);
 
     const labels = fixture.debugElement.nativeElement.querySelectorAll('label');
@@ -92,7 +92,7 @@ describe('SearchFiltersComponent', () => {
     expect(labels[2].innerHTML).toEqual('Physical resources');
 
     // Check section
-    const div = fixture.debugElement.nativeElement.querySelector('div.mb-2');
+    const div = fixture.debugElement.nativeElement.querySelector('div[class="core:mb-2"]');
     const span = div.querySelector('div.font-bold');
     expect(span.innerHTML).toEqual('show only');
   });
@@ -107,7 +107,7 @@ describe('SearchFiltersComponent', () => {
     const onChange = component.onChange.subscribe((change: IChecked) => {
       expect(change).toEqual(event);
     });
-    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-inputswitch');
+    const inputs = fixture.debugElement.nativeElement.querySelectorAll('p-toggleswitch');
     inputs[1].querySelector('div').click();
     onChange.unsubscribe();
   });

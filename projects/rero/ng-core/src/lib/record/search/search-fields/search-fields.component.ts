@@ -25,8 +25,9 @@ export interface searchFieldEvent {
 };
 
 @Component({
-  selector: 'ng-core-search-fields',
-  templateUrl: './search-fields.component.html'
+    selector: 'ng-core-search-fields',
+    templateUrl: './search-fields.component.html',
+    standalone: false
 })
 export class SearchFieldsComponent implements OnInit {
 

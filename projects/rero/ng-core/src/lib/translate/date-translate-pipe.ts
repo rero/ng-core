@@ -19,8 +19,9 @@ import { inject, Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
-  name: 'dateTranslate',
-  pure: false, // required to update the value when the promise is resolved
+    name: 'dateTranslate',
+    pure: false,
+    standalone: false
 })
 export class DateTranslatePipe extends DatePipe implements PipeTransform {
 

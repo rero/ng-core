@@ -21,13 +21,14 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
  * Component for displaying an object in editor.
  */
 @Component({
-  selector: 'ng-core-editor-formly-object-type',
-  templateUrl: './object-type.component.html'
+    selector: 'ng-core-editor-formly-object-type',
+    templateUrl: './object-type.component.html',
+    standalone: false
 })
 export class ObjectTypeComponent extends FieldType<FormlyFieldConfig> {
   defaultOptions: Partial<FormlyFieldConfig<any>> = {
     props: {
-      containerCssClass: 'flex flex-column gap-2'
+      containerCssClass: 'core:flex core:flex-col core:gap-2'
     }
   };
 }

@@ -14,11 +14,11 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="text-center my-5">
-  <p class="text-4xl">
-    <i class="fa fa-flash mr-3"></i>
-    <span class="text-color-secondary">{{ error.status }}</span>
+<div class="core:text-center core:my-8">
+  <p class="core:text-4xl">
+    <i class="fa fa-flash core:mr-4"></i>
+    <span class="core:text-muted-color">{{ error.status }}</span>
     {{ error.title }}
   </p>
-  <h5 class="mt-5">{{ error.message | default: ('You cannot access this page.' | translate) }}</h5>
+  <h5 class="core:mt-8">{{ error.message | default: ('You cannot access this page.' | translate) }}</h5>
 </div>

@@ -17,8 +17,9 @@
 import { Component, ElementRef, ViewChild, input, output } from '@angular/core';
 
 @Component({
-  selector: 'ng-core-search-input',
-  templateUrl: './search-input.component.html'
+    selector: 'ng-core-search-input',
+    templateUrl: './search-input.component.html',
+    standalone: false
 })
 export class SearchInputComponent {
   /** Input Id */

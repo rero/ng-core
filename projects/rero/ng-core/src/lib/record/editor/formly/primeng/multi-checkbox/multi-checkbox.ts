@@ -32,27 +32,29 @@ export interface IMultiCheckBoxProps extends FormlyFieldProps {
 }
 
 @Component({
-  selector: 'ng-core-multi-checkbox',
-  template: `
-    <div class="flex" [ngClass]="{ 'gap-3': props.style === 'inline', 'flex-column gap-1': props.style === 'stacked' }">
-    @for (option of optionValues$|async; track option) {
-      <div class="flex align-items-center">
+    selector: 'ng-core-multi-checkbox',
+    template: `
+    <div class="core:flex" [ngClass]="{ 'core:gap-3': props.style === 'inline', 'core:flex-col core:gap-1': props.style === 'stacked' }">
+    @for (option of optionValues$|async|keyvalue; track option) {
+      @let fieldKey = field.key + '_' + option.key;
+      <div class="core:flex core:items-center core:gap-2">
         <p-checkbox
-          [disabled]="option.disabled"
+          [disabled]="option.value.disabled"
           [formlyAttributes]="field"
-          [label]="option.label"
-          [labelStyleClass]="props.labelStyleClass"
+          [inputId]="fieldKey"
           [name]="field.key"
           [ngModel]="field.formControl.value"
           [readonly]="props.readonly"
           [styleClass]="props.styleClass"
-          [value]="option.value"
+          [value]="option.value.value"
           (onChange)="onChange($event)"
         />
+        <label [for]="fieldKey" [class]="props.labelStyleClass">{{ option.value.label }}</label>
       </div>
     }
     </div>
   `,
+    standalone: false
 })
 export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCheckBoxProps>> implements OnInit, OnDestroy {
 
@@ -100,7 +102,7 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
     CommonModule,
     CheckboxModule,
     FormsModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forChild(),
     FormlySelectModule,
     FormlyModule.forChild({
       types: [

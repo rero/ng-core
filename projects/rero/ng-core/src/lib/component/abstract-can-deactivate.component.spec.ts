@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 import { AbstractCanDeactivateComponent } from "./abstract-can-deactivate.component";
 import { CommonModule } from "@angular/common";
 
@@ -31,20 +31,22 @@ describe('AbstractCanDeactivateComponent', () => {
     returnValue: false
   };
 
-  TestBed.configureTestingModule({
-    imports: [
-      CommonModule
-    ],
-    declarations: [CanDeactivateComponent],
-  })
-  .compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        CommonModule
+      ],
+      declarations: [CanDeactivateComponent],
+    })
+    .compileComponents()
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(CanDeactivateComponent);
     component = fixture.componentInstance;
   });
 
-  it('should return canDeactivate value', async () => {
+  it('should return canDeactivate value', () => {
     component.canDeactivateChanged(true);
     component.unloadNotification(event);
     expect(event.returnValue).toBeFalse();

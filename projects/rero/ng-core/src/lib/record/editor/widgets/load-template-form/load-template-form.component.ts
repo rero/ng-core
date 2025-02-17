@@ -26,8 +26,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'ng-core-load-template-form',
-  templateUrl: './load-template-form.component.html'
+    selector: 'ng-core-load-template-form',
+    templateUrl: './load-template-form.component.html',
+    standalone: false
 })
 export class LoadTemplateFormComponent implements OnInit {
 

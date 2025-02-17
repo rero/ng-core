@@ -17,7 +17,10 @@
 import { Directive, inject, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 // eslint-disable-next-line @angular-eslint/directive-selector
-@Directive({ selector: '[ngVar]' })
+@Directive({
+    selector: '[ngVar]',
+    standalone: false
+})
 export class NgVarDirective {
 
   protected vcRef: ViewContainerRef = inject(ViewContainerRef);

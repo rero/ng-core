@@ -21,8 +21,9 @@ import { RecordSearchService } from '../../record-search.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'ng-core-aggregation-date-range',
-  templateUrl: './date-range.component.html'
+    selector: 'ng-core-aggregation-date-range',
+    templateUrl: './date-range.component.html',
+    standalone: false
 })
 export class AggregationDateRangeComponent implements OnInit, OnDestroy {
 

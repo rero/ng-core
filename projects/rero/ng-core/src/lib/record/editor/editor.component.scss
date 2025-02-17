@@ -19,6 +19,6 @@ ng-core-editor {
   .bd-toc,
   .bd-sidebar {
     top: 4rem;
-    height: 100vh - 10vh;
+    height: calc(100vh - 10vh);
   }
 }

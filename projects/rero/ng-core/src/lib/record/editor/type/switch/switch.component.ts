@@ -26,10 +26,10 @@ interface SwitchProps extends FormlyFieldProps {
  * Component for displaying a switcher in editor.
  */
 @Component({
-  selector: 'ng-core-editor-formly-field-switch',
-  template: `
-    <div class="flex gap-2 align-items-center">
-      <p-inputSwitch
+    selector: 'ng-core-editor-formly-field-switch',
+    template: `
+    <div class="core:flex core:gap-2 core:items-center">
+      <p-toggleswitch
       [ngClass]="{'ng-invalid ng-dirty': showError }"
         [formControl]="formControl"
         [formlyAttributes]="field"
@@ -37,6 +37,7 @@ interface SwitchProps extends FormlyFieldProps {
       <label [for]="id" [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</label>
     </div>
   `,
+    standalone: false
 })
 export class SwitchComponent extends FieldType<FormlyFieldConfig<SwitchProps>> {
   /** Default properties */

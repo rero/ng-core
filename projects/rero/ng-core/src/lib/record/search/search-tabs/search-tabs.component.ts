@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject, input, output } from '@angular/core';
+import { Component, OnInit, inject, input, output, model, OnDestroy, OutputRefSubscription } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 // Documentation: https://primeng.org/tabview
@@ -25,10 +25,11 @@ export interface ITabViewChangeEvent {
 };
 
 @Component({
-  selector: 'ng-core-search-tabs',
-  templateUrl: './search-tabs.component.html'
+    selector: 'ng-core-search-tabs',
+    templateUrl: './search-tabs.component.html',
+    standalone: false
 })
-export class SearchTabsComponent implements OnInit {
+export class SearchTabsComponent implements OnInit, OnDestroy {
 
   protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
@@ -42,22 +43,17 @@ export class SearchTabsComponent implements OnInit {
   typesInTabs: any[];
 
   /** Tab index */
-  typeIndex: number = 0;
+  currentType = model<string | undefined>(undefined);
+  currentTypeSubscription: OutputRefSubscription;
 
   /** OnInit hook */
   ngOnInit(): void {
     this.typesInTabs = this.types().filter((item: any) => item.hideInTabs !== true);
-    this.typeIndex = Math.max(
-      this.typesInTabs.findIndex((type: any) => type.key === this.activatedRoute.snapshot.params.type),
-      0
-    );
+    this.currentType.set(this.activatedRoute.snapshot.params.type);
+    this.currentTypeSubscription = this.currentType.subscribe(typeName => this.onChangeType.emit(typeName));
   }
 
-  /**
-   * Type Change
-   * @param type - string
-   */
-  changeType(type: string): void {
-    this.onChangeType.emit(type);
+  ngOnDestroy(): void {
+    this.currentTypeSubscription.unsubscribe();
   }
 }

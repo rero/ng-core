@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,8 +21,8 @@ import { RecordSearchService } from '../../record-search.service';
 import { BucketNamePipe } from '../pipe/bucket-name.pipe';
 import { BucketsComponent } from './buckets.component';
 import { ComponentRef } from '@angular/core';
-import { TriStateCheckboxModule } from 'primeng/tristatecheckbox';
 import { FormsModule } from '@angular/forms';
+import { CheckboxModule } from 'primeng/checkbox';
 
 describe('BucketsComponent', () => {
   let component: BucketsComponent;
@@ -39,7 +39,7 @@ describe('BucketsComponent', () => {
       ],
       imports: [
         FormsModule,
-        TriStateCheckboxModule,
+        CheckboxModule,
         TranslateModule.forRoot({
           loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         })
@@ -73,7 +73,7 @@ describe('BucketsComponent', () => {
   });
 
   it('should assign the new filter', () => {
-    const checkbox = fixture.debugElement.nativeElement.querySelectorAll('input.p-element')[0];
+    const checkbox = fixture.debugElement.nativeElement.querySelectorAll('.p-checkbox-input')[0];
     checkbox.click();
     expect(recordSearchService.hasFilter('type', 'docmaintype_article')).toBeTrue();
   });

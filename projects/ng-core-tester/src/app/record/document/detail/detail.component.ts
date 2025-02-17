@@ -23,8 +23,9 @@ import { Observable } from 'rxjs';
  * Component for displaying the detail of a document.
  */
 @Component({
-  selector: 'app-detail',
-  templateUrl: './detail.component.html'
+    selector: 'app-detail',
+    templateUrl: './detail.component.html',
+    standalone: false
 })
 export class DetailComponent implements DetailRecord, OnInit {
   // Inject

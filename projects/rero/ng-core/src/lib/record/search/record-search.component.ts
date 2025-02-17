@@ -44,9 +44,8 @@ import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { AggregationsFilter, RecordSearchService } from './record-search.service';
 import { ChangeEvent } from './paginator/paginator.component';
-import { TabViewChangeEvent } from 'primeng/tabview';
 import { IChecked } from './search-filters/search-filters.component';
-import { DropdownChangeEvent } from 'primeng/dropdown';
+import { SelectChangeEvent } from 'primeng/select';
 import { MenuItem } from 'primeng/api';
 
 export interface SearchParams {
@@ -70,8 +69,9 @@ export interface SortOption {
 }
 
 @Component({
-  selector: 'ng-core-record-search',
-  templateUrl: './record-search.component.html',
+    selector: 'ng-core-record-search',
+    templateUrl: './record-search.component.html',
+    standalone: false
 })
 export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   protected recordService: RecordService = inject(RecordService);
@@ -366,7 +366,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
                     bucketSize: this.config.aggregationsBucketSize || null,
                     value: { buckets: [] },
                     expanded: (aggregationsExpandCfg || []).includes(key),
-                    included: ([...aggregationsExpandCfg, ...this.aggregationsToHide] || []).includes(key),
+                    included: ([...aggregationsExpandCfg, ...this.aggregationsToHide]).includes(key),
                     name: key.name || this._aggregationName(key) || null,
                   };
                 });
@@ -376,8 +376,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
           tap(() => (this.hits = [])),
           switchMap(() => this._getRecords())
         )
-        .subscribe(
-          (records: Record) => {
+        .subscribe({
+
+          next: (records: Record) => {
             this.loaded = true;
             this.hits = records.hits;
             this.spinner.hide();
@@ -399,10 +400,11 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
             // reload export options
             this.exportOptions = this._exportFormats();
           },
-          (error) => {
+          error: (error) => {
             this.error = error;
             this.spinner.hide();
           }
+        }
         )
     );
   }
@@ -531,10 +533,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Change type of records.
-   * @param TabViewChangeEvent - Defines the custom events used by the component's emitters.
+   * @param type - resource type name.
    */
-  changeType(event: TabViewChangeEvent) {
-    this.currentType = this.availableTypes[event.index].key;
+  changeType(type: string) {
+    this.currentType = type;
     this._loadConfigurationForType(this.currentType);
     this.aggregationsFilters = [];
     this._searchParamsHasChanged();
@@ -723,7 +725,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  searchInField(event: DropdownChangeEvent): void {
+  searchInField(event: SelectChangeEvent): void {
     const selectedField = event.value;
     this.searchFields = this.searchFields.map((item: SearchField) => {
       if (selectedField && item.path === selectedField.path) {
@@ -820,7 +822,6 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
         preFilters[key] = value;
       }
     }
-
     return this.recordService.getRecords(
       this._currentIndex(),
       q,

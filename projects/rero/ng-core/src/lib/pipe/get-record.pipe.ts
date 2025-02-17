@@ -23,7 +23,8 @@ import { extractIdOnRef } from '../utils/utils';
  * Get a record by its PID.
  */
 @Pipe({
-  name: 'getRecord'
+    name: 'getRecord',
+    standalone: false
 })
 export class GetRecordPipe implements PipeTransform {
 

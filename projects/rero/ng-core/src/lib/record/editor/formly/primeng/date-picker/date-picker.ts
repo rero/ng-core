@@ -18,7 +18,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, NgModule, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 
 // Calendar options: https://primeng.org/calendar
 export interface IDateTimePickerProps extends FormlyFieldProps {
@@ -52,9 +52,9 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
 }
 
 @Component({
-  selector: 'ng-core-date-picker',
-  template: `
-    <p-calendar
+    selector: 'ng-core-date-picker',
+    template: `
+    <p-datepicker
       [appendTo]="props.appendTo"
       [formControl]="formControl"
       [formlyAttributes]="field"
@@ -87,7 +87,8 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [view]="props.view"
     />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePickerProps>> implements OnInit {
 
@@ -114,7 +115,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       stepHour: 1,
       stepMinute: 1,
       stepSecond: 1,
-      styleClass: 'w-full',
+      styleClass: 'core:w-full',
       todayButtonStyleClass: 'p-button-text',
       view: 'date'
     },
@@ -150,7 +151,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
   declarations: [DatePickerComponent],
   imports: [
     CommonModule,
-    CalendarModule,
+    DatePickerModule,
     FormsModule,
     ReactiveFormsModule,
     FormlyModule.forChild({

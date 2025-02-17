@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,8 +42,9 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
 
 @Component({
   selector: 'ng-core-remote-autocomplete',
+  standalone: false,
   template: `
-  <div class="flex gap-1">
+  <div class="core:flex core:gap-1">
     @if (!field.formControl.value) {
       @if (props.filters?.options) {
           <p-dropdown
@@ -53,9 +54,9 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           />
       }
         <p-autoComplete
-          class="flex-grow-1"
-          styleClass="w-full"
-          inputStyleClass="w-full"
+          class="core:grow"
+          styleClass="core:w-full"
+          inputStyleClass="core:w-full"
           [scrollHeight]="props.scrollHeight"
           [minLength]="props.minLength"
           [maxlength]="props.maxLength"
@@ -66,23 +67,25 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           (completeMethod)="search($event)"
           (onSelect)="onSelect($event)"
         >
-          <ng-template let-data pTemplate="item">
-            <div class="flex gap-1">
-              <div class="flex" [innerHTML]="data.label"></div>
-              @if (data.link) {
-                <a class="text-color-secondary" [href]="data.link" target="_blank">
-                  <i class="fa fa-external-link"></i>
-                </a>
+          <ng-template #item let-data>
+            <div class="core:w-full">
+              <div class="core:flex core:gap-2">
+                <span class="grow" [innerHTML]="data.label"></span>
+                @if (data.link) {
+                  <a class="core:flex-none text-color-secondary" [href]="data.link" target="_blank">
+                    <i class="fa fa-external-link"></i>
+                  </a>
+                }
+              </div>
+              @if (data.summary) {
+                <div class="core:w-full" [innerHTML]="data.summary" [ngClass]="props.summaryClass"></div>
               }
             </div>
-            @if (data.summary) {
-              <div [innerHTML]="data.summary" [ngClass]="props.summaryClass"></div>
-            }
           </ng-template>
         </p-autoComplete>
     } @else {
-      <div class="flex gap-1 align-items-center">
-        <span [innerHtml]="valueSelected()"></span>
+      <div class="core:flex core:gap-1 core:items-center">
+        <div [innerHtml]="valueSelected()"></div>
         <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="clear()" />
       </div>
     }

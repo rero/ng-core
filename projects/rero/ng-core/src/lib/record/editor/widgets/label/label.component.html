@@ -17,7 +17,7 @@
 @if (field) {
 <!-- header and menu -->
 @if (!isRoot()) {
-<ng-container *ngTemplateOutlet="hasMenu(field) ? menu : title; context: { f: field }" />
+  <ng-container *ngTemplateOutlet="hasMenu(field) ? menu : title; context: { f: field }" />
 }
 
 <!-- TEMPLATES -->
@@ -25,7 +25,7 @@
 <ng-template #menu let-f="f">
   <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
     <ng-container menu>
-      <div class="flex">
+      <div class="core:flex">
         <p-button icon="fa fa-caret-down" severity="secondary" [text]="true" (onClick)="menu.toggle($event)" />
         <p-tieredMenu #menu [model]="items" [popup]="true" />
       </div>
@@ -39,7 +39,7 @@
         icon="fa fa-clone"
         severity="secondary"
         [text]="true"
-        styleClass="mr-1"
+        styleClass="core:mr-1"
         (onClick)="add()"
       />
       }
@@ -59,9 +59,9 @@
 
 <!-- section title -->
 <ng-template #title let-f="f">
-  <div class="flex gap-1 align-items-center">
+  <div class="core:flex core:gap-1 core:items-center">
     @if (f.props.label) {
-    <label [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
+    <label class="p-fieldset-legend-label" [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
       {{ f.props.label }}
     </label>
     @if (f.props.required && f.props.hideRequiredMarker !== true) { * } @if (canAddItem()) {

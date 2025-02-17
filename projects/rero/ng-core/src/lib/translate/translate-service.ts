@@ -26,7 +26,7 @@ import de from 'primelocale/de.json';
 import en from 'primelocale/en.json';
 import fr from 'primelocale/fr.json';
 import it from 'primelocale/it.json';
-import { PrimeNGConfig } from "primeng/api";
+import { PrimeNG } from "primeng/config";
 import { Observable } from "rxjs";
 import { CoreConfigService } from "../core-config.service";
 
@@ -35,7 +35,7 @@ import { CoreConfigService } from "../core-config.service";
 })
 export class NgCoreTranslateService extends TranslateService {
 
-  protected primengConfig: PrimeNGConfig = inject(PrimeNGConfig);
+  protected primeNG: PrimeNG = inject(PrimeNG);
   protected coreConfigService: CoreConfigService = inject(CoreConfigService);
 
   private locales = {
@@ -63,7 +63,7 @@ export class NgCoreTranslateService extends TranslateService {
 
   use(lang: string): Observable<any> {
     DateTime.locale = lang;
-    this.primengConfig.setTranslation(this.locales[lang].primeng[lang]);
+    this.primeNG.setTranslation(this.locales[lang].primeng[lang]);
 
     return super.use(lang);
   }

@@ -6,6 +6,12 @@
       "schematics": {
         "@schematics/angular:component": {
           "standalone": false
+        },
+        "@schematics/angular:directive": {
+            "standalone": false
+        },
+        "@schematics/angular:pipe" : {
+            "standalone": false
         }
       },
       "projectType": "library",
@@ -45,8 +51,13 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss",
           "standalone": false
+        },
+        "@schematics/angular:directive": {
+            "standalone": false
+        },
+        "@schematics/angular:pipe" : {
+            "standalone": false
         }
       },
       "root": "projects/ng-core-tester",
@@ -54,17 +65,20 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
             "allowedCommonJsDependencies": [
               "crypto-js",
               "easymde",
               "js-generate-password"
             ],
-            "outputPath": "dist/ng-core-tester",
+            "outputPath": {
+              "base": "dist/ng-core-tester"
+            },
             "index": "projects/ng-core-tester/src/index.html",
-            "main": "projects/ng-core-tester/src/main.ts",
-            "polyfills": "projects/ng-core-tester/src/polyfills.ts",
+            "polyfills": [
+              "projects/ng-core-tester/src/polyfills.ts"
+            ],
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
             "assets": [
               "projects/ng-core-tester/src/favicon.ico",
@@ -73,12 +87,11 @@
             "styles": [
               "projects/ng-core-tester/src/styles.scss"
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "projects/ng-core-tester/src/main.ts"
           },
           "configurations": {
             "production": {
@@ -93,8 +106,6 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",

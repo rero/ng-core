@@ -17,20 +17,23 @@
         "createDefaultProgram": true
       },
       "rules": {
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "ngCore",
-            "style": "camelCase"
-          }
-        ],
+        "@angular-eslint/component-class-suffix": "off",
+        "@angular-eslint/no-output-on-prefix": "off",
+        "@angular-eslint/no-output-native": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
             "type": "element",
             "prefix": "ng-core",
             "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "prefix": ["ng-core", "ng"],
+            "style": "camelCase",
+            "type": "attribute"
           }
         ]
       }

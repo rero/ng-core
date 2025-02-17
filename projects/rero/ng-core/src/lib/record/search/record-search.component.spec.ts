@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -35,7 +35,6 @@ import { RecordSearchComponent } from './record-search.component';
 import { RecordSearchService } from './record-search.service';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
 import { ConfirmationService } from 'primeng/api';
-import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 
 const adminMode = (): Observable<ActionStatus> => {
@@ -146,7 +145,6 @@ describe('RecordSearchComponent', () => {
         TranslateLanguagePipe
       ],
       imports: [
-        TabViewModule,
         ButtonModule,
         BrowserAnimationsModule,
         FormsModule,
@@ -190,13 +188,6 @@ describe('RecordSearchComponent', () => {
     expect(component.q).toBe('');
     component.searchByQuery('search');
     expect(component.q).toBe('search');
-  });
-
-  it('should change type', () => {
-    tabViewChangeEventMock.index = 0;
-    component.changeType(tabViewChangeEventMock);
-    expect(component.currentType).toBe('documents');
-    expect(component.aggregationsFilters.length).toBe(0);
   });
 
   it('should set current page for pagination', () => {

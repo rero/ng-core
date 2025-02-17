@@ -24,7 +24,8 @@ import { sortByKeys } from '../utils/sort-by-keys';
  */
 @Pipe({
     name: 'sortByKeys',
-    pure: true
+    pure: true,
+    standalone: false
 })
 export class SortByKeysPipe implements PipeTransform {
   /**

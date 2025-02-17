@@ -16,7 +16,7 @@
  */
 import { Component, inject, input, output } from '@angular/core';
 import { SearchFilter, SearchFilterSection } from '../../record';
-import { InputSwitchChangeEvent } from 'primeng/inputswitch';
+import { ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { ActivatedRoute } from '@angular/router';
 
 export interface IChecked {
@@ -25,8 +25,9 @@ export interface IChecked {
 }
 
 @Component({
-  selector: 'ng-core-search-filters',
-  templateUrl: './search-filters.component.html'
+    selector: 'ng-core-search-filters',
+    templateUrl: './search-filters.component.html',
+    standalone: false
 })
 export class SearchFiltersComponent {
 
@@ -98,10 +99,10 @@ export class SearchFiltersComponent {
 
   /**
    * Event on switch
-   * @param event - InputSwitchChangeEvent primeng
+   * @param event - ToggleSwitchChangeEvent primeng
    * @param filter the search filter
    */
-  change(event: InputSwitchChangeEvent, filter: SearchFilter): void {
+  change(event: ToggleSwitchChangeEvent, filter: SearchFilter): void {
     this.onChange.emit({ filterKey: filter.filter, checked: event.checked })
   }
 }
