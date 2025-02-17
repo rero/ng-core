@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +23,7 @@ import { RecordModule } from '@rero/ng-core';
 import { LoadTemplateFormComponent } from './load-template-form.component';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RouterModule } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoadTemplateFormComponent', () => {
   let component: LoadTemplateFormComponent;
@@ -31,23 +32,22 @@ describe('LoadTemplateFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [LoadTemplateFormComponent],
-      imports: [
-        BrowserAnimationsModule,
+    declarations: [LoadTemplateFormComponent],
+    imports: [BrowserAnimationsModule,
         RecordModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
-        HttpClientTestingModule,
         TranslateModule.forRoot({
-          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
-        })
-      ],
-      providers: [
-          TranslateService,
-          DynamicDialogRef,
-          DynamicDialogConfig
-      ]
-    })
+            loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })],
+    providers: [
+        TranslateService,
+        DynamicDialogRef,
+        DynamicDialogConfig,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
     .compileComponents();
     dynamicDialogConfig = TestBed.inject(DynamicDialogConfig);
   }));

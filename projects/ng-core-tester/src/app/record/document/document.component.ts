@@ -21,7 +21,8 @@ import { ResultItem, TitleMetaService } from '@rero/ng-core';
  * Component for displaying a document brief view.
  */
 @Component({
-  templateUrl: './document.component.html'
+    templateUrl: './document.component.html',
+    standalone: false
 })
 export class DocumentComponent implements OnInit, ResultItem {
   // Inject

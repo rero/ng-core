@@ -15,11 +15,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "font-awesome/scss/font-awesome.scss";
-@import "primeng/resources/primeng";
-@import "primeicons/primeicons.css";
-@import "primeng/resources/themes/aura-light-blue/theme.css";
-@import "easymde/dist/easymde.min";
-@import "node_modules/ngx-spinner/animations/ball-zig-zag.css";
-@import "primeflex/primeflex";
-@import "projects/rero/ng-core/assets/scss/ng-core.scss";
+@use "font-awesome/scss/font-awesome.scss";
+@use "primeicons/primeicons.css";
+@use "easymde/dist/easymde.min";
+@use "node_modules/ngx-spinner/animations/ball-zig-zag.css";
+@use "projects/rero/ng-core/assets/scss/ng-core.scss";
+@use "projects/rero/ng-core/assets/scss/ng-core-tailwind.css";
+@use "tailwindcss";
+
+@plugin "tailwindcss-primeui";
+
+:root {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1rem;
+}

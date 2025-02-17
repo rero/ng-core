@@ -18,9 +18,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
 
 @Component({
-  selector: 'ng-core-form-field-wrapper',
-  template: `
-    <div class="flex flex-column gap-2" [ngClass]="props.cssClass" [class.has-error]="showError">
+    selector: 'ng-core-form-field-wrapper',
+    template: `
+    <div class="core:flex core:flex-col core:gap-2" [class]="props.cssClass" [class.has-error]="showError">
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
         <div>
@@ -32,13 +32,13 @@ import { FieldWrapper } from '@ngx-formly/core';
           </label>
         </div>
       }
-      <div class="flex align-content-center flex-grow-1 gap-1">
-        <div class="flex-grow-1">
+      <div class="core:flex core:content-center core:grow core:gap-1">
+        <div class="core:grow">
           <!-- field -->
           <ng-template #fieldComponent></ng-template>
         </div>
           @if (canAdd() || canRemove()) {
-          <div class="flex gap-1 align-items-center">
+          <div class="core:flex core:gap-1 core:items-center">
             <!-- clone button -->
             @if (canAdd()) {
               <p-button icon="fa fa-clone" severity="secondary" [text]="true" (onClick)="add()" />
@@ -51,13 +51,14 @@ import { FieldWrapper } from '@ngx-formly/core';
           }
         </div>
       @if (showError) {
-        <div class="text-error my-2">
+        <div class="core:text-error core:my-2">
           <formly-validation-message [field]="field"/>
         </div>
       }
    </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FormFieldWrapperComponent extends FieldWrapper {
 

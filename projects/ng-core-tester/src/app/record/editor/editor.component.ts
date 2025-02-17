@@ -18,8 +18,9 @@ import { AfterContentChecked, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-editor',
-  templateUrl: './editor.component.html'
+    selector: 'app-editor',
+    templateUrl: './editor.component.html',
+    standalone: false
 })
 export class EditorComponent implements OnInit, AfterContentChecked {
   // Inject

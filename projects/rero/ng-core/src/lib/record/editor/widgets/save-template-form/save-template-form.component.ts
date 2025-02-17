@@ -22,8 +22,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
-  selector: 'ng-core-save-template-form',
-  templateUrl: './save-template-form.component.html'
+    selector: 'ng-core-save-template-form',
+    templateUrl: './save-template-form.component.html',
+    standalone: false
 })
 export class SaveTemplateFormComponent implements OnInit {
 

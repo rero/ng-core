@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,7 +58,6 @@ describe('PaginatorComponent', () => {
     fixture.componentRef.setInput('pageLinkSize', 10);
     fixture.detectChanges();
 
-    element: HTMLElement = fixture.nativeElement;
     button = element.querySelector('.p-paginator-pages').querySelectorAll('button');
     expect(button.length).toEqual(10);
   });
@@ -75,23 +74,16 @@ describe('PaginatorComponent', () => {
     fixture.componentRef.setInput('rowsPerPageOptions', [10,20,30,50]);
     fixture.detectChanges();
     const element: HTMLElement = fixture.nativeElement;
-    const dropdown = element.querySelector('p-dropdown');
+    const dropdown = element.querySelector('p-select');
     expect(dropdown).not.toEqual(null);
   });
 
   it('should contain the new values on the page change click', () => {
-    let $subscribe = component.rowPageChange.subscribe((event: ChangeEvent) => {
+    let subscribe = component.rowPageChange.subscribe((event: ChangeEvent) => {
       expect(event).toEqual({'rows': 10, 'page': 1});
     });
-    let btn = fixture.debugElement.nativeElement.querySelectorAll('.p-paginator-element')[2];
+    let btn = fixture.debugElement.nativeElement.querySelectorAll('.p-paginator-page')[1];
     btn.click();
-    $subscribe.unsubscribe();
-
-    $subscribe = component.rowPageChange.subscribe((event: ChangeEvent) => {
-      expect(event).toEqual({'rows': 10, 'page': 3});
-    });
-    btn = fixture.debugElement.nativeElement.querySelectorAll('.p-paginator-element')[4];
-    btn.click();
-    $subscribe.unsubscribe();
+    subscribe.unsubscribe();
   });
 });

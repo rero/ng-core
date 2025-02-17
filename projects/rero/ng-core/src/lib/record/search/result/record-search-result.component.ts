@@ -28,8 +28,9 @@ export interface IDeleteRecordEvent {
 }
 
 @Component({
-  selector: 'ng-core-record-search-result',
-  templateUrl: './record-search-result.component.html',
+    selector: 'ng-core-record-search-result',
+    templateUrl: './record-search-result.component.html',
+    standalone: false
 })
 export class RecordSearchResultComponent implements OnInit, AfterViewInit {
 

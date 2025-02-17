@@ -30,8 +30,9 @@ import { RecordDetailDirective } from './detail.directive';
 import { JsonComponent } from './view/json.component';
 
 @Component({
-  selector: 'ng-core-record-detail',
-  templateUrl: './detail.component.html'
+    selector: 'ng-core-record-detail',
+    templateUrl: './detail.component.html',
+    standalone: false
 })
 export class DetailComponent implements OnInit, OnDestroy {
 

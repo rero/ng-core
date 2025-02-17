@@ -21,8 +21,9 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
  * Component for displaying a label with dropdown in editor.
  */
 @Component({
-  selector: 'ng-core-editor-dropdown-label-editor',
-  templateUrl: './dropdown-label-editor.component.html'
+    selector: 'ng-core-editor-dropdown-label-editor',
+    templateUrl: './dropdown-label-editor.component.html',
+    standalone: false
 })
 export class DropdownLabelEditorComponent {
   // current form field configuration

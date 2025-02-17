@@ -14,13 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
 import { TranslateLoader as BaseTranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { CoreConfigService, RecordModule, RecordService, RemoteAutocompleteService, TranslateLoader } from '@rero/ng-core';
+import {
+  CoreConfigService,
+  primeNGConfig,
+  RecordModule,
+  RecordService,
+  RemoteAutocompleteService,
+  TranslateLoader,
+} from '@rero/ng-core';
+import { providePrimeNG } from 'primeng/config';
 import { MenubarModule } from 'primeng/menubar';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -37,47 +46,49 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        DocumentComponent,
-        HomeComponent,
-        DetailComponent,
-        SearchBarComponent,
-        EditorComponent,
-        ToastComponent,
-        AppDialogComponent,
-        MenuComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        FormsModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: BaseTranslateLoader,
-                useClass: TranslateLoader,
-                deps: [CoreConfigService, HttpClient]
-            }
-        }),
-        RecordModule,
-        MenubarModule,
-    ],
-    providers: [
-        {
-          provide: CoreConfigService,
-          useClass: AppConfigService
-        },
-        {
-          provide: RecordService,
-          useClass: RecordServiceMock
-        },
-        {
-          provide: RemoteAutocompleteService,
-          useClass: AppRemoteAutocompleteService
-        }
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    DocumentComponent,
+    HomeComponent,
+    DetailComponent,
+    SearchBarComponent,
+    EditorComponent,
+    ToastComponent,
+    AppDialogComponent,
+    MenuComponent,
+  ],
+  bootstrap: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    FormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: BaseTranslateLoader,
+        useClass: TranslateLoader,
+        deps: [CoreConfigService, HttpClient],
+      },
+    }),
+    RecordModule,
+    MenubarModule,
+  ],
+  providers: [
+    {
+      provide: CoreConfigService,
+      useClass: AppConfigService,
+    },
+    {
+      provide: RecordService,
+      useClass: RecordServiceMock,
+    },
+    {
+      provide: RemoteAutocompleteService,
+      useClass: AppRemoteAutocompleteService,
+    },
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimationsAsync(),
+    providePrimeNG(primeNGConfig)
+  ],
 })
 export class AppModule {}

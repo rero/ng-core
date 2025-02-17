@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
@@ -31,21 +31,19 @@ describe('RecordSearchResultComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
+    declarations: [
         JsonComponent,
         RecordSearchResultComponent
-      ],
-      imports: [
-        ButtonModule,
+    ],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [ButtonModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot({
-          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+            loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
         }),
-        HttpClientModule,
-        CoreModule
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    }).compileComponents();
+        CoreModule],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
   }));
 
   beforeEach(() => {

@@ -16,9 +16,9 @@
  */
 import { TestBed } from '@angular/core/testing';
 import { TranslateLoader } from './translate-loader';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TranslateModule, TranslateService, TranslateLoader as NgxTranslateLoader } from '@ngx-translate/core';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CoreConfigService } from '../core-config.service';
 
 describe('TranslateLoader', () => {
@@ -27,27 +27,26 @@ describe('TranslateLoader', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        TranslateModule.forRoot({
-          loader: {
-            provide: NgxTranslateLoader,
-            useFactory: () => new TranslateLoader(),
-            deps: [HttpClient]
-          }
-        })
-      ],
-      providers: [
+    imports: [TranslateModule.forRoot({
+            loader: {
+                provide: NgxTranslateLoader,
+                useFactory: () => new TranslateLoader(),
+                deps: [HttpClient]
+            }
+        })],
+    providers: [
         TranslateService,
         { provide: CoreConfigService, useValue: {
-            languages: ['fr'],
-            translationsURLs: [
-              '/assets/i18n/${lang}.json'
-            ]
-          }
-        }
-      ]
-    });
+                languages: ['fr'],
+                translationsURLs: [
+                    '/assets/i18n/${lang}.json'
+                ]
+            }
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     translate = TestBed.inject(TranslateService);
     http = TestBed.inject(HttpTestingController);
   });

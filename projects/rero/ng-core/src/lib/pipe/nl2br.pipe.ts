@@ -20,7 +20,10 @@ import { DomSanitizer } from '@angular/platform-browser';
 /**
  * Pipe for converting carriage returns to <br> html entities.
  */
-@Pipe({ name: 'nl2br' })
+@Pipe({
+    name: 'nl2br',
+    standalone: false
+})
 export class Nl2brPipe implements PipeTransform {
 
   protected sanitizer: DomSanitizer = inject(DomSanitizer);

@@ -20,6 +20,7 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@angular-eslint/prefer-standalone": "off",
         "@angular-eslint/component-selector": [
           "error",
           {
@@ -27,16 +28,7 @@
             "style": "kebab-case",
             "type": "element"
           }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "prefix": "ng-core",
-            "style": "camelCase",
-            "type": "attribute"
-          }
-        ],
-        "@angular-eslint/component-class-suffix": ["off"]
+        ]
       }
     },
     {
@@ -47,7 +39,7 @@
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {
-         "@angular-eslint/template/eqeqeq": [
+        "@angular-eslint/template/eqeqeq": [
           "error",
           {
             "allowNullOrUndefined": true

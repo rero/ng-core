@@ -20,8 +20,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { DocumentComponent } from '../record/document/document.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html'
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    standalone: false
 })
 export class HomeComponent implements OnInit {
   // Inject

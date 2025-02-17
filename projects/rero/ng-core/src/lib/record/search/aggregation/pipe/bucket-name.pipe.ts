@@ -19,7 +19,8 @@ import { Observable } from 'rxjs';
 import { BucketNameService } from '../service/bucket-name.service';
 
 @Pipe({
-  name: 'bucketName'
+    name: 'bucketName',
+    standalone: false
 })
 export class BucketNamePipe implements PipeTransform {
 

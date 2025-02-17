@@ -24,8 +24,9 @@ import { MessageService } from 'primeng/api';
  * Component showing the search bar for searching records.
  */
 @Component({
-  selector: 'app-search-bar',
-  templateUrl: './search-bar.component.html'
+    selector: 'app-search-bar',
+    templateUrl: './search-bar.component.html',
+    standalone: false
 })
 export class SearchBarComponent implements OnInit {
   // Inject

@@ -72,7 +72,6 @@ export class DocumentsRoute implements RouteInterface {
               'author',
               'year',
               'acquisition',
-              'library',
               'organisation',
               'language',
               'subject',

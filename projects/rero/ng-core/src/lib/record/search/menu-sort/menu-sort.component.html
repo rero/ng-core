@@ -17,7 +17,7 @@
 @if (options().length > 0) {
 <p-menu #menu [model]="options()" [popup]="true" />
 <p-button severity="secondary" outlined (onClick)="menu.toggle($event)">
-  <div class="flex gap-3 align-items-center">
+  <div class="core:flex core:gap-4 core:items-center">
     @if (selectedOption()?.icon) {
       <i [ngClass]="selectedOption().icon"></i>
     } @else if (selectedOption()) {

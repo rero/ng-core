@@ -16,7 +16,7 @@
 -->
 <!-- Aggregation with no bucket, containing only the count. -->
 @if (aggregation().doc_count) {
-  <div class="mb-3">
+  <div class="core:mb-4">
     <ng-core-record-search-aggregation-buckets
       [buckets]="[{key: '1', doc_count: aggregation().doc_count, name: aggregation().key | translate }]"
       [aggregationKey]="aggregation().key"
@@ -29,7 +29,7 @@
     [collapsed]="!isAggregationDisplayed"
     (collapsedChange)="toggleVisibility()"
   >
-  <div class="p-2">
+  <div class="core:p-2">
   @switch (aggregation().type) {
     @case ('range') {
       <ng-core-aggregation-slider
@@ -52,7 +52,7 @@
           [size]="aggregation().bucketSize" />
       } @else {
         @if (aggregation().loaded) {
-          <span class="text-sm" translate>No result</span>
+          <span class="core:text-sm" translate>No result</span>
         }
       }
     }

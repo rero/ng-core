@@ -16,7 +16,7 @@
  */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MenuSortComponent } from './menu-sort.component';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ComponentRef } from '@angular/core';
@@ -50,7 +50,7 @@ describe('MenuSortComponent', () => {
       imports: [
         FormsModule,
         BrowserAnimationsModule,
-        DropdownModule,
+        SelectModule,
         RouterModule.forRoot([]),
         TranslateModule.forRoot(),
         MenuModule,

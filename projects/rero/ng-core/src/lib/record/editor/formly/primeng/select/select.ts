@@ -21,8 +21,8 @@ import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule as FormlyCoreSelectModule, FormlyFieldSelectProps } from '@ngx-formly/core/select';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DropdownModule } from 'primeng/dropdown';
-import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
+import { SelectModule } from 'primeng/select';
+import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
 import { TranslateLabelService } from './translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
@@ -54,11 +54,11 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 }
 
 @Component({
-  selector: 'ng-core-primeng-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
+    selector: 'ng-core-primeng-select',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
   @if(props.options) {
-    <p-dropdown
+    <p-select
       [appendTo]="props.appendTo"
       [class]="props.class"
       [dropdownIcon]="props.dropdownIcon"
@@ -87,25 +87,25 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       (onChange)="props.change && props.change(field, $event)"
       (onClear)="clearValidators()"
     >
-      <ng-template let-selected pTemplate="selectedItem">
+      <ng-template let-selected #selectedItem>
         {{ selected.label | translate }}
       </ng-template>
-      <ng-template let-group pTemplate="group">
+      <ng-template let-group #group>
         @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
           <div class="option-group">{{ group.label }}</div>
         } @else if (group.label === 'group-other') {
           <div class="option-group"><hr></div>
         }
       </ng-template>
-    </p-dropdown>
+    </p-select>
   }
   `,
-  styles: `
-  :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
+    styles: `
+  :host ::ng-deep .p-select-panel .p-select-items .p-select-item-group {
     padding: 0 0.3rem;
   }
 
-  :host ::ng-deep .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group hr {
+  :host ::ng-deep .p-select-panel .p-select-items .p-select-item-group hr {
     height: 1px;
     border: 0;
     border-top: 1px solid #ccc;
@@ -115,7 +115,8 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
   .option-group {
     padding: 0.5rem 0;
   }
-  `
+  `,
+    standalone: false
 })
 export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> implements OnInit, OnDestroy {
 
@@ -128,17 +129,17 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
     props: {
-      class: 'w-full',
+      class: 'core:w-full',
       editable: false,
       filter: false,
       filterMatchMode: 'contains',
       group: false,
-      panelStyleClass: 'w-full',
+      panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
       sort: false,
-      styleClass: 'w-full mb-1',
+      styleClass: 'core:w-full core:mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
     }
@@ -172,9 +173,9 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   declarations: [SelectComponent],
   imports: [
     CommonModule,
-    DropdownModule,
+    SelectModule,
     ReactiveFormsModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forChild(),
     FormlyCoreSelectModule,
     FormlyModule.forChild({
       types: [

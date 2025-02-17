@@ -21,12 +21,14 @@ import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ITreeSelectProps, NgCoreFormlyTreeSelectModule } from './tree-select';
 import { of } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
 
 const renderComponent = (field: FormlyFieldConfig<ITreeSelectProps>) => {
   return createFieldComponent(field, {
     imports: [
       NgCoreFormlyTreeSelectModule,
       NoopAnimationsModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent }

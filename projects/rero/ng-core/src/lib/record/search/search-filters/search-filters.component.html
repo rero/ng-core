@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (searchFilters().length > 0) {
-  <div class="mb-2">
+  <div class="core:mb-2">
     @for (searchFilter of searchFilters(); track searchFilter) {
       @if (searchFilter.filters) {
         @if (showFilterSection(searchFilter)) {
@@ -36,24 +36,24 @@
 }
 
 <ng-template #searchFilterTemplate let-filter="filter">
-    <div class="flex">
-      <div class="flex align-items-center mr-2">
-        <p-inputSwitch
+    <div class="core:flex">
+      <div class="core:flex core:items-center core:mr-2">
+        <p-toggleswitch
           [ngModel]="isChecked(filter)"
           inputId="customSwitch-{{ filter.filter }}"
           [ariaLabel]="filter.label | translate"
           (onChange)="change($event, filter)"
         />
       </div>
-      <div class="flex align-items-center">
+      <div class="core:flex core:items-center">
         <label for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>
         @if (filter.url) {
           @if (filter.url.external) {
-            <a class="ml-1" [title]="filter.url.title" [href]="filter.url.link" [target]="filter.url.target">
+            <a class="core:ml-1" [title]="filter.url.title" [href]="filter.url.link" [target]="filter.url.target">
               <i class="pi pi-info-circle" aria-hidden="true"></i>
             </a>
           } @else {
-            <a class="ml-1" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
+            <a class="core:ml-1" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
               <i class="pi pi-info-circle" aria-hidden="true"></i>
             </a>
           }

@@ -21,8 +21,9 @@ import { CONFIG, CoreConfigService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-menu',
-  templateUrl: './menu.component.html'
+    selector: 'app-menu',
+    templateUrl: './menu.component.html',
+    standalone: false
 })
 export class MenuComponent implements OnInit {
 
@@ -164,7 +165,7 @@ export class MenuComponent implements OnInit {
         styleClass: undefined,
         command: () => {
           this.translateService.use(language);
-          this.messageService.add({ severity: 'info', detail: `Language change to ${language}`, life: CONFIG.MESSAGE_LIFE });
+          this.messageService.add({ severity: 'info', summary: `Language change to ${language}`, life: CONFIG.MESSAGE_LIFE });
         }
       }
       languageMenu.items.push(lang);

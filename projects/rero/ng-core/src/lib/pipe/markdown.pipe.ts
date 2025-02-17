@@ -22,7 +22,8 @@ import { marked } from 'marked';
  * Pipe to transform markdown to html.
  */
 @Pipe({
-  name: 'markdown',
+    name: 'markdown',
+    standalone: false
 })
 export class MarkdownPipe implements PipeTransform {
 
@@ -35,6 +36,7 @@ export class MarkdownPipe implements PipeTransform {
    * @returns HTML corresponding to markdown.
    */
   transform(value: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(marked(value, { gfm: true, breaks: false }));
+    const markValue: string = marked.parse(value, { gfm: true, breaks: false, async: false });
+    return this.sanitizer.bypassSecurityTrustHtml(markValue);
   }
 }

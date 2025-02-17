@@ -76,8 +76,8 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
 };
 
 @Component({
-  selector: 'ng-core-editor-field-password-generator',
-  template: `
+    selector: 'ng-core-editor-field-password-generator',
+    template: `
   <p-inputGroup>
     <input
       pInputText
@@ -91,30 +91,30 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       [class]="props.class ? props.class : props.readonly ? 'surface-100' : ''"
     />
     <p-inputGroupAddon>
-      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="onClick()">
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="onClick()">
         <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}"></i>
       </div>
     </p-inputGroupAddon>
     <p-inputGroupAddon>
-      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="showHidePassword()">
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="showHidePassword()">
         <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}"></i>
       </div>
     </p-inputGroupAddon>
     @if (props.enabledEditMode) {
     <p-inputGroupAddon>
-      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="onEdit()">
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="onEdit()">
         <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}"></i>
       </div>
     </p-inputGroupAddon>
     }
   </p-inputGroup>
   @if (!showError && hasBeenGenerated) {
-    <div class="text-color-secondary my-3" translate>
+    <div class="core:text-muted-color core:my-4" translate>
       The password has been copied to the clipboard.
     </div>
     }
   `,
-  styles: `
+    styles: `
     :host ::ng-deep .p-inputgroup-addon {
       padding: 0;
     }
@@ -123,7 +123,8 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       width: 100%;
       height: 100%;
     }
-  `
+  `,
+    standalone: false
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {
 

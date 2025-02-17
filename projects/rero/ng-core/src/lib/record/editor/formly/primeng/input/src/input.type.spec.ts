@@ -40,7 +40,7 @@ describe('ui-primeng: NgCore Input Type', () => {
       }
     });
     expect(query('p-inputgroup')).not.toBeNull();
-    const nodes = query('p-inputgroup').nativeElement.querySelectorAll('p-inputgroupaddon');
+    const nodes = query('p-inputgroup').nativeElement.querySelectorAll('p-inputgroup-addon');
     expect(nodes[0].textContent).toBe('Left');
     expect(nodes[1].textContent).toBe('Right');
     expect(nodes[2].textContent).toBe('RightBis');

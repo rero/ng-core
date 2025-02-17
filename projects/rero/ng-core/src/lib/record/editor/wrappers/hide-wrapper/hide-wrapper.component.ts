@@ -18,9 +18,10 @@ import { Component } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
 
 @Component({
-  selector: 'ng-core-hide-wrapper',
-  // do not include the children
-  template: ''
+    selector: 'ng-core-hide-wrapper',
+    // do not include the children
+    template: '',
+    standalone: false
 })
 export class HideWrapperComponent extends FieldWrapper {
 

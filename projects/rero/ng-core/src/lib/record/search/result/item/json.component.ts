@@ -21,10 +21,10 @@ import { ResultItem } from './result-item';
  * Component for displaying record as JSON in brief views.
  */
 @Component({
-  template: `
+    template: `
     {{ record|json }}
     @if (detailUrl) {
-      <div class="my-3">
+      <div class="core:my-4">
         @if (detailUrl.external === false) {
           <p-button outlined icon="pi pi-eye" [label]="'Show' | translate" [routerLink]="detailUrl.link" />
         } @else {
@@ -32,7 +32,8 @@ import { ResultItem } from './result-item';
         }
       </div>
     }
-  `
+  `,
+    standalone: false
 })
 export class JsonComponent implements ResultItem {
   // Record data.

@@ -20,11 +20,11 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FORMLY_CONFIG, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
-import { DataViewModule } from 'primeng/dataview';
 import { FormlyPrimeNGModule } from '@ngx-formly/primeng';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { CalendarModule } from 'primeng/calendar';
+import { DataViewModule } from 'primeng/dataview';
+import { DatePickerModule } from 'primeng/datepicker';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CoreModule } from '../core.module';
 import { GetRecordPipe } from '../pipe/get-record.pipe';
@@ -61,6 +61,7 @@ import { HideWrapperComponent } from './editor/wrappers/hide-wrapper/hide-wrappe
 import { ExportButtonComponent } from './export-button/export-button.component';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordService } from './record.service';
+import { SearchAutocompleteComponent } from './search-autocomplete/search-autocomplete.component';
 import { RecordSearchAggregationComponent } from './search/aggregation/aggregation.component';
 import { BucketsComponent } from './search/aggregation/buckets/buckets.component';
 import { AggregationDateRangeComponent } from './search/aggregation/date-range/date-range.component';
@@ -76,7 +77,6 @@ import { RecordSearchResultComponent } from './search/result/record-search-resul
 import { SearchFieldsComponent } from './search/search-fields/search-fields.component';
 import { SearchFiltersComponent } from './search/search-filters/search-filters.component';
 import { SearchTabsComponent } from './search/search-tabs/search-tabs.component';
-import { SearchAutocompleteComponent } from './search-autocomplete/search-autocomplete.component';
 
 @NgModule({
     declarations: [
@@ -127,7 +127,7 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         FormsModule,
         ReactiveFormsModule,
         RecordRoutingModule,
-        CalendarModule,
+        DatePickerModule,
         DataViewModule,
         ClipboardModule,
         RadioButtonModule,
@@ -167,7 +167,7 @@ import { SearchAutocompleteComponent } from './search-autocomplete/search-autoco
         NgCoreFormlyMultiSelectModule,
         NgCoreFormlyRemoteAutocompleteModule,
         NgCoreFormlySelectModule,
-        NgCoreFormlyTreeSelectModule
+        NgCoreFormlyTreeSelectModule,
     ],
     exports: [
         RecordSearchComponent,

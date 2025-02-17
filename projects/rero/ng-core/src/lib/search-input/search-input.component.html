@@ -15,14 +15,13 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (displayLabel()) {
-  <label [for]="inputId()" class="font-bold">{{ placeholder() }}</label>
+  <label [for]="inputId()" class="core:font-bold">{{ placeholder() }}</label>
 }
 <p-inputGroup>
   <input
     #searchInput
-    pAutoFocus
+    [pAutoFocus]="focus()"
     pInputText
-    [autofocus]="focus()"
     [disabled]="disabled()"
     [id]="inputId()"
     [placeholder]="!displayLabel() && placeholder() ? placeholder() : ''"

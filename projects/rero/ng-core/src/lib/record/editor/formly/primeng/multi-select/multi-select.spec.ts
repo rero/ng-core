@@ -20,11 +20,13 @@ import { createFieldComponent } from '@ngx-formly/core/testing';
 import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { IMultiSelectProps, NgCoreFormlyMultiSelectModule } from './multi-select';
+import { TranslateModule } from '@ngx-translate/core';
 
 const renderComponent = (field: FormlyFieldConfig<IMultiSelectProps>) => {
   return createFieldComponent(field, {
     imports: [
       NgCoreFormlyMultiSelectModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent }

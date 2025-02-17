@@ -19,15 +19,20 @@ import { Component, OnInit } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
 
 @Component({
-  selector: 'ng-core-card-wrapper',
-  template: `
+    selector: 'ng-core-card-wrapper',
+    template: `
+  @if (!props?.isRoot) {
     <p-fieldset>
-      <ng-template pTemplate="header">
-        <ng-core-label-editor [field]="field"></ng-core-label-editor>
+      <ng-template #header>
+          <ng-core-label-editor [field]="field" />
       </ng-template>
       <ng-template #fieldComponent></ng-template>
     </p-fieldset>
-  `
+    } @else {
+      <ng-template #fieldComponent></ng-template>
+    }
+  `,
+    standalone: false
 })
 export class CardWrapperComponent extends FieldWrapper implements OnInit {
   /** OnInit hook */

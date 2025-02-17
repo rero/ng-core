@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Pipe for truncating text.
  */
 @Pipe({
-  name: 'truncateText'
+    name: 'truncateText',
+    standalone: false
 })
 export class TruncateTextPipe implements PipeTransform {
   /**

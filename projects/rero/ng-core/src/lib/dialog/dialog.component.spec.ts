@@ -61,7 +61,7 @@ describe('DialogComponent', () => {
   });
 
   it('Should display the confirmation message', () => {
-    const element = fixture.debugElement.nativeElement.querySelectorAll('div.flex')[1];
+    const element = fixture.debugElement.nativeElement.querySelectorAll('div > div')[1];
     expect(element.innerHTML).toContain(config.data.body);
   });
 

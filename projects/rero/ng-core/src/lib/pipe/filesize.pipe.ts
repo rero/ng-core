@@ -20,7 +20,8 @@ import { Pipe, PipeTransform } from '@angular/core';
  * Get human readable file size.
  */
 @Pipe({
-  name: 'filesize'
+    name: 'filesize',
+    standalone: false
 })
 export class FilesizePipe implements PipeTransform {
   /**

@@ -17,12 +17,12 @@
 import { TestBed } from "@angular/core/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { DateTime } from "luxon";
-import { PrimeNGConfig } from "primeng/api";
+import { PrimeNG } from "primeng/config";
 import { NgCoreTranslateService } from "./translate-service";
 
 describe('NgCoreTranslateService', () => {
   let service: NgCoreTranslateService;
-  let primeConfig: PrimeNGConfig;
+  let primeConfig: PrimeNG;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -31,11 +31,11 @@ describe('NgCoreTranslateService', () => {
       ],
       providers: [
         NgCoreTranslateService,
-        PrimeNGConfig
+        PrimeNG
       ]
     });
     service = TestBed.inject(NgCoreTranslateService);
-    primeConfig = TestBed.inject(PrimeNGConfig);
+    primeConfig = TestBed.inject(PrimeNG);
     service.initialize();
   });
 

@@ -23,16 +23,19 @@ import {Component, HostListener} from "@angular/core";
  * are about to be unloaded. The document is still visible and the event is still
  * cancelable at this point.
  */
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export abstract class AbstractCanDeactivateComponent {
 
   abstract canDeactivate: boolean;
 
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
-      if (!this.canDeactivate) {
-          $event.returnValue = true;
-      }
+    if (!this.canDeactivate) {
+        $event.returnValue = true;
+    }
   }
 
   /**

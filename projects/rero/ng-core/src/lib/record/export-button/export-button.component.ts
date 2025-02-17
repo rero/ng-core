@@ -25,8 +25,9 @@ export interface IExportOption {
 };
 
 @Component({
-  selector: 'ng-core-export-button',
-  templateUrl: './export-button.component.html'
+    selector: 'ng-core-export-button',
+    templateUrl: './export-button.component.html',
+    standalone: false
 })
 export class ExportButtonComponent {
 

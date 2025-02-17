@@ -24,8 +24,9 @@ export interface IFilter {
 }
 
 @Component({
-  selector: 'ng-core-list-filters',
-  templateUrl: './list-filters.component.html',
+    selector: 'ng-core-list-filters',
+    templateUrl: './list-filters.component.html',
+    standalone: false
 })
 export class ListFiltersComponent {
 

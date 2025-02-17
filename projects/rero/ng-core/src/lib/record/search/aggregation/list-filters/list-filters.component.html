@@ -15,10 +15,10 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (filters()?.length > 0) {
-  <div class="flex flex-wrap mb-2">
+  <div class="core:flex core:flex-wrap core:mb-2">
     @for (filter of filters(); track filter) {
     <p-button
-      class="mr-2 mb-2"
+      class="core:mr-2 core:mb-2"
       [label]="filter.name ? filter.name : (filter.key | bucketName : filter.aggregationKey | async)"
       icon="pi pi-times"
       [outlined]="true"
