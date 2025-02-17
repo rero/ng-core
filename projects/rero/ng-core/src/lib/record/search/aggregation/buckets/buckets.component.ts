@@ -19,8 +19,9 @@ import { Subscription } from 'rxjs';
 import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
 
 @Component({
-  selector: 'ng-core-record-search-aggregation-buckets',
-  templateUrl: './buckets.component.html'
+    selector: 'ng-core-record-search-aggregation-buckets',
+    templateUrl: './buckets.component.html',
+    standalone: false
 })
 export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 

@@ -20,8 +20,9 @@ import { CONFIG } from '@rero/ng-core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
-  selector: 'app-dialog',
-  templateUrl: './app-dialog.component.html'
+    selector: 'app-dialog',
+    templateUrl: './app-dialog.component.html',
+    standalone: false
 })
 export class AppDialogComponent {
   translate = inject(TranslateService);

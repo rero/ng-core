@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -23,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '../../../record.module';
 import { EditorComponent } from '../../editor.component';
 import { LabelComponent } from './label.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 
 describe('LabelComponent', () => {
@@ -32,15 +33,13 @@ describe('LabelComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ LabelComponent ],
-      imports: [
-        BrowserAnimationsModule,
-        HttpClientTestingModule,
+    declarations: [LabelComponent],
+    imports: [BrowserAnimationsModule,
         RouterModule.forRoot([]),
         RecordModule,
-        TranslateModule.forRoot()
-      ]
-    })
+        TranslateModule.forRoot()],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

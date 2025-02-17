@@ -17,9 +17,10 @@
 
 ng-core-search-autocomplete p-Autocomplete {
   button {
-  @extend .text-gray-500, .bg-white, .border-300;
+  @apply core:text-gray-500 core:bg-white;
+    background-origin: var(--p-surface-100);
   }
   li.p-autocomplete-item {
-    @extend .text-overflow-ellipsis;
+    @apply core:text-ellipsis;
   }
 }

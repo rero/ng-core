@@ -15,57 +15,57 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import "./variables";
+
 a {
-  @extend .no-underline;
+  @apply no-underline;
  }
 
-a:not(.p-button):not(.p-element):not([role=button]):not([role=tab]) {
-  color: var(--blue-500);
+a:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
+  color: var(--p-blue-500);
 }
 
-a:hover:not(.p-button):not(.p-element):not([role=button]):not([role=tab]) {
-  color: var(--blue-600);
-  @extend .text-blue-600, .underline;
+a:hover:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
+  color: var(--p-blue-600);
+  @apply text-blue-600 underline;
 }
 
 .p-submenu-list {
   z-index: 1000;
 }
 
-.p-menuitem {
+.p-menubar-item {
   a {
-    @extend .text-color;
+    @apply text-color;
   }
   a:hover {
-    @extend .no-underline;
+    @apply no-underline;
   }
 }
 
 dl.metadata {
-  @extend .grid, .my-0, .w-full, .p-2;
+  @apply grid grid-cols-4;
   dt {
-    @extend .font-bold, .col-12, .py-0, .mx-0, .my-1;
-    @include styleclass('md:col-4');
+    @apply font-bold mr-2;
   }
   dd {
-    @extend .col-12, .py-0, .mx-0, .my-1;
-    @include styleclass('md:col-8');
+    @apply col-span-3;
   }
 }
 
 .p-menubar {
-  @extend .mb-0, .border-none, .bg-white;
+  @apply mb-0 border-none bg-white;
 }
 
 legend {
-  @extend .text-base;
+  @apply text-base;
   width: auto;
 }
 
 // CALLOUT
 .callout {
-  border: 1px solid var(--surface-300);
-  border-left: 5px solid var(--surface-300);
+  border: 1px solid var(--p-surface-300);
+  border-left: 5px solid var(--p-surface-300);
   border-radius: 5px;
 }
 
@@ -80,54 +80,20 @@ legend {
   }
 }
 
-$grid-column-right-offsets: (
-    "col-offset-right-0": 0,
-    "col-offset-right-1": 8.3333%,
-    "col-offset-right-2": 16.6667%,
-    "col-offset-right-3": 25%,
-    "col-offset-right-4": 33.3333%,
-    "col-offset-right-5": 41.6667%,
-    "col-offset-right-6": 50%,
-    "col-offset-right-7": 58.3333%,
-    "col-offset-right-8": 66.6667%,
-    "col-offset-right-9": 75%,
-    "col-offset-right-10": 83.3333%,
-    "col-offset-right-11": 91.6667%,
-    "col-offset-right-12": 100%,
-) !default;
-
-@include style-class('margin-right', $grid-column-right-offsets, true);
-
-.#{$prefix}grid-nogutter-x {
-    @extend .mx-0;
-}
-
-.#{$prefix}grid-nogutter-x > .#{$prefix}col,
-.#{$prefix}grid-nogutter-x > [class*="#{$prefix}col-"] {
-  @extend .px-0;
-}
-
-.#{$prefix}grid-nogutter-y {
-  @extend .mt-0;
-}
-
-.#{$prefix}grid-nogutter-y > .#{$prefix}col,
-.#{$prefix}grid-nogutter-y > [class*="#{$prefix}col-"] {
-  @extend .py-0;
-}
-
-
 .p-timeline-event {
   min-height: 40px !important;
 }
 
 p-accordiontab {
+  .p-accordionheader {
+    background-color: var(--p-surface-100);
+  }
   .p-accordion-header-link {
     align-items: start;
-    @extend .pr-2;
+    @apply pr-2;
   }
 
   .p-accordion-toggle-icon {
-    @extend .py-2;
+    @apply py-2;
   }
 }

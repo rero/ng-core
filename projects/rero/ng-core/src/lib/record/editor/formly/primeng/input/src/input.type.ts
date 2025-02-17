@@ -25,13 +25,13 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
 }
 
 @Component({
-  selector: 'ng-core-formly-field-primeng-input',
-  template: `
+    selector: 'ng-core-formly-field-primeng-input',
+    template: `
     @if (props.addonLeft || props.addonRight) {
-      <p-inputGroup>
+      <p-inputgroup>
           @if (props.addonLeft) {
             @for (prop of props.addonLeft; track prop) {
-              <p-inputGroupAddon [innerHTML]="prop"></p-inputGroupAddon>
+              <p-inputgroup-addon [innerHTML]="prop"></p-inputgroup-addon>
             }
           }
           @if (props.type !== 'number') {
@@ -53,10 +53,10 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           }
           @if (props.addonRight) {
             @for (prop of props.addonRight; track prop) {
-              <p-inputGroupAddon [innerHTML]="prop"></p-inputGroupAddon>
+              <p-inputgroup-addon [innerHTML]="prop"></p-inputgroup-addon>
             }
           }
-      </p-inputGroup>
+      </p-inputgroup>
     } @else {
       @if (props.type !== 'number') {
         <input
@@ -77,14 +77,15 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NgCoreFormlyFieldInput extends FieldType<NgCoreFormlyInputFieldConfig> {
 
   defaultOptions?: any = {
     props: {
       type: 'input',
-      class: 'w-full'
+      class: 'core:w-full'
     }
   };
 

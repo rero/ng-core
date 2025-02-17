@@ -16,18 +16,14 @@
  */
 
 ng-core-card-wrapper {
-  // primeng bug?
-  span.p-fieldset-legend-text {
-    @extend .hidden;
-  }
   .p-fieldset .p-fieldset-legend {
-    @extend .m-0;
+    @apply core:m-0;
     span {
-      @extend .p-0;
+      @apply core:p-0;
     }
     ng-core-label-editor > div,
     ng-core-editor-dropdown-label-editor > div {
-      @extend .ml-2;
+      @apply core:ml-2;
     }
   }
 }

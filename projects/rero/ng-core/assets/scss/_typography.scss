@@ -27,37 +27,37 @@ h6,
 .h4,
 .h5,
 .h6 {
-  @extend .mt-0, .mb-2, .font-medium, .line-height-2;
+  @apply mt-0 mb-2 font-medium;
 }
 
 h1,
 .h1 {
-  @extend .text-5xl;
+  @apply text-5xl;
 }
 
 h2,
 .h2 {
-  @extend .text-4xl;
+  @apply text-4xl;
 }
 
 h3,
 .h3 {
-  @extend .text-3xl;
+  @apply text-3xl;
 }
 
 h4,
 .h4 {
-  @extend .text-2xl;
+  @apply text-2xl;
 }
 
 h5,
 .h5 {
-  @extend .text-xl;
+  @apply text-xl;
 }
 
 h6,
 .h6 {
-  @extend .text-lg;
+  @apply text-lg;
 }
 
 // from aura-light-blue message theme
@@ -110,23 +110,24 @@ h6,
 }
 
 .text-link {
-  @include styleclass('text-blue-500 hover:text-blue-600 hover:underline cursor-pointer');
+  @apply text-blue-500 hover:text-blue-600 hover:underline cursor-pointer;
 }
 
 .text-link-secondary {
-  @include styleclass('text-color-secondary hover:text-blue-600 cursor-pointer');
+  @apply hover:text-blue-600 cursor-pointer;
+  color: var(--p-text-muted-color);
 }
 
 .alternate-color > * {
   display: block;
   &:nth-child(odd) {
-    @extend .surface-100;
+    background-color: var(--p-surface-50);
   }
 }
 
 .p-card-body-p-0 {
   .p-card-body {
-    @extend .p-0;
+    @apply p-0;
   }
 }
 
@@ -137,6 +138,6 @@ h6,
 .time-line-30 {
   .p-timeline-event-opposite {
     width: 30%;
-    @extend .flex-initial;
+    @apply flex-initial;
   }
 }

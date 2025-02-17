@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { RecordModule } from '@rero/ng-core';
 import { EditorComponent } from './editor.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -29,15 +30,13 @@ describe('EditorComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RecordModule,
-        HttpClientTestingModule,
+    declarations: [EditorComponent],
+    imports: [RecordModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([]),
-        BrowserAnimationsModule
-      ],
-      declarations: [ EditorComponent ]
-    })
+        BrowserAnimationsModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
   }));
 

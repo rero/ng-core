@@ -21,6 +21,7 @@ import { Directive, inject, Input, ViewContainerRef } from '@angular/core';
  */
 @Directive({
     selector: '[ngCoreRecordDetail]',
+    standalone: false
 })
 export class RecordDetailDirective {
 

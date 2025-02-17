@@ -20,9 +20,10 @@ import { SaveTemplateFormComponent } from './save-template-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
 import { RecordModule } from '@rero/ng-core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RouterModule } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SaveTemplateFormComponent', () => {
   let component: SaveTemplateFormComponent;
@@ -30,21 +31,20 @@ describe('SaveTemplateFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RecordModule,
+    declarations: [SaveTemplateFormComponent],
+    imports: [RecordModule,
         ReactiveFormsModule,
         RouterModule.forRoot([]),
-        HttpClientTestingModule,
         TranslateModule.forRoot({
-          loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
-        })
-      ],
-      providers: [
+            loader: { provide: TranslateLoader, useClass: TranslateFakeLoader }
+        })],
+    providers: [
         TranslateService,
-        DynamicDialogRef
-      ],
-      declarations: [ SaveTemplateFormComponent ]
-    })
+        DynamicDialogRef,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+})
     .compileComponents();
   }));
 

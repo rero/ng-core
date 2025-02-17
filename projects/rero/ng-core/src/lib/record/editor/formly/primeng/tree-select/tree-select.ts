@@ -47,8 +47,8 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
 }
 
 @Component({
-  selector: 'ng-core-tree-select',
-  template: `
+    selector: 'ng-core-tree-select',
+    template: `
     <p-treeSelect
       [class]="props.class"
       [containerStyleClass]="props.containerStyleClass"
@@ -69,6 +69,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       (onClear)="clearFormValue()"
     />
   `,
+    standalone: false
 })
 export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelectProps>> implements OnInit, OnDestroy {
 
@@ -81,12 +82,12 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ITreeSelectProps>> = {
     props: {
-      class: 'w-full',
-      containerStyleClass: 'w-full',
+      class: 'core:w-full',
+      containerStyleClass: 'core:w-full',
       filter: false,
       filterBy: 'label',
-      panelClass: 'w-full',
-      panelStyleClass: 'w-full',
+      panelClass: 'core:w-full',
+      panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
       scrollHeight: '400px',
       variant: 'outlined'
@@ -145,7 +146,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
     CommonModule,
     FormsModule,
     FormlySelectModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forChild(),
     TreeSelectModule,
     FormlyModule.forChild({
       types: [

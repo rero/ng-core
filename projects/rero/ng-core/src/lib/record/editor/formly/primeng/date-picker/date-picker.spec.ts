@@ -67,7 +67,7 @@ describe('DatePickerComponent', () => {
       }
     });
 
-    const element = query('p-calendar');
+    const element = query('p-datepicker');
     expect(element).not.toBeNull();
   });
 });

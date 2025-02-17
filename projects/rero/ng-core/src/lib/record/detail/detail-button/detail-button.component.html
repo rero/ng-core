@@ -14,17 +14,17 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="flex justify-content-between flex-wrap mb-3">
+<div class="core:flex core:justify-between core:flex-wrap core:mb-4">
   <p-button
     id="detail-back-button"
-    styleClass="flex-grow-1"
+    styleClass="core:grow"
     icon="fa fa-arrow-left"
     [label]="'Back'|translate"
     severity="secondary"
     [text]="true"
     (onClick)="goBack()"
   />
-  <div class="flex flex-wrap align-items-center gap-1">
+  <div class="core:flex core:flex-wrap core:items-center core:gap-1">
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode().can) {
       @if (useStatus() && useStatus().can && useStatus().url) {
@@ -51,7 +51,7 @@
           id="detail-delete-button"
           icon="fa fa-trash"
           severity="danger"
-          class="pointer-events-auto"
+          class="core:pointer-events-auto"
           outlined
           (onClick)="deleteRecord(record())"
           [pTooltip]="tooltipContent"

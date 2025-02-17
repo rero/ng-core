@@ -20,8 +20,9 @@ import { ActionStatus } from '../../action-status';
 import { IRecordEvent } from './IRecordEvent.interface';
 
 @Component({
-  selector: 'ng-core-detail-button',
-  templateUrl: './detail-button.component.html'
+    selector: 'ng-core-detail-button',
+    templateUrl: './detail-button.component.html',
+    standalone: false
 })
 export class DetailButtonComponent {
 

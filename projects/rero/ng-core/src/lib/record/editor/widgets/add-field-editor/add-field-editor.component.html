@@ -19,21 +19,22 @@
   #addField
   optionLabel="props.label"
   [placeholder]="'Add field' | translate"
-  styleClass="mb-2 w-full"
+  styleClass="core:mb-2 core:w-full"
   [suggestions]="suggestions"
   (completeMethod)="search($event)"
   (onSelect)="onSelect($event)"
   [disabled]="items.length < 1"
+  appendTo="body"
 />
 
 @if(essentialsOptions?.length > 0) {
   <p-listbox
     [options]="essentialsOptions"
     scrollHeight=""
-    styleClass="mt-2"
+    styleClass="core:mt-2"
     (onChange)="onAddField($event)"
   >
-    <ng-template let-item pTemplate="item">
+    <ng-template #item let-item>
       {{item.label|async}}
     </ng-template>
   </p-listbox>

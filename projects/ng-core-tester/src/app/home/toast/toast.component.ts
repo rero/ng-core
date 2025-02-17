@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Message, MessageService } from 'primeng/api';
+import { MessageService, ToastMessageOptions } from 'primeng/api';
+import { Message } from 'primeng/message';
 
 interface IToastType {
   name: string;
@@ -24,8 +25,9 @@ interface IToastType {
 }
 
 @Component({
-  selector: 'app-toast',
-  templateUrl: './toast.component.html'
+    selector: 'app-toast',
+    templateUrl: './toast.component.html',
+    standalone: false
 })
 export class ToastComponent implements OnInit {
 
@@ -56,14 +58,14 @@ export class ToastComponent implements OnInit {
   }
 
   showToast(): void {
-    const message: Message = {
+    const message: ToastMessageOptions = {
       severity: 'error',
       summary: this.translateService.instant('Error'),
       detail: this.translateService.instant('Please select a type')
     };
     if (this.toastType) {
       message.severity = this.toastType.code;
-      message.summary = this.toastType.name;
+      message.text = this.toastType.name;
       message.detail = this.toastMessage;
     }
     if (message.severity === 'error') {

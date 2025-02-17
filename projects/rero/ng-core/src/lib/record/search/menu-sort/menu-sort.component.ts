@@ -20,8 +20,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 
 @Component({
-  selector: 'ng-core-menu-sort',
-  templateUrl: './menu-sort.component.html'
+    selector: 'ng-core-menu-sort',
+    templateUrl: './menu-sort.component.html',
+    standalone: false
 })
 export class MenuSortComponent {
 

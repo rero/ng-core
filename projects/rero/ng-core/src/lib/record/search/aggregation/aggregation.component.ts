@@ -18,8 +18,9 @@ import { Component, input, output } from '@angular/core';
 import { Aggregation } from '../../record';
 
 @Component({
-  selector: 'ng-core-record-search-aggregation',
-  templateUrl: './aggregation.component.html',
+    selector: 'ng-core-record-search-aggregation',
+    templateUrl: './aggregation.component.html',
+    standalone: false
 })
 export class RecordSearchAggregationComponent {
   // COMPONENT ATTRIBUTES =====================================================

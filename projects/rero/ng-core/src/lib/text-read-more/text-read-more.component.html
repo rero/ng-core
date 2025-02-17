@@ -15,9 +15,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (isLimitReached && limit<0) {
-  <a class="pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
+  <a class="core:pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
 }
 <span [innerHTML]="textToDisplay | nl2br"></span>
 @if (isLimitReached && limit>=0) {
-  <a class="pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
+  <a class="core:pl-2" href="#" (click)="toggleText($event)">{{ linkLabel }}</a>
 }

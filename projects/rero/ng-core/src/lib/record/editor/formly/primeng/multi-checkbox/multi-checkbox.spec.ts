@@ -20,11 +20,13 @@ import { createFieldComponent } from '@ngx-formly/core/testing';
 import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { IMultiCheckBoxProps, NgCoreFormlyMultiCheckboxModule } from './multi-checkbox';
+import { TranslateModule } from '@ngx-translate/core';
 
 const renderComponent = (field: FormlyFieldConfig<IMultiCheckBoxProps>) => {
   return createFieldComponent(field, {
     imports: [
       NgCoreFormlyMultiCheckboxModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent }
@@ -49,7 +51,7 @@ describe('MultiCheckboxComponent', () => {
       }
     });
     expect(queryAll('p-checkbox')).toHaveSize(2);
-    expect(queryAll('div.flex.flex-column.gap-1')).toHaveSize(1);
+    expect(queryAll('div[class="core:flex core:flex-col core:gap-1"')).toHaveSize(1);
   });
 
   it('should return checkboxes in line', () => {
@@ -65,6 +67,6 @@ describe('MultiCheckboxComponent', () => {
       }
     });
     expect(queryAll('p-checkbox')).toHaveSize(2);
-    expect(queryAll('div.flex.gap-3')).toHaveSize(1);
+    expect(queryAll('div[class="core:flex core:gap-3"]')).toHaveSize(1);
   });
 });

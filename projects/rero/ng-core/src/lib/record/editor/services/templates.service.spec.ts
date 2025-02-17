@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { TemplatesService } from './templates.service';
@@ -42,14 +42,12 @@ describe('TemplatesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot(),
-        HttpClientModule,
-      ],
-      providers: [
-        { provide: RecordService, useValue: recordServiceMock }
-      ]
-    });
+    imports: [TranslateModule.forRoot()],
+    providers: [
+        { provide: RecordService, useValue: recordServiceMock },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     service = TestBed.inject(TemplatesService);
   });

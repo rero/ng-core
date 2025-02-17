@@ -15,18 +15,16 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="grid">
-    <div class="col-12 flex header sticky top-0 bg-white h-full z-5 justify-content-between align-items-center my-2 p-2 border-bottom-1 surface-border">
-      <div class="">
-        @if (rootField) {
-          <legend class="text-2xl">
-              <span [pTooltip]="description" tooltipPosition="top">
-                {{ title || recordType | ucfirst | translate }}
-              </span>
-          </legend>
-        }
-      </div>
-      <div class="flex align-items-center justify-content-end gap-1">
+  <div class="core:grid core:grid-cols-12 core:gap-4">
+    <div class="core:col-span-12 core:flex core:sticky core:z-10 core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b border-surface core:py-2">
+      @if (rootField) {
+        <legend>
+            <span class="core:text-2xl" [pTooltip]="description" tooltipPosition="top">
+              {{ title || recordType | ucfirst | translate }}
+            </span>
+        </legend>
+      }
+      <div class="core:flex core:items-center core:justify-end core:gap-1">
         <!-- load from template button -->
         @if (canLoadTemplate()) {
           <p-button
@@ -67,13 +65,13 @@
 
     <!-- add fields section -->
     @if (editorSettings.longMode) {
-      <div class="col-2 bd-sidebar overflow-y-auto sticky">
+      <div class="core:col-span-2 bd-sidebar core:overflow-y-auto core:sticky core:pt-3">
         <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
       </div>
     }
 
     <!-- editor itself -->
-    <div class="col" [ngClass]="{ 'col-10 lg:col-8': editorSettings.longMode }" role="main">
+    <div class="core:col-span-12" [ngClass]="{ 'core:col-span-10 core:lg:col-span-8': editorSettings.longMode }" role="main">
         <!-- ngx-formly -->
         <formly-form
           [model]="model"
@@ -86,12 +84,12 @@
 
     @if (editorSettings.longMode) {
       <!-- TOC navigation -->
-      <nav class="col-2 py-2 text-sm bd-toc sticky overflow-y-auto hidden lg:block" aria-label="Secondary navigation">
+      <nav class="core:col-span-2 core:pt-3 core:text-sm bd-toc core:sticky core:overflow-y-auto core:hidden core:lg:block" aria-label="Secondary navigation">
           <label for="addField" translate>Jump to</label>
-          <ul class="ml-2 pl-0 list-none">
+          <ul class="core:ml-2 core:pl-0 core:list-none">
             @for (f of tocFields$ | async; track f) {
-              <li class="mb-1">
-                <span class="text-link-secondary" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
+              <li class="core:mb-1">
+                <span class="core:text-link-secondary" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
               </li>
             }
           </ul>

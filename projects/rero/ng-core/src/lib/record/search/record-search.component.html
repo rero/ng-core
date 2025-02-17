@@ -25,10 +25,10 @@
   <h5>{{ availableTypes[0].label | translate }}</h5>
   }
   <ng-content select="[header]"></ng-content>
-  <div class="mt-3 flex gap-2">
+  <div class="core:mt-4 core:flex core:gap-2">
     @if (showSearchInput) {
     <ng-core-search-input
-      class="flex-grow-1"
+      class="core:grow"
       [placeholder]="'search' | translate | ucfirst"
       [searchText]="q"
       [displayLabel]="false"
@@ -39,12 +39,9 @@
     <ng-content select="[afterInputSearch]"/>
   </div>
   @if (loaded && hasNoRecord) {
-    <p-messages
-      class="my-4"
-      [value]="[{ severity: 'info', detail: emptyRecordMessage }]"
-      [enableService]="false"
-      [closable]="false"
-    />
+    <p-message class="core:my-6" severity="info">
+      {{ emptyRecordMessage }}
+    </p-message>
     @if (adminMode.can && addStatus.can) {
     <p-button
       id="search-add-button"
@@ -54,13 +51,13 @@
     />
     }
   } @else {
-  <div class="flex align-items-stretch w-full my-3">
+  <div class="core:flex core:items-stretch core:w-full core:my-4">
     @if (resultsText$ | async; as resultsText) {
-    <div class="flex align-items-center w-full">
+    <div class="core:flex core:items-center core:w-full">
       <strong>{{ resultsText }}</strong>
     </div>
     }
-    <div class="flex align-items-center justify-content-end w-full">
+    <div class="core:flex core:items-center core:justify-end core:w-full">
       @if (adminMode.can && addStatus.can) {
       <p-button
         id="search-add-button"
@@ -71,30 +68,30 @@
       }
       <!-- Sorting -->
       @if (config?.sortOptions?.length > 0) {
-      <ng-core-menu-sort class="ml-1" [selectedValue]="selectedSortValue" [config]="config.sortOptions" (onChange)="changeSorting($event)" />
+      <ng-core-menu-sort class="core:ml-1" [selectedValue]="selectedSortValue" [config]="config.sortOptions" (onChange)="changeSorting($event)" />
       }
       <!-- EXPORT BUTTON -->
-      <ng-core-export-button class="ml-1"[exportOptions]="exportOptions"/>
+      <ng-core-export-button class="core:ml-1"[exportOptions]="exportOptions"/>
       <!-- END EXPORT BUTTON -->
     </div>
   </div>
   <ng-content select="[beforeResult]"></ng-content>
-  <div class="grid">
+  <div class="core:grid core:grid-cols-12 core:gap-4">
     <ng-core-list-filters
       [aggregations]="aggregations"
-      class="col-12"
+      class="core:col-span-12"
       [aggregationsFilters]="aggregationsFilters"
       [searchFilters]="searchFilters"
       (remove)="removeFilter($event)"
     />
     <ng-content select="[top-search-result]"></ng-content>
     @if ((aggregations && aggregations.length) || searchFields.length > 0 || searchFilters.length > 0) {
-    <div class="md:col-5 lg:col-3 col-12">
+    <div class="core:md:col-span-5 core:lg:col-span-3 core:col-span-12">
       @if (searchFields.length > 0 && q) {
-      <div class="mb-3">
-        <span class="mr-1" translate>Search in</span>
-        <p-dropdown
-          class="w-full"
+      <div class="core:mb-4">
+        <span class="core:mr-1" translate>Search in</span>
+        <p-select
+          class="core:w-full"
           placeholder="…"
           [optionValue]="'path'"
           [options]="searchFields"
@@ -108,7 +105,7 @@
         [searchFilters]="searchFilters"
         [config]="config"
         [query]="q"
-        styleClassSection="my-2"
+        styleClassSection="core:my-2"
         (onChange)="onChangeSearchFilter($event)"
       />
 
@@ -127,20 +124,18 @@
       } }
     </div>
     }
-    <div id="recordlist" class="md:col-7 lg:col-9 col-12">
+    <div id="recordlist" class="core:md:col-span-7 core:lg:col-span-9 core:col-span-12">
       @if (showEmptySearchMessage) {
-      <p-messages
-        [value]="[{ severity: 'info', detail: 'Enter a query to get results.' | translate }]"
-        [enableService]="false"
-        [closable]="false"
-      />
+      <p-message severity="info">
+        {{ 'Enter a query to get results.' | translate }}
+      </p-message>
       }
       <ng-content select="[top-result]"/>
       <p-dataView [value]="records" [emptyMessage]="' '">
-        <ng-template pTemplate="list" let-records>
-          <ul class="p-0 m-0">
+        <ng-template #list let-records>
+          <ul class="core:p-0 core:m-0">
             @for (record of records; track record ; let first = $first) {
-            <li class="list-none py-2" [ngClass]="{ 'border-top-1 surface-border': !first }">
+            <li class="core:list-none core:py-2" [ngClass]="{ 'core:border-t-1 border-surface': !first }">
               <ng-core-record-search-result
                 [adminMode]="adminMode"
                 [record]="record"

@@ -19,8 +19,9 @@ import { Subscription } from 'rxjs';
 import { RecordSearchService } from '../../record-search.service';
 
 @Component({
-  selector: 'ng-core-aggregation-slider',
-  templateUrl: './slider.component.html'
+    selector: 'ng-core-aggregation-slider',
+    templateUrl: './slider.component.html',
+    standalone: false
 })
 export class AggregationSliderComponent implements OnDestroy, OnInit {
 

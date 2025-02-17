@@ -15,30 +15,32 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (buckets()) {
-  <ul class="list-none text-sm m-0 p-0">
+  <ul class="core:list-none core:text-sm core:m-0 core:p-0">
   @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
     <li>
         @if (bucket.doc_count) {
-          <div class="flex gap-1 align-items-top text-link-secondary mb-1">
-            <p-triStateCheckbox
+          <div class="core:flex core:gap-1 align-core:items-top core:text-link-secondary core:mb-1">
+            <p-checkbox
               inputId="{{ bucket.aggregationKey }}-{{ index }}"
+              binary
+              [indeterminate]="bucket.indeterminate"
               variant="filled"
-              [ngModel]="bucket.indeterminate ? false : isSelected(bucket.key)"
+              [ngModel]="isSelected(bucket.key)"
               (onChange)="updateFilter(bucket)"
             />
-            <label class="flex-grow-1 overflow-hidden" for="{{ bucket.aggregationKey }}-{{ index }}">
+            <label class="core:grow core:overflow-hidden" for="{{ bucket.aggregationKey }}-{{ index }}">
               @if (bucket.name) {
                 {{ bucket.name }}
               } @else {
                 {{ bucket.key | bucketName: aggregationKey() | async }}
               }
             </label>
-              <div class="pl-2">
+              <div class="core:pl-2">
                 {{ bucket.doc_count }}
               </div>
           </div>
         }
-      <div class="ml-4">
+      <div class="core:ml-6">
         @if (displayChildren(bucket)) {
           @for (aggregation of bucketChildren[bucket.key]; track aggregation) {
             <ng-core-record-search-aggregation-buckets
@@ -54,7 +56,7 @@
   </ul>
 }
 @if (displayMoreAndLessLink) {
-  <div class="flex justify-content-end">
-    <span class="text-link" (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
+  <div class="core:flex core:justify-end">
+    <span class="core:text-link" (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
   </div>
 }

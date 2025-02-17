@@ -21,8 +21,9 @@ import { Error } from './error';
  * Component for displaying errors.
  */
 @Component({
-  selector: 'ng-core-error',
-  templateUrl: './error.component.html'
+    selector: 'ng-core-error',
+    templateUrl: './error.component.html',
+    standalone: false
 })
 export class ErrorComponent {
   // Error object containing title, status and optionally a message.

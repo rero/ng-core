@@ -15,11 +15,11 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="flex align-items-start">
-  <div class="flex-grow-1">
+<div class="core:flex core:items-start">
+  <div class="core:grow">
     <ng-container #item></ng-container>
   </div>
-  <div class="flex flex-none gap-1 justify-content-end ml-2">
+  <div class="core:flex core:flex-none core:gap-1 core:justify-end core:ml-2">
     @if (adminMode.can) {
         <!-- use button -->
         @if (useStatus?.can && useStatus?.url) {
@@ -47,7 +47,7 @@
           <p-button
           icon="fa fa-trash"
           severity="danger"
-          class="pointer-events-auto"
+          class="core:pointer-events-auto"
           outlined
           [title]="'Delete'|translate"
           (onClick)="deleteRecord(record.id, deleteStatus?.type)"

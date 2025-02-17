@@ -19,23 +19,23 @@ import { BucketNamePipe } from './bucket-name.pipe';
 import { BucketNameService } from '../service/bucket-name.service';
 import { RecordModule } from '@rero/ng-core';
 import { TranslateModule } from '@ngx-translate/core';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('BucketNamePipe', () => {
   let pipe: BucketNamePipe;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [RecordModule,
+        TranslateModule.forRoot({})],
+    providers: [
         BucketNamePipe,
-        BucketNameService
-      ],
-      imports: [
-        RecordModule,
-        TranslateModule.forRoot({}),
-        HttpClientTestingModule
-      ]
-    });
+        BucketNameService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+});
     pipe = TestBed.inject(BucketNamePipe);
   });
 

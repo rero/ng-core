@@ -23,7 +23,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
-import { AutofocusDirective } from './directives/autofocus.directive';
 import { NgVarDirective } from './directives/ng-var.directive';
 import { ErrorComponent } from './error/error.component';
 import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
@@ -41,7 +40,6 @@ import { TextReadMoreComponent } from './text-read-more/text-read-more.component
 import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
-import { MenuComponent } from './widget/menu/menu.component';
 import { NgCoreTranslateService } from './translate/translate-service';
 import { Observable, of } from 'rxjs';
 
@@ -62,15 +60,13 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
         DateTranslatePipe,
         DialogComponent,
         SearchInputComponent,
-        MenuComponent,
         TranslateLanguagePipe,
         TextReadMoreComponent,
         SortByKeysPipe,
         ErrorComponent,
         FilesizePipe,
         NgVarDirective,
-        MarkdownPipe,
-        AutofocusDirective,
+        MarkdownPipe
     ],
     imports: [
         CommonModule,
@@ -83,7 +79,7 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
             }
         }),
         NgxSpinnerModule,
-        PrimeNgCoreModule,
+        PrimeNgCoreModule
     ],
     exports: [
         PrimeNgCoreModule,
@@ -99,14 +95,12 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
         FilesizePipe,
         DialogComponent,
         SearchInputComponent,
-        MenuComponent,
         TextReadMoreComponent,
         ErrorComponent,
         SortByKeysPipe,
         NgxSpinnerModule,
         NgVarDirective,
-        MarkdownPipe,
-        AutofocusDirective,
+        MarkdownPipe
     ],
     providers: [
       ComponentCanDeactivateGuard,

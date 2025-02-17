@@ -31,8 +31,9 @@ export interface ChangeEvent {
 }
 
 @Component({
-  selector: 'ng-core-paginator',
-  templateUrl: './paginator.component.html'
+    selector: 'ng-core-paginator',
+    templateUrl: './paginator.component.html',
+    standalone: false
 })
 export class PaginatorComponent implements OnInit {
 

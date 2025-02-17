@@ -20,7 +20,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
-import { CalendarModule } from "primeng/calendar";
+import { DatePickerModule } from "primeng/datepicker";
 import { RecordSearchService } from "../../record-search.service";
 import { AggregationDateRangeComponent } from "./date-range.component";
 import { RippleModule } from 'primeng/ripple';
@@ -46,7 +46,7 @@ import { SharedModule } from "primeng/api";
 //         CommonModule,
 //         BrowserAnimationsModule,
 //         NoopAnimationsModule,
-//         CalendarModule,
+//         DatePickerModule,
 //         SharedModule,
 //         ButtonModule,
 //         RippleModule,

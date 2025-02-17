@@ -38,17 +38,18 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
  * Component to display textarea as a markdown editor.
  */
 @Component({
-  selector: 'ng-core-editor-formly-field-markdown',
-  template: `
-    <div class="my-2">
-      <textarea #textarea></textarea>
+    selector: 'ng-core-editor-formly-field-markdown',
+    template: `
+    <div class="core:my-2">
+      <textarea pTextarea #textarea></textarea>
       @if (showError) {
-        <div class="text-error my-2">
+        <div class="core:text-error core:my-2">
           <formly-validation-message [field]="field"/>
         </div>
       }
     </div>
   `,
+    standalone: false
 })
 export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaProps>> implements AfterViewInit {
   // Reference to textarea element.

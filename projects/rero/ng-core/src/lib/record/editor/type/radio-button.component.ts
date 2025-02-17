@@ -30,40 +30,32 @@ interface Option {
 };
 
 @Component({
-  selector: 'ng-core-editor-field-radio-button',
-  template: `
+    selector: 'ng-core-editor-field-radio-button',
+    template: `
   <ng-template #radioButton let-option="option" let-class="class">
-    <div class="flex" [ngClass]="class">
-      <p-radioButton
+    <div class="core:flex">
+      <p-radiobutton
+        [inputId]="option.value"
         [formControl]="option.disabled ? disabledControl : formControl"
-        [label]="option.label"
         [value]="option.value"
       />
+      <label [for]="option.value" class="core:ml-1">{{option.label}}</label>
     </div>
   </ng-template>
   @if (props.style === 'stacked') {
-    @for (option of props.options | formlySelectOptions : field | async; track option; let i = $index;) {
-      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button'}"/>
+    @for (option of props.options | formlySelectOptions : field | async; track option) {
+      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
   } @else {
-    <div class="flex flex-wrap">
-    @for (option of props.options | formlySelectOptions : field | async; track option; let i = $index;) {
-      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option, class: 'radio-button-label'}"/>
+    <div class="core:flex core:gap-2">
+    @for (option of props.options | formlySelectOptions : field | async; track option) {
+      <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
     </div>
   }
   `,
-  styles: `
-  .radio-button {
-    margin-bottom: 4px;
-  }
-  .radio-button-label {
-    margin-top: 4px;
-    margin-bottom: 4px;
-    margin-right: 10px;
-  }
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RadioButtonComponent extends FieldType<FormlyFieldConfig<RadioButtonProps>> {
 
