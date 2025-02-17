@@ -69,7 +69,7 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
         this.essentialsOptions = fields
           .filter(f => this.isFieldEssential(f))
           .map((field: any) => {
-            return { label: this.translateService.instant(field.props.untranslatedLabel), value: field }
+            return { label: this.translateService.stream(field.props.untranslatedLabel), value: field }
           });
 
       })
