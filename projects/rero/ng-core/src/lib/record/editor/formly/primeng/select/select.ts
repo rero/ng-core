@@ -84,6 +84,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [tooltipPositionStyle]="props.tooltipPositionStyle"
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
+      (onClear)="clearValidators()"
     >
       <ng-template let-selected pTemplate="selectedItem">
         {{ selected.label | translate }}
@@ -150,6 +151,11 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  clearValidators() {
+    const errors = this.formControl.errors;
+    this.formControl.setErrors(errors.required? {required: true}: null);
   }
 }
 

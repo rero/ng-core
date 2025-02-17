@@ -935,7 +935,13 @@
     "selectWithPreferredOptions": {
       "title": "Select with preferred options",
       "type": "string",
-      "enum": [],
+      "enum": [
+        "fre",
+        "ita",
+        "eng",
+        "por",
+        "jpn"
+      ],
       "widget": {
         "formlyConfig": {
           "props": {
@@ -977,12 +983,12 @@
       "title": "Select with group and sort",
       "type": "string",
       "enum": [
-        "Epicea",
-        "Baobab",
-        "Foxglove",
-        "Crocus",
-        "Heather",
-        "Daffodil"
+        "epicea",
+        "baobab",
+        "foxglove",
+        "crocus",
+        "heather",
+        "daffodil"
       ],
       "widget": {
         "formlyConfig": {
@@ -995,7 +1001,7 @@
                 "items": [
                   {
                     "label": "Epicea",
-                    "value": "Epicea"
+                    "value": "epicea"
                   },
                   {
                     "label": "Baobab",
