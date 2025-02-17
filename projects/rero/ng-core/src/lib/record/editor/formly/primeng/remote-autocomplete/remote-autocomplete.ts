@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -169,7 +169,6 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
   clear(): void {
     this.value = '';
     this.formControl.reset(null);
-    this.onValueSelect.next(null);
     this.field.focus = true;
   }
 }
