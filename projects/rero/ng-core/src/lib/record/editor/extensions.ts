@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,13 +17,12 @@
 import { inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
-import { FormlyExtension, FormlyFieldConfig } from '@ngx-formly/core';
+import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { isObservable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { isObservable } from 'rxjs';
+import { Validators } from '../../validator/validators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
-import { Validators } from '../../validator/validators';
 
 export class NgCoreFormlyExtension {
 
@@ -346,14 +345,7 @@ export class TranslateExtension implements FormlyExtension {
 
   protected translate: TranslateService = inject(TranslateService);
 
-  /**
-   * Translate some fields before populating the form.
-   *
-   * It translates the label, the description and the placeholder.
-   * @param field formly field config
-   */
-
-  prePopulate(field: FormlyFieldConfig): void {
+  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
     const props: any = field.props || {};
 
     // translate only once
@@ -393,36 +385,11 @@ export class TranslateExtension implements FormlyExtension {
     if (props.addonRight) {
       props.addonRightUntranslated = props.addonRight;
     }
+
     this.processAllAddon(props);
-    this.translate.onLangChange.subscribe(() => this.processAllAddon(props));
-
-    // Options
-    if (props.options && (isObservable(props.options) || props.options.some((o: any) => 'label' in o && 'value' in o))) {
-          props.options = isObservable(props.options) ? props.options : of(props.options);
-          props.options = props.options.pipe(
-            map((options: any[]) => {
-              if (options?.length > 0) {
-                options.map((opt) => this.translateOptionsLabel(opt));
-              }
-              return options;
-            })
-          );
-    }
-  }
-
-  private translateOptionsLabel(node) {
-    if (node?.label) {
-      node.label = this.translate.instant(node.label);
-    }
-    if (node?.children?.length > 0) {
-      node.children.map((child) => this.translateOptionsLabel(child));
-    }
-    if (node?.items?.length > 0) {
-      node.items.map((child) => this.translateOptionsLabel(child));
-    }
-    if (node?.value && !node?.data) {
-      node.data = node.value;
-    }
+    this.translate.onLangChange.subscribe(() => {
+      this.processAllAddon(props);
+    });
   }
 
   private processAllAddon(props: any): void {
@@ -436,6 +403,63 @@ export class TranslateExtension implements FormlyExtension {
 
   private processAddon(addon: string[]): any {
     return addon.map((label: string) => (label.startsWith('<') ? label : this.translate.instant(label)));
+  }
+}
+
+export class FormOptionsProcessExtension implements FormlyExtension {
+  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
+    // Process options
+    if (field.props?.options && !isObservable(field.props?.options)) {
+      field.props.options = this.processOptions(field.props);
+    }
+  }
+
+  private processOptions(props: any): any[] {
+    this.processUntranslatedLabel(props.options);
+    const preferredOptions = props.options.filter((option: any) => option.preferred);
+    if (preferredOptions.length > 0) {
+      const options = [];
+      props.group = true;
+      const otherOptions = props.options.filter((option: any) => !option.preferred);
+      options.push({
+        label: 'group-preferred',
+        untranslatedLabel: 'group-preferred',
+        items: props.sort ? this.sortOptions(preferredOptions) : preferredOptions
+      });
+      options.push({
+        label: 'group-other',
+        untranslatedLabel: 'group-other',
+        items: props.sort ? this.sortOptions(otherOptions) : otherOptions
+      });
+      return options;
+    } else {
+
+      return props.sort ? this.sortOptions(props.options) : props.options
+    }
+  }
+
+  private processUntranslatedLabel(options: any[]): void {
+    options.map((option: any) => {
+      option.untranslatedLabel = option.label;
+      if (option.items) {
+        this.processUntranslatedLabel(option.items);
+      }
+      if (option.children) {
+        this.processUntranslatedLabel(option.children);
+      }
+    });
+  }
+
+  private sortOptions(options: any) {
+    options = options.sort((a: any, b: any) => a.label.localeCompare(b.label));
+    if (options.filter((option: any) => option.items).length > 0) {
+      options.forEach((option: any) => {
+        if (option.items) {
+          return this.sortOptions(option.items);
+        }
+      });
+    }
+    return options;
   }
 }
 
@@ -566,6 +590,11 @@ export function registerNgCoreFormlyExtension(translate: TranslateService, recor
       },
     ],
     extensions: [
+      {
+        name: 'form-options',
+        extension: new FormOptionsProcessExtension(),
+        priority: 12
+      },
       {
         name: 'translate',
         extension: new TranslateExtension(),

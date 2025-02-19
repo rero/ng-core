@@ -1034,10 +1034,6 @@
       "type": "array",
       "minItems": 1,
       "uniqueItems": true,
-      "default": [
-        "value2",
-        "value3"
-      ],
       "items": {
         "type": "string",
         "enum": [
@@ -1077,12 +1073,12 @@
       "items": {
         "type": "string",
         "enum": [
-          "Epicea",
-          "Baobab",
-          "Foxglove",
-          "Crocus",
-          "Heather",
-          "Daffodil"
+          "epicea",
+          "baobab",
+          "foxglove",
+          "crocus",
+          "heather",
+          "daffodil"
         ]
       },
       "widget": {
@@ -1097,7 +1093,7 @@
                 "items": [
                   {
                     "label": "Epicea",
-                    "value": "Epicea"
+                    "value": "epicea"
                   },
                   {
                     "label": "Baobab",
@@ -1280,7 +1276,8 @@
         "formlyConfig": {
           "type": "passwordGenerator",
           "props": {
-            "enabledEditMode": true
+            "enabledEditMode": true,
+            "styleClass": "surface-100"
           }
         }
       }

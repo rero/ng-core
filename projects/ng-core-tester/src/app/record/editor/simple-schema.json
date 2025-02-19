@@ -10,7 +10,8 @@
     "optional",
     "required",
     "essential",
-    "textarea"
+    "textarea",
+    "select"
   ],
   "properties": {
     "$schema": {
@@ -69,6 +70,22 @@
             "limitChars": 200,
             "limitWords": 10,
             "rows": 5
+          }
+        }
+      }
+    },
+    "select": {
+      "title": "Product",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "type": "select",
+          "props": {
+            "options": [
+              { "label": "House", "value": "house" },
+              { "label": "Car", "value": "car" },
+              { "label": "Window", "value": "window" }
+            ]
           }
         }
       }

@@ -46,8 +46,8 @@ describe('SelectComponent', () => {
         filterMatchMode: 'contains',
         group: false,
         options: [
-          { label: 'Foo', value: 'foo' },
-          { label: 'Bar', value: 'bar' },
+          { label: 'Foo', value: 'foo', untranslatedLabel: 'foo' },
+          { label: 'Bar', value: 'bar', untranslatedLabel: 'bar' },
         ],
         panelStyleClass: 'w-full',
         required: false,

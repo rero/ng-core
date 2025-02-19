@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -42,8 +42,8 @@ describe('MultiCheckboxComponent', () => {
       props: {
         style: 'stacked',
         options: [
-          { label: 'foo', value: 'foo' },
-          { label: 'bar', value: 'bar' },
+          { label: 'foo', value: 'foo', untranslatedLabel: 'foo' },
+          { label: 'bar', value: 'bar', untranslatedLabel: 'bar' },
         ],
       }
     });
@@ -58,8 +58,8 @@ describe('MultiCheckboxComponent', () => {
       props: {
         style: 'inline',
         options: [
-          { label: 'foo', value: 'foo' },
-          { label: 'bar', value: 'bar' },
+          { label: 'foo', value: 'foo', untranslatedLabel: 'foo' },
+          { label: 'bar', value: 'bar', untranslatedLabel: 'bar' },
         ],
       }
     });

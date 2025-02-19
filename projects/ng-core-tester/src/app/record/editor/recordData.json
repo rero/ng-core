@@ -17,7 +17,6 @@
       "readonly_changeable": "Value 1",
       "hide_with_required_expression_control": "Optional",
       "treeSelect": "node5",
-      "selectMultiple": ["value2", "value3"],
       "markdown": "Hello **world**.\nGreat day.",
       "array_with_multicheckbox": ["checkbox1", "checkbox2"],
       "input_with_default_value": "slrofar6uh",
