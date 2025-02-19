@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022-2024 RERO
+ * Copyright (C) 2022-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
  */
 import { Clipboard } from '@angular/cdk/clipboard';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, Signal, viewChild } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { GeneratePassword } from "js-generate-password";
@@ -81,23 +81,30 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
   <p-inputGroup>
     <input
       pInputText
+      #password
       id="password"
       [type]="type"
       autocomplete="off"
       [formControl]="formControl"
       (change)="onChange($event.target.value)"
       [readonly]="props.readonly"
-      [class]="props.class"
+      [class]="props.class ? props.class : props.readonly ? 'surface-100' : ''"
     />
     <p-inputGroupAddon>
-      <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}" (click)="onClick()"></i>
+      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="onClick()">
+        <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}"></i>
+      </div>
     </p-inputGroupAddon>
     <p-inputGroupAddon>
-      <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}" (click)="showHidePassword()"></i>
+      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="showHidePassword()">
+        <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}"></i>
+      </div>
     </p-inputGroupAddon>
     @if (props.enabledEditMode) {
     <p-inputGroupAddon>
-      <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}" (click)="props.readonly = !props.readonly"></i>
+      <div class="flex justify-content-center align-items-center min-h-full cursor-pointer hover:surface-hover" (click)="onEdit()">
+        <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}"></i>
+      </div>
     </p-inputGroupAddon>
     }
   </p-inputGroup>
@@ -106,6 +113,16 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       The password has been copied to the clipboard.
     </div>
     }
+  `,
+  styles: `
+    :host ::ng-deep .p-inputgroup-addon {
+      padding: 0;
+    }
+
+    :host ::ng-deep .p-inputgroup-addon > div {
+      width: 100%;
+      height: 100%;
+    }
   `
 })
 export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<PasswordGeneratorProps>> implements OnInit {
@@ -113,6 +130,8 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
   protected httpClient: HttpClient = inject(HttpClient);
   protected clipboard: Clipboard = inject(Clipboard);
   protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  passwordField: Signal<ElementRef> = viewChild('password');
 
   /** Default options */
   defaultOptions: Partial<FormlyFieldConfig<PasswordGeneratorProps>> = {
@@ -172,6 +191,13 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
   /** Hide or show password data */
   showHidePassword(): void {
     this.type = this.type === 'password' ? 'text' : 'password';
+  }
+
+  onEdit(): void {
+    this.props.readonly = !this.props.readonly;
+    if (!this.props.readonly) {
+      this.passwordField().nativeElement.focus();
+    }
   }
 
   /** Generate the password by javascript */
