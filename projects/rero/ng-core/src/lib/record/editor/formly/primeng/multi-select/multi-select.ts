@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit, Type } from '@angular/core';
+import { Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
-import { FormlyFieldSelectProps } from '@ngx-formly/core/select';
+import { FormlyFieldSelectProps, FormlySelectModule } from '@ngx-formly/core/select';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
-import { isObservable, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
@@ -67,11 +69,11 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
-      [options]="selectOptions"
+      [options]="props.options"
       optionLabel="label"
       optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder"
+      [placeholder]="props.placeholder | translate"
       [required]="props.required"
       [showClear]="!props.required"
       [styleClass]="props.styleClass"
@@ -80,10 +82,28 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [tooltipPositionStyle]="props.tooltipPositionStyle"
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
-    />
+    >
+      <ng-template let-items pTemplate="selectedItems">
+        @for(option of items; track items; let last = $last) {
+          <div class="inline-flex align-items-center gap-2 px-1">
+            <div>
+              {{ option.label }}@if(!last) {, }
+            </div>
+          </div>
+        }
+        @if (!items || items.length === 0) {
+          <div>{{ props.placeholder | translate }}</div>
+        }
+      </ng-template>
+    </p-multiSelect>
   `,
 })
-export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSelectProps>> implements OnInit {
+export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSelectProps>> implements OnInit, OnDestroy {
+
+  private translateService: TranslateService = inject(TranslateService);
+  private translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+
+  private subscription: Subscription = new Subscription();
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<IMultiSelectProps>> = {
@@ -106,29 +126,15 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     }
   };
 
-  selectOptions: any[] = [];
-
   ngOnInit(): void {
-    if (!isObservable(this.props.options)) {
-      this.props.options = of(this.props.options);
-    }
-    this.props.options.subscribe((options: any) => this.selectOptions = this.props.sort
-      ? this.sortOptions(options)
-      : options
-    );
+    this.translateLabelService.translateLabel(this.props.options);
+    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
+      this.translateLabelService.translateLabel(this.props.options);
+    }));
   }
 
-  private sortOptions(options: any) {
-    options = options.sort((a: any, b: any) => a.label.localeCompare(b.label));
-    if (options.filter((option: any) => option.items).length > 0) {
-      options.forEach((option: any) => {
-        if (option.items) {
-          return this.sortOptions(option.items);
-        }
-      });
-    }
-
-    return options;
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
 
@@ -138,6 +144,8 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    TranslateModule.forRoot(),
+    FormlySelectModule,
     PrimeNgMultiSelectModule,
     FormlyModule.forChild({
       types: [

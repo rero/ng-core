@@ -49,9 +49,10 @@ describe('TreeSelectComponent', () => {
           {
             key: 'label_1',
             label: 'Tree 1',
+            untranslatedLabel: 'Tree 1',
             children: [
-              { key: 'label_1_1', label: 'Subtree 1', data: 'subtree1' },
-              { key: 'label_1_2', label: 'Subtree 2', data: 'subtree2' }
+              { key: 'label_1_1', label: 'Subtree 1', data: 'subtree1', untranslatedLabel: 'Subtree 1' },
+              { key: 'label_1_2', label: 'Subtree 2', data: 'subtree2', untranslatedLabel: 'Subtree 2' }
             ]
           }
         ],

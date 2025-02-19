@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, NgModule, OnInit, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule as FormlyCoreSelectModule, FormlyFieldSelectProps } from '@ngx-formly/core/select';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DropdownModule } from 'primeng/dropdown';
-import { isObservable, of } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { TranslateLabelService } from './translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
@@ -54,7 +56,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
   selector: 'ng-core-primeng-select',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-  @if(selectOptions) {
+  @if(props.options) {
     <p-dropdown
       [appendTo]="props.appendTo"
       [class]="props.class"
@@ -69,11 +71,11 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
-      [options]="selectOptions"
-      optionLabel="label"
-      optionValue="value"
+      [options]="props.options"
+      [optionLabel]="props.group ? undefined : 'label'"
+      [optionValue]="props.group ? undefined : 'value'"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder"
+      [placeholder]="props.placeholder | translate"
       [required]="props.required"
       [showClear]="!props.required"
       [styleClass]="props.styleClass"
@@ -83,8 +85,11 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
     >
+      <ng-template let-selected pTemplate="selectedItem">
+        {{ selected.label | translate }}
+      </ng-template>
       <ng-template let-group pTemplate="group">
-        @if (group.label !== 'group-preferred' && group.label !== 'group-other') {
+        @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
           <div class="option-group">{{ group.label }}</div>
         } @else if (group.label === 'group-other') {
           <div class="option-group"><hr></div>
@@ -110,9 +115,13 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
   }
   `
 })
-export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> implements OnInit {
+export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> implements OnInit, OnDestroy {
 
-  protected cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private translateService: TranslateService = inject(TranslateService);
+  private translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+
+  private subscription: Subscription = new Subscription();
+
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
     props: {
@@ -132,46 +141,15 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
     }
   };
 
-  selectOptions: any[];
-
   ngOnInit(): void {
-    if (!isObservable(this.props.options)) {
-      this.props.options = of(this.props.options);
-    }
-
-    this.props.options.subscribe((options: any) => {
-      const preferredOptions = options.filter((option: any) => option.preferred);
-      if (preferredOptions.length > 0) {
-        this.props.group = true;
-        const otherOptions = options.filter((option: any) => !option.preferred);
-        this.selectOptions = [
-          {
-            label: 'group-preferred',
-            items: this.props.sort ? this.sortOptions(preferredOptions) : preferredOptions
-          },
-          {
-            label: 'group-other',
-            items: this.props.sort ? this.sortOptions(otherOptions) : otherOptions
-          }
-        ];
-      } else {
-        this.selectOptions = this.props.sort ? this.sortOptions(options) : options;
-      }
-      this.cd.markForCheck();
-    });
+    this.translateLabelService.translateLabel(this.props.options);
+    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
+      this.translateLabelService.translateLabel(this.props.options);
+    }));
   }
 
-  private sortOptions(options: any) {
-    options = options.sort((a: any, b: any) => a.label.localeCompare(b.label));
-    if (options.filter((option: any) => option.items).length > 0) {
-      options.forEach((option: any) => {
-        if (option.items) {
-          return this.sortOptions(option.items);
-        }
-      });
-    }
-
-    return options;
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }
 
@@ -181,6 +159,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
     CommonModule,
     DropdownModule,
     ReactiveFormsModule,
+    TranslateModule.forRoot(),
     FormlyCoreSelectModule,
     FormlyModule.forChild({
       types: [

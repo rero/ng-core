@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024-2025 RERO
+ * Copyright (C) 2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,5 +14,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-export * from './select';
-export * from './translate-label.service';
+import { inject, Injectable } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TranslateLabelService {
+
+  private translateService: TranslateService = inject(TranslateService);
+
+  translateLabel(options: any): any[] {
+    options.map((option: any) => {
+      option.label = this.translateService.instant(option.untranslatedLabel);
+      if (option.items) {
+        this.translateLabel(option.items);
+      }
+      if (option.children) {
+        this.translateLabel(option.children);
+      }
+    });
+
+    return options;
+  }
+}
