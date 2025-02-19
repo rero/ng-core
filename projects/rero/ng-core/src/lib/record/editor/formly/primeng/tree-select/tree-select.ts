@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit, Type } from '@angular/core';
+import { Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
+import { FormlySelectModule } from '@ngx-formly/primeng/select';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule as PrimeNgTreeSelectModule } from 'primeng/treeselect';
-import { isObservable, of } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 // Doc https://primeng.org/treeselect
 
@@ -55,10 +58,10 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [filterPlaceholder]="props.filterPlaceholder"
       [formlyAttributes]="field"
       [ngModel]="nodeSelected"
-      [options]="selectOptions"
+      [options]="props.options"
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder"
+      [placeholder]="props.placeholder | translate"
       [showClear]="!props.required"
       [variant]="props.variant"
       (onNodeSelect)="onNodeSelect($event)"
@@ -66,7 +69,12 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
     />
   `,
 })
-export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelectProps>> implements OnInit {
+export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelectProps>> implements OnInit, OnDestroy {
+
+  private translateService: TranslateService = inject(TranslateService);
+  private translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+
+  private subscription: Subscription = new Subscription();
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ITreeSelectProps>> = {
@@ -84,23 +92,16 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   };
 
   nodeSelected: any = undefined;
-  // translateService = inject(TranslateService);
-  // Doc for TreeNode https://primeng.org/treeselect#api.treeselect.interfaces.TreeNode
-  selectOptions: TreeNode<any>[] = [];
 
   ngOnInit(): void {
-    if (!isObservable(this.props.options)) {
-      this.props.options = of(this.props.options);
-    }
-    this.props.options.subscribe((options: any) => {
-      this.selectOptions = options;
-      if (this.field.formControl.value) {
-        this.nodeSelected = this.findNodeByValue(
-          this.selectOptions,
-          this.field.formControl.value
-        );
-      }
-    });
+    this.translateLabelService.translateLabel(this.props.options);
+    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
+      this.translateLabelService.translateLabel(this.props.options);
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   onNodeSelect(event: TreeNodeSelectEvent): void {
@@ -132,7 +133,9 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   imports: [
     CommonModule,
     FormsModule,
+    FormlySelectModule,
     PrimeNgTreeSelectModule,
+    TranslateModule.forRoot(),
     FormlyModule.forChild({
       types: [
         {
