@@ -17,6 +17,7 @@
 
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
+import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { IMultiCheckBoxProps, NgCoreFormlyMultiCheckboxModule } from './multi-checkbox';
 
@@ -41,10 +42,10 @@ describe('MultiCheckboxComponent', () => {
       type: 'multi-checkbox',
       props: {
         style: 'stacked',
-        options: [
+        options: of([
           { label: 'foo', value: 'foo', untranslatedLabel: 'foo' },
           { label: 'bar', value: 'bar', untranslatedLabel: 'bar' },
-        ],
+        ]),
       }
     });
     expect(queryAll('p-checkbox')).toHaveSize(2);
@@ -57,10 +58,10 @@ describe('MultiCheckboxComponent', () => {
       type: 'multi-checkbox',
       props: {
         style: 'inline',
-        options: [
+        options: of([
           { label: 'foo', value: 'foo', untranslatedLabel: 'foo' },
           { label: 'bar', value: 'bar', untranslatedLabel: 'bar' },
-        ],
+        ]),
       }
     });
     expect(queryAll('p-checkbox')).toHaveSize(2);
