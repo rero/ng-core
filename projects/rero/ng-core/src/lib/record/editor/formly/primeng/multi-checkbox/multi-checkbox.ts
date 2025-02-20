@@ -15,27 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
-import { Subscription } from 'rxjs';
+import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
 
 export interface IMultiCheckBoxProps extends FormlyFieldProps {
   labelStyleClass?: string;
   style: 'stacked' | 'inline';
   styleClass?: string;
-  options?: any[]
+  options?: Observable<any[]>;
 }
 
 @Component({
   selector: 'ng-core-multi-checkbox',
   template: `
     <div class="flex" [ngClass]="{ 'gap-3': props.style === 'inline', 'flex-column gap-1': props.style === 'stacked' }">
-    @for (option of props.options; track option) {
+    @for (option of optionValues$|async; track option) {
       <div class="flex align-items-center">
         <p-checkbox
           [disabled]="option.disabled"
@@ -58,6 +58,7 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
 
   private translateService: TranslateService = inject(TranslateService);
   private translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+  private ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription: Subscription = new Subscription();
 
@@ -68,13 +69,20 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
     }
   };
 
+  optionValues$: Observable<any[]>;
+
   multiCheckBoxValue: string[] = [];
 
   ngOnInit(): void {
-    this.translateLabelService.translateLabel(this.props.options);
-    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
-      this.translateLabelService.translateLabel(this.props.options);
-    }));
+    const optionsObs = this.props.options;
+    const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
+    this.optionValues$ = merge(...[optionsObs, changeObs])
+    .pipe(
+      map(options => {
+        this.ref.markForCheck();
+        return this.translateLabelService.translateLabel(options);
+      })
+    );
   }
 
   ngOnDestroy(): void {

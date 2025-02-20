@@ -19,7 +19,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { isObservable } from 'rxjs';
+import { isObservable, of } from 'rxjs';
 import { Validators } from '../../validator/validators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
@@ -410,7 +410,7 @@ export class FormOptionsProcessExtension implements FormlyExtension {
   prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
     // Process options
     if (field.props?.options && !isObservable(field.props?.options)) {
-      field.props.options = this.processOptions(field.props);
+      field.props.options = of(this.processOptions(field.props));
     }
   }
 

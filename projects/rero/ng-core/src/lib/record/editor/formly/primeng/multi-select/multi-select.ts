@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldSelectProps, FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
-import { Subscription } from 'rxjs';
+import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
@@ -47,6 +47,7 @@ export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectPr
   tooltipPositionStyle: string;
   tooltipStyleClass?: string;
   variant: 'outlined' | 'filled';
+  options?: Observable<any[]>;
 }
 
 export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSelectProps> {
@@ -69,7 +70,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
-      [options]="props.options"
+      [options]="optionValues$|async"
       optionLabel="label"
       optionValue="value"
       [panelStyleClass]="props.panelStyleClass"
@@ -103,6 +104,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
 
   private translateService: TranslateService = inject(TranslateService);
   private translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+  private ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription: Subscription = new Subscription();
 
@@ -127,16 +129,23 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     },
   };
 
+  optionValues$: Observable<any[]>;
+
   ngOnInit(): void {
-    this.translateLabelService.translateLabel(this.props.options);
-    this.subscription.add(this.translateService.onLangChange.subscribe(() => {
-      this.translateLabelService.translateLabel(this.props.options);
-    }));
+    const optionsObs = this.props.options;
+    const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
+    this.optionValues$ = merge(...[optionsObs, changeObs])
+    .pipe(
+      map(options => {
+        this.ref.markForCheck();
+        return this.translateLabelService.translateLabel(options);
+      })
+    );
   }
 
   // Clear all validators except required.
   clearValidators() {
-    const errors = this.formControl.errors;
+    const {errors} = this.formControl;
     this.formControl.setErrors(errors.required ? { required: true } : null);
   }
 
