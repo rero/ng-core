@@ -26,6 +26,9 @@ export class TranslateLabelService {
 
   translateLabel(options: any): any[] {
     options.map((option: any) => {
+      if (!option.untranslatedLabel) {
+        option.untranslatedLabel = option.label;
+      }
       option.label = this.translateService.instant(option.untranslatedLabel);
       if (option.items) {
         this.translateLabel(option.items);

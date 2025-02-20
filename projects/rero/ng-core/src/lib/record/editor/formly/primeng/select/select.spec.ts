@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ISelectProps, NgCoreFormlySelectModule } from './select';
+import { of } from 'rxjs';
 
 const renderComponent = (field: FormlyFieldConfig<ISelectProps>) => {
   return createFieldComponent(field, {
@@ -45,10 +46,10 @@ describe('SelectComponent', () => {
         filter: false,
         filterMatchMode: 'contains',
         group: false,
-        options: [
+        options: of([
           { label: 'Foo', value: 'foo', untranslatedLabel: 'foo' },
           { label: 'Bar', value: 'bar', untranslatedLabel: 'bar' },
-        ],
+        ]),
         panelStyleClass: 'w-full',
         required: false,
         scrollHeight: '250px',

@@ -23,12 +23,14 @@ import { FieldWrapper } from '@ngx-formly/core';
     <div class="flex flex-column gap-2" [ngClass]="props.cssClass" [class.has-error]="showError">
       <!-- label -->
       @if (props.label && props.hideLabel !== true) {
-        <label [attr.for]="id" [pTooltip]="props.description" tooltipPosition="top">
-          {{ props.label }}
-          @if (props.required && props.hideRequiredMarker !== true) {
-            &nbsp;*
-          }
-        </label>
+        <div>
+          <label [attr.for]="id" [pTooltip]="props.description" tooltipPosition="top">
+            {{ props.label }}
+            @if (props.required && props.hideRequiredMarker !== true) {
+              &nbsp;*
+            }
+          </label>
+        </div>
       }
       <div class="flex align-content-center flex-grow-1 gap-1">
         <div class="flex-grow-1">

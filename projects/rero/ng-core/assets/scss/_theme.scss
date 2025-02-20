@@ -57,11 +57,6 @@ dl.metadata {
   @extend .mb-0, .border-none, .bg-white;
 }
 
-// bootstrap patches
-label {
-  display: block;
-}
-
 legend {
   @extend .text-base;
   width: auto;

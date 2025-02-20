@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,7 @@ import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ITreeSelectProps, NgCoreFormlyTreeSelectModule } from './tree-select';
+import { of } from 'rxjs';
 
 const renderComponent = (field: FormlyFieldConfig<ITreeSelectProps>) => {
   return createFieldComponent(field, {
@@ -45,7 +46,7 @@ describe('TreeSelectComponent', () => {
         containerStyleClass: 'w-full',
         filter: false,
         filterBy: 'label',
-        options: [
+        options: of([
           {
             key: 'label_1',
             label: 'Tree 1',
@@ -55,7 +56,7 @@ describe('TreeSelectComponent', () => {
               { key: 'label_1_2', label: 'Subtree 2', data: 'subtree2', untranslatedLabel: 'Subtree 2' }
             ]
           }
-        ],
+        ]),
         panelClass: 'w-full',
         panelStyleClass: 'w-full',
         scrollHeight: '400px',
