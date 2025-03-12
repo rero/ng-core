@@ -5,8 +5,7 @@
   "scripts": {
     "ng": "ng",
     "serve": "ng serve --configuration wiremockapi",
-    "build-css": "postcss  --config projects/rero/ng-core projects/rero/ng-core/tailwind.css -o projects/rero/ng-core/assets/scss/ng-core-tailwind.css",
-    "watch-css": "postcss  --config projects/rero/ng-core projects/rero/ng-core/tailwind.css -o projects/rero/ng-core/assets/scss/ng-core-tailwind.css --watch",
+    "build-css": "postcss  --config projects/rero/ng-core projects/rero/ng-core/tailwind.css | ./scripts/split_css.py projects/rero/ng-core/assets/scss/tailwind",
     "build-lib": "ng build --configuration production @rero/ng-core",
     "pack": "npm run build-css && ng build --configuration production @rero/ng-core; npm pack dist/rero/ng-core",
     "test-lib": "ng test @rero/ng-core",

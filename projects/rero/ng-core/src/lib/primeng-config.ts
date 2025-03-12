@@ -6,7 +6,8 @@ export const primeNGConfig = {
       options: {
         cssLayer: {
           name: 'primeng'
-        }
+        },
+        darkModeSelector: false
       },
       preset: definePreset(Aura, {
         semantic: {
