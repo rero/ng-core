@@ -85,7 +85,7 @@ export class LabelComponent implements OnInit, OnDestroy {
     }
     return (
       (this.hiddenFieldGroup(this.getFieldGroup(this.field)).length > 0 || this.field.props.helpURL) &&
-      field.props.editorConfig.longMode
+      field.props?.editorConfig?.longMode
     );
   }
 
