@@ -44,7 +44,8 @@
     "date_only",
     "date_range",
     "password",
-    "array_with_multicheckbox",
+    "array_with_multicheckbox_inline",
+    "array_with_multicheckbox_stacked",
     "remoteAutoCompleteWithFilters",
     "remoteAutocompleteWithoutFilters",
     "input_with_default_value",
@@ -1281,8 +1282,8 @@
         }
       }
     },
-    "array_with_multicheckbox": {
-      "title": "Array with multiple checkbox",
+    "array_with_multicheckbox_inline": {
+      "title": "Array with multiple checkbox (inline)",
       "type": "multicheckbox",
       "minItems": 1,
       "default": [
@@ -1303,6 +1304,51 @@
           "type": "multi-checkbox",
           "props": {
             "style": "inline",
+            "options": [
+              {
+                "label": "Checkbox 1",
+                "value": "checkbox1",
+                "disabled": true
+              },
+              {
+                "label": "Checkbox 2",
+                "value": "checkbox2"
+              },
+              {
+                "label": "Checkbox 3",
+                "value": "checkbox3"
+              },
+              {
+                "label": "Checkbox 4",
+                "value": "checkbox4"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "array_with_multicheckbox_stacked": {
+      "title": "Array with multiple checkbox (stacked)",
+      "type": "multicheckbox",
+      "minItems": 1,
+      "default": [
+        "checkbox2",
+        "checkbox3"
+      ],
+      "items": {
+        "type": "string",
+        "enum": [
+          "checkbox1",
+          "checkbox2",
+          "checkbox3",
+          "checkbox4"
+        ]
+      },
+      "widget": {
+        "formlyConfig": {
+          "type": "multi-checkbox",
+          "props": {
+            "style": "stacked",
             "options": [
               {
                 "label": "Checkbox 1",
