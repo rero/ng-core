@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -31,6 +31,8 @@ import {
 } from '@rero/ng-core';
 import { providePrimeNG } from 'primeng/config';
 import { MenubarModule } from 'primeng/menubar';
+import { RippleModule } from 'primeng/ripple';
+import { TagModule } from 'primeng/tag';
 import { AppConfigService } from './app-config.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -48,21 +50,25 @@ import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.
 @NgModule({
   declarations: [
     AppComponent,
-    DocumentComponent,
-    HomeComponent,
-    DetailComponent,
-    SearchBarComponent,
-    EditorComponent,
-    ToastComponent,
     AppDialogComponent,
+    DetailComponent,
+    DocumentComponent,
+    EditorComponent,
+    HomeComponent,
     MenuComponent,
+    SearchBarComponent,
+    ToastComponent,
   ],
   bootstrap: [AppComponent],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
+    BrowserModule,
     FormsModule,
+    MenubarModule,
+    RecordModule,
+    RippleModule,
+    TagModule,
     TranslateModule.forRoot({
       loader: {
         provide: BaseTranslateLoader,
@@ -70,8 +76,6 @@ import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.
         deps: [CoreConfigService, HttpClient],
       },
     }),
-    RecordModule,
-    MenubarModule,
   ],
   providers: [
     {

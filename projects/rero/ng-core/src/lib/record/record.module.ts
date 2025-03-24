@@ -145,7 +145,7 @@ import { SearchTabsComponent } from './search/search-tabs/search-tabs.component'
                 { name: 'input', component: NgCoreFormlyFieldInput },
                 { name: 'boolean', component: SwitchComponent },
                 { name: 'enum', extends: 'select' },
-                { name: 'array', component: ArrayTypeComponent, wrappers: ['form-field', 'card'] },
+                { name: 'array', component: ArrayTypeComponent, wrappers: ['card'] },
                 { name: 'object', component: ObjectTypeComponent,  wrappers: ['card'] },
                 { name: 'multischema', component: MultiSchemaTypeComponent},
                 { name: 'textarea', component: TextareaFieldComponent },

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,10 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService, ToastMessageOptions } from 'primeng/api';
-import { Message } from 'primeng/message';
 
 interface IToastType {
   name: string;
@@ -64,6 +63,7 @@ export class ToastComponent implements OnInit {
       detail: this.translateService.instant('Please select a type')
     };
     if (this.toastType) {
+      message.summary = this.toastType.code.toUpperCase();
       message.severity = this.toastType.code;
       message.text = this.toastType.name;
       message.detail = this.toastMessage;

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, ViewEncapsulation, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
 
@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
    * - Initializes listener to record changes.
    * - Sets title metadata.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.initializeEvents();
     // Set default title window when application start
     const prefix = this.configService.prefixWindow;
@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
   /**
    * Initializes listening of events when a record is changed.
    */
-  private initializeEvents() {
+  private initializeEvents(): void {
     this.recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
       const {pid} = recordEvent.data.record;
       this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on create (Record Pid: ${pid})`});

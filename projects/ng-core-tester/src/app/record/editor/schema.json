@@ -170,18 +170,24 @@
               "title": "Name",
               "type": "string",
               "minLength": 3,
-              "className": "lg:col-span-6"
+              "widget": {
+                "formlyConfig": {
+                  "props": {
+                    "hide": true,
+                    "itemCssClass": "ui:lg:col-span-6"
+                  }
+                }
+              }
             },
             "hidden": {
               "title": "Hidden name",
               "type": "string",
               "minLength": 3,
-              "className": "lg:col-span-6",
               "widget": {
                 "formlyConfig": {
                   "props": {
                     "hide": true,
-                    "itemCssClass": "lg:col-span-6"
+                    "itemCssClass": "ui:lg:col-span-6"
                   }
                 }
               }
@@ -194,9 +200,9 @@
               "readOnly": true,
               "widget": {
                 "formlyConfig": {
-                  "wrappers": [
-                    "hide"
-                  ]
+                  "props": {
+                    "itemCssClass": "ui:hidden"
+                  }
                 }
               }
             }
@@ -204,7 +210,7 @@
           "widget": {
             "formlyConfig": {
               "props": {
-                "containerCssClass": "grid"
+                "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2"
               }
             }
           }
@@ -219,7 +225,7 @@
               "widget": {
                 "formlyConfig": {
                   "props": {
-                    "itemCssClass": "lg:col-span-6"
+                    "itemCssClass": "ui:lg:col-span-6"
                   }
                 }
               }
@@ -233,7 +239,7 @@
               "widget": {
                 "formlyConfig": {
                   "props": {
-                    "itemCssClass": "lg:col-span-6"
+                    "itemCssClass": "ui:lg:col-span-6"
                   }
                 }
               }
@@ -245,7 +251,7 @@
               "widget": {
                 "formlyConfig": {
                   "props": {
-                    "itemCssClass": "lg:col-span-6"
+                    "itemCssClass": "ui:lg:col-span-6"
                   }
                 }
               }
@@ -254,7 +260,7 @@
           "widget": {
             "formlyConfig": {
               "props": {
-                "containerCssClass": "grid"
+                "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2"
               }
             }
           }
@@ -263,7 +269,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "cssClass": "p-2"
+            "cssClass": "ui:p-2"
           }
         }
       }
@@ -298,9 +304,9 @@
       "minLength": 3,
       "widget": {
         "formlyConfig": {
-          "wrappers": [
-            "hide"
-          ]
+          "props": {
+            "itemCssClass": "ui:hidden"
+          }
         }
       }
     },
@@ -401,7 +407,7 @@
           "widget": {
             "formlyConfig": {
               "props": {
-                "itemCssClass": "md:col-span-6"
+                "itemCssClass": "ui:md:col-span-6"
               }
             }
           }
@@ -413,7 +419,7 @@
           "widget": {
             "formlyConfig": {
               "props": {
-                "itemCssClass": "md:col-span-6"
+                "itemCssClass": "ui:md:col-span-6"
               }
             }
           }
@@ -422,7 +428,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "containerCssClass": "grid",
+            "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2",
             "hideLabel": true
           }
         }
@@ -478,7 +484,7 @@
         "widget": {
           "formlyConfig": {
             "props": {
-              "itemCssClass": "lg:col-span-6"
+              "itemCssClass": "ui:lg:col-span-6"
             }
           }
         }
@@ -486,7 +492,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "containerCssClass": "grid"
+            "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2"
           }
         }
       }
@@ -502,7 +508,7 @@
         "widget": {
           "formlyConfig": {
             "props": {
-              "itemCssClass": "lg:col-span-6"
+              "itemCssClass": "ui:lg:col-span-6"
             }
           }
         }
@@ -510,7 +516,7 @@
       "widget": {
         "formlyConfig": {
           "props": {
-            "containerCssClass": "grid"
+            "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2"
           }
         }
       }
@@ -542,7 +548,7 @@
             "widget": {
               "formlyConfig": {
                 "props": {
-                  "itemCssClass": "col-span-6"
+                  "itemCssClass": "ui:col-span-6"
                 }
               }
             }
@@ -555,7 +561,7 @@
               "formlyConfig": {
                 "props": {
                   "hide": true,
-                  "itemCssClass": "col-span-6"
+                  "itemCssClass": "ui:col-span-6"
                 }
               }
             }
@@ -564,7 +570,7 @@
         "widget": {
           "formlyConfig": {
             "props": {
-              "containerCssClass": "grid"
+              "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2"
             }
           }
         }
@@ -1193,7 +1199,7 @@
             "displayWords": true,
             "limitChars": 200,
             "limitWords": 10,
-            "grids": 5
+            "ui:grids": 5
           }
         }
       }
@@ -1220,7 +1226,7 @@
           "type": "dateTimePicker",
           "props": {
             "dataType": "string",
-            "styleClass": "w-full",
+            "styleClass": "ui:w-full",
             "showTime": true,
             "validation": {
               "messages": {
@@ -1276,8 +1282,7 @@
         "formlyConfig": {
           "type": "passwordGenerator",
           "props": {
-            "enabledEditMode": true,
-            "styleClass": "surface-100"
+            "enabledEditMode": true
           }
         }
       }
@@ -1517,10 +1522,10 @@
           "props": {
             "addonRight": [
               "day(s)",
-              "<i class=\"pi pi-user\"></i>"
+              "<i class=\"fa fa-user\"></i>"
             ],
             "addonLeft": [
-              "<i class=\"pi pi-user\"></i>"
+              "<i class=\"fa fa-envelope\"></i>"
             ]
           }
         }

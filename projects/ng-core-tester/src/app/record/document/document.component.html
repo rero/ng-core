@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -29,11 +29,8 @@
     {{ record.metadata.title[0].mainTitle[0].value }}
   }
 </h5>
-<p>
-  @for (author of record.metadata.authors; track author) {
-    <span class="badge badge-primary mr-1">{{ author.name }}</span>
+<p class="ui:flex ui:gap-1">
+  @for (type of record.metadata.type; track type) {
+    <p-tag [value]="type.main_type" />
   }
 </p>
-<!-- @if (record.metadata.abstracts) {
-  <div>{{ record.metadata.abstracts[0].value | truncateText:30 }}</div>
-} -->

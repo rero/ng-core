@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -32,13 +32,12 @@ export class AppDialogComponent {
   confirm(event: Event): void {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
+      closable: false,
       acceptLabel: this.translate.instant('Yes'),
       rejectLabel: this.translate.instant('No'),
       message: this.translate.instant('Are you sure that you want to proceed?'),
       header: this.translate.instant('Confirmation'),
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon:"none",
-      rejectIcon:"none",
+      icon: 'fa fa-exclamation-triangle fa-2x ui:!text-red-500 ui:animate-pulse',
       rejectButtonStyleClass:"p-button-text",
       accept: () => {
           this.messageService.add({

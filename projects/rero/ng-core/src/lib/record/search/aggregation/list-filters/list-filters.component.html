@@ -20,7 +20,7 @@
     <p-button
       class="core:mr-2 core:mb-2"
       [label]="filter.name ? filter.name : (filter.key | bucketName : filter.aggregationKey | async)"
-      icon="pi pi-times"
+      icon="fa fa-times"
       [outlined]="true"
       severity="secondary"
       (onClick)="removeFilter(filter)"

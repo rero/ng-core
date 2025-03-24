@@ -70,9 +70,9 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           <ng-template #item let-data>
             <div class="core:w-full">
               <div class="core:flex core:gap-2">
-                <span class="grow" [innerHTML]="data.label"></span>
+                <span class="core:grow" [innerHTML]="data.label"></span>
                 @if (data.link) {
-                  <a class="core:flex-none text-color-secondary" [href]="data.link" target="_blank">
+                  <a class="core:flex-none core:text-color-secondary" [href]="data.link" target="_blank">
                     <i class="fa fa-external-link"></i>
                   </a>
                 }

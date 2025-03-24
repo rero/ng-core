@@ -92,28 +92,12 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       </ng-template>
       <ng-template let-group #group>
         @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
-          <div class="option-group">{{ group.label }}</div>
+          <div class="core:py-2 core:font-bold">{{ group.label }}</div>
         } @else if (group.label === 'group-other') {
-          <div class="option-group"><hr></div>
+          <div class="core:py-2"><hr></div>
         }
       </ng-template>
     </p-select>
-  }
-  `,
-    styles: `
-  :host ::ng-deep .p-select-panel .p-select-items .p-select-item-group {
-    padding: 0 0.3rem;
-  }
-
-  :host ::ng-deep .p-select-panel .p-select-items .p-select-item-group hr {
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    padding: 0;
-  }
-
-  .option-group {
-    padding: 0.5rem 0;
   }
   `,
     standalone: false

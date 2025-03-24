@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,7 +39,7 @@ export class MenuComponent implements OnInit {
       {
         label: this.translateService.instant('home'),
         untranslatedLabel: 'home',
-        icon: 'pi pi-home',
+        icon: 'fa fa-home',
         command: () => {
           this.router.navigate(['/']);
           this.messageService.add({ severity: 'success', detail: 'Home menu selected', life: CONFIG.MESSAGE_LIFE });

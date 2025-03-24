@@ -21,19 +21,20 @@
     <!-- check if we can export list -->
     @if (!exportOptions()[0]?.disabled) {
       <a
+        pButton
+        outlined
         [href]="exportOptions()[0].url"
         rel="noopener noreferrer"
-        class="p-button core:font-bold core:text-primary core:bg-primary-contrast"
       >
-        <i class="pi pi-cloud-download core:mr-2"></i>
+        <i class="fa fa-cloud-download core:mr-1"></i>
         {{ 'Export as' | translate }} {{ exportOptions()[0].label }}
       </a>
     } @else {
       <p-button
         label="{{ 'Export as' | translate }} {{ exportOptions()[0].label }}"
-        icon="pi pi-cloud-download"
+        icon="fa fa-cloud-download"
         styleClass="core:opacity-30 mx-1"
-        [outlined]="true"
+        outlined
         [pTooltip]="exportOptions()[0]?.disabled_message"
         tooltipPosition="top"
       />

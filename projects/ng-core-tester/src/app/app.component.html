@@ -17,18 +17,18 @@
 <p-toast />
 <p-confirmDialog />
 
-<div class="p-6 border border-surface rounded-md my-8">
-  <div class="flex items-center gap-2 mb-6">
-    <div class="flex flex-auto">
+<div class="ui:p-6 ui:border ui:border-surface ui:rounded-md ui:m-4">
+  <div class="ui:flex ui:items-center ui:gap-2 ui:mb-6">
+    <div class="ui:flex ui:flex-auto">
       <app-menu />
     </div>
-    <div class="flex flex-auto justify-end">
-      <app-search-bar class="w-full" viewcode="global"/>
+    <div class="ui:flex ui:flex-auto ui:justify-end">
+      <app-search-bar class="ui:w-full" viewcode="global" />
     </div>
   </div>
   <router-outlet></router-outlet>
 </div>
 
 <ngx-spinner color="#fff" size="medium" type="ball-zig-zag" [fullScreen]="true">
-  <p class="text-white" translate>Loading…</p>
+  <p class="ui:text-white" translate>Loading…</p>
 </ngx-spinner>

@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2024 RERO
+  Copyright (C) 2024-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<p-menubar [model]="menuItems" class="z-20 relative" styleClass="bg-white">
+<p-menubar [model]="menuItems" class="ui:z-20 ui:relative" styleClass="bg-white">
 
   <ng-template #start>
     <img src="assets/angular.svg" width="24px" height="24px" />
@@ -26,12 +26,12 @@
         @if (item.icon) {
           <span class="p-menubar-item-icon" [class]="item.icon"></span>
         }
-        <span class="ml-2 p-menubar-item-label">{{ item.label }}</span>
+        <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (item.badge) {
-          <p-badge [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge"/>
+          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge"/>
         }
         @if (item.shortcut) {
-          <span class="ml-auto border border-surface rounded-border bg-surface-100 dark:bg-surface-700 text-xs p-1">{{ item.shortcut }}</span>
+          <span class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1">{{ item.shortcut }}</span>
         }
       </a>
     }
@@ -40,12 +40,12 @@
         @if (item.icon) {
           <span class="p-menubar-item-icon" [class]="item.icon"></span>
         }
-        <span class="ml-2 p-menubar-item-label">{{ item.label }}</span>
+        <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (item.badge) {
-          <p-badge [ngClass]="{ 'ml-auto': !root, 'ml-2': root }" [value]="item.badge"/>
+          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge"/>
         }
         @if (item.shortcut) {
-          <span class="ml-auto border border-surface rounded-border bg-surface-100 dark:bg-surface-700 text-xs p-1">{{ item.shortcut }}</span>
+          <span class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1">{{ item.shortcut }}</span>
         }
       </a>
     }
@@ -54,9 +54,9 @@
         @if (item.icon) {
           <span class="p-menubar-item-icon" [class]="item.icon"></span>
         }
-        <span class="ml-2 p-menubar-item-label">{{ item.label }}</span>
+        <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (!item.disabled && item.items) {
-          <i [ngClass]="['pi pi-fw', root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto']"></i>
+          <i [ngClass]="['fa', root ? 'fa-angle-down ui:ml-2' : 'fa-angle-right ui:ml-auto']"></i>
         }
       </div>
     }

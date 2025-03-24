@@ -48,7 +48,7 @@ export interface IAutoComplete {
     <p-autoComplete
       #autoComplete
       [overlayOptions]="overlayOptions"
-      dropdownIcon="pi pi-search"
+      dropdownIcon="fa fa-search"
       [dropdown]="true"
       dropdownMode="none"
       [styleClass]="styleClass()"

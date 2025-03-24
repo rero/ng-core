@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,15 +16,12 @@
  */
 
 @use "font-awesome/scss/font-awesome.scss";
-@use "primeicons/primeicons.css";
 @use "easymde/dist/easymde.min";
 @use "node_modules/ngx-spinner/animations/ball-zig-zag.css";
+@use "projects/rero/ng-core/assets/scss/ng-core-tailwind.scss";
 @use "projects/rero/ng-core/assets/scss/ng-core.scss";
-@use "projects/rero/ng-core/assets/scss/tailwind/base.scss";
-@use "projects/rero/ng-core/assets/scss/tailwind/theme.scss";
-@use "projects/rero/ng-core/assets/scss/tailwind/utilities.scss";
-@use "projects/rero/ng-core/assets/scss/tailwind/others.scss";
-@use "tailwindcss";
+
+@import "tailwindcss" prefix(ui);
 
 @plugin "tailwindcss-primeui";
 

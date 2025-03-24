@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,7 +18,7 @@
 @import "./variables";
 
 a {
-  @apply no-underline;
+  @apply ui:no-underline;
  }
 
 a:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
@@ -27,39 +27,17 @@ a:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
 
 a:hover:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
   color: var(--p-blue-600);
-  @apply text-blue-600 underline;
-}
-
-.p-submenu-list {
-  z-index: 1000;
-}
-
-.p-menubar-item {
-  a {
-    @apply text-color;
-  }
-  a:hover {
-    @apply no-underline;
-  }
+  @apply ui:text-blue-600 ui:underline;
 }
 
 dl.metadata {
-  @apply grid grid-cols-4;
+  @apply ui:grid ui:grid-cols-4;
   dt {
-    @apply font-bold mr-2;
+    @apply ui:font-bold ui:mr-2;
   }
   dd {
-    @apply col-span-3;
+    @apply ui:col-span-3;
   }
-}
-
-.p-menubar {
-  @apply mb-0 border-none bg-white;
-}
-
-legend {
-  @apply text-base;
-  width: auto;
 }
 
 // CALLOUT
@@ -77,23 +55,5 @@ legend {
 
   .callout-bg-#{$variant} {
     background-color: rgba(var(--callout-color-#{$variant}), 0.05);
-  }
-}
-
-.p-timeline-event {
-  min-height: 40px !important;
-}
-
-p-accordiontab {
-  .p-accordionheader {
-    background-color: var(--p-surface-100);
-  }
-  .p-accordion-header-link {
-    align-items: start;
-    @apply pr-2;
-  }
-
-  .p-accordion-toggle-icon {
-    @apply py-2;
   }
 }
