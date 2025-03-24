@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,9 +23,14 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
   <div class="core:flex core:flex-col core:gap-2">
     <div class="core:flex" [innerHtml]="config.data.body|nl2br"></div>
     <div class="core:flex core:justify-end core:gap-2">
-      <p-button [label]="config.data.cancelTitleButton || 'Cancel' | translate" severity="secondary" (onClick)="cancel()" />
+      <p-button
+        [label]="config.data.cancelTitleButton || 'Cancel'|translate"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="cancel()"
+      />
       @if (config.data.confirmButton) {
-        <p-button [label]="config.data.confirmTitleButton || 'OK' | translate" (onClick)="confirm()" />
+        <p-button [label]="config.data.confirmTitleButton || 'OK'|translate" (onClick)="confirm()" />
       }
     </div>
   </div>

@@ -19,7 +19,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmitForm()">
     <p-message severity="warn">
         <div class="core:w-full">
-          <h4 class="core:text-error" translate>Warning!</h4>
+          <h4 class="text-error" translate>Warning!</h4>
           <p class="core:mt-1" translate>
             Loading a template will reload the current form. All values previously encoded will be lost.
           </p>
@@ -27,9 +27,9 @@
     </p-message>
 
     <div class="core:my-1 core:font-bold" translate>Select a template</div>
-    <formly-form [form]="form" [fields]="formFields" [model]="model"></formly-form>
-    <div class="core:flex core:justify-end core:gap-2">
-      <p-button [label]="'Cancel'|translate" severity="secondary" (onClick)="closeDialog()" />
+    <formly-form [form]="form" [fields]="formFields" [model]="model" />
+    <div class="core:flex core:justify-end core:gap-2 core:mt-2">
+      <p-button [label]="'Cancel'|translate" [outlined]="true" severity="danger" (onClick)="closeDialog()" />
       <p-button type="submit" [label]="'Load'|translate"  [disabled]="this.form.status !== 'VALID'" />
     </div>
   </form>

@@ -88,7 +88,7 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       [formControl]="formControl"
       (change)="onChange($event.target.value)"
       [readonly]="props.readonly"
-      [class]="props.class ? props.class : props.readonly ? 'surface-100' : ''"
+      [class]="props.class ? props.class : props.readonly ? 'core:!bg-surface-200' : ''"
     />
     <p-inputGroupAddon>
       <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="onClick()">
@@ -112,16 +112,6 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
     <div class="core:text-muted-color core:my-4" translate>
       The password has been copied to the clipboard.
     </div>
-    }
-  `,
-    styles: `
-    :host ::ng-deep .p-inputgroup-addon {
-      padding: 0;
-    }
-
-    :host ::ng-deep .p-inputgroup-addon > div {
-      width: 100%;
-      height: 100%;
     }
   `,
     standalone: false

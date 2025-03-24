@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Location } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { FormControl, UntypedFormGroup } from '@angular/forms';
+import { Component, EventEmitter, inject, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
@@ -486,7 +486,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       });
       let errorMessage = '';
       if (fields.length > 0) {
-        errorMessage += '<br>' + this.translateService.instant('Field(s) in error: ');
+        errorMessage += "\n" + this.translateService.instant('Field(s) in error: ');
         errorMessage += fields.join(', ');
       }
       this.messageService.add({
@@ -629,6 +629,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     this.dialogService.open(LoadTemplateFormComponent, {
       header: this.translateService.instant('Load from template'),
       width: '50vw',
+      position: 'top',
       dismissableMask: false,
       data: {
         templateResourceType: this.editorSettings.template.recordType,

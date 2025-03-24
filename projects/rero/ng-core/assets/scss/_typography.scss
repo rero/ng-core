@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,117 +27,60 @@ h6,
 .h4,
 .h5,
 .h6 {
-  @apply mt-0 mb-2 font-medium;
+  @apply ui:mt-0 ui:mb-2 ui:font-medium;
 }
 
 h1,
 .h1 {
-  @apply text-5xl;
+  @apply ui:text-5xl;
 }
 
 h2,
 .h2 {
-  @apply text-4xl;
+  @apply ui:text-4xl;
 }
 
 h3,
 .h3 {
-  @apply text-3xl;
+  @apply ui:text-3xl;
 }
 
 h4,
 .h4 {
-  @apply text-2xl;
+  @apply ui:text-2xl;
 }
 
 h5,
 .h5 {
-  @apply text-xl;
+  @apply ui:text-xl;
 }
 
 h6,
 .h6 {
-  @apply text-lg;
+  @apply ui:text-lg;
 }
 
-// from aura-light-blue message theme
 .text-info {
-  color: #2563eb;
+  color: var(--p-blue-600);
 }
 
 .text-success {
-  color: #16a34a;
+  color: var(--p-green-600);
 }
 
 .text-warning {
-  color: #ca8a04;
+  color: var(--p-yellow-600);
 }
 
 .text-error {
-  color: #dc2626;
-}
-
-.border-info {
-  border-color: #2563eb;
-}
-
-.border-success {
-  border-color: #16a34a;
-}
-
-.border-warning {
-  border-color: #ca8a04;
-}
-
-.border-error {
-  border-color: #dc2626;
-}
-
-.background-info {
-  background-color: #2563eb;
-}
-
-.background-success {
-  background-color: #16a34a;
-}
-
-.background-warning {
-  background-color: #ca8a04;
-}
-
-.background-error {
-  background-color: #dc2626;
+  color: var(--p-red-600);
 }
 
 .text-link {
-  @apply text-blue-500 hover:text-blue-600 hover:underline cursor-pointer;
+  @apply ui:text-blue-500 ui:hover:text-blue-600 ui:hover:underline ui:cursor-pointer;
 }
 
 .text-link-secondary {
-  @apply hover:text-blue-600 cursor-pointer;
+  @apply ui:hover:text-blue-600 ui:cursor-pointer;
   color: var(--p-text-muted-color);
-}
-
-.alternate-color > * {
-  display: block;
-  &:nth-child(odd) {
-    background-color: var(--p-surface-50);
-  }
-}
-
-.p-card-body-p-0 {
-  .p-card-body {
-    @apply p-0;
-  }
-}
-
-.bg-transparent {
-  background-color: transparent;
-}
-
-.time-line-30 {
-  .p-timeline-event-opposite {
-    width: 30%;
-    @apply flex-initial;
-  }
 }

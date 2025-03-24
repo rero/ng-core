@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -15,11 +15,11 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (buckets()) {
-  <ul class="core:list-none core:text-sm core:m-0 core:p-0">
+  <ul class="core:list-none core:text-sm">
   @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
     <li>
         @if (bucket.doc_count) {
-          <div class="core:flex core:gap-1 align-core:items-top core:text-link-secondary core:mb-1">
+          <div class="core:flex core:gap-1 core:items-start core:text-link-secondary core:mb-1">
             <p-checkbox
               inputId="{{ bucket.aggregationKey }}-{{ index }}"
               binary
@@ -57,6 +57,6 @@
 }
 @if (displayMoreAndLessLink) {
   <div class="core:flex core:justify-end">
-    <span class="core:text-link" (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
+    <span class="text-link" (click)="moreMode = !moreMode">{{ (moreMode ? 'more…' : 'less…') | translate }}</span>
   </div>
 }
