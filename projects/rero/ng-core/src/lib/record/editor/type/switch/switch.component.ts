@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -28,9 +28,9 @@ interface SwitchProps extends FormlyFieldProps {
 @Component({
     selector: 'ng-core-editor-formly-field-switch',
     template: `
-    <div class="core:flex core:gap-2 core:items-center">
+    <div class="core:flex core:gap-2 core:my-2">
       <p-toggleswitch
-      [ngClass]="{'ng-invalid ng-dirty': showError }"
+        [ngClass]="{'ng-invalid ng-dirty': showError }"
         [formControl]="formControl"
         [formlyAttributes]="field"
       />

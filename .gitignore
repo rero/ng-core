@@ -52,4 +52,4 @@ Thumbs.db
 .nx/
 
 # generated css file
-projects/rero/ng-core/assets/scss/tailwind
+projects/rero/ng-core/assets/scss/ng-core-tailwind.scss

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,7 +44,7 @@ describe('SearchInputComponent', () => {
     fixture.detectChanges();
 
     searchInput = fixture.nativeElement.querySelector('#search');
-    searchButton = fixture.nativeElement.querySelector('i.pi-search');
+    searchButton = fixture.nativeElement.querySelector('i.fa-search');
   });
 
   it('should create', () => {

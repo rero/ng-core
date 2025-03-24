@@ -133,9 +133,9 @@
       <ng-content select="[top-result]"/>
       <p-dataView [value]="records" [emptyMessage]="' '">
         <ng-template #list let-records>
-          <ul class="core:p-0 core:m-0">
+          <ul class="core:list-none">
             @for (record of records; track record ; let first = $first) {
-            <li class="core:list-none core:py-2" [ngClass]="{ 'core:border-t-1 border-surface': !first }">
+            <li class="core:py-2" [ngClass]="{ 'core:border-t-1 core:border-surface': !first }">
               <ng-core-record-search-result
                 [adminMode]="adminMode"
                 [record]="record"

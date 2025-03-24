@@ -16,7 +16,7 @@
  */
 import { inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { _ } from "@ngx-translate/core";
 import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { isObservable, of } from 'rxjs';
@@ -27,19 +27,6 @@ import { isEmpty, removeEmptyValues } from './utils';
 export class NgCoreFormlyExtension {
 
   protected recordService: RecordService = inject(RecordService);
-
-  // Types to apply horizontal wrapper on
-  // private _horizontalWrapperTypes = [
-  //   'enum',
-  //   'string',
-  //   'integer',
-  //   'textarea',
-  //   'datepicker',
-  //   'multi-checkbox',
-  //   'multi-select',
-  //   'remoteAutoComplete',
-  //   'tree-select',
-  // ];
 
   // Types to apply field wrapper on
   private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator'];
@@ -104,17 +91,18 @@ export class NgCoreFormlyExtension {
       if (parent && parent.props && parent.props.isRoot === true && !field.wrappers.includes('card') && !field.wrappers.includes('hide')) {
         field.wrappers.unshift('card');
       }
-      // Add an horizontal wrapper for all given field types
-      // if (this._horizontalWrapperTypes.some((elem) => elem === field.type)) {
-      //   field.wrappers = field.wrappers.filter((w) => w !== 'form-field');
-      //   field.wrappers.push('form-field-horizontal');
-      // }
-    } else {
-      // adds form-fields for non standard field types
-      if (this._fieldWrapperTypes.some((elem) => elem === field.type)) {
-        field.wrappers = [...(field.wrappers || []), 'form-field'];
-      }
     }
+
+    // adds form-fields for non standard field types
+    if (this._fieldWrapperTypes.some((elem) => elem === field.type) && !field.wrappers.includes('card')) {
+      field.wrappers = [...(field.wrappers || []), 'form-field'];
+    }
+
+    // The form-field and the card must not be together
+    if (field.wrappers.includes('card')) {
+      field.wrappers = field.wrappers.filter((value: string) => value != 'form-field');
+    }
+
     // TODO: this can be fixed in a future formly release
     // due to multiple calls (sometimes) we need to make the value unique
     field.wrappers = [...new Set(field.wrappers)];

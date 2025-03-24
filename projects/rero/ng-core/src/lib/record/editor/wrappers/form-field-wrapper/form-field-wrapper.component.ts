@@ -51,7 +51,7 @@ import { FieldWrapper } from '@ngx-formly/core';
           }
         </div>
       @if (showError) {
-        <div class="core:text-error core:my-2">
+        <div class="text-error core:my-2">
           <formly-validation-message [field]="field"/>
         </div>
       }
@@ -84,14 +84,11 @@ export class FormFieldWrapperComponent extends FieldWrapper {
         if (!this.field.props?.editorConfig?.longMode) {
           return false;
         }
-        return (
-          !this.field.props.required &&
-          !this.field.hide
-        );
-        case 'array':
-          return this.field.parent.props.canRemove();
-        default:
-          return false;
+        return (!this.field.props.required && !this.field.hide);
+      case 'array':
+        return this.field.parent.props.canRemove();
+      default:
+        return false;
       }
   }
 

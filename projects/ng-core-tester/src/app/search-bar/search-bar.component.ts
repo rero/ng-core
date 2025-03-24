@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -68,7 +68,7 @@ export class SearchBarComponent implements OnInit {
   }
 
   onSelect(event: IAutoComplete) {
-    const label = event.originalLabel ? event.originalLabel : event.label;
+    const label = event.originalLabel || event.label;
     const doc = new DOMParser().parseFromString(label, 'text/html');
     this.value = doc.body.textContent || '';
     switch(event.index) {
@@ -128,6 +128,6 @@ export class SearchBarComponent implements OnInit {
       label = label.substring(0, truncateSize) + '…';
     }
 
-    return label.replace(new RegExp(query, 'gi'), `<b class="text-orange-600">${query}</b>`);
+    return label.replace(new RegExp(query, 'gi'), `<b class="ui:text-orange-600">${query}</b>`);
   }
 }

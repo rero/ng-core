@@ -1,0 +1,11 @@
+ui:animate-pulse
+ui:col-span-6
+ui:gap-x-2
+ui:grid
+ui:grid-cols-12
+ui:hidden
+ui:lg:col-span-6
+ui:md:col-span-6
+ui:surface-100
+ui:text-orange-600
+ui:!text-red-500

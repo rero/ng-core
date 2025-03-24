@@ -26,9 +26,19 @@ export const primeNGConfig = {
           }
         },
         components: {
+          menubar: {
+            root: {
+                borderColor: "transparent"
+            }
+          },
           fieldset: {
             legend: {
               padding: '0 0.25rem 0.25rem 0.25rem'
+            }
+          },
+          timeline: {
+            event: {
+              minHeight: "2.5rem"
             }
           }
         }

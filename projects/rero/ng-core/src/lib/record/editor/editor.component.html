@@ -16,7 +16,7 @@
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="core:grid core:grid-cols-12 core:gap-4">
-    <div class="core:col-span-12 core:flex core:sticky core:z-10 core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b border-surface core:py-2">
+    <div class="core:col-span-12 core:flex core:sticky core:z-10 core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b core:border-surface core:py-2">
       @if (rootField) {
         <legend>
             <span class="core:text-2xl" [pTooltip]="description" tooltipPosition="top">
@@ -89,7 +89,7 @@
           <ul class="core:ml-2 core:pl-0 core:list-none">
             @for (f of tocFields$ | async; track f) {
               <li class="core:mb-1">
-                <span class="core:text-link-secondary" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
+                <span class="core:text-link-secondary core:cursor-pointer" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
               </li>
             }
           </ul>
