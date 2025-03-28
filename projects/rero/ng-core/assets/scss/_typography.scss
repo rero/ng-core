@@ -61,7 +61,7 @@ h6,
 }
 
 .text-info {
-  color: var(--p-blue-600);
+  color: var(--p-primary-600);
 }
 
 .text-success {
@@ -77,10 +77,10 @@ h6,
 }
 
 .text-link {
-  @apply ui:text-blue-500 ui:hover:text-blue-600 ui:hover:underline ui:cursor-pointer;
+  @apply ui:text-primary-500 ui:hover:text-primary-600 ui:hover:underline ui:cursor-pointer;
 }
 
 .text-link-secondary {
-  @apply ui:hover:text-blue-600 ui:cursor-pointer;
+  @apply ui:hover:text-primary-600 ui:cursor-pointer;
   color: var(--p-text-muted-color);
 }
