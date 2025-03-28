@@ -22,12 +22,12 @@ a {
  }
 
 a:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
-  color: var(--p-blue-500);
+  color: var(--p-primary-500);
 }
 
 a:hover:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
-  color: var(--p-blue-600);
-  @apply ui:text-blue-600 ui:underline;
+  color: var(--p-primary-600);
+  @apply ui:text-primary-600 ui:underline;
 }
 
 dl.metadata {
