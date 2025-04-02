@@ -22,7 +22,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     template: `
   <div class="core:flex core:flex-col core:gap-2">
     <div class="core:flex" [innerHtml]="config.data.body|nl2br"></div>
-    <div class="core:flex core:justify-end core:gap-2">
+    <div class="core:flex core:justify-end core:gap-1">
       <p-button
         [label]="config.data.cancelTitleButton || 'Cancel'|translate"
         severity="danger"

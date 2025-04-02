@@ -60,6 +60,9 @@ export class NgCoreFormlyExtension {
     }
     this._setWrappers(field);
     this._hideEmptyField(field);
+    if (field.props.alwaysHidden) {
+      field.props.itemCssClass = 'core:hidden';
+    }
     const expressions = field?.expressions;
     if (expressions && expressions['props.required'] !== undefined) {
       field.options.fieldChanges.subscribe((changes) => {
@@ -397,8 +400,12 @@ export class TranslateExtension implements FormlyExtension {
 export class FormOptionsProcessExtension implements FormlyExtension {
   prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
     // Process options
-    if (field.props?.options && !isObservable(field.props?.options)) {
+    if (field.props?.options && !isObservable(field.props.options)) {
       field.props.options = of(this.processOptions(field.props));
+    }
+    // Process filter options
+    if (field.props?.filters?.options && !isObservable(field.props.filters.options)) {
+      field.props.filters.options = of(this.processOptions(field.props.filters));
     }
   }
 

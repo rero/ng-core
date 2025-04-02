@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -22,7 +22,7 @@
 
 <div>
   <!-- for each item -->
-  <div class="{{ props.containerCssClass }} ">
+  <div [class]="props.containerCssClass">
     @for (f of field.fieldGroup; track f) { @if (!f.hide) {
     <div class="{{ f.props.itemCssClass }} core:mb-1" [id]="'field-' + f.id">
       <formly-field [field]="f" />

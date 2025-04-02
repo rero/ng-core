@@ -668,27 +668,56 @@ export const primeNGConfig = {
       components: {
         accordion: {
           header: {
-              borderRadius: "{content.border.radius}",
-              borderColor: "{content.border.color}",
-              background: "{surface.100}",
-              hoverBackground: "{surface.200}",
-              activeBackground: "{surface.200}",
-              activeHoverBackground: "{surface.200}"
+            borderRadius: "{content.border.radius}",
+            borderColor: "{content.border.color}",
+            background: "{surface.100}",
+            hoverBackground: "{surface.200}",
+            activeBackground: "{surface.200}",
+            activeHoverBackground: "{surface.200}"
+          },
+          content: {
+            padding: "0.5rem 0.25rem"
           }
-      },
+        },
+        autocomplete: {
+          option: {
+            padding: "0.2rem 0.5rem"
+          }
+        },
+        card: {
+          root: {
+            background: "{surface.100}",
+          },
+          body: {
+            padding: "0",
+          }
+        },
         fieldset: {
           legend: {
-            padding: '0 0.25rem 0.25rem 0.25rem'
+            padding: "0 0.25rem 0.25rem 0.25rem",
+          }
+        },
+        listbox: {
+          option: {
+            padding: "0.2rem 0.5rem"
           }
         },
         menubar: {
           root: {
-            borderColor: "transparent"
+            borderColor: "transparent",
+          }
+        },
+        panel: {
+          root: {
+            background: "{surface.100}",
+          },
+          content: {
+            padding: "0"
           }
         },
         timeline: {
           event: {
-            minHeight: "2.5rem"
+            minHeight: "2.5rem",
           }
         }
       }

@@ -15,16 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, NgModule } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, NgModule, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
-import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
-import { Subject, switchMap } from 'rxjs';
+import { SelectChangeEvent, SelectModule } from 'primeng/select';
+import { map, merge, Observable, Subject, switchMap } from 'rxjs';
 import { IQuery, IQueryOptions, IRemoteAutoCompleteFilter, IValueSelect } from './remote-autocomplete.interface';
 import { RemoteAutocompleteService } from './remote-autocomplete.service';
 
@@ -47,11 +48,15 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   <div class="core:flex core:gap-1">
     @if (!field.formControl.value) {
       @if (props.filters?.options) {
-          <p-dropdown
-            [options]="props.filters.options"
-            [ngModel]="props.filters.selected"
-            (onChange)="changeFilter($event)"
-          />
+        <p-select
+          [options]="optionValues$|async"
+          [ngModel]="props.filters.selected"
+          (onChange)="changeFilter($event)"
+        >
+          <ng-template let-selected #selectedItem>
+            {{ selected.untranslatedLabel | translate }}
+          </ng-template>
+        </p-select>
       }
         <p-autoComplete
           class="core:grow"
@@ -92,10 +97,12 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   </div>
   `,
 })
-export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoCompleteProps>> implements AfterViewInit {
+export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoCompleteProps>> implements OnInit,AfterViewInit {
 
+  protected translateService: TranslateService = inject(TranslateService);
   protected remoteAutocompleteService = inject(RemoteAutocompleteService);
   protected route = inject(ActivatedRoute);
+  protected ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   protected query = new Subject<any>();
 
@@ -132,6 +139,22 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
 
   value: string = '';
 
+  optionValues$: Observable<any[]>;
+
+  ngOnInit(): void {
+    if (this.props.filters) {
+      const optionsObs = this.props.filters.options;
+      const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
+      this.optionValues$ = merge(...[optionsObs, changeObs])
+      .pipe(
+        map(options => {
+          this.ref.markForCheck();
+          return this.translateLabel(options);
+        })
+      );
+    }
+  }
+
   ngAfterViewInit(): void {
     if (this.field.props.filters) {
       this.field.props.queryOptions.filter = this.field.props.filters.selected;
@@ -144,7 +167,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     }
   }
 
-  changeFilter(filter: DropdownChangeEvent): void {
+  changeFilter(filter: SelectChangeEvent): void {
     this.field.props.queryOptions.filter = filter.value;
     this.value = '';
   }
@@ -170,6 +193,17 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     this.formControl.reset(null);
     this.field.focus = true;
   }
+
+  translateLabel(options: any): any[] {
+    options.map((option: any) => {
+      if (!option.untranslatedLabel) {
+        option.untranslatedLabel = option.label;
+      }
+      option.label = this.translateService.instant(option.untranslatedLabel);
+    });
+
+    return options;
+  }
 }
 
 @NgModule({
@@ -178,8 +212,9 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     AutoCompleteModule,
     ButtonModule,
     CommonModule,
-    DropdownModule,
+    SelectModule,
     FormsModule,
+    TranslateModule.forChild(),
     FormlyModule.forChild({
       types: [
         { name: 'remoteAutoComplete', component: RemoteAutocomplete }

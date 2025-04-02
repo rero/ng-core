@@ -62,12 +62,15 @@ export class LabelComponent implements OnInit, OnDestroy {
   updateItems() {
     if (this.hasMenu(this.field)) {
       this.items = [];
-      this.hiddenFieldGroup(this.getFieldGroup(this.field)).map((field: any) =>
+      this.hiddenFieldGroup(this.getFieldGroup(this.field)).map((field: any) => {
+        if(!field.props.untranslatedLabel) {
+          field.props.untranslatedLabel = field.props.label;
+        }
         this.items.push({
-          label: field.props.label,
+          label: this.translateService.instant(field.props.untranslatedLabel),
           command: () => this.show(field),
-        })
-      );
+        });
+      });
     }
   }
 
