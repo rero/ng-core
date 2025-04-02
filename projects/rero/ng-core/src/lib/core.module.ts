@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,12 @@
  */
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { of } from 'rxjs';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
 import { NgVarDirective } from './directives/ng-var.directive';
@@ -41,14 +42,6 @@ import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { NgCoreTranslateService } from './translate/translate-service';
-import { Observable, of } from 'rxjs';
-
-function initializeAppFactory(translateService: NgCoreTranslateService): () => Observable<any> {
-  return () => {
-    translateService.initialize();
-    return of(true);
-  };
-}
 
 @NgModule({
     declarations: [
@@ -103,16 +96,15 @@ function initializeAppFactory(translateService: NgCoreTranslateService): () => O
         MarkdownPipe
     ],
     providers: [
+      provideAppInitializer(() => {
+        const translateService = inject(NgCoreTranslateService);
+        translateService.initialize();
+        return of(true);
+      }),
       ComponentCanDeactivateGuard,
       ConfirmationService,
       MessageService,
       { provide: TranslateService, useClass: NgCoreTranslateService },
-      {
-        provide: APP_INITIALIZER,
-        useFactory: initializeAppFactory,
-        deps: [NgCoreTranslateService],
-        multi: true
-      }
     ]
 })
 export class CoreModule { }

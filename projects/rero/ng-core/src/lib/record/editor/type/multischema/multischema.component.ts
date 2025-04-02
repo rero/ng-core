@@ -20,7 +20,7 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 @Component({
     selector: 'ng-core-editor-formly-multi-schema-type',
     template: `
-    <div class="{{ field.parent.props.cssClass }}">
+    <div [class]="field.parent.props.cssClass">
       @if (props.label) {
       <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
       } @if (showError && formControl.errors) {

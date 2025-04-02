@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -14,18 +14,21 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<p-autoComplete
-  [dropdown]="true"
-  #addField
-  optionLabel="props.label"
-  [placeholder]="'Add field' | translate"
-  styleClass="core:mb-2 core:w-full"
-  [suggestions]="suggestions"
-  (completeMethod)="search($event)"
-  (onSelect)="onSelect($event)"
-  [disabled]="items.length < 1"
-  appendTo="body"
-/>
+  <div>
+    <p-autoComplete
+      [dropdown]="true"
+      #addField
+      optionLabel="props.label"
+      [placeholder]="'Add field' | translate"
+      styleClass="core:mb-2 core:w-full"
+      [suggestions]="suggestions"
+      (completeMethod)="search($event)"
+      (onSelect)="onSelect($event)"
+      [disabled]="items.length < 1"
+      scrollHeight="400px"
+      appendTo="body"
+    />
+  </div>
 
 @if(essentialsOptions?.length > 0) {
   <p-listbox
@@ -35,7 +38,7 @@
     (onChange)="onAddField($event)"
   >
     <ng-template #item let-item>
-      {{item.label|async}}
+      {{ item.label | async }}
     </ng-template>
   </p-listbox>
 }
