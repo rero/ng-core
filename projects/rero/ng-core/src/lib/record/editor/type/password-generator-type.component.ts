@@ -154,8 +154,8 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
   /** OnInit hook */
   ngOnInit(): void {
     this._password$.pipe(
-      tap((password: string) => this.clipboard.copy(this.formControl.errors ? ' ' : password)),
       tap((password: string) => this.formControl.setValue(password)),
+      tap((password: string) => this.clipboard.copy(this.formControl.errors ? ' ' : password)),
     ).subscribe(() => {
       this.hasBeenGenerated = true;
       this.cd.markForCheck();

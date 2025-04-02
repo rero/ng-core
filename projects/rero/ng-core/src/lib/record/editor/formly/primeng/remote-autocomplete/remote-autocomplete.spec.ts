@@ -23,6 +23,8 @@ import { createFieldComponent } from "@ngx-formly/core/testing";
 import { FormFieldWrapperComponent } from "../../../wrappers/form-field-wrapper/form-field-wrapper.component";
 import { IRemoteAutoCompleteProps, NgCoreFormlyRemoteAutocompleteModule, RemoteAutocomplete } from "./remote-autocomplete";
 import { RemoteAutocompleteService } from "./remote-autocomplete.service";
+import { TranslateModule } from "@ngx-translate/core";
+import { of } from "rxjs";
 
 const ActivatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', ['']);
 ActivatedRouteSpy.snapshot = {
@@ -36,6 +38,7 @@ const renderComponent = (field: FormlyFieldConfig<IRemoteAutoCompleteProps>) => 
     imports: [
       NgCoreFormlyRemoteAutocompleteModule,
       ReactiveFormsModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent },
@@ -65,7 +68,7 @@ describe('RemoteAutocomplete', () => {
         scrollHeight: '350px',
         filters: {
           selected: 'test',
-          options: [
+          options: of([
             {
               label: 'test',
               value: 'test'
@@ -74,7 +77,7 @@ describe('RemoteAutocomplete', () => {
               label: 'bar',
               value: 'bar'
             }
-          ]
+          ])
         }
       }
     });

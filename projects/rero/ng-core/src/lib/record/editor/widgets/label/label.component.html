@@ -27,7 +27,7 @@
     <ng-container menu>
       <div class="core:flex">
         <p-button icon="fa fa-caret-down" severity="secondary" [text]="true" (onClick)="menu.toggle($event)" />
-        <p-tieredMenu #menu [model]="items" [popup]="true" />
+        <p-tieredMenu #menu [model]="items" [popup]="true" appendTo="body" />
       </div>
     </ng-container>
     <ng-container buttons>

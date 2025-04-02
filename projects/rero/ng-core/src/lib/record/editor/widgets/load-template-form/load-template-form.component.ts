@@ -20,10 +20,10 @@ import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from 'primeng/api';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RecordService } from '../../../record.service';
 import { TemplatesService } from '../../services/templates.service';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
 
 @Component({
     selector: 'ng-core-load-template-form',
@@ -62,6 +62,7 @@ export class LoadTemplateFormComponent implements OnInit {
       props: {
         appendTo: 'body',
         required: true,
+        group: true,
         options: [],
         attributes: {
           size: 10
@@ -69,26 +70,29 @@ export class LoadTemplateFormComponent implements OnInit {
       }
     });
 
-    this.templateService.getTemplates(
-      data.templateResourceType, data.resourceType).subscribe(
-        (templates) => {
-          templates = templates.map(hit => {
-            const data = {
-              label: hit.name,
-              value: hit.pid,
-              group: null,
+    this.templateService.getTemplates(data.templateResourceType, data.resourceType)
+      .subscribe((templates) => {
+        const items = [];
+        templates.map((hit: any) => {
+          let element = items.find((item) => item.untranslatedLabel === hit.visibility);
+          if (!element) {
+            element = {
+              label: hit.visibility === 'public'
+                ? this.translateService.instant('Public templates')
+                : this.translateService.instant('My private templates'),
+              untranslatedLabel: hit.visibility,
+              items: []
             };
-            if (hit.hasOwnProperty('visibility')) {
-              data.group = (hit.visibility === 'public')
-                  ? this.translateService.instant('Public templates')
-                  : this.translateService.instant('My private templates');
-            }
-            return data;
+            items.push(element);
+          }
+          element.items.push({
+            label: hit.name,
+            value: hit.pid
           });
-          this.formFields[0].props.options = templates;
-          this.isDataFormLoaded = true;
-        }
-    );
+        });
+        this.formFields[0].props.options = items;
+        this.isDataFormLoaded = true;
+      });
   }
 
   /**
@@ -97,8 +101,8 @@ export class LoadTemplateFormComponent implements OnInit {
    */
   onSubmitForm() {
     const formValues = this.form.value;
-    this.recordService.getRecord('templates', formValues.template).subscribe(
-        (template) => {
+    this.recordService.getRecord('templates', formValues.template).subscribe({
+        next: (template) => {
           this.router.navigate([], {
             queryParams: {
               source: 'templates',
@@ -109,7 +113,7 @@ export class LoadTemplateFormComponent implements OnInit {
           });
           this.closeDialog();
         },
-        (error) => {
+        error: (error) => {
           this.messageService.add({
             severity: 'error',
             summary: this.translateService.instant('Error'),
@@ -118,7 +122,7 @@ export class LoadTemplateFormComponent implements OnInit {
             closable: true
           });
         }
-    );
+    });
   }
 
   closeDialog(): void {

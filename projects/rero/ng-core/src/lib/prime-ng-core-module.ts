@@ -38,6 +38,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { SelectModule } from 'primeng/select';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { TabsModule } from 'primeng/tabs';
@@ -76,6 +77,7 @@ import { TooltipModule } from 'primeng/tooltip';
     PanelModule,
     RadioButtonModule,
     RippleModule,
+    ScrollPanelModule,
     SelectModule,
     SplitButtonModule,
     TabsModule,

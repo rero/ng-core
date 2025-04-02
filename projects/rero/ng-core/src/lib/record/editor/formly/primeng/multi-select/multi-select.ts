@@ -70,6 +70,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
       [options]="optionValues$|async"
       optionLabel="label"
       optionValue="value"

@@ -203,7 +203,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
                 return false;
               }
               // properties with hide wrapper should not be in the navigation
-              if (f.wrappers && f.wrappers.some(w => w === 'hide')) {
+              if (f.props.alwaysHidden) {
                 return false;
               }
               return true;
@@ -628,6 +628,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   showLoadTemplateDialog(): void {
     this.dialogService.open(LoadTemplateFormComponent, {
       header: this.translateService.instant('Load from template'),
+      focusOnShow: false,
       width: '50vw',
       position: 'top',
       dismissableMask: false,

@@ -224,6 +224,7 @@ export class DetailComponent implements OnInit, OnDestroy {
 
   /** Dynamically load component depending on selected resource type. */
   private loadRecordView(): void {
+    this.viewContainerRef.clear();
     const componentRef = this.viewContainerRef.createComponent(this.viewComponent || JsonComponent);
     (componentRef.instance as JsonComponent).record$ = this.record$;
     (componentRef.instance as JsonComponent).type = this.route.snapshot.paramMap.get('type');

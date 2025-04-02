@@ -14,19 +14,13 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div class="ui:flex">
-  <div class="ui:flex ui:mr-2">
-    <p-select
-      [options]="toastTypes"
-      optionLabel="name"
-      [placeholder]="'Select a toast type'|translate"
-      [(ngModel)]="toastType"
-    />
-  </div>
-  <div class="ui:flex ui:mr-2">
-    <input type="text" pInputText [(ngModel)]="toastMessage" />
-  </div>
-  <div class="ui:flex">
-    <p-button [label]="'Show'|translate" [outlined]="true" (onClick)="showToast()" />
-  </div>
+<div class="ui:flex ui:gap-2">
+  <p-select
+    [options]="toastTypes"
+    optionLabel="name"
+    [placeholder]="'Select a toast type'|translate"
+    [(ngModel)]="toastType"
+  />
+  <input type="text" pInputText [(ngModel)]="toastMessage" />
+  <p-button [label]="'Show'|translate" [outlined]="true" (onClick)="showToast()" />
 </div>

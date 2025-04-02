@@ -20,7 +20,6 @@
 @import "tailwindcss/theme.css" layer(theme) prefix(core);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(core);
 @import "./src/lib/record/editor/wrappers/card-wrapper/card-wrapper.component.scss";
-@import "./src/lib/record/editor/editor.component.scss";
 @import "./src/lib/record/search-autocomplete/search-autocomplete.component.scss";
 @import "./assets/scss/colors.scss";
 

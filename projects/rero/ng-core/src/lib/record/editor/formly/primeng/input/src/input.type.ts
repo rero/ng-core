@@ -34,23 +34,14 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
               <p-inputgroup-addon [innerHTML]="prop"></p-inputgroup-addon>
             }
           }
-          @if (props.type !== 'number') {
-            <input
-              pInputText
-              [class]="props.class"
-              [type]="props.type || 'text'"
-              [formControl]="formControl"
-              [formlyAttributes]="field"
-            />
-          } @else {
-            <input
-              [class]="props.class"
-              type="number"
-              pInputText
-              [formControl]="formControl"
-              [formlyAttributes]="field"
-            />
-          }
+          <input
+            pInputText
+            [class]="props.class"
+            [type]="props.type || 'text'"
+            [formControl]="formControl"
+            [formlyAttributes]="field"
+            [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+          />
           @if (props.addonRight) {
             @for (prop of props.addonRight; track prop) {
               <p-inputgroup-addon [innerHTML]="prop"></p-inputgroup-addon>
@@ -58,23 +49,14 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           }
       </p-inputgroup>
     } @else {
-      @if (props.type !== 'number') {
-        <input
-          pInputText
-          [class]="props.class"
-          [type]="props.type || 'text'"
-          [formControl]="formControl"
-          [formlyAttributes]="field"
-        />
-      } @else {
-        <input
-          [class]="props.class"
-          type="number"
-          pInputText
-          [formControl]="formControl"
-          [formlyAttributes]="field"
-        />
-      }
+      <input
+        pInputText
+        [class]="props.class"
+        [type]="props.type || 'text'"
+        [formControl]="formControl"
+        [formlyAttributes]="field"
+        [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+      />
     }
   `,
     changeDetection: ChangeDetectionStrategy.OnPush,

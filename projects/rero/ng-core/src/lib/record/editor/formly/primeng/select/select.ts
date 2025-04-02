@@ -33,6 +33,7 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   emptyFilterMessage?: string;
   emptyMessage?: string;
   filter: boolean;
+  filters?: any[];
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
   group: boolean;
   loadingIcon?: string;
@@ -72,6 +73,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
       [options]="optionValues$|async"
       [optionLabel]="props.group ? undefined : 'label'"
       [optionValue]="props.group ? undefined : 'value'"
@@ -88,7 +90,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       (onClear)="clearValidators()"
     >
       <ng-template let-selected #selectedItem>
-        {{ selected.label | translate }}
+        {{ selected.untranslatedLabel | translate }}
       </ng-template>
       <ng-template let-group #group>
         @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {

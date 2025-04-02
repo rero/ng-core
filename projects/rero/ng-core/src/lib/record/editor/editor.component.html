@@ -16,7 +16,7 @@
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
   <div class="core:grid core:grid-cols-12 core:gap-4">
-    <div class="core:col-span-12 core:flex core:sticky core:z-10 core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b core:border-surface core:py-2">
+    <div class="core:col-span-12 core:flex core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b core:border-surface core:py-2">
       @if (rootField) {
         <legend>
             <span class="core:text-2xl" [pTooltip]="description" tooltipPosition="top">
@@ -63,38 +63,60 @@
       </div>
     </div>
 
-    <!-- add fields section -->
-    @if (editorSettings.longMode) {
-      <div class="core:col-span-2 bd-sidebar core:overflow-y-auto core:sticky core:pt-3">
-        <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
+    <div class="core:col-span-12">
+      <div class="core:grid core:grid-cols-12 core:gap-4">
+        <!-- add fields section -->
+        @if (editorSettings.longMode) {
+          <div class="core:col-span-2 core:h-[90vh]">
+            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
+              <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
+            </p-scrollpanel>
+          </div>
+        }
+
+        <!-- editor itself -->
+        <div [ngClass]="{ 'core:h-[90vh] core:col-span-10 core:lg:col-span-8': editorSettings.longMode, 'core:col-span-12': !editorSettings.longMode }" role="main">
+          <!-- ngx-formly -->
+          @if (editorSettings.longMode) {
+            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
+              <formly-form
+                [model]="model"
+                [fields]="fields"
+                [options]="options"
+                [form]="form"
+                (modelChange)="modelChanged($event)"
+              />
+            </p-scrollpanel>
+          } @else {
+            <formly-form
+              [model]="model"
+              [fields]="fields"
+              [options]="options"
+              [form]="form"
+              (modelChange)="modelChanged($event)"
+            />
+          }
+
+        </div>
+
+        @if (editorSettings.longMode) {
+          <!-- TOC navigation -->
+          <div class="core:col-span-2 core:text-sm core:hidden core:lg:block core:h-[90vh]">
+            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
+              <ng-content select="[beforeTableOfContent]"></ng-content>
+              <span class="core:font-bold core:mb-1" for="addField" translate>Jump to</span>
+              <ul class="core:ml-2 core:pl-0 core:list-none">
+                @for (f of tocFields$ | async; track f) {
+                  <li class="core:mb-1">
+                    <span class="core:text-link-secondary core:cursor-pointer" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
+                  </li>
+                }
+              </ul>
+            </p-scrollpanel>
+        </div>
+        }
       </div>
-    }
-
-    <!-- editor itself -->
-    <div class="core:col-span-12" [ngClass]="{ 'core:col-span-10 core:lg:col-span-8': editorSettings.longMode }" role="main">
-        <!-- ngx-formly -->
-        <formly-form
-          [model]="model"
-          [fields]="fields"
-          [options]="options"
-          [form]="form"
-          (modelChange)="modelChanged($event)"
-        />
     </div>
-
-    @if (editorSettings.longMode) {
-      <!-- TOC navigation -->
-      <nav class="core:col-span-2 core:pt-3 core:text-sm bd-toc core:sticky core:overflow-y-auto core:hidden core:lg:block" aria-label="Secondary navigation">
-          <label for="addField" translate>Jump to</label>
-          <ul class="core:ml-2 core:pl-0 core:list-none">
-            @for (f of tocFields$ | async; track f) {
-              <li class="core:mb-1">
-                <span class="core:text-link-secondary core:cursor-pointer" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
-              </li>
-            }
-          </ul>
-      </nav>
-    }
   </div>
 </form>
 

@@ -1555,16 +1555,16 @@
             "style": "inline",
             "options": [
               {
-                "label": "Radio 1",
+                "label": "Radio button 1",
                 "value": "radio_1"
               },
               {
-                "label": "Radio 2",
+                "label": "Radio button 2",
                 "value": "radio_2",
                 "disabled": true
               },
               {
-                "label": "Radio 3",
+                "label": "Radio button 3",
                 "value": "radio_3"
               }
             ]

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022-2024 RERO
+ * Copyright (C) 2022-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -39,16 +39,16 @@ interface Option {
         [formControl]="option.disabled ? disabledControl : formControl"
         [value]="option.value"
       />
-      <label [for]="option.value" class="core:ml-1">{{option.label}}</label>
+      <label [for]="option.value" class="core:ml-1">{{ option.untranslatedLabel | translate }}</label>
     </div>
   </ng-template>
   @if (props.style === 'stacked') {
-    @for (option of props.options | formlySelectOptions : field | async; track option) {
+    @for (option of props.options | async; track option) {
       <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
   } @else {
     <div class="core:flex core:gap-2">
-    @for (option of props.options | formlySelectOptions : field | async; track option) {
+    @for (option of props.options | async; track option) {
       <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
     </div>

@@ -18,8 +18,8 @@
 
 <form class="core:w-full" [formGroup]="form" (ngSubmit)="onSubmitForm()">
     <formly-form class="core:w-full" [form]="form" [fields]="formFields" [model]="model"/>
-    <div class="core:flex core:justify-end core:gap-2">
-      <p-button [label]="'Cancel'|translate" severity="secondary" (onClick)="closeDialog()" />
+    <div class="core:flex core:justify-end core:gap-1 core:mt-2">
+      <p-button [label]="'Cancel'|translate" [outlined]="true" severity="danger" (onClick)="closeDialog()" />
       <p-button type="submit" [label]="'Save'|translate" [disabled]="this.form.status !== 'VALID'" />
     </div>
 </form>

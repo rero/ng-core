@@ -30,12 +30,21 @@ export class TruncateTextPipe implements PipeTransform {
    * @param value Text to truncate.
    * @param limit Limit after which the text is truncated.
    * @param trail Trailing chars
+   * @param type Word or Char type
    * @return Truncated string
    */
-  transform(value: string, limit: number = 40, trail: string = '…'): string {
+  transform(value: string, limit: number = 40, trail: string = '…', type: 'word'|'char' = 'word'): string {
     let result = value || '';
 
-    if (value) {
+    if (type === 'char' && value) {
+      if (value.length < limit) {
+        return value;
+      } else {
+        return value.substring(0, limit) + trail;
+      }
+    }
+
+    if (type === 'word' && value) {
       const words = value.split(/\s+/);
       if (words.length > Math.abs(limit)) {
         if (limit < 0) {
