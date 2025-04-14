@@ -717,15 +717,15 @@ export const primeNGConfig = {
         },
         tag: {
           root: {
-            fontSize: "0.875rem",
-            fontWeight: "700",
-            padding: "0.25rem 0.5rem",
+            fontSize: "0.8rem",
+            fontWeight: "600",
+            padding: "0.15rem 0.5rem",
             gap: "0.25rem",
             borderRadius: "{content.border.radius}",
             roundedBorderRadius: "{border.radius.xl}"
           },
           icon: {
-            size: "0.75rem"
+            size: "0.5rem"
           },
           colorScheme: {
               light: {
@@ -734,7 +734,7 @@ export const primeNGConfig = {
                       color: "{primary.700}"
                   },
                   secondary: {
-                      background: "{surface.400}",
+                      background: "{surface.500}",
                       color: "{surface.0}"
                   },
                   success: {
