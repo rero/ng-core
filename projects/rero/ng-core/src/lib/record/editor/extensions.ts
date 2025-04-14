@@ -16,7 +16,7 @@
  */
 import { inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { _ } from "@ngx-translate/core";
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
 import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { isObservable, of } from 'rxjs';
