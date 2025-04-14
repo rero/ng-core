@@ -19,7 +19,6 @@
   "peerDependencies": {
     "@angular/common": "^19.2",
     "@angular/core": "^19.2",
-    "@biesbjerg/ngx-translate-extract-marker": "^1.0.0",
     "@ngx-formly/primeng": "^7.0.0-alpha.1",
     "@ngx-formly/core": "^7.0.0-alpha.1",
     "@ngx-translate/core": "^16.0.0",
