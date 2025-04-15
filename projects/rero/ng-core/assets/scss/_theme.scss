@@ -30,6 +30,11 @@ a:hover:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
   @apply ui:text-primary-600 ui:underline;
 }
 
+// Force links in tag elements to keep the color defined by the tag
+p-tag a {
+  color: inherit!important;
+}
+
 dl.metadata {
   @apply ui:grid ui:grid-cols-4;
   dt {
