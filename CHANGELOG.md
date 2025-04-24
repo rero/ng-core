@@ -1,5 +1,15 @@
 # Changelog
 
+## [v19.0.0](https://github.com/rero/ng-core/tree/v19.0.0) (2025-04-24)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v17.3.0...v19.0.0)
+
+**New features:**
+* chore: upgrade to angular 19 and migrate to primeng [\#680](https://github.com/rero/ng-core/pull/680) (by @Garfield-fr & @jma)
+
+**Other changes:**
+* chore: replace translate extract library [\#685](https://github.com/rero/ng-core/pull/685) (by @Garfield-fr)
+
 ## [v17.3.0](https://github.com/rero/ng-core/tree/v17.3.0) (2024-10-24)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.3...v17.3.0)
