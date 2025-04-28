@@ -34,6 +34,7 @@ export interface ITreeSelectProps extends FormlyFieldProps {
   disabled?: boolean;
   filter: boolean;
   filterBy: string;
+  filterInputAutoFocus: boolean;
   filterPlaceholder?: string;
   panelClass: string;
   panelStyleClass: string;
@@ -55,6 +56,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [disabled]="props.disabled"
       [filter]="props.filter"
       [filterBy]="props.filterBy"
+      [filterInputAutoFocus]="props.filterInputAutoFocus"
       [filterPlaceholder]="props.filterPlaceholder"
       [formlyAttributes]="field"
       [ngModel]="nodeSelected"
@@ -86,6 +88,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       containerStyleClass: 'core:w-full',
       filter: false,
       filterBy: 'label',
+      filterInputAutoFocus: true,
       panelClass: 'core:w-full',
       panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
@@ -106,7 +109,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       map(options => {
         this.ref.markForCheck();
         return this.translateLabelService.translateLabel(options);
-      })
+      }),
     );
   }
 

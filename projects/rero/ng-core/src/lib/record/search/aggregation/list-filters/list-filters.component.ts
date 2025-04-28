@@ -89,10 +89,11 @@ export class ListFiltersComponent {
         });
       }
     });
-    this.aggregations().map((item: any) => {
+    if(this.aggregations()) {
+      this.aggregations().map((item: any) => {
         this.getFilterNames(item.value.buckets, filters);
-    });
-
+      });
+    }
     return filters;
   }
 

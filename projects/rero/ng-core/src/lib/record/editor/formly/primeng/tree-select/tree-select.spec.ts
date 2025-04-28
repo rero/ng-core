@@ -48,6 +48,7 @@ describe('TreeSelectComponent', () => {
         containerStyleClass: 'w-full',
         filter: false,
         filterBy: 'label',
+        filterInputAutoFocus: false,
         options: of([
           {
             key: 'label_1',

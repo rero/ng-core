@@ -18,6 +18,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SearchInputComponent } from './search-input.component';
+import { AutoFocusModule } from 'primeng/autofocus';
 
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;
@@ -33,6 +34,7 @@ describe('SearchInputComponent', () => {
       imports: [
         InputGroupModule,
         InputGroupAddonModule,
+        AutoFocusModule
       ],
     })
       .compileComponents();
