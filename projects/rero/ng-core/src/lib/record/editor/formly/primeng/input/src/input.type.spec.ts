@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -44,5 +44,44 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(nodes[0].textContent).toBe('Left');
     expect(nodes[1].textContent).toBe('Right');
     expect(nodes[2].textContent).toBe('RightBis');
+  });
+
+  it('should not have the step attribute on a field that is not of type number', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+    });
+    expect(query('input')).not.toBeNull();
+    const { attributes } = query('input');
+    expect(attributes.type).toEqual('text');
+    expect(attributes.step).toBeUndefined();
+  });
+
+  it('should have the step parameter set to any on a number field', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+      }
+    });
+    expect(query('input')).not.toBeNull();
+    const { attributes } = query('input');
+    expect(attributes.type).toEqual('number');
+    expect(attributes.step).toEqual('any');
+  });
+
+  it('should have the step parameter set to 0.5 on a number field', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+        inputStep: 0.5
+      }
+    });
+    const { attributes } = query('input');
+    expect(attributes.type).toEqual('number');
+    expect(attributes.step).toEqual('0.5');
   });
 });
