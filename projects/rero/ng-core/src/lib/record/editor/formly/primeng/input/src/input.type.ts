@@ -22,6 +22,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
   addonRight?: string[];
   addonLeft?: string[];
   class?: string;
+  inputStep?: string|number;
 }
 
 @Component({
@@ -34,13 +35,9 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
               <p-inputgroup-addon [innerHTML]="prop"></p-inputgroup-addon>
             }
           }
-          <input
-            pInputText
-            [class]="props.class"
-            [type]="props.type || 'text'"
-            [formControl]="formControl"
-            [formlyAttributes]="field"
-            [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+          <ng-container
+            [ngTemplateOutlet]="input"
+            [ngTemplateOutletContext]="{ formControl, props, field, showError }"
           />
           @if (props.addonRight) {
             @for (prop of props.addonRight; track prop) {
@@ -49,15 +46,33 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           }
       </p-inputgroup>
     } @else {
-      <input
-        pInputText
-        [class]="props.class"
-        [type]="props.type || 'text'"
-        [formControl]="formControl"
-        [formlyAttributes]="field"
-        [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+      <ng-container
+        [ngTemplateOutlet]="input"
+        [ngTemplateOutletContext]="{ formControl, props, field, showError }"
       />
     }
+    <ng-template #input let-formControl="formControl" let-props="props" let-field="field" let-showError="showError">
+      @if (props.type === 'number') {
+        <input
+          pInputText
+          [class]="props.class"
+          type="number"
+          [attr.step]="props.inputStep"
+          [formControl]="formControl"
+          [formlyAttributes]="field"
+          [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+        />
+      } @else {
+        <input
+          pInputText
+          [class]="props.class"
+          [type]="props.type || 'text'"
+          [formControl]="formControl"
+          [formlyAttributes]="field"
+          [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+        />
+      }
+    </ng-template>
   `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
@@ -66,8 +81,8 @@ export class NgCoreFormlyFieldInput extends FieldType<NgCoreFormlyInputFieldConf
 
   defaultOptions?: any = {
     props: {
-      type: 'input',
-      class: 'core:w-full'
+      class: 'core:w-full',
+      inputStep: 'any'
     }
   };
 

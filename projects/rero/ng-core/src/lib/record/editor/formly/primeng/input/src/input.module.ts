@@ -21,6 +21,7 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyFormFieldModule } from '@ngx-formly/primeng/form-field';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { NgCoreFormlyFieldInput } from './input.type';
 
@@ -31,6 +32,7 @@ import { NgCoreFormlyFieldInput } from './input.type';
     CommonModule,
     ReactiveFormsModule,
     InputTextModule,
+    InputNumberModule,
     InputGroupModule,
     InputGroupAddonModule,
     FormlyFormFieldModule,
