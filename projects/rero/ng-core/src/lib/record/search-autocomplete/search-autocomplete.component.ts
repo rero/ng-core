@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -17,10 +17,11 @@
 import { AfterViewInit, Component, HostListener, inject, input, output, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OverlayOptions } from 'primeng/api';
-import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { DomHandler } from 'primeng/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { RecordService } from '../record.service';
+import { SanitizePipe } from '../../pipe/sanitize.pipe';
 
 export interface IRecordType {
   field: string;
@@ -58,7 +59,7 @@ export interface IAutoComplete {
       [minLength]="minLength()"
       [placeholder]="placeholder()"
       [ngModel]="value()"
-      (ngModelChange)="currentValue = $event"
+      (ngModelChange)="currentValue = sanitize($event)"
       [scrollHeight]="scrollHeight()"
       [suggestions]="suggestions()"
       (completeMethod)="setSuggestionQuery($event)"
@@ -83,6 +84,7 @@ export interface IAutoComplete {
 export class SearchAutocompleteComponent implements AfterViewInit{
 
   protected recordService: RecordService = inject(RecordService);
+  protected sanitizePipe: SanitizePipe = inject(SanitizePipe);
 
   // Input
   delay = input<number>(300);
@@ -96,7 +98,6 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   value = input<string>();
 
   // Output
-  onSelect = output<string>();
   onSearch = output<string>();
 
   // Current value
@@ -111,7 +112,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   // User Query
   private query = new Subject<string>();
 
-  buttonClick(event) {
+  buttonClick(event: AutoCompleteDropdownClickEvent) {
     this.onSearch.emit(this.currentValue);
   }
 
@@ -124,7 +125,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   }
 
   onSelectValue(event: AutoCompleteSelectEvent) {
-    this.onSelect.emit(event.value);
+    this.onSearch.emit(event.value);
   }
 
   search(event: KeyboardEvent) {
@@ -132,6 +133,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
       this.onSearch.emit(this.currentValue);
     }
   }
+
   calculateWidth() {
     let width = 200;
     if (this.autoComplete) {
@@ -149,6 +151,10 @@ export class SearchAutocompleteComponent implements AfterViewInit{
 
   ngAfterViewInit() {
     this.calculateWidth();
+  }
+
+  sanitize(value: string): string {
+    return this.sanitizePipe.transform(value);
   }
 
   private getSuggestions(query: string): any {
