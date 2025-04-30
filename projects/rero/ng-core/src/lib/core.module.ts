@@ -32,6 +32,7 @@ import { DefaultPipe } from './pipe/default.pipe';
 import { FilesizePipe } from './pipe/filesize.pipe';
 import { MarkdownPipe } from './pipe/markdown.pipe';
 import { Nl2brPipe } from './pipe/nl2br.pipe';
+import { SanitizePipe } from './pipe/sanitize.pipe';
 import { SortByKeysPipe } from './pipe/sort-by-keys.pipe';
 import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
@@ -59,7 +60,8 @@ import { NgCoreTranslateService } from './translate/translate-service';
         ErrorComponent,
         FilesizePipe,
         NgVarDirective,
-        MarkdownPipe
+        MarkdownPipe,
+        SanitizePipe
     ],
     imports: [
         CommonModule,
@@ -93,7 +95,8 @@ import { NgCoreTranslateService } from './translate/translate-service';
         SortByKeysPipe,
         NgxSpinnerModule,
         NgVarDirective,
-        MarkdownPipe
+        MarkdownPipe,
+        SanitizePipe
     ],
     providers: [
       provideAppInitializer(() => {
@@ -105,6 +108,7 @@ import { NgCoreTranslateService } from './translate/translate-service';
       ConfirmationService,
       MessageService,
       { provide: TranslateService, useClass: NgCoreTranslateService },
+      SanitizePipe
     ]
 })
 export class CoreModule { }

@@ -40,7 +40,7 @@ import { NgCoreFormlyFieldInput, NgCoreFormlyInputModule } from './editor/formly
 import { NgCoreFormlyMultiCheckboxModule } from './editor/formly/primeng/multi-checkbox/multi-checkbox';
 import { NgCoreFormlyMultiSelectModule } from './editor/formly/primeng/multi-select/multi-select';
 import { NgCoreFormlyRemoteAutocompleteModule } from './editor/formly/primeng/remote-autocomplete/remote-autocomplete';
-import { NgCoreFormlySelectModule, SelectComponent } from './editor/formly/primeng/select/select';
+import { NgCoreFormlySelectModule } from './editor/formly/primeng/select/select';
 import { NgCoreFormlyTreeSelectModule } from './editor/formly/primeng/tree-select/tree-select';
 import { ArrayTypeComponent } from './editor/type/array-type/array-type.component';
 import { MarkdownFieldComponent } from './editor/type/markdown/markdown.component';
@@ -149,7 +149,6 @@ import { SearchTabsComponent } from './search/search-tabs/search-tabs.component'
                 { name: 'object', component: ObjectTypeComponent,  wrappers: ['card'] },
                 { name: 'multischema', component: MultiSchemaTypeComponent},
                 { name: 'textarea', component: TextareaFieldComponent },
-                { name: 'select', component: SelectComponent },
                 { name: 'markdown', component: MarkdownFieldComponent },
                 { name: 'passwordGenerator', component: PasswordGeneratorTypeComponent },
                 { name: 'radioButton', component: RadioButtonComponent },
