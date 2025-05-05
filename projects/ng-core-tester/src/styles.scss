@@ -15,11 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "font-awesome/scss/font-awesome.scss";
+@use "font-awesome/scss/font-awesome";
 @use "easymde/dist/easymde.min";
-@use "node_modules/ngx-spinner/animations/ball-zig-zag.css";
-@use "projects/rero/ng-core/assets/scss/ng-core-tailwind.scss";
-@use "projects/rero/ng-core/assets/scss/ng-core.scss";
+@use "ngx-spinner/animations/ball-zig-zag.css";
+@use "ng-core-tailwind";
+@use "ng-core";
 
 @import "tailwindcss" prefix(ui);
 

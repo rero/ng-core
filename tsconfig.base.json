@@ -17,17 +17,6 @@
       "ES2022",
       "dom"
     ],
-    "paths": {
-      "@rero/ng-core": [
-        "dist/rero/ng-core"
-      ],
-      "@rero/ng-core/*": [
-        "dist/rero/ng-core/*"
-      ],
-      "@rero/prime/*": [
-        "dist/rero/ng-core/src/lib/record/editor/formly/primeng/*"
-      ]
-    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -36,5 +25,9 @@
   "angularCompilerOptions": {
     "strictTemplates": false,
     "strictInjectionParameters": true
-  }
+  },
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }

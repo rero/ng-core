@@ -1,11 +1,16 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "types": [
       "jasmine",
       "node"
-    ]
+    ],
+    "paths": {
+      "@rero/ng-core": [
+        "dist/rero/ng-core"
+      ]
+    }
   },
   "files": [
     "src/test.ts",

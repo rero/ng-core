@@ -20,11 +20,11 @@ import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/primeng/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
+import { TranslateLabelService } from '../services/translate-label.service';
 
 // Doc https://primeng.org/treeselect
 

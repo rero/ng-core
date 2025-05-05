@@ -36,7 +36,8 @@ import { JsonComponent as DetailJsonComponent } from './detail/view/json.compone
 import { EditorComponent } from './editor/editor.component';
 import { registerNgCoreFormlyExtension } from './editor/extensions';
 import { NgCoreFormlyDatePickerModule } from './editor/formly/primeng/date-picker/date-picker';
-import { NgCoreFormlyFieldInput, NgCoreFormlyInputModule } from './editor/formly/primeng/input';
+import { NgCoreFormlyInputModule } from './editor/formly/primeng/input/src/input.module';
+import { NgCoreFormlyFieldInput } from './editor/formly/primeng/input/src/input.type';
 import { NgCoreFormlyMultiCheckboxModule } from './editor/formly/primeng/multi-checkbox/multi-checkbox';
 import { NgCoreFormlyMultiSelectModule } from './editor/formly/primeng/multi-select/multi-select';
 import { NgCoreFormlyRemoteAutocompleteModule } from './editor/formly/primeng/remote-autocomplete/remote-autocomplete';

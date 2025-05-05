@@ -20,9 +20,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldSelectProps, FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
 import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
+import { TranslateLabelService } from '../services/translate-label.service';
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
