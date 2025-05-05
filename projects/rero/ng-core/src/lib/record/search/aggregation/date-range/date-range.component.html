@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2021-2024 RERO
+  Copyright (C) 2021-2025 RERO
   Copyright (C) 2021 UCLouvain
 
   This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
   <ng-template #footer>
     <p-divider/>
     <div class="core:grid core:grid-cols-12 core:gap-4">
-      @for (cfg of buttonConfig; track cfg) {
+      @for (cfg of buttonConfig; track cfg.value) {
         <div class="core:col-span-6 core:flex core:justify-center">
           <p-button (onClick)="setRange(cfg.value)" styleClass="core:w-full" class="core:grow core:p-1" outlined size="small" [label]="cfg.label" />
         </div>

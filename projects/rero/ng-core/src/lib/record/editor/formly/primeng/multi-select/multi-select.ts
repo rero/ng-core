@@ -87,7 +87,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       (onClear)="clearValidators()"
     >
       <ng-template #selectedItems let-items>
-        @for(option of items; track items; let last = $last) {
+        @for(option of items; track option.value; let last = $last) {
           <div class="core:inline-flex core:items-center core:gap-2 core:px-1">
             <div>
               {{ option.label }}@if(!last) {, }
@@ -140,6 +140,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     .pipe(
       map(options => {
         this.ref.markForCheck();
+        console.log(options);
         return this.translateLabelService.translateLabel(options);
       })
     );

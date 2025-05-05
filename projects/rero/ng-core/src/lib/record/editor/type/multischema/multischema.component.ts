@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -22,13 +22,15 @@ import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
     template: `
     <div [class]="field.parent.props.cssClass">
       @if (props.label) {
-      <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
-      } @if (showError && formControl.errors) {
+        <legend [pTooltip]="props.description" tooltipPosition="top">{{ props.label }}</legend>
+      }
+      @if (showError && formControl.errors) {
         <div class="text-error core:my-2">
           <formly-validation-message [field]="field" />
         </div>
-      } @for (f of field.fieldGroup; track f) {
-      <formly-field [field]="f"></formly-field>
+      }
+      @for (f of field.fieldGroup; track f.id) {
+        <formly-field [field]="f"></formly-field>
       }
     </div>
   `,

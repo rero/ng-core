@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2024 RERO
+  Copyright (C) 2024-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -16,11 +16,11 @@
 -->
 @if (searchFilters().length > 0) {
   <div class="core:mb-2">
-    @for (searchFilter of searchFilters(); track searchFilter) {
+    @for (searchFilter of searchFilters(); track searchFilter.filter) {
       @if (searchFilter.filters) {
         @if (showFilterSection(searchFilter)) {
           <div [ngClass]="styleClassSection()">{{ searchFilter.label | translate }}</div>
-          @for(searchFilterSection of searchFilter.filters; track searchFilterSection) {
+          @for(searchFilterSection of searchFilter.filters; track searchFilterSection.filter) {
             @if (showFilter(searchFilterSection)) {
               <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilterSection}"/>
             }

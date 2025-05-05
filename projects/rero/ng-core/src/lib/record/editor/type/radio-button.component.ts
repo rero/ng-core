@@ -43,12 +43,12 @@ interface Option {
     </div>
   </ng-template>
   @if (props.style === 'stacked') {
-    @for (option of props.options | async; track option) {
+    @for (option of props.options | async; track option.value) {
       <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
   } @else {
     <div class="core:flex core:gap-2">
-    @for (option of props.options | async; track option) {
+    @for (option of props.options | async; track option.value) {
       <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{option}"/>
     }
     </div>

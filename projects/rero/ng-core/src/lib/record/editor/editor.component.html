@@ -106,7 +106,7 @@
               <ng-content select="[beforeTableOfContent]"></ng-content>
               <span class="core:font-bold core:mb-1" for="addField" translate>Jump to</span>
               <ul class="core:ml-2 core:pl-0 core:list-none">
-                @for (f of tocFields$ | async; track f) {
+                @for (f of tocFields$ | async; track f.key) {
                   <li class="core:mb-1">
                     <span class="core:text-link-secondary core:cursor-pointer" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
                   </li>

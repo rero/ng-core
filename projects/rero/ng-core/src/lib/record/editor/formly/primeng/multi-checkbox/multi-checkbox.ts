@@ -35,7 +35,7 @@ export interface IMultiCheckBoxProps extends FormlyFieldProps {
     selector: 'ng-core-multi-checkbox',
     template: `
     <div class="core:flex" [ngClass]="{ 'core:gap-3': props.style === 'inline', 'core:flex-col core:gap-1': props.style === 'stacked' }">
-    @for (option of optionValues$|async|keyvalue; track option) {
+    @for (option of optionValues$|async|keyvalue; track option.key) {
       @let fieldKey = field.key + '_' + option.key;
       <div class="core:flex core:items-center core:gap-2">
         <p-checkbox

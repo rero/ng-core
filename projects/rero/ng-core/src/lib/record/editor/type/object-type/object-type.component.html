@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2020-2024 RERO
+  Copyright (C) 2020-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <div [class]="props.containerCssClass">
-  @for (f of field.fieldGroup; track f) {
+  @for (f of field.fieldGroup; track f.id) {
     <div [hidden]="f.hide" [class]="f.props.itemCssClass" [id]="'field-' + f.id">
       <formly-field [field]="f" />
     </div>
