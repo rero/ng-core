@@ -51,6 +51,7 @@ export * from './lib/record/editor/formly/primeng/multi-checkbox/multi-checkbox'
 export * from './lib/record/editor/formly/primeng/multi-select/multi-select';
 export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete';
 export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.service';
+export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.interface';
 export * from './lib/record/editor/formly/primeng/select/select';
 export * from './lib/record/editor/formly/primeng/tree-select/tree-select';
 export * from './lib/record/editor/services/jsonschema.service';
@@ -100,4 +101,5 @@ export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/validator/validators';
+export * from './lib/record/editor/formly/primeng/services/translate-label.service';
 

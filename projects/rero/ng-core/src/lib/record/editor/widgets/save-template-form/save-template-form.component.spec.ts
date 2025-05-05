@@ -19,11 +19,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { SaveTemplateFormComponent } from './save-template-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService} from '@ngx-translate/core';
-import { RecordModule } from '@rero/ng-core';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RouterModule } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { RecordModule } from '../../../record.module';
 
 describe('SaveTemplateFormComponent', () => {
   let component: SaveTemplateFormComponent;

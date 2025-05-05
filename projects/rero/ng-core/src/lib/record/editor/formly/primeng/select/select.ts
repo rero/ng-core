@@ -23,7 +23,7 @@ import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectModule } from 'primeng/select';
 import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
-import { TranslateLabelService } from './translate-label.service';
+import { TranslateLabelService } from '../services/translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;

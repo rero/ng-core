@@ -19,11 +19,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { RecordModule } from '@rero/ng-core';
 import { LoadTemplateFormComponent } from './load-template-form.component';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RouterModule } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { RecordModule } from '../../../record.module';
 
 describe('LoadTemplateFormComponent', () => {
   let component: LoadTemplateFormComponent;

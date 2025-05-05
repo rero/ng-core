@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, inject, OnInit } from '@angular/core';
-import { TitleMetaService } from '@rero/ng-core';
-import { DetailRecord } from '@rero/ng-core/lib/record/detail/view/detail-record';
+import { TitleMetaService, DetailRecord } from '@rero/ng-core';
 import { Observable } from 'rxjs';
 
 /**

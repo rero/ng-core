@@ -17,10 +17,10 @@
 import { TestBed } from '@angular/core/testing';
 import { BucketNamePipe } from './bucket-name.pipe';
 import { BucketNameService } from '../service/bucket-name.service';
-import { RecordModule } from '@rero/ng-core';
 import { TranslateModule } from '@ngx-translate/core';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { RecordModule } from '../../../record.module';
 
 describe('BucketNamePipe', () => {
   let pipe: BucketNamePipe;

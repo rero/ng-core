@@ -87,6 +87,11 @@
             "styles": [
               "projects/ng-core-tester/src/styles.scss"
             ],
+              "stylePreprocessorOptions": {
+                "includePaths": [
+                  "projects/rero/ng-core/assets/scss"
+                ]
+              },
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,

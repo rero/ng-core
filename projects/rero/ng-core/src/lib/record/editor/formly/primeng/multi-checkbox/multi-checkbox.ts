@@ -20,9 +20,9 @@ import { FormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateLabelService } from '@rero/ng-core/src/lib/record/editor/formly/primeng/select';
 import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
+import { TranslateLabelService } from '../services/translate-label.service';
 
 export interface IMultiCheckBoxProps extends FormlyFieldProps {
   labelStyleClass?: string;

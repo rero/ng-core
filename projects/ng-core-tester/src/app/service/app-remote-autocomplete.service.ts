@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Injectable } from "@angular/core";
-import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from "@rero/prime/remote-autocomplete";
+import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from "@rero/ng-core";
 import { Observable, of } from "rxjs";
 
 @Injectable({
