@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2022-2024 RERO
+  Copyright (C) 2022-2025 RERO
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -16,7 +16,7 @@
 -->
 @if (filters()?.length > 0) {
   <div class="core:flex core:flex-wrap core:mb-2">
-    @for (filter of filters(); track filter) {
+    @for (filter of filters(); track filter.key) {
     <p-button
       class="core:mr-2 core:mb-2"
       [label]="filter.name ? filter.name : (filter.key | bucketName : filter.aggregationKey | async)"

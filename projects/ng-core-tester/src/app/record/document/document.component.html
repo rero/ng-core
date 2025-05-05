@@ -30,7 +30,7 @@
   }
 </h5>
 <p class="ui:flex ui:gap-1">
-  @for (type of record.metadata.type; track type) {
+  @for (type of record.metadata.type; track type.main_type) {
     <p-tag [value]="type.main_type" />
   }
 </p>

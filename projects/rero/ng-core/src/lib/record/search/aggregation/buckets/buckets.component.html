@@ -16,7 +16,7 @@
 -->
 @if (buckets()) {
   <ul class="core:list-none core:text-sm">
-  @for (bucket of buckets()|slice:0:bucketSize; track bucket; let index = $index) {
+  @for (bucket of buckets()|slice:0:bucketSize; track bucket.key; let index = $index) {
     <li>
         @if (bucket.doc_count) {
           <div class="core:flex core:gap-1 core:items-start core:text-link-secondary core:mb-1">
@@ -42,7 +42,7 @@
         }
       <div class="core:ml-6">
         @if (displayChildren(bucket)) {
-          @for (aggregation of bucketChildren[bucket.key]; track aggregation) {
+          @for (aggregation of bucketChildren[bucket.key]; track aggregation.key) {
             <ng-core-record-search-aggregation-buckets
               [buckets]="aggregation.buckets"
               [size]="aggregation.bucketSize"

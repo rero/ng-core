@@ -111,7 +111,7 @@
 
       @if (!showEmptySearchMessage || q) {
       <ng-content select="[top-facets]"/>
-      @for (item of aggregations; track item) {
+      @for (item of aggregations; track item.key) {
       <div>
         @if (!aggregationsToHide.includes(item.key)) {
         <ng-core-record-search-aggregation
@@ -134,7 +134,7 @@
       <p-dataView [value]="records" [emptyMessage]="' '">
         <ng-template #list let-records>
           <ul class="core:list-none">
-            @for (record of records; track record ; let first = $first) {
+            @for (record of records; track record.metadata.pid; let first = $first) {
             <li class="core:py-2" [ngClass]="{ 'core:border-t-1 core:border-surface': !first }">
               <ng-core-record-search-result
                 [adminMode]="adminMode"

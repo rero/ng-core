@@ -23,7 +23,7 @@
 <div>
   <!-- for each item -->
   <div [class]="props.containerCssClass">
-    @for (f of field.fieldGroup; track f) { @if (!f.hide) {
+    @for (f of field.fieldGroup; track f.id) { @if (!f.hide) {
     <div class="{{ f.props.itemCssClass }} core:mb-1" [id]="'field-' + f.id">
       <formly-field [field]="f" />
     </div>
