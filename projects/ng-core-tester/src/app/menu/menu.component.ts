@@ -173,7 +173,7 @@ export class MenuComponent implements OnInit {
     this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
       this.translateItems(this.menuItems)
       languageMenu.items.map((item: MenuItem) => {
-        item.styleClass = item.id === event.lang ? 'font-bold': ''
+        item.styleClass = item.id === event.lang ? 'ui:font-bold': ''
       });
     });
   }

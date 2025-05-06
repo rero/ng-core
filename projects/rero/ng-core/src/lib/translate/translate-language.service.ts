@@ -16,7 +16,6 @@
  */
 import { inject, Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-// TODO: Search for a better solution for dynamic file loading
 import de from './languages/de.json';
 import en from './languages/en.json';
 import fr from './languages/fr.json';
