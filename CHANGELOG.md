@@ -1,5 +1,16 @@
 # Changelog
 
+## [v19.0.1](https://github.com/rero/ng-core/tree/v19.0.1) (2025-05-06)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.0.0...v19.0.1)
+
+**Fixes:**
+* chore: fix ng-core submodules configuration [\#695](https://github.com/rero/ng-core/pull/695) (by @jma)
+* chore: adjust track expression [\#694](https://github.com/rero/ng-core/pull/694) (by @Garfield-fr)
+
+**Other changes:**
+* chore: update dependencies [\#696](https://github.com/rero/ng-core/pull/696) (by @Garfield-fr)
+
 ## [v19.0.0](https://github.com/rero/ng-core/tree/v19.0.0) (2025-04-24)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.3.0...v19.0.0)
