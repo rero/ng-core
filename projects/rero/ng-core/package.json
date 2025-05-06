@@ -23,14 +23,13 @@
     "@ngx-formly/core": "^7.0.0-alpha.1",
     "@ngx-translate/core": "^16.0.0",
     "crypto-js": "^4.2.0",
-    "easymde": "^2.18.0",
+    "easymde": "^2.19.0",
     "font-awesome": "^4.7.0",
     "js-generate-password": "^0.1",
     "luxon": "^3.5.0",
     "marked": "^15.0.0",
     "ngx-spinner": "^19.0.0",
-    "primeicons": "^7.0.0",
-    "primelocale": "^1.6",
+    "primelocale": "^2.1.2",
     "primeng": "^19.0.8"
   },
   "publishConfig": {

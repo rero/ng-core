@@ -140,7 +140,6 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     .pipe(
       map(options => {
         this.ref.markForCheck();
-        console.log(options);
         return this.translateLabelService.translateLabel(options);
       })
     );

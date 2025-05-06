@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,84 +23,82 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { SearchField } from '../../record';
 import { SearchFieldsComponent } from './search-fields.component';
 
-// TODO: Fix this test after migrate to v18.
+describe('SearchFieldsComponent', () => {
+  let component: SearchFieldsComponent;
+  let componentRef: ComponentRef<SearchFieldsComponent>;
+  let fixture: ComponentFixture<SearchFieldsComponent>;
 
-// describe('SearchFieldsComponent', () => {
-//   let component: SearchFieldsComponent;
-//   let componentRef: ComponentRef<SearchFieldsComponent>;
-//   let fixture: ComponentFixture<SearchFieldsComponent>;
+  const searchFields: SearchField[] = [
+    { label: 'first', path: 'first', selected: false },
+    { label: 'second', path: 'second', selected: false },
+  ];
 
-//   const searchFields: SearchField[] = [
-//     { label: 'first', path: 'first', selected: false },
-//     { label: 'second', path: 'second', selected: false },
-//   ];
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      declarations: [SearchFieldsComponent],
+      imports: [
+        BrowserAnimationsModule,
+        SplitButtonModule,
+        TranslateModule.forRoot(),
+        RouterModule.forRoot([])
+      ]
+    })
+    .compileComponents();
 
-//   beforeEach(async () => {
-//     TestBed.configureTestingModule({
-//       declarations: [SearchFieldsComponent],
-//       imports: [
-//         BrowserAnimationsModule,
-//         SplitButtonModule,
-//         TranslateModule.forRoot(),
-//         RouterModule.forRoot([])
-//       ]
-//     })
-//     .compileComponents();
+    fixture = TestBed.createComponent(SearchFieldsComponent);
+    component = fixture.componentInstance;
+    componentRef = fixture.componentRef;
+    componentRef.setInput('searchFields', searchFields);
+  });
 
-//     fixture = TestBed.createComponent(SearchFieldsComponent);
-//     component = fixture.componentInstance;
-//     componentRef = fixture.componentRef;
-//     componentRef.setInput('searchFields', searchFields);
-//   });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
+  it('should display the menu with the default label', () => {
+    fixture.detectChanges();
+    const buttonLabel = fixture.debugElement.nativeElement.querySelector('p-splitButton button > span');
+    expect(buttonLabel.innerHTML).toEqual('Search in …');
+  });
 
-//   it('should display the menu with the default label', () => {
-//     fixture.detectChanges();
-//     const buttonLabel = fixture.debugElement.nativeElement.querySelector('p-splitButton button > span');
-//     expect(buttonLabel.innerHTML).toEqual('Search in …');
-//   });
+  it('should display the menu with the specified label', () => {
+    const label = 'Search field';
+    componentRef.setInput('searchLabel', label);
+    fixture.detectChanges();
+    const buttonLabel = fixture.debugElement.nativeElement.querySelector('p-splitButton button > span');
+    expect(buttonLabel.innerHTML).toEqual(label + ' …');
+  });
 
-//   it('should display the menu with the specified label', () => {
-//     const label = 'Search field';
-//     componentRef.setInput('searchLabel', label);
-//     fixture.detectChanges();
-//     const buttonLabel = fixture.debugElement.nativeElement.querySelector('p-splitButton button > span');
-//     expect(buttonLabel.innerHTML).toEqual(label + ' …');
-//   });
+  it('should display the menu with the filter fields', () => {
+    fixture.detectChanges();
+    const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-dropdown');
+    button.click();
+    fixture.detectChanges();
+    const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-tieredmenu-item');
+    expect(menuItems.length).toEqual(3);
+    expect(menuItems[0].innerText).toEqual('first');
+    expect(menuItems[1].innerText).toEqual('second');
+    expect(menuItems[2].innerText).toEqual('Reset');
+  });
 
-//   it('should display the menu with the filter fields', () => {
-//     fixture.detectChanges();
-//     const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-menubutton');
-//     button.click();
-//     fixture.detectChanges();
-//     const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-menuitem span');
-//     expect(menuItems.length).toEqual(3);
-//     expect(menuItems[0].innerHTML).toEqual('first');
-//     expect(menuItems[1].innerHTML).toEqual('second');
-//     expect(menuItems[2].innerHTML).toEqual('Reset');
-//   });
+  it('should display the menu with the reset mode label change', () => {
+    const label = 'My reset';
+    componentRef.setInput('resetLabel', label);
+    fixture.detectChanges();
+    const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-dropdown');
+    button.click();
+    fixture.detectChanges();
+    const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-tieredmenu-item');
+    expect(menuItems[2].innerText).toEqual(label);
+  });
 
-//   it('should display the menu with the reset mode label change', () => {
-//     const label = 'My reset';
-//     componentRef.setInput('resetLabel', label);
-//     fixture.detectChanges();
-//     const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-menubutton');
-//     button.click();
-//     fixture.detectChanges();
-//     const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-menuitem span');
-//     expect(menuItems[2].innerHTML).toEqual(label);
-//   });
-
-//   it('should not display the reset option in the menu', () => {
-//     componentRef.setInput('withResetAction',false);
-//     fixture.detectChanges();
-//     const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-menubutton');
-//     button.click();
-//     fixture.detectChanges();
-//     const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-menuitem span');
-//     expect(menuItems.length).toEqual(2);
-//   });
-// });
+  it('should not display the reset option in the menu', () => {
+    componentRef.setInput('withResetAction',false);
+    fixture.detectChanges();
+    const button = fixture.debugElement.nativeElement.querySelector('.p-splitbutton-dropdown');
+    button.click();
+    fixture.detectChanges();
+    const menuItems = fixture.debugElement.nativeElement.querySelectorAll('li.p-tieredmenu-item');
+    expect(menuItems.length).toEqual(2);
+  });
+});
