@@ -474,8 +474,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    */
   submit(): void {
     this.isSaveButtonDisabled = true;
-    this._canDeactivate();
-    this.form.updateValueAndValidity();
+    this.form.markAllAsTouched();
 
     if (this.form.valid === false) {
       const fields = [];
@@ -500,6 +499,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       return;
     }
 
+    this._canDeactivate();
     this.loadingChange.emit(true);
 
     let data = removeEmptyValues(this.model);
