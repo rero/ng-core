@@ -19,7 +19,7 @@
     <div class="core:col-span-12 core:flex core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b core:border-surface core:py-2">
       @if (rootField) {
         <legend>
-            <span class="core:text-2xl" [pTooltip]="description" tooltipPosition="top">
+            <span class="core:text-2xl" [pTooltip]="description | translate" tooltipPosition="top">
               {{ title || recordType | ucfirst | translate }}
             </span>
         </legend>
