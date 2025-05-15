@@ -1,5 +1,36 @@
 # Changelog
 
+## [v19.1.0](https://github.com/rero/ng-core/tree/v19.1.0) (2025-06-26)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.0.1...v19.1.0)
+
+**New features:**
+* feat(datePicker): add custom format [\#720](https://github.com/rero/ng-core/pull/720) (by @Garfield-fr)
+* feat(select): add disabled props [\#721](https://github.com/rero/ng-core/pull/721) (by @Garfield-fr)
+* feat: display validation errors on submit [\#698](https://github.com/rero/ng-core/pull/698) (by @jma)
+
+**Enhancements:**
+* feat(editor): sort label by language on add a field [\#718](https://github.com/rero/ng-core/pull/718) (by @Garfield-fr)
+* feat(editor): add long value support for selects [\#719](https://github.com/rero/ng-core/pull/719) (by @jma)
+* style(select): harmonise scrollHeights for selects [\#723](https://github.com/rero/ng-core/pull/723) (by @PascalRepond)
+* feat(templates): enhance load template modal [\#703](https://github.com/rero/ng-core/pull/703) (by @PascalRepond)
+* chore: improved display of deletion confirmation dialog [\#712](https://github.com/rero/ng-core/pull/712) (by @Garfield-fr)
+
+**Fix:**
+* fix(circulation): set autofocus after each circulation operation [\#714](https://github.com/rero/ng-core/pull/714) (by @jma)
+* fix: display tooltip on disabled export button [\#716](https://github.com/rero/ng-core/pull/716) (by @Garfield-fr)
+* fix(editor): password generator button [\#722](https://github.com/rero/ng-core/pull/722) (by @Garfield-fr)
+* fix(editor): enable filter when the number of options is big [\#713](https://github.com/rero/ng-core/pull/713) (by @jma)
+* fix(editor): datepicker should be smaller instead of taking the whole width of the screen [\#711](https://github.com/rero/ng-core/pull/710) (by @jma)
+* feat(aggregation): allow date editing on datepicker [\#710](https://github.com/rero/ng-core/pull/710) (by @Garfield-fr)
+* fix(editor): "my private templates" should be displayed first also for standard librarians [\#709](https://github.com/rero/ng-core/pull/709) (by @jma)
+* fix(paginator): update first position [\#705](https://github.com/rero/ng-core/pull/705) (by @Garfield-fr)
+* chore(search bar): improve search button design [\#706](https://github.com/rero/ng-core/pull/706) (by @PascalRepond)
+* fix(search): better layout when no results [\#704](https://github.com/rero/ng-core/pull/704) (by @PascalRepond)
+* fix(search): disable auto-spacing in pubdate facet [\#702](https://github.com/rero/ng-core/pull/702) (by @PascalRepond)
+* fix: fix scroll views in editor [\#701](https://github.com/rero/ng-core/pull/701) (by @jma)
+* fix: translate the title editor description [\#699](https://github.com/rero/ng-core/pull/699) (by @jma)
+
 ## [v19.0.1](https://github.com/rero/ng-core/tree/v19.0.1) (2025-05-06)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.0.0...v19.0.1)
