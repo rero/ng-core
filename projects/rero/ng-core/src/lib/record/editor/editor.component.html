@@ -15,108 +15,92 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <div class="core:grid core:grid-cols-12 core:gap-4">
-    <div class="core:col-span-12 core:flex core:top-0 core:bg-white core:h-full core:justify-between core:items-center core:border-b core:border-surface core:py-2">
-      @if (rootField) {
-        <legend>
-            <span class="core:text-2xl" [pTooltip]="description | translate" tooltipPosition="top">
-              {{ title || recordType | ucfirst | translate }}
-            </span>
-        </legend>
-      }
-      <div class="core:flex core:items-center core:justify-end core:gap-1">
-        <!-- load from template button -->
-        @if (canLoadTemplate()) {
-          <p-button
-            id="editor-load-template-button"
-            [label]="'Load template…' | translate"
-            [outlined]="true"
-            icon="fa fa-upload"
-            (onClick)="showLoadTemplateDialog()"
-          />
+  <div class="core:flex core:flex-col core:gap-1">
+    <div class="core:z-10 core:flex core:flex-col core:gap-2 core:bg-white core:sticky core:top-0 core:py-1">
+      <div class="core:flex core:justify-between core:items-center">
+        @if (rootField) {
+          <legend>
+              <span class="core:text-2xl" [pTooltip]="description | translate" tooltipPosition="top">
+                {{ title || recordType | ucfirst | translate }}
+              </span>
+          </legend>
         }
-        <!-- cancel button -->
-        <p-button
-          id="editor-cancel-button"
-          [label]="'Cancel' | translate"
-          icon="fa fa-times"
-          [outlined]="true"
-          severity="danger"
-          (onClick)="cancel()"
-        />
-      <!-- save button -->
-        @if (saveAlternatives.length === 0) {
-        <p-button
-          id="editor-save-button"
-          [label]="'Save' | translate"
-          (onClick)="submit()"
-          [disabled]="isSaveButtonDisabled"
-        />
-        } @else {
-        <p-splitButton
-          id="editor-save-button-split"
-          [label]="'Save' | translate"
-          (onClick)="submit()"
-          [model]="saveAlternatives"
-        />
-        }
-      </div>
-    </div>
-
-    <div class="core:col-span-12">
-      <div class="core:grid core:grid-cols-12 core:gap-4">
-        <!-- add fields section -->
-        @if (editorSettings.longMode) {
-          <div class="core:col-span-2 core:h-[90vh]">
-            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
-              <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
-            </p-scrollpanel>
-          </div>
-        }
-
-        <!-- editor itself -->
-        <div [ngClass]="{ 'core:h-[90vh] core:col-span-10 core:lg:col-span-8': editorSettings.longMode, 'core:col-span-12': !editorSettings.longMode }" role="main">
-          <!-- ngx-formly -->
-          @if (editorSettings.longMode) {
-            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
-              <formly-form
-                [model]="model"
-                [fields]="fields"
-                [options]="options"
-                [form]="form"
-                (modelChange)="modelChanged($event)"
-              />
-            </p-scrollpanel>
-          } @else {
-            <formly-form
-              [model]="model"
-              [fields]="fields"
-              [options]="options"
-              [form]="form"
-              (modelChange)="modelChanged($event)"
+        <div class="core:flex core:items-center core:justify-end core:gap-1">
+          <!-- load from template button -->
+          @if (canLoadTemplate()) {
+            <p-button
+              id="editor-load-template-button"
+              [label]="'Load template…' | translate"
+              [outlined]="true"
+              icon="fa fa-upload"
+              (onClick)="showLoadTemplateDialog()"
             />
           }
-
+          <!-- cancel button -->
+          <p-button
+            id="editor-cancel-button"
+            [label]="'Cancel' | translate"
+            icon="fa fa-times"
+            [outlined]="true"
+            severity="danger"
+            (onClick)="cancel()"
+          />
+        <!-- save button -->
+          @if (saveAlternatives.length === 0) {
+          <p-button
+            id="editor-save-button"
+            [label]="'Save' | translate"
+            (onClick)="submit()"
+            [disabled]="isSaveButtonDisabled"
+          />
+          } @else {
+          <p-splitButton
+            id="editor-save-button-split"
+            [label]="'Save' | translate"
+            (onClick)="submit()"
+            [model]="saveAlternatives"
+          />
+          }
         </div>
+      </div>
+      <p-divider class="core:!mt-0" />
+    </div>
 
+    <div class="core:flex core:gap-2">
+      <!-- add fields section -->
+      @if (editorSettings.longMode) {
+        <div class="core:flex core:top-18 core:sticky core:flex-[0_0_250px] core:h-[calc(100dvh-(--spacing(18)))] core:overflow-y-auto core:py-1">
+          <ng-core-editor-add-field-editor [editorComponent]="editorComponent" />
+        </div>
+      }
+
+      <!-- editor itself -->
+      <div class="core:grow core:flex core:gap-2">
+        <!-- ngx-formly -->
+          <formly-form
+            class="core:grow core:**:scroll-mt-18"
+            [model]="model"
+            [fields]="fields"
+            [options]="options"
+            [form]="form"
+            (modelChange)="modelChanged($event)"
+          />
         @if (editorSettings.longMode) {
           <!-- TOC navigation -->
-          <div class="core:col-span-2 core:text-sm core:hidden core:lg:block core:h-[90vh]">
-            <p-scrollpanel [style]="{ width: '100%', height: '100%' }">
+          <div class="core:text-sm core:hidden core:lg:block core:flex core:top-18 core:sticky core:flex-[0_0_250px] core:h-[calc(100dvh-(--spacing(18)))] core:overflow-y-auto core:flex-col core:gap-2">
               <ng-content select="[beforeTableOfContent]"></ng-content>
-              <span class="core:font-bold core:mb-1" for="addField" translate>Jump to</span>
+              <span class="core:font-bold" for="addField" translate>Jump to</span>
               <ul class="core:ml-2 core:pl-0 core:list-none">
                 @for (f of tocFields$ | async; track f.key) {
                   <li class="core:mb-1">
-                    <span class="core:text-link-secondary core:cursor-pointer" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
+                    <span class="text-link-secondary" (click)="setFocus($event, f)">{{ f.props.label | translate }}</span>
                   </li>
                 }
               </ul>
-            </p-scrollpanel>
         </div>
         }
       </div>
-    </div>
+      </div>
   </div>
 </form>
 
