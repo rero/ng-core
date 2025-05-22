@@ -63,6 +63,8 @@ export class LoadTemplateFormComponent implements OnInit {
         appendTo: 'body',
         required: true,
         group: true,
+        filter: true,
+        scrollHeight: '50vh',
         options: [],
         attributes: {
           size: 10

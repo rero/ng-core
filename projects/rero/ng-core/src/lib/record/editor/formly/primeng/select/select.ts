@@ -73,6 +73,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
+      [scrollHeight]="props.scrollHeight"
       [ngClass]="{ 'ng-invalid ng-dirty': showError }"
       [options]="optionValues$|async"
       [optionLabel]="props.group ? undefined : 'label'"
