@@ -18,12 +18,14 @@
     <p-inputNumber
       class="core:mr-1"
       inputId="integeronly"
+      [useGrouping]="false"
       [(ngModel)]="range[0]"
       [min]="range[0]"
       [max]="range[1]" />
     <p-inputNumber
       class="core:ml-1"
       inputId="integeronly"
+      [useGrouping]="false"
       [(ngModel)]="range[1]"
       [min]="range[0]"
       [max]="range[1]" />
