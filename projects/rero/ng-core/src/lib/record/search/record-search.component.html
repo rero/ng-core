@@ -20,12 +20,12 @@
 } @else {
 <span #topScrollAnchor></span>
 <ng-core-search-tabs [types]="availableTypes" (onChangeType)="changeType($event)"/>
-<div>
+<div class="core:flex core:flex-col core:gap-2">
   @if (availableTypes.length === 1 && showLabel) {
   <h5>{{ availableTypes[0].label | translate }}</h5>
   }
   <ng-content select="[header]"></ng-content>
-  <div class="core:mt-4 core:flex core:gap-2">
+  <div class="core:flex core:gap-2">
     @if (showSearchInput) {
     <ng-core-search-input
       class="core:grow"
@@ -39,7 +39,7 @@
     <ng-content select="[afterInputSearch]"/>
   </div>
   @if (loaded && hasNoRecord) {
-    <p-message class="core:my-6" severity="info">
+    <p-message severity="info">
       {{ emptyRecordMessage }}
     </p-message>
     @if (adminMode.can && addStatus.can) {
@@ -51,7 +51,7 @@
     />
     }
   } @else {
-  <div class="core:flex core:items-stretch core:w-full core:my-4">
+  <div class="core:flex core:items-stretch core:w-full">
     @if (resultsText$ | async; as resultsText) {
     <div class="core:flex core:items-center core:w-full">
       <strong>{{ resultsText }}</strong>
