@@ -30,6 +30,12 @@
     attr.aria-label="{{ placeholder() }}"
   />
   <p-inputGroupAddon>
-    <i class="fa fa-search" (click)="doSearch()"></i>
+    <p-button
+      icon="fa fa-search"
+      variant="text"
+      severity="secondary"
+      (click)="doSearch()"
+      class="core:h-[2.5rem]"
+    />
   </p-inputGroupAddon>
 </p-inputGroup>

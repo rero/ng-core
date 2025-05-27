@@ -19,6 +19,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SearchInputComponent } from './search-input.component';
 import { AutoFocusModule } from 'primeng/autofocus';
+import { ButtonModule } from 'primeng/button';
 
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;
@@ -34,7 +35,8 @@ describe('SearchInputComponent', () => {
       imports: [
         InputGroupModule,
         InputGroupAddonModule,
-        AutoFocusModule
+        AutoFocusModule,
+        ButtonModule
       ],
     })
       .compileComponents();
@@ -46,7 +48,7 @@ describe('SearchInputComponent', () => {
     fixture.detectChanges();
 
     searchInput = fixture.nativeElement.querySelector('#search');
-    searchButton = fixture.nativeElement.querySelector('i.fa-search');
+    searchButton = fixture.nativeElement.querySelector('p-inputgroupaddon p-button button');
   });
 
   it('should create', () => {
@@ -61,7 +63,7 @@ describe('SearchInputComponent', () => {
       expect(text).toBe(query);
     });
 
-    searchButton.dispatchEvent(new Event('click'));
+    searchButton.click();
 
     fixture.detectChanges();
   });
