@@ -86,4 +86,15 @@ describe('PaginatorComponent', () => {
     btn.click();
     subscribe.unsubscribe();
   });
+
+  it('should recalculate the pager\'s position', () => {
+    expect(component.first()).toEqual(0);
+    fixture.componentRef.setInput('currentPage', 3);
+    fixture.detectChanges();
+    expect(component.first()).toEqual(20);
+
+    fixture.componentRef.setInput('rows', '20');
+    fixture.detectChanges();
+    expect(component.first()).toEqual(40);
+  });
 });

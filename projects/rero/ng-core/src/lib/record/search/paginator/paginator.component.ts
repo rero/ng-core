@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, Signal, computed, input, output } from '@angular/core';
+import { Component, Signal, computed, input, output } from '@angular/core';
 
 // Documentation: https://primeng.org/paginator
 
@@ -35,7 +35,7 @@ export interface ChangeEvent {
     templateUrl: './paginator.component.html',
     standalone: false
 })
-export class PaginatorComponent implements OnInit {
+export class PaginatorComponent {
 
   /** Input */
   alwaysShow = input<boolean>(true);
@@ -50,19 +50,17 @@ export class PaginatorComponent implements OnInit {
   rowPageChange = output<ChangeEvent>();
 
   /** Position for the current page */
-  first: Signal<number> = computed(() => this.eventData.page * this.eventData.rows);
+  first: Signal<number> = computed(() => {
+    this.eventData.page = (this.currentPage() -1);
+    this.eventData.rows = this.rows();
+    return this.eventData.page * this.eventData.rows
+  });
 
   /** Paginator Event */
   private eventData: ChangeEvent = {
     page: 0,
     rows: 10
   };
-
-  /** OnInit hook */
-  ngOnInit(): void {
-    this.eventData.page = this.currentPage() - 1;
-    this.eventData.rows = this.rows();
-  }
 
   /** Event on change page */
   onPageChange(event: PageEvent) {
