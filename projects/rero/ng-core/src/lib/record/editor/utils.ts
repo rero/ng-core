@@ -15,6 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { extractIdOnRef } from '../../utils/utils';
+import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
+
+export interface JSONSchema7 extends JSONSchema7Base {
+  widget: any;
+}
 
 /**
  * Initialize the Formly widget on JSONSchema
