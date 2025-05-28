@@ -21,7 +21,6 @@ import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateService } from '@ngx-translate/core';
-import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
 import { cloneDeep } from 'lodash-es';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -36,13 +35,9 @@ import { CONFIG } from '../../utils/config';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { JSONSchemaService } from './services/jsonschema.service';
-import { processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
+import { JSONSchema7, processJsonSchema, removeEmptyValues, resolve$ref } from './utils';
 import { LoadTemplateFormComponent } from './widgets/load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from './widgets/save-template-form/save-template-form.component';
-
-export interface JSONSchema7 extends JSONSchema7Base {
-  widget: any;
-}
 
 @Component({
     selector: 'ng-core-editor',

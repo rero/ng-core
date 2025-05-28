@@ -20,9 +20,9 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
-import { JSONSchema7 } from '../editor/editor.component';
 import { RecordUiService } from '../record-ui.service';
 import { RecordSearchService } from './record-search.service';
+import { JSONSchema7 } from '../editor/utils';
 
 @Component({
     selector: 'ng-core-record-search-page',

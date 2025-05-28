@@ -38,7 +38,6 @@ import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
-import { JSONSchema7 } from '../editor/editor.component';
 import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
@@ -47,6 +46,7 @@ import { ChangeEvent } from './paginator/paginator.component';
 import { IChecked } from './search-filters/search-filters.component';
 import { SelectChangeEvent } from 'primeng/select';
 import { MenuItem } from 'primeng/api';
+import { JSONSchema7 } from '../editor/utils';
 
 export interface SearchParams {
   currentType: string;
@@ -726,10 +726,9 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   searchInField(event: SelectChangeEvent): void {
-    const selectedField = event.value;
     this.searchFields = this.searchFields.map((item: SearchField) => {
-      if (selectedField && item.path === selectedField.path) {
-        item.selected = !item.selected;
+      if (item.path === event?.value) {
+        item.selected = true;
       } else {
         item.selected = false;
       }
@@ -957,7 +956,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // Loop over select fields and add them to final query string.
     const queries = [];
     this.selectedSearchFields.forEach((field: SearchField) => {
-      queries.push(`${field.path}:${this.q}`);
+      queries.push(`${field.path}:(${this.q})`);
     });
 
     return queries.join(' ');

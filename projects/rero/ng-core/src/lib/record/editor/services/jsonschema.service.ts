@@ -22,7 +22,7 @@ import { map } from 'rxjs';
 import { ApiService } from '../../../api/api.service';
 import { Record } from '../../record';
 import { RecordService } from '../../record.service';
-import { JSONSchema7 } from '../editor.component';
+import { JSONSchema7 } from '../utils';
 
 @Injectable({
   providedIn: 'root'
