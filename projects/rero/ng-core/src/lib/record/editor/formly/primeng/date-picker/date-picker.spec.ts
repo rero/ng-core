@@ -49,9 +49,11 @@ describe('DatePickerComponent', () => {
         dateFormat: 'yy-mm-dd',
         disabled: false,
         firstDayOfWeek: 0,
+        fluid: true,
         inline: false,
         numberOfMonths: 1,
         outputDateFormat: 'yyyy-MM-dd',
+        panelStyleClass: '',
         required: false,
         selectionMode: 'single',
         showButtonBar: false,
@@ -61,7 +63,7 @@ describe('DatePickerComponent', () => {
         stepHour: 1,
         stepMinute: 1,
         stepSecond: 1,
-        styleClass: 'w-full',
+        styleClass: '',
         todayButtonStyleClass: 'p-button-text',
         view: 'date'
       }

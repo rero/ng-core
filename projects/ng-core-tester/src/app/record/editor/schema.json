@@ -1227,7 +1227,6 @@
           "type": "dateTimePicker",
           "props": {
             "dataType": "string",
-            "styleClass": "ui:w-full",
             "showTime": true,
             "validation": {
               "messages": {
