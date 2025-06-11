@@ -43,20 +43,17 @@ describe('SelectComponent', () => {
       key: 'name',
       type: 'select',
       props: {
-        class: 'w-full',
         editable: false,
-        filter: false,
         filterMatchMode: 'contains',
+        fluid: true,
         group: false,
         options: of([
           { label: 'Foo', value: 'foo', untranslatedLabel: 'foo' },
           { label: 'Bar', value: 'bar', untranslatedLabel: 'bar' },
         ]),
-        panelStyleClass: 'w-full',
         required: false,
         scrollHeight: '250px',
         sort: false,
-        styleClass: 'w-full mb-1',
         tooltipPosition: 'top',
         tooltipPositionStyle: 'absolute'
       }
