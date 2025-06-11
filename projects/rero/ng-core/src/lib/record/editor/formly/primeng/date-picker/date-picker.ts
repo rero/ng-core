@@ -30,6 +30,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   disabledDates?: Date[];
   disabledDays?: number[];
   firstDayOfWeek?: number;
+  fluid: boolean;
   hourFormat?: string;
   inline: boolean;
   inputStyleClass?: string;
@@ -37,6 +38,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   maxDate?: Date;
   minDate?: Date;
   numberOfMonths: number;
+  panelStyleClass: string;
   readonlyInput?: boolean;
   selectionMode: 'multiple' | 'range' | 'single';
   showButtonBar: boolean;
@@ -46,7 +48,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   stepHour: number;
   stepMinute: number;
   stepSecond: number;
-  styleClass: string;
+  styleClass?: string;
   todayButtonStyleClass: string;
   view?: 'date' | 'month' | 'year';
 }
@@ -65,12 +67,14 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [disabledDates]="disabledDates"
       [disabledDays]="props.disabledDays"
       [firstDayOfWeek]="props.firstDayOfWeek"
+      [fluid]="props.fluid"
       [hourFormat]="props.hourFormat"
       [inline]="props.inline"
       [inputStyleClass]="props.inputStyleClass"
       [maxDate]="maxDate"
       [minDate]="minDate"
       [numberOfMonths]="props.numberOfMonths"
+      [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
       [readonlyInput]="props.readonlyInput || props.selectionMode !== 'single'"
       [required]="props.required"
@@ -102,9 +106,11 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       dateFormat: 'yy-mm-dd',
       disabled: false,
       firstDayOfWeek: 0,
+      fluid: true,
       inline: false,
       numberOfMonths: 1,
       outputDateFormat: 'yyyy-MM-dd',
+      panelStyleClass: 'core:!min-w-0',
       placeholder: 'Select…',
       required: false,
       selectionMode: 'single',
@@ -115,7 +121,6 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       stepHour: 1,
       stepMinute: 1,
       stepSecond: 1,
-      styleClass: 'core:w-full',
       todayButtonStyleClass: 'p-button-text',
       view: 'date'
     },

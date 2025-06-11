@@ -47,6 +47,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { TooltipModule } from 'primeng/tooltip';
+import { FluidModule } from 'primeng/fluid'
 
 @NgModule({
   providers: [
@@ -66,6 +67,7 @@ import { TooltipModule } from 'primeng/tooltip';
     DividerModule,
     DynamicDialogModule,
     FieldsetModule,
+    FluidModule,
     InputGroupAddonModule,
     InputGroupModule,
     InputNumberModule,
