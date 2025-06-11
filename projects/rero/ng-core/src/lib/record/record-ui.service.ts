@@ -52,10 +52,8 @@ export class RecordUiService {
       rejectLabel: this.translateService.instant('Cancel'),
       message: this.deleteMessage(pid, type).join('<br>'),
       header: this.translateService.instant('Confirmation'),
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon:"none",
-      rejectIcon:"none",
-      acceptButtonStyleClass: "bg-red-500 border-red-500",
+      icon: 'fa fa-exclamation-triangle fa-2x core:text-red-500',
+      acceptButtonStyleClass: "core:bg-red-500 core:border-red-500",
       rejectButtonStyleClass:"p-button-text",
       accept: () => {
         this.recordService.delete(type, pid).subscribe({

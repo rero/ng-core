@@ -1,1 +1,4 @@
 core:!bg-surface-200
+core:bg-red-500
+core:border-red-500
+core:text-red-500
