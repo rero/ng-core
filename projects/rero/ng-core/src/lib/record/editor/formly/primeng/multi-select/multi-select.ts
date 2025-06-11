@@ -21,7 +21,7 @@ import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@n
 import { FormlyFieldSelectProps, FormlySelectModule } from '@ngx-formly/core/select';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
-import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
+import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
@@ -32,8 +32,8 @@ export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectPr
   editable: boolean;
   emptyFilterMessage?: string;
   emptyMessage?: string;
-  filter: boolean;
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
+  fluid: boolean;
   group: boolean;
   loadingIcon?: string;
   panelStyleClass?: string;
@@ -64,8 +64,9 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [dropdownIcon]="props.dropdownIcon"
       [emptyFilterMessage]="props.emptyFilterMessage"
       [emptyMessage]="props.emptyMessage"
-      [filter]="props.filter"
+      [filter]="filter"
       filterBy="label"
+      [fluid]="props.fluid"
       [formControl]="formControl"
       [formlyAttributes]="field"
       [group]="props.group"
@@ -98,6 +99,13 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
           <div>{{ props.placeholder | translate }}</div>
         }
       </ng-template>
+            <ng-template let-group #group>
+        @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
+          <div class="core:py-2 core:font-bold">{{ group.label }}</div>
+        } @else if (group.label === 'group-other') {
+          <div class="core:py-2"><hr></div>
+        }
+      </ng-template>
     </p-multiSelect>
   `,
     standalone: false
@@ -109,22 +117,20 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
   private ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription: Subscription = new Subscription();
+  filter: boolean = false;
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<IMultiSelectProps>> = {
     props: {
-      class: 'core:w-full',
       display: 'comma',
       editable: false,
-      filter: true,
       filterMatchMode: 'contains',
+      fluid: true,
       group: false,
-      panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
       sort: false,
-      styleClass: 'core:w-full core:mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
       variant: 'outlined',
@@ -138,11 +144,43 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
     const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
     this.optionValues$ = merge(...[optionsObs, changeObs])
     .pipe(
+      tap((options) => {
+        this.filter = this.enableFilter(options, 0).enabled;
+      }),
       map(options => {
         this.ref.markForCheck();
         return this.translateLabelService.translateLabel(options);
       })
     );
+  }
+
+  /**
+   * Check if the filter feature of the select should be enabled.
+   *
+   * This function is interrupted if the threshold is reached.
+   *
+   * @param options the list of options
+   * @param numberOfOptions the numberOfOptions used by the recursion
+   * @returns enabled: true if the filter should be enabled, the current total of detected options (used by the recursion)
+   */
+  enableFilter(options, numberOfOptions=0): {enabled: boolean, total:number} {
+    if(!options?.length) {
+      return {total: numberOfOptions, enabled: false};
+    }
+    // number of entries to enable the filter
+    const limit = 5;
+    let total = numberOfOptions + options.length;
+    if(total > limit) {
+      return {enabled: true, total};
+    }
+    for(const option of options) {
+      const child =  this.enableFilter(option?.items, total)
+      total = child.total;
+      if(total > limit) {
+        return {enabled: total > limit, total};
+      }
+    }
+    return {enabled: total > limit, total};
   }
 
   // Clear all validators except required.

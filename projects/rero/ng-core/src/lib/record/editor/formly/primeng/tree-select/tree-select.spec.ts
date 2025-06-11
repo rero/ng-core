@@ -44,11 +44,9 @@ describe('TreeSelectComponent', () => {
       key: 'name',
       type: 'tree-select',
       props: {
-        class: 'w-full',
-        containerStyleClass: 'w-full',
-        filter: false,
         filterBy: 'label',
         filterInputAutoFocus: false,
+        fluid: true,
         options: of([
           {
             key: 'label_1',
@@ -60,8 +58,6 @@ describe('TreeSelectComponent', () => {
             ]
           }
         ]),
-        panelClass: 'w-full',
-        panelStyleClass: 'w-full',
         scrollHeight: '400px',
         variant: 'outlined'
       }

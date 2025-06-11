@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, inject, NgModule, OnDestroy, OnInit, Type } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectModule as FormlyCoreSelectModule, FormlyFieldSelectProps } from '@ngx-formly/core/select';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectModule } from 'primeng/select';
-import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
+import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
@@ -32,9 +32,9 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   editable: boolean;
   emptyFilterMessage?: string;
   emptyMessage?: string;
-  filter: boolean;
   filters?: any[];
   filterMatchMode: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
+  fluid: boolean,
   group: boolean;
   loadingIcon?: string;
   panelStyleClass?: string;
@@ -66,9 +66,10 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       [editable]="props.editable"
       [emptyFilterMessage]="props.emptyFilterMessage"
       [emptyMessage]="props.emptyMessage"
-      [filter]="props.filter"
+      [filter]="filter"
       filterBy="label"
       [filterMatchMode]="props.filterMatchMode"
+      [fluid]="props.fluid"
       [formControl]="formControl"
       [formlyAttributes]="field"
       [group]="props.group"
@@ -112,21 +113,19 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   private ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription: Subscription = new Subscription();
+  filter: boolean = false;
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
     props: {
-      class: 'core:w-full',
       editable: false,
-      filter: false,
       filterMatchMode: 'contains',
+      fluid: true,
       group: false,
-      panelStyleClass: 'core:w-full',
       placeholder: 'Select…',
       required: false,
       scrollHeight: '250px',
       sort: false,
-      styleClass: 'core:w-full core:mb-1',
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',
     }
@@ -139,11 +138,43 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
     const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
     this.optionValues$ = merge(...[optionsObs, changeObs])
     .pipe(
+      tap((options) => {
+        this.filter = this.enableFilter(options, 0).enabled;
+      }),
       map(options => {
         this.ref.markForCheck();
         return this.translateLabelService.translateLabel(options);
       })
     );
+  }
+
+  /**
+   * Check if the filter feature of the select should be enabled.
+   *
+   * This function is interrupted if the threshold is reached.
+   *
+   * @param options the list of options
+   * @param numberOfOptions the numberOfOptions used by the recursion
+   * @returns enabled: true if the filter should be enabled, the current total of detected options (used by the recursion)
+   */
+  enableFilter(options, numberOfOptions=0): {enabled: boolean, total:number} {
+    if(!options?.length) {
+      return {total: numberOfOptions, enabled: false};
+    }
+    // number of entries to enable the filter
+    const limit = 5;
+    let total = numberOfOptions + options.length;
+    if(total > limit) {
+      return {enabled: true, total};
+    }
+    for(const option of options) {
+      const child =  this.enableFilter(option?.items, total)
+      total = child.total;
+      if(total > limit) {
+        return {enabled: total > limit, total};
+      }
+    }
+    return {enabled: total > limit, total};
   }
 
   ngOnDestroy(): void {
