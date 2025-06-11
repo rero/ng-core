@@ -74,24 +74,32 @@ export class LoadTemplateFormComponent implements OnInit {
 
     this.templateService.getTemplates(data.templateResourceType, data.resourceType)
       .subscribe((templates) => {
-        const items = [];
-        templates.map((hit: any) => {
-          let element = items.find((item) => item.untranslatedLabel === hit.visibility);
-          if (!element) {
-            element = {
-              label: hit.visibility === 'public'
-                ? this.translateService.instant('Public templates')
-                : this.translateService.instant('My private templates'),
-              untranslatedLabel: hit.visibility,
-              items: []
-            };
-            items.push(element);
-          }
-          element.items.push({
-            label: hit.name,
-            value: hit.pid
+        const items: {label:string, untranslatedLabel: string, items: {label:string, value:string}[]}[] = [];
+        // private first
+        const privateItems = templates.filter(template => template.visibility === 'private');
+        if(privateItems?.length>0) {
+          items.push({
+              label: this.translateService.instant('My private templates'),
+              untranslatedLabel: 'My private templates',
+              items: privateItems.map(item => ({
+                label: item.name,
+                value: item.pid
+              }))
           });
-        });
+        }
+        // public last
+        const publicItems = templates.filter(template => template.visibility === 'public');
+
+        if(publicItems?.length>0) {
+          items.push({
+              label: this.translateService.instant('Public templates'),
+              untranslatedLabel: 'Public templates',
+              items: publicItems.map(item => ({
+                label: item.name,
+                value: item.pid
+              }))
+          });
+        }
         this.formFields[0].props.options = items;
         this.isDataFormLoaded = true;
       });

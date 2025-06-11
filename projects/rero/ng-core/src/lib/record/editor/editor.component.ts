@@ -631,6 +631,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
       focusOnShow: false,
       width: '50vw',
       position: 'top',
+      modal: true,
       dismissableMask: false,
       data: {
         templateResourceType: this.editorSettings.template.recordType,
