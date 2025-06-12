@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, ElementRef, ViewChild, input, output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild, effect, input, output } from '@angular/core';
 
 @Component({
     selector: 'ng-core-search-input',
@@ -48,6 +48,14 @@ export class SearchInputComponent {
 
   /** Search input reference */
   @ViewChild('searchInput') input: ElementRef;
+
+  constructor() {
+    effect(() => {
+      if (this.focus() && this.input?.nativeElement) {
+        this.input.nativeElement.focus();
+      }
+    });
+  }
 
   /**
    * Start the search by pressing enter
