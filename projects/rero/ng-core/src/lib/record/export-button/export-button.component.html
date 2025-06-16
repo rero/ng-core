@@ -1,6 +1,6 @@
 <!--
   RERO angular core
-  Copyright (C) 2022-2024 RERO
+  Copyright (C) 2022-2025 RERO
   Copyright (C) 2022 UCLouvain
 
   This program is free software: you can redistribute it and/or modify
@@ -17,12 +17,12 @@
 -->
 @if (exportOptions() && exportOptions().length > 0) {
   <!-- check single export format -->
-  @if (exportOptions().length === 1) {
-    <!-- check if we can export list -->
+   @if (exportOptions().length === 1) {
     @if (!exportOptions()[0]?.disabled) {
       <a
         pButton
         outlined
+        severity="secondary"
         [href]="exportOptions()[0].url"
         rel="noopener noreferrer"
       >
@@ -31,23 +31,34 @@
       </a>
     } @else {
       <p-button
+        severity="secondary"
+        outlined
         label="{{ 'Export as' | translate }} {{ exportOptions()[0].label }}"
         icon="fa fa-cloud-download"
-        styleClass="core:opacity-30 mx-1"
-        outlined
+        [href]="exportOptions()[0].url"
+        [disabled]="exportOptions()[0]?.disabled"
         [pTooltip]="exportOptions()[0]?.disabled_message"
+        [tooltipDisabled]="!exportOptions()[0]?.disabled"
         tooltipPosition="top"
       />
     }
-  } @else {
-    <!-- display multiple export formats as dropdown list -->
+   } @else {
+      <!-- display multiple export formats as dropdown list -->
       <p-menu #menu [model]="exportOptions()" [popup]="true" />
-      <p-button severity="secondary" outlined (onClick)="menu.toggle($event)">
+      <p-button
+        severity="secondary"
+        outlined
+        [disabled]="exportOptions()[0]?.disabled"
+        [pTooltip]="exportOptions()[0]?.disabled_message"
+        [tooltipDisabled]="!exportOptions()[0]?.disabled"
+        tooltipPosition="top"
+        (onClick)="menu.toggle($event)"
+      >
         <div class="core:flex core:gap-4 core:items-center">
-        <i class="fa fa-download"></i>
-        {{ 'Export as' | translate }}&nbsp;…
-        <i class="fa fa-caret-down"></i>
-      </div>
+          <i class="fa fa-download"></i>
+          {{ 'Export as' | translate }}&nbsp;…
+          <i class="fa fa-caret-down"></i>
+        </div>
       </p-button>
-  }
+   }
 }
