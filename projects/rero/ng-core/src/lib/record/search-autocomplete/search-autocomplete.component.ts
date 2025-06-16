@@ -22,6 +22,7 @@ import { DomHandler } from 'primeng/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { RecordService } from '../record.service';
 import { SanitizePipe } from '../../pipe/sanitize.pipe';
+import { CONFIG } from '../../utils/config';
 
 export interface IRecordType {
   field: string;
@@ -93,7 +94,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   minLength = input<number>(3);
   placeholder = input(null);
   recordTypes = input.required<IRecordType[]>();
-  scrollHeight = input<string>('250px');
+  scrollHeight = input<string>(CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT);
   styleClass = input<string>('core:w-full');
   value = input<string>();
 
