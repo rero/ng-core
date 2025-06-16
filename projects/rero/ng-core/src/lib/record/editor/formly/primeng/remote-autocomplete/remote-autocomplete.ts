@@ -28,6 +28,7 @@ import { SelectChangeEvent, SelectModule } from 'primeng/select';
 import { map, merge, Observable, Subject, switchMap } from 'rxjs';
 import { IQuery, IQueryOptions, IRemoteAutoCompleteFilter, IValueSelect } from './remote-autocomplete.interface';
 import { RemoteAutocompleteService } from './remote-autocomplete.service';
+import { CONFIG } from '../../../../../utils/config';
 
 export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   delay: number;
@@ -129,7 +130,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
       delay: 300,
       group: false,
       minLength: 3,
-      scrollHeight: '400px',
+      scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
       queryOptions: {
         allowAdd: false,
         maxOfResult: 100

@@ -25,6 +25,7 @@ import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
+import { CONFIG } from '../../../../../utils/config';
 
 // Doc https://primeng.org/treeselect
 
@@ -96,7 +97,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       filterInputAutoFocus: true,
       fluid: true,
       placeholder: 'Select…',
-      scrollHeight: '400px',
+      scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
       variant: 'outlined'
     }
   };

@@ -15,5 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 export const CONFIG = {
-  MESSAGE_LIFE: 5000        // Message lifetime in ms
+  MESSAGE_LIFE: 5000,        // Message lifetime in ms
+  DEFAULT_SELECT_SCROLL_HEIGHT: '50vh'
 }

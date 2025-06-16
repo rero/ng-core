@@ -23,6 +23,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
 import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
+import { CONFIG } from '../../../../../utils/config';
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
@@ -134,7 +135,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
       group: false,
       placeholder: 'Select…',
       required: false,
-      scrollHeight: '250px',
+      scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
       sort: false,
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',

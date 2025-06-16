@@ -24,6 +24,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { SelectModule } from 'primeng/select';
 import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
+import { CONFIG } from '../../../../../utils/config';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
@@ -130,7 +131,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
       group: false,
       placeholder: 'Select…',
       required: false,
-      scrollHeight: '250px',
+      scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
       sort: false,
       tooltipPosition: 'top',
       tooltipPositionStyle: 'absolute',

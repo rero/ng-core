@@ -24,6 +24,7 @@ import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { RecordService } from '../../../record.service';
 import { TemplatesService } from '../../services/templates.service';
+import { CONFIG } from '../../../../utils/config';
 
 @Component({
     selector: 'ng-core-load-template-form',
@@ -64,7 +65,7 @@ export class LoadTemplateFormComponent implements OnInit {
         required: true,
         group: true,
         filter: true,
-        scrollHeight: '50vh',
+        scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
         options: [],
         attributes: {
           size: 10
