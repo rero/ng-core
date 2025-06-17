@@ -89,6 +89,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       filterBy: 'label',
       filterInputAutoFocus: true,
       fluid: true,
+      panelStyleClass: 'core:max-w-full',
       placeholder: 'Select…',
       scrollHeight: '400px',
       variant: 'outlined'
