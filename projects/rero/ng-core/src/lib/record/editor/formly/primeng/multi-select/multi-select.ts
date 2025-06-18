@@ -99,7 +99,12 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
           <div>{{ props.placeholder | translate }}</div>
         }
       </ng-template>
-            <ng-template let-group #group>
+      <ng-template let-item #item>
+        <span class="core:whitespace-normal">
+          {{item.label}}
+        </span>
+      </ng-template>
+      <ng-template let-group #group>
         @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
           <div class="core:py-2 core:font-bold">{{ group.label }}</div>
         } @else if (group.label === 'group-other') {

@@ -94,6 +94,11 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
       <ng-template let-selected #selectedItem>
         {{ selected.untranslatedLabel | translate }}
       </ng-template>
+      <ng-template let-item #item>
+        <span class="core:whitespace-normal">
+          {{item.label}}
+        </span>
+      </ng-template>
       <ng-template let-group #group>
         @if (group.untranslatedLabel !== 'group-preferred' && group.untranslatedLabel !== 'group-other') {
           <div class="core:py-2 core:font-bold">{{ group.label }}</div>

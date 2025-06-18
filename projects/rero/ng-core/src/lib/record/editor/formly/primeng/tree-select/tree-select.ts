@@ -70,7 +70,13 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       (onNodeSelect)="setFormValue($event)"
       (onNodeUnselect)="clearFormValue()"
       (onClear)="clearFormValue()"
-    />
+    >
+      <ng-template let-item #item>
+        <span class="core:whitespace-normal">
+          {{item.label}}
+        </span>
+      </ng-template>
+    </p-treeSelect>
   `,
     standalone: false
 })
