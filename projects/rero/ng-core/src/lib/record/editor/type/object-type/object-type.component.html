@@ -16,7 +16,13 @@
 -->
 <div [class]="props.containerCssClass">
   @for (f of field.fieldGroup; track f.id) {
-    <div [hidden]="f.hide" [class]="f.props.itemCssClass" [id]="'field-' + f.id">
+    <!-- the core:scroll-mt-18 class is added for sticky -->
+    <div
+      [hidden]="f.hide"
+      [class]="f.props.itemCssClass"
+      [ngClass]="{'core:scroll-mt-18': (props.isRoot && props.editorConfig?.longMode)}"
+      [id]="'field-' + f.id"
+    >
       <formly-field [field]="f" />
     </div>
   }
