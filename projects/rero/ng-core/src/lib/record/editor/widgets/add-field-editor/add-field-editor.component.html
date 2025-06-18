@@ -24,21 +24,21 @@
       [suggestions]="suggestions"
       (completeMethod)="search($event)"
       (onSelect)="onSelect($event)"
-      [disabled]="items.length < 1"
+      [disabled]="items().length < 1"
       scrollHeight="400px"
       appendTo="body"
     />
   </div>
 
-@if(essentialsOptions?.length > 0) {
+@if(essentialsOptions()?.length > 0) {
   <p-listbox
-    [options]="essentialsOptions"
+    [options]="essentialsOptions()"
     scrollHeight=""
     styleClass="core:mt-2"
     (onChange)="onAddField($event)"
   >
     <ng-template #item let-item>
-      {{ item.label | async }}
+      {{ item.props.label }}
     </ng-template>
   </p-listbox>
 }

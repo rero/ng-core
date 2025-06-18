@@ -1,4 +1,5 @@
 {
+  "Array": "Array",
   "search": "Eine Ressource suchen",
   "location": "Standort",
   "created year": "Erstellungsjahr",
@@ -53,5 +54,6 @@
   "Checkbox 4": "Checkbox 4",
   "Radio button 1": "Radio Knopf 1",
   "Radio button 2": "Radio Knopf 2",
-  "Radio button 3": "Radio Knopf 3"
+  "Radio button 3": "Radio Knopf 3",
+  "Password": "Passwort"
 }

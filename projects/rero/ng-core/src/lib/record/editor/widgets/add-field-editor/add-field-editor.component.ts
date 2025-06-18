@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,13 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, ElementRef, inject, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, computed, inject, Input, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { SelectChangeEvent } from 'primeng/select';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 /**
  * For big editor add the possibility to display
@@ -39,7 +39,7 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
 
   searchValue: string | undefined;
 
-  items: any[] = [];
+  items: WritableSignal<any[]> = signal([]);
 
   suggestions: any[] | undefined;
 
@@ -49,7 +49,8 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   // Subscriptions to observables.
   private subscriptions: Subscription = new Subscription();
 
-  essentialsOptions = [];
+  essentialsOptions = computed(() => this.items()
+          .filter(f => this.isFieldEssential(f)));
 
   @ViewChild("addField") autocomplete: AutoComplete;
 
@@ -62,18 +63,11 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
     this.editorComponentInstance = (this.editorComponent)();
 
     this.subscriptions.add(this.editorComponentInstance.hiddenFields$.pipe(
-      map((fields: any[]) => fields.sort(
-        (field1, field2) => field1.props.label.localeCompare(field2.props.label)
-      )),
-      tap((fields: any[]) => this.items = fields),
-      tap((fields: any[]) => {
-        this.essentialsOptions = fields
-          .filter(f => this.isFieldEssential(f))
-          .map((field: any) => {
-            return { label: this.translateService.stream(field.props.untranslatedLabel), value: field }
-          });
+      tap((fields: any) => this.fieldsTranslate(fields))
+    ).subscribe());
 
-      })
+    this.subscriptions.add(this.translateService.onLangChange.pipe(
+      tap(() => this.fieldsTranslate(this.items()))
     ).subscribe());
   }
 
@@ -83,8 +77,9 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   }
 
   search(event: AutoCompleteCompleteEvent): void {
-    this.suggestions = this.items.filter((item: any) =>
-      item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) === 0
+    this.suggestions = this.items().filter((item: any) => {
+      return item.props.label.toLowerCase().indexOf(event.query.toLowerCase()) > -1
+    }
     );
   }
 
@@ -94,20 +89,20 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Translate the label of a given formly field.
-   *
-   * @param field ngx-formly field
-   * @return the translated string
-   */
-  translateLabel(field: FormlyFieldConfig): Observable<string | any> {
-    return this.translateService.stream(field.props.untranslatedLabel);
-  }
-
-  /**
    * Filter fields to display only essential ones
    * @param field - field to check
    */
   isFieldEssential(field: FormlyFieldConfig) {
-    return field.props.navigation && field.props.navigation.essential === true;
+    return field.props?.navigation && field.props.navigation.essential === true;
+  }
+
+  fieldsTranslate(fields: any) {
+    this.items.set(
+      fields
+        .map((field: any) =>  {
+          field.props.label = this.translateService.instant(field.props.untranslatedLabel);
+          return field;
+        })
+        .sort((field1, field2) => field1.props.label.localeCompare(field2.props.label)))
   }
 }

@@ -1,4 +1,5 @@
 {
+  "Array": "Tableau",
   "Always hidden": "Toujours caché",
   "Hidden": "Caché",
   "Default hidden": "Caché par défaut",
@@ -69,5 +70,6 @@
   "Checkbox 4": "Case à cocher 4",
   "Radio button 1": "Bouton radio 1",
   "Radio button 2": "Bouton radio 2",
-  "Radio button 3": "Bouton radio 3"
+  "Radio button 3": "Bouton radio 3",
+  "Password": "Mot de passe"
 }

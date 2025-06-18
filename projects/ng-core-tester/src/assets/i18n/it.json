@@ -1,4 +1,5 @@
 {
+  "Array": "Tabella",
   "search": "Ricerca di una risorsa",
   "location": "Localizzazione",
   "created year": "Anno di creazione",
@@ -53,5 +54,6 @@
   "Checkbox 4": "Casella 4",
   "Radio button 1": "Pulsante radio 1",
   "Radio button 2": "Pulsante radio 2",
-  "Radio button 3": "Pulsante radio 3"
+  "Radio button 3": "Pulsante radio 3",
+  "Password": "Password"
 }
