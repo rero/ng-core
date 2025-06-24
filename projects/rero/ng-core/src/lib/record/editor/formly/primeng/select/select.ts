@@ -118,6 +118,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {
     props: {
+      disabled: false,
       editable: false,
       filterMatchMode: 'contains',
       fluid: true,
@@ -136,6 +137,9 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   ngOnInit(): void {
     const optionsObs = this.props.options;
     const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
+    if (this.field.props?.disabled) {
+      this.formControl.disable();
+    }
     this.optionValues$ = merge(...[optionsObs, changeObs])
     .pipe(
       tap((options) => {
