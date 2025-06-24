@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,12 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
-import { IDateTimePickerProps, NgCoreFormlyDatePickerModule } from './date-picker';
+import { DatePickerComponent, IDateTimePickerProps, NgCoreFormlyDatePickerModule } from './date-picker';
+import { TestBed } from '@angular/core/testing';
+import { DatePickerModule } from 'primeng/datepicker';
 
 const renderComponent = (field: FormlyFieldConfig<IDateTimePickerProps>) => {
   return createFieldComponent(field, {
@@ -40,26 +42,21 @@ const renderComponent = (field: FormlyFieldConfig<IDateTimePickerProps>) => {
 describe('DatePickerComponent', () => {
   it('should create', () => {
     const { query } = renderComponent({
-      key: 'name',
+      key: 'date',
       type: 'datePicker',
       props: {
         appendTo: 'body',
         clearButtonStyleClass: 'p-button-text',
-        dataType: 'string',
         dateFormat: 'yy-mm-dd',
         disabled: false,
         firstDayOfWeek: 0,
         fluid: true,
         inline: false,
         numberOfMonths: 1,
-        outputDateFormat: 'yyyy-MM-dd',
         panelStyleClass: '',
         required: false,
-        selectionMode: 'single',
         showButtonBar: false,
         showIcon: false,
-        showSeconds: false,
-        showTime: false,
         stepHour: 1,
         stepMinute: 1,
         stepSecond: 1,
@@ -71,5 +68,25 @@ describe('DatePickerComponent', () => {
 
     const element = query('p-datepicker');
     expect(element).not.toBeNull();
+  });
+
+  it('should return the correct output format', async () => {
+    await TestBed.configureTestingModule({
+      declarations: [DatePickerComponent],
+      imports: [DatePickerModule, FormlyModule, FormsModule, ReactiveFormsModule]
+    }).compileComponents();
+    const date = '1996-06-25';
+    const fixture = TestBed.createComponent(DatePickerComponent);
+    fixture.componentInstance.field = {
+      props: {
+        dateFormat: 'dd.mm.yy'
+      },
+      formControl: new FormControl()
+    };
+    fixture.detectChanges();
+    expect(fixture.componentInstance.field?.formControl?.value).toBeNull();
+    fixture.componentInstance.value.set(new Date(date));
+    fixture.detectChanges();
+    expect(fixture.componentInstance.field?.formControl?.value).toEqual(date);
   });
 });

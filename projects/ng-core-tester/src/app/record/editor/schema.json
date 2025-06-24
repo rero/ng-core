@@ -41,9 +41,8 @@
     "markdown",
     "textarea",
     "email",
-    "date_time",
-    "date_only",
-    "date_range",
+    "datePicker",
+    "datePicker_calendar",
     "password",
     "array_with_multicheckbox_inline",
     "array_with_multicheckbox_stacked",
@@ -1217,27 +1216,7 @@
         }
       }
     },
-    "date_time": {
-      "title": "Date Time picker",
-      "type": "string",
-      "format": "datetime-local",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01]) [012][0-9]:[0-5][0-9]$",
-      "widget": {
-        "formlyConfig": {
-          "type": "dateTimePicker",
-          "props": {
-            "dataType": "string",
-            "showTime": true,
-            "validation": {
-              "messages": {
-                "patternMessage": "Should be in the following format: 2022-12-31 13:01 (YYYY-MM-DD hh:mm)."
-              }
-            }
-          }
-        }
-      }
-    },
-    "date_only": {
+    "datePicker": {
       "title": "Date picker",
       "type": "string",
       "format": "date",
@@ -1246,12 +1225,8 @@
         "formlyConfig": {
           "type": "datePicker",
           "props": {
+            "dateFormat": "dd.mm.yy",
             "placement": "top",
-            "validation": {
-              "messages": {
-                "patternMessage": "Should be in the following format: 2022-12-31 (YYYY-MM-DD)."
-              }
-            },
             "disabledDates": [
               "2024-08-10",
               "2024-08-12"
@@ -1260,16 +1235,22 @@
         }
       }
     },
-    "date_range": {
-      "title": "Date picker range",
+    "datePicker_calendar": {
+      "title": "Date picker with calendar icon click",
       "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$",
       "widget": {
         "formlyConfig": {
           "type": "datePicker",
           "props": {
-            "selectionMode": "range",
-            "numberOfMonths": 2,
-            "showButtonBar": true
+            "showOnFocus": false,
+            "dateFormat": "dd.mm.yy",
+            "placement": "top",
+            "disabledDates": [
+              "2024-08-10",
+              "2024-08-12"
+            ]
           }
         }
       }
