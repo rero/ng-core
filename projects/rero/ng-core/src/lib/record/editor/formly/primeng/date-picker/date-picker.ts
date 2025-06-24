@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2024 RERO
+ * Copyright (C) 2024-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,41 +15,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, NgModule, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, model, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
+import { DateTime } from "luxon";
 import { DatePickerModule } from 'primeng/datepicker';
+import { Subscription } from 'rxjs';
 
 // Calendar options: https://primeng.org/calendar
 export interface IDateTimePickerProps extends FormlyFieldProps {
-  appendTo: string;
-  clearButtonStyleClass: string;
-  dataType: 'date' | 'string';
+  appendTo?: string;
+  clearButtonStyleClass?: string;
   dateFormat?: string;
   defaultDate?: Date;
   disabledDates?: Date[];
   disabledDays?: number[];
   firstDayOfWeek?: number;
-  fluid: boolean;
+  fluid?: boolean;
   hourFormat?: string;
-  inline: boolean;
+  inline?: boolean;
   inputStyleClass?: string;
-  outputDateFormat: string;
   maxDate?: Date;
   minDate?: Date;
-  numberOfMonths: number;
-  panelStyleClass: string;
+  numberOfMonths?: number;
+  panelStyleClass?: string;
   readonlyInput?: boolean;
-  selectionMode: 'multiple' | 'range' | 'single';
-  showButtonBar: boolean;
-  showIcon: boolean;
-  showSeconds: boolean;
-  showTime?: boolean;
-  stepHour: number;
-  stepMinute: number;
-  stepSecond: number;
+  showButtonBar?: boolean;
+  showIcon?: boolean;
+  showOnFocus?: boolean;
+  stepHour?: number;
+  stepMinute?: number;
+  stepSecond?: number;
   styleClass?: string;
-  todayButtonStyleClass: string;
+  todayButtonStyleClass?: string;
   view?: 'date' | 'month' | 'year';
 }
 
@@ -57,11 +55,10 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
     selector: 'ng-core-date-picker',
     template: `
     <p-datepicker
-      [appendTo]="props.appendTo"
-      [formControl]="formControl"
+      [(ngModel)]="value"
       [formlyAttributes]="field"
+      [appendTo]="props.appendTo"
       [clearButtonStyleClass]="props.clearButtonStyleClass"
-      [dataType]="props.dataType"
       [dateFormat]="props.dateFormat"
       [defaultDate]="props.defaultDate"
       [disabledDates]="disabledDates"
@@ -76,13 +73,12 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [numberOfMonths]="props.numberOfMonths"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder"
-      [readonlyInput]="props.readonlyInput || props.selectionMode !== 'single'"
+      [readonlyInput]="props.readonlyInput"
       [required]="props.required"
-      [selectionMode]="props.selectionMode"
+      selectionMode="single"
       [showButtonBar]="props.showButtonBar"
       [showIcon]="props.showIcon"
-      [showSeconds]="props.showSeconds"
-      [showTime]="props.showTime"
+      [showOnFocus]="props.showOnFocus"
       [stepHour]="props.stepHour"
       [stepMinute]="props.stepMinute"
       [stepSecond]="props.stepSecond"
@@ -94,30 +90,30 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: false
 })
-export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePickerProps>> implements OnInit {
+export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePickerProps>> implements OnInit, OnDestroy {
 
   protected locale = inject(LOCALE_ID);
+
+  value = model<Date>();
+
+  private subscription: Subscription = new Subscription();
 
   defaultOptions: Partial<FormlyFieldConfig<IDateTimePickerProps>> = {
     props: {
       appendTo: 'body',
       clearButtonStyleClass: 'p-button-text',
-      dataType: 'string',
       dateFormat: 'yy-mm-dd',
       disabled: false,
       firstDayOfWeek: 0,
       fluid: true,
       inline: false,
       numberOfMonths: 1,
-      outputDateFormat: 'yyyy-MM-dd',
       panelStyleClass: 'core:!min-w-0',
       placeholder: 'Select…',
       required: false,
-      selectionMode: 'single',
       showButtonBar: false,
-      showIcon: false,
-      showSeconds: false,
-      showTime: false,
+      showIcon: true,
+      showOnFocus: true,
       stepHour: 1,
       stepMinute: 1,
       stepSecond: 1,
@@ -126,12 +122,24 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     },
   };
 
-  defaultDate: Date = undefined;
-  disabledDates: Date[] = undefined;
-  maxDate: Date = undefined;
-  minDate: Date = undefined;
+  defaultDate?: Date = undefined;
+  disabledDates?: Date[] = undefined;
+  maxDate?: Date = undefined;
+  minDate?: Date = undefined;
 
   ngOnInit(): void {
+    this.subscription.add(this.formControl.valueChanges.subscribe((value) => {
+      const date = new Date(value);
+      if (this.value() !== date) {
+        this.value.set(date)
+      }
+    }));
+
+    let { value } = this.formControl;
+    if (value) {
+      this.value.set(new Date(value));
+    }
+
     if (!this.formControl.value && this.props.defaultDate) {
       this.defaultDate = this.processDate(this.props.defaultDate);
     }
@@ -144,10 +152,29 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     if (this.props.maxDate) {
       this.maxDate = this.processDate(this.props.maxDate);
     }
+
+    this.subscription.add(this.value.subscribe((value: any) => {
+      if (value) {
+        const convertedDate = this.outputDate(value);
+        if (convertedDate !== this.formControl.value) {
+          this.formControl.patchValue(convertedDate);
+        }
+      }
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   private processDate(date: string | Date ): Date {
     return date instanceof Date ? date : new Date(date);
+  }
+
+  private outputDate(value: string|Date): string {
+    return DateTime
+      .fromJSDate(this.processDate(value))
+      .toFormat('yyyy-MM-dd');
   }
 }
 
