@@ -77,6 +77,9 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
 
 @Component({
     selector: 'ng-core-editor-field-password-generator',
+    styles: `
+      p-inputGroupAddon { padding: 0 !important }
+    `,
     template: `
   <p-inputGroup>
     <input
@@ -90,20 +93,20 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       [readonly]="props.readonly"
       [class]="props.class ? props.class : props.readonly ? 'core:!bg-surface-200' : ''"
     />
-    <p-inputGroupAddon>
-      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="onClick()">
-        <i class="fa fa-repeat" title="{{ 'Generate a new password' | translate }}"></i>
+    <p-inputGroupAddon class="core:flex">
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:grow core:cursor-pointer core:hover:bg-emphasis" (click)="onClick()">
+        <i class="fa fa-repeat" [title]="'Generate a new password' | translate"></i>
       </div>
     </p-inputGroupAddon>
     <p-inputGroupAddon>
-      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="showHidePassword()">
-        <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" title="{{ 'Show or hide password' | translate }}"></i>
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:grow core:cursor-pointer core:hover:bg-emphasis" (click)="showHidePassword()">
+        <i class="fa" [ngClass]="{'fa-eye': type === 'password', 'fa-eye-slash': type === 'text'}" [title]="'Show or hide password' | translate"></i>
       </div>
     </p-inputGroupAddon>
     @if (props.enabledEditMode) {
     <p-inputGroupAddon>
-      <div class="core:flex core:justify-center core:items-center core:min-h-full core:cursor-pointer core:hover:bg-emphasis" (click)="onEdit()">
-        <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" title="{{ 'Edit mode' | translate }}"></i>
+      <div class="core:flex core:justify-center core:items-center core:min-h-full core:grow core:cursor-pointer core:hover:bg-emphasis" (click)="onEdit()">
+        <i class="fa" [ngClass]="{'fa-lock': props.readonly, 'fa-unlock-alt': !props.readonly}" [title]="'Edit mode' | translate"></i>
       </div>
     </p-inputGroupAddon>
     }
