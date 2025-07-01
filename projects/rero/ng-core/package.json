@@ -19,18 +19,18 @@
   "peerDependencies": {
     "@angular/common": "^19.2",
     "@angular/core": "^19.2",
-    "@ngx-formly/primeng": "^7.0.0-alpha.1",
-    "@ngx-formly/core": "^7.0.0-alpha.1",
+    "@ngx-formly/primeng": "^7.0.0",
+    "@ngx-formly/core": "^7.0.0",
     "@ngx-translate/core": "^16.0.0",
     "crypto-js": "^4.2.0",
-    "easymde": "^2.19.0",
+    "easymde": "^2.20.0",
     "font-awesome": "^4.7.0",
-    "js-generate-password": "^0.1",
-    "luxon": "^3.5.0",
-    "marked": "^15.0.0",
+    "generate-password-lite": "^1.0.2",
+    "luxon": "^3.6.0",
+    "marked": "^16.0.0",
     "ngx-spinner": "^19.0.0",
     "primelocale": "^2.1.2",
-    "primeng": "^19.0.8"
+    "primeng": "^19.1.0"
   },
   "publishConfig": {
     "access": "public"

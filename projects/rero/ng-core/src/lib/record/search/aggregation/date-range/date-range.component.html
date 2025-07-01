@@ -34,8 +34,8 @@
   </ng-template>
 </p-datepicker>
 <div class="core:flex core:justify-end core:mt-2 core:gap-2">
-  <p-button size="small" [label]="'Apply' | translate" outlined (onClick)="updateFilter()" />
   @if (hasQueryParam) {
-    <p-button size="small" class="core:ml-1" [label]="'Clear filter' | translate" outlined (onClick)="clearFilter()" />
+    <p-button size="small" [label]="'Clear' | translate" [outlined]="true" (onClick)="clearFilter()" />
   }
+  <p-button size="small" [label]="'Apply' | translate" [outlined]="true" (onClick)="updateFilter()" />
 </div>

@@ -19,7 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, Signal, viewChild } from '@angular/core';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
-import { GeneratePassword } from "js-generate-password";
+import { GeneratePassword } from "generate-password-lite";
 import { Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
