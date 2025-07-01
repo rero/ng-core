@@ -24,7 +24,6 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { of } from 'rxjs';
 import { CoreConfigService } from './core-config.service';
 import { DialogComponent } from './dialog/dialog.component';
-import { NgVarDirective } from './directives/ng-var.directive';
 import { ErrorComponent } from './error/error.component';
 import { ComponentCanDeactivateGuard } from './guard/component-can-deactivate.guard';
 import { CallbackArrayFilterPipe } from './pipe/callback-array-filter.pipe';
@@ -59,7 +58,6 @@ import { NgCoreTranslateService } from './translate/translate-service';
         SortByKeysPipe,
         ErrorComponent,
         FilesizePipe,
-        NgVarDirective,
         MarkdownPipe,
         SanitizePipe
     ],
@@ -94,7 +92,6 @@ import { NgCoreTranslateService } from './translate/translate-service';
         ErrorComponent,
         SortByKeysPipe,
         NgxSpinnerModule,
-        NgVarDirective,
         MarkdownPipe,
         SanitizePipe
     ],
