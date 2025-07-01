@@ -19,7 +19,6 @@ export * from './lib/component/abstract-can-deactivate.component';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
 export * from './lib/dialog/dialog.component';
-export * from './lib/directives/ng-var.directive';
 export * from './lib/error/error';
 export * from './lib/error/error.component';
 export * from './lib/guard/component-can-deactivate.guard';
