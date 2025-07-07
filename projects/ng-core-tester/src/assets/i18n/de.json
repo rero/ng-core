@@ -55,5 +55,9 @@
   "Radio button 1": "Radio Knopf 1",
   "Radio button 2": "Radio Knopf 2",
   "Radio button 3": "Radio Knopf 3",
-  "Password": "Passwort"
+  "Password": "Passwort",
+  "Date descending": "Datum absteigend",
+  "Date ascending": "Datum aufsteigend",
+  "Relevance": "Relevanz",
+  "Title": "Titel"
 }

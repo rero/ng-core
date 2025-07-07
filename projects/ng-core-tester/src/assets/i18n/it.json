@@ -55,5 +55,9 @@
   "Radio button 1": "Pulsante radio 1",
   "Radio button 2": "Pulsante radio 2",
   "Radio button 3": "Pulsante radio 3",
-  "Password": "Password"
+  "Password": "Password",
+  "Date descending": "Data decrescente",
+  "Date ascending": "Data ascendente",
+  "Relevance": "Rilevanza",
+  "Title": "Titolo"
 }
