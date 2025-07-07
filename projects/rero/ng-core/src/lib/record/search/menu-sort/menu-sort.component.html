@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 @if (options().length > 0) {
+  {{ options() | json }}
 <p-menu #menu [model]="options()" [popup]="true" />
 <p-button severity="secondary" outlined (onClick)="menu.toggle($event)">
   <div class="core:flex core:gap-4 core:items-center">

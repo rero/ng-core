@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022-2024 RERO
+ * Copyright (C) 2022-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, computed, inject, input, output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
@@ -33,23 +34,24 @@ export class MenuSortComponent {
   config = input.required<MenuItem[]>();
   selectedValue = input<string>();
 
+  language = toSignal(this.translateService.onLangChange);
+
   selectedOption = computed(() => this.config().find((conf: MenuItem) => conf.value === this.selectedValue()));
-  options = computed(() => this.sortOptions());
+  options = computed(() => { this.language(); return this.sortOptions()});
 
   /** Change event */
   onChange = output<string>();
 
   /** Return the sort options from config. */
   sortOptions(): MenuItem[] {
-    return (this.config())
-      ? this.config()
-          .map((option: MenuItem) => {
-            option.label = this.translateService.instant(option.label);
-            option.command = (event: MenuItemCommandEvent) => this.onChange.emit(event.item.value);
-            return option;
-          })
-          .sort((a: MenuItem, b: MenuItem) => a.label.localeCompare(b.label))
-      : [];
-  }
+    const translations = [];
+    this.config().map((option: MenuItem) => {
+      const newOption = { ...option };
+      newOption.label = this.translateService.instant(option.label);
+      newOption.command = (event: MenuItemCommandEvent) => this.onChange.emit(event.item.value);
+      translations.push(newOption);
+    });
 
+    return translations.sort((a: MenuItem, b: MenuItem) => a.label.localeCompare(b.label));
+  }
 }

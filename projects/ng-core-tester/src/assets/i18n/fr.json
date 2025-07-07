@@ -71,5 +71,9 @@
   "Radio button 1": "Bouton radio 1",
   "Radio button 2": "Bouton radio 2",
   "Radio button 3": "Bouton radio 3",
-  "Password": "Mot de passe"
+  "Password": "Mot de passe",
+  "Date descending": "Date décroissante",
+  "Date ascending": "Date croissante",
+  "Relevance": "Pertinence",
+  "Title": "Titre"
 }
