@@ -17,7 +17,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MenuSortComponent } from './menu-sort.component';
 import { SelectModule } from 'primeng/select';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ComponentRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,7 @@ describe('MenuSortComponent', () => {
   let component: MenuSortComponent;
   let componentRef: ComponentRef<MenuSortComponent>;
   let fixture: ComponentFixture<MenuSortComponent>;
+  let translateService: TranslateService;
 
   const MenuItems: MenuItem[] = [
     { label: "Pertinence", value: "pertinence" }
@@ -57,12 +58,22 @@ describe('MenuSortComponent', () => {
         ButtonModule
       ],
       providers: [
+        TranslateService,
         { provide: ActivatedRoute, useValue: activatedRouteMock },
       ]
     })
     .compileComponents();
 
+    translateService = TestBed.inject(TranslateService);
+    translateService.use('en');
+    translateService.setTranslation('fr', {
+      'Date start': "Date de début",
+      "Date end": "Date de fin",
+      "Available": "Disponibilité"
+    });
+
     fixture = TestBed.createComponent(MenuSortComponent);
+
     component = fixture.componentInstance;
     componentRef = fixture.componentRef;
     componentRef.setInput('config', MenuItems);
@@ -104,4 +115,18 @@ describe('MenuSortComponent', () => {
     expect(component.options()[1].value).toEqual('date_end');
     expect(component.options()[2].value).toEqual('date_start');
   });
+
+  it('should translate labels to language change', () => {
+    componentRef.setInput('config', MenuItemsOrder);
+    fixture.detectChanges();
+    // English (default)
+    expect(component.options()[0].label).toEqual('Available');
+    expect(component.options()[1].label).toEqual('Date end');
+    expect(component.options()[2].label).toEqual('Date start');
+    // French after switch language
+    translateService.use('fr');
+    expect(component.options()[0].label).toEqual('Date de début');
+    expect(component.options()[1].label).toEqual('Date de fin');
+    expect(component.options()[2].label).toEqual('Disponibilité');
+  })
 });
