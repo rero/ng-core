@@ -130,7 +130,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   }
 
   search(event: KeyboardEvent) {
-    if(event?.code === 'Enter') {
+    if(event?.key === 'Enter') {
       this.onSearch.emit(this.currentValue);
     }
   }
