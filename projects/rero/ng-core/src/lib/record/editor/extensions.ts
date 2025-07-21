@@ -29,7 +29,7 @@ export class NgCoreFormlyExtension {
   protected recordService: RecordService = inject(RecordService);
 
   // Types to apply field wrapper on
-  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator'];
+  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator', 'radioButton', 'textarea'];
 
   /**
    * prePopulate Formly hook
@@ -99,11 +99,6 @@ export class NgCoreFormlyExtension {
     // adds form-fields for non standard field types
     if (this._fieldWrapperTypes.some((elem) => elem === field.type) && !field.wrappers.includes('card')) {
       field.wrappers = [...(field.wrappers || []), 'form-field'];
-    }
-
-    // The form-field and the card must not be together
-    if (field.wrappers.includes('card')) {
-      field.wrappers = field.wrappers.filter((value: string) => value != 'form-field');
     }
 
     // TODO: this can be fixed in a future formly release

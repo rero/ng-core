@@ -14,6 +14,11 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+@if (showError) {
+  <div class="text-error core:my-2">
+    <formly-validation-message [field]="field"/>
+  </div>
+}
 <div [class]="props.containerCssClass">
   @for (f of field.fieldGroup; track f.id) {
     <!-- the core:scroll-mt-18 class is added for sticky -->
