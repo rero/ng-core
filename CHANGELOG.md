@@ -1,5 +1,18 @@
 # Changelog
 
+## [v19.1.1](https://github.com/rero/ng-core/tree/v19.1.1) (2025-07-22)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.1.0...v19.1.1)
+
+**Fixes:**
+* fix(editor): scroll [\#734](https://github.com/rero/ng-core/pull/734) (by @Garfield-fr)
+* fix(editor): don't remove form field wrapper [\#732](https://github.com/rero/ng-core/pull/732) (by @Garfield-fr)
+* fix(sort): remove testing data [\#730](https://github.com/rero/ng-core/pull/730) (by @PascalRepond)
+* fix: menu sort translation [\#728](https://github.com/rero/ng-core/pull/728) (by @Garfield-fr)
+* fix(search): allow launching a search also with numpad "Enter" [\#729](https://github.com/rero/ng-core/pull/729) (by @PascalRepond)
+* fix(select): translate default placeholder [\#726](https://github.com/rero/ng-core/pull/726) (by @PascalRepond)
+* fix(search): fix query when using a search field [\#707](https://github.com/rero/ng-core/pull/707) (by @jma)
+
 ## [v19.1.0](https://github.com/rero/ng-core/tree/v19.1.0) (2025-06-26)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.0.1...v19.1.0)
