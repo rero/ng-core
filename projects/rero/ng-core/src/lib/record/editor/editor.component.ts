@@ -740,14 +740,14 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Hide the given formly field.
    * @param field - FormlyFieldConfig, the field to hide
    */
-  setHide(field: FormlyFieldConfig, value: boolean): void {
+  setHide(field: FormlyFieldConfig, value: boolean, scroll: boolean = false): void {
     if (value) {
       if (field.parent.props.isRoot) {
         this.addHiddenField(field);
       }
     } else {
       this.removeHiddenField(field);
-      this.setFieldFocus(field, true);
+      this.setFieldFocus(field, scroll);
     }
     field.hide = value;
   }

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2022 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 /**
@@ -31,15 +31,4 @@ export class DropdownLabelEditorComponent {
 
   // can we add a new element to the related array
   @Input() canAdd: boolean;
-
-  // event when the add button is clicked
-  @Output() addClicked = new EventEmitter<boolean>();
-
-  /**
-   * Emit a new Output event when the add button is clicked
-   * @param event - Event, the click event.
-   */
-  addClick(event: any): void {
-    this.addClicked.emit(event);
-  }
 }

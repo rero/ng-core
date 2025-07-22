@@ -55,7 +55,7 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   @ViewChild("addField") autocomplete: AutoComplete;
 
   onAddField(event: SelectChangeEvent): void {
-    this.editorComponentInstance.setHide(event.value, false);
+    this.editorComponentInstance.setHide(event.value, false, true);
   }
 
   /** onInit hook */
