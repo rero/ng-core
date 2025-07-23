@@ -62,7 +62,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [fluid]="props.fluid"
       [formlyAttributes]="field"
       [ngModel]="nodeSelected"
-      [options]="optionValues$|async"
+      [options]="optionValues"
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder | translate"
@@ -106,6 +106,8 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
 
   optionValues$: Observable<any[]>;
 
+  optionValues: TreeNode[] = [];
+
   ngOnInit(): void {
     const optionsObs = this.props.options;
     const changeObs = this.translateService.onLangChange.pipe(switchMap(() => this.optionValues$));
@@ -119,6 +121,12 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
         return this.translateLabelService.translateLabel(options);
       }),
     );
+    this.subscription.add(this.optionValues$.subscribe((options: TreeNode[]) => {
+      this.optionValues = options;
+      if (this.field.formControl?.value) {
+        this.nodeSelected = this.findNodeByValue(options, this.field.formControl?.value);
+      }
+    }));
   }
 
   /**
