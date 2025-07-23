@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022-2024 RERO
+ * Copyright (C) 2022-2025 RERO
  * Copyright (C) 2022 UCLouvain
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,20 +33,20 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { BehaviorSubject, Observable, Subscription, isObservable, of } from 'rxjs';
+import { MenuItem } from 'primeng/api';
+import { ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
+import { BehaviorSubject, isObservable, Observable, of, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
 import { ActionStatus } from '../action-status';
+import { JSONSchema7 } from '../editor/utils';
 import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
-import { AggregationsFilter, RecordSearchService } from './record-search.service';
 import { ChangeEvent } from './paginator/paginator.component';
+import { AggregationsFilter, RecordSearchService } from './record-search.service';
 import { IChecked } from './search-filters/search-filters.component';
-import { SelectChangeEvent } from 'primeng/select';
-import { MenuItem } from 'primeng/api';
-import { JSONSchema7 } from '../editor/utils';
 
 export interface SearchParams {
   currentType: string;
@@ -725,12 +725,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  searchInField(event: SelectChangeEvent): void {
+  searchInField(event: ToggleSwitchChangeEvent, path: string): void {
     this.searchFields = this.searchFields.map((item: SearchField) => {
-      if (item.path === event?.value) {
-        item.selected = true;
-      } else {
-        item.selected = false;
+      if (item.path ===path) {
+        item.selected = event.checked;
       }
       return item;
     });
