@@ -68,6 +68,7 @@ export interface FormlyTreeSelectFieldConfig extends FormlyFieldConfig<ITreeSele
       [placeholder]="props.placeholder | translate"
       [showClear]="!props.required"
       [variant]="props.variant"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
       (onNodeSelect)="setFormValue($event)"
       (onNodeUnselect)="clearFormValue()"
       (onClear)="clearFormValue()"

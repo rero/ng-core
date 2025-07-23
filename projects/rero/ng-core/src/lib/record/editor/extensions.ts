@@ -29,7 +29,15 @@ export class NgCoreFormlyExtension {
   protected recordService: RecordService = inject(RecordService);
 
   // Types to apply field wrapper on
-  private _fieldWrapperTypes = ['boolean', 'datepicker', 'passwordGenerator', 'radioButton', 'textarea'];
+  private _fieldWrapperTypes = [
+    'boolean',
+    'datepicker',
+    'markdown',
+    'passwordGenerator',
+    'radioButton',
+    'remoteAutoComplete',
+    'textarea'
+  ];
 
   /**
    * prePopulate Formly hook

@@ -92,6 +92,7 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       (change)="onChange($event.target.value)"
       [readonly]="props.readonly"
       [class]="props.class ? props.class : props.readonly ? 'core:!bg-surface-200' : ''"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
     />
     <p-inputGroupAddon class="core:flex">
       <div class="core:flex core:justify-center core:items-center core:min-h-full core:grow core:cursor-pointer core:hover:bg-emphasis" (click)="onClick()">

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2021-2024 RERO
+ * Copyright (C) 2021-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -40,7 +40,9 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
 @Component({
     selector: 'ng-core-editor-formly-field-markdown',
     template: `
+    <div style="padding-inline: 0; padding-block: 0" [ngClass]="{ 'p-inputtext ng-invalid ng-dirty': showError }">
       <textarea pTextarea #textarea></textarea>
+    </div>
   `,
     standalone: false
 })

@@ -46,7 +46,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   selector: 'ng-core-remote-autocomplete',
   standalone: false,
   template: `
-  <div class="core:flex core:gap-1">
+  <div style="padding-inline: 0; padding-block: 0" class="core:flex core:gap-1" [ngClass]="{ 'p-inputtext ng-invalid ng-dirty': showError }">
     @if (!field.formControl.value) {
       @if (props.filters?.options) {
         <p-select
