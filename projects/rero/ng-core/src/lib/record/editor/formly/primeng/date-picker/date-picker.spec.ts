@@ -15,14 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
-import { DatePickerComponent, IDateTimePickerProps, NgCoreFormlyDatePickerModule } from './date-picker';
-import { TestBed } from '@angular/core/testing';
-import { DatePickerModule } from 'primeng/datepicker';
+import { IDateTimePickerProps, NgCoreFormlyDatePickerModule } from './date-picker';
 
 const renderComponent = (field: FormlyFieldConfig<IDateTimePickerProps>) => {
   return createFieldComponent(field, {
@@ -70,23 +68,37 @@ describe('DatePickerComponent', () => {
     expect(element).not.toBeNull();
   });
 
-  it('should return the correct output format', async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DatePickerComponent],
-      imports: [DatePickerModule, FormlyModule, FormsModule, ReactiveFormsModule]
-    }).compileComponents();
-    const date = '1996-06-25';
-    const fixture = TestBed.createComponent(DatePickerComponent);
-    fixture.componentInstance.field = {
+  it('should return the correct output format', () => {
+    const { fixture, field } = renderComponent({
+      key: 'date',
+      type: 'datePicker',
       props: {
-        dateFormat: 'dd.mm.yy'
-      },
-      formControl: new FormControl()
-    };
+        appendTo: 'body',
+        clearButtonStyleClass: 'p-button-text',
+        dateFormat: 'dd.mm.yy',
+        disabled: false,
+        firstDayOfWeek: 0,
+        fluid: true,
+        inline: false,
+        numberOfMonths: 1,
+        panelStyleClass: '',
+        required: false,
+        showButtonBar: false,
+        showIcon: false,
+        stepHour: 1,
+        stepMinute: 1,
+        stepSecond: 1,
+        styleClass: '',
+        todayButtonStyleClass: 'p-button-text',
+        view: 'date'
+      }
+    });
     fixture.detectChanges();
-    expect(fixture.componentInstance.field?.formControl?.value).toBeNull();
-    fixture.componentInstance.value.set(new Date(date));
+    expect(field?.formControl?.value).toBeUndefined();
+
+    const date = '1996-06-25';
+    field.formControl?.setValue(new Date(date));
     fixture.detectChanges();
-    expect(fixture.componentInstance.field?.formControl?.value).toEqual(date);
+    expect(field?.formControl?.value).toEqual(date);
   });
 });

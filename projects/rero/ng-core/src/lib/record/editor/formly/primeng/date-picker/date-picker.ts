@@ -85,6 +85,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [styleClass]="props.styleClass"
       [todayButtonStyleClass]="props.todayButtonStyleClass"
       [view]="props.view"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
     />
   `,
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -37,6 +37,7 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
       class="core:w-full"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
+      [ngClass]="{ 'ng-invalid ng-dirty': showError }"
     ></textarea>
     @if (field.props.limitWords || field.props.displayWords) {
       <ng-container
