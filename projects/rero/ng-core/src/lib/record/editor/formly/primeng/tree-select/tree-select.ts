@@ -126,6 +126,15 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
       this.optionValues = options;
       if (this.field.formControl?.value) {
         this.nodeSelected = this.findNodeByValue(options, this.field.formControl?.value);
+      } else {
+        this.nodeSelected = null;
+      }
+    }));
+    this.subscription.add(this.field.formControl?.valueChanges.subscribe((value) => {
+      if (value) {
+        this.nodeSelected = this.findNodeByValue(this.optionValues, value);
+      } else {
+        this.nodeSelected = null;
       }
     }));
   }
