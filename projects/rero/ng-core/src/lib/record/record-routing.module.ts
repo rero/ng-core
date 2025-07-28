@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,16 +15,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ResolveFn, RouterModule, Routes } from '@angular/router';
 import { DetailComponent } from './detail/detail.component';
 import { EditorComponent } from './editor/editor.component';
 import { RecordSearchPageComponent } from './search/record-search-page.component';
 
+export const typeResolver: ResolveFn<string> = (route) => {
+  return route.params["type"];
+};
+
 const routes: Routes = [
-  { path: ':type', component: RecordSearchPageComponent },
-  { path: ':type/detail/:pid', component: DetailComponent },
-  { path: ':type/edit/:pid', component: EditorComponent },
-  { path: ':type/new', component: EditorComponent }
+  {
+    path: ':type',
+    title: typeResolver,
+    component: RecordSearchPageComponent
+  },
+  {
+    path: ':type/detail/:pid',
+    title: typeResolver,
+    component: DetailComponent
+  },
+  {
+    path: ':type/edit/:pid',
+    component: EditorComponent
+  },
+  {
+    path: ':type/new',
+    title: typeResolver,
+    component: EditorComponent
+  }
 ];
 
 @NgModule({

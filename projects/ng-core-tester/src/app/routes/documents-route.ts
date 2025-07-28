@@ -1,7 +1,7 @@
 
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,18 +15,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import {
   ActionStatus,
+  EditorComponent, JSONSchema7,
   DetailComponent as RecordDetailComponent,
-  EditorComponent, JSONSchema7, RecordSearchPageComponent,
-  RouteInterface
+  RecordSearchPageComponent,
+  RouteInterface,
+  capitalize
 } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';
-import { inject } from '@angular/core';
+
+export const titleResolver: ResolveFn<string> = (route) => {
+  return capitalize(route.params["type"]);
+};
 
 /**
  * Routes for document resources
@@ -47,10 +54,10 @@ export class DocumentsRoute implements RouteInterface {
     return {
       path: 'record/search',
       children: [
-        { path: ':type', component: RecordSearchPageComponent },
-        { path: ':type/new', component: EditorComponent },
-        { path: ':type/edit/:pid', component: EditorComponent },
-        { path: ':type/detail/:pid', component: RecordDetailComponent }
+        { path: ':type', component: RecordSearchPageComponent, title: titleResolver },
+        { path: ':type/new', component: EditorComponent, title: titleResolver },
+        { path: ':type/edit/:pid', component: EditorComponent, title: titleResolver },
+        { path: ':type/detail/:pid', component: RecordDetailComponent, title: titleResolver }
       ],
       data: {
         showSearchInput: true,

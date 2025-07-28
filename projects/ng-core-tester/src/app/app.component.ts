@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit, inject } from '@angular/core';
-import { CoreConfigService, RecordEvent, RecordService, TitleMetaService } from '@rero/ng-core';
+import { CoreConfigService, RecordEvent, RecordService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
 
 /**
@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
   /** Service injection */
   // translateService = inject(TranslateService);
   configService = inject(CoreConfigService);
-  titleMetaService = inject(TitleMetaService);
   recordService = inject(RecordService);
   messageService = inject(MessageService);
 
@@ -55,12 +54,6 @@ export class AppComponent implements OnInit {
    */
   ngOnInit(): void {
     this.initializeEvents();
-    // Set default title window when application start
-    const prefix = this.configService.prefixWindow;
-    if (prefix) {
-      this.titleMetaService.setPrefix(prefix);
-    }
-    this.titleMetaService.setTitle('Welcome');
   }
 
   /**

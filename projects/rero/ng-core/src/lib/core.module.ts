@@ -17,7 +17,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, TitleStrategy } from '@angular/router';
 import { TranslateLoader as BaseTranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -37,6 +37,7 @@ import { TruncateTextPipe } from './pipe/truncate-text.pipe';
 import { UpperCaseFirstPipe } from './pipe/ucfirst.pipe';
 import { PrimeNgCoreModule } from './prime-ng-core-module';
 import { SearchInputComponent } from './search-input/search-input.component';
+import { PageTitleStrategy } from './service/page-title-strategy';
 import { TextReadMoreComponent } from './text-read-more/text-read-more.component';
 import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
@@ -101,10 +102,11 @@ import { NgCoreTranslateService } from './translate/translate-service';
         translateService.initialize();
         return of(true);
       }),
+      { provide: TranslateService, useClass: NgCoreTranslateService },
+      { provide: TitleStrategy, useClass: PageTitleStrategy },
       ComponentCanDeactivateGuard,
       ConfirmationService,
       MessageService,
-      { provide: TranslateService, useClass: NgCoreTranslateService },
       SanitizePipe
     ]
 })

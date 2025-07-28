@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,8 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes, UrlSegment } from '@angular/router';
-import { ActionStatus } from '@rero/ng-core';
+import { ResolveFn, RouterModule, Routes, UrlSegment } from '@angular/router';
+import { ActionStatus, capitalize } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
@@ -184,19 +184,26 @@ export function organisationsMatcher(url: Array<UrlSegment>) {
   return null;
 }
 
+export const titleEditorResolver: ResolveFn<string> = (route) => {
+  // For translation, put this string "Editor > demo - edit" in the language dictionary.
+  const edit = route.params.pid ? 'edit': 'add';
+  return `Editor > ${capitalize(route.params["type"])} - ${edit}`;
+};
+
 /**
  * List of routes for application.
  */
 const routes: Routes = [
   {
     path: '',
+    title: 'Home',
     component: HomeComponent
   },
   {
     path: 'editor',
     children: [
-      { path: ':type', component: EditorComponent },
-      { path: ':type/:pid', component: EditorComponent }
+      { path: ':type', component: EditorComponent, title: titleEditorResolver },
+      { path: ':type/:pid', component: EditorComponent, title: titleEditorResolver }
     ],
     data: {
       types: [
@@ -222,6 +229,7 @@ const routes: Routes = [
   {
     matcher: documentsMatcher,
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    title: 'Documents',
     data: {
       showSearchInput: true,
       adminMode: adminModeCanNot,
@@ -241,6 +249,7 @@ const routes: Routes = [
   {
     matcher: organisationsMatcher,
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    title: 'Organisations',
     data: {
       showSearchInput: true,
       adminMode: adminModeCanNot,
@@ -255,6 +264,7 @@ const routes: Routes = [
   {
     path: 'unisi/record/search',
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    title: 'Documents',
     data: {
       showSearchInput: true,
       adminMode: adminModeCanNot,
@@ -273,6 +283,7 @@ const routes: Routes = [
   {
     path: 'admin/record/search',
     loadChildren: () => import('./record-wrapper/record-wrapper.module').then(m => m.RecordWrapperModule),
+    title: 'Documents',
     data: {
       types: [
         {

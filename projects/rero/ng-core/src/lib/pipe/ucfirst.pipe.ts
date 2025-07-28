@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
+import { capitalize } from '../utils/utils';
 
 /**
  * Uppercase the first letter of the string.
@@ -30,11 +31,11 @@ export class UpperCaseFirstPipe implements PipeTransform {
    * @param value Value to transform.
    * @return Transformed value.
    */
-  transform(value: string): string {
-    if (value === null) {
+  transform(value: string | null | undefined): string | null | undefined {
+    if (!value) {
       return value;
     }
 
-    return value.charAt(0).toUpperCase() + value.slice(1);
+    return capitalize(value);
   }
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { TestBed } from '@angular/core/testing';
-import { extractIdOnRef } from './utils';
+import { capitalize, extractIdOnRef } from './utils';
 
 describe('Utils', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -53,6 +53,10 @@ describe('Utils', () => {
     const ref = 'ils.rero.ch/api/documents/19999';
     expect(extractIdOnRef(ref)).toEqual('19999');
 
+  });
+
+  it('should capitalize the value', () => {
+    expect(capitalize('document')).toEqual('Document');
   });
 
 });
