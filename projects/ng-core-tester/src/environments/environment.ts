@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
 
 export const environment = {
   production: false,
-  prefixWindow: 'NG CORE TESTER',
+  projectTitle: 'NG-Core',
   apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
   languages: ['fr', 'de', 'it', 'en'],

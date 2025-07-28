@@ -31,7 +31,7 @@ export class AppConfigService extends CoreConfigService {
   constructor() {
     super();
     this.production = false;
-    this.prefixWindow = environment.prefixWindow;
+    this.projectTitle = environment.projectTitle;
     this.apiBaseUrl = environment.apiBaseUrl;
     this.schemaFormEndpoint = '/schemas';
     this.$refPrefix = environment.$refPrefix;

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@ import { Injectable } from '@angular/core';
  */
 export interface Config {
   production?: boolean;
-  prefixWindow?: string;
+  projectTitle?: string;
   apiBaseUrl?: string;
   apiEndpointPrefix?: string;
   $refPrefix: string;
@@ -40,11 +40,11 @@ export interface Config {
 })
 export class CoreConfigService implements Config {
   production = false;
-  prefixWindow = undefined;
+  projectTitle;
   apiBaseUrl = '';
   apiEndpointPrefix = '/api';
   schemaFormEndpoint = '/api/schemaform';
-  $refPrefix = undefined;
+  $refPrefix;
   languages = ['en'];
   defaultLanguage = 'en';
   secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';

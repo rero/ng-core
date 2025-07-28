@@ -87,7 +87,6 @@ export * from './lib/search-input/search-input.component';
 export * from './lib/service/crypto-js.service';
 export * from './lib/service/local-storage.service';
 export * from './lib/service/logger.service';
-export * from './lib/service/title-meta.service';
 export * from './lib/text-read-more/text-read-more.component';
 export * from './lib/translate/date-translate-pipe';
 export * from './lib/translate/translate-language.pipe';

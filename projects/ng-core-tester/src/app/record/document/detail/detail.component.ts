@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, OnInit } from '@angular/core';
-import { TitleMetaService, DetailRecord } from '@rero/ng-core';
+import { Component, OnInit } from '@angular/core';
+import { DetailRecord } from '@rero/ng-core';
 import { Observable } from 'rxjs';
 
 /**
@@ -27,9 +27,6 @@ import { Observable } from 'rxjs';
     standalone: false
 })
 export class DetailComponent implements DetailRecord, OnInit {
-  // Inject
-  private titleMetaService = inject(TitleMetaService);
-
   // Observable resolving record data
   record$: Observable<any>;
 
@@ -40,8 +37,6 @@ export class DetailComponent implements DetailRecord, OnInit {
   record: any;
 
   ngOnInit(): void {
-    this.titleMetaService.setTitle('Detail of ' + this.type);
-
     this.record$.subscribe((record) => {
       this.record = record;
     });
