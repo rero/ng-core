@@ -132,7 +132,7 @@
         <ng-template #list let-records>
           <ul class="core:list-none">
             @for (record of records; track record.metadata.pid; let first = $first) {
-            <li class="core:py-2" [ngClass]="{ 'core:border-t-1 core:border-surface': !first }">
+            <li class="core:py-2 core:md:py-6" [ngClass]="{ 'core:border-t-1 core:border-surface': !first }">
               <ng-core-record-search-result
                 [adminMode]="adminMode"
                 [record]="record"
