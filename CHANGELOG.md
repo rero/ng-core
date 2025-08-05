@@ -1,5 +1,37 @@
 # Changelog
 
+## [v19.1.2](https://github.com/rero/ng-core/tree/v19.1.2) (2025-08-05)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.1.0...v19.1.2)
+
+**Other changes:**
+
+**New features:**
+- feat(filters): change select by toggle switch [#737](https://github.com/rero/ng-core/pull/737) (by @Garfield-fr)
+- feat: add page title [#739](https://github.com/rero/ng-core/pull/739) (by @Garfield-fr)
+
+**Fixes:**
+- fix(editor): update the selected node of tree select [#738](https://github.com/rero/ng-core/pull/738) (by @jma)
+- fix(editor): field color error [#736](https://github.com/rero/ng-core/pull/736) (by @Garfield-fr)
+- fix(editor): Tree select [#735](https://github.com/rero/ng-core/pull/735) (by @Garfield-fr)
+
+**Other changes:**
+- chore: increase the space between list items [#741](https://github.com/rero/ng-core/pull/741) (by @Garfield-fr)
+- chore: update dependencies [#740](https://github.com/rero/ng-core/pull/740) (by @Garfield-fr)
+
+## [v19.1.1](https://github.com/rero/ng-core/tree/v19.1.1) (2025-07-22)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.1.0...v19.1.1)
+
+**Fixes:**
+* fix(editor): scroll [\#734](https://github.com/rero/ng-core/pull/734) (by @Garfield-fr)
+* fix(editor): don't remove form field wrapper [\#732](https://github.com/rero/ng-core/pull/732) (by @Garfield-fr)
+* fix(sort): remove testing data [\#730](https://github.com/rero/ng-core/pull/730) (by @PascalRepond)
+* fix: menu sort translation [\#728](https://github.com/rero/ng-core/pull/728) (by @Garfield-fr)
+* fix(search): allow launching a search also with numpad "Enter" [\#729](https://github.com/rero/ng-core/pull/729) (by @PascalRepond)
+* fix(select): translate default placeholder [\#726](https://github.com/rero/ng-core/pull/726) (by @PascalRepond)
+* fix(search): fix query when using a search field [\#707](https://github.com/rero/ng-core/pull/707) (by @jma)
+
 ## [v19.1.0](https://github.com/rero/ng-core/tree/v19.1.0) (2025-06-26)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.0.1...v19.1.0)
