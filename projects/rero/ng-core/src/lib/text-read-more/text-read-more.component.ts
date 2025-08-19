@@ -18,6 +18,9 @@ import { Component, Input, OnInit } from '@angular/core';
 
 /**
  * Component for displaying a "read more" link after a text.
+ *
+ * OLD VERSION: use the new component ng-core-read-more
+ * @DEPRECATED
  */
 @Component({
     selector: 'ng-core-text-read-more',

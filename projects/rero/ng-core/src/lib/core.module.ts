@@ -43,6 +43,8 @@ import { DateTranslatePipe } from './translate/date-translate-pipe';
 import { TranslateLanguagePipe } from './translate/translate-language.pipe';
 import { TranslateLoader } from './translate/translate-loader';
 import { NgCoreTranslateService } from './translate/translate-service';
+import { KatexDirective } from './directive/katex.directive';
+import { ReadMoreComponent } from './read-more/read-more.component';
 
 @NgModule({
     declarations: [
@@ -53,6 +55,7 @@ import { NgCoreTranslateService } from './translate/translate-service';
         CallbackArrayFilterPipe,
         DateTranslatePipe,
         DialogComponent,
+        ReadMoreComponent,
         SearchInputComponent,
         TranslateLanguagePipe,
         TextReadMoreComponent,
@@ -60,7 +63,8 @@ import { NgCoreTranslateService } from './translate/translate-service';
         ErrorComponent,
         FilesizePipe,
         MarkdownPipe,
-        SanitizePipe
+        SanitizePipe,
+        KatexDirective
     ],
     imports: [
         CommonModule,
@@ -88,13 +92,15 @@ import { NgCoreTranslateService } from './translate/translate-service';
         DateTranslatePipe,
         FilesizePipe,
         DialogComponent,
+        ReadMoreComponent,
         SearchInputComponent,
         TextReadMoreComponent,
         ErrorComponent,
         SortByKeysPipe,
         NgxSpinnerModule,
         MarkdownPipe,
-        SanitizePipe
+        SanitizePipe,
+        KatexDirective
     ],
     providers: [
       provideAppInitializer(() => {
