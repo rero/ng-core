@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2025 RERO
+ * Copyright (C) 2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,22 +14,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { AfterContentChecked, Directive, ElementRef, inject, input } from '@angular/core';
+import renderMathInElement, { RenderMathInElementOptions } from 'katex/contrib/auto-render';
 
-@use "font-awesome/scss/font-awesome";
-@use "easymde/dist/easymde.min";
-@use "ngx-spinner/animations/ball-zig-zag.css";
-@use "ng-core-tailwind";
-@use "ng-core";
-@use "katex";
+// Doc: https://katex.org/docs/autorender
 
-@import "tailwindcss" prefix(ui);
+@Directive({
+  selector: '[katex]',
+  standalone: false
+})
+export class KatexDirective implements AfterContentChecked {
 
-@plugin "tailwindcss-primeui";
+  private el = inject(ElementRef);
 
-:root {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1rem;
+  katex = input<RenderMathInElementOptions>();
+
+  ngAfterContentChecked(): void {
+    renderMathInElement(this.el.nativeElement, this.katex());
+  }
 }

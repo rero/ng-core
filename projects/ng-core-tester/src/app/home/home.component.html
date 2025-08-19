@@ -40,6 +40,17 @@
   </div>
 </p-panel>
 
+<p-panel header="Katex directive" styleClass="ui:mt-4 ui:pb-4">
+  <div class="ui:pl-4 ui:flex ui:flex-col ui:gap-4">
+    <div katex>
+      {{ katexTitle }}
+    </div>
+    <div katex>
+      {{ katex }}
+    </div>
+  </div>
+</p-panel>
+
 <p-panel header="Spinner" styleClass="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <p-button label="Show spinner (for 3 seconds)" size="small" [outlined]="true" (onClick)="showSpinner()" />
@@ -53,15 +64,9 @@
   </div>
 </p-panel>
 
-<p-panel header="Text Read More" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Read More" styleClass="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
-    <ng-core-text-read-more
-      text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. "
-      [unit]="'character'"
-      [limit]="10"
-      [showMoreLabel]="'Show more' | translate"
-      [showLessLabel]="'Show less' | translate"
-    />
+    <ng-core-read-more [text]="katex" limit="20" [katex]="true" />
   </div>
 </p-panel>
 

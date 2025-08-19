@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -19,6 +19,7 @@ export * from './lib/component/abstract-can-deactivate.component';
 export * from './lib/core-config.service';
 export * from './lib/core.module';
 export * from './lib/dialog/dialog.component';
+export * from './lib/directive/katex.directive';
 export * from './lib/error/error';
 export * from './lib/error/error.component';
 export * from './lib/guard/component-can-deactivate.guard';
@@ -35,6 +36,7 @@ export * from './lib/pipe/truncate-text.pipe';
 export * from './lib/pipe/ucfirst.pipe';
 export * from './lib/prime-ng-core-module';
 export * from './lib/primeng-config';
+export * from './lib/read-more/read-more.component';
 export * from './lib/record/action-status';
 export * from './lib/record/detail/detail-button/detail-button.component';
 export * from './lib/record/detail/detail-button/IRecordEvent.interface';
@@ -49,9 +51,10 @@ export * from './lib/record/editor/formly/primeng/input/src/input.type';
 export * from './lib/record/editor/formly/primeng/multi-checkbox/multi-checkbox';
 export * from './lib/record/editor/formly/primeng/multi-select/multi-select';
 export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete';
-export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.service';
 export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.interface';
+export * from './lib/record/editor/formly/primeng/remote-autocomplete/remote-autocomplete.service';
 export * from './lib/record/editor/formly/primeng/select/select';
+export * from './lib/record/editor/formly/primeng/services/translate-label.service';
 export * from './lib/record/editor/formly/primeng/tree-select/tree-select';
 export * from './lib/record/editor/services/jsonschema.service';
 export * from './lib/record/editor/type/array-type/array-type.component';
@@ -99,5 +102,4 @@ export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
 export * from './lib/validator/validators';
-export * from './lib/record/editor/formly/primeng/services/translate-label.service';
 

@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -25,9 +25,9 @@ import { DocumentComponent } from '../record/document/document.component';
     standalone: false
 })
 export class HomeComponent implements OnInit {
-  // Inject
-  private recordSearchService = inject(RecordSearchService);
-  private spinner = inject(NgxSpinnerService);
+
+  private recordSearchService: RecordSearchService = inject(RecordSearchService);
+  private spinner: NgxSpinnerService = inject(NgxSpinnerService);
 
   // Configuration for resources.
   recordConfig: Array<any> = [
@@ -61,6 +61,11 @@ export class HomeComponent implements OnInit {
 
   // Markdown text
   markdownText = '*Hello* **world**';
+
+  // Katex
+  katexTitle = 'Infinitesimal Hilbertianity of Locally $$\\mathrm{CAT}(\\kappa )$$-Spaces';
+
+  katex = 'We show that, given a metric space $$(\\mathrm{Y},\\textsf {d} )$$of curvature bounded from above in the sense of Alexandrov, and a positive Radon measure $$\\mu $$on $$\\mathrm{Y}$$giving finite mass to bounded sets, the resulting metric measure space $$(\\mathrm{Y},\\textsf {d} ,\\mu )$$is infinitesimally Hilbertian, i.e. the Sobolev space $$W^{1,2}(\\mathrm{Y},\\textsf {d} ,\mu )$$is a Hilbert space. The result is obtained by constructing an isometric embedding of the ‘abstract and analytical’ space of derivations into the ‘concrete and geometrical’ bundle whose fibre at $$x\\in \\mathrm{Y}$$is the tangent cone at x of $$\\mathrm{Y}$$. The conclusion then follows from the fact that for every $$x\\in \\mathrm{Y}$$such a cone is a $$\\mathrm{CAT}(0)$$space and, as such, has a Hilbert-like structure.';
 
   ngOnInit(): void {
       // Initializes aggregations filters to launch the first search.
