@@ -36,7 +36,7 @@ export class RecordSearchAggregationComponent {
    * Returns aggregations filters corresponding to the aggregation key.
    * @return List of aggregation filters
    */
-  get aggregationFilters(): Array<string> {
+  get aggregationFilters(): string[] {
     const aggregationFilters = this.aggregationsFilters().find((item: any) => item.key === this.aggregation().key);
     return aggregationFilters === undefined ? [] : aggregationFilters.values;
   }

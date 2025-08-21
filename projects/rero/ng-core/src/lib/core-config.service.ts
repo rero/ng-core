@@ -29,7 +29,7 @@ export interface Config {
   languages?: string[];
   defaultLanguage?: string;
   secretPassphrase: string;
-  translationsURLs?: Array<any>;
+  translationsURLs?: any[];
 }
 
 /**

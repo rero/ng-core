@@ -23,7 +23,7 @@ import { ComponentCanDeactivateGuard } from './component-can-deactivate.guard';
 import { DialogComponent } from '../dialog/dialog.component';
 
 export class MockComponent extends AbstractCanDeactivateComponent {
-  canDeactivate: boolean = true;
+  canDeactivate = true;
 }
 
 describe('ComponentCanDeactivateGuard', () => {

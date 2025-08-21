@@ -147,13 +147,13 @@ export class PasswordGeneratorTypeComponent extends FieldType<FormlyFieldConfig<
     }
   };
 
-  hasBeenGenerated: boolean = false;
+  hasBeenGenerated = false;
 
   /** Field password type (show or hide password) */
   type: 'text' | 'password' = 'password';
 
   /** Password Observable */
-  private _password$: Subject<string> = new Subject();
+  private _password$ = new Subject<string>();
 
   /** OnInit hook */
   ngOnInit(): void {

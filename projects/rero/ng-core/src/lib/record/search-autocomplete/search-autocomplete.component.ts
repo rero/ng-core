@@ -31,7 +31,7 @@ export interface IRecordType {
   maxSuggestions?: number;
   processSuggestions: Function;
   preFilters?: any;
-  queryParams?: Object;
+  queryParams?: object;
   sort?: string;
 };
 
@@ -102,7 +102,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   onSearch = output<string>();
 
   // Current value
-  currentValue: string = '';
+  currentValue = '';
 
   // Whether to display options as grouped when nested options are provided.
   group = false;

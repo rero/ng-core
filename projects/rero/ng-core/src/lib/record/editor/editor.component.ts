@@ -78,7 +78,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   description?: string;
 
   // Can Deactivate
-  canDeactivate: boolean = false;
+  canDeactivate = false;
 
   // angular formGroup root
   form: UntypedFormGroup;
@@ -134,7 +134,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   private _hiddenFields: FormlyFieldConfig[] = [];
 
   // Observable of hidden fields
-  private _hiddenFieldsSubject: BehaviorSubject<FormlyFieldConfig[]> = new BehaviorSubject([]);
+  private _hiddenFieldsSubject = new BehaviorSubject<FormlyFieldConfig[]>([]);
 
   // Dialog Ref
   ref: DynamicDialogRef | undefined;
@@ -652,7 +652,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * @param field: the field or fieldGroup where to search about field candidate.
    * @param scroll: is the screen should scroll to the field.
    */
-  setFieldFocus(field: FormlyFieldConfig, scroll: boolean = false): boolean {
+  setFieldFocus(field: FormlyFieldConfig, scroll = false): boolean {
     if (scroll === true && field.id)  {
       const el = document.getElementById(`field-${field.id}`);
       if (el != null) {
@@ -740,7 +740,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
    * Hide the given formly field.
    * @param field - FormlyFieldConfig, the field to hide
    */
-  setHide(field: FormlyFieldConfig, value: boolean, scroll: boolean = false): void {
+  setHide(field: FormlyFieldConfig, value: boolean, scroll = false): void {
     if (value) {
       if (field.parent.props.isRoot) {
         this.addHiddenField(field);
@@ -772,7 +772,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     return throwError(() => ({ status: error.status, title: error.title }));
   }
 
-  private _canDeactivate(activate: boolean = true) {
+  private _canDeactivate(activate = true) {
     this.canDeactivate = activate;
     this.canDeactivateChange.next(activate);
   }

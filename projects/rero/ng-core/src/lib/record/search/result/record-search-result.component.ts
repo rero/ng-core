@@ -74,7 +74,7 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
   @Input() canUse$: Observable<ActionStatus>;
 
   // Aggregations
-  @Input() aggregations: Array<object>;
+  @Input() aggregations: object[];
 
   // Observable emitting current value of record URL.
   @Input() detailUrl$: Observable<{ link: string, external: boolean }> = null;

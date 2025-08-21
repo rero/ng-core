@@ -42,17 +42,17 @@ export class RecordService {
   /**
    * Event for record created
    */
-  private onCreate: Subject<RecordEvent> = new Subject();
+  private onCreate = new Subject<RecordEvent>();
 
   /**
    * Event for record updated
    */
-  private onUpdate: Subject<RecordEvent> = new Subject();
+  private onUpdate = new Subject<RecordEvent>();
 
   /**
    * Event for record deleted
    */
-  private onDelete: Subject<RecordEvent> = new Subject();
+  private onDelete = new Subject<RecordEvent>();
 
   /**
    * On create observable
@@ -95,7 +95,7 @@ export class RecordService {
    */
   getRecords(
     type: string,
-    query: string = '',
+    query = '',
     page = 1,
     itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
     aggregationsFilters: any[] = [],
@@ -349,8 +349,8 @@ export class RecordService {
     url: string,
     field: string,
     q: string
-  ): Observable<Array<string>> {
-    return this.http.get<Array<string>>(`${this.apiService.baseUrl}${url}`, {
+  ): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiService.baseUrl}${url}`, {
       params: { resource, field, q },
     });
   }

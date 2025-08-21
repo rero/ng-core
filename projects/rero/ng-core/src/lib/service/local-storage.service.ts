@@ -31,17 +31,17 @@ export class LocalStorageService {
   /**
    * Event for set data on local storage
    */
-  private onSet: Subject<LocalStorageEvent> = new Subject();
+  private onSet = new Subject<LocalStorageEvent>();
 
   /**
    * Event for remove data on local storage
    */
-  private onRemove: Subject<any> = new Subject();
+  private onRemove = new Subject<any>();
 
   /**
    * Event for clear on local storage
    */
-  private onClear: Subject<any> = new Subject();
+  private onClear = new Subject<any>();
 
   /**
    * On set observable

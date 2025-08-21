@@ -46,7 +46,7 @@ function createWidgetFormlyConfigProps(schema: any) {
 export function resolve$ref(schema: any, schemaProperties: any): any {
   if (schemaProperties) {
     Object.keys(schemaProperties).forEach((property: any) => {
-      let field = schemaProperties[property];
+      const field = schemaProperties[property];
       if (field.properties) {
         resolve$ref(schema, field.properties);
       }

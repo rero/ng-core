@@ -23,7 +23,7 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class SanitizePipe implements PipeTransform
 {
-  transform(value: string, regex: string = '<[^>]*>', replace: string = '', flag: string = 'g'): string {
+  transform(value: string, regex = '<[^>]*>', replace = '', flag = 'g'): string {
     const re = new RegExp(regex, flag);
     return value.replace(re, replace);
   }

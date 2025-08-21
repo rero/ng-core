@@ -88,7 +88,7 @@ export class SearchFiltersComponent {
         return false;
       }
       if (filter.filter === 'simple') {
-        return !Boolean(JSON.parse(value));
+        return !JSON.parse(value);
       } else {
         return Boolean(JSON.parse(value));
       }

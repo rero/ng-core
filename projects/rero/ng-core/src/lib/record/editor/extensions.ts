@@ -355,7 +355,7 @@ export class TranslateExtension implements FormlyExtension {
 
   protected translate: TranslateService = inject(TranslateService);
 
-  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
+  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & Record<string, any>>): void {
     const props: any = field.props || {};
 
     // translate only once
@@ -417,7 +417,7 @@ export class TranslateExtension implements FormlyExtension {
 }
 
 export class FormOptionsProcessExtension implements FormlyExtension {
-  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & { [additionalProperties: string]: any; }>): void {
+  prePopulate(field: FormlyFieldConfig<FormlyFieldProps & Record<string, any>>): void {
     // Process options
     if (field.props?.options && !isObservable(field.props.options)) {
       field.props.options = of(this.processOptions(field.props));

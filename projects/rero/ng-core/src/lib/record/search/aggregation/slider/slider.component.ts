@@ -40,7 +40,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   step = input<number>(1);
 
   /** Range to search */
-  range: Array<number> = null;
+  range: number[] = null;
   /** True if route have aggregation query param. */
   hasQueryParam = false;
 

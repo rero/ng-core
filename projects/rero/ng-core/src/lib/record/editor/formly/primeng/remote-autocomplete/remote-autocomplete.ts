@@ -138,7 +138,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
     }
   };
 
-  value: string = '';
+  value = '';
 
   optionValues$: Observable<any[]>;
 

@@ -164,7 +164,7 @@ export function matchedUrl(url: UrlSegment[]) {
  * @param url List of URL segments.
  * @return Object representing the matched URL.
  */
-export function documentsMatcher(url: Array<UrlSegment>) {
+export function documentsMatcher(url: UrlSegment[]) {
   if (url[0].path === 'records' && url[1].path === 'documents') {
     return matchedUrl(url);
   }
@@ -177,7 +177,7 @@ export function documentsMatcher(url: Array<UrlSegment>) {
  * @param url List of URL segments.
  * @return Object representing the matched URL.
  */
-export function organisationsMatcher(url: Array<UrlSegment>) {
+export function organisationsMatcher(url: UrlSegment[]) {
   if (url[0].path === 'records' && url[1].path === 'organisations') {
     return matchedUrl(url);
   }

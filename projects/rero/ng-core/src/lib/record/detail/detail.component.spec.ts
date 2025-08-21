@@ -125,8 +125,7 @@ describe('DetailComponent', () => {
     const routeSpy = TestBed.inject(ActivatedRoute) as any;
     routeSpy.testParamMap = { type: 'test', pid: '1' };
     expect(() => {
-      /* tslint:disable:no-string-literal */
-      component['loadViewComponentRef']();
+           component['loadViewComponentRef']();
     }).toThrowError('Configuration not found for type "test"');
   });
 
@@ -139,15 +138,13 @@ describe('DetailComponent', () => {
     };
 
     expect(() => {
-      /* tslint:disable:no-string-literal */
-      component['loadViewComponentRef']();
+           component['loadViewComponentRef']();
     }).toThrowError('Configuration types not passed to component');
 
     delete routeSpy.snapshot.data.types;
 
     expect(() => {
-      /* tslint:disable:no-string-literal */
-      component['loadViewComponentRef']();
+           component['loadViewComponentRef']();
     }).toThrowError('Configuration types not passed to component');
   });
 
@@ -160,8 +157,7 @@ describe('DetailComponent', () => {
       }
     ];
 
-    /* tslint:disable:no-string-literal */
-    component['loadViewComponentRef']();
+       component['loadViewComponentRef']();
     expect(component.viewComponent).toEqual(JsonComponent);
   });
 

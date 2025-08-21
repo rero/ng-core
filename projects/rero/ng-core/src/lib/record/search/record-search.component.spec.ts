@@ -169,8 +169,7 @@ describe('RecordSearchComponent', () => {
     component = fixture.componentInstance;
     component.aggregationsFilters = [];
     component.aggregations = [];
-    /* tslint:disable:no-string-literal */
-    component['config'] = {
+       component['config'] = {
       preFilters: {}
     };
     fixture.detectChanges();
@@ -207,8 +206,7 @@ describe('RecordSearchComponent', () => {
 
   it('should delete record', fakeAsync(() => {
 
-    /* tslint:disable:no-string-literal */
-    component['config'].total = 2;
+       component['config'].total = 2;
 
     expect(component['config'].total).toBe(2);
     component.deleteRecord({ pid: '1' });

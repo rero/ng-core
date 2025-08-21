@@ -120,7 +120,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
   private ref: ChangeDetectorRef = inject(ChangeDetectorRef);
 
   private subscription: Subscription = new Subscription();
-  filter: boolean = false;
+  filter = false;
 
   /** Default properties */
   defaultOptions: Partial<FormlyFieldConfig<ISelectProps>> = {

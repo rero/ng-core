@@ -100,8 +100,8 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     listHeaders?: any,
     itemHeaders?: any,
     aggregationsName?: any,
-    aggregationsOrder?: Array<string>,
-    aggregationsExpand?: Array<string> | (() => Array<string>),
+    aggregationsOrder?: string[],
+    aggregationsExpand?: string[] | (() => string[]),
     aggregationsBucketSize?: number,
     pagination?: {
       boundaryLinks?: boolean,
