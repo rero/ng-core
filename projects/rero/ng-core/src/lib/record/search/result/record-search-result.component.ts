@@ -139,7 +139,7 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
     if (this.deleteStatus.can) {
       this.deletedRecord.emit({ pid, type });
     } else {
-      this.deleteMessageEvent.emit(this.deleteStatus.message.replace(new RegExp('\n', 'g'), '<br>'));
+      this.deleteMessageEvent.emit(this.deleteStatus.message.replace(new RegExp('\\n', 'g'), '<br>'));
     }
   }
 

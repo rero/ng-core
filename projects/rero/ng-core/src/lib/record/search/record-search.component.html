@@ -92,7 +92,7 @@
           @for (searchField of searchFields; track $index) {
             <div class="core:flex core:gap-2 core:items-center">
               <p-toggleswitch (onChange)="searchInField($event, searchField.path)" />
-              <label>{{ searchField.label | translate }}</label>
+              <span>{{ searchField.label | translate }}</span>
             </div>
           }
         </div>

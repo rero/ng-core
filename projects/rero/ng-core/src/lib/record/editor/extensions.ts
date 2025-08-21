@@ -180,7 +180,7 @@ export class NgCoreFormlyExtension {
   private _modelIsEmpty(field): boolean {
     let model = field?.model;
     // for simple object the model is the parent dict
-    if (field.model != null && !field.hasOwnProperty('fieldGroup')) {
+    if (field.model != null && !Object.hasOwn(field, 'fieldGroup')) {
       // New from ngx-formly v5.9.0
       model = field.model[Array.isArray(field.key) ? field.key[0] : field.key];
     }
@@ -196,7 +196,8 @@ export class NgCoreFormlyExtension {
     if (!field.props?.editorConfig) {
       return;
     }
-    const { pid, longMode } = field.props?.editorConfig;
+    const longMode = field?.props?.editorConfig?.longMode;
+    const pid = field?.props?.editorConfig?.pid;
     if (
       // only in longMode else it will not be possible to unhide a field
       !longMode ||
@@ -206,7 +207,7 @@ export class NgCoreFormlyExtension {
       // TODO: find a better way to identify this case
       !isNaN(Number(field.key)) ||
       // ignore field that has hide expression
-      'hide' in field?.expressions ||
+      field?.expressions?.hide ||
       // do not hide a field containing a 'hide' wrapper
       this._hasHideWrapper(field) ||
       // do not hide a field that has a parent marked as hidden and a model is empty
@@ -233,7 +234,11 @@ export class NgCoreFormlyExtension {
           // only during the editor initialization
           !field?.props?.getRoot()?.formControl?.touched)
       ) {
-        field.props.setHide ? field.props.setHide(field, true) : (field.hide = true);
+        if (field.props.setHide) {
+          field.props.setHide(field, true);
+        } else {
+          field.hide = true;
+        }
       }
     }
   }
