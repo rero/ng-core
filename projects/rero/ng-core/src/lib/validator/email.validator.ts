@@ -19,7 +19,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 
 export function emailValidator(field: FormlyFieldConfig) {
   // Regex pattern to check email
-  const emailPattern = /^([A-Za-z0-9\._%+-]+@[A-Za-z0-9\.-]+\.[A-Z|a-z]{2,})$/;
+  const emailPattern = /^([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})$/;
   if ( field.props?.type !== 'email' || field.validators?.email) {
     return;
   }

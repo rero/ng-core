@@ -19,7 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install package
       run: |
-        npm install -g @angular/cli@17
+        npm install -g @angular/cli@19
         npm ci
     - name: run tests
       run: |

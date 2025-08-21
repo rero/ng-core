@@ -205,7 +205,7 @@ export function isEmpty(value: any) {
     // null or undefined
     value == null ||
     // has length and it's zero (array, string)
-    (value.hasOwnProperty('length') && value.length === 0) ||
+    (Object.hasOwn(value, 'length') && value.length === 0) ||
     // is an Object and has no keys
     (value instanceof Object && Object.keys(value).length === 0)
   );

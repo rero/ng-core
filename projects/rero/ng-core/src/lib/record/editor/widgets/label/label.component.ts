@@ -136,7 +136,7 @@ export class LabelComponent implements OnInit, OnDestroy {
    * @returns FormlyFieldConfig[], the filtered list
    */
   hiddenFieldGroup(fieldGroup: FormlyFieldConfig[]): FormlyFieldConfig[] {
-    return fieldGroup.filter((f) => f.hide && !('hide' in f?.expressions));
+    return fieldGroup.filter((f) => f.hide && !(f?.expressions?.hide));
   }
 
   /**
@@ -153,7 +153,11 @@ export class LabelComponent implements OnInit, OnDestroy {
    */
   remove(): void {
     if (this.field.parent.type === 'object') {
-      this.field.props.setHide ? this.field.props.setHide(this.field, true) : (this.field.hide = true);
+      if (this.field.props.setHide) {
+        this.field.props.setHide(this.field, true);
+      } else {
+        this.field.hide = true;
+      }
     }
     if (this.field.parent.type === 'array') {
       this.field.parent.props.remove(this.getIndex());
@@ -165,7 +169,11 @@ export class LabelComponent implements OnInit, OnDestroy {
    * @param field - FormlyFieldConfig, the field to show
    */
   show(field: FormlyFieldConfig) {
-    field.props.setHide ? field.props.setHide(field, false) : (field.hide = false);
+    if (field.props.setHide) {
+      field.props.setHide(field, false);
+    } else {
+      (field.hide = false);
+    }
   }
 
   /**

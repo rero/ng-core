@@ -56,7 +56,7 @@ const sortByKey = <T>(a: T, b: T, ...keys: string[]): number => {
 
     // Make sure the objects both have the key. We make sure
     // to check this after we have removed the minus sign.
-    if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
+    if (!Object.prototype.hasOwnProperty.call(a, key) || !Object.prototype.hasOwnProperty.call(b, key)) {
         throw new Error(ERROR_OBJECT_DOESNT_CONTAIN_KEY);
     }
 

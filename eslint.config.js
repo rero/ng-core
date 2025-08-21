@@ -10,6 +10,12 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     rules: {
       '@angular-eslint/prefer-standalone': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@angular-eslint/component-class-suffix': 'warn',
+      '@angular-eslint/no-output-on-prefix': 'warn',
+      '@angular-eslint/no-output-native': 'warn',
+      '@typescript-eslint/no-unsafe-function-type': 'warn',
       '@angular-eslint/directive-selector': [
         'error',
         {
@@ -30,6 +36,9 @@ module.exports = tseslint.config(
   {
     files: ['**/*.html'],
     extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
-    rules: {},
+    rules: {
+      '@angular-eslint/template/click-events-have-key-events': 'warn',
+      '@angular-eslint/template/interactive-supports-focus': 'warn',
+    },
   }
 );

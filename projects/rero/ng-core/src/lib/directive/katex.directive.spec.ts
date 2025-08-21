@@ -25,22 +25,22 @@ import { KatexDirective } from './katex.directive';
     `,
     standalone: false
 })
-export class KatexComponentTest {
+export class KatexComponent {
   katexData = 'Infinitesimal Hilbertianity of Locally $$\\mathrm{CAT}(\\kappa )$$-Spaces';
 }
 
 describe('KatexDirective', () => {
-  let component: KatexComponentTest;
-  let fixture: ComponentFixture<KatexComponentTest>;
+  let component: KatexComponent;
+  let fixture: ComponentFixture<KatexComponent>;
 
   beforeEach(async() => {
     TestBed.configureTestingModule({
-      declarations: [ KatexComponentTest, KatexDirective ],
+      declarations: [ KatexComponent, KatexDirective ],
     }).compileComponents();
   });
 
   beforeEach(() => {
-      fixture = TestBed.createComponent(KatexComponentTest);
+      fixture = TestBed.createComponent(KatexComponent);
       component = fixture.componentInstance;
       fixture.detectChanges();
   });

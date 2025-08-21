@@ -66,7 +66,11 @@ export class FormFieldWrapperComponent extends FieldWrapper {
   remove(): void {
     switch (this.field.parent.type) {
       case 'object':
-        this.field.props.setHide ? this.field.props.setHide(this.field, true): this.field.hide = true;
+        if (this.field.props.setHide) {
+          this.field.props.setHide(this.field, true);
+        } else {
+          this.field.hide = true;
+        }
         break;
       case 'array':
         this.field.parent.props.remove(Number(this.field.key));

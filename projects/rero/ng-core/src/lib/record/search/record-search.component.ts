@@ -650,7 +650,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @return Boolean
    */
   canExport(format: any): boolean {
-    return format.hasOwnProperty('disableMaxRestResultsSize') && format.disableMaxRestResultsSize
+    return Object.hasOwn(format, 'disableMaxRestResultsSize') && format.disableMaxRestResultsSize
       ? this.total > 0
       : 0 < this.total && this.total < RecordService.MAX_REST_RESULTS_SIZE;
   }
@@ -992,7 +992,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     this._flatSearchFilters()
       .filter((filter) => filter.persistent === true)
       .forEach((filter: SearchFilter) => {
-        if (this.activatedRoute.snapshot.queryParams.hasOwnProperty(filter.filter)) {
+        if (Object.hasOwn(this.activatedRoute.snapshot.queryParams, filter.filter)) {
           const data = this.activatedRoute.snapshot.queryParams[filter.filter];
           persistent.push({
             key: filter.filter,

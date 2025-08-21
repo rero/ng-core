@@ -45,7 +45,7 @@ export class ActivatedRouteStub {
     return this._testParamMap;
   }
 
-  set testParamMap(params: {}) {
+  set testParamMap(params: object) {
     this._testParamMap = convertToParamMap(params);
   }
 
@@ -125,7 +125,7 @@ describe('DetailComponent', () => {
     const routeSpy = TestBed.inject(ActivatedRoute) as any;
     routeSpy.testParamMap = { type: 'test', pid: '1' };
     expect(() => {
-           component['loadViewComponentRef']();
+      component['loadViewComponentRef']();
     }).toThrowError('Configuration not found for type "test"');
   });
 
@@ -138,13 +138,13 @@ describe('DetailComponent', () => {
     };
 
     expect(() => {
-           component['loadViewComponentRef']();
+      component['loadViewComponentRef']();
     }).toThrowError('Configuration types not passed to component');
 
     delete routeSpy.snapshot.data.types;
 
     expect(() => {
-           component['loadViewComponentRef']();
+      component['loadViewComponentRef']();
     }).toThrowError('Configuration types not passed to component');
   });
 
@@ -157,7 +157,7 @@ describe('DetailComponent', () => {
       }
     ];
 
-       component['loadViewComponentRef']();
+    component['loadViewComponentRef']();
     expect(component.viewComponent).toEqual(JsonComponent);
   });
 

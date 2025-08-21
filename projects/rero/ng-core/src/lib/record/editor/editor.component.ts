@@ -235,8 +235,8 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         if (this.editorSettings.template.recordType !== undefined) {
           const tmplResource = this.routeCollectionService.getRoute(this.editorSettings.template.recordType);
           const tmplConfiguration = tmplResource.getConfiguration();
-          if (tmplConfiguration.hasOwnProperty('data')
-            && tmplConfiguration.data.hasOwnProperty('types')) {
+          if (Object.hasOwn(tmplConfiguration, 'data')
+            && Object.hasOwn(tmplConfiguration.data, 'types')) {
             this.recordUiService.types = this.recordUiService.types.concat(tmplConfiguration.data.types);
           }
         }
@@ -732,7 +732,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
     return (
       !field.props.required &&
       !field.hide &&
-      !('hide' in field?.expressions)
+      !(field?.expressions?.hide)
     );
   }
 

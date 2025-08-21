@@ -54,7 +54,7 @@ export class RecordHandleErrorService {
     }
 
     // check if we have possible custom error message to display
-    if (error.status === 400 && error.error.hasOwnProperty('message')) {
+    if (error.status === 400 && Object.hasOwn(error.error, 'message')) {
       let { message } = error.error;
       message = message.replace(/^Validation error: /, '').trim();  // Remove Invenio `ValidationError` header
       return throwError(() => ({ status: error.status, title: this.translateService.instant(message) }));

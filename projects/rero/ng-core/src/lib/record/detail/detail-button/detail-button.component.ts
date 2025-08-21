@@ -74,7 +74,7 @@ export class DetailButtonComponent {
     if (this.deleteStatus().can) {
       this.recordEvent.emit({ action: 'delete', record });
     } else {
-      this.deleteMessageEvent.emit(this.deleteStatus().message.replace(new RegExp('\n', 'g'), '<br>'));
+      this.deleteMessageEvent.emit(this.deleteStatus().message.replace(new RegExp('\\n', 'g'), '<br>'));
     }
   }
 
