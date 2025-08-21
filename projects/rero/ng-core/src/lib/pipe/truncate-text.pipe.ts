@@ -33,7 +33,7 @@ export class TruncateTextPipe implements PipeTransform {
    * @param type Word or Char type
    * @return Truncated string
    */
-  transform(value: string, limit: number = 40, trail: string = '…', type: 'word'|'char' = 'word'): string {
+  transform(value: string, limit = 40, trail = '…', type: 'word'|'char' = 'word'): string {
     let result = value || '';
 
     if (type === 'char' && value) {

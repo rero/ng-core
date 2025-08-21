@@ -54,10 +54,10 @@ export interface SearchParams {
   q: string;
   page: number;
   size: number;
-  aggregationsFilters: Array<AggregationsFilter>;
+  aggregationsFilters: AggregationsFilter[];
   sort: string;
-  searchFields: Array<SearchField>;
-  searchFilters: Array<SearchFilter | SearchFilterSection>;
+  searchFields: SearchField[];
+  searchFilters: (SearchFilter | SearchFilterSection)[];
 }
 
 export interface SortOption {
@@ -114,13 +114,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     permissions?: any;
     aggregations?: any;
     preFilters?: any;
-    defaultSearchInputFilters?: Array<AggregationsFilter>;
+    defaultSearchInputFilters?: AggregationsFilter[];
     listHeaders?: any;
     itemHeaders?: any;
     aggregationsName?: any;
-    aggregationsOrder?: Array<string>;
-    aggregationsExpand?: Array<string> | (() => Array<string>);
-    aggregationsHide?: Array<string> | (() => Array<string>);
+    aggregationsOrder?: string[];
+    aggregationsExpand?: string[] | (() => string[]);
+    aggregationsHide?: string[] | (() => string[]);
     aggregationsBucketSize?: number;
     showSearchInput?: boolean;
     pagination?: {
@@ -139,21 +139,21 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   @Output() recordsSearched = new EventEmitter<SearchResult>();
 
   /** Current aggregations filters applied */
-  aggregationsFilters: Array<AggregationsFilter> = [];
+  aggregationsFilters: AggregationsFilter[] = [];
   /** Contain result row data */
   hits: any = [];
   /** Facets retrieved from requested result */
-  aggregations: Array<Aggregation>;
+  aggregations: Aggregation[];
   /** Aggregation keys to always hide (defined into the config) */
-  aggregationsToHide: Array<string> = [];
+  aggregationsToHide: string[] = [];
   /** Error message when something wrong happens during a search */
   error: Error;
   /** Check if record can be added */
   addStatus: ActionStatus = { can: true, message: '' };
   /** List of fields on which we can do a specific search. */
-  searchFields: Array<SearchField> = [];
+  searchFields: SearchField[] = [];
   /** List of fields on which we can filter. */
-  searchFilters: Array<SearchFilter | SearchFilterSection> = [];
+  searchFilters: (SearchFilter | SearchFilterSection)[] = [];
   /** If we need to show the empty search message info. */
   showEmptySearchMessage = false;
   /** Export formats configuration. */
@@ -165,7 +165,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }[];
 
   /** JSON dumping of last search parameters (used for checking if we have to do a search or not).*/
-  protected _searchParameters: BehaviorSubject<SearchParams> = new BehaviorSubject(null);
+  protected _searchParameters = new BehaviorSubject<SearchParams>(null);
   /** Define if search input have to be displayed or not. */
   protected _showSearchInput = true;
   /** Define if title have to be displayed or not. */
@@ -177,7 +177,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
   availableTypes = [];
 
-  loaded: boolean = false;
+  loaded = false;
 
   // GETTER & SETTER ==========================================================
   /** Check if pagination have to be displayed or not. */
@@ -198,7 +198,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /** Request result record hits. */
-  get records(): Array<any> {
+  get records(): any[] {
     return this.hits && this.hits.hits ? this.hits.hits : [];
   }
 
@@ -263,7 +263,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Return the list of search fields that are selected.
    * @return List of selected search fields.
    */
-  get selectedSearchFields(): Array<SearchField> {
+  get selectedSearchFields(): SearchField[] {
     return this.searchFields.filter((field: SearchField) => field.selected);
   }
 
@@ -330,7 +330,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     this._subscriptions.add(
-      this.recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
+      this.recordSearchService.aggregationsFilters.subscribe((aggregationsFilters: AggregationsFilter[]) => {
         // No aggregations filters are set at this time, we do nothing.
         if (aggregationsFilters === null) {
           return;
@@ -474,7 +474,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Internal notification that notify the search parameters has changed.
    * @param resetPage reset the pager to the first page
    */
-  protected _searchParamsHasChanged(resetPage: boolean = true) {
+  protected _searchParamsHasChanged(resetPage = true) {
     if (resetPage) {
       this.page = 1;
     }
@@ -590,7 +590,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-  protected _exportFormats(): Array<any> {
+  protected _exportFormats(): any[] {
     if (!this.config || !this.config.exportFormats) {
       return [];
     }
@@ -987,7 +987,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Extract persistent search filters on current url
    * @return Array of aggregations filter
    */
-  protected _extractPersistentAggregationsFilters(): Array<AggregationsFilter> {
+  protected _extractPersistentAggregationsFilters(): AggregationsFilter[] {
     const persistent = [];
     this._flatSearchFilters()
       .filter((filter) => filter.persistent === true)
@@ -1071,7 +1071,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Compile facets keys to get only 'included' facets or having a filter selected.
    * @returns List of facets.
    */
-  protected _getFacetsParameter(): Array<string> {
+  protected _getFacetsParameter(): string[] {
     const facets = [];
     this.aggregations.forEach((agg: any) => {
       if (

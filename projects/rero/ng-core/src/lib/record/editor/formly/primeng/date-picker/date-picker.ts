@@ -138,7 +138,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       }
     }));
 
-    let { value } = this.formControl;
+    const { value } = this.formControl;
     if (value) {
       this.value.set(new Date(value));
     }

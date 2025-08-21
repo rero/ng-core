@@ -52,7 +52,7 @@ export class LoadTemplateFormComponent implements OnInit {
 
   isDataFormLoaded = false;
 
-  isVisible: boolean = true;
+  isVisible = true;
 
   ngOnInit() {
     const { data } = this.dynamicDialogConfig;

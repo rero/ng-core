@@ -115,7 +115,7 @@ export class TextareaFieldComponent extends FieldType<FormlyFieldConfig<ExtraTex
    * @returns A validator function returning the eventual error.
    */
   limitValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
+    return (control: AbstractControl): Record<string, any> | null => {
       if (this.props.limitWords && this.countWords > this.props.limitWords) {
         return { limitWords: { value: control.value } };
       }

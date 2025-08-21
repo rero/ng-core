@@ -112,7 +112,7 @@ describe('TranslateLabelService', () => {
 
   it('should translate cascading labels with children', () => {
     translate.use('fr');
-    let translatedLabels = service.translateLabel(optionsChildren);
+    const translatedLabels = service.translateLabel(optionsChildren);
     expect(translatedLabels[0].label).toEqual('Valeur 1');
     expect(translatedLabels[0].children[0].label).toEqual('Valeur 2');
     expect(translatedLabels[0].children[0].children[0].label).toEqual('Valeur 3');

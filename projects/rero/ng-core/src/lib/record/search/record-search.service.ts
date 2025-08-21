@@ -23,7 +23,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
  */
 export interface AggregationsFilter {
   key: string;
-  values: Array<any>;
+  values: any[];
 }
 
 /**
@@ -34,10 +34,10 @@ export interface AggregationsFilter {
 })
 export class RecordSearchService {
   /** Aggregations filters array */
-  private _aggregationsFilters: Array<AggregationsFilter> = null;
+  private _aggregationsFilters: AggregationsFilter[] = null;
 
   /** Aggregations filters subject */
-  private _aggregationsFiltersSubject: BehaviorSubject<Array<AggregationsFilter>>;
+  private _aggregationsFiltersSubject: BehaviorSubject<AggregationsFilter[]>;
 
   /**
    * Constructor, initialize aggregations filters subject.
@@ -49,7 +49,7 @@ export class RecordSearchService {
   /**
    * Returns an observable which emits aggregations filters.
    */
-  get aggregationsFilters(): Observable<Array<AggregationsFilter>> {
+  get aggregationsFilters(): Observable<AggregationsFilter[]> {
     return this._aggregationsFiltersSubject.asObservable();
   }
 
@@ -72,7 +72,7 @@ export class RecordSearchService {
    * @param aggregationsFilters List of aggregations filters
    * @param forceRefresh Force the refresh of aggregations filters
    */
-  setAggregationsFilters(aggregationsFilters: Array<AggregationsFilter>, forceRefresh: boolean = false) {
+  setAggregationsFilters(aggregationsFilters: AggregationsFilter[], forceRefresh = false) {
     // TODO: If the filter is in a child bucket, checks if all parents are
     // selected, too. If not, adds all parents filters.
     if (!forceRefresh && JSON.stringify(this._aggregationsFilters) !== JSON.stringify(aggregationsFilters)) {
@@ -126,7 +126,7 @@ export class RecordSearchService {
    * @param value - the filter value
    * @param emit - is the `_aggregationsFiltersSubject` should be emitted
    */
-  removeFilter(key: string, value: string, emit: boolean = false): void {
+  removeFilter(key: string, value: string, emit = false): void {
     const filter = this._aggregationsFilters.find(item => item.key === key);
     if (filter) {
       filter.values = filter.values.filter(item => item !== value);

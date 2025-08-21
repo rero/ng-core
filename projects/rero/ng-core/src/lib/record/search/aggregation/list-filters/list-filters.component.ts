@@ -69,7 +69,7 @@ export class ListFiltersComponent {
     });
     this.filtersToHide = [...new Set<string>([...this.filtersToHide, ...filterSet])];
 
-    let filters = [];
+    const filters = [];
     this.aggregationsFilters().map((filter: any) => {
       if (!this.filtersToHide.includes(filter.key)) {
         filter.values.map((value: string) => {

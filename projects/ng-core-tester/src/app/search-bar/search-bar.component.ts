@@ -95,7 +95,7 @@ export class SearchBarComponent implements OnInit {
   private processDocuments(data: Record, query: string): any {
     const values: IAutoComplete[] = [];
     data.hits.hits.map((hit: any) => {
-      const title = hit.metadata.title[0].mainTitle[0].value.replace(/[:\-\[\]()/"]/g, ' ').replace(/\s\s+/g, ' ');
+      const title = hit.metadata.title[0].mainTitle[0].value.replace(/[:\-[\]()/"]/g, ' ').replace(/\s\s+/g, ' ');
       values.push({
         iconClass: 'fa fa-book',
         index: 'documents',

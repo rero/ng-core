@@ -80,7 +80,7 @@ export interface SearchFilter {
   url?: {
     external?: boolean;
     link?: string;
-    routerLink?: Array<string>;
+    routerLink?: string[];
     target?: string;
     title?: string;
   };
@@ -106,7 +106,7 @@ export interface SearchFilterSection {
 export interface Aggregation {
   key: string;
   bucketSize: any;
-  value: { buckets: Array<any> };
+  value: { buckets: any[] };
   expanded: boolean;
   loaded?: boolean;
   doc_count?: number;

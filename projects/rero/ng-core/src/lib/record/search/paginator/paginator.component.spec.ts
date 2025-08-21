@@ -49,7 +49,7 @@ describe('PaginatorComponent', () => {
   });
 
   it('should display the pagination with defined page link size', () => {
-    let element: HTMLElement = fixture.nativeElement;
+    const element: HTMLElement = fixture.nativeElement;
     const paginator = element.querySelector('p-paginator');
     expect(paginator).not.toEqual(null);
     let button = element.querySelector('.p-paginator-pages').querySelectorAll('button');
@@ -79,10 +79,10 @@ describe('PaginatorComponent', () => {
   });
 
   it('should contain the new values on the page change click', () => {
-    let subscribe = component.rowPageChange.subscribe((event: ChangeEvent) => {
+    const subscribe = component.rowPageChange.subscribe((event: ChangeEvent) => {
       expect(event).toEqual({'rows': 10, 'page': 1});
     });
-    let btn = fixture.debugElement.nativeElement.querySelectorAll('.p-paginator-page')[1];
+    const btn = fixture.debugElement.nativeElement.querySelectorAll('.p-paginator-page')[1];
     btn.click();
     subscribe.unsubscribe();
   });

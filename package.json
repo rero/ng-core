@@ -48,11 +48,6 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.0",
-    "@angular-eslint/builder": "^19.2",
-    "@angular-eslint/eslint-plugin": "^19.2",
-    "@angular-eslint/eslint-plugin-template": "^19.2",
-    "@angular-eslint/schematics": "^19.2",
-    "@angular-eslint/template-parser": "^19.2",
     "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.2.0",
     "@angular/language-service": "^19.2.0",
@@ -63,7 +58,8 @@
     "@typescript-eslint/eslint-plugin": "^8.25.0",
     "@typescript-eslint/parser": "^8.25.0",
     "@vendure/ngx-translate-extract": "^9.4.0",
-    "eslint": "^9.21.0",
+    "angular-eslint": "^19.8.1",
+    "eslint": "^9.33.0",
     "jasmine-core": "~5.6.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.0",
@@ -76,6 +72,7 @@
     "postcss-rename": "^0.6.1",
     "tailwindcss": "^4.1.0",
     "tailwindcss-primeui": "^0.6.1",
-    "typescript": "~5.7.2"
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.39.1"
   }
 }

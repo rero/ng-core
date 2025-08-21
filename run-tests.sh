@@ -39,7 +39,7 @@ display_success_message "Building test application..."
 ng build ng-core-tester --configuration production
 
 display_success_message "Linting the projects..."
-npm run lint
+ng lint
 
 display_success_message "Run the tests"
 ng test --no-watch --no-progress --browsers=ChromeHeadlessCI

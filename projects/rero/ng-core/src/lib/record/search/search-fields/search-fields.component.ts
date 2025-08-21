@@ -86,7 +86,7 @@ export class SearchFieldsComponent implements OnInit {
    * @param label - The name of the field
    * @returns string, The formatted label
    */
-  private processLabel(label: string = '…'): string {
+  private processLabel(label = '…'): string {
     return this.translate.instant(this.searchLabel()) + ' ' + label;
   }
 }

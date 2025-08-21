@@ -38,7 +38,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   /** More and less on aggregation content (facet) */
   moreMode = true;
   /** Current selected values for the aggregations */
-  aggregationsFilters: Array<AggregationsFilter> = [];
+  aggregationsFilters: AggregationsFilter[] = [];
   /** Children of current bucket */
   bucketChildren: any = {};
 
@@ -48,7 +48,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
   // GETTERS & SETTERS =================================================================
   /** Returns selected filters for the aggregation key. */
-  get aggregationFilters(): Array<string> {
+  get aggregationFilters(): string[] {
     const aggregationFilters = this.aggregationsFilters.find((item: AggregationsFilter) => item.key === this.aggregationKey());
     return aggregationFilters === undefined
         ? []
@@ -83,7 +83,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.aggregationsFiltersSubscription = this.recordSearchService
         .aggregationsFilters
-        .subscribe((aggregationsFilters: Array<AggregationsFilter>) => {
+        .subscribe((aggregationsFilters: AggregationsFilter[]) => {
           if (aggregationsFilters !== null) {
             this.aggregationsFilters = aggregationsFilters;
           }
@@ -168,7 +168,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @param bucket: parent bucket
    * @return Bucket children list of given bucket
    */
-  getBucketChildren(bucket: any): Array<any> {
+  getBucketChildren(bucket: any): any[] {
     const children = [];
     for (const k of Object.keys(bucket).filter(key => typeof bucket[key] === 'object' && bucket[key].buckets)) {
       children.push({

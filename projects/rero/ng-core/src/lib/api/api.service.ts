@@ -40,7 +40,7 @@ export class ApiService {
    * @param absolute If absolute or relative url must be returned.
    * @return Endpoint as string.
    */
-  getEndpointByType(type: string, absolute: boolean = false): string {
+  getEndpointByType(type: string, absolute = false): string {
     let endpoint = this.configService.apiEndpointPrefix + '/' + type;
     if (absolute === true) {
       endpoint = this.configService.apiBaseUrl + endpoint;
@@ -55,7 +55,7 @@ export class ApiService {
    * @param absolute If absolute or relative url must be returned.
    * @return Endpoint as string.
    */
-  getExportEndpointByType(type: string, absolute: boolean = false): string {
+  getExportEndpointByType(type: string, absolute = false): string {
     let endpoint = this.configService.apiEndpointPrefix + '/export/' + type;
     if (absolute === true) {
       endpoint = this.configService.apiBaseUrl + endpoint;
@@ -85,7 +85,7 @@ export class ApiService {
    * @param absolute If absolute or relative url must be returned.
    * @return Schema form endpoint.
    */
-  getSchemaFormEndpoint(type: string, absolute: boolean = false): string {
+  getSchemaFormEndpoint(type: string, absolute = false): string {
     let endpoint = this.configService.schemaFormEndpoint + '/' + type;
     if (absolute === true) {
       endpoint = this.configService.apiBaseUrl + endpoint;
