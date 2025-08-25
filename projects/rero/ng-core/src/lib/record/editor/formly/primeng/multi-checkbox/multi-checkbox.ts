@@ -92,7 +92,8 @@ export class MultiCheckboxComponent extends FieldType<FormlyFieldConfig<IMultiCh
   }
 
   onChange(event: CheckboxChangeEvent): void {
-    this.field.formControl.patchValue(event.checked);
+    this.formControl?.patchValue(event.checked);
+    this.formControl?.markAsTouched();
   }
 }
 

@@ -94,6 +94,7 @@ export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaPr
 
     mde.codemirror.on('change', () => {
       this.formControl.patchValue(mde.value());
+      this.formControl.markAsTouched();
     });
   }
 }

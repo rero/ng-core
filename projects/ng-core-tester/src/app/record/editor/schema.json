@@ -43,6 +43,7 @@
     "email",
     "datePicker",
     "datePicker_calendar",
+    "date_validator",
     "password",
     "array_with_multicheckbox_inline",
     "array_with_multicheckbox_stacked",
@@ -55,6 +56,77 @@
     "field_radio_button_inline"
   ],
   "properties": {
+    "date_validator": {
+      "title": "Date Validator",
+      "type": "object",
+      "additionalProperties": false,
+      "propertiesOrder": ["start_date", "end_date"],
+      "required": ["start_date"],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "title": "Start date",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+          "widget": {
+            "formlyConfig": {
+              "type": "datePicker",
+              "props": {
+                "itemCssClass": "ui:col-span-12 ui:md:col-span-6",
+                "validation": {
+                  "messages": {
+                    "patternMessage": "Should be in the following format: 2022-12-31 (YYYY-MM-DD).",
+                    "datesGreaterThan": "The start date must be less than the end date."
+                  },
+                  "validators": {
+                    "datesGreaterThan": {
+                      "dateFirst": "start_date",
+                      "dateLast": "end_date",
+                      "strict": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "title": "End date",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+          "widget": {
+            "formlyConfig": {
+              "type": "datePicker",
+              "props": {
+                "itemCssClass": "ui:col-span-12 ui:md:col-span-6",
+                "validation": {
+                  "messages": {
+                    "patternMessage": "Should be in the following format: 2022-12-31 (YYYY-MM-DD).",
+                    "datesGreaterThan": "The end date must be greater than the start date."
+                  },
+                  "validators": {
+                    "datesGreaterThan": {
+                      "dateFirst": "start_date",
+                      "dateLast": "end_date",
+                      "strict": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "containerCssClass": "ui:grid ui:grid-cols-12 ui:gap-x-2",
+            "hideLabel": true
+          }
+        }
+      }
+    },
     "notes": {
       "title": "Notes",
       "type": "array",

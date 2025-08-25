@@ -15,10 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 import { FormFieldWrapperComponent } from '../../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { IDateTimePickerProps, NgCoreFormlyDatePickerModule } from './date-picker';
 
@@ -26,7 +26,7 @@ const renderComponent = (field: FormlyFieldConfig<IDateTimePickerProps>) => {
   return createFieldComponent(field, {
     imports: [
       NgCoreFormlyDatePickerModule,
-      ReactiveFormsModule,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [
           { name: 'form-field', component: FormFieldWrapperComponent }

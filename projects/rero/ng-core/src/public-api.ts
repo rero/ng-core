@@ -101,5 +101,4 @@ export * from './lib/utils/sort-by-keys';
 export * from './lib/utils/utils';
 export * from './lib/validator/time.validator';
 export * from './lib/validator/unique.validator';
-export * from './lib/validator/validators';
 
