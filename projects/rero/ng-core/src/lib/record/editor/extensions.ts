@@ -16,11 +16,10 @@
  */
 import { inject } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { _ } from "@ngx-translate/core";
 import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
-import { TranslateService } from '@ngx-translate/core';
+import { _, TranslateService } from "@ngx-translate/core";
+import { DateTime } from "luxon";
 import { isObservable, of } from 'rxjs';
-import { Validators } from '../../validator/validators';
 import { RecordService } from '../record.service';
 import { isEmpty, removeEmptyValues } from './utils';
 
@@ -272,7 +271,7 @@ export class NgCoreFormlyExtension {
     if (customValidators.uniqueValueKeysInObject) {
       field.validators = {
         uniqueValueKeysInObject: {
-          expression: (control: UntypedFormControl) => {
+          expression: (control: UntypedFormControl): boolean => {
             // if value isn't an array or array contains less than 2 elements, no need to check
             if (!(control.value instanceof Array) || control.value.length < 2) {
               return true;
@@ -298,7 +297,7 @@ export class NgCoreFormlyExtension {
     if (customValidators.numberOfSpecificValuesInObject) {
       field.validators = {
         numberOfSpecificValuesInObject: {
-          expression: (control: UntypedFormControl) => {
+          expression: (control: UntypedFormControl): boolean => {
             function objIntersection(a, b) {
               const k1 = Object.keys(a);
               return k1.filter((k) => a[k] === b[k]);
@@ -319,16 +318,33 @@ export class NgCoreFormlyExtension {
     }
     // The start date must be less than the end date.
     if (customValidators.datesGreaterThan) {
-      const dateFirst: string = customValidators.datesGreaterThan.dateFirst;
-      const dateLast: string = customValidators.datesGreaterThan.dateLast;
+      const firstDate: string = customValidators.datesGreaterThan.dateFirst;
+      const lastDate: string = customValidators.datesGreaterThan.dateLast;
       const strict: boolean = customValidators.datesGreaterThan.strict || false;
-      const updateOn: 'change' | 'blur' | 'submit' = customValidators.datesGreaterThan.updateOn || 'blur';
-      const fieldKey = String(field.key);
       field.validators = {
         datesGreaterThan: {
-          updateOn,
-          expression: (control: UntypedFormControl) => Validators.datesGreaterThan(dateFirst, dateLast, fieldKey, strict)(control),
-          message: () => field.props.validation.messages.datesGreaterThan
+          expression: (control: UntypedFormControl): boolean =>
+          {
+            const dateFormat = 'yyyy-MM-dd';
+            const parentCtrl = control?.parent;
+            if (!parentCtrl) {
+              return true;
+            }
+            const dateFirstCtrl = parentCtrl.get(firstDate);
+            const dateLastCtrl = parentCtrl.get(lastDate);
+            if (dateFirstCtrl?.value?.length > 0 && dateLastCtrl?.value?.length > 0) {
+              const dateTimeFirst = DateTime.fromFormat(dateFirstCtrl?.value, dateFormat);
+              const dateTimeLast = DateTime.fromFormat(dateLastCtrl?.value, dateFormat);
+              const valid = strict ? dateTimeFirst < dateTimeLast : dateTimeFirst <= dateTimeLast;
+              if (valid) {
+                dateFirstCtrl?.setErrors(null);
+                dateLastCtrl?.setErrors(null);
+              }
+              return valid;
+            }
+            return true;
+          },
+          message: () => field?.props?.validation?.messages?.datesGreaterThan
         },
       };
     }

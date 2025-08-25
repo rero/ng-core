@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, model, NgModule, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
+import { _, TranslateModule } from '@ngx-translate/core';
 import { DateTime } from "luxon";
 import { DatePickerModule } from 'primeng/datepicker';
 import { Subscription } from 'rxjs';
@@ -39,6 +40,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
   minDate?: Date;
   numberOfMonths?: number;
   panelStyleClass?: string;
+  placeholder?: string;
   readonlyInput?: boolean;
   showButtonBar?: boolean;
   showIcon?: boolean;
@@ -72,7 +74,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [minDate]="minDate"
       [numberOfMonths]="props.numberOfMonths"
       [panelStyleClass]="props.panelStyleClass"
-      [placeholder]="props.placeholder"
+      [placeholder]="props.placeholder | translate"
       [readonlyInput]="props.readonlyInput"
       [required]="props.required"
       selectionMode="single"
@@ -110,7 +112,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       inline: false,
       numberOfMonths: 1,
       panelStyleClass: 'core:!min-w-0',
-      placeholder: 'Select…',
+      placeholder: _('Select…'),
       required: false,
       showButtonBar: false,
       showIcon: true,
@@ -159,6 +161,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
         const convertedDate = this.outputDate(value);
         if (convertedDate !== this.formControl.value) {
           this.formControl.patchValue(convertedDate);
+          this.formControl.markAsTouched();
         }
       }
     }));
@@ -187,6 +190,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     DatePickerModule,
     FormsModule,
     ReactiveFormsModule,
+    TranslateModule.forChild(),
     FormlyModule.forChild({
       types: [
         {

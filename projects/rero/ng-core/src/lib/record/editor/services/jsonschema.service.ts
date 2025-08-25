@@ -33,15 +33,6 @@ export class JSONSchemaService {
   protected recordService: RecordService = inject(RecordService);
   protected apiService: ApiService = inject(ApiService);
 
-  // list of custom validators
-  private customValidators = [
-    'valueAlreadyExists',
-    'uniqueValueKeysInObject',
-    'numberOfSpecificValuesInObject',
-    'dateMustBeGreaterThan',
-    'dateMustBeLessThan'
-  ];
-
   processField(field: FormlyFieldConfig, jsonSchema: JSONSchema7) {
     // initial population of arrays with a minItems constraints
     if (field.type === 'array' && jsonSchema.minItems && !jsonSchema.hasOwnProperty('default')) {
@@ -129,17 +120,6 @@ export class JSONSchemaService {
             // translate the validation messages coming from the JSONSchema
             // TODO: need to remove `as any` once it is fixed in ngx-formly v.5.7.2
             this.translateService.stream(msg) as any;
-        }
-      }
-
-      // store the custom validators config
-      field.props.customValidators = {};
-      if (formOptions.validation && formOptions.validation.validators) {
-        for (const customValidator of this.customValidators) {
-          const validatorConfig = formOptions.validation.validators[customValidator];
-          if (validatorConfig != null) {
-            field.props.customValidators[customValidator] = validatorConfig;
-          }
         }
       }
 

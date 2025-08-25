@@ -7,6 +7,9 @@
   "metadata": {
       "$schema": "https://bib.rero.ch/schemas/demo/demo.json",
       "pid": "1",
+      "date_validator": {
+        "start_date": "2025-08-19"
+      },
       "required": "value required",
       "defaultHidden": "default value",
       "array_of_array": [
