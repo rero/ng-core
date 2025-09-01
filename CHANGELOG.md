@@ -1,5 +1,23 @@
 # Changelog
 
+## [v19.2.0](https://github.com/rero/ng-core/tree/v19.2.0) (2025-09-01)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.1.2...v19.2.0)
+
+**New features:**
+
+- feat(editor): Show validation messages on the date picker. [#747](https://github.com/rero/ng-core/pull/747) (by @jma)
+- feat: latex text processing [#745](https://github.com/rero/ng-core/pull/745) (by @Garfield-fr)
+
+**Fixes:**
+
+- fix(pipe): fix translate language on change language [#746](https://github.com/rero/ng-core/pull/746) (by @Garfield-fr)
+- fix: add missing key entry on tree-select options [#743](https://github.com/rero/ng-core/pull/743) (by @Garfield-fr)
+
+**Other changes:**
+
+- chore(dev): update eslint settings [#744](https://github.com/rero/ng-core/pull/744) (by @PascalRepond)
+
 ## [v19.1.2](https://github.com/rero/ng-core/tree/v19.1.2) (2025-08-05)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.1.0...v19.1.2)
@@ -7,15 +25,18 @@
 **Other changes:**
 
 **New features:**
+
 - feat(filters): change select by toggle switch [#737](https://github.com/rero/ng-core/pull/737) (by @Garfield-fr)
 - feat: add page title [#739](https://github.com/rero/ng-core/pull/739) (by @Garfield-fr)
 
 **Fixes:**
+
 - fix(editor): update the selected node of tree select [#738](https://github.com/rero/ng-core/pull/738) (by @jma)
 - fix(editor): field color error [#736](https://github.com/rero/ng-core/pull/736) (by @Garfield-fr)
 - fix(editor): Tree select [#735](https://github.com/rero/ng-core/pull/735) (by @Garfield-fr)
 
 **Other changes:**
+
 - chore: increase the space between list items [#741](https://github.com/rero/ng-core/pull/741) (by @Garfield-fr)
 - chore: update dependencies [#740](https://github.com/rero/ng-core/pull/740) (by @Garfield-fr)
 
@@ -24,264 +45,300 @@
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.1.0...v19.1.1)
 
 **Fixes:**
-* fix(editor): scroll [\#734](https://github.com/rero/ng-core/pull/734) (by @Garfield-fr)
-* fix(editor): don't remove form field wrapper [\#732](https://github.com/rero/ng-core/pull/732) (by @Garfield-fr)
-* fix(sort): remove testing data [\#730](https://github.com/rero/ng-core/pull/730) (by @PascalRepond)
-* fix: menu sort translation [\#728](https://github.com/rero/ng-core/pull/728) (by @Garfield-fr)
-* fix(search): allow launching a search also with numpad "Enter" [\#729](https://github.com/rero/ng-core/pull/729) (by @PascalRepond)
-* fix(select): translate default placeholder [\#726](https://github.com/rero/ng-core/pull/726) (by @PascalRepond)
-* fix(search): fix query when using a search field [\#707](https://github.com/rero/ng-core/pull/707) (by @jma)
+
+- fix(editor): scroll [\#734](https://github.com/rero/ng-core/pull/734) (by @Garfield-fr)
+- fix(editor): don't remove form field wrapper [\#732](https://github.com/rero/ng-core/pull/732) (by @Garfield-fr)
+- fix(sort): remove testing data [\#730](https://github.com/rero/ng-core/pull/730) (by @PascalRepond)
+- fix: menu sort translation [\#728](https://github.com/rero/ng-core/pull/728) (by @Garfield-fr)
+- fix(search): allow launching a search also with numpad "Enter" [\#729](https://github.com/rero/ng-core/pull/729) (by @PascalRepond)
+- fix(select): translate default placeholder [\#726](https://github.com/rero/ng-core/pull/726) (by @PascalRepond)
+- fix(search): fix query when using a search field [\#707](https://github.com/rero/ng-core/pull/707) (by @jma)
 
 ## [v19.1.0](https://github.com/rero/ng-core/tree/v19.1.0) (2025-06-26)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.0.1...v19.1.0)
 
 **New features:**
-* feat(datePicker): add custom format [\#720](https://github.com/rero/ng-core/pull/720) (by @Garfield-fr)
-* feat(select): add disabled props [\#721](https://github.com/rero/ng-core/pull/721) (by @Garfield-fr)
-* feat: display validation errors on submit [\#698](https://github.com/rero/ng-core/pull/698) (by @jma)
+
+- feat(datePicker): add custom format [\#720](https://github.com/rero/ng-core/pull/720) (by @Garfield-fr)
+- feat(select): add disabled props [\#721](https://github.com/rero/ng-core/pull/721) (by @Garfield-fr)
+- feat: display validation errors on submit [\#698](https://github.com/rero/ng-core/pull/698) (by @jma)
 
 **Enhancements:**
-* feat(editor): sort label by language on add a field [\#718](https://github.com/rero/ng-core/pull/718) (by @Garfield-fr)
-* feat(editor): add long value support for selects [\#719](https://github.com/rero/ng-core/pull/719) (by @jma)
-* style(select): harmonise scrollHeights for selects [\#723](https://github.com/rero/ng-core/pull/723) (by @PascalRepond)
-* feat(templates): enhance load template modal [\#703](https://github.com/rero/ng-core/pull/703) (by @PascalRepond)
-* chore: improved display of deletion confirmation dialog [\#712](https://github.com/rero/ng-core/pull/712) (by @Garfield-fr)
+
+- feat(editor): sort label by language on add a field [\#718](https://github.com/rero/ng-core/pull/718) (by @Garfield-fr)
+- feat(editor): add long value support for selects [\#719](https://github.com/rero/ng-core/pull/719) (by @jma)
+- style(select): harmonise scrollHeights for selects [\#723](https://github.com/rero/ng-core/pull/723) (by @PascalRepond)
+- feat(templates): enhance load template modal [\#703](https://github.com/rero/ng-core/pull/703) (by @PascalRepond)
+- chore: improved display of deletion confirmation dialog [\#712](https://github.com/rero/ng-core/pull/712) (by @Garfield-fr)
 
 **Fix:**
-* fix(circulation): set autofocus after each circulation operation [\#714](https://github.com/rero/ng-core/pull/714) (by @jma)
-* fix: display tooltip on disabled export button [\#716](https://github.com/rero/ng-core/pull/716) (by @Garfield-fr)
-* fix(editor): password generator button [\#722](https://github.com/rero/ng-core/pull/722) (by @Garfield-fr)
-* fix(editor): enable filter when the number of options is big [\#713](https://github.com/rero/ng-core/pull/713) (by @jma)
-* fix(editor): datepicker should be smaller instead of taking the whole width of the screen [\#711](https://github.com/rero/ng-core/pull/710) (by @jma)
-* feat(aggregation): allow date editing on datepicker [\#710](https://github.com/rero/ng-core/pull/710) (by @Garfield-fr)
-* fix(editor): "my private templates" should be displayed first also for standard librarians [\#709](https://github.com/rero/ng-core/pull/709) (by @jma)
-* fix(paginator): update first position [\#705](https://github.com/rero/ng-core/pull/705) (by @Garfield-fr)
-* chore(search bar): improve search button design [\#706](https://github.com/rero/ng-core/pull/706) (by @PascalRepond)
-* fix(search): better layout when no results [\#704](https://github.com/rero/ng-core/pull/704) (by @PascalRepond)
-* fix(search): disable auto-spacing in pubdate facet [\#702](https://github.com/rero/ng-core/pull/702) (by @PascalRepond)
-* fix: fix scroll views in editor [\#701](https://github.com/rero/ng-core/pull/701) (by @jma)
-* fix: translate the title editor description [\#699](https://github.com/rero/ng-core/pull/699) (by @jma)
+
+- fix(circulation): set autofocus after each circulation operation [\#714](https://github.com/rero/ng-core/pull/714) (by @jma)
+- fix: display tooltip on disabled export button [\#716](https://github.com/rero/ng-core/pull/716) (by @Garfield-fr)
+- fix(editor): password generator button [\#722](https://github.com/rero/ng-core/pull/722) (by @Garfield-fr)
+- fix(editor): enable filter when the number of options is big [\#713](https://github.com/rero/ng-core/pull/713) (by @jma)
+- fix(editor): datepicker should be smaller instead of taking the whole width of the screen [\#711](https://github.com/rero/ng-core/pull/710) (by @jma)
+- feat(aggregation): allow date editing on datepicker [\#710](https://github.com/rero/ng-core/pull/710) (by @Garfield-fr)
+- fix(editor): "my private templates" should be displayed first also for standard librarians [\#709](https://github.com/rero/ng-core/pull/709) (by @jma)
+- fix(paginator): update first position [\#705](https://github.com/rero/ng-core/pull/705) (by @Garfield-fr)
+- chore(search bar): improve search button design [\#706](https://github.com/rero/ng-core/pull/706) (by @PascalRepond)
+- fix(search): better layout when no results [\#704](https://github.com/rero/ng-core/pull/704) (by @PascalRepond)
+- fix(search): disable auto-spacing in pubdate facet [\#702](https://github.com/rero/ng-core/pull/702) (by @PascalRepond)
+- fix: fix scroll views in editor [\#701](https://github.com/rero/ng-core/pull/701) (by @jma)
+- fix: translate the title editor description [\#699](https://github.com/rero/ng-core/pull/699) (by @jma)
 
 ## [v19.0.1](https://github.com/rero/ng-core/tree/v19.0.1) (2025-05-06)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.0.0...v19.0.1)
 
 **Fixes:**
-* chore: fix ng-core submodules configuration [\#695](https://github.com/rero/ng-core/pull/695) (by @jma)
-* chore: adjust track expression [\#694](https://github.com/rero/ng-core/pull/694) (by @Garfield-fr)
+
+- chore: fix ng-core submodules configuration [\#695](https://github.com/rero/ng-core/pull/695) (by @jma)
+- chore: adjust track expression [\#694](https://github.com/rero/ng-core/pull/694) (by @Garfield-fr)
 
 **Other changes:**
-* chore: update dependencies [\#696](https://github.com/rero/ng-core/pull/696) (by @Garfield-fr)
+
+- chore: update dependencies [\#696](https://github.com/rero/ng-core/pull/696) (by @Garfield-fr)
 
 ## [v19.0.0](https://github.com/rero/ng-core/tree/v19.0.0) (2025-04-24)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.3.0...v19.0.0)
 
 **New features:**
-* chore: upgrade to angular 19 and migrate to primeng [\#680](https://github.com/rero/ng-core/pull/680) (by @Garfield-fr & @jma)
+
+- chore: upgrade to angular 19 and migrate to primeng [\#680](https://github.com/rero/ng-core/pull/680) (by @Garfield-fr & @jma)
 
 **Other changes:**
-* chore: replace translate extract library [\#685](https://github.com/rero/ng-core/pull/685) (by @Garfield-fr)
+
+- chore: replace translate extract library [\#685](https://github.com/rero/ng-core/pull/685) (by @Garfield-fr)
 
 ## [v17.3.0](https://github.com/rero/ng-core/tree/v17.3.0) (2024-10-24)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.3...v17.3.0)
 
 **New features:**
-* search: export search components to other modules [\#643](https://github.com/rero/ng-core/pull/643) (by @jma)
+
+- search: export search components to other modules [\#643](https://github.com/rero/ng-core/pull/643) (by @jma)
 
 ## [v17.2.3](https://github.com/rero/ng-core/tree/v17.2.3) (2024-07-29)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.2...v17.2.3)
 
 **Fixes:**
-* editor: fix can remove field when a hide expression exists [\#635](https://github.com/rero/ng-core/pull/635) (by @jma)
-* editor: fix wrong validation for the datepicker component [\#634](https://github.com/rero/ng-core/pull/634) (by @jma)
-* editor: add URL parameters support [\#632](https://github.com/rero/ng-core/pull/632) (by @jma)
+
+- editor: fix can remove field when a hide expression exists [\#635](https://github.com/rero/ng-core/pull/635) (by @jma)
+- editor: fix wrong validation for the datepicker component [\#634](https://github.com/rero/ng-core/pull/634) (by @jma)
+- editor: add URL parameters support [\#632](https://github.com/rero/ng-core/pull/632) (by @jma)
 
 **Other changes:**
-* chore(dependencies): fix vulnerabilites [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
+
+- chore(dependencies): fix vulnerabilites [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
 
 ## [v17.2.2](https://github.com/rero/ng-core/tree/v17.2.2) (2024-07-18)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.1...v17.2.2)
 
 **Other changes:**
-* fix: update ngx-formly [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
+
+- fix: update ngx-formly [\#629](https://github.com/rero/ng-core/pull/629) (by @PascalRepond)
 
 ## [v17.2.1](https://github.com/rero/ng-core/tree/v17.2.1) (2024-06-06)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.2.0...v17.2.1)
 
 **Fixes:**
-* chore: update ngx-formly to the version 6.3.2 [\#625](https://github.com/rero/ng-core/pull/625) (by @Garfield-fr)
+
+- chore: update ngx-formly to the version 6.3.2 [\#625](https://github.com/rero/ng-core/pull/625) (by @Garfield-fr)
 
 ## [v17.2.0](https://github.com/rero/ng-core/tree/v17.2.0) (2024-05-16)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.1.0...v17.2.0)
 
 **New features:**
-* feat(editor): add new radio button type [\#618](https://github.com/rero/ng-core/pull/618) (by @Garfield-fr)
+
+- feat(editor): add new radio button type [\#618](https://github.com/rero/ng-core/pull/618) (by @Garfield-fr)
 
 **Fixes:**
-* fix(editor): remote typeahead clear value [\#617](https://github.com/rero/ng-core/pull/617) (by @Garfield-fr)
-* export: fix the url generation [\#613](https://github.com/rero/ng-core/pull/613) (by @Garfield-fr)
+
+- fix(editor): remote typeahead clear value [\#617](https://github.com/rero/ng-core/pull/617) (by @Garfield-fr)
+- export: fix the url generation [\#613](https://github.com/rero/ng-core/pull/613) (by @Garfield-fr)
 
 ## [v17.1.0](https://github.com/rero/ng-core/tree/v17.1.0) (2024-04-10)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v17.0.0...v17.1.0)
 
 **New features:**
-* files: add invenio record resources support [\#601](https://github.com/rero/ng-core/pull/601) (by @jma)
+
+- files: add invenio record resources support [\#601](https://github.com/rero/ng-core/pull/601) (by @jma)
 
 **Fixes:**
-* fix(editor): process json schema [\#608](https://github.com/rero/ng-core/pull/608) (by @Garfield-fr)
-* fix(search): add default filters [\#602](https://github.com/rero/ng-core/pull/602) (by @Garfield-fr)
+
+- fix(editor): process json schema [\#608](https://github.com/rero/ng-core/pull/608) (by @Garfield-fr)
+- fix(search): add default filters [\#602](https://github.com/rero/ng-core/pull/602) (by @Garfield-fr)
 
 **Other changes:**
-* chore: update dependencies [\#604](https://github.com/rero/ng-core/pull/604) (by @Garfield-fr)
-* chore: editor demo with all functionalities [\#603](https://github.com/rero/ng-core/pull/603) (by @Garfield-fr)
+
+- chore: update dependencies [\#604](https://github.com/rero/ng-core/pull/604) (by @Garfield-fr)
+- chore: editor demo with all functionalities [\#603](https://github.com/rero/ng-core/pull/603) (by @Garfield-fr)
 
 ## [v17.0.0](https://github.com/rero/ng-core/tree/v17.0.0) (2024-02-29)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.8.0...v17.0.0)
 
 **Breaking changes:**
-* chore: upgrade Angular v17 and Formly v6 [\#597](https://github.com/rero/ng-core/pull/597) (by @Garfield-fr)
+
+- chore: upgrade Angular v17 and Formly v6 [\#597](https://github.com/rero/ng-core/pull/597) (by @Garfield-fr)
 
 ## [v14.8.0](https://github.com/rero/ng-core/tree/v14.8.0) (2024-01-30)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.7.0...v14.8.0)
 
 **New features:**
-* feat(editor): add option on custom-select [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
+
+- feat(editor): add option on custom-select [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
 
 **Other changes:**
-* chore: update dependencies [\#592](https://github.com/rero/ng-core/pull/592) (by @PascalRepond)
+
+- chore: update dependencies [\#592](https://github.com/rero/ng-core/pull/592) (by @PascalRepond)
 
 ## [v14.7.0](https://github.com/rero/ng-core/tree/v14.7.0) (2024-01-11)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.6.0...v14.7.0)
 
 **New features:**
-* editor: disabled save button on first click [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
-* detail view: allow the addition of buttons [\#574](https://github.com/rero/ng-core/pull/574) (by @Garfield-fr)
+
+- editor: disabled save button on first click [\#580](https://github.com/rero/ng-core/pull/580) (by @Garfield-fr)
+- detail view: allow the addition of buttons [\#574](https://github.com/rero/ng-core/pull/574) (by @Garfield-fr)
 
 **Enhancements:**
-* search filters: refactoring to be more generic [\#571](https://github.com/rero/ng-core/pull/571) (by @Garfield-fr)
-* The select component in the editor should sort the values only in the suggestions [\#568](https://github.com/rero/ng-core/issues/568) (by @Garfield-fr)
+
+- search filters: refactoring to be more generic [\#571](https://github.com/rero/ng-core/pull/571) (by @Garfield-fr)
+- The select component in the editor should sort the values only in the suggestions [\#568](https://github.com/rero/ng-core/issues/568) (by @Garfield-fr)
 
 **Fixes:**
-* Form option does not work in definition. [\#547](https://github.com/rero/ng-core/issues/547) (by @Garfield-fr)
-* fix: search fields translations [\#581](https://github.com/rero/ng-core/pull/581) (by @PascalRepond)
-* fix: remove lowercase search field [\#575](https://github.com/rero/ng-core/pull/575) (by @PascalRepond)
-* formly: fix default value expression [\#569](https://github.com/rero/ng-core/pull/569) (by @Garfield-fr)
-* fix: default filter [\#567](https://github.com/rero/ng-core/pull/567) (by @Garfield-fr)
+
+- Form option does not work in definition. [\#547](https://github.com/rero/ng-core/issues/547) (by @Garfield-fr)
+- fix: search fields translations [\#581](https://github.com/rero/ng-core/pull/581) (by @PascalRepond)
+- fix: remove lowercase search field [\#575](https://github.com/rero/ng-core/pull/575) (by @PascalRepond)
+- formly: fix default value expression [\#569](https://github.com/rero/ng-core/pull/569) (by @Garfield-fr)
+- fix: default filter [\#567](https://github.com/rero/ng-core/pull/567) (by @Garfield-fr)
 
 **Other changes:**
-* chore: upgrade to node v16 [\#583](https://github.com/rero/ng-core/pull/583) (by @Garfield-fr)
-* chore: refactoring handle error [\#577](https://github.com/rero/ng-core/pull/577) (by @Garfield-fr)
-* chore: update github templates [\#566](https://github.com/rero/ng-core/pull/566) (by @PascalRepond)
+
+- chore: upgrade to node v16 [\#583](https://github.com/rero/ng-core/pull/583) (by @Garfield-fr)
+- chore: refactoring handle error [\#577](https://github.com/rero/ng-core/pull/577) (by @Garfield-fr)
+- chore: update github templates [\#566](https://github.com/rero/ng-core/pull/566) (by @PascalRepond)
 
 ## [v14.6.0](https://github.com/rero/rero-mef/tree/v14.6.0) (2023-09-06)
 
 [Full Changelog](https://github.com/rero/rero-mef/compare/v14.5.0...v14.6.0)
 
 **New features:**
-* general: Managing multiple resources in a route [\#557](https://github.com/rero/ng-core/pull/557) (by @Garfield-fr)
+
+- general: Managing multiple resources in a route [\#557](https://github.com/rero/ng-core/pull/557) (by @Garfield-fr)
 
 ## [v14.5.0](https://github.com/rero/ng-core/tree/v14.5.0) (2023-08-22)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.4.0...v14.5.0)
 
 **Changes:**
-* files: add permissions [\#555](https://github.com/rero/ng-core/pull/555) (by @jma)
+
+- files: add permissions [\#555](https://github.com/rero/ng-core/pull/555) (by @jma)
 
 ## [v14.4.0](https://github.com/rero/ng-core/tree/v14.4.0) (2023-07-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.3.0...v14.4.0)
 
 **Changes:**
-* editor: fix groupable custom select [\#553](https://github.com/rero/ng-core/pull/553) (by @zannkukai)
-* typeahead: allow more options for typeahead suggestion. [\#558](https://github.com/rero/ng-core/pull/558) (by @zannkukai)
-* editor: confirmation message when leaving [\#554](https://github.com/rero/ng-core/pull/554) (by @Garfield-fr)
-* formly: add a set default value [\#548](https://github.com/rero/ng-core/pull/548) (by @Garfield-fr)
-* translate: change locale en by en-GB [\#552](https://github.com/rero/ng-core/pull/552) (by @Garfield-fr)
-* search: fix number facets behavior [\#550](https://github.com/rero/ng-core/pull/550) (by @zannkukai)
+
+- editor: fix groupable custom select [\#553](https://github.com/rero/ng-core/pull/553) (by @zannkukai)
+- typeahead: allow more options for typeahead suggestion. [\#558](https://github.com/rero/ng-core/pull/558) (by @zannkukai)
+- editor: confirmation message when leaving [\#554](https://github.com/rero/ng-core/pull/554) (by @Garfield-fr)
+- formly: add a set default value [\#548](https://github.com/rero/ng-core/pull/548) (by @Garfield-fr)
+- translate: change locale en by en-GB [\#552](https://github.com/rero/ng-core/pull/552) (by @Garfield-fr)
+- search: fix number facets behavior [\#550](https://github.com/rero/ng-core/pull/550) (by @zannkukai)
 
 ## [v14.3.0](https://github.com/rero/ng-core/tree/v14.3.0) (2023-05-08)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.2.1...v14.3.0)
 
 **Other changes:**
-* formly: add filter on remote typeahead [\#542](https://github.com/rero/ng-core/pull/542) (by @Garfield-fr)
-* dependencies: fix security issues [\#546](https://github.com/rero/ng-core/pull/546) (by @rerowep)
-* results: allow default aggregation using the search input [\#541](https://github.com/rero/ng-core/pull/541) (by @zannkukai)
+
+- formly: add filter on remote typeahead [\#542](https://github.com/rero/ng-core/pull/542) (by @Garfield-fr)
+- dependencies: fix security issues [\#546](https://github.com/rero/ng-core/pull/546) (by @rerowep)
+- results: allow default aggregation using the search input [\#541](https://github.com/rero/ng-core/pull/541) (by @zannkukai)
 
 ## [v14.2.1](https://github.com/rero/ng-core/tree/v14.2.1) (2023-03-20)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.2.0...v14.2.1)
 
 **Changes:**
-* fix translations [f3744cd](https://github.com/rero/ng-core/commit/f3744cdffba651b3c157d818911ea0f552588c18) (by @PascalRepond)
+
+- fix translations [f3744cd](https://github.com/rero/ng-core/commit/f3744cdffba651b3c157d818911ea0f552588c18) (by @PascalRepond)
 
 ## [v14.2.0](https://github.com/rero/ng-core/tree/v14.2.0) (2023-02-28)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.1.0...v14.2.0)
 
 **Changes:**
-* formly type: add password generator [\#531](https://github.com/rero/ng-core/pull/531) (by @Garfield-fr)
-* formly type: add multicheckbox type [\#530](https://github.com/rero/ng-core/pull/530) (by @Garfield-fr)
-* aggregation: add title to filter button [\#540](https://github.com/rero/ng-core/pull/540) (by @Garfield-fr)
-* editor: management of Marshamllow errors [\#537](https://github.com/rero/ng-core/pull/537) (by @zannkukai)
-* dev: add better support of `npm link` [\#536](https://github.com/rero/ng-core/pull/536) (by @jma)
-* document editor: add a date time picker for ngx-formly [\#534](https://github.com/rero/ng-core/pull/534) (by @Garfield-fr)
+
+- formly type: add password generator [\#531](https://github.com/rero/ng-core/pull/531) (by @Garfield-fr)
+- formly type: add multicheckbox type [\#530](https://github.com/rero/ng-core/pull/530) (by @Garfield-fr)
+- aggregation: add title to filter button [\#540](https://github.com/rero/ng-core/pull/540) (by @Garfield-fr)
+- editor: management of Marshamllow errors [\#537](https://github.com/rero/ng-core/pull/537) (by @zannkukai)
+- dev: add better support of `npm link` [\#536](https://github.com/rero/ng-core/pull/536) (by @jma)
+- document editor: add a date time picker for ngx-formly [\#534](https://github.com/rero/ng-core/pull/534) (by @Garfield-fr)
 
 ## [v14.1.0](https://github.com/rero/ng-core/tree/v14.1.0) (2022-12-05)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v14.0.0...v14.1.0)
 
 **Changes:**
-* search : add customizable areas into search result page [\#527](https://github.com/rero/ng-core/pull/527) (by @zannkukai)
+
+- search : add customizable areas into search result page [\#527](https://github.com/rero/ng-core/pull/527) (by @zannkukai)
 
 ## [v14.0.0](https://github.com/rero/ng-core/tree/v14.0.0) (2022-10-13)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.16.1...v14.0.0)
 
 **Changes:**
-* dependencies: upgrade to angular 14 [\#525](https://github.com/rero/ng-core/pull/525) (by @jma)
-* search filters: hide simple filter [\#524](https://github.com/rero/ng-core/pull/524) (by @Garfield-fr)
+
+- dependencies: upgrade to angular 14 [\#525](https://github.com/rero/ng-core/pull/525) (by @jma)
+- search filters: hide simple filter [\#524](https://github.com/rero/ng-core/pull/524) (by @Garfield-fr)
 
 ## [v1.16.1](https://github.com/rero/ng-core/tree/v1.16.1) (2022-09-12)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.16.0...v1.16.1)
 
 **Changes:**
-* search filters: fix label translation [\#519](https://github.com/rero/ng-core/pull/519) (by @Garfield-fr)
-* search filters: fix dates range format [\#521](https://github.com/rero/ng-core/pull/521) (by @Garfield-fr)
-* search filters: fix translation on button [\#520](https://github.com/rero/ng-core/pull/520) (by @Garfield-fr)
+
+- search filters: fix label translation [\#519](https://github.com/rero/ng-core/pull/519) (by @Garfield-fr)
+- search filters: fix dates range format [\#521](https://github.com/rero/ng-core/pull/521) (by @Garfield-fr)
+- search filters: fix translation on button [\#520](https://github.com/rero/ng-core/pull/520) (by @Garfield-fr)
 
 ## [v1.16.0](https://github.com/rero/ng-core/tree/v1.16.0) (2022-08-25)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.15.1...v1.16.0)
 
 **Other changes:**
-* ApiService: Export endpoint [\#511](https://github.com/rero/ng-core/pull/511) (by @zannkukai)
-* search: keep only the children filter and add filter list [\#503](https://github.com/rero/ng-core/pull/503) (by @vgranata)
-* editor: improvements [\#516](https://github.com/rero/ng-core/pull/516) (by @Garfield-fr)
-* record: generalize export button [\#504](https://github.com/rero/ng-core/pull/504) (by @lauren-d)
+
+- ApiService: Export endpoint [\#511](https://github.com/rero/ng-core/pull/511) (by @zannkukai)
+- search: keep only the children filter and add filter list [\#503](https://github.com/rero/ng-core/pull/503) (by @vgranata)
+- editor: improvements [\#516](https://github.com/rero/ng-core/pull/516) (by @Garfield-fr)
+- record: generalize export button [\#504](https://github.com/rero/ng-core/pull/504) (by @lauren-d)
 
 ## [v1.15.1](https://github.com/rero/ng-core/tree/v1.15.1) (2022-07-07)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v1.14.5...v1.15.1)
 
 **Other changes:**
-* select: fix process options [\#512](https://github.com/rero/ng-core/pull/512) (by @Garfield-fr)
-* search: move to the top of the page if you change page [\#510](https://github.com/rero/ng-core/pull/510) (by @Garfield-fr)
-* editor: hide empty fields in edition [\#490](https://github.com/rero/ng-core/pull/490) (by @Garfield-fr)
-* facets: fix date range facet [\#498](https://github.com/rero/ng-core/pull/498) (by @zannkukai)
-* editor: add email validator [\#499](https://github.com/rero/ng-core/pull/499) (by @Garfield-fr)
+
+- select: fix process options [\#512](https://github.com/rero/ng-core/pull/512) (by @Garfield-fr)
+- search: move to the top of the page if you change page [\#510](https://github.com/rero/ng-core/pull/510) (by @Garfield-fr)
+- editor: hide empty fields in edition [\#490](https://github.com/rero/ng-core/pull/490) (by @Garfield-fr)
+- facets: fix date range facet [\#498](https://github.com/rero/ng-core/pull/498) (by @zannkukai)
+- editor: add email validator [\#499](https://github.com/rero/ng-core/pull/499) (by @Garfield-fr)
 
 ## [v1.14.5](https://github.com/rero/ng-core/tree/v1.14.5) (2022-02-24)
 
