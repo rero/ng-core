@@ -20,16 +20,16 @@ import { OverlayOptions } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { DomHandler } from 'primeng/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
-import { RecordService } from '../record.service';
 import { SanitizePipe } from '../../pipe/sanitize.pipe';
 import { CONFIG } from '../../utils/config';
+import { RecordService } from '../record.service';
 
 export interface IRecordType {
   field: string;
   groupLabel?: string;
   index: string;
   maxSuggestions?: number;
-  processSuggestions: Function;
+  processSuggestions: (data: any, query: string) => IAutoComplete[]; 
   preFilters?: any;
   queryParams?: object;
   sort?: string;

@@ -91,7 +91,7 @@ describe('LocalStorageService', () => {
   });
 
   it('should check if event onRemove is notified', () => {
-    const onRemoveEvent = service.onRemove$.subscribe((event: any) => {
+    const onRemoveEvent = service.onRemove$.subscribe((event: null) => {
       expect(event).toBeNull();
     });
     service.set('local', {});
@@ -100,7 +100,7 @@ describe('LocalStorageService', () => {
   });
 
   it('should check if event onClear is notified', () => {
-    const onClearEvent = service.onClear$.subscribe((event: any) => {
+    const onClearEvent = service.onClear$.subscribe((event: null) => {
       expect(event).toBeNull();
     });
     service.set('local', {});

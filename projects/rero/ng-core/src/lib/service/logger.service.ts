@@ -22,13 +22,13 @@ import { ILogger } from '../ILogger';
 })
 export class LoggerService implements ILogger {
 
-  info(data: any, message?: any): void {
+  info(data, message?: string): void {
     console.log(message, data);
   }
-  warning(data: any, message?: any): void {
+  warning(data, message?: string): void {
     console.warn(message, data);
   }
-  error(data: any, message?: any): void {
+  error(data, message?: string): void {
     console.error(message, data);
   }
 }

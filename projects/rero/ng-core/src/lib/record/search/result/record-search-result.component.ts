@@ -59,7 +59,7 @@ export class RecordSearchResultComponent implements OnInit, AfterViewInit {
   @Input() type: string;
 
   // Component for displaying item view
-  @Input() itemViewComponent: any;
+  @Input() itemViewComponent: ResultItem;
 
   // Admin mode (edit, remove, add, ...)
   @Input() adminMode: ActionStatus = { can: false, message: '' };
