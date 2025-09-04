@@ -14,13 +14,26 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, computed, inject, input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface IFilter {
   key: string;
   aggregationKey: string;
   name?: string;
+}
+
+export interface IBucket {
+  key: string | number;
+  aggregationKey?: string;
+  name?: string;
+  buckets?: IBucket[];
+  value?: { buckets: IBucket[] };
+  doc_count?: number;         
+  indeterminate?: boolean;   
+  bucketSize?: number;        
+
+  [key: string]: unknown;     
 }
 
 @Component({
@@ -32,24 +45,22 @@ export class ListFiltersComponent {
 
   protected translateService: TranslateService = inject(TranslateService);
 
-  /**
-   * All aggregations
-   */
-  aggregations = input<any[]>([]);
+    /** All aggregations */
+  aggregations = input<IBucket[]>([]);
 
-  // Selected aggregations filters
-  aggregationsFilters = input<any>([]);
+  /** Selected aggregations filters */
+  aggregationsFilters = input<IBucket[]>([]);
 
-  // Search filters
-  searchFilters = input<any[]>([]);
+  /** Search filters */
+  searchFilters = input<IBucket[]>([]);
 
   /** Remove filter event */
   remove = output<IFilter>();
 
-  // Filters to hide
+  /** Filters to hide */
   filtersToHide = ['simple'];
 
-  // Filters selected
+  /** Filters selected */
   filters = computed(() => this.getActiveFilters());
 
   /**
@@ -58,21 +69,21 @@ export class ListFiltersComponent {
    */
   private getActiveFilters(): IFilter[] {
     const filterSet = [];
-    this.searchFilters().forEach((filter: any) => {
+      this.searchFilters()?.forEach(filter => {
       if (!filter.filters) {
-        filterSet.push(filter.filter);
+        filterSet.push(filter.filter as string);
       } else {
-        filter.filters.forEach((fSection: any) => {
-          filterSet.push(fSection.filter);
+        (filter.filters as IBucket[]).forEach(fSection => {
+          filterSet.push(fSection.filter as string);
         });
       }
     });
     this.filtersToHide = [...new Set<string>([...this.filtersToHide, ...filterSet])];
 
     const filters = [];
-    this.aggregationsFilters().map((filter: any) => {
+   this.aggregationsFilters()?.forEach(filter => {
       if (!this.filtersToHide.includes(filter.key)) {
-        filter.values.map((value: string) => {
+        (filter.value as string[]).forEach(value => {
           if (value.includes('--')) {
             const regex = /\d{13,}--\d{13,}/;
             if (regex.test(value)) {
@@ -89,11 +100,10 @@ export class ListFiltersComponent {
         });
       }
     });
-    if(this.aggregations()) {
-      this.aggregations().map((item: any) => {
-        this.getFilterNames(item.value.buckets, filters);
-      });
-    }
+    this.aggregations()?.forEach(item => {
+      this.getFilterNames(item.value?.buckets || [], filters);
+    });
+
     return filters;
   }
 
@@ -103,26 +113,28 @@ export class ListFiltersComponent {
    *
    * @param buckets - Bucket to get the name from.
    */
-  getFilterNames(buckets: any, filters) {
+    private getFilterNames(buckets: IBucket[], filters: IFilter[]): void {
     if (!buckets || buckets.length === 0) {
       return;
     }
-    buckets.map((bucket: any) => {
+
+    buckets.forEach(bucket => {
       for (const k in bucket) {
-        if (bucket[k].buckets) {
-          this.getFilterNames(bucket[k].buckets, filters);
+        const subBucket = bucket[k];
+        if (subBucket && typeof subBucket === 'object' && (subBucket as IBucket).buckets) {
+          this.getFilterNames((subBucket as IBucket).buckets!, filters);
         }
       }
+
       if (bucket.name) {
-        const index = filters.findIndex((filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey);
+        const index = filters.findIndex(f => f.key === bucket.key && f.aggregationKey === bucket.aggregationKey);
         if (index > -1) {
           filters[index].name = bucket.name;
-          filters[index] = {...filters[index]};
+          filters[index] = { ...filters[index] };
         }
       }
     });
   }
-
   /**
    * Remove filter.
    * @param filter - the filter to remove

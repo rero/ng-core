@@ -61,7 +61,7 @@ export class ReadMoreComponent {
 
   private processText(data: string, more: boolean): string {
     if (more) {
-      let result: any[] = [];
+      let result: string[] = [];
       if (this.unit() === 'word') {
         result = this.splitWord().slice(0, this.limit());
       } else {

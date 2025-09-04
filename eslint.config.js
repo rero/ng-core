@@ -10,7 +10,7 @@ module.exports = tseslint.config(
     processor: angular.processInlineTemplates,
     rules: {
       '@angular-eslint/prefer-standalone': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@angular-eslint/component-class-suffix': 'warn',
       '@angular-eslint/no-output-on-prefix': 'warn',

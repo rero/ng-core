@@ -18,7 +18,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { inject, Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
 import { Error } from '../error/error';
@@ -26,6 +26,14 @@ import { resolveRefs } from './editor/utils';
 import { Record } from './record';
 import { RecordHandleErrorService } from './record.handle-error.service';
 
+export interface AggregationsFilter<T = string | Date> {
+  key: string;
+  values: T[];
+}
+interface TotalObject {
+  value: number;
+  relation?: string;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -39,6 +47,8 @@ export class RecordService {
   static readonly DEFAULT_REST_RESULTS_SIZE = 10;
   static readonly MAX_REST_RESULTS_SIZE = 9999;
 
+
+  
   /**
    * Event for record created
    */
@@ -62,6 +72,8 @@ export class RecordService {
     return this.onCreate.asObservable();
   }
 
+
+  
   /**
    * On update observable
    * @return onUpdate Subject
@@ -98,9 +110,9 @@ export class RecordService {
     query = '',
     page = 1,
     itemsPerPage = RecordService.DEFAULT_REST_RESULTS_SIZE,
-    aggregationsFilters: any[] = [],
+    aggregationsFilters: AggregationsFilter[] = [],
     preFilters: object = {},
-    headers: any = null,
+    headers: HttpHeaders | Record<string, string> | null = null,
     sort: string = null,
     facets: string[] = []
   ): Observable<Record | Error> {
@@ -168,8 +180,8 @@ export class RecordService {
     type: string,
     pid: string,
     resolve = 0,
-    headers: any = {}
-  ): Observable<any | Error> {
+    headers: HttpHeaders | Record<string, string> = {}
+  ): Observable<Record | Error> {
     return this.http
       .get<Record>(
         `${this.apiService.getEndpointByType(
@@ -187,36 +199,34 @@ export class RecordService {
    * Return the schema form to generate the form based on the resource given.
    * @param recordType - string, type of the resource
    */
-  getSchemaForm(recordType: string) {
-    let recType = recordType.replace(/ies$/, 'y');
-    recType = recType.replace(/s$/, '');
-    const url = this.apiService.getSchemaFormEndpoint(recordType, true);
-    return this.http.get<any>(url).pipe(
-      catchError((e) => {
-        if (e.status === 404) {
-          return of(null);
-        }
-      }),
-      map((data) => {
-        return data;
-      })
-    );
-  }
+  getSchemaForm(recordType: string): Observable<FormlyFieldConfig[] | null> {
+  let recType = recordType.replace(/ies$/, 'y');
+  recType = recType.replace(/s$/, '');
+  const url = this.apiService.getSchemaFormEndpoint(recordType, true);
+  return this.http.get<FormlyFieldConfig[]>(url).pipe(
+    catchError((e) => {
+      if (e.status === 404) {
+        return of(null);
+      }
+      throw e;
+    })
+  );
+}
 
   /**
    * Create a new record
    * @param recordType - string, type of resource
    * @param record - object, record to create
    */
-  create(recordType: string, record: object): Observable<any> {
+  create(recordType: string, record: Record): Observable<Record> {
+  return this.http
+    .post<Record>(this.apiService.getEndpointByType(recordType, true) + '/', record)
+    .pipe(
+      catchError((error) => this._handleError(error, recordType)),
+      tap(() => this.onCreate.next(this._createEvent(recordType, { record })))
+    );
+}
 
-    return this.http
-      .post(this.apiService.getEndpointByType(recordType, true) + '/', record)
-      .pipe(
-        catchError((error) => this._handleError(error, recordType)),
-        tap(() => this.onCreate.next(this._createEvent(recordType, { record })))
-      );
-  }
 
   /**
    * Update a record
@@ -224,16 +234,17 @@ export class RecordService {
    * @param pid - string, record PID
    * @param record - object, record to update
    */
-  update(recordType: string, pid: string, record: any) {
-    const url = `${this.apiService.getEndpointByType(recordType, true)}/${pid}`;
+ update(recordType: string, pid: string, record: Record): Observable<Record> {
+  const url = `${this.apiService.getEndpointByType(recordType, true)}/${pid}`;
 
-    return this.http
-        .put(url, record)
-        .pipe(
-          catchError((error) => this._handleError(error, recordType)),
-          tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
-        );
-  }
+  return this.http
+      .put<Record>(url, record)
+      .pipe(
+        catchError((error) => this._handleError(error, recordType)),
+        tap(() => this.onUpdate.next(this._createEvent(recordType, { record })))
+      );
+}
+
 
   /**
    * Check if a record is already registered with the same value
@@ -317,23 +328,22 @@ export class RecordService {
    * @param relation - boolean
    * @return integer, text or null
    */
-  totalHits(total: any, relation = false): any {
-    switch (typeof total) {
-      case 'object':
-        if (relation) {
-          return `${this.translateService.instant(
-            total.relation
-          )} ${total.value.toString()}`;
-        }
-        return Number(total.value);
-      case 'number':
-        return total;
-      case 'string':
-        return Number(total);
-      default:
-        return null;
-    }
+  
+totalHits(total: TotalObject | number | string, relation = false): number | string | null {
+  switch (typeof total) {
+    case 'object':
+      if (relation) {
+        return `${this.translateService.instant(total.relation)} ${total.value.toString()}`;
+      }
+      return Number(total.value);
+    case 'number':
+      return total;
+    case 'string':
+      return Number(total);
+    default:
+      return null;
   }
+}
 
   /**
    * Return the suggestions for query and field.
@@ -369,24 +379,25 @@ export class RecordService {
    * Creates and returns a HttpHeader object to send to request.
    * @param headers Object containing http headers to send to request.
    */
-  private _createRequestHeaders(headers: any = {}) {
-    return headers
-      ? new HttpHeaders(headers)
-      : new HttpHeaders({ 'Content-Type': 'application/json' });
-  }
-
+private _createRequestHeaders(
+  headers: HttpHeaders | Record<string, string> = {}
+): HttpHeaders {
+  return headers instanceof HttpHeaders
+    ? headers
+    : new HttpHeaders(headers);
+}
   /**
    * Create a message for event
    * @param resource - string
    * @param data - any
    */
-  private _createEvent(resource: string, data: any) {
-    return { resource, data };
-  }
+private _createEvent<T>(resource: string, data: T) {
+  return { resource, data };
+}
 }
 
 /** Record Event Interface */
-export interface RecordEvent {
+export interface RecordEvent<T = unknown> {
   resource: string;
-  data: any;
+  data: T;
 }

@@ -36,12 +36,12 @@ export class LocalStorageService {
   /**
    * Event for remove data on local storage
    */
-  private onRemove = new Subject<any>();
+  private onRemove = new Subject<void>();
 
   /**
    * Event for clear on local storage
    */
-  private onClear = new Subject<any>();
+  private onClear = new Subject<void>();
 
   /**
    * On set observable
@@ -73,7 +73,7 @@ export class LocalStorageService {
    * @param value - string
    * @return LocalStorageService
    */
-  set(key: string, value: any) {
+  set(key: string, value: unknown) {
     const data = { date: new Date(), data: value };
     localStorage.setItem(key, this.cryptoService.encrypt(
       JSON.stringify(data)
@@ -180,5 +180,5 @@ export class LocalStorageService {
  */
 export interface LocalStorageEvent {
   key: string;
-  data: any;
+  data: unknown;
 }

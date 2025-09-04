@@ -17,6 +17,7 @@
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
+import { IBucket } from '../list-filters/list-filters.component';
 
 @Component({
     selector: 'ng-core-record-search-aggregation-buckets',
@@ -29,7 +30,7 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
 
   // COMPONENT ATTRIBUTES ============================================================
   /** Buckets list for aggregation */
-  buckets = input.required<any[]>();
+  buckets = input.required<IBucket[]>();
   /** Aggregation key */
   aggregationKey = input.required<string>();
   /** Bucket size, if not null, reduce displayed items to this size. */
@@ -40,7 +41,8 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
   /** Current selected values for the aggregations */
   aggregationsFilters: AggregationsFilter[] = [];
   /** Children of current bucket */
-  bucketChildren: any = {};
+  bucketChildren: Record<string, IBucket[]> = {};
+
 
   /** Subscription to aggregationsFilters observable */
   private aggregationsFiltersSubscription: Subscription;
@@ -118,15 +120,15 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * @param value: filter value (could be string, number, ...)
    * @return `true` if value is present in the aggregation filters, `null` otherwise.
    */
-  isSelected(value: any): boolean|null {
-    return this.aggregationFilters.includes(value.toString()) ? true : null;
-  }
+  isSelected(value: string | number): boolean | null {
+  return this.aggregationFilters.includes(value.toString()) ? true : null;
+}
 
   /**
    * Do we need to display the children?
    * @return `true` if we want to display the children, `false` otherwise.
    */
-  displayChildren(bucket): boolean {
+  displayChildren(bucket : IBucket): boolean {
     return (
       this.isSelected(bucket.key) ||
       // not necessary but faster than hasChildrenFilter
@@ -141,43 +143,51 @@ export class BucketsComponent implements OnInit, OnDestroy, OnChanges {
    * values to service.
    * @param bucket - string: the selected bucket value (checked OR unchecked)
    */
-  updateFilter(bucket: any) {
-    const index = this.aggregationsFilters.findIndex((item: AggregationsFilter) => item.key === this.aggregationKey());
-    if (index === -1) {
-      // No filters exist for the aggregation.
-      this.recordSearchService.updateAggregationFilter(this.aggregationKey(), [bucket.key], bucket);
+  updateFilter(bucket: IBucket) {
+  const index = this.aggregationsFilters.findIndex(
+    (item: AggregationsFilter) => item.key === this.aggregationKey()
+  );
+
+  if (index === -1) {
+    // No filters exist for the aggregation.
+    this.recordSearchService.updateAggregationFilter(this.aggregationKey(), [bucket.key], bucket);
+  } else {
+    const aggFilter = this.aggregationsFilters[index];
+    if (!aggFilter.values.includes(bucket.key.toString())) {
+      // Bucket value is not yet selected, we add value to selected values.
+      this.aggregationsFilters[index].values.push(bucket.key.toString());
+      this.recordSearchService.updateAggregationFilter(
+        this.aggregationKey(),
+        this.aggregationsFilters[index].values,
+        bucket
+      );
     } else {
-      const aggFilter = this.aggregationsFilters[index];
-      if (!aggFilter.values.includes(bucket.key.toString())) {
-        // Bucket value is not yet selected, we add value to selected values.
-        this.aggregationsFilters[index].values.push(bucket.key.toString());
-        this.recordSearchService.updateAggregationFilter(
-          this.aggregationKey(),
-          this.aggregationsFilters[index].values,
-          bucket
-        );
-      } else {
-        // Removes value from selected values and all children selected values.
-        this.recordSearchService.removeAggregationFilter(this.aggregationKey(), bucket);
-      }
+      // Removes value from selected values and all children selected values.
+      this.recordSearchService.removeAggregationFilter(this.aggregationKey(), bucket);
     }
   }
+}
+
 
   /**
    * Get children buckets
    * @param bucket: parent bucket
    * @return Bucket children list of given bucket
    */
-  getBucketChildren(bucket: any): any[] {
-    const children = [];
-    for (const k of Object.keys(bucket).filter(key => typeof bucket[key] === 'object' && bucket[key].buckets)) {
-      children.push({
-        aggregationKey: k,
-        bucketSize: this.bucketSize,
-        key: k,
-        buckets: bucket[k].buckets,
-      });
-    }
-    return children;
+  getBucketChildren(bucket: IBucket): IBucket[] {
+  const children: IBucket[] = [];
+
+  for (const k of Object.keys(bucket).filter(
+    key => typeof bucket[key] === 'object' && Array.isArray(bucket[key])
+  )) {
+    children.push({
+      aggregationKey: k,
+      key: k,
+      buckets: bucket[k] as IBucket[],
+      bucketSize: this.bucketSize
+    } as IBucket);
   }
+
+  return children;
+}
 }
