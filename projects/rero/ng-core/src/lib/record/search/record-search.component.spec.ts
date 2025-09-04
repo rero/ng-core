@@ -20,6 +20,8 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { ConfirmationService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../dialog/dialog.component';
 import { DefaultPipe } from '../../pipe/default.pipe';
@@ -34,8 +36,6 @@ import { RecordSearchAggregationComponent } from './aggregation/aggregation.comp
 import { RecordSearchComponent } from './record-search.component';
 import { RecordSearchService } from './record-search.service';
 import { RecordSearchResultComponent } from './result/record-search-result.component';
-import { ConfirmationService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
 
 const adminMode = (): Observable<ActionStatus> => {
   return of({
@@ -215,13 +215,13 @@ describe('RecordSearchComponent', () => {
   }));
 
   it('should have permission to update record', () => {
-    component.canUpdateRecord$({}).subscribe((result: any) => {
+    component.canUpdateRecord$({}).subscribe((result: ActionStatus) => {
       expect(result.can).toBe(true);
     });
 
     recordUiServiceSpy.canUpdateRecord$.and.returnValue(of({ can: false, message: '' }));
 
-    component.canUpdateRecord$({}).subscribe((result: any) => {
+    component.canUpdateRecord$({}).subscribe((result: ActionStatus) => {
       expect(result.can).toBe(false);
     });
   });
@@ -244,13 +244,13 @@ describe('RecordSearchComponent', () => {
     component['currentType'] = 'documents';
     component.detailUrl = '/custom/url/for/detail/:type/:pid';
 
-    component.resolveDetailUrl$({ id: 100 }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ id: 100 }).subscribe((result: { link: string; external: boolean } | null) => {
       expect(result.link).toBe('/custom/url/for/detail/documents/100');
     });
 
     component.detailUrl = null;
 
-    component.resolveDetailUrl$({ id: 100 }).subscribe((result: any) => {
+    component.resolveDetailUrl$({ id: 100 }).subscribe((result: { link: string; external: boolean } | null) => {
       expect(result.link).toBe('detail/100');
     });
   }));

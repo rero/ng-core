@@ -20,9 +20,9 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, Subscription } from 'rxjs';
 import { ActionStatus } from '../action-status';
+import { JSONSchema7 } from '../editor/utils';
 import { RecordUiService } from '../record-ui.service';
 import { RecordSearchService } from './record-search.service';
-import { JSONSchema7 } from '../editor/utils';
 
 @Component({
     selector: 'ng-core-record-search-page',
@@ -90,16 +90,16 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
     index?: string,
     component?: Component,
     total?: number,
-    canAdd?: any,
-    canUpdate?: any,
-    canDelete?: any,
-    canRead?: any,
-    permissions?: any,
-    aggregations?: any,
-    preFilters?: any,
-    listHeaders?: any,
-    itemHeaders?: any,
-    aggregationsName?: any,
+    canAdd?: ActionStatus,
+    canUpdate?: ActionStatus,
+    canDelete?: ActionStatus,
+    canRead?: ActionStatus,
+    permissions?: unknown,
+    aggregations?: (aggs: object) => Observable<object> | object;
+    preFilters?: Record<string, string | string[]>;
+    listHeaders?: Record<string, string>;
+    itemHeaders?: Record<string, string>;
+    aggregationsName?: Record<string, string>;
     aggregationsOrder?: string[],
     aggregationsExpand?: string[] | (() => string[]),
     aggregationsBucketSize?: number,
@@ -149,13 +149,15 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
         });
 
         // Add filter parameter value
+        // Add filter parameter value
         if (config.searchFilters) {
-          config.searchFilters.forEach((filter: any) => {
-            if (queryParams.get(filter.filter) === null && filter.disabledValue) {
+          config.searchFilters.forEach((filter: SearchFilter | SearchFilterSection) => {
+            if ("filter" in filter && queryParams.get(filter.filter) === null && filter.disabledValue) {
               aggregationsFilters.push({ key: filter.filter, values: [filter.disabledValue] });
-            }
-          });
         }
+        });
+        }
+
         // update the facet filters given the URL params
         this.recordSearchService.setAggregationsFilters(aggregationsFilters);
       }
@@ -193,8 +195,8 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
    * Update URL accordingly to parameters given.
    * @param parameters Parameters to put in url or query string
    */
-  updateUrl(parameters: any) {
-    const queryParams: any = {
+  updateUrl(parameters: SearchParams) {
+     const queryParams: Record<string, string | number> = {
       q: parameters.q,
       page: parameters.page,
       size: parameters.size,
@@ -229,7 +231,7 @@ export class RecordSearchPageComponent implements OnInit, OnDestroy {
    *
    * @param config Configuration object.
    */
-  private _setDefaultSort(config: any, sortParam: string) {
+  private _setDefaultSort(config: RecordTypeConfig, sortParam: string) {
     if (sortParam) {
       this.sort = sortParam;
       return;

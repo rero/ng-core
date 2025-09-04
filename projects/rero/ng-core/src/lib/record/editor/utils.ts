@@ -14,18 +14,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { extractIdOnRef } from '../../utils/utils';
 import { JSONSchema7 as JSONSchema7Base } from 'json-schema';
+import { extractIdOnRef } from '../../utils/utils';
 
+export interface WidgetConfig {
+  formlyConfig?: {
+    props?: Record<string, unknown>;
+    templateOptions?: Record<string, unknown>;
+  };
+  [key: string]: unknown;
+}
 export interface JSONSchema7 extends JSONSchema7Base {
-  widget: any;
+  widget: WidgetConfig;
 }
 
 /**
  * Initialize the Formly widget on JSONSchema
  * @param schema - object, the JSONSchema
  */
-function createWidgetFormlyConfigProps(schema: any) {
+function createWidgetFormlyConfigProps(schema: JSONSchema7)  {
   if (!schema.widget) {
     schema.widget = {};
   }
@@ -43,71 +50,86 @@ function createWidgetFormlyConfigProps(schema: any) {
  * @param schemaProperties - json schema level
  * @returns the updated schema
  */
-export function resolve$ref(schema: any, schemaProperties: any): any {
+export function resolve$ref(
+  schema: Record<string, unknown>,
+  schemaProperties?: Record<string, JSONSchema7>
+): Record<string, unknown> {
   if (schemaProperties) {
-    Object.keys(schemaProperties).forEach((property: any) => {
+    Object.keys(schemaProperties).forEach((property: string) => {
       const field = schemaProperties[property];
       if (field.properties) {
         resolve$ref(schema, field.properties);
       }
-      // The field contains a $ref definition
       if (field.$ref) {
         const paths = field.$ref.replace('#/', '').split('/');
-        let def = schema;
+        let def: Record<string, unknown> = schema;
         paths.forEach((path: string) => {
-          def = def[path];
+          def = def[path] as Record<string, unknown>;
         });
-        // Populate field with new definition
         Object.keys(def).forEach((defKey: string) => {
-          if (defKey === 'widget' && def[defKey].formlyConfig?.templateOptions) {
-            def[defKey].formlyConfig.props = def[defKey].formlyConfig.templateOptions;
-            delete def[defKey].formlyConfig.templateOptions;
+          if (
+            defKey === 'widget' &&
+            (def[defKey] as JSONSchema7).formlyConfig?.templateOptions
+          ) {
+            ((def[defKey] as JSONSchema7).formlyConfig!.props =
+              (def[defKey] as JSONSchema7).formlyConfig!.templateOptions);
+            delete (def[defKey] as JSONSchema7).formlyConfig!.templateOptions;
           }
-          field[defKey] = def[defKey];
+          (field as Record<string, unknown>)[defKey] = def[defKey];
         });
-        // Delete reference
         delete field.$ref;
       }
     });
   }
-
   return schema;
 }
+
 
 /**
  * Process required properties on the JSONSchema.
  * @param schema - object, the JSONSchema
  * @returns object, a processed required properties JSONSchema
  */
-function processRequiredJsonSchema(schema: any): any {
-  schema.required.map((key: string) => {
+function processRequiredJsonSchema(
+  schema: JSONSchema7 & { required?: string[]; properties: Record<string, JSONSchema7> }
+): JSONSchema7 & { required?: string[]; properties: Record<string, JSONSchema7> } {
+  schema.required?.forEach((key: string) => {
     const childSchema = schema.properties[key];
-      if (childSchema) {
-        createWidgetFormlyConfigProps(childSchema);
-        childSchema.widget.formlyConfig.props.initialRequired = true;
-      }
+    if (childSchema) {
+      createWidgetFormlyConfigProps(childSchema);
+      childSchema.widget.formlyConfig!.props!.initialRequired = true;
+    }
   });
 
   return schema;
 }
+
 
 /**
  * Process order properties on the JSONSchema
  * @param schema - object, the JSONSchema
  * @returns object, a processed order properties JSONSchema
  */
-function processPropertiesOder(schema: any): any {
+function processPropertiesOder(
+  schema: JSONSchema7 & {
+    propertiesOrder?: string[];
+    _properties?: Record<string, JSONSchema7>;
+  }
+): JSONSchema7 & { propertiesOrder?: string[]; _properties?: Record<string, JSONSchema7> } {
   // copy the data
   schema._properties = { ...schema.properties };
   // new ordered properties
   schema.properties = {};
   // copy in the right order
-  for (const property of schema.propertiesOrder) {
-    schema.properties[property] = schema._properties[property];
+  if (schema.propertiesOrder) {
+    for (const property of schema.propertiesOrder) {
+      schema.properties[property] = schema._properties[property];
+    }
   }
 
   return schema;
 }
+
 
 
 /**
@@ -119,7 +141,27 @@ function processPropertiesOder(schema: any): any {
  * @param schema - object, the JSONSchema
  * @returns object, a converted JSONSchema
  */
-export function processJsonSchema(schema: any): any {
+export function processJsonSchema(
+  schema: JSONSchema7 & {
+    properties?: Record<string, JSONSchema7>;
+    propertiesOrder?: string[];
+    required?: string[];
+    items?: JSONSchema7;
+    oneOf?: JSONSchema7[];
+    anyOf?: JSONSchema7[];
+    allOf?: JSONSchema7[];
+    definitions?: Record<string, JSONSchema7>;
+  }
+): JSONSchema7 & {
+  properties?: Record<string, JSONSchema7>;
+  propertiesOrder?: string[];
+  required?: string[];
+  items?: JSONSchema7;
+  oneOf?: JSONSchema7[];
+  anyOf?: JSONSchema7[];
+  allOf?: JSONSchema7[];
+  definitions?: Record<string, JSONSchema7>;
+} {
   if (schema.properties) {
     if (schema.propertiesOrder) {
       schema = processPropertiesOder(schema);
@@ -132,36 +174,38 @@ export function processJsonSchema(schema: any): any {
       processJsonSchema(schema.properties[property]);
     }
   }
-  // recursion for array
+
   if (schema.items) {
     processJsonSchema(schema.items);
   }
-  // recursion for oneOf
+
   if (schema.oneOf) {
     for (const item of schema.oneOf) {
       processJsonSchema(item);
     }
   }
-  // recursion for anyOf
+
   if (schema.anyOf) {
     for (const item of schema.anyOf) {
       processJsonSchema(item);
     }
   }
-  // recursion for allOf
+
   if (schema.allOf) {
     for (const item of schema.allOf) {
       processJsonSchema(item);
     }
   }
-  // recursion for definitions
+
   if (schema.definitions) {
     for (const property of Object.keys(schema.definitions)) {
       processJsonSchema(schema.definitions[property]);
     }
   }
+
   return schema;
 }
+
 
 /**
  * Replace $ref by pid
@@ -170,59 +214,58 @@ export function processJsonSchema(schema: any): any {
  * @param data - object, the data to be cleaned
  * @returns object, a fresh copy of the data with replacements
  */
-export function resolveRefs(data: any) {
+export function resolveRefs(data: unknown): unknown {
   // array?
-  if (data instanceof Array) {
-    for (const d of data) {
-      // recursion
-      const value = resolveRefs(d);
-    }
+  if (Array.isArray(data)) {
+    return data.map(d => resolveRefs(d));
   }
+
   // object
-  if (data instanceof Object) {
-    // new object with resolved refs
-    const newObject: any = {};
+  if (data !== null && typeof data === 'object') {
+    const newObject: Record<string, unknown> = {};
     for (const key of Object.keys(data)) {
-      const value = resolveRefs(data[key]);
+      const value = resolveRefs((data as Record<string, unknown>)[key]);
       if (key === '$ref') {
-        newObject.pid = extractIdOnRef(value);
+        newObject['pid'] = extractIdOnRef(value);
       } else {
         newObject[key] = value;
       }
     }
     return newObject;
   }
+
+  // primitive (string, number, boolean, null, undefined)
   return data;
 }
+
 
 /**
  * Tell if a value can be considered as empty
  * @param value - any, the value to check
  * @returns boolean, true if the value is empty
  */
-export function isEmpty(value: any) {
+export function isEmpty(value: unknown): boolean {
   return (
     // null or undefined
     value == null ||
     // has length and it's zero (array, string)
-    (Object.hasOwn(value, 'length') && value.length === 0) ||
+    (typeof value === 'object' && value !== null && 'length' in value && (value as { length: number }).length === 0) ||
     // is an Object and has no keys
-    (value instanceof Object && Object.keys(value).length === 0)
+    (typeof value === 'object' && value !== null && !('length' in value) && Object.keys(value).length === 0)
   );
 }
+
 
 /**
  * Recursively remove the empty values
  * @param data - object, the data to be cleaned
  * @returns object, a fresh copy of the clean data
  */
-export function removeEmptyValues(data: any) {
+export function removeEmptyValues(data: unknown): unknown {
   // array?
-  if (data instanceof Array) {
-    // new array with non empty values
-    const newArray = [];
+  if (Array.isArray(data)) {
+    const newArray: unknown[] = [];
     for (const d of data) {
-      // recursion
       const value = removeEmptyValues(d);
       if (!isEmpty(value)) {
         newArray.push(value);
@@ -230,17 +273,20 @@ export function removeEmptyValues(data: any) {
     }
     return newArray;
   }
+
   // object?
-  if (data instanceof Object) {
-    // new object with non empty values
-    const newObject = {};
+  if (data !== null && typeof data === 'object') {
+    const newObject: Record<string, unknown> = {};
     for (const key of Object.keys(data)) {
-      const value = removeEmptyValues(data[key]);
+      const value = removeEmptyValues((data as Record<string, unknown>)[key]);
       if (!isEmpty(value)) {
         newObject[key] = value;
       }
     }
     return newObject;
   }
+
+  // primitive
   return data;
 }
+

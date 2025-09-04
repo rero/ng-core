@@ -18,6 +18,11 @@ import { Component, OnDestroy, OnInit, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RecordSearchService } from '../../record-search.service';
 
+export interface IAggregationBucket {
+  key: string;
+  doc_count?: number;
+  [key: string]: unknown;
+}
 @Component({
     selector: 'ng-core-aggregation-slider',
     templateUrl: './slider.component.html',
@@ -31,7 +36,7 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
   /** The aggregation key. */
   key = input<string>();
   /** Buckets list */
-  buckets = input<any[]>();
+  buckets = input<IAggregationBucket[]>();
   /** The minimum value */
   min = input<number>(1);
   /** The maximum value */
@@ -55,20 +60,17 @@ export class AggregationSliderComponent implements OnDestroy, OnInit {
     this.range = [this.min(), this.max()];
     this.searchServiceSubscription = this.recordSearchService
         .aggregationsFilters
-        .subscribe((filters: any) => {
-          if (!filters) {
-            return;
-          }
-          let filter = filters.find((element: any) => element.key === this.key());
+        .subscribe((filters: AggregationsFilter[]) => {
+          let filter = filters.find((element: AggregationsFilter) => element.key === this.key());
           if (filter) {
-            filter = filter.values[0].split('--').map((item: string) => +item);
-            this.hasQueryParam = true;
-            this.range = filter;
-          } else {
-            this.range = [this.min(), this.max()];
-          }
-        });
+          const values = filter.values[0].split('--').map((item: string) => +item);
+           this.hasQueryParam = true;
+    this.range = values;
+  } else {
+    this.range = [this.min(), this.max()];
   }
+});
+
 
   /**
    * OnDestroy hook

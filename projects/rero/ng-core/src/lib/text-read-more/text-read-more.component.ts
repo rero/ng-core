@@ -91,7 +91,7 @@ export class TextReadMoreComponent implements OnInit {
     if (this.text === undefined) {
        return '';
     }
-    let pattern: any = /\s+/;
+    let pattern = /\s+/;
     let joinText = ' ';
     if (this.unit !== 'word') {
       pattern = '';

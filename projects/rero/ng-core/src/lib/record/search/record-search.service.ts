@@ -17,14 +17,17 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { IBucket } from './aggregation/list-filters/list-filters.component';
+
 
 /**
  * Interface representing aggregations filters
  */
-export interface AggregationsFilter {
+export interface AggregationsFilter<T = string | Date> {
   key: string;
-  values: any[];
+  values: T[];
 }
+
 
 /**
  * Service for managing records search.
@@ -59,7 +62,7 @@ export class RecordSearchService {
    * @param key Aggregation key
    * @param bucket Bucket containing the value to remove
    */
-  removeAggregationFilter(key: string, bucket: any) {
+  removeAggregationFilter(key: string, bucket: IBucket) {
     this.removeFilter(key, bucket.key.toString());
     this.removeChildrenFilters(bucket);
     this.removeParentFilters(bucket);
@@ -91,7 +94,7 @@ export class RecordSearchService {
    * @param values Selected values
    * @param bucket The complete ElasticSearch affected bucket configuration
    */
-  updateAggregationFilter(term: string, values: string[], bucket: any = null) {
+  updateAggregationFilter(term: string, values: string[], bucket: IBucket = null) {
      if (this._aggregationsFilters === null) {
       this._aggregationsFilters = [];
     }

@@ -107,17 +107,17 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     index?: string;
     component?: Component;
     total?: number;
-    canAdd?: any;
-    canUpdate?: any;
-    canDelete?: any;
-    canRead?: any;
-    permissions?: any;
-    aggregations?: any;
-    preFilters?: any;
+    canAdd?: ActionStatus;
+    canUpdate?: ActionStatus;
+    canDelete?: ActionStatus;
+    canRead?: ActionStatus;
+    permissions?: unknown;
+    aggregations?: (aggs: object) => Observable<object> | object;
+    preFilters?: Record<string, string | string[]>;
     defaultSearchInputFilters?: AggregationsFilter[];
-    listHeaders?: any;
-    itemHeaders?: any;
-    aggregationsName?: any;
+    listHeaders?: Record<string, string>;
+    itemHeaders?: Record<string, string>;
+    aggregationsName?: Record<string, string>;
     aggregationsOrder?: string[];
     aggregationsExpand?: string[] | (() => string[]);
     aggregationsHide?: string[] | (() => string[]);
@@ -141,7 +141,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Current aggregations filters applied */
   aggregationsFilters: AggregationsFilter[] = [];
   /** Contain result row data */
-  hits: any = [];
+  hits: RecordHits = { hits: [], total: 0 };
+
   /** Facets retrieved from requested result */
   aggregations: Aggregation[];
   /** Aggregation keys to always hide (defined into the config) */
@@ -173,7 +174,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   /** Subscriptions to observables. */
   protected _subscriptions: Subscription = new Subscription();
   /** Store configuration for type. */
-  protected config: any = null;
+  protected config: RecordTypeConfig = null;
 
   availableTypes = [];
 
@@ -198,7 +199,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /** Request result record hits. */
-  get records(): any[] {
+  get records(): Record[] {
     return this.hits && this.hits.hits ? this.hits.hits : [];
   }
 
@@ -311,10 +312,10 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnInit() {
     this._subscriptions.add(
-      this.translateService.onLangChange.subscribe((lang: any) => {
+      this.translateService.onLangChange.subscribe((lang: LangChangeEvent) => {
         this._loadSearchFields();
-      })
-    );
+  })
+);
     this.availableTypes = this.types.filter((item) => item.hideInTabs !== true);
     // Subscribe on aggregation filters changes and do search.
     let first = true;
@@ -383,8 +384,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
             this.hits = records.hits;
             this.spinner.hide();
             // Apply filters
-            this.aggregations$(records.aggregations).subscribe((aggregations: any) => {
-              for (const agg of this.aggregations) {
+            this.aggregations$(records.aggregations).subscribe((aggregations: AggsDictionary) => {
+                for (const agg of this.aggregations) {
                 // reset aggregations
                 agg.loaded = false;
                 agg.value.buckets = [];
@@ -590,7 +591,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-  protected _exportFormats(): any[] {
+  protected _exportFormats(): ExportOption[] {
     if (!this.config || !this.config.exportFormats) {
       return [];
     }
@@ -609,7 +610,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param format - export format object
    * @return formatted url for an export format.
    */
-  getExportFormatUrl(format: any) {
+  getExportFormatUrl(format: ExportFormatConfig) {
     const queryParams = Object.keys(this.activatedRoute.snapshot.queryParams);
     // TODO: maybe we can use URLSerializer to build query string
     const baseUrl = format.endpoint ? format.endpoint : this.apiService.getEndpointByType(this._currentIndex());
@@ -649,7 +650,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param format - export format object
    * @return Boolean
    */
-  canExport(format: any): boolean {
+  canExport(format: ExportFormatConfig): boolean {
     return Object.hasOwn(format, 'disableMaxRestResultsSize') && format.disableMaxRestResultsSize
       ? this.total > 0
       : 0 < this.total && this.total < RecordService.MAX_REST_RESULTS_SIZE;
@@ -688,13 +689,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param records - Result records
    * @return Observable containing aggregations corresponding to actual records.
    */
-  aggregations$(aggregations: object): Observable<any> {
-    if (this.config.aggregations) {
-      return this.config.aggregations(aggregations);
-    } else {
-      return of(aggregations);
-    }
+  aggregations$(aggregations: AggsDictionary): Observable<AggsDictionary> {
+  if (this.config.aggregations) {
+    return this.config.aggregations(aggregations) as Observable<AggsDictionary> | AggsDictionary instanceof Observable
+      ? (this.config.aggregations(aggregations) as Observable<AggsDictionary>)
+      : of(this.config.aggregations(aggregations) as AggsDictionary);
+  } else {
+    return of(aggregations);
   }
+}
 
   /**
    * Returns an observable which emits the URL value for given record.
@@ -702,7 +705,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Generate detail URL for this record.
    * @return Observable emitting detail URL object
    */
-  resolveDetailUrl$(record: any): Observable<any> {
+  resolveDetailUrl$(record: Record): Observable<{ link: string; external: boolean } | null> {
     const url = { link: `detail/${record.id}`, external: false };
 
     if (this.detailUrl) {
@@ -755,12 +758,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param filter SearchFilter
    * @returns true if the given filter is selected.
    */
-  isFilterActive(filter: SearchFilter): boolean {
+  isFilterActive(filter: SearchFilter): boolean { 
     return this.aggregationsFilters
-      ? this.aggregationsFilters.some(
-          (item: any) => item.key === filter.filter && item.values.includes(String(filter.value))
-        )
-      : false;
+     ? this.aggregationsFilters.some( 
+      (item: any) => item.key === filter.filter && item.values.includes(String
+        (filter.value)) 
+      ) 
+      : false; 
+    }
+
   }
 
   /**

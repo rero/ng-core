@@ -15,7 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClient } from '@angular/common/http';
-import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
+import { inject } from '@angular/core';
+import { TranslateLoader as BaseTranslateLoader, TranslationObject } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CoreConfigService } from '../core-config.service';
@@ -23,7 +24,6 @@ import de from './i18n/de.json';
 import en from './i18n/en.json';
 import fr from './i18n/fr.json';
 import it from './i18n/it.json';
-import { inject } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.
@@ -45,7 +45,7 @@ export class TranslateLoader implements BaseTranslateLoader {
    * Return observable used by ngx-translate to get translations.
    * @param lang - string, language to retrieve translations from.
    */
-  getTranslation(lang: string): Observable<any> {
+  getTranslation(lang: string): Observable<TranslationObject> {
     // Already in cache
     if (this.translations[lang] != null) {
       return of(this.translations[lang]);

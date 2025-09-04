@@ -20,5 +20,5 @@ export interface RouteInterface {
   readonly name: string;
 
   /** Get configuration of the current route */
-  getConfiguration(): any;
+  getConfiguration(): unknown;
 }

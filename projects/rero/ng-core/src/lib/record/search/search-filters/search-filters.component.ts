@@ -15,13 +15,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, inject, input, output } from '@angular/core';
-import { SearchFilter, SearchFilterSection } from '../../record';
-import { ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { ActivatedRoute } from '@angular/router';
+import { ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
+import { SearchFilter, SearchFilterSection } from '../../record';
 
 export interface IChecked {
   filterKey: string;
   checked: boolean;
+}
+
+export interface SearchFiltersConfig {
+  allowEmptySearch: boolean;
 }
 
 @Component({
@@ -37,7 +41,7 @@ export class SearchFiltersComponent {
   searchFilters = input<SearchFilter[]|SearchFilterSection[]>([]);
 
   // Resources configuration
-  config = input.required<any>();
+  config = input.required<aSearchFiltersConfigny>();
 
   // query string
   query = input.required<string>();

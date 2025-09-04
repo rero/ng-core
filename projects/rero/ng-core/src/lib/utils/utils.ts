@@ -22,7 +22,7 @@ export function extractIdOnRef(ref: string) {
   return null;
 }
 
-export function cleanDictKeys(data: any) {
+export function cleanDictKeys(data: object) {
   // let data = _.cloneDeep(data);
   for (const key in data) {
     if (data[key] === null || data[key] === undefined || data[key].length === 0) {

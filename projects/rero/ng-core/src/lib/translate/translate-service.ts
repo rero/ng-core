@@ -20,7 +20,7 @@ import localeEn from '@angular/common/locales/en-GB';
 import localeFr from '@angular/common/locales/fr';
 import localeIt from '@angular/common/locales/it';
 import { inject, Injectable } from "@angular/core";
-import { TranslateService } from "@ngx-translate/core";
+import { InterpolatableTranslation, TranslateService } from "@ngx-translate/core";
 import { DateTime } from "luxon";
 import de from 'primelocale/de.json';
 import en from 'primelocale/en.json';
@@ -61,7 +61,7 @@ export class NgCoreTranslateService extends TranslateService {
     }
   }
 
-  use(lang: string): Observable<any> {
+  use(lang: string): Observable<InterpolatableTranslation> {
     DateTime.locale = lang;
     this.primeNG.setTranslation(this.locales[lang].primeng[lang]);
 

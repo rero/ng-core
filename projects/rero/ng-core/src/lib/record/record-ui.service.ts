@@ -23,7 +23,21 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { CONFIG } from '../utils/config';
 import { ActionStatus } from './action-status';
+import { Record } from './record.model';
 import { RecordService } from './record.service';
+
+
+export interface ResourceConfig {
+  key: string;
+  canAdd?: () => Observable<ActionStatus>;
+  canUpdate?: (record: Record | Record<string, unknown>) => Observable<ActionStatus>;
+  canDelete?: (record: Record | Record<string, unknown>) => Observable<ActionStatus>;
+  canRead?: (record: Record | Record<string, unknown>) => Observable<ActionStatus>;
+  canUse?: (record: Record | Record<string, unknown>) => Observable<ActionStatus>;
+  permissions?: (record: Record | Record<string, unknown>) => Observable<Record<string, ActionStatus>>;
+  deleteMessage?: (pid: string) => string[];
+  redirectUrl?: (record: Record | Record<string, unknown>, action: string) => Observable<string | null>;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +50,11 @@ export class RecordUiService {
   protected confirmationService: ConfirmationService = inject(ConfirmationService);
   protected messageService: MessageService = inject(MessageService);
 
+
+
   /** Configuration for all resources. */
-  types = [];
+  types: ResourceConfig[] = [];
+
 
   /**
    * Delete a record by its PID.
@@ -66,7 +83,7 @@ export class RecordUiService {
               life: CONFIG.MESSAGE_LIFE
             });
           },
-          error: (error: any)  => {
+          error: (error: HttpErrorResponse)  => {
             delete$.next(false);
             this.messageService.add({
               severity: 'error',
@@ -103,7 +120,7 @@ export class RecordUiService {
    * @param type Current type to find
    * @returns Object configuration for the current type
    */
-  getResourceConfig(type: string): any {
+  getResourceConfig(type: string): ResourceConfig  {
     if (this.types == null) {
       throw new Error(`Configuration not found for type "${type}"`);
     }
@@ -122,7 +139,7 @@ export class RecordUiService {
    * @param action - string, http action: create or update
    * @param route - ActivatedRoute: the current route used
    */
-  redirectAfterSave(pid: string, record: any, recordType: string, action: string, route: ActivatedRoute) {
+  redirectAfterSave(pid: string, record: Record | Record<string, unknown>, recordType: string, action: string, route: ActivatedRoute) {
     const config = this.getResourceConfig(recordType);
     if (config.redirectUrl) {
       config.redirectUrl(record, action).subscribe((result: string) => {
@@ -183,26 +200,25 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canUpdateRecord$(record: object, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig(type);
-    // The canUpdate function takes precedence over permissions
-    if (config.canUpdate) {
-      return config.canUpdate(record).pipe(first());
-    }
-    if (config.permissions) {
-      const permissions = config.permissions(record);
-      return permissions.pipe(
-        map((perms: any) => {
-          if ('canUpdate' in perms) {
-            return perms.canUpdate;
-          } else {
-            return of({ can: true, message: '' });
-          }
-        })
-      );
-    }
-    return of({ can: true, message: '' });
+  canUpdateRecord$(record: Record | Record<string, unknown>, type: string): Observable<ActionStatus> {
+  const config = this.getResourceConfig(type);
+  if (config.canUpdate) {
+    return config.canUpdate(record).pipe(first());
   }
+  if (config.permissions) {
+    const permissions = config.permissions(record);
+    return permissions.pipe(
+      map((perms: Record<string, ActionStatus>) => {
+        if ('canUpdate' in perms) {
+          return perms.canUpdate;
+        } else {
+          return { can: true, message: '' };
+        }
+      })
+    );
+  }
+  return of({ can: true, message: '' });
+}
 
   /**
    * Check if a record can be deleted
@@ -210,26 +226,26 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canDeleteRecord$(record: object, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig(type);
-    // The canDelete function takes precedence over permissions
-    if (config.canDelete) {
-      return config.canDelete(record).pipe(first());
-    }
-    if (config.permissions) {
-      const permissions = config.permissions(record);
-      return permissions.pipe(
-        map((perms: any) => {
-          if ('canDelete' in perms) {
-            return perms.canDelete;
-          } else {
-            return of({ can: true, message: '' });
-          }
-        })
-      );
-    }
-    return of({ can: true, message: '' });
+  canDeleteRecord$(record: Record | Record<string, unknown>, type: string): Observable<ActionStatus> {
+  const config = this.getResourceConfig(type);
+  // The canDeleteRecord function takes precedence over permissions
+  if (config.canDelete) {
+    return config.canDelete(record).pipe(first());
   }
+  if (config.permissions) {
+    const permissions = config.permissions(record);
+    return permissions.pipe(
+      map((perms: Record<string, ActionStatus>) => {
+        if ('canDelete' in perms) {
+          return perms.canDelete;
+        } else {
+          return { can: true, message: '' };
+        }
+      })
+    );
+  }
+  return of({ can: true, message: '' });
+}
 
   /**
    * Check if a record can be read
@@ -237,26 +253,26 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canReadRecord$(record: object, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig(type);
-    // The canRead function takes precedence over permissions
-    if (config.canRead) {
-      return config.canRead(record).pipe(first());
-    }
-    if (config.permissions) {
-      const permissions = config.permissions(record);
-      return permissions.pipe(
-        map((perms: any) => {
-          if ('canRead' in perms) {
-            return perms.canRead;
-          } else {
-            return of({ can: true, message: '' });
-          }
-        })
-      );
-    }
-    return of({ can: true, message: '' });
+  canReadRecord$(record: Record | Record<string, unknown>, type: string): Observable<ActionStatus> {
+  const config = this.getResourceConfig(type);
+  // The canReadRecord function takes precedence over permissions
+  if (config.canRead) {
+    return config.canRead(record).pipe(first());
   }
+  if (config.permissions) {
+    const permissions = config.permissions(record);
+    return permissions.pipe(
+      map((perms: Record<string, ActionStatus>) => {
+        if ('canRead' in perms) {
+          return perms.canRead;
+        } else {
+          return { can: true, message: '' };
+        }
+      })
+    );
+  }
+  return of({ can: true, message: '' });
+}
 
   /**
    * Check if a record can be used (mainly used for templates)
@@ -264,18 +280,18 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-   canUseRecord$(record: object, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig(type);
-    // The canUse function takes precedence over permissions
-    if (config.canUse) {
-      return config.canUse(record).pipe(first());
+  canUseRecord$(record: Record | Record<string, unknown>, type: string): Observable<ActionStatus> {
+  const config = this.getResourceConfig(type);
+  // The canUseRecord function takes precedence over permissions
+  if (config.canUse) {
+    return config.canUse(record).pipe(first());
+  }
+  if (config.permissions) {
+    const permissions = config.permissions(record);
+    if ('canUse' in permissions) {
+      return permissions.canUse;
     }
-    if (config.permissions) {
-      const permissions = config.permissions(record);
-      if ('canUse' in permissions) {
-        return permissions.canUse;
-      }
-    }
-    return of({ can: false, message: '' });
-   }
+  }
+  return of({ can: false, message: '' });
+}
 }

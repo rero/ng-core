@@ -19,10 +19,10 @@
  * Class representing a record set returned by API.
  */
 export class Record {
-  aggregations: any;
+  aggregations: Record<string, Aggregation> | null;
   id?: string;
-  hits: any;
-  links: any;
+  hits: SearchResult[] | null;
+  links: Record<string, string> | null;
 }
 
 export class SearchResult {
@@ -38,7 +38,7 @@ export interface File {
   version_id: string;
   is_head: boolean;
   created: string;
-  tags: any;
+  tags: string[];
   delete_marker: boolean;
   links: {
     self: string,
@@ -51,7 +51,7 @@ export interface File {
   key: string;
   showInfo: boolean;
   showChildren: boolean;
-  metadata: any;
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -105,8 +105,8 @@ export interface SearchFilterSection {
 /** Interfaces for an aggregation */
 export interface Aggregation {
   key: string;
-  bucketSize: any;
-  value: { buckets: any[] };
+  bucketSize: number;
+  value: { buckets: AggregationBucket[] };
   expanded: boolean;
   loaded?: boolean;
   doc_count?: number;

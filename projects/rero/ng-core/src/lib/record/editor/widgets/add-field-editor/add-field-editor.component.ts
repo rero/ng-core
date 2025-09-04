@@ -35,7 +35,7 @@ export class AddFieldEditorComponent implements OnInit, OnDestroy {
   protected translateService: TranslateService = inject(TranslateService);
 
   /** EditorComponent function */
-  @Input() editorComponent: any;
+  @Input() editorComponent!: () => EditorComponentInstance;
 
   searchValue: string | undefined;
 

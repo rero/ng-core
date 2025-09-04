@@ -37,7 +37,7 @@ import { ResultItem } from './result-item';
 })
 export class JsonComponent implements ResultItem {
   // Record data.
-  @Input() record: any;
+  @Input() record: unknown;
 
   // Type of resource.
   @Input() type: string;

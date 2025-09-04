@@ -21,19 +21,19 @@ export interface ILogger {
    * @param data - Any element
    * @param message - Message to be transmitted
    */
-  info(data: any, message?: any): void;
+  info(data, message?: string): void;
 
   /**
    * Warning message
    * @param data - Any element
    * @param message - Message to be transmitted
    */
-  warning(data: any, message?: any): void;
+  warning(data, message?: string): void;
 
   /**
    * Error message
    * @param data - Any element
    * @param message - Message to be transmitted
    */
-  error(data: any, message?: any): void;
+  error(data, message?: string): void;
 }
