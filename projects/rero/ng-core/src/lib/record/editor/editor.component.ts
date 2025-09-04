@@ -102,10 +102,11 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   @Input()
   editorSettings = {
     longMode: false,  // editor long mode
+    getHeaders: null,      // optional headers to use when loading a model
     template: {
-      recordType: undefined,    // the resource considerate as template
+      recordType: '',    // the resource considerate as template
       loadFromTemplate: false,  // enable load from template button
-      saveAsTemplate: false     // allow to save the record as a template
+      saveAsTemplate: false,     // allow to save the record as a template
     }
   };
 
@@ -116,7 +117,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
   saveAlternatives: { label: string, command: any }[] = [];
 
   // current record type from the url
-  recordType = null;
+  recordType = '';
 
   // If an error occurred, it is stored, to display in interface.
   error: Error;
@@ -232,7 +233,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
         // load template resource configuration if needed
         //   If editor allowed to use a resource as a template, we need to load the configuration
         //   of this resource and save it into `recordUIService.types` to use it when loading and saving
-        if (this.editorSettings.template.recordType !== undefined) {
+        if (this.editorSettings.template.recordType !== '') {
           const tmplResource = this.routeCollectionService.getRoute(this.editorSettings.template.recordType);
           const tmplConfiguration = tmplResource.getConfiguration();
           if (Object.hasOwn(tmplConfiguration, 'data')
@@ -279,7 +280,7 @@ export class EditorComponent extends AbstractCanDeactivateComponent implements O
           //   we need to load this record and use it as data source to fill the form.
         } else if (this.pid) {
           record$ = this.recordService
-            .getRecord(this.recordType, this.pid)
+            .getRecord(this.recordType, this.pid, 0, this.editorSettings.getHeaders || null)
             .pipe(
               switchMap((record: any) => {
                 return this.recordUiService.canUpdateRecord$(record, this.recordType).pipe(
