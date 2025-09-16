@@ -26,9 +26,10 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent 
 import { ButtonModule } from 'primeng/button';
 import { SelectChangeEvent, SelectModule } from 'primeng/select';
 import { map, merge, Observable, Subject, switchMap } from 'rxjs';
+import { CONFIG } from '../../../../../utils/config';
+import { removeChars } from '../../../../../utils/utils';
 import { IQuery, IQueryOptions, IRemoteAutoCompleteFilter, IValueSelect } from './remote-autocomplete.interface';
 import { RemoteAutocompleteService } from './remote-autocomplete.service';
-import { CONFIG } from '../../../../../utils/config';
 
 export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
   delay: number;
@@ -111,7 +112,7 @@ export class RemoteAutocomplete extends FieldType<FormlyFieldConfig<IRemoteAutoC
 
   suggestions = toSignal(this.query.pipe(
     switchMap((data: IQuery) => this.remoteAutocompleteService.getSuggestions(
-      data.query,
+      removeChars(data.query),
       data.queryOptions,
       data.recordPid
     ))

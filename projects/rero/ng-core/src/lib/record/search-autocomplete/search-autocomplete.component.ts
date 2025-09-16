@@ -20,9 +20,10 @@ import { OverlayOptions } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { DomHandler } from 'primeng/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
-import { RecordService } from '../record.service';
 import { SanitizePipe } from '../../pipe/sanitize.pipe';
 import { CONFIG } from '../../utils/config';
+import { removeChars } from '../../utils/utils';
+import { RecordService } from '../record.service';
 
 export interface IRecordType {
   field: string;
@@ -185,6 +186,7 @@ export class SearchAutocompleteComponent implements AfterViewInit{
   }
 
   private prepareQuery(query: string): Observable<any>[] {
+    query = removeChars(query);
     const suggestions: Observable<any>[] = [];
     this.recordTypes().forEach((recordType: IRecordType) => {
       const queryParams = [];

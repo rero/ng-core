@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -34,4 +34,9 @@ export function cleanDictKeys(data: any) {
 
 export function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+export function removeChars(value: string, chars: string[] = ['"']): string {
+  const re = new RegExp('['+ chars.join('') +']', 'gi');
+  return value.replace(re, '');
 }
