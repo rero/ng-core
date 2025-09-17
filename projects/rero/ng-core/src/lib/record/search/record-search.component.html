@@ -20,7 +20,7 @@
 } @else {
 <span #topScrollAnchor></span>
 <ng-core-search-tabs [types]="availableTypes" (onChangeType)="changeType($event)"/>
-<div class="core:flex core:flex-col core:gap-2">
+<div class="core:flex core:flex-col core:gap-2" [ngClass]="{ 'core:mt-2': availableTypes.length !== 1 || !showLabel }">
   @if (availableTypes.length === 1 && showLabel) {
   <h5>{{ availableTypes[0].label | translate }}</h5>
   }
