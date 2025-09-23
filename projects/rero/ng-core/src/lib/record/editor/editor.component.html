@@ -46,14 +46,20 @@
             (onClick)="cancel()"
           />
         <!-- save button -->
-          @if (saveAlternatives.length === 0) {
-          <p-button
+         <!--
+          TODO: Fix this when the split-button component allows you to change the button type.
+          We hide the submit button when the split button is displayed so that the submit function
+          can still be accessed using the enter key.
+         -->
+         <p-button
+            type="submit"
             id="editor-save-button"
             [label]="'Save' | translate"
-            (onClick)="submit()"
             [disabled]="isSaveButtonDisabled"
+            [hidden]="saveAlternatives.length > 0"
           />
-          } @else {
+          <!-- END TODO -->
+          @if (saveAlternatives.length > 0) {
           <p-splitButton
             id="editor-save-button-split"
             [label]="'Save' | translate"
