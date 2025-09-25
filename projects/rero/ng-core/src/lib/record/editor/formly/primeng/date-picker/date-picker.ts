@@ -79,6 +79,7 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [required]="props.required"
       selectionMode="single"
       [showButtonBar]="props.showButtonBar"
+      [showClear]="!props.required"
       [showIcon]="props.showIcon"
       [showOnFocus]="props.showOnFocus"
       [stepHour]="props.stepHour"
@@ -97,7 +98,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
 
   protected locale = inject(LOCALE_ID);
 
-  value = model<Date>();
+  value = model<Date | null>();
 
   private subscription: Subscription = new Subscription();
 
@@ -125,14 +126,14 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
     },
   };
 
-  defaultDate?: Date = undefined;
+  defaultDate?: Date | null = null;
   disabledDates?: Date[] = undefined;
   maxDate?: Date = undefined;
   minDate?: Date = undefined;
 
   ngOnInit(): void {
     this.subscription.add(this.formControl.valueChanges.subscribe((value) => {
-      const date = new Date(value);
+      const date = value? new Date(value): null;
       if (this.value() !== date) {
         this.value.set(date)
       }
@@ -163,12 +164,20 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
           this.formControl.patchValue(convertedDate);
           this.formControl.markAsTouched();
         }
+      } else {
+        this.clearFormValue();
       }
     }));
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  clearFormValue(): void {
+    this.formControl.reset(null);
+    const { errors } = this.formControl;
+    this.formControl.setErrors(errors?.required? {required: true}: null);
   }
 
   private processDate(date: string | Date ): Date {

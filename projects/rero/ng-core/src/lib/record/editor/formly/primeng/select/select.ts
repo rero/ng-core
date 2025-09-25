@@ -194,7 +194,7 @@ export class SelectComponent extends FieldType<FormlyFieldConfig<ISelectProps>> 
 
   clearValidators() {
     const { errors } = this.formControl;
-    this.formControl.setErrors(errors.required? {required: true}: null);
+    this.formControl.setErrors(errors?.required? {required: true}: null);
   }
 }
 

@@ -192,7 +192,7 @@ export class MultiSelectComponent extends FieldType<FormlyFieldConfig<IMultiSele
   // Clear all validators except required.
   clearValidators() {
     const {errors} = this.formControl;
-    this.formControl.setErrors(errors.required ? { required: true } : null);
+    this.formControl.setErrors(errors?.required ? { required: true } : null);
   }
 
   ngOnDestroy(): void {
