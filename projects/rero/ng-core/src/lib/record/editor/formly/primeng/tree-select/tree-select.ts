@@ -179,7 +179,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
   clearFormValue(): void {
     this.formControl.reset(null);
     const { errors } = this.formControl;
-    this.formControl.setErrors(errors.required? {required: true}: null);
+    this.formControl.setErrors(errors?.required? {required: true}: null);
   }
 
   private findNodeByValue(node: TreeNode[], value: string, data?: TreeNode): any {
