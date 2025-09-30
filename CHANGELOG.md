@@ -1,5 +1,20 @@
 # Changelog
 
+## [v19.3.0](https://github.com/rero/ng-core/tree/v19.3.0) (2025-09-30)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.2.0...v19.3.0)
+
+**New features:**
+
+- feat(editor): add a new `getHeaders` configuration [#751](https://github.com/rero/ng-core/pull/751) (by @jma)
+- feat(editor): add a clear button on the date picker [#758](https://github.com/rero/ng-core/pull/758) (by @jma)
+
+**Fixes:**
+
+- fix(aggregation): add offset on the max date [#757](https://github.com/rero/ng-core/pull/757) (by @Garfield-fr)
+- fix(editor): submit on enter key [#756](https://github.com/rero/ng-core/pull/756) (by @Garfield-fr)
+- fix(autocomplete): remove special chars on query [#754](https://github.com/rero/ng-core/pull/754) (by @Garfield-fr)
+
 ## [v19.2.0](https://github.com/rero/ng-core/tree/v19.2.0) (2025-09-01)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.1.2...v19.2.0)
