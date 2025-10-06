@@ -147,7 +147,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       this.defaultDate = this.processDate(this.props.defaultDate);
     }
     if (this.props.disabledDates) {
-      this.disabledDates = this.props.disabledDates.map((date: any) =>this.processDate(date));
+      this.disabledDates = this.props.disabledDates.map((date: string | Date) =>this.processDate(date));
     }
     if (this.props.minDate) {
       this.minDate = this.processDate(this.props.minDate);
@@ -156,7 +156,7 @@ export class DatePickerComponent extends FieldType<FormlyFieldConfig<IDateTimePi
       this.maxDate = this.processDate(this.props.maxDate);
     }
 
-    this.subscription.add(this.value.subscribe((value: any) => {
+    this.subscription.add(this.value.subscribe((value: string | Date) => {
       if (value) {
         const convertedDate = this.outputDate(value);
         if (convertedDate !== this.formControl.value) {
