@@ -89,7 +89,7 @@
   "should be multiple of ${{step}}": "має бути кратним ${{step}}",
   "should be null": "має бути нульовим/порожнім",
   "should have {{counter}} {{keys}}": "має бути {{counter}} {{keys}}",
-  "show less": "show less",
+  "show less": "показати менше",
   "show more": "show more",
   "strictly {{counter}}": "суворо {{counter}}",
   "the value is already taken": "значення вже призначено",
