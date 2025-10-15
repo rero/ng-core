@@ -24,6 +24,8 @@ import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { map, merge, Observable, Subscription, switchMap } from 'rxjs';
 import { TranslateLabelService } from '../services/translate-label.service';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 export interface IMultiCheckBoxProps extends FormlyFieldProps {
   labelStyleClass?: string;
   style: 'stacked' | 'inline';

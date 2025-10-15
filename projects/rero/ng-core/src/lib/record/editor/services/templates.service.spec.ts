@@ -17,10 +17,11 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { TemplatesService } from './templates.service';
 import { of } from 'rxjs';
 import { RecordService } from '../../record.service';
+import { TemplatesService } from './templates.service';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 describe('TemplatesService', () => {
   let service: TemplatesService;
 
