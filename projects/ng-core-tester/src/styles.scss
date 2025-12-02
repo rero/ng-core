@@ -15,21 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "font-awesome/scss/font-awesome";
-@use "easymde/dist/easymde.min";
-@use "ngx-spinner/animations/ball-zig-zag.css";
-@use "ng-core-tailwind";
-@use "ng-core";
-@use "katex";
+@use 'font-awesome/scss/font-awesome';
+@use 'easymde/dist/easymde.min';
+@use 'ngx-spinner/animations/ball-zig-zag.css';
+@use 'ng-core-tailwind';
+@use 'ng-core';
+@use 'katex';
 
-@import "tailwindcss" prefix(ui);
+@import 'tailwindcss' layer(tailwind) prefix(ui);
 
 @plugin "tailwindcss-primeui";
 
 :root {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1rem;
 }

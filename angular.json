@@ -3,24 +3,13 @@
   "version": 1,
   "projects": {
     "@rero/ng-core": {
-      "schematics": {
-        "@schematics/angular:component": {
-          "standalone": false
-        },
-        "@schematics/angular:directive": {
-            "standalone": false
-        },
-        "@schematics/angular:pipe" : {
-            "standalone": false
-        }
-      },
       "projectType": "library",
       "root": "projects/rero/ng-core",
       "sourceRoot": "projects/rero/ng-core/src",
       "prefix": "ng-core",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "builder": "@angular/build:ng-packagr",
           "options": {
             "tsConfig": "projects/rero/ng-core/tsconfig.lib.json",
             "project": "projects/rero/ng-core/ng-package.json"
@@ -32,11 +21,11 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/rero/ng-core/src/test.ts",
-            "tsConfig": "projects/rero/ng-core/tsconfig.spec.json",
-            "karmaConfig": "projects/rero/ng-core/karma.conf.js"
+            "buildTarget": "ng-core-tester:build",
+            "browsers": ["chromium"],
+            "tsConfig": "projects/rero/ng-core/tsconfig.spec.json"
           }
         },
         "lint": {
@@ -49,49 +38,25 @@
     },
     "ng-core-tester": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "standalone": false
-        },
-        "@schematics/angular:directive": {
-            "standalone": false
-        },
-        "@schematics/angular:pipe" : {
-            "standalone": false
-        }
-      },
       "root": "projects/ng-core-tester",
       "sourceRoot": "projects/ng-core-tester/src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular/build:application",
           "options": {
-            "allowedCommonJsDependencies": [
-              "crypto-js",
-              "easymde",
-              "js-generate-password"
-            ],
+            "allowedCommonJsDependencies": ["crypto-js", "easymde", "js-generate-password"],
             "outputPath": {
               "base": "dist/ng-core-tester"
             },
             "index": "projects/ng-core-tester/src/index.html",
-            "polyfills": [
-              "projects/ng-core-tester/src/polyfills.ts"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
-            "assets": [
-              "projects/ng-core-tester/src/favicon.ico",
-              "projects/ng-core-tester/src/assets"
-            ],
-            "styles": [
-              "projects/ng-core-tester/src/styles.scss"
-            ],
-              "stylePreprocessorOptions": {
-                "includePaths": [
-                  "projects/rero/ng-core/assets/scss"
-                ]
-              },
+            "assets": ["projects/ng-core-tester/src/favicon.ico", "projects/ng-core-tester/src/assets"],
+            "styles": ["projects/ng-core-tester/src/styles.scss"],
+            "stylePreprocessorOptions": {
+              "includePaths": ["projects/rero/ng-core/assets/scss"]
+            },
             "extractLicenses": false,
             "sourceMap": true,
             "optimization": false,
@@ -127,7 +92,7 @@
           "defaultConfiguration": ""
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "options": {
             "buildTarget": "ng-core-tester:build"
           },
@@ -144,46 +109,52 @@
           }
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "ng-core-tester:build"
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/ng-core-tester/src/test.ts",
-            "polyfills": "projects/ng-core-tester/src/polyfills.ts",
-            "tsConfig": "projects/ng-core-tester/tsconfig.spec.json",
-            "karmaConfig": "projects/ng-core-tester/karma.conf.js",
-            "assets": [
-              "projects/ng-core-tester/src/favicon.ico",
-              "projects/ng-core-tester/src/assets"
-            ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/ng-core-tester/e2e/protractor.conf.js",
-            "devServerTarget": "ng-core-tester:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "ng-core-tester:serve:production"
-            }
+            "buildTarget": "ng-core-tester:build",
+            "browsers": ["chromium"],
+            "tsConfig": "projects/ng-core-tester/tsconfig.spec.json"
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "projects/ng-core-tester/src/**/*.ts",
-              "projects/ng-core-tester/src/**/*.html"
-            ]
+            "lintFilePatterns": ["projects/ng-core-tester/src/**/*.ts", "projects/ng-core-tester/src/**/*.html"]
           }
         }
       }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   }
 }

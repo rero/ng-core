@@ -1,0 +1,89 @@
+/*
+ * RERO angular core
+ * Copyright (C) 2020-2024 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ActionStatus } from '../../../../model/action-status.interface';
+import { RecordActionEvent } from './record-action-event.interface';
+import { Button } from 'primeng/button';
+import { TranslateDirective, TranslatePipe } from '@ngx-translate/core';
+import { Tooltip } from 'primeng/tooltip';
+import { RecordData } from '../../../../model/record.interface';
+
+@Component({
+  selector: 'ng-core-detail-button',
+  templateUrl: './detail-button.component.html',
+  imports: [Button, TranslateDirective, Tooltip, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DetailButtonComponent {
+  // Inject
+  location: Location = inject(Location);
+
+  /** Record */
+  record = input<RecordData | null>(null);
+
+  /** Record type */
+  type = input<string>('');
+
+  /** Admin mode for CRUD operations */
+  adminMode = input<ActionStatus>({ can: false, message: '' });
+
+  /** Record can be used ? */
+  useStatus = input<ActionStatus>({ can: false, message: '', url: '' });
+
+  /** Record can be updated ? */
+  updateStatus = input<ActionStatus>({ can: false, message: '' });
+
+  /** Record can be deleted ? */
+  deleteStatus = input<ActionStatus>({ can: false, message: '' });
+
+  /** Record event */
+  recordEvent = output<RecordActionEvent>();
+
+  /** Delete record message event */
+  deleteMessageEvent = output<string>();
+
+  /** Use the record */
+  useRecord(): void {
+    this.recordEvent.emit({ action: 'use', url: this.updateStatus().url });
+  }
+
+  /**
+   * Update record event
+   * @param record - the current record
+   */
+  updateRecord(record: RecordData): void {
+    this.recordEvent.emit({ action: 'update', record });
+  }
+
+  /**
+   * Delete record event
+   * @param record - the current record
+   */
+  deleteRecord(record: RecordData): void {
+    if (this.deleteStatus().can) {
+      this.recordEvent.emit({ action: 'delete', record });
+    } else {
+      this.deleteMessageEvent.emit(this.deleteStatus().message.replace(new RegExp('\\n', 'g'), '<br>'));
+    }
+  }
+
+  /** Go back to previous page */
+  goBack(): void {
+    this.location.back();
+  }
+}

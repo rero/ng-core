@@ -22,7 +22,7 @@ import { environment } from '../environments/environment';
  * Service for configuring the application.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppConfigService extends CoreConfigService {
   /**
@@ -34,7 +34,9 @@ export class AppConfigService extends CoreConfigService {
     this.projectTitle = environment.projectTitle;
     this.apiBaseUrl = environment.apiBaseUrl;
     this.schemaFormEndpoint = '/schemas';
-    this.$refPrefix = environment.$refPrefix;
+    if (environment.$refPrefix) {
+      this.$refPrefix = environment.$refPrefix;
+    }
     this.languages = environment.languages;
     this.translationsURLs = environment.translationsURLs;
   }

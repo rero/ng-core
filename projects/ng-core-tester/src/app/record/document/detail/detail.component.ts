@@ -14,30 +14,31 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit } from '@angular/core';
-import { DetailRecord } from '@rero/ng-core';
+import { JsonPipe } from '@angular/common';
+import { Component, input, OnInit } from '@angular/core';
+import { DetailRecord, RecordData } from '@rero/ng-core';
 import { Observable } from 'rxjs';
 
 /**
  * Component for displaying the detail of a document.
  */
 @Component({
-    selector: 'app-detail',
-    templateUrl: './detail.component.html',
-    standalone: false
+  selector: 'app-detail',
+  templateUrl: './detail.component.html',
+  imports: [JsonPipe],
 })
 export class DetailComponent implements DetailRecord, OnInit {
   // Observable resolving record data
-  record$: Observable<any>;
+  record$ = input.required<Observable<RecordData>>();
 
   // Resource type
-  type: string;
+  type = input.required<string>();
 
   // Record data
   record: any;
 
   ngOnInit(): void {
-    this.record$.subscribe((record) => {
+    this.record$().subscribe((record) => {
       this.record = record;
     });
   }

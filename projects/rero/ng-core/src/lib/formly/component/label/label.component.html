@@ -1,0 +1,96 @@
+<!--
+  RERO angular core
+  Copyright (C) 2020-2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+@if (field()) {
+  <!-- header and menu -->
+  @if (!isRoot()) {
+    <ng-container *ngTemplateOutlet="hasMenu() ? menu : title; context: { f: field() }" />
+  }
+
+  <!-- TEMPLATES -->
+  <!-- dropdown menu -->
+  <ng-template #menu let-f="f">
+    <ng-core-editor-dropdown-label-editor [field]="f" [canAdd]="false">
+      <ng-container menu>
+        <div class="core:flex">
+          <p-button icon="fa fa-caret-down" severity="secondary" [text]="true" (onClick)="menu.toggle($event)" />
+          <p-tieredMenu #menu [model]="items()" [popup]="true" appendTo="body" />
+        </div>
+      </ng-container>
+      <ng-container buttons>
+        @if (canAddItem()) {
+          <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" />
+        }
+        @if (canAdd()) {
+          <p-button
+            id="{{ f.id }}-clone-button"
+            icon="fa fa-clone"
+            severity="secondary"
+            [text]="true"
+            styleClass="core:mr-1"
+            (onClick)="add()"
+          />
+        }
+        <!-- hide button -->
+        @if (canRemove()) {
+          <p-button
+            id="{{ f.id }}-remove-button"
+            icon="fa fa-trash"
+            severity="secondary"
+            [text]="true"
+            (onClick)="remove()"
+          />
+        }
+      </ng-container>
+    </ng-core-editor-dropdown-label-editor>
+  </ng-template>
+
+  <!-- section title -->
+  <ng-template #title let-f="f">
+    <div class="core:flex core:gap-1 core:items-center">
+      @if (f.props.label) {
+        <label class="p-fieldset-legend-label" [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
+          {{ f.props.label }}
+        </label>
+        @if (required() && f.props.hideRequiredMarker !== true) {
+          *
+        }
+        @if (canAddItem()) {
+          <p-button icon="fa fa-plus" severity="secondary" [text]="true" (onClick)="addItem()" />
+        }
+        @if (canAdd()) {
+          <p-button
+            id="{{ f.id }}-clone-button"
+            icon="fa fa-clone"
+            [text]="true"
+            severity="secondary"
+            (onClick)="add()"
+          />
+        }
+        <!-- hide button -->
+        @if (canRemove()) {
+          <p-button
+            id="{{ f.id }}-remove-button"
+            icon="fa fa-trash"
+            [text]="true"
+            severity="secondary"
+            (onClick)="remove()"
+          />
+        }
+      }
+    </div>
+  </ng-template>
+}

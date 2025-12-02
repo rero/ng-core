@@ -18,9 +18,9 @@
   <p-select
     [options]="toastTypes"
     optionLabel="name"
-    [placeholder]="'Select a toast type'|translate"
+    [placeholder]="'Select a toast type' | translate"
     [(ngModel)]="toastType"
   />
   <input type="text" pInputText [(ngModel)]="toastMessage" />
-  <p-button [label]="'Show'|translate" [outlined]="true" (onClick)="showToast()" />
+  <p-button [label]="'Show' | translate" [outlined]="true" (onClick)="showToast()" />
 </div>

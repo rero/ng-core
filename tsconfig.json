@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@rero/ng-core": ["dist/rero/ng-core"]
+    },
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "importHelpers": true,
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "strict": true,
+    "types": []
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "strictInjectionParameters": true
+  },
+  "references": [
+    {
+      "path": "./projects/ng-core-tester/tsconfig.app.json"
+    },
+    {
+      "path": "./projects/ng-core-tester/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/rero/ng-core/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/rero/ng-core/tsconfig.spec.json"
+    }
+  ],
+  "exclude": ["dist", "node_modules"]
+}
