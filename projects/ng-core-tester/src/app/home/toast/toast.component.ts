@@ -15,8 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, OnInit, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { MessageService, ToastMessageOptions } from 'primeng/api';
+import { Select } from 'primeng/select';
+import { FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { Button } from 'primeng/button';
 
 interface IToastType {
   name: string;
@@ -26,18 +30,18 @@ interface IToastType {
 @Component({
     selector: 'app-toast',
     templateUrl: './toast.component.html',
-    standalone: false
+    imports: [Select, FormsModule, InputText, Button, TranslatePipe]
 })
 export class ToastComponent implements OnInit {
 
   translateService = inject(TranslateService);
   messageService = inject(MessageService);
 
-  toastTypes: IToastType[];
+  toastTypes: IToastType[] = [];
 
   toastType: any;
 
-  toastMessage: string;
+  toastMessage: string | undefined;
 
   ngOnInit(): void {
     this.toastMessage = this.translateService.instant('This is the message');

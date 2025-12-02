@@ -1,10 +1,10 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
+    "composite": true,
     "types": [
-      "jasmine",
-      "node"
+      "vitest/globals"
     ],
     "paths": {
       "@rero/ng-core": [
@@ -12,12 +12,7 @@
       ]
     }
   },
-  "files": [
-    "src/test.ts",
-    "src/polyfills.ts"
-  ],
   "include": [
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts"
+    "src/**/*.ts"
   ]
 }

@@ -1,0 +1,67 @@
+/*
+ * RERO angular core
+ * Copyright (C) 2020 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+import { TestBed } from '@angular/core/testing';
+import { RouteCollectionService } from './route-collection.service';
+import { RouteInterface } from './route-interface';
+
+class RouteMock implements RouteInterface {
+
+  name = 'routeMock';
+
+  getConfiguration() {
+    return { route: this.name };
+  }
+}
+
+describe('RoutingCollectionService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
+
+  it('should be created', () => {
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
+    expect(service).toBeTruthy();
+  });
+
+  it('GetRoute return the correct route added', () => {
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
+    const routeMock = new RouteMock();
+    service.addRoute(routeMock);
+    expect(service.getRoute('routeMock')()).toEqual(routeMock);
+  });
+
+  it('Should have correct route count', () => {
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
+    const routeMock = new RouteMock();
+    service.addRoute(routeMock);
+    expect(service.routes().length).toBe(1);
+  });
+
+  it('GetRoutes return all route(s) added', () => {
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
+    const routeMock = new RouteMock();
+    service.addRoute(routeMock);
+    expect(service.routes().length).toBe(1);
+    expect(service.routes()[0]).toEqual({ route: 'routeMock' });
+  });
+
+  it('Should return all route names from configurations', () => {
+    const service: RouteCollectionService = TestBed.inject(RouteCollectionService);
+    const routeMock = new RouteMock();
+    service.addRoute(routeMock);
+    const routeNames = service.routes().map(r => r.route);
+    expect(routeNames).toEqual(['routeMock']);
+  });
+});

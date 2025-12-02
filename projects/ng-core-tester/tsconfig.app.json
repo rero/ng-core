@@ -1,13 +1,9 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
+    "composite": true,
     "types": [],
-    "paths": {
-      "@rero/ng-core": [
-        "dist/rero/ng-core"
-      ]
-    }
   },
   "files": [
     "src/main.ts",

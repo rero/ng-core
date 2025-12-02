@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,24 +14,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, Input } from '@angular/core';
-import { ResultItem } from '@rero/ng-core';
+import { Component, input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { DetailUrl, RecordData, ResultItem } from '@rero/ng-core';
+import { Tag } from 'primeng/tag';
+
+export interface DocumentMetadata {
+  pid: string;
+  type: {
+    main_type: string;
+  }[];
+  title: {
+    mainTitle: {
+      value: string;
+    }[];
+  }[];
+}
 
 /**
  * Component for displaying a document brief view.
  */
 @Component({
     templateUrl: './document.component.html',
-    standalone: false
+    imports: [RouterLink, Tag],
 })
-export class DocumentComponent implements ResultItem {
+export class DocumentComponent implements ResultItem<RecordData<DocumentMetadata>> {
   // Record data.
-  @Input() record: any;
+  record = input.required<RecordData<DocumentMetadata>>();
 
   // Type of resource.
-  @Input() type: string;
+  type = input.required<string>();
 
-  // Object containing link to detail.
-  @Input() detailUrl: { link: string, external: boolean };
-
+  // Info for detail URL link.
+  detailUrl = input<DetailUrl>();
 }

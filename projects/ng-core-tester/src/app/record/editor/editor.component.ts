@@ -16,11 +16,13 @@
  */
 import { AfterContentChecked, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { EditorComponent as CoreEditorComponent } from '@rero/ng-core';
+import { Card } from 'primeng/card';
 
 @Component({
     selector: 'app-editor',
     templateUrl: './editor.component.html',
-    standalone: false
+    imports: [Card, CoreEditorComponent]
 })
 export class EditorComponent implements OnInit, AfterContentChecked {
   // Inject

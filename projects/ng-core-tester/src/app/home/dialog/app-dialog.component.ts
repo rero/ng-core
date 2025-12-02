@@ -15,14 +15,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Component, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { CONFIG } from '@rero/ng-core';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Button } from 'primeng/button';
 
 @Component({
     selector: 'app-dialog',
     templateUrl: './app-dialog.component.html',
-    standalone: false
+    imports: [Button, TranslatePipe]
 })
 export class AppDialogComponent {
   translate = inject(TranslateService);

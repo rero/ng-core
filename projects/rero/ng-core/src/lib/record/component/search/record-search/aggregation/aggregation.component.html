@@ -1,0 +1,53 @@
+<!--
+  RERO angular core
+  Copyright (C) 2020-2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Aggregation with no bucket, containing only the count. -->
+@if (aggregation().doc_count) {
+  <div class="core:mb-4">
+    <ng-core-record-search-aggregation-buckets
+      [buckets]="[{key: '1', doc_count: aggregation().doc_count, name: aggregation().key | translate }]"
+      [aggregationKey]="aggregation().key" />
+  </div>
+} @else {
+  <p-fieldset
+    [legend]="(aggregation().name || (aggregation().key | translate | ucfirst) || '')"
+    [toggleable]="true"
+    [collapsed]="!isAggregationDisplayed()"
+    (collapsedChange)="toggleVisibility()"
+  >
+  <div class="core:p-2">
+  @switch (aggregation().type) {
+    @case ('range') {
+      <ng-core-aggregation-slider [key]="aggregation().key" />
+    }
+    @case ('date-range') {
+      <ng-core-aggregation-date-range [key]="aggregation().key" />
+    }
+    @default {
+      @if (aggregation().value.buckets.length > 0) {
+        <ng-core-record-search-aggregation-buckets
+          [buckets]="aggregation().value.buckets"
+          [aggregationKey]="aggregation().key" />
+      } @else {
+        @if (aggregation().loaded) {
+          <span class="core:text-sm" translate>No result</span>
+        }
+      }
+    }
+  }
+</div>
+</p-fieldset>
+}

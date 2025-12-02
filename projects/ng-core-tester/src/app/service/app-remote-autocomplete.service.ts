@@ -28,7 +28,7 @@ export class AppRemoteAutocompleteService implements IRemoteAutocomplete {
     { label: 'Mystery', value: 'mystery' },
   ];
 
-  public getSuggestions(query: string, queryOptions: IQueryOptions = {}, currentPid: string): Observable<ISuggestionItem[]> {
+  public getSuggestions(query: string, queryOptions: IQueryOptions = {}): Observable<ISuggestionItem[]> {
     if (!query) {
       return of([]);
     }
@@ -43,7 +43,7 @@ export class AppRemoteAutocompleteService implements IRemoteAutocomplete {
 
   getValueAsHTML(queryOptions: IQueryOptions, item: ISuggestionItem): Observable<string> {
     if (!item) {
-      return of(undefined);
+      return of('');
     }
 
     let value = item.label;

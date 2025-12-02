@@ -34,7 +34,7 @@ export class RouteService {
     this.routeCollectionService
       .addRoute(new DocumentsRoute());
 
-    this.routeCollectionService.getRoutes().map((route: any) => {
+    this.routeCollectionService.routes().map((route: any) => {
       this.router.config.push(route);
     });
   }
