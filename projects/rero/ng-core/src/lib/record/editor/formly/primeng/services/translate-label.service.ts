@@ -17,6 +17,8 @@
 import { inject, Injectable } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 @Injectable({
   providedIn: 'root'
 })

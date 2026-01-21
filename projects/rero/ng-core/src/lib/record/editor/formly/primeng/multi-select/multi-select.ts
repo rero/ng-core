@@ -22,11 +22,13 @@ import { FormlyFieldSelectProps, FormlySelectModule } from '@ngx-formly/core/sel
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MultiSelectModule as PrimeNgMultiSelectModule } from 'primeng/multiselect';
 import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
-import { TranslateLabelService } from '../services/translate-label.service';
 import { CONFIG } from '../../../../../utils/config';
+import { TranslateLabelService } from '../services/translate-label.service';
+
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 
 export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
-  appendTo?: any;
+  appendTo?: string;
   class?: string;
   display: string;
   dropdownIcon?: string;

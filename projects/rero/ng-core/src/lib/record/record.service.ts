@@ -18,10 +18,11 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { inject, Injectable } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError, debounceTime, map, tap } from 'rxjs/operators';
 import { ApiService } from '../api/api.service';
 import { Error } from '../error/error';
+import { EsResult, InvenioRecord } from '../types';
 import { resolveRefs } from './editor/utils';
 import { Record } from './record';
 import { RecordHandleErrorService } from './record.handle-error.service';
@@ -103,7 +104,7 @@ export class RecordService {
     headers: any = null,
     sort: string = null,
     facets: string[] = []
-  ): Observable<Record | Error> {
+  ): Observable<EsResult | Error> {
     // Build query string
     let httpParams = new HttpParams().set('q', query);
     httpParams = httpParams.append('page', '' + page);
@@ -168,10 +169,10 @@ export class RecordService {
     type: string,
     pid: string,
     resolve = 0,
-    headers: any = {}
-  ): Observable<any | Error> {
+    headers = {}
+  ): Observable<InvenioRecord> {
     return this.http
-      .get<Record>(
+      .get<InvenioRecord>(
         `${this.apiService.getEndpointByType(
           type,
           true
@@ -254,7 +255,7 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res: Record) => this.totalHits(res.hits.total)),
+      map((res: EsResult) => res.hits.total.value),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(1000)
     );
@@ -304,35 +305,10 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, query, 1, 1).pipe(
-      map((res: Record) => this.totalHits(res.hits.total)),
+      map((res: EsResult) => res.hits.total.value),
       map((total) => (total ? { alreadyTaken: value } : null)),
       debounceTime(500)
     );
-  }
-
-  /**
-   * Transform a total value string or object representation
-   * (ES compatibility v6 and v7)
-   * @param total - string or object
-   * @param relation - boolean
-   * @return integer, text or null
-   */
-  totalHits(total: any, relation = false): any {
-    switch (typeof total) {
-      case 'object':
-        if (relation) {
-          return `${this.translateService.instant(
-            total.relation
-          )} ${total.value.toString()}`;
-        }
-        return Number(total.value);
-      case 'number':
-        return total;
-      case 'string':
-        return Number(total);
-      default:
-        return null;
-    }
   }
 
   /**

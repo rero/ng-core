@@ -24,9 +24,10 @@ import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelectModule } from 'primeng/treeselect';
 import { map, merge, Observable, Subscription, switchMap, tap } from 'rxjs';
-import { TranslateLabelService } from '../services/translate-label.service';
 import { CONFIG } from '../../../../../utils/config';
+import { TranslateLabelService } from '../services/translate-label.service';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 // Doc https://primeng.org/treeselect
 
 export interface ITreeSelectProps extends FormlyFieldProps {
@@ -103,7 +104,7 @@ export class TreeSelectComponent extends FieldType<FormlyFieldConfig<ITreeSelect
     }
   };
 
-  nodeSelected: any = undefined;
+  nodeSelected = undefined;
 
   optionValues$: Observable<any[]>;
 
