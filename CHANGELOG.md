@@ -1,5 +1,18 @@
 # Changelog
 
+## [v19.3.1](https://github.com/rero/ng-core/tree/v19.3.1) (2026-02-26)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.3.0...v19.3.1)
+
+**Other changes:**
+
+- ci: remove unused github workflow for stale issues [#784](https://github.com/rero/ng-core/pull/784) (by @PascalRepond)
+- build: add workflow to publish releases to npm [#783](https://github.com/rero/ng-core/pull/783) (by @PascalRepond)
+- chore: update dependencies [#773](https://github.com/rero/ng-core/pull/773) (by @PascalRepond)
+- chore: update dependencies [#766](https://github.com/rero/ng-core/pull/766) (by @PascalRepond)
+- chore(actions): auto-assign PR author [#762](https://github.com/rero/ng-core/pull/762) (by @PascalRepond)
+- chore: update dependencies [#760](https://github.com/rero/ng-core/pull/760) (by @PascalRepond)
+
 ## [v19.3.0](https://github.com/rero/ng-core/tree/v19.3.0) (2025-09-30)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.2.0...v19.3.0)
