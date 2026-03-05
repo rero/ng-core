@@ -22,7 +22,7 @@
 @use "ng-core";
 @use "katex";
 
-@import "tailwindcss" prefix(ui);
+@import "tailwindcss" layer(tailwind) prefix(ui);
 
 @plugin "tailwindcss-primeui";
 

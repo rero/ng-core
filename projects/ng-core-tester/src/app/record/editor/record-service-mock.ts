@@ -21,6 +21,9 @@ import JSONSchema from './schema.json';
 import SimpleJSONSchema from './simple-schema.json';
 import simpleData from './simple-record-data.json';
 import { Injectable } from "@angular/core";
+import { HttpHeaders } from "@angular/common/http";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +33,17 @@ export class RecordServiceMock extends RecordService {
     return of({ schema: recordType === 'demo' ? JSONSchema : SimpleJSONSchema });
   }
 
-  getRecord(type: string, pid: string, resolve = 0, headers: any = {}): Observable<any | Error> {
+   getRecord(
+    type: string,
+    pid: string,
+    {
+      resolve = 0,
+      headers = new HttpHeaders({ 'Content-Type': 'application/json' })
+    } : {
+      resolve?: number;
+      headers?: HttpHeaders | Record<string, string | string[]>;
+    } = {}
+  ): Observable<any | Error>{
     return of(type === 'demo' ? data : simpleData);
   }
 }

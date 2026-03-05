@@ -14,28 +14,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, WritableSignal, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { CONFIG, CoreConfigService } from '@rero/ng-core';
+import { CONFIG, Config, CoreConfigService } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { Menubar } from 'primeng/menubar';
+import { Ripple } from 'primeng/ripple';
+import { Badge } from 'primeng/badge';
+import { NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [Menubar, Ripple, RouterLink, Badge, NgClass]
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
 
   messageService = inject(MessageService);
   translateService = inject(TranslateService);
   router = inject(Router);
-  config = inject(CoreConfigService);
+  config: Config = inject(CoreConfigService);
 
-  menuItems: MenuItem[];
+  menuItems: WritableSignal<MenuItem[]> = signal([]);
+
+  subscription = new Subscription
 
   ngOnInit(): void {
-    this.menuItems = [
+    this.menuItems.set([
       {
         label: this.translateService.instant('home'),
         untranslatedLabel: 'home',
@@ -95,6 +103,7 @@ export class MenuComponent implements OnInit {
             routerLink: ['/records', 'organisations']
           },
           {
+            label: '',
             separator: true
           },
           {
@@ -154,31 +163,48 @@ export class MenuComponent implements OnInit {
         icon: 'fa fa-language',
         items: []
       }
-    ];
+    ]);
 
-    const languageMenu = this.menuItems.find((item: MenuItem) => item.id === 'language');
-    this.config.languages.map((language: string) => {
-      const lang = {
-        label: this.translateService.instant(language),
-        untranslatedLabel: language,
-        id: language,
-        styleClass: undefined,
-        command: () => {
-          this.translateService.use(language);
-          this.messageService.add({ severity: 'info', summary: `Language change to ${language}`, life: CONFIG.MESSAGE_LIFE });
+    const languageMenu: MenuItem | undefined = this.menuItems().find((item: MenuItem) => item.id === 'language');
+    if (languageMenu !== undefined) {
+      this.config.languages?.forEach((language: string) => {
+        const lang = {
+          label: this.translateService.instant(language),
+          untranslatedLabel: language,
+          id: language,
+          styleClass: undefined,
+          command: () => {
+            this.translateService.use(language);
+            this.messageService.add({
+              severity: 'info',
+              detail: `Selected: ${this.translateService.instant(language)}`,
+              summary: `Switch language`,
+              life: CONFIG.MESSAGE_LIFE
+            });
+          }
         }
-      }
-      languageMenu.items.push(lang);
-    });
-    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
-      this.translateItems(this.menuItems)
-      languageMenu.items.map((item: MenuItem) => {
-        item.styleClass = item.id === event.lang ? 'ui:font-bold': ''
+        languageMenu.items?.push(lang);
       });
-    });
+    }
+    this.subscription.add(
+      this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+        const menu = this.translateItems(this.menuItems());
+        const language = menu.find((item: MenuItem) => item.id === 'language');
+        if (language !== undefined) {
+          language.items?.map((item: MenuItem) => {
+            item.styleClass = item.id === event.lang ? 'ui:font-bold': ''
+          });
+        }
+        this.menuItems.set([...menu]);
+      })
+    );
   }
 
-  private translateItems(menuItems: MenuItem[]): void {
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private translateItems(menuItems: MenuItem[]): MenuItem[] {
     menuItems.map((item: MenuItem) => {
       if (item.untranslatedLabel) {
         item.label = this.translateService.instant(item.untranslatedLabel);
@@ -186,6 +212,8 @@ export class MenuComponent implements OnInit {
       if (item.items) {
         this.translateItems(item.items);
       }
-    })
+    });
+
+    return menuItems;
   }
 }

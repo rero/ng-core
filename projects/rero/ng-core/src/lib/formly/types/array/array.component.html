@@ -1,0 +1,37 @@
+<!--
+  RERO angular core
+  Copyright (C) 2020-2025 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- array title only if the array is empty -->
+
+@if (props.label && field.props.hideLabel !== true) {
+  <ng-core-label-editor [field]="field" />
+}
+
+<div>
+  @if (showError) {
+    <div class="text-error core:my-2">
+      <formly-validation-message [field]="field"/>
+    </div>
+  }
+  <!-- for each item -->
+  <div [class]="props.containerCssClass">
+    @for (f of field.fieldGroup; track f.id) { @if (!f.hide) {
+    <div class="{{ f.props?.itemCssClass }} core:mb-1" [id]="'field-' + f.id">
+      <formly-field [field]="f" />
+    </div>
+    } }
+  </div>
+</div>

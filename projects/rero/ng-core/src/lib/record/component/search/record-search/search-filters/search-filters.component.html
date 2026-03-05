@@ -1,0 +1,64 @@
+<!--
+  RERO angular core
+  Copyright (C) 2024-2025 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+@if (allSearchFilters().length > 0) {
+  <div class="core:mb-2 core:flex core:flex-col core:gap-1">
+    @for (item of allSearchFilters(); track $index) {
+      @if (isSection(item)) {
+        @if (showFilterSection(asSection(item))) {
+          <div [ngClass]="styleClassSection()">{{ asSection(item).label | translate }}</div>
+          @for (searchFilter of asSection(item).filters; track searchFilter.filter) {
+            @if (showFilter(searchFilter)) {
+              <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: searchFilter}"/>
+            }
+          }
+        }
+      } @else {
+        @if (showFilter(item)) {
+          <ng-container [ngTemplateOutlet]="searchFilterTemplate" [ngTemplateOutletContext]="{filter: item}"/>
+        }
+      }
+    }
+  </div>
+}
+
+<ng-template #searchFilterTemplate let-filter="filter">
+    <div class="core:flex">
+      <div class="core:flex core:items-center core:mr-2">
+        <p-toggleswitch
+          [ngModel]="isChecked(filter)"
+          inputId="customSwitch-{{ filter.filter }}"
+          [ariaLabel]="filter.label | translate"
+          (onChange)="change($event, filter)"
+        />
+      </div>
+      <div class="core:flex core:items-center">
+        <label for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>
+        @if (filter.url) {
+          @if (filter.url.external) {
+            <a class="core:ml-1" [title]="filter.url.title" [href]="filter.url.link" [target]="filter.url.target">
+              <i class="fa fa-info-circle " aria-hidden="true"></i>
+            </a>
+          } @else {
+            <a class="core:ml-1" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
+              <i class="fa fa-info-circle " aria-hidden="true"></i>
+            </a>
+          }
+        }
+      </div>
+    </div>
+</ng-template>

@@ -1,14 +1,11 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../../out-tsc/lib",
     "declaration": true,
+    "composite": true,
     "inlineSources": true,
-    "types": [],
-    "lib": [
-      "dom",
-      "ES2022"
-    ]
+    "types": []
   },
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
@@ -17,11 +14,6 @@
     "preserveSymlinks": true,
     "enableResourceInlining": true
   },
-  "exclude": [
-    "src/test.ts",
-    "**/*.spec.ts"
-  ],
-  "typeRoots": [
-    "./typings.d.ts"
-  ]
+  "exclude": ["src/test.ts", "**/*.spec.ts"],
+  "typeRoots": ["./typings.d.ts"]
 }

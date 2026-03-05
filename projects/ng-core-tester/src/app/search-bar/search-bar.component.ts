@@ -17,8 +17,9 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { CONFIG, IAutoComplete, IRecordType, Record } from '@rero/ng-core';
+import { AutoCompleteData,  AutoCompleteRecordType, SearchAutocompleteComponent, RecordData } from '@rero/ng-core';
 import { MessageService } from 'primeng/api';
+import { DocumentMetadata } from '../record/document/document.component';
 
 /**
  * Component showing the search bar for searching records.
@@ -26,7 +27,7 @@ import { MessageService } from 'primeng/api';
 @Component({
     selector: 'app-search-bar',
     templateUrl: './search-bar.component.html',
-    standalone: false
+    imports: [SearchAutocompleteComponent]
 })
 export class SearchBarComponent implements OnInit {
   // Inject
@@ -37,9 +38,9 @@ export class SearchBarComponent implements OnInit {
   viewcode = input<string>();
 
   // List of resource type
-  recordTypes: IRecordType[] = [];
+  recordTypes: AutoCompleteRecordType[] = [];
 
-  value: string = undefined;
+  value = '';
 
   ngOnInit() {
     this.recordTypes = [
@@ -47,7 +48,7 @@ export class SearchBarComponent implements OnInit {
         index: 'documents',
         field: 'autocomplete_title',
         groupLabel: this.translateService.instant('Documents'),
-        processSuggestions: (data: any, query: string) => this.processDocuments(data, query),
+        processSuggestions: (data: any, query?: string): AutoCompleteData[] => this.processDocuments(data, query ?? ''),
         preFilters: this.viewcode() ? { view: this.viewcode() } : {}
       },
       {
@@ -59,7 +60,7 @@ export class SearchBarComponent implements OnInit {
       }
     ];
   }
-  onSearch(query) {
+  onSearch(query: string) {
     this.router.navigate(['/record', 'search', 'documents'], {
       queryParams: {
         q: query
@@ -67,34 +68,9 @@ export class SearchBarComponent implements OnInit {
     });
   }
 
-  onSelect(event: IAutoComplete) {
-    const label = event.originalLabel || event.label;
-    const doc = new DOMParser().parseFromString(label, 'text/html');
-    this.value = doc.body.textContent || '';
-    switch(event.index) {
-      case 'documents':
-        this.messageService.add({
-          severity: 'success',
-          summary: 'DOCUMENTS',
-          detail: 'navigate to document: ' + event.value,
-          life: CONFIG.MESSAGE_LIFE
-        });
-        this.router.navigate(['/record', 'search', 'documents', 'detail', event.value]);
-        break;
-      case 'entities':
-        this.messageService.add({
-          severity: 'success',
-          summary: 'ENTITIES',
-          detail: 'navigate to entity: ' + event.value,
-          life: CONFIG.MESSAGE_LIFE
-        });
-        break;
-    }
-  }
-
-  private processDocuments(data: Record, query: string): any {
-    const values: IAutoComplete[] = [];
-    data.hits.hits.map((hit: any) => {
+  private processDocuments(data: any, query: string): AutoCompleteData[] {
+    const values: AutoCompleteData[] = [];
+    data.hits.hits.map((hit: RecordData<DocumentMetadata>) => {
       const title = hit.metadata.title[0].mainTitle[0].value.replace(/[:\-[\]()/"]/g, ' ').replace(/\s\s+/g, ' ');
       values.push({
         iconClass: 'fa fa-book',
@@ -108,8 +84,8 @@ export class SearchBarComponent implements OnInit {
     return values;
   }
 
-  private processEntities(data: Record): any {
-    const values: IAutoComplete[] = [];
+  private processEntities(data: any): AutoCompleteData[] {
+    const values: AutoCompleteData[] = [];
     data.hits.hits.map((hit: any) => {
       values.push({
         iconClass: 'fa fa-user',
