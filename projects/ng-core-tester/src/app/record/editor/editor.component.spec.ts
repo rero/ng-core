@@ -1,4 +1,3 @@
-
 /*
  * RERO angular core
  * Copyright (C) 2020 RERO
@@ -16,29 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { RecordModule } from '@rero/ng-core';
 import { EditorComponent } from './editor.component';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideCore } from '@rero/ng-core';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
   let fixture: ComponentFixture<EditorComponent>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
-    declarations: [EditorComponent],
-    imports: [RecordModule,
-        TranslateModule.forRoot(),
-        RouterModule.forRoot([]),
-        BrowserAnimationsModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
-    .compileComponents();
-  }));
+      imports: [TranslateModule.forRoot(), RouterModule.forRoot([]), BrowserAnimationsModule, EditorComponent],
+      providers: [provideCore(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+    });
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(EditorComponent);

@@ -14,24 +14,32 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<p-menubar [model]="menuItems" class="ui:z-20 ui:relative" styleClass="bg-white">
-
+<p-menubar [model]="menuItems()" class="ui:z-20 ui:relative" styleClass="bg-white">
   <ng-template #start>
     <img src="assets/angular.svg" alt="Angular logo" width="24px" height="24px" />
   </ng-template>
 
   <ng-template #item1 let-item let-root="root">
     @if (item.routerLink && !item.url) {
-      <a pRipple class="p-menubar-item-link" [id]="item.id" [routerLink]="item.routerLink" [queryParams]="item.queryParams">
+      <a
+        pRipple
+        class="p-menubar-item-link"
+        [id]="item.id"
+        [routerLink]="item.routerLink"
+        [queryParams]="item.queryParams"
+      >
         @if (item.icon) {
           <span class="p-menubar-item-icon" [class]="item.icon"></span>
         }
         <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (item.badge) {
-          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge"/>
+          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge" />
         }
         @if (item.shortcut) {
-          <span class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1">{{ item.shortcut }}</span>
+          <span
+            class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1"
+            >{{ item.shortcut }}</span
+          >
         }
       </a>
     }
@@ -42,10 +50,13 @@
         }
         <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (item.badge) {
-          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge"/>
+          <p-badge [ngClass]="{ 'ui:ml-auto': !root, 'ui:ml-2': root }" [value]="item.badge" />
         }
         @if (item.shortcut) {
-          <span class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1">{{ item.shortcut }}</span>
+          <span
+            class="ui:ml-auto ui:border ui:border-surface ui:rounded-ui:border ui:bg-surface-100 ui:dark:bg-surface-700 ui:text-xs ui:p-1"
+            >{{ item.shortcut }}</span
+          >
         }
       </a>
     }
@@ -61,5 +72,4 @@
       </div>
     }
   </ng-template>
-
 </p-menubar>

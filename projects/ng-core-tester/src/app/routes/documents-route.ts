@@ -1,4 +1,3 @@
-
 /*
  * RERO angular core
  * Copyright (C) 2020-2025 RERO
@@ -16,30 +15,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
+import { ResolveFn, Route } from '@angular/router';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import {
-  ActionStatus,
-  EditorComponent, JSONSchema7,
-  DetailComponent as RecordDetailComponent,
-  RecordSearchPageComponent,
-  RouteInterface,
-  capitalize
-} from '@rero/ng-core';
+import { ActionStatus, RouteInterface, capitalize, ngCoreRoutes } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';
 
 export const titleResolver: ResolveFn<string> = (route) => {
-  return capitalize(route.params["type"]);
+  return capitalize(route.params['type']);
 };
 
 /**
  * Routes for document resources
  */
 export class DocumentsRoute implements RouteInterface {
-
   protected translateService: TranslateService = inject(TranslateService);
 
   // Route name
@@ -50,15 +41,10 @@ export class DocumentsRoute implements RouteInterface {
    *
    * @return Configuration object.
    */
-  getConfiguration() {
+  getConfiguration(): Route {
     return {
       path: 'record/search',
-      children: [
-        { path: ':type', component: RecordSearchPageComponent, title: titleResolver },
-        { path: ':type/new', component: EditorComponent, title: titleResolver },
-        { path: ':type/edit/:pid', component: EditorComponent, title: titleResolver },
-        { path: ':type/detail/:pid', component: RecordDetailComponent, title: titleResolver }
-      ],
+      children: ngCoreRoutes,
       data: {
         showSearchInput: true,
         types: [
@@ -68,12 +54,14 @@ export class DocumentsRoute implements RouteInterface {
             component: DocumentComponent,
             detailComponent: DetailComponent,
             editorSettings: {
-              longMode: true
+              longMode: true,
             },
-            defaultSearchInputFilters: [{
-              'key': 'organisation',
-              'values': ["1"]
-            }],
+            defaultSearchInputFilters: [
+              {
+                key: 'organisation',
+                values: ['1'],
+              },
+            ],
             aggregationsOrder: [
               'document_type',
               'author',
@@ -82,10 +70,10 @@ export class DocumentsRoute implements RouteInterface {
               'organisation',
               'language',
               'subject',
-              'status'
+              'status',
             ],
             listHeaders: {
-              Accept: 'application/rero+json, application/json'
+              Accept: 'application/rero+json, application/json',
             },
             aggregationsExpand: ['document_type'],
             aggregationsBucketSize: 5,
@@ -109,43 +97,49 @@ export class DocumentsRoute implements RouteInterface {
               boundaryLinks: false,
               maxSize: 5,
               pageReport: false,
-              rowsPerPageOptions: [10,20]
+              rowsPerPageOptions: [10, 20],
             },
-            formFieldMap: (field: FormlyFieldConfig, jsonSchema: JSONSchema7): FormlyFieldConfig => {
+            formFieldMap: (field: FormlyFieldConfig): FormlyFieldConfig => {
               // Populates each select with custom options
               if (field.type === 'enum') {
-                field.props.options = [{ label: 'Option 1', value: '1' }, { label: 'Option 2', value: '2' }];
+                if (!field.props) {
+                  field.props = {};
+                }
+                field.props.options = [
+                  { label: 'Option 1', value: '1' },
+                  { label: 'Option 2', value: '2' },
+                ];
               }
               return field;
             },
-            canAdd: (record: any): Observable<ActionStatus> => {
+            canAdd: (): Observable<ActionStatus> => {
               return of({
                 can: Math.random() >= 0.5,
-                message: ''
+                message: '',
               });
             },
-            canUpdate: (record: any): Observable<ActionStatus> => {
+            canUpdate: (): Observable<ActionStatus> => {
               return of({
                 can: Math.random() >= 0.5,
-                message: ''
+                message: '',
               });
             },
-            canDelete: (record: any): Observable<ActionStatus> => {
+            canDelete: (): Observable<ActionStatus> => {
               return of({
                 can: Math.random() >= 0.5,
-                message: ''
+                message: '',
               });
             },
             deleteMessage: (): string[] => {
               // If you want to translate the strings, you have to do it here
               return [
                 this.translateService.instant('Document: Do you really want to delete this record?'),
-                this.translateService.instant('Attached items will also be deleted.')
+                this.translateService.instant('Attached items will also be deleted.'),
               ];
-            }
-          }
-        ]
-      }
+            },
+          },
+        ],
+      },
     };
   }
 }

@@ -15,22 +15,22 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <h5>
-  @if (detailUrl) {
-    @if (detailUrl.external === false) {
-      <a [routerLink]="detailUrl.link">
-        {{ record.metadata.title[0].mainTitle[0].value }}
+  @if (detailUrl()) {
+    @if (detailUrl()?.external) {
+      <a [href]="detailUrl()?.link">
+        {{ record().metadata.title[0].mainTitle[0].value }}
       </a>
     } @else {
-      <a [href]="detailUrl.link">
-        {{ record.metadata.title[0].mainTitle[0].value }}
+      <a [routerLink]="detailUrl()?.link">
+        {{ record().metadata.title[0].mainTitle[0].value }}
       </a>
     }
   } @else {
-    {{ record.metadata.title[0].mainTitle[0].value }}
+    {{ record().metadata.title[0].mainTitle[0].value }}
   }
 </h5>
 <p class="ui:flex ui:gap-1">
-  @for (type of record.metadata.type; track type.main_type) {
+  @for (type of record().metadata.type; track type.main_type) {
     <p-tag [value]="type.main_type" />
   }
 </p>

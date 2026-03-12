@@ -14,21 +14,20 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Injectable } from "@angular/core";
-import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from "@rero/ng-core";
-import { Observable, of } from "rxjs";
+import { Injectable } from '@angular/core';
+import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from '@rero/ng-core';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppRemoteAutocompleteService implements IRemoteAutocomplete {
-
   private data: ISuggestionItem[] = [
-    { label: 'House', value: 'house' , summary: 'House description' },
+    { label: 'House', value: 'house', summary: 'House description' },
     { label: 'Mystery', value: 'mystery' },
   ];
 
-  public getSuggestions(query: string, queryOptions: IQueryOptions = {}, currentPid: string): Observable<ISuggestionItem[]> {
+  public getSuggestions(query: string, queryOptions: IQueryOptions = {}): Observable<ISuggestionItem[]> {
     if (!query) {
       return of([]);
     }
@@ -36,14 +35,16 @@ export class AppRemoteAutocompleteService implements IRemoteAutocomplete {
       return of(this.processName(queryOptions.filter));
     }
 
-    return of(this.processName(queryOptions.filter).filter((element: ISuggestionItem) =>
-      element.label.toLowerCase().includes(query.toLowerCase())
-    ));
+    return of(
+      this.processName(queryOptions.filter).filter((element: ISuggestionItem) =>
+        element.label.toLowerCase().includes(query.toLowerCase()),
+      ),
+    );
   }
 
   getValueAsHTML(queryOptions: IQueryOptions, item: ISuggestionItem): Observable<string> {
     if (!item) {
-      return of(undefined);
+      return of('');
     }
 
     let value = item.label;

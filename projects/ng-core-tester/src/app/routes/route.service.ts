@@ -23,7 +23,7 @@ import { DocumentsRoute } from './documents-route';
  * Service for managing routes.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RouteService {
   // Inject
@@ -31,10 +31,9 @@ export class RouteService {
   private router = inject(Router);
 
   initializeRoutes() {
-    this.routeCollectionService
-      .addRoute(new DocumentsRoute());
+    this.routeCollectionService.addRoute(new DocumentsRoute());
 
-    this.routeCollectionService.getRoutes().map((route: any) => {
+    this.routeCollectionService.routes().map((route: any) => {
       this.router.config.push(route);
     });
   }

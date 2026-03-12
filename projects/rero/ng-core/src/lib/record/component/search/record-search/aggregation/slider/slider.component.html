@@ -1,0 +1,52 @@
+<!--
+  RERO angular core
+  Copyright (C) 2020-2024 RERO
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<p-inputGroup>
+  <p-inputNumber
+    class="core:mr-1"
+    inputId="integeronly"
+    [useGrouping]="false"
+    [ngModel]="range()[0]"
+    (ngModelChange)="range.set([$event, range()[1]])"
+    [min]="range()[0]"
+    [max]="range()[1]"
+  />
+  <p-inputNumber
+    class="core:ml-1"
+    inputId="integeronly"
+    [useGrouping]="false"
+    [ngModel]="range()[1]"
+    (ngModelChange)="range.set([range()[0], $event])"
+    [min]="range()[0]"
+    [max]="range()[1]"
+  />
+</p-inputGroup>
+<div class="core:flex core:justify-end core:mt-2 core:gap-2">
+  @if (hasQueryParam()) {
+    <p-button
+      size="small"
+      [label]="'Clear' | translate"
+      [outlined]="true"
+      (onClick)="$event.preventDefault(); clearFilter()"
+    />
+  }
+  <p-button
+    size="small"
+    [label]="'Apply' | translate"
+    [outlined]="true"
+    (onClick)="$event.preventDefault(); updateFilter()"
+  />
+</div>

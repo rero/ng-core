@@ -1,0 +1,170 @@
+/*
+ * RERO angular core
+ * Copyright (C) 2025 RERO
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+export interface JsonObject {
+  [key: string]: JsonValue;
+}
+
+export type JsonValue = string | number | boolean | undefined | JsonValue[] | JsonObject;
+
+export interface RecordData<TMetadata = JsonObject> {
+  created: string;
+  id: string;
+  links: Links;
+  metadata: TMetadata;
+  updated: string;
+}
+
+export interface Links {
+  create?: string;
+  next?: string;
+  prev?: string;
+  self: string;
+}
+
+/**
+ * Class representing a record set returned by API.
+ */
+export interface EsResult<TMetadata = JsonObject> {
+  aggregations: Aggregations;
+  hits: {
+    hits: RecordData<TMetadata>[];
+    total: {
+      relation: string;
+      value: number;
+    };
+  };
+  links: Links;
+}
+
+export interface File {
+  updated: string;
+  size: string;
+  url?: string;
+  mimetype: string;
+  version_id: string;
+  is_head: boolean;
+  created: string;
+  tags: any;
+  delete_marker: boolean;
+  links: {
+    self: string;
+    version?: string;
+    uploads?: string;
+    commit?: string;
+    content?: string;
+  };
+  checksum: string;
+  key: string;
+  showInfo: boolean;
+  showChildren: boolean;
+  metadata: any;
+}
+
+/**
+ * Interface representing a search property, on which we can do a specific search
+ * with query string like: `q=title:query`.
+ */
+export interface SearchField {
+  label: string;
+  path: string;
+  selected?: boolean;
+}
+
+/** Interface representing a search filter */
+export interface SearchFilter {
+  filter: string;
+  label: string;
+  value: string;
+  /* Display filter only if there is a query.
+  This is overridden by the allowEmptySearch parameter
+  in the resource configuration. */
+  showIfQuery?: boolean;
+  /* If you set this value, the url parameter will still be present,
+  but with different values */
+  disabledValue?: string;
+  persistent?: boolean;
+  url?: {
+    external?: boolean;
+    link?: string;
+    routerLink?: string[];
+    target?: string;
+    title?: string;
+  };
+}
+
+/**
+ * Interface representing a collection of SearchFilters with label.
+ * The label adds a title to the interface.
+ *
+ * Example on the interface:
+ *
+ * Show only (label):
+ * Filter 1
+ * Filter 2
+ * etc…
+ */
+export interface SearchFilterSection {
+  label: string;
+  filters: SearchFilter[];
+}
+
+/** Interface representing a bucket returned by Elasticsearch aggregations */
+export interface Bucket {
+  key: string;
+  doc_count: number;
+  label?: string;
+  indeterminate?: boolean;
+  buckets?: Bucket[];
+  [key: string]: any;
+}
+
+/** Interfaces for an aggregation */
+export interface Aggregation {
+  key: string;
+  bucketSize: any;
+  value: { buckets: Bucket[] };
+  expanded: boolean;
+  included?: boolean;
+  loaded?: boolean;
+  doc_count: number;
+  type?: string;
+  config?: AggregationConfig;
+  name: string;
+}
+
+export type Aggregations = Record<string, Aggregation>;
+/**
+ * Interface to describe an aggregation configuration
+ *
+ * Additionally to aggregation buckets, an aggregation configuration object could be
+ * provided to control the aggregation display behavior. The configuration keys depends
+ * on the aggregation type.
+ *
+ * attributes are :
+ *   @attribute type - string: the type of aggregation (ex date-range, sum, date-histogram, ...)
+ *   @attribute min - number: the minimum value into the aggregation buckets.
+ *   @attribute max - number: the maximum value into the aggregation buckets.
+ *   @attribute step - number: the step uses between to value.
+ *   @attributes any additional/not known attributes.
+ */
+export interface AggregationConfig {
+  type?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}
