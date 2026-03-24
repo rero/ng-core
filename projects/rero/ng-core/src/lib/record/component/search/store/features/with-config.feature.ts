@@ -20,7 +20,7 @@ import { patchState, signalStoreFeature, type, withComputed, withMethods, withSt
 import { Observable, of, switchMap } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { ActionStatus, RecordData } from '../../../../../model';
-import { RecordType } from '../../../../model/record-search.iterface';
+import { RecordType } from '../../../../model/record-search.interface';
 import { shallowEqual } from '../../../../record-search-utils';
 import { DefaultSearchResultComponent } from '../../record-search/record-search-result/default-search-result/default-search-result.component';
 

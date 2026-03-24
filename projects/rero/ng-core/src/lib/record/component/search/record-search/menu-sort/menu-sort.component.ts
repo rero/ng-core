@@ -21,7 +21,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { SortOption } from '../../../../model/record-search.iterface';
+import { SortOption } from '../../../../model/record-search.interface';
 import { RecordSearchStore } from '../../store/record-search.store';
 
 @Component({

@@ -40,7 +40,7 @@ import { tap } from 'rxjs/operators';
 import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
 import { Aggregations, SearchField, SearchFilter, SearchFilterSection } from '../../../../model';
 import { ActionStatus, DEFAULT_ACTION_STATUS } from '../../../../model/action-status.interface';
-import { ExportFormat } from '../../../model/record-search.iterface';
+import { ExportFormat } from '../../../model/record-search.interface';
 import { ApiService } from '../../../service/api/api.service';
 import { RecordUiService } from '../../../service/record-ui/record-ui.service';
 import { RecordService } from '../../../service/record/record.service';

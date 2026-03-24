@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2023 RERO
+ * Copyright (C) 2023-2026 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -30,9 +30,9 @@ export abstract class AbstractCanDeactivateComponent {
   abstract canDeactivate: boolean;
 
   @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: Event): void {
+  unloadNotification($event: BeforeUnloadEvent): void {
     if (!this.canDeactivate) {
-      $event.returnValue = true;
+      $event.preventDefault();
     }
   }
 

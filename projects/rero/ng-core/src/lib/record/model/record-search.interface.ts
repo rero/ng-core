@@ -58,6 +58,7 @@ export interface ExportFormat {
   endpoint: string;
   disableMaxRestResultsSize: boolean;
 }
+
 export interface RecordType<TMetadata = JsonObject> {
   key: string;
   label: string;
