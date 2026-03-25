@@ -27,7 +27,7 @@
     "@ngx-formly/core": "^7.1.0",
     "@ngx-formly/primeng": "^7.1.0",
     "@ngx-translate/core": "^17.0.0",
-    "@primeng/themes": "^21.0.4",
+    "@primeuix/themes": "^2.0.3",
     "crypto-js": "^4.2.0",
     "easymde": "^2.20.0",
     "font-awesome": "^4.7.0",

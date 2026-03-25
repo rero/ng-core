@@ -1,4 +1,4 @@
-import { provideZoneChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 /*
  * RERO angular core
  * Copyright (C) 2020-2025 RERO
@@ -20,8 +20,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 
-// remove zone less in a near future
 bootstrapApplication(AppComponent, {
   ...appConfig,
-  providers: [provideZoneChangeDetection(), ...appConfig.providers],
+  providers: [provideZonelessChangeDetection(), ...appConfig.providers],
 }).catch((err) => console.error(err));

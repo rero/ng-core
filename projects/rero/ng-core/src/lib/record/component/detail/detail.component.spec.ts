@@ -19,7 +19,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { ActionStatus } from '../../../model/action-status.interface';
 import { RecordService } from '../../service/record/record.service';
 import { DetailComponent } from './detail.component';
@@ -161,9 +161,7 @@ describe('DetailComponent', () => {
   });
 
   it('should store an error message when API is not available', () => {
-    recordServiceSpy.getRecord.mockImplementation(() => {
-      throw new Error('error');
-    });
+    recordServiceSpy.getRecord.mockReturnValue(throwError(() => new Error('error')));
 
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;

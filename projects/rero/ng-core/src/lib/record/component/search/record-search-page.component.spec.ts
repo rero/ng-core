@@ -284,8 +284,6 @@ describe('RecordSearchPageComponent', () => {
     });
 
     it('should not navigate if store params match URL params', async () => {
-      mockRouter.navigate.mockClear();
-
       // Set URL params to match store
       queryParamMapSubject.next({
         has: (key: string) => key === 'q',
@@ -293,8 +291,11 @@ describe('RecordSearchPageComponent', () => {
         getAll: (_: string) => [],
         keys: ['q'],
       } as ParamMap);
+      mockActivatedRoute.snapshot.queryParamMap = queryParamMapSubject.value;
 
       await new Promise((resolve) => setTimeout(resolve, 50));
+      mockRouter.navigate.mockClear();
+
       component.store.updateQuery('same search');
       await new Promise((resolve) => setTimeout(resolve, 50));
       // Navigation should not have been called again

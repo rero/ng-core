@@ -50,7 +50,7 @@
               "base": "dist/ng-core-tester"
             },
             "index": "projects/ng-core-tester/src/index.html",
-            "polyfills": ["zone.js"],
+            "polyfills": [],
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
             "assets": ["projects/ng-core-tester/src/favicon.ico", "projects/ng-core-tester/src/assets"],
             "styles": ["projects/ng-core-tester/src/styles.scss"],
