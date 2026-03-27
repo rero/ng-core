@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { TranslateFakeLoader, TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -21,7 +22,8 @@ import { ApiService } from '../api/api.service';
 import { Error } from '../error/error';
 import { Record } from './record';
 import { RecordService } from './record.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 
 describe('RecordService', () => {
   const url = 'https://localhost:5000/api/documents';
@@ -65,13 +67,13 @@ describe('RecordService', () => {
     const expectedData: Record = {
       aggregations: {},
       hits: {
-        total: 2
+        total: { value: 2, relation: 'eq' }
       },
       links: {}
     };
 
     service.getRecords('documents', '', 1, 10, [{ key: 'author', values: ['John doe'] }]).subscribe((data: Record) => {
-      expect(service.totalHits(data.hits.total)).toBe(2);
+      expect(data.hits.total.value).toBe(2);
     });
 
     const req = httpMock.expectOne(request => request.method === 'GET' && request.url === url + '/');

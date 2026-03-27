@@ -20,6 +20,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { merge, Subscription } from 'rxjs';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 @Component({
     selector: 'ng-core-label-editor',
     templateUrl: './label.component.html',

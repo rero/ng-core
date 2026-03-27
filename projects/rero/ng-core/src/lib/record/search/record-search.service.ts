@@ -17,14 +17,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-/**
- * Interface representing aggregations filters
- */
-export interface AggregationsFilter {
-  key: string;
-  values: any[];
-}
+import { AggregationsFilter } from '../../types';
 
 /**
  * Service for managing records search.

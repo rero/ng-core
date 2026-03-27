@@ -19,6 +19,7 @@ import { AbstractControl, ValidatorFn } from '@angular/forms';
 import { FieldType, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 interface ExtraTextAreaProps extends FormlyFieldProps {
   displayChars: boolean;
   displayWords: boolean;

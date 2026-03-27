@@ -16,7 +16,8 @@
  */
 import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, inject, input } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { AggregationsFilter, RecordSearchService } from '../../record-search.service';
+import { AggregationsFilter } from '../../../../types';
+import { RecordSearchService } from '../../record-search.service';
 
 @Component({
     selector: 'ng-core-record-search-aggregation-buckets',

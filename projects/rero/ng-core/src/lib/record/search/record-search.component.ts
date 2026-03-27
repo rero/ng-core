@@ -39,13 +39,14 @@ import { BehaviorSubject, isObservable, Observable, of, Subscription } from 'rxj
 import { distinctUntilChanged, map, switchMap, tap } from 'rxjs/operators';
 import { ApiService } from '../../api/api.service';
 import { Error } from '../../error/error';
+import { AggregationsFilter, CanPermission, EsResult, ExportFormat, ExportFormatConfig, InvenioRecord, RecordPermissions, RecordsAggregation, Url } from '../../types';
 import { ActionStatus } from '../action-status';
 import { JSONSchema7 } from '../editor/utils';
 import { Aggregation, Record, SearchField, SearchFilter, SearchFilterSection, SearchResult } from '../record';
 import { RecordUiService } from '../record-ui.service';
 import { RecordService } from '../record.service';
 import { ChangeEvent } from './paginator/paginator.component';
-import { AggregationsFilter, RecordSearchService } from './record-search.service';
+import { RecordSearchService } from './record-search.service';
 import { IChecked } from './search-filters/search-filters.component';
 
 export interface SearchParams {
@@ -107,16 +108,16 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     index?: string;
     component?: Component;
     total?: number;
-    canAdd?: any;
-    canUpdate?: any;
-    canDelete?: any;
-    canRead?: any;
-    permissions?: any;
-    aggregations?: any;
-    preFilters?: any;
+    canAdd?: CanPermission;
+    canUpdate?: CanPermission;
+    canDelete?: CanPermission;
+    canRead?: CanPermission;
+    permissions?: RecordPermissions;
+    aggregations?: (aggregations: object) => Observable<any>;
+    preFilters?: object;
     defaultSearchInputFilters?: AggregationsFilter[];
-    listHeaders?: any;
-    itemHeaders?: any;
+    listHeaders?: object;
+    itemHeaders?: object;
     aggregationsName?: any;
     aggregationsOrder?: string[];
     aggregationsExpand?: string[] | (() => string[]);
@@ -198,13 +199,13 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /** Request result record hits. */
-  get records(): any[] {
+  get records(): InvenioRecord[] {
     return this.hits && this.hits.hits ? this.hits.hits : [];
   }
 
   /** Total records number corresponding to the request. */
   get total(): number {
-    return this.hits && this.hits.total ? this.recordService.totalHits(this.hits.total) : 0;
+    return this.hits && this.hits.total.value;
   }
 
   /** Get the text for displaying results text. */
@@ -311,7 +312,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnInit() {
     this._subscriptions.add(
-      this.translateService.onLangChange.subscribe((lang: any) => {
+      this.translateService.onLangChange.subscribe(() => {
         this._loadSearchFields();
       })
     );
@@ -590,7 +591,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Get Export formats for the current resource given by configuration.
    * @return Array of export format to generate an `export as` button or an empty array.
    */
-  protected _exportFormats(): any[] {
+  protected _exportFormats(): ExportFormatConfig[] {
     if (!this.config || !this.config.exportFormats) {
       return [];
     }
@@ -609,7 +610,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param format - export format object
    * @return formatted url for an export format.
    */
-  getExportFormatUrl(format: any) {
+  getExportFormatUrl(format: Partial<ExportFormat>) {
     const queryParams = Object.keys(this.activatedRoute.snapshot.queryParams);
     // TODO: maybe we can use URLSerializer to build query string
     const baseUrl = format.endpoint ? format.endpoint : this.apiService.getEndpointByType(this._currentIndex());
@@ -649,7 +650,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param format - export format object
    * @return Boolean
    */
-  canExport(format: any): boolean {
+  canExport(format: Partial<ExportFormat>): boolean {
     return Object.hasOwn(format, 'disableMaxRestResultsSize') && format.disableMaxRestResultsSize
       ? this.total > 0
       : 0 < this.total && this.total < RecordService.MAX_REST_RESULTS_SIZE;
@@ -688,7 +689,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param records - Result records
    * @return Observable containing aggregations corresponding to actual records.
    */
-  aggregations$(aggregations: object): Observable<any> {
+  aggregations$(aggregations: object): Observable<object> {
     if (this.config.aggregations) {
       return this.config.aggregations(aggregations);
     } else {
@@ -702,8 +703,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param record - Generate detail URL for this record.
    * @return Observable emitting detail URL object
    */
-  resolveDetailUrl$(record: any): Observable<any> {
-    const url = { link: `detail/${record.id}`, external: false };
+  resolveDetailUrl$(record: InvenioRecord): Observable<Url | null> {
+    const url: Url = { link: `detail/${record.id}`, external: false };
 
     if (this.detailUrl) {
       url.link = this.detailUrl.replace(':type', this._currentIndex()).replace(':pid', record.id);
@@ -772,15 +773,15 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     if (event.expanded === false) {
       return;
     }
-    const aggregation = this.aggregations.find((item: any) => item.key === event.key);
+    const aggregation = this.aggregations.find((item: Aggregation) => item.key === event.key);
     // No aggregation found or buckets are already loaded.
     if (!aggregation || aggregation.loaded) {
       return;
     }
 
     // Get buckets for the aggregation
-    this._getRecords(1).subscribe((records: any) => {
-      this.aggregations$(records.aggregations).subscribe((aggregations: any) => {
+    this._getRecords(1).subscribe((records: EsResult) => {
+      this.aggregations$(records.aggregations).subscribe((aggregations: object) => {
         if (aggregations[event.key]) {
           this._mapAggregation(aggregation, aggregations[event.key]);
         }
@@ -795,7 +796,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * Search for records.
    * @param size - number : force the number of records to return. If `null` the default component `size` attribute will be used.
    */
-  protected _getRecords(size: number = null): Observable<any> {
+  protected _getRecords(size: number = null): Observable<EsResult | Error> {
     // Build query string
     const q = this._buildQueryString();
 
@@ -803,7 +804,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
     // processed.
     if (this.config.allowEmptySearch === false && !q) {
       this.showEmptySearchMessage = true;
-      return of({ hits: { hits: [], total: 0 }, aggregations: {} });
+      return of({ hits: { hits: [], total: { relation: 'eq', value: 0 } }, aggregations: {} });
     } else {
       this.showEmptySearchMessage = false;
     }
@@ -882,8 +883,8 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
 
     // Update filters with default search filters only if the q parameter is empty
     if ((q === null || q.trim().length === 0) && this.config.defaultSearchInputFilters) {
-      this.config.defaultSearchInputFilters.forEach((filter: { key: string; values: any[] }) => {
-        this.recordSearchService.updateAggregationFilter(filter.key, filter.values);
+      this.config.defaultSearchInputFilters.forEach((filter: any) => {
+        this.recordSearchService.updateAggregationFilter(filter.key, filter.value);
       });
     }
   }
@@ -894,7 +895,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param defaultValue - Default value is returned if the parameter is not defined
    * @return A config value or the given default value instead
    */
-  protected _getResourceConfig(paramName: string, defaultValue: any) {
+  protected _getResourceConfig(paramName: string, defaultValue: object) {
     return (paramName in this.config) ? this.config[paramName] : defaultValue;
   }
 
@@ -1009,7 +1010,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    */
   protected _flatSearchFilters(): SearchFilter[] {
     const flatFilters = [];
-    this.searchFilters.forEach((searchFilter: any) => {
+    this.searchFilters.forEach((searchFilter: SearchFilterSection) => {
       if (searchFilter.filters) {
         searchFilter.filters.forEach((filter: any) => flatFilters.push(filter));
       } else {
@@ -1025,7 +1026,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
    * @param aggregation Aggregation object.
    * @param recordsAggregation Aggregation retrieved from record.
    */
-  protected _mapAggregation(aggregation: Aggregation, recordsAggregation: any): void {
+  protected _mapAggregation(aggregation: Aggregation, recordsAggregation: RecordsAggregation): void {
     aggregation.doc_count = recordsAggregation.doc_count || null;
     aggregation.type = recordsAggregation.type || 'terms';
     aggregation.config = recordsAggregation.config || null;
@@ -1077,7 +1078,7 @@ export class RecordSearchComponent implements OnInit, OnChanges, OnDestroy {
       if (
         agg.included === true ||
         agg.expanded ||
-        this.aggregationsFilters.some((filter: any) => filter.key === agg.key)
+        this.aggregationsFilters.some((filter: AggregationsFilter) => filter.key === agg.key)
       ) {
         facets.push(agg.key);
       }

@@ -17,6 +17,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig } from '@ngx-formly/core';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 /**
  * Component for displaying array fields in editor.
  */
