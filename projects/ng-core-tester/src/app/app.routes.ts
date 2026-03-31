@@ -198,6 +198,10 @@ export const routes: Routes = [
     component: HomeComponent,
   },
   {
+    path: 'record',
+    loadChildren: () => import('./record/document/document-routes').then((r) => r.routes)
+  },
+  {
     path: 'editor',
     children: [
       { path: ':type', component: EditorComponent, title: titleEditorResolver },

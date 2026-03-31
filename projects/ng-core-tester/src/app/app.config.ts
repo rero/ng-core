@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ApplicationConfig, inject, provideEnvironmentInitializer } from '@angular/core';
+import { ApplicationConfig } from '@angular/core';
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -33,7 +33,6 @@ import { providePrimeNG } from 'primeng/config';
 import { AppConfigService } from './app-config.service';
 import { routes } from './app.routes';
 import { RecordServiceMock } from './record/editor/record-service-mock';
-import { RouteService } from './routes/route.service';
 import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 
 export const appConfig: ApplicationConfig = {
@@ -55,9 +54,6 @@ export const appConfig: ApplicationConfig = {
       provide: RemoteAutocompleteService,
       useClass: AppRemoteAutocompleteService,
     },
-    provideEnvironmentInitializer(() => {
-      inject(RouteService).initializeRoutes();
-    }),
     {
       provide: RecordService,
       useClass: RecordServiceMock,

@@ -50,7 +50,6 @@ import { AbstractCanDeactivateComponent } from '../../../../core/component/abstr
 import { ErrorComponent } from '../../../../core/component/error/error.component';
 import { Error } from '../../../../core/component/error/error.interface';
 import { CONFIG } from '../../../../core/config/config';
-import { RouteCollectionService } from '../../../../core/service/route/route-collection.service';
 import { AddFieldEditorComponent } from '../../../../formly';
 import { ActionStatus, JsonObject, JsonValue, RecordData } from '../../../../model';
 import { ApiService } from '../../../service/api/api.service';
@@ -61,6 +60,7 @@ import { TemplateMetadata } from '../../services/template/templates.service';
 import { JSONSchema7, processJsonSchema, removeEmptyValues, resolve$ref } from '../../utils/utils';
 import { LoadTemplateFormComponent } from '../load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from '../save-template-form/save-template-form.component';
+import { RecordType } from '../../../model';
 
 interface EditorTemplateSettings {
   recordType: string;
@@ -140,7 +140,6 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
   protected recordUiService: RecordUiService = inject(RecordUiService);
   protected translateService: TranslateService = inject(TranslateService);
   protected location: Location = inject(Location);
-  protected routeCollectionService: RouteCollectionService = inject(RouteCollectionService);
   protected jsonschemaService: JSONSchemaService = inject(JSONSchemaService);
   protected dialogService: DialogService = inject(DialogService);
   protected messageService: MessageService = inject(MessageService);
@@ -785,10 +784,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
 
     const editorSettings = this.editorSettings();
     if (editorSettings.template.recordType !== '') {
-      const tmplResource = this.routeCollectionService.getRoute(editorSettings.template.recordType);
-      const tmplConfiguration = tmplResource()?.getConfiguration();
-      if (tmplConfiguration?.data?.types) {
-        this.recordUiService.types = this.recordUiService.types.concat(tmplConfiguration.data.types);
+      const tmplTypes = this.route.snapshot.data.types.filter((recordType: Partial<RecordType>) => recordType.key === editorSettings.template.recordType);
+      if (tmplTypes?.length) {
+        this.recordUiService.types = this.recordUiService.types.concat(tmplTypes);
       }
     }
 

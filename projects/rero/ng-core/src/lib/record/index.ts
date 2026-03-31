@@ -53,3 +53,4 @@ export * from './editor/utils/utils';
 export * from './editor/services/template/templates.service';
 export * from './editor/services/jsonschema/jsonschema.service';
 export * from './record-search-utils';
+export * from './model/record-search.interface';

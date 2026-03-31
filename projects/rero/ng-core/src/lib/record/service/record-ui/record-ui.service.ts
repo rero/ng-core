@@ -38,7 +38,7 @@ export class RecordUiService {
   protected messageService: MessageService = inject(MessageService);
 
   /** Configuration for all resources. */
-  types: RecordType<any>[] = [];
+  types: Partial<RecordType<any>>[] = [];
 
   /**
    * Delete a record by its PID.

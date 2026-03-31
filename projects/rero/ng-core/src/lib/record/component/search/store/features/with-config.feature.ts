@@ -23,6 +23,7 @@ import { ActionStatus, RecordData } from '../../../../../model';
 import { RecordType } from '../../../../model/record-search.interface';
 import { shallowEqual } from '../../../../record-search-utils';
 import { DefaultSearchResultComponent } from '../../record-search/record-search-result/default-search-result/default-search-result.component';
+import { DefaultDetailComponent } from '../../../detail/default-detail/default-detail.component';
 
 export interface RouteConfig {
   /** Record type configurations */
@@ -37,11 +38,15 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
   label: 'Documents',
   index: '',
   component: DefaultSearchResultComponent,
+  detailComponent: DefaultDetailComponent,
   canAdd: () => of({ can: true, message: '' }),
   canUpdate: () => of({ can: true, message: '' }),
   canDelete: () => of({ can: true, message: '' }),
   canRead: () => of({ can: true, message: '' }),
   canUse: () => of({ can: true, message: '' }),
+  editorSettings: {
+    longMode: true,
+  },
   permissions: () => of({}),
   exportFormats: [],
   preFilters: {},

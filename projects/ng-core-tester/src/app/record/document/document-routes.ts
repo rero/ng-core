@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020 RERO
+ * Copyright (C) 2026 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,12 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Route } from '@angular/router';
+import { ngCoreRoutes } from "@rero/ng-core";
+import { DocumentsRoute } from "../../routes/documents-route";
+import { ResolveFn, Routes } from "@angular/router";
+import { RecordType } from "projects/rero/ng-core/src/lib/record/model";
 
-export interface RouteInterface {
-  /** Route name */
-  readonly name: string;
+export const typesDocumentResolver: ResolveFn<Partial<RecordType>[]> = () => {
+  return new DocumentsRoute().getTypes();
+};
 
-  /** Get configuration of the current route */
-  getConfiguration(): Route;
-}
+export const routes: Routes = [
+  {
+    path: 'search',
+    children: ngCoreRoutes,
+    resolve: {
+      types: typesDocumentResolver,
+    },
+    data: {
+      showSearchInput: true,
+    }
+  },
+];

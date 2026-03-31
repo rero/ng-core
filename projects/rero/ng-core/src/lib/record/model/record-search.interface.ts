@@ -64,6 +64,7 @@ export interface RecordType<TMetadata = JsonObject> {
   label: string;
   index: string;
   component: Type<unknown>;
+  detailComponent?: Type<unknown>;
   canAdd: () => Observable<ActionStatus>;
   canUpdate: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
   canDelete: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
@@ -105,4 +106,7 @@ export interface RecordType<TMetadata = JsonObject> {
   redirectUrl: (record: RecordData<TMetadata>, action: string) => Observable<string>;
   deleteMessage: (pid: string) => string[];
   searchFilters: SearchFilter[];
+  editorSettings: {
+    longMode: boolean;
+  };
 }

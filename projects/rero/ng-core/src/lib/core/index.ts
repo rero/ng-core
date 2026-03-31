@@ -34,8 +34,7 @@ export * from './component/abstract-can-deactivate/abstract-can-deactivate.compo
 export * from './utils/utils';
 export * from './core.provider';
 export * from './directive/katex.directive';
-export * from './service/route/route-collection.service';
-export * from './service/route/route-interface';
+export * from './route-data-types.interface';
 export * from './service/local-storage/local-storage.service';
 export * from './service/crypto-js/crypto-js.service';
 export * from './service/core-config/core-config.service';
