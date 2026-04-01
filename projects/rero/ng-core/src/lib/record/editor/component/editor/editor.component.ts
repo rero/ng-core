@@ -62,13 +62,13 @@ import { LoadTemplateFormComponent } from '../load-template-form/load-template-f
 import { SaveTemplateFormComponent } from '../save-template-form/save-template-form.component';
 import { RecordType } from '../../../model';
 
-interface EditorTemplateSettings {
+export interface EditorTemplateSettings {
   recordType: string;
   loadFromTemplate: boolean;
   saveAsTemplate: boolean;
 }
 
-interface EditorSettingsConfig {
+export interface EditorSettingsConfig {
   longMode?: boolean;
   getHeaders?: unknown;
   template?: Partial<EditorTemplateSettings>;
@@ -155,7 +155,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
 
   // store pid on edit mode
   readonly pid = input<string | null>(null);
-  protected _pid = signal<string>('');
+  protected _pid = signal<string | null>(null);
 
   // initial values changes notification
   readonly modelChange = output<JsonValue | null>();
@@ -485,8 +485,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     }
 
     let recordAction$: Observable<EditorRecordActionResult>;
-    if (this._pid() != null) {
-      recordAction$ = this.recordService.update(this.recordType(), this._pid(), this.preUpdateRecord(data)).pipe(
+    const pid = this._pid();
+    if (pid != null) {
+      recordAction$ = this.recordService.update(this.recordType(), pid, this.preUpdateRecord(data)).pipe(
         catchError((error) => this._handleError(error)),
         map((record) => {
           return { record, action: 'update' as const, message: this.translateService.instant('Record updated.') };
@@ -801,7 +802,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
       ]);
     }
 
-    this._pid.set(params.pid ?? '');
+    this._pid.set(params.pid ?? null);
     const schema$ = this.recordService.getSchemaForm(
       this.recordType(),
     ) as unknown as Observable<EditorSchemaFormResponse>;

@@ -19,7 +19,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Type } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { JSONSchema7 } from 'projects/rero/ng-core/src/public-api';
+import { EditorSettingsConfig, JSONSchema7 } from 'projects/rero/ng-core/src/public-api';
 import { Observable } from 'rxjs';
 import {
   ActionStatus,
@@ -47,9 +47,9 @@ export interface SearchParams {
 export interface SortOption {
   value: string;
   label: string;
-  defaultQuery: boolean;
-  defaultNoQuery: boolean;
-  icon: string;
+  defaultQuery?: boolean;
+  defaultNoQuery?: boolean;
+  icon?: string;
 }
 
 export interface ExportFormat {
@@ -87,7 +87,7 @@ export interface RecordType<TMetadata = JsonObject> {
   aggregationsExpand: string[] | (() => string[]);
   aggregationsHide: string[];
   aggregationsBucketSize: number;
-  processAggregations: (aggregations: Aggregation[]) => Observable<Aggregation[]>;
+  // processAggregations: (aggregations: Aggregation[]) => Observable<Aggregation[]>;
   searchFields: SearchField[];
   resultsText: ((hits: EsResult['hits']) => string) | null;
   pagination: {
@@ -105,8 +105,6 @@ export interface RecordType<TMetadata = JsonObject> {
   preprocessRecordEditor: (record: TMetadata) => TMetadata;
   redirectUrl: (record: RecordData<TMetadata>, action: string) => Observable<string>;
   deleteMessage: (pid: string) => string[];
-  searchFilters: SearchFilter[];
-  editorSettings: {
-    longMode: boolean;
-  };
+  searchFilters: (SearchFilter | SearchFilterSection)[];
+  editorSettings: EditorSettingsConfig;
 }

@@ -19,7 +19,7 @@
     @for (filter of filters(); track filter.key) {
       <p-button
         class="core:mr-2 core:mb-2"
-        [label]="filter.name ? filter.name : (filter.key | bucketName: filter.aggregationKey | async) || ''"
+        [label]="filter.name ? filter.name : (filter.key | bucketName: filter.aggregationKey | translate) || ''"
         icon="fa fa-times"
         [outlined]="true"
         severity="secondary"

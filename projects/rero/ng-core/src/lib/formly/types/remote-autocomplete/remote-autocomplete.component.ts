@@ -14,8 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AsyncPipe, NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -25,7 +25,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
 import { Select, SelectChangeEvent } from 'primeng/select';
-import { map, Observable, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { map, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { removeChars } from '../../../core/utils/utils';
 import { TranslateLabelService } from '../../service/translate-label.service';
@@ -56,7 +56,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
       @if (!field.formControl.value) {
         @if (props.filters?.options) {
           <p-select
-            [options]="optionValues$ | async"
+            [options]="optionValues()"
             [ngModel]="props.filters?.selected"
             (onChange)="changeFilter($event)"
           >
@@ -102,7 +102,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
       }
     </div>
   `,
-  imports: [NgClass, Select, FormsModule, AutoComplete, Button, AsyncPipe, TranslatePipe],
+  imports: [NgClass, Select, FormsModule, AutoComplete, Button, TranslatePipe],
 })
 export class RemoteAutocompleteComponent
   extends FieldType<FieldTypeConfig<IRemoteAutoCompleteProps>>
@@ -112,6 +112,7 @@ export class RemoteAutocompleteComponent
   protected remoteAutocompleteService = inject(RemoteAutocompleteService);
   protected route = inject(ActivatedRoute);
   protected translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+  private injector = inject(Injector);
 
   protected query = new Subject<IQuery>();
 
@@ -155,17 +156,20 @@ export class RemoteAutocompleteComponent
 
   value = '';
 
-  optionValues$: Observable<any> | null = null;
+  optionValues!: Signal<any[]>;
 
   ngOnInit(): void {
-    if (this.props.filters) {
-      const options$ = (this.props.filters.options ?? of([])).pipe(shareReplay(1));
-      this.optionValues$ = this.translateService.onLangChange.pipe(
-        startWith(null),
-        switchMap(() => options$),
-        map((options: any) => this.translateLabelService.translateLabel(options)),
-      );
-    }
+    const options$ = (this.props.filters?.options ?? of([])).pipe(shareReplay(1));
+    this.optionValues = runInInjectionContext(this.injector, () =>
+      toSignal(
+        this.translateService.onLangChange.pipe(
+          startWith(null),
+          switchMap(() => options$),
+          map((options: any) => this.translateLabelService.translateLabel(options)),
+        ),
+        { initialValue: [] },
+      ),
+    );
   }
 
   ngAfterViewInit(): void {

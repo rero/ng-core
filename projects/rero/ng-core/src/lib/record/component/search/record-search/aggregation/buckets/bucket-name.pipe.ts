@@ -14,13 +14,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { inject, Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'bucketName' })
 export class BucketNamePipe implements PipeTransform {
-  private translateService = inject(TranslateService);
 
   /**
    * Transform aggregation name
@@ -28,7 +25,7 @@ export class BucketNamePipe implements PipeTransform {
    * @param aggregationKey - aggregation type
    * @returns Observable<string>
    */
-  transform(value: string, aggregationKey: string): Observable<string> {
+  transform(value: string, aggregationKey: string): string {
     let data = value;
     // Legacy: for compatibility
     switch (aggregationKey) {
@@ -36,7 +33,6 @@ export class BucketNamePipe implements PipeTransform {
         data = `lang_${value}`;
         break;
     }
-    // End Legacy
-    return of(this.translateService.instant(data));
+    return data;
   }
 }

@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
-import { RecordSearchStore } from '../../../store/record-search.store';
 import { Bucket } from '../../../../../../model';
+import { RecordSearchStore } from '../../../store/record-search.store';
 import { BucketNamePipe } from '../buckets/bucket-name.pipe';
 
 export interface IFilter {
@@ -31,7 +30,7 @@ export interface IFilter {
 @Component({
   selector: 'ng-core-list-filters',
   templateUrl: './list-filters.component.html',
-  imports: [Button, AsyncPipe, BucketNamePipe],
+  imports: [Button, BucketNamePipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {

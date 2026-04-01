@@ -14,19 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { BucketNamePipe } from './bucket-name.pipe';
 
 describe('BucketNamePipe', () => {
   let pipe: BucketNamePipe;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [BucketNamePipe, TranslateModule.forRoot({})],
-      providers: [BucketNamePipe],
-    });
-    pipe = TestBed.inject(BucketNamePipe);
+    pipe = new BucketNamePipe();
   });
 
   it('create an instance', () => {
@@ -34,14 +28,10 @@ describe('BucketNamePipe', () => {
   });
 
   it('should return the default value', () => {
-    pipe.transform('book', 'document_type').subscribe((data: any) => {
-      expect(data).toEqual('book');
-    });
+    expect(pipe.transform('book', 'document_type')).toEqual('book');
   });
 
   it('should return the modified value for the language', () => {
-    pipe.transform('fre', 'language').subscribe((data: any) => {
-      expect(data).toEqual('lang_fre');
-    });
+    expect(pipe.transform('fre', 'language')).toEqual('lang_fre');
   });
 });

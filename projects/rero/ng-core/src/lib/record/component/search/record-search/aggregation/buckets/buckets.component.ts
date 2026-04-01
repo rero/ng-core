@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AsyncPipe, SlicePipe } from '@angular/common';
+import { SlicePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { BucketNamePipe } from './bucket-name.pipe';
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',
   templateUrl: './buckets.component.html',
-  imports: [Checkbox, FormsModule, AsyncPipe, SlicePipe, TranslatePipe, BucketNamePipe, Button],
+  imports: [Checkbox, FormsModule, SlicePipe, TranslatePipe, BucketNamePipe, Button],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BucketsComponent {

@@ -24,7 +24,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelect } from 'primeng/treeselect';
-import { combineLatest, map, Observable, of, startWith, tap } from 'rxjs';
+import { combineLatest, map, of, startWith, tap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { TranslateLabelService } from '../../service/translate-label.service';
 
@@ -112,19 +112,16 @@ export class TreeSelectComponent extends FieldType<FieldTypeConfig<ITreeSelectPr
   readonly nodeSelected = signal<TreeNode | null>(null);
   readonly optionValues = signal<TreeNode[]>([]);
 
-  optionValues$!: Observable<NgCoreTreeSelectOption[]>;
-
   ngOnInit(): void {
     const optionsObs = this.props.options ?? of([]);
     const langChangeObs = this.translateService.onLangChange.pipe(startWith(null));
-    this.optionValues$ = combineLatest([optionsObs, langChangeObs]).pipe(
+    combineLatest([optionsObs, langChangeObs]).pipe(
       tap(([options]) => {
         this.filter = this.enableFilter(options, 0).enabled;
       }),
       map(([options]) => this.translateLabelService.translateLabel(options)),
-    );
-
-    this.optionValues$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((options: TreeNode[]) => {
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((options: TreeNode[]) => {
       this.optionValues.set(options);
       this.nodeSelected.set(this.formControl?.value ? this.findNodeByValue(options, this.formControl.value) : null);
     });

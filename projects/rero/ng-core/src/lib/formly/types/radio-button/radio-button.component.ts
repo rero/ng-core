@@ -14,8 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -23,7 +24,7 @@ import { RadioButton } from 'primeng/radiobutton';
 import { Observable, of } from 'rxjs';
 
 interface RadioButtonProps {
-  options: Observable<Option[]>;
+  optionValues: Observable<Option[]>;
   style: 'stacked' | 'inline';
 }
 
@@ -47,27 +48,37 @@ interface Option {
       </div>
     </ng-template>
     @if (props.style === 'stacked') {
-      @for (option of props.options | async; track option.value) {
+      @for (option of optionValues(); track option.value) {
         <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{ option }" />
       }
     } @else {
       <div class="core:flex core:gap-2">
-        @for (option of props.options | async; track option.value) {
+        @for (option of optionValues(); track option.value) {
           <ng-container [ngTemplateOutlet]="radioButton" [ngTemplateOutletContext]="{ option }" />
         }
       </div>
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RadioButton, FormsModule, ReactiveFormsModule, NgTemplateOutlet, AsyncPipe, TranslatePipe],
+  imports: [RadioButton, FormsModule, ReactiveFormsModule, NgTemplateOutlet, TranslatePipe],
 })
-export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonProps>> {
+export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonProps>> implements OnInit {
+  private injector = inject(Injector);
+
   defaultOptions?: Partial<FieldTypeConfig<RadioButtonProps>> = {
     props: {
-      options: of([]),
+      optionValues: of([]),
       style: 'stacked',
     },
   };
+
+  optionValues!: Signal<Option[]>;
+
+  ngOnInit(): void {
+    this.optionValues = runInInjectionContext(this.injector, () =>
+      toSignal(this.props.optionValues ?? of([]), { initialValue: [] })
+    );
+  }
 
   get disabledControl() {
     return new FormControl({ value: this.formControl.value, disabled: true });

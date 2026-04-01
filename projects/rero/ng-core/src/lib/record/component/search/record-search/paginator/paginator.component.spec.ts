@@ -47,7 +47,7 @@ describe('PaginatorComponent', () => {
     expect(component.pageLinkSize()).toEqual(5);
     expect(component.rows()).toEqual(10);
     expect(component.rowsPerPageOptions()).toEqual([10, 25, 50, 100]);
-    expect(component.showCurrentPageReport()).toBe(true);
+    expect(component.showCurrentPageReport()).toBe(false);
     expect(component.showFirstLastIcon()).toBe(true);
     expect(component.totalRecords()).toEqual(100);
     expect(component.first()).toEqual(0);
@@ -76,10 +76,10 @@ describe('PaginatorComponent', () => {
     expect(button.length).toEqual(10);
   });
 
-  it('should display text information from pages', () => {
+  it('should not display current page report when pageReport is false', () => {
     const element: HTMLElement = fixture.nativeElement;
     const info = element.querySelector('.p-paginator-current');
-    expect(info!.textContent).toEqual('1 of 10');
+    expect(info).toBeNull();
   });
 
   it('should display the rows per page dropdown', () => {

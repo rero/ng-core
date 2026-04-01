@@ -62,7 +62,6 @@ export class RecordSearchPageComponent {
      * B. Sync Route Data (Static or Resolved data)
      */
     this.store.updateRouteConfig(this.route.snapshot.data);
-
     // Legacy service update (Targeted for future refactoring)
     if (this.route.snapshot.data?.['types']) {
       this.recordUiService.types = this.route.snapshot.data['types'];

@@ -32,7 +32,7 @@
               @if (bucket.name) {
                 {{ bucket.name }}
               } @else {
-                {{ bucket.key | bucketName: aggregationKey() | async }}
+                {{ bucket.key | bucketName: aggregationKey() | translate }}
               }
             </label>
             <div class="core:pl-2">
