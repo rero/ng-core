@@ -32,7 +32,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { catchError, combineLatest, filter, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, finalize, map, Observable, of, switchMap } from 'rxjs';
 import { ActionStatus } from '../../../model/action-status.interface';
 import { RecordData } from '../../../model/record.interface';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
@@ -69,7 +69,19 @@ export class DetailComponent {
   readonly type = computed(() => this.paramMap().get('type') ?? '');
   readonly pid = computed(() => this.paramMap().get('pid') ?? '');
 
-  private readonly params = computed(() => ({ type: this.type(), pid: this.pid() }));
+  private readonly recordRequest = computed(() => {
+    const config = this.config();
+    const pid = this.pid();
+    const type = this.type();
+    if (!config || !pid || !type) {
+      return null;
+    }
+    return { config, pid };
+  });
+  private readonly recordContext = computed(() => ({
+    record: this.record(),
+    type: this.type(),
+  }));
 
   private readonly config = computed<RecordType | null>(() => {
     const types: RecordType[] = this.routeData()?.types ?? [];
@@ -78,12 +90,78 @@ export class DetailComponent {
     return types.find((t) => t.key === type) ?? null;
   });
 
-  readonly useStatus = signal<ActionStatus>({ can: false, message: '', url: '' });
-  readonly updateStatus = signal<ActionStatus>({ can: false, message: '' });
-  readonly deleteStatus = signal<ActionStatus>({ can: false, message: '' });
-  readonly record = signal<RecordData | undefined>(undefined);
+  readonly record = toSignal(
+    toObservable(this.recordRequest).pipe(
+      switchMap((request) => {
+        if (!request) {
+          this.spinner.hide();
+          return of(undefined);
+        }
+
+        this.error.set(undefined);
+        this.spinner.show();
+
+        const { config, pid } = request;
+        const resourceType = config.index || config.key;
+        return this.recordService
+          .getRecord<RecordData>(resourceType, pid, {
+            headers: config.itemHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
+          })
+          .pipe(
+            map((record) => record ?? undefined),
+            catchError((err) => {
+              this.error.set(err);
+              return of(undefined);
+            }),
+            finalize(() => this.spinner.hide()),
+          );
+      }),
+    ),
+    { initialValue: undefined },
+  );
   readonly error = signal<Error | undefined>(undefined);
-  readonly adminMode = signal<ActionStatus>({ can: true, message: '' });
+  readonly useStatus = toSignal(
+    toObservable(this.recordContext).pipe(
+      switchMap(({ record, type }) =>
+        record && type ? this.recordUiService.canUseRecord$(record, type) : of({ can: false, message: '', url: '' }),
+      ),
+    ),
+    { initialValue: { can: false, message: '', url: '' } },
+  );
+  readonly updateStatus = toSignal(
+    toObservable(this.recordContext).pipe(
+      switchMap(({ record, type }) =>
+        record && type ? this.recordUiService.canUpdateRecord$(record, type) : of({ can: false, message: '' }),
+      ),
+    ),
+    { initialValue: { can: false, message: '' } },
+  );
+  readonly deleteStatus = toSignal(
+    toObservable(this.recordContext).pipe(
+      switchMap(({ record, type }) =>
+        record && type ? this.recordUiService.canDeleteRecord$(record, type) : of({ can: false, message: '' }),
+      ),
+    ),
+    { initialValue: { can: false, message: '' } },
+  );
+  readonly adminMode = toSignal(
+    toObservable(this.recordContext).pipe(
+      switchMap(({ record }) => (record ? this.getAdminMode$() : of({ can: true, message: '' }))),
+    ),
+    { initialValue: { can: true, message: '' } },
+  );
+  readonly canReadStatus = toSignal<ActionStatus | null>(
+    toObservable(this.recordContext).pipe(
+      switchMap(({ record, type }) =>
+        record && type ? this.recordUiService.canReadRecord$(record, type) : of(null),
+      ),
+    ),
+    { initialValue: null },
+  );
+  readonly canUse = computed(() => this.useStatus().can);
+  readonly canUpdate = computed(() => this.updateStatus().can);
+  readonly canDelete = computed(() => this.deleteStatus().can);
+  readonly isAdminMode = computed(() => this.adminMode().can);
 
   constructor() {
     // Keep recordUiService.types in sync with route data
@@ -106,70 +184,25 @@ export class DetailComponent {
       });
     });
 
-    toObservable(this.params).pipe(
-      filter(({ type, pid }) => !!type && !!pid),
-      tap(() => this.spinner.show()),
-      switchMap(({ type, pid }) => {
-        const config = this.config();
-        if (!config) {
-          this.spinner.hide();
-          return of(void 0);
-        }
+    effect(() => {
+      const record = this.record();
+      const type = this.type();
+      if (!record || !type) {
+        return;
+      }
 
-        const resourceType = config.index || config.key;
-        const record$ = this.recordService
-          .getRecord<RecordData>(resourceType, pid, {
-            headers: config.itemHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
-          })
-          .pipe(
-            catchError((err) => {
-              this.error.set(err);
-              return of(null);
-            }),
-          );
-
-        return record$.pipe(
-          switchMap((record) => {
-            this.record.set(record ?? undefined);
-            if (!record) {
-              return of(void 0);
-            }
-
-            const adminMode$: Observable<ActionStatus> = this.route.snapshot.data.adminMode
-              ? this.route.snapshot.data.adminMode()
-              : of(this.adminMode());
-
-            return combineLatest([
-              this.recordUiService.canReadRecord$(record, type),
-              this.recordUiService.canDeleteRecord$(record, type),
-              this.recordUiService.canUpdateRecord$(record, type),
-              this.recordUiService.canUseRecord$(record, type),
-              adminMode$,
-            ]).pipe(
-              tap(([canRead, canDelete, canUpdate, canUse, adminMode]) => {
-                if (!canRead.can) {
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: this.translate.instant(type),
-                    detail: this.translate.instant('You cannot read this record'),
-                    sticky: true,
-                    closable: true,
-                  });
-                  this.location.back();
-                }
-                this.deleteStatus.set(canDelete);
-                this.updateStatus.set(canUpdate);
-                this.useStatus.set(canUse);
-                this.adminMode.set(adminMode);
-              }),
-              map(() => void 0),
-            );
-          }),
-          finalize(() => this.spinner.hide()),
-        );
-      }),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe();
+      const canReadStatus = this.canReadStatus();
+      if (canReadStatus && !canReadStatus.can) {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translate.instant(type),
+          detail: this.translate.instant('You cannot read this record'),
+          sticky: true,
+          closable: true,
+        });
+        this.location.back();
+      }
+    });
   }
 
   recordEvent(event: RecordActionEvent): void {
@@ -217,6 +250,11 @@ export class DetailComponent {
 
   showDeleteMessage(message: string): void {
     this.recordUiService.showDeleteMessage(message);
+  }
+
+  private getAdminMode$(): Observable<ActionStatus> {
+    const adminModeResolver = this.route.snapshot.data.adminMode as (() => Observable<ActionStatus>) | undefined;
+    return adminModeResolver ? adminModeResolver() : of({ can: true, message: '' });
   }
 
 }
