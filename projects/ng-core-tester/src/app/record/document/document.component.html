@@ -14,23 +14,25 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<h5>
-  @if (detailUrl()) {
-    @if (detailUrl()?.external) {
-      <a [href]="detailUrl()?.link">
-        {{ record().metadata.title[0].mainTitle[0].value }}
-      </a>
+@if (record(); as rec) {
+  <h5>
+    @if (detailUrl()) {
+      @if (detailUrl()?.external) {
+        <a [href]="detailUrl()?.link">
+          {{ rec.metadata.title[0].mainTitle[0].value }}
+        </a>
+      } @else {
+        <a [routerLink]="detailUrl()?.link">
+          {{ rec.metadata.title[0].mainTitle[0].value }}
+        </a>
+      }
     } @else {
-      <a [routerLink]="detailUrl()?.link">
-        {{ record().metadata.title[0].mainTitle[0].value }}
-      </a>
+      {{ rec.metadata.title[0].mainTitle[0].value }}
     }
-  } @else {
-    {{ record().metadata.title[0].mainTitle[0].value }}
-  }
-</h5>
-<p class="ui:flex ui:gap-1">
-  @for (type of record().metadata.type; track type.main_type) {
-    <p-tag [value]="type.main_type" />
-  }
-</p>
+  </h5>
+  <p class="ui:flex ui:gap-1">
+    @for (type of rec.metadata.type; track type.main_type) {
+      <p-tag [value]="type.main_type" />
+    }
+  </p>
+}

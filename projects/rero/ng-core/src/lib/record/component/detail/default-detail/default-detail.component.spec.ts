@@ -18,7 +18,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DefaultDetailComponent } from './default-detail.component';
 import { CommonModule } from '@angular/common';
-import { of } from 'rxjs';
 
 describe('DefaultDetailComponent', () => {
   let fixture: ComponentFixture<DefaultDetailComponent>;
@@ -29,13 +28,7 @@ describe('DefaultDetailComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(DefaultDetailComponent);
-    fixture.componentRef.setInput(
-      'record$',
-      of({
-        id: '123456',
-        title: 'foo',
-      }),
-    );
+    fixture.componentRef.setInput('record', { id: '123456', title: 'foo' });
     fixture.componentRef.setInput('type', 'documents');
     fixture.detectChanges();
   });

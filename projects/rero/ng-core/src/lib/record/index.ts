@@ -41,7 +41,6 @@ export * from './component/detail/detail-button/record-action-event.interface';
 export * from './component/detail/detail-button/detail-button.component';
 export * from './component/detail/detail.component';
 export * from './component/detail/default-detail/default-detail.component';
-export * from './component/detail/detail.directive';
 export * from './service/record/record.service';
 export * from './service/record-handle-error/record-handle-error.service';
 export * from './service/api/api.service';

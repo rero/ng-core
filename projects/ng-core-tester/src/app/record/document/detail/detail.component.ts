@@ -15,9 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { JsonPipe } from '@angular/common';
-import { Component, input, OnInit } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { DetailRecord, RecordData } from '@rero/ng-core';
-import { Observable } from 'rxjs';
 
 /**
  * Component for displaying the detail of a document.
@@ -27,19 +26,10 @@ import { Observable } from 'rxjs';
   templateUrl: './detail.component.html',
   imports: [JsonPipe],
 })
-export class DetailComponent implements DetailRecord, OnInit {
-  // Observable resolving record data
-  record$ = input.required<Observable<RecordData>>();
+export class DetailComponent implements DetailRecord {
+  // Record data
+  record = input.required<RecordData | undefined>();
 
   // Resource type
   type = input.required<string>();
-
-  // Record data
-  record: any;
-
-  ngOnInit(): void {
-    this.record$().subscribe((record) => {
-      this.record = record;
-    });
-  }
 }

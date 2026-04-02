@@ -18,181 +18,160 @@ import { Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   DestroyRef,
+  effect,
   inject,
-  input,
   inputBinding,
-  linkedSignal,
-  OnInit,
   signal,
-  viewChild,
   ViewContainerRef,
-  Type,
+  viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
-import { catchError, combineLatest, finalize, isObservable, map, Observable, of, switchMap, tap } from 'rxjs';
-import { RecordData } from '../../../model/record.interface';
+import { catchError, combineLatest, filter, finalize, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ActionStatus } from '../../../model/action-status.interface';
+import { RecordData } from '../../../model/record.interface';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordService } from '../../service/record/record.service';
+import { RecordType } from '../../model';
 import { DetailButtonComponent } from './detail-button/detail-button.component';
 import { RecordActionEvent } from './detail-button/record-action-event.interface';
-import { RecordDetailDirective } from './detail.directive';
 import { DefaultDetailComponent } from './default-detail/default-detail.component';
 import { ErrorComponent } from '../../../core/component/error/error.component';
 import { Error } from '../../../core';
 import { HttpHeaders } from '@angular/common/http';
 
-interface DetailViewConfig {
-  key: string;
-  detailComponent?: Type<unknown> | Observable<Type<unknown>>;
-}
-
-interface DetailResourceConfig {
-  key: string;
-  index?: string;
-  itemHeaders?: HttpHeaders | Record<string, string | string[]>;
-  redirectUrl?: (record: RecordData, action: string) => Observable<string>;
-  files?: { enabled?: boolean };
-}
-
 @Component({
-  selector: 'ng-core-record-detail',
   templateUrl: './detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DetailButtonComponent, ErrorComponent, RecordDetailDirective],
+  imports: [DetailButtonComponent, ErrorComponent],
 })
-export class DetailComponent implements OnInit {
-  protected route: ActivatedRoute = inject(ActivatedRoute);
-  protected router: Router = inject(Router);
-  protected location: Location = inject(Location);
-  protected recordService: RecordService = inject(RecordService);
-  protected recordUiService: RecordUiService = inject(RecordUiService);
-  protected translate: TranslateService = inject(TranslateService);
-  protected spinner: NgxSpinnerService = inject(NgxSpinnerService);
-  protected messageService: MessageService = inject(MessageService);
+export class DetailComponent {
+  protected readonly route = inject(ActivatedRoute);
+  protected readonly router = inject(Router);
+  protected readonly location = inject(Location);
+  protected readonly recordService = inject(RecordService);
+  protected readonly recordUiService = inject(RecordUiService);
+  protected readonly translate = inject(TranslateService);
+  protected readonly spinner = inject(NgxSpinnerService);
+  protected readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected viewContainerRef: ViewContainerRef = inject(ViewContainerRef);
+  readonly dynamicHost = viewChild.required('dynamicHost', { read: ViewContainerRef });
 
-  /** View component for displaying record */
-  readonly viewComponent = input<Type<unknown> | null>(null);
-  protected _viewComponent = linkedSignal<Type<unknown> | null>(() => this.viewComponent());
+  private readonly paramMap = toSignal(this.route.paramMap, { requireSync: true });
+  private readonly routeData = toSignal(this.route.data, { requireSync: true });
 
-  /** Record can be used ? */
+  readonly type = computed(() => this.paramMap().get('type') ?? '');
+  readonly pid = computed(() => this.paramMap().get('pid') ?? '');
+
+  private readonly params = computed(() => ({ type: this.type(), pid: this.pid() }));
+
+  private readonly config = computed<RecordType | null>(() => {
+    const types: RecordType[] = this.routeData()?.types ?? [];
+    const type = this.type();
+    if (!types.length || !type) return null;
+    return types.find((t) => t.key === type) ?? null;
+  });
+
   readonly useStatus = signal<ActionStatus>({ can: false, message: '', url: '' });
-
-  /** Record can be updated ? */
   readonly updateStatus = signal<ActionStatus>({ can: false, message: '' });
-
-  /** Record can be deleted ? */
   readonly deleteStatus = signal<ActionStatus>({ can: false, message: '' });
-
-  /** Observable resolving record data */
-  record$: Observable<RecordData | null> = new Observable<RecordData>();
-
-  /** Record data */
   readonly record = signal<RecordData | undefined>(undefined);
-
-  /** Error message */
   readonly error = signal<Error | undefined>(undefined);
-
-  /** Admin mode for CRUD operations */
   readonly adminMode = signal<ActionStatus>({ can: true, message: '' });
 
-  /** Type of record */
-  readonly type = signal('');
+  constructor() {
+    // Keep recordUiService.types in sync with route data
+    effect(() => {
+      const types = this.routeData()?.types;
+      if (types?.length) {
+        this.recordUiService.types = types;
+      }
+    });
 
-  /** Object type route config */
-  private config: DetailResourceConfig | null = null;
+    // Reactively render the detail component when config or record changes
+    effect(() => {
+      const vcr = this.dynamicHost();
+      vcr.clear();
+      vcr.createComponent(this.config()?.component || DefaultDetailComponent, {
+        bindings: [
+          inputBinding('record', () => this.record()),
+          inputBinding('type', () => this.type()),
+        ],
+      });
+    });
 
-  /** Directive for displaying record */
-  readonly recordDetail = viewChild(RecordDetailDirective);
+    toObservable(this.params).pipe(
+      filter(({ type, pid }) => !!type && !!pid),
+      tap(() => this.spinner.show()),
+      switchMap(({ type, pid }) => {
+        const config = this.config();
+        if (!config) {
+          this.spinner.hide();
+          return of(void 0);
+        }
 
-  /** On init hook */
-  ngOnInit() {
-    this.route.paramMap
-      .pipe(
-        tap(() => {
-          this.spinner.show();
-          this.loadViewComponentRef();
-        }),
-        switchMap(() => {
-          const pid = this.route.snapshot.paramMap.get('pid');
-          this.type.set(this.route.snapshot.paramMap.get('type') ?? '');
-          if (!pid || !this.type()) {
-            return of(void 0);
-          }
-
-          this.recordUiService.types = this.route.snapshot.data.types;
-          this.config = this.recordUiService.getResourceConfig(this.type());
-
-          const type = this.config.index || this.config.key;
-          this.record$ = this.recordService
-            .getRecord(type, pid, {
-              headers: this.config.itemHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
-            })
-            .pipe(
-              catchError((error) => {
-                this.error.set(error);
-                return of(null);
-              }),
-            );
-          this.loadRecordView();
-
-          return this.record$.pipe(
-            switchMap((record) => {
-              this.record.set(record ?? undefined);
-              if (!record) {
-                return of(void 0);
-              }
-
-              const adminMode$: Observable<ActionStatus> = this.route.snapshot.data.adminMode
-                ? this.route.snapshot.data.adminMode()
-                : of(this.adminMode());
-
-              return combineLatest([
-                this.recordUiService.canReadRecord$(record, this.type()),
-                this.recordUiService.canDeleteRecord$(record, this.type()),
-                this.recordUiService.canUpdateRecord$(record, this.type()),
-                this.recordUiService.canUseRecord$(record, this.type()),
-                adminMode$,
-              ]).pipe(
-                tap(([canRead, canDelete, canUpdate, canUse, adminMode]) => {
-                  if (canRead.can === false) {
-                    this.messageService.add({
-                      severity: 'error',
-                      summary: this.translate.instant(this.type()),
-                      detail: this.translate.instant('You cannot read this record'),
-                      sticky: true,
-                      closable: true,
-                    });
-                    this.location.back();
-                  }
-                  this.deleteStatus.set(canDelete);
-                  this.updateStatus.set(canUpdate);
-                  this.useStatus.set(canUse);
-                  this.adminMode.set(adminMode);
-                }),
-                map(() => void 0),
-              );
+        const resourceType = config.index || config.key;
+        const record$ = this.recordService
+          .getRecord<RecordData>(resourceType, pid, {
+            headers: config.itemHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
+          })
+          .pipe(
+            catchError((err) => {
+              this.error.set(err);
+              return of(null);
             }),
-            finalize(() => this.spinner.hide()),
           );
-        }),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe();
+
+        return record$.pipe(
+          switchMap((record) => {
+            this.record.set(record ?? undefined);
+            if (!record) {
+              return of(void 0);
+            }
+
+            const adminMode$: Observable<ActionStatus> = this.route.snapshot.data.adminMode
+              ? this.route.snapshot.data.adminMode()
+              : of(this.adminMode());
+
+            return combineLatest([
+              this.recordUiService.canReadRecord$(record, type),
+              this.recordUiService.canDeleteRecord$(record, type),
+              this.recordUiService.canUpdateRecord$(record, type),
+              this.recordUiService.canUseRecord$(record, type),
+              adminMode$,
+            ]).pipe(
+              tap(([canRead, canDelete, canUpdate, canUse, adminMode]) => {
+                if (!canRead.can) {
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: this.translate.instant(type),
+                    detail: this.translate.instant('You cannot read this record'),
+                    sticky: true,
+                    closable: true,
+                  });
+                  this.location.back();
+                }
+                this.deleteStatus.set(canDelete);
+                this.updateStatus.set(canUpdate);
+                this.useStatus.set(canUse);
+                this.adminMode.set(adminMode);
+              }),
+              map(() => void 0),
+            );
+          }),
+          finalize(() => this.spinner.hide()),
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 
-  /**
-   * Record event
-   * @param event - Record event message
-   */
   recordEvent(event: RecordActionEvent): void {
     switch (event.action) {
       case 'use':
@@ -211,19 +190,6 @@ export class DetailComponent implements OnInit {
     }
   }
 
-  /**
-   * Getter giving the information if file management is enabled.
-   * @returns True if file management is enabled.
-   */
-  get filesEnabled(): boolean {
-    return this.config?.files?.enabled ?? false;
-  }
-
-  /**
-   * Delete the record and go back to previous page.
-   * @param event - DOM event
-   * @param element - string (PID to remove) or object
-   */
   deleteRecord(element: RecordData | string): void {
     const pid = typeof element === 'object' ? element.id : element;
     this.recordUiService
@@ -233,9 +199,9 @@ export class DetailComponent implements OnInit {
         if (result === true) {
           let redirectUrl = '../..';
           const navigateOptions = { relativeTo: this.route };
-          if (typeof element === 'object' && this.config?.redirectUrl) {
-            this.config
-              .redirectUrl(element, 'delete')
+          if (typeof element === 'object' && this.config()?.redirectUrl) {
+            this.config()!
+              .redirectUrl!(element, 'delete')
               .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((redirect: string) => {
                 if (redirect !== null) {
@@ -249,49 +215,8 @@ export class DetailComponent implements OnInit {
       });
   }
 
-  /**
-   * Show a modal containing message given in parameter.
-   * @param message - message to display into modal
-   */
   showDeleteMessage(message: string): void {
     this.recordUiService.showDeleteMessage(message);
   }
 
-  /** Dynamically load component depending on selected resource type. */
-  private loadRecordView(): void {
-    this.viewContainerRef.clear();
-    this.viewContainerRef.createComponent(this._viewComponent() || DefaultDetailComponent, {
-      bindings: [
-        inputBinding('record$', () => this.record$),
-        inputBinding('type', () => this.route.snapshot.paramMap.get('type')),
-      ],
-    });
-  }
-
-  /** Load component view corresponding to type */
-  private loadViewComponentRef() {
-    if (!this.route.snapshot.data.types || this.route.snapshot.data.types.length === 0) {
-      throw new Error('Configuration types not passed to component');
-    }
-
-    const type = this.route.snapshot.paramMap.get('type');
-    const { types } = this.route.snapshot.data as { types: DetailViewConfig[] };
-    const index = types.findIndex((item) => item.key === type);
-
-    if (index === -1) {
-      throw new Error(`Configuration not found for type "${type}"`);
-    }
-
-    if (types[index].detailComponent) {
-      let detailComponent$ = types[index].detailComponent;
-
-      if (isObservable(detailComponent$) === false) {
-        detailComponent$ = of(detailComponent$);
-      }
-
-      detailComponent$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((component: Type<unknown>) => {
-        this._viewComponent.set(component);
-      });
-    }
-  }
 }

@@ -14,16 +14,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Observable } from 'rxjs';
-import { RecordData } from '../../../model/record.interface';
 import { InputSignal } from '@angular/core';
+import { RecordData } from '../../../model/record.interface';
 
 /**
  * Interface representing a record detail.
  */
 export interface DetailRecord {
-  // Observable resolving record data
-  record$: InputSignal<Observable<RecordData>>;
+  // Record data
+  record: InputSignal<RecordData | undefined>;
 
   // Resource type
   type: InputSignal<string>;

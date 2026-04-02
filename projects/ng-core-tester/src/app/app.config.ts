@@ -32,7 +32,7 @@ import {
 import { providePrimeNG } from 'primeng/config';
 import { AppConfigService } from './app-config.service';
 import { routes } from './app.routes';
-import { RecordServiceMock } from './record/editor/record-service-mock';
+// import { RecordServiceMock } from './record/editor/record-service-mock';
 import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 
 export const appConfig: ApplicationConfig = {
@@ -54,9 +54,9 @@ export const appConfig: ApplicationConfig = {
       provide: RemoteAutocompleteService,
       useClass: AppRemoteAutocompleteService,
     },
-    {
-      provide: RecordService,
-      useClass: RecordServiceMock,
-    },
+    // {
+    //   provide: RecordService,
+    //   useClass: RecordServiceMock,
+    // },
   ],
 };

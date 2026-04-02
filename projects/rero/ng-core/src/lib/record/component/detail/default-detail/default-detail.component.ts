@@ -15,8 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RecordData } from '../../../../model/record.interface';
 import { DetailRecord } from '../detail-record.interface';
 
@@ -36,21 +35,9 @@ import { DetailRecord } from '../detail-record.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultDetailComponent implements DetailRecord {
-  // Observable resolving record data
-  record$ = input.required<Observable<RecordData>>();
+  // Record data
+  record = input.required<RecordData | undefined>();
 
   // Resource type
   type = input.required<string>();
-
-  // Record data
-  readonly record = signal<RecordData | undefined>(undefined);
-
-  constructor() {
-    effect((onCleanup) => {
-      const sub = this.record$().subscribe((record) => {
-        this.record.set(record);
-      });
-      onCleanup(() => sub.unsubscribe());
-    });
-  }
 }

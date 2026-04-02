@@ -36,7 +36,9 @@ export class ActivatedRouteStub {
   // Observable that contains a map of the parameters
   private subjectParamMap = new BehaviorSubject(convertToParamMap(this.testParamMap));
   paramMap = this.subjectParamMap.asObservable();
-  private data: any = {};
+
+  private subjectData = new BehaviorSubject<any>({});
+  data = this.subjectData.asObservable();
 
   private _testParamMap!: ParamMap;
 
@@ -46,16 +48,17 @@ export class ActivatedRouteStub {
 
   set testParamMap(params: object) {
     this._testParamMap = convertToParamMap(params);
+    this.subjectParamMap.next(this._testParamMap);
   }
 
   set testData(data: any) {
-    this.data = data;
+    this.subjectData.next(data);
   }
 
   get snapshot() {
     return {
       paramMap: this.testParamMap,
-      data: this.data,
+      data: this.subjectData.getValue(),
     };
   }
 }
@@ -120,44 +123,21 @@ describe('DetailComponent', () => {
     expect(component.filesEnabled).toBeFalsy();
   });
 
-  it('should raise exception when configuration not found for type', () => {
-    const routeSpy = TestBed.inject(ActivatedRoute) as any;
-    routeSpy.testParamMap = { type: 'test', pid: '1' };
-    expect(() => {
-      component['loadViewComponentRef']();
-    }).toThrowError('Configuration not found for type "test"');
+  it('should resolve config for the current type', () => {
+    expect(component['config']()).toBeTruthy();
+    expect(component['config']()!.key).toEqual('documents');
   });
 
-  it('should raise exception when no types are specified in configuration', () => {
+  it('should return null config when type is not found', () => {
     const routeSpy = TestBed.inject(ActivatedRoute) as any;
-    routeSpy.testData = {
-      types: [],
-      showSearchInput: true,
-      adminMode,
-    };
-
-    expect(() => {
-      component['loadViewComponentRef']();
-    }).toThrowError('Configuration types not passed to component');
-
-    delete routeSpy.snapshot.data.types;
-
-    expect(() => {
-      component['loadViewComponentRef']();
-    }).toThrowError('Configuration types not passed to component');
+    routeSpy.testParamMap = { type: 'unknown', pid: '1' };
+    expect(component['config']()).toBeNull();
   });
 
-  it('should store component for viewing notice detail', () => {
-    const routeSpy = TestBed.inject(ActivatedRoute);
-    routeSpy.snapshot.data.types = [
-      {
-        key: 'documents',
-        detailComponent: DefaultDetailComponent,
-      },
-    ];
-
-    component['loadViewComponentRef']();
-    expect(component['_viewComponent']()).toEqual(DefaultDetailComponent);
+  it('should return null config when types list is empty', () => {
+    const routeSpy = TestBed.inject(ActivatedRoute) as any;
+    routeSpy.testData = { types: [], adminMode };
+    expect(component['config']()).toBeNull();
   });
 
   it('should store an error message when API is not available', () => {
@@ -178,6 +158,6 @@ describe('DetailComponent', () => {
         detailComponent: DefaultDetailComponent,
       },
     ];
-    expect(component.recordDetail()).toBeDefined();
+    expect(component.dynamicHost()).toBeDefined();
   });
 });
