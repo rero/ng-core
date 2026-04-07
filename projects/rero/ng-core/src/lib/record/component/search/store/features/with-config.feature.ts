@@ -29,7 +29,7 @@ export interface RouteConfig {
   /** Record type configurations */
   detailUrl: string;
   showSearchInput: boolean;
-  adminMode: () => Observable<ActionStatus>;
+  adminMode: boolean;
   types: RecordType[];
 }
 
@@ -85,7 +85,7 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
 export const DEFAULT_ROUTE_CONFIG: RouteConfig = {
   detailUrl: '',
   showSearchInput: true,
-  adminMode: () => of({ can: true, message: '' }),
+  adminMode: true,
   types: [DEFAULT_RECORD_TYPE],
 };
 

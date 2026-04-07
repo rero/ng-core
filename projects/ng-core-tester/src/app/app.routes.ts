@@ -22,25 +22,8 @@ import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
 import { EditorComponent } from './record/editor/editor.component';
 
-/**
- * Disallows access to admin functionalities.
- */
-const adminModeCanNot = (): Observable<ActionStatus> => {
-  return of({
-    can: false,
-    message: '',
-  });
-};
-
-/**
- * Allows access to admin functionalities.
- */
-const adminModeCan = (): Observable<ActionStatus> => {
-  return of({
-    can: true,
-    message: '',
-  });
-};
+const adminModeCanNot = false;
+const adminModeCan = true;
 
 /**
  * Whether user can add a record.
@@ -302,7 +285,6 @@ export const routes: Routes = [
           canRead,
           permissions,
           aggregations,
-          adminMode: adminModeCan,
           aggregationsBucketSize: 8,
           aggregationsExpand: ['language'],
           aggregationsOrder: ['author', 'language'],
@@ -430,6 +412,7 @@ export const routes: Routes = [
           ],
         },
       ],
+      adminMode: adminModeCan,
     },
   },
 ];

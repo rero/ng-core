@@ -55,7 +55,7 @@ export class GetRecordPipe implements PipeTransform {
     }
 
     return this.recordService
-      .getRecord(type, pid, { headers: headers || new HttpHeaders({ 'Content-Type': 'application/json' }) })
+      .getRecord(type, pid, { resolve:1, headers: headers || new HttpHeaders({ 'Content-Type': 'application/json' }) })
       .pipe(
         map((data) => {
           if (!data) {

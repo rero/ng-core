@@ -67,7 +67,7 @@ routeSpy.snapshot = {
       },
     ],
     showSearchInput: true,
-    adminMode: of({ message: '', can: true }),
+      adminMode: true,
   },
 };
 

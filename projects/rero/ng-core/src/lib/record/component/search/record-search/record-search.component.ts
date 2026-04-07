@@ -39,7 +39,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
 import { Aggregations, SearchField, SearchFilter, SearchFilterSection } from '../../../../model';
-import { ActionStatus, DEFAULT_ACTION_STATUS } from '../../../../model/action-status.interface';
+import { ActionStatus } from '../../../../model/action-status.interface';
 import { ExportFormat } from '../../../model/record-search.interface';
 import { ApiService } from '../../../service/api/api.service';
 import { RecordUiService } from '../../../service/record-ui/record-ui.service';
@@ -95,7 +95,7 @@ export class RecordSearchComponent {
   // COMPONENT ATTRIBUTES =====================================================
   /** If admin mode is disabled, no action can be performed on a record (as add, update or remove) */
   // this cannot be done in the store because we want to let it as pure
-  readonly adminMode = toSignal(this.store.routeConfig().adminMode(), { initialValue: DEFAULT_ACTION_STATUS });
+  readonly adminMode = computed(() => this.store.routeConfig().adminMode);
 
   // Convert observables to signals directly - more efficient than manual subscriptions
   readonly addStatus: Signal<ActionStatus> = toSignal(this.store.canAddRecord$(), {
@@ -194,8 +194,10 @@ export class RecordSearchComponent {
    */
   deleteRecord(event: { pid: string; type?: string }) {
     const type = event.type ?? this.store.currentType();
+    const config = this.store.configs().find((item) => item.key === type) ?? null;
+    const deleteMessage = this.recordUiService.deleteMessage(event.pid, config);
     this.recordUiService
-      .deleteRecord(type, event.pid)
+      .deleteRecord(type, event.pid, deleteMessage)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         tap(() => {

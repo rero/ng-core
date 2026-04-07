@@ -20,7 +20,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { paramMapToSearchParams, searchParamsToUrlParams, shallowEqual } from '../../record-search-utils';
 import { RecordSearchStore } from './store/record-search.store';
-import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordSearchComponent } from './record-search/record-search.component';
 import { SearchParams } from '../../model';
 
@@ -35,7 +34,6 @@ import { SearchParams } from '../../model';
 export class RecordSearchPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
-  private readonly recordUiService = inject(RecordUiService);
 
   readonly store = inject(RecordSearchStore);
 
@@ -62,10 +60,6 @@ export class RecordSearchPageComponent {
      * B. Sync Route Data (Static or Resolved data)
      */
     this.store.updateRouteConfig(this.route.snapshot.data);
-    // Legacy service update (Targeted for future refactoring)
-    if (this.route.snapshot.data?.['types']) {
-      this.recordUiService.types = this.route.snapshot.data['types'];
-    }
 
     /**
      * C. Sync Store -> URL (Output Effect)

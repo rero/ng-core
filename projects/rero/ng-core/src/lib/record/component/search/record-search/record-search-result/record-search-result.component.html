@@ -20,7 +20,7 @@
     <ng-container #item></ng-container>
   </div>
   <div class="core:flex core:flex-none core:gap-1 core:justify-end core:ml-2">
-    @if (adminMode().can) {
+    @if (adminMode()) {
       <!-- use button -->
       @if (useStatus().can && useStatusUrl()) {
         <p-button

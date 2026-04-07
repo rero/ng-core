@@ -41,7 +41,7 @@
       <p-message severity="info">
         {{ 'There are no records in this section' | translate }}
       </p-message>
-      @if (adminMode().can && addStatus().can) {
+      @if (adminMode() && addStatus().can) {
         <p-button
           id="search-add-button"
           [label]="'Add' | translate"
@@ -55,7 +55,7 @@
           <strong>{{ store.resultsText() | translate: { total: store.total() } }}</strong>
         </div>
         <div class="core:flex core:items-center core:justify-end core:w-full">
-          @if (adminMode().can && addStatus().can) {
+          @if (adminMode() && addStatus().can) {
             <p-button
               id="search-add-button"
               [label]="'Add' | translate"

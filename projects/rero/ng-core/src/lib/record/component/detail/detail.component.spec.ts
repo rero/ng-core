@@ -19,18 +19,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, RouterModule, convertToParamMap } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { ActionStatus } from '../../../model/action-status.interface';
+import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecordService } from '../../service/record/record.service';
 import { DetailComponent } from './detail.component';
 import { DefaultDetailComponent } from './default-detail/default-detail.component';
 
-const adminMode = (): Observable<ActionStatus> => {
-  return of({
-    can: true,
-    message: '',
-  });
-};
+const adminMode = true;
 
 export class ActivatedRouteStub {
   // Observable that contains a map of the parameters
@@ -67,11 +61,11 @@ describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>;
   const recordServiceSpy = {
-    getRecord: vi.fn().mockName('RecordService.getRecord'),
+    getRecord: vi.fn(),
   };
 
   const loc = {
-    back: vi.fn().mockName('Location.back'),
+    back: vi.fn(),
   };
 
   const detailRecord = {
@@ -119,10 +113,6 @@ describe('DetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return false if file configuration is not enabled', () => {
-    expect(component.filesEnabled).toBeFalsy();
-  });
-
   it('should resolve config for the current type', () => {
     expect(component['config']()).toBeTruthy();
     expect(component['config']()!.key).toEqual('documents');
@@ -151,13 +141,18 @@ describe('DetailComponent', () => {
   });
 
   it('should use a custom view component for displaying record', () => {
-    const routeSpy = TestBed.inject(ActivatedRoute);
-    routeSpy.snapshot.data.types = [
+    const routeSpy = TestBed.inject(ActivatedRoute) as any;
+    routeSpy.testData = {
+      types: [
       {
         key: 'documents',
         detailComponent: DefaultDetailComponent,
       },
-    ];
+      ],
+      showSearchInput: true,
+      adminMode,
+    };
+    fixture.detectChanges();
     expect(component.dynamicHost()).toBeDefined();
   });
 });

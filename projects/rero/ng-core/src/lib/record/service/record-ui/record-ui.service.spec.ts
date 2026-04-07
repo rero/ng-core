@@ -37,28 +37,22 @@ describe('RecordUiService', () => {
   });
 
   it('should return the default delete message', () => {
-    expect(service.deleteMessage('1', 'holdings')[0]).toEqual('Do you really want to delete this record?');
+    expect(service.deleteMessage('1')[0]).toEqual('Do you really want to delete this record?');
   });
 
   it('Should return the default delete message with a defined type, but no message configuration', () => {
-    service.types = [
-      {
-        key: 'holdings',
-      } as any,
-    ];
-    expect(service.deleteMessage('1', 'holdings')[0]).toEqual('Do you really want to delete this record?');
+    expect(service.deleteMessage('1', { key: 'holdings' } as any)[0]).toEqual('Do you really want to delete this record?');
   });
 
   it('should return the custom delete message', () => {
     const messagesType = ['foo', 'bar'];
-    service.types = [
-      {
+    expect(
+      service.deleteMessage('1', {
         key: 'holdings',
         deleteMessage: () => {
           return messagesType;
         },
-      } as any,
-    ];
-    expect(service.deleteMessage('1', 'holdings')).toEqual(messagesType);
+      } as any),
+    ).toEqual(messagesType);
   });
 });

@@ -66,7 +66,7 @@ describe('DetailButtonComponent', () => {
   });
 
   it('should show buttons with admin mode enabled', () => {
-    componentRef.setInput('adminMode', action);
+    componentRef.setInput('adminMode', true);
     componentRef.setInput('useStatus', useAction);
     componentRef.setInput('deleteStatus', action);
     componentRef.setInput('updateStatus', action);

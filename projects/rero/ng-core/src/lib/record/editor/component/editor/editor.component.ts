@@ -156,6 +156,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
   // store pid on edit mode
   readonly pid = input<string | null>(null);
   protected _pid = signal<string | null>(null);
+  private resourceTypes: Partial<RecordType>[] = [];
 
   // initial values changes notification
   readonly modelChange = output<JsonValue | null>();
@@ -343,7 +344,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @param record - Record object to preprocess
    */
   private preprocessRecord(record: TMetadata): TMetadata {
-    const config = this.recordUiService.getResourceConfig<TMetadata>(this.recordType());
+    const config = this.getResourceConfig<TMetadata>(this.recordType());
 
     if (config.preprocessRecordEditor) {
       return config.preprocessRecordEditor(record);
@@ -356,7 +357,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @param record - Record object to postprocess
    */
   private postprocessRecord(record: TMetadata): TMetadata {
-    const config = this.recordUiService.getResourceConfig<TMetadata>(this.recordType());
+    const config = this.getResourceConfig<TMetadata>(this.recordType());
 
     if (config.postprocessRecordEditor) {
       return config.postprocessRecordEditor(record);
@@ -369,7 +370,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @param record - Record object
    */
   private preCreateRecord(record: TMetadata): TMetadata {
-    const config = this.recordUiService.getResourceConfig<TMetadata>(this.recordType());
+    const config = this.getResourceConfig<TMetadata>(this.recordType());
 
     if (config.preCreateRecord) {
       return config.preCreateRecord(record);
@@ -382,7 +383,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @param record - Record object
    */
   private preUpdateRecord(record: TMetadata): TMetadata {
-    const config = this.recordUiService.getResourceConfig<TMetadata>(this.recordType());
+    const config = this.getResourceConfig<TMetadata>(this.recordType());
 
     if (config.preUpdateRecord) {
       return config.preUpdateRecord(record);
@@ -515,7 +516,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         this.recordUiService.redirectAfterSave(
           result.record.id,
           result.record,
-          this.recordType(),
+          this._resourceConfig,
           result.action,
           this.route,
         );
@@ -541,9 +542,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
             data: modelData,
             template_type: this.recordType(),
           };
-          const tmplConfig = this.recordUiService.getResourceConfig<TemplateMetadata>(
-            this.editorSettings().template.recordType,
-          );
+          const tmplConfig = this.getResourceConfig<TemplateMetadata>(this.editorSettings().template.recordType);
           if (tmplConfig.preCreateRecord) {
             record = tmplConfig.preCreateRecord(record);
           }
@@ -561,7 +560,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
                 this.recordUiService.redirectAfterSave<TemplateMetadata>(
                   createdRecord.id,
                   createdRecord,
-                  editorSettings.template.recordType,
+                  tmplConfig,
                   'create',
                   this.route,
                 );
@@ -772,9 +771,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     }
 
     this.recordType.set(params.type);
-    this.recordUiService.types = this.route.snapshot.data.types;
+    this.resourceTypes = [...(this.route.snapshot.data.types ?? [])];
 
-    this._resourceConfig = this.recordUiService.getResourceConfig(this.recordType());
+    this._resourceConfig = this.getResourceConfig(this.recordType());
     if (this._resourceConfig?.editorSettings) {
       const mergedSettings: ReturnType<EditorComponent['editorSettings']> = {
         ...cloneDeep(this.editorSettings()),
@@ -787,7 +786,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     if (editorSettings.template.recordType !== '') {
       const tmplTypes = this.route.snapshot.data.types.filter((recordType: Partial<RecordType>) => recordType.key === editorSettings.template.recordType);
       if (tmplTypes?.length) {
-        this.recordUiService.types = this.recordUiService.types.concat(tmplTypes);
+        this.resourceTypes = this.resourceTypes.concat(tmplTypes);
       }
     }
 
@@ -831,7 +830,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         })
         .pipe(
           switchMap((record) => {
-            return this.recordUiService.canUpdateRecord$(record, this.recordType()).pipe(
+            return this.recordUiService.canUpdateRecord$(record, this._resourceConfig).pipe(
               map((result) => {
                 return {
                   result,
@@ -873,5 +872,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         this.cdr.markForCheck();
       }),
     );
+  }
+
+  private getResourceConfig<T = JsonObject>(type: string): RecordType<T> {
+    return this.recordUiService.getResourceConfig<T>(this.resourceTypes, type);
   }
 }

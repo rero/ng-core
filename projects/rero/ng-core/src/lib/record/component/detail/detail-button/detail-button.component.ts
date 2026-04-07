@@ -40,7 +40,7 @@ export class DetailButtonComponent {
   type = input<string>('');
 
   /** Admin mode for CRUD operations */
-  adminMode = input<ActionStatus>({ can: false, message: '' });
+  adminMode = input(false);
 
   /** Record can be used ? */
   useStatus = input<ActionStatus>({ can: false, message: '', url: '' });
@@ -59,7 +59,7 @@ export class DetailButtonComponent {
 
   /** Use the record */
   useRecord(): void {
-    this.recordEvent.emit({ action: 'use', url: this.updateStatus().url });
+    this.recordEvent.emit({ action: 'use', url: this.useStatus().url });
   }
 
   /**

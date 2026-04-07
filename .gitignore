@@ -53,3 +53,6 @@ Thumbs.db
 
 # generated css file
 projects/rero/ng-core/assets/scss/ng-core-tailwind.scss
+
+# generated test screenshots
+**/__screenshots__/

@@ -66,8 +66,10 @@ describe('RecordSearchPageComponent', () => {
     };
 
     mockRecordUiService = {
-      types: [],
-    } as any;
+      deleteMessage: vi.fn().mockReturnValue(['Do you really want to delete this record?']),
+      deleteRecord: vi.fn(),
+      showDeleteMessage: vi.fn(),
+    };
 
     mockRecordService = {
       getRecords: vi.fn(),
@@ -121,9 +123,6 @@ describe('RecordSearchPageComponent', () => {
       expect((component as any).router).toBeTruthy();
     });
 
-    it('should have recordUiService injected', () => {
-      expect((component as any).recordUiService).toBeTruthy();
-    });
   });
 
   describe('Route Parameter Extraction', () => {
@@ -198,13 +197,6 @@ describe('RecordSearchPageComponent', () => {
           types: expect.arrayContaining([expect.objectContaining({ key: 'documents', label: 'Documents' })]),
         }),
       );
-    });
-
-    it('should update recordUiService types from route data', async () => {
-      fixture.detectChanges();
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      fixture.detectChanges();
-      expect(mockRecordUiService.types).toEqual([{ key: 'documents', label: 'Documents' } as any]);
     });
 
     it('should handle missing route data gracefully', () => {

@@ -37,21 +37,18 @@ export class RecordUiService {
   protected confirmationService: ConfirmationService = inject(ConfirmationService);
   protected messageService: MessageService = inject(MessageService);
 
-  /** Configuration for all resources. */
-  types: Partial<RecordType<any>>[] = [];
-
   /**
    * Delete a record by its PID.
    * @param type Type of resource
    * @param pid - string, PID to delete
    * @returns Observable resolving as a boolean
    */
-  deleteRecord(type: string, pid: string): Observable<boolean> {
+  deleteRecord(type: string, pid: string, deleteMessage: string[] = this.defaultDeleteMessage()): Observable<boolean> {
     const delete$ = new BehaviorSubject(false);
     this.confirmationService.confirm({
       acceptLabel: this.translateService.instant('Delete'),
       rejectLabel: this.translateService.instant('Cancel'),
-      message: this.deleteMessage(pid, type).join('<br>'),
+      message: deleteMessage.join('<br>'),
       header: this.translateService.instant('Confirmation'),
       icon: 'fa fa-exclamation-triangle fa-2x core:text-red-500',
       acceptButtonStyleClass: 'core:bg-red-500 core:border-red-500',
@@ -104,15 +101,15 @@ export class RecordUiService {
    * @param type Current type to find
    * @returns Object configuration for the current type
    */
-  getResourceConfig<T = JsonObject>(type: string): RecordType<T> {
-    if (this.types == null) {
+  getResourceConfig<T = JsonObject>(types: Partial<RecordType>[], type: string): RecordType<T> {
+    if (types == null) {
       throw new Error(`Configuration not found for type "${type}"`);
     }
-    const index = this.types.findIndex((item) => item.key === type);
+    const index = types.findIndex((item) => item.key === type);
     if (index === -1) {
       throw new Error(`Configuration not found for type "${type}"`);
     }
-    return this.types[index] as RecordType<T>;
+    return types[index] as unknown as RecordType<T>;
   }
 
   /**
@@ -126,26 +123,24 @@ export class RecordUiService {
   redirectAfterSave<T = JsonObject>(
     pid: string,
     record: RecordData<T>,
-    recordType: string,
+    config: Partial<RecordType<T>> | null,
     action: string,
     route: ActivatedRoute,
   ): void {
-    const config = this.getResourceConfig<T>(recordType);
-    if (config.redirectUrl) {
-      config.redirectUrl(record, action).subscribe((result: string) => {
-        if (result !== null) {
-          this.router.navigateByUrl(result);
-          return;
-        }
-      });
-    } else {
-      // Default behavior
+    if (!config?.redirectUrl) {
       if (action === 'update') {
         this.router.navigate(['../../detail', pid], { relativeTo: route, replaceUrl: true });
         return;
       }
       this.router.navigate(['../detail', pid], { relativeTo: route, replaceUrl: true });
+      return;
     }
+
+    config.redirectUrl(record, action).subscribe((result: string) => {
+      if (result !== null) {
+        this.router.navigateByUrl(result);
+      }
+    });
   }
 
   /**
@@ -154,14 +149,8 @@ export class RecordUiService {
    * @param type - Type of resource
    * @returns  Observable array of string
    */
-  deleteMessage(pid: string, type: string): string[] {
-    const defaultMessage = [this.translateService.instant('Do you really want to delete this record?')];
-    try {
-      const config = this.getResourceConfig(type);
-      return config.deleteMessage ? config.deleteMessage(pid) : defaultMessage;
-    } catch {
-      return defaultMessage;
-    }
+  deleteMessage<T = JsonObject>(pid: string, config?: Partial<RecordType<T>> | null): string[] {
+    return config?.deleteMessage ? config.deleteMessage(pid) : this.defaultDeleteMessage();
   }
 
   // ================================================================
@@ -173,8 +162,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canAddRecord$(type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig(type);
+  canAddRecord$(config: Partial<RecordType> | null): Observable<ActionStatus> {
+    if (!config) {
+      return of({ can: true, message: '' });
+    }
     return config.canAdd ? config.canAdd().pipe(first()) : of({ can: true, message: '' });
   }
 
@@ -184,8 +175,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canUpdateRecord$<T = JsonObject>(record: RecordData<T>, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig<T>(type);
+  canUpdateRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+    if (!config) {
+      return of({ can: true, message: '' });
+    }
     // The canUpdate function takes precedence over permissions
     if (config.canUpdate) {
       return config.canUpdate(record).pipe(first());
@@ -211,8 +204,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canDeleteRecord$<T = JsonObject>(record: RecordData<T>, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig<T>(type);
+  canDeleteRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+    if (!config) {
+      return of({ can: true, message: '' });
+    }
     // The canDelete function takes precedence over permissions
     if (config.canDelete) {
       return config.canDelete(record).pipe(first());
@@ -238,8 +233,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canReadRecord$<T = JsonObject>(record: RecordData<T>, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig<T>(type);
+  canReadRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+    if (!config) {
+      return of({ can: true, message: '' });
+    }
     // The canRead function takes precedence over permissions
     if (config.canRead) {
       return config.canRead(record).pipe(first());
@@ -265,8 +262,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canUseRecord$<T = JsonObject>(record: RecordData<T>, type: string): Observable<ActionStatus> {
-    const config = this.getResourceConfig<T>(type);
+  canUseRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+    if (!config) {
+      return of({ can: false, message: '' });
+    }
     // The canUse function takes precedence over permissions
     if (config.canUse) {
       return config.canUse(record).pipe(first());
@@ -284,5 +283,9 @@ export class RecordUiService {
       );
     }
     return of({ can: false, message: '' });
+  }
+
+  private defaultDeleteMessage(): string[] {
+    return [this.translateService.instant('Do you really want to delete this record?')];
   }
 }

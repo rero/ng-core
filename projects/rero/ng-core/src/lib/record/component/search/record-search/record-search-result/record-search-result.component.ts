@@ -88,9 +88,7 @@ export class RecordSearchResultComponent {
   readonly itemViewComponent = computed(() => this.store.config().component);
 
   // Get admin mode from store routeConfig
-  readonly adminMode = toSignal(this.store.routeConfig().adminMode(), {
-    initialValue: DEFAULT_ACTION_STATUS,
-  });
+  readonly adminMode = computed(() => this.store.routeConfig().adminMode);
 
   // Event emitted when a record is deleted
   readonly deletedRecord = output<IDeleteRecordEvent>();

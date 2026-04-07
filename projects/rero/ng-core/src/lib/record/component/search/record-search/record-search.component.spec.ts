@@ -23,12 +23,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { DialogComponent } from '../../../../core/component/dialog/dialog.component';
 import { SearchInputComponent } from '../../../../core/component/search-input/search-input.component';
 import { Nl2brPipe } from '../../../../core/pipe/nl2br/nl2br.pipe';
 import { UpperCaseFirstPipe } from '../../../../core/pipe/ucfirst/ucfirst.pipe';
-import { ActionStatus } from '../../../../model/action-status.interface';
 import { TranslateLanguagePipe } from '../../../../translate/pipe/translate-language/translate-language.pipe';
 import { RecordUiService } from '../../../service/record-ui/record-ui.service';
 import { RecordService } from '../../../service/record/record.service';
@@ -37,12 +36,7 @@ import { RecordSearchAggregationComponent } from './aggregation/aggregation.comp
 import { RecordSearchResultComponent } from './record-search-result/record-search-result.component';
 import { RecordSearchComponent } from './record-search.component';
 
-const adminMode = (): Observable<ActionStatus> => {
-  return of({
-    can: true,
-    message: '',
-  });
-};
+const adminMode = true;
 
 describe('RecordSearchComponent', () => {
   let component: RecordSearchComponent;
@@ -87,8 +81,10 @@ describe('RecordSearchComponent', () => {
 
   const recordUiServiceSpy: any = {
     getResourceConfig: vi.fn(),
+    deleteMessage: vi.fn(),
     deleteRecord: vi.fn(),
   };
+  recordUiServiceSpy.deleteMessage.mockReturnValue(['Do you really want to delete this record?']);
   recordUiServiceSpy.deleteRecord.mockReturnValue(of(true));
   recordUiServiceSpy.getResourceConfig.mockReturnValue({ key: 'documents' });
   recordUiServiceSpy.types = [
