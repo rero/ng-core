@@ -120,16 +120,13 @@ export class RemoteAutocompleteComponent
 
   suggestions = toSignal(
     this.query.pipe(
-      switchMap((data: IQuery) => {
-        if (!data.recordPid) {
-          return of([]);
-        }
-        return this.remoteAutocompleteService.getSuggestions(
+      switchMap((data: IQuery) =>
+        this.remoteAutocompleteService.getSuggestions(
           removeChars(data.query),
           data.queryOptions,
           data.recordPid,
-        );
-      }),
+        )
+      ),
     ),
     { initialValue: [] },
   );

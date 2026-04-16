@@ -17,7 +17,7 @@
 import { Observable } from 'rxjs';
 
 export interface IRemoteAutocomplete {
-  getSuggestions(query: string, queryOptions: IQueryOptions, currentPid: string): Observable<ISuggestionItem[]>;
+  getSuggestions(query: string, queryOptions: IQueryOptions, currentPid: string | null): Observable<ISuggestionItem[]>;
   getValueAsHTML(queryOptions: IQueryOptions, item: ISuggestionItem): Observable<string>;
 }
 

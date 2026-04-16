@@ -27,7 +27,7 @@ export class RemoteAutocompleteService implements IRemoteAutocomplete {
   public getSuggestions(
     _query: string,
     _queryOptions: IQueryOptions,
-    _currentPid: string,
+    _currentPid: string | null,
   ): Observable<ISuggestionItem[]> {
     return of([{ label: 'test' }]);
   }
