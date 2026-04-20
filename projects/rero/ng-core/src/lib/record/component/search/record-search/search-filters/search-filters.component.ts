@@ -17,7 +17,7 @@
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { SearchFilter, SearchFilterSection } from '../../../../../model';
@@ -30,7 +30,6 @@ import { RecordSearchStore } from '../../store/record-search.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchFiltersComponent {
-  protected activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   protected store = inject(RecordSearchStore);
 
   // Class for section (layout customization, provided by parent)
@@ -78,24 +77,20 @@ export class SearchFiltersComponent {
   }
 
   /**
-   * Activates the filter according to the route parameters.
+   * Activates the filter according to the store aggregations filters (signal-based).
    * @param filter - SearchFilter
-   * @returns True, if the parameter is present and contains a value.
+   * @returns True, if the filter is active.
    */
   isChecked(filter: SearchFilter): boolean {
-    if (this.activatedRoute.snapshot.queryParamMap.has(filter.filter)) {
-      const value = this.activatedRoute.snapshot.queryParamMap.get(filter.filter);
-      if (!value) {
-        return false;
-      }
-      if (filter.filter === 'simple') {
-        return !JSON.parse(value);
-      } else {
-        return Boolean(JSON.parse(value));
-      }
+    const entry = this.store.aggregationsFilters().find((f) => f.key === filter.filter);
+    if (!entry || entry.values.length === 0) {
+      return false;
     }
-
-    return false;
+    const value = entry.values[0];
+    if (filter.filter === 'simple') {
+      return !JSON.parse(value);
+    }
+    return Boolean(JSON.parse(value));
   }
 
   /**
