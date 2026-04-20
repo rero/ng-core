@@ -19,7 +19,7 @@ import { computed, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
-import { Aggregation, Bucket, EsResult } from '../../../../../model';
+import { Aggregation, Bucket, EsResult, JsonObject } from '../../../../../model';
 import { RecordType } from '../../../../model';
 import { RecordService } from '../../../../service/record/record.service';
 import { AggregationsFilter } from '../../model/aggregations-filter.interface';
@@ -157,8 +157,19 @@ export function withAggregations() {
        * @param processBuckets If true, automatically process buckets (default: true)
        */
       enrichAggregation(aggregation: Aggregation, esAggregation: any, processBuckets = true): Aggregation {
+        // TODO: Change any to another type
+        // Copy the custom properties
+        const keys = ['buckets', 'config', 'doc_count', 'name', 'type', 'value'];
+        const additionalProperties: any = {};
+        Object.keys(esAggregation).find(key => {
+          if (!keys.includes(key)) {
+            additionalProperties[key] = esAggregation[key];
+          }}
+        );
+
         const enriched = {
           ...aggregation,
+          ...additionalProperties,
           doc_count: esAggregation.doc_count || aggregation.doc_count,
           type: esAggregation.type || aggregation.type || 'terms',
           config: esAggregation.config || aggregation.config,

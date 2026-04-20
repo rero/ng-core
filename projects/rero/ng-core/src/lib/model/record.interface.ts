@@ -136,7 +136,7 @@ export interface Bucket {
 /** Interfaces for an aggregation */
 export interface Aggregation {
   key: string;
-  bucketSize: any;
+  bucketSize: number;
   value: { buckets: Bucket[] };
   expanded: boolean;
   included?: boolean;
