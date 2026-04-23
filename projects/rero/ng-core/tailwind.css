@@ -15,7 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Only used by postcss for tailwind generated scss file */
+/*
+ * Source file for ng-core-tailwind.scss (generated via `npm run build-css`).
+ *
+ * CSS cascade layer ordering
+ * --------------------------
+ * The final layer order (lowest → highest priority) is managed by PrimeNG at
+ * runtime via cssLayer.order in primeng-config.ts. PrimeNG injects its
+ * @layer declaration as a <style> tag in the document <head> before styles.css
+ * is linked, so it establishes the order before Tailwind layers are declared:
+ *
+ *   1. theme       – Tailwind + core theme variables
+ *   2. base        – Tailwind base reset
+ *   3. components  – Tailwind components
+ *   4. primeng     – PrimeNG component styles
+ *   5. utilities   – Tailwind utilities (ui: / core:) — overrides primeng
+ *   6. properties  – CSS @property fallbacks
+ *
+ * WARNING: Do NOT add a manual @layer ordering declaration here.
+ * It would be compiled into ng-core-tailwind.scss (@use'd first in styles.scss)
+ * and would override PrimeNG's runtime injection, breaking the intended order.
+ */
 
 @import "tailwindcss/theme.css" layer(theme) prefix(core);
 @import "tailwindcss/utilities.css" layer(utilities) prefix(core);

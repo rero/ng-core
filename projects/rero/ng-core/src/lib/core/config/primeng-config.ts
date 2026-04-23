@@ -21,9 +21,14 @@ import Aura from '@primeuix/themes/aura';
 export const primeNGConfig = {
   theme: {
     options: {
+      // Layer order (lowest → highest priority). PrimeNG injects this @layer
+      // declaration before styles.css, so "primeng" is established below
+      // "utilities" — allowing Tailwind utility classes (ui:, core:) to
+      // override PrimeNG component styles. Do not move "utilities" before
+      // "primeng" or Tailwind overrides will stop working.
       cssLayer: {
         name: 'primeng',
-        order: 'tailwind, primeng',
+        order: 'theme, base, components, primeng, utilities, properties'
       },
       darkModeSelector: false,
     },

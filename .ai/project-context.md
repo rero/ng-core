@@ -47,6 +47,24 @@ Rules:
 - Do not use NgRx reducers/effects/store module.
 - Do not introduce BehaviorSubject-based stores.
 
+## CSS layers
+
+The project uses Tailwind CSS v4 (prefix `ui:`) with PrimeNG and the `tailwindcss-primeui` plugin.
+
+CSS cascade layer order (lowest → highest priority):
+
+```
+theme < base < components < primeng < utilities < properties
+```
+
+Rules:
+
+- Layer order is managed by `cssLayer.order` in `primeng-config.ts`.
+- PrimeNG injects its `@layer` declaration before `styles.scss` in the document, establishing the order before Tailwind declares its own layers.
+- Tailwind utility classes (`ui:`, `core:`) therefore override PrimeNG component styles.
+- Do NOT add a manual `@layer` ordering declaration in `tailwind.css` or `styles.scss`. It would be parsed after PrimeNG's injection and break the intended order.
+- The library Tailwind source is `tailwind.css` → compiled to `ng-core-tailwind.scss` via `npm run build-css`.
+
 ## Change detection
 
 The application runs in **zoneless mode**.

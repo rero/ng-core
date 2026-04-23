@@ -22,7 +22,11 @@
 @use 'ng-core';
 @use 'katex';
 
-@import 'tailwindcss' layer(tailwind) prefix(ui);
+// CSS cascade layer order is managed by PrimeNG (cssLayer.order in primeng-config.ts).
+// PrimeNG injects its @layer declaration before this stylesheet, establishing:
+//   theme < base < components < primeng < utilities < properties
+// Tailwind utility classes (ui:) therefore override PrimeNG component styles.
+@import 'tailwindcss' prefix(ui);
 
 @plugin "tailwindcss-primeui";
 
