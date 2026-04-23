@@ -103,7 +103,7 @@ export class RecordSearchComponent {
   });
 
   /** If we need to show the empty search message info. */
-  showEmptySearchMessage = false;
+  showEmptySearchMessage = computed(() => this.store.config().allowEmptySearch === false && !this.store.q());
 
   /** Define if title have to be displayed or not. */
   readonly _showLabel = input(true);
@@ -127,8 +127,8 @@ export class RecordSearchComponent {
 
   /** Get showLabel value, given either by config or by local value. */
   showLabel = computed(() => {
-    if (this.config()?.showLabel != null) {
-      return this.config()?.showLabel;
+    if (this.config().showLabel != null) {
+      return this.config().showLabel;
     }
     return this._showLabel();
   });
@@ -141,7 +141,7 @@ export class RecordSearchComponent {
    * @returns True if no record is found and no search query is done.
    */
   get hasNoRecord(): boolean {
-    return this.config()?.showFacetsIfNoResults
+    return this.config().showFacetsIfNoResults
       ? false
       : !this.store.q() && this.store.hits().length === 0 && !this.showEmptySearchMessage;
   }
@@ -172,20 +172,7 @@ export class RecordSearchComponent {
    * @param event - string, new query text
    */
   searchByQuery(event: string) {
-    // // If empty search is not allowed and query is empty, the search is not processed.
-    // if (this.config()?.allowEmptySearch === false && !event) {
-    //   this.showEmptySearchMessage = true;
-    //   return;
-    // }
-
     this.store.updateQuery(event);
-    // this._setDefaultSort();
-
-    // // Build aggregations to used.
-    // //   This is a combination of `defaultSearchInputFilters` and persistent aggregation filters.
-    // const aggregations = new Set(this._extractPersistentAggregationsFilters());
-    // this.store.aggregationsFilters.forEach((aggregation) => aggregations.add(aggregation));
-    // this.store.updateAggregationsFilters(Array.from(aggregations));
   }
 
   /**
@@ -194,8 +181,7 @@ export class RecordSearchComponent {
    */
   deleteRecord(event: { pid: string; type?: string }) {
     const type = event.type ?? this.store.currentType();
-    const config = this.store.configs().find((item) => item.key === type) ?? null;
-    const deleteMessage = this.recordUiService.deleteMessage(event.pid, config);
+    const deleteMessage = this.recordUiService.deleteMessage(event.pid, this.store.config());
     this.recordUiService
       .deleteRecord(type, event.pid, deleteMessage)
       .pipe(
@@ -208,12 +194,13 @@ export class RecordSearchComponent {
             index: this.store.currentIndex(),
             query: this.store.q(),
             page: this.store.page(),
+            allowEmptySearch: this.store.config().allowEmptySearch,
             itemsPerPage: this.store.size(),
             aggregationsFilters: this.store.aggregationsFilters(),
             preFilters: this.store.config().preFilters,
             sort: this.store.activeSort(),
             facets: this.store.facetsParameter(),
-            headers: this.store.config()?.listHeaders,
+            headers: this.store.config().listHeaders,
           });
         }),
       )
@@ -233,7 +220,7 @@ export class RecordSearchComponent {
    * @return A component for displaying result item.
    */
   getResultItemComponentView() {
-    return this.config()?.component ? this.config()?.component : null;
+    return this.config().component ? this.config().component : null;
   }
 
   /**
@@ -252,7 +239,7 @@ export class RecordSearchComponent {
       url += `&size=${RecordService.MAX_REST_RESULTS_SIZE}`;
     }
     // preFilters
-    if (this.config()?.preFilters) {
+    if (this.config().preFilters) {
       for (const [key, value] of Object.entries(this.store.config().preFilters)) {
         // force value to an array
         const values = !Array.isArray(value) ? [value] : value;
@@ -347,35 +334,6 @@ export class RecordSearchComponent {
       }
     });
     return flatFilters;
-  }
-
-  /**
-   * Show the filter's section
-   * @param searchFilterSection - Collection of filter
-   * @returns true if the filter's section is show
-   */
-  showFilterSection(searchFilterSection: SearchFilterSection): boolean {
-    return searchFilterSection.filters.some((filter: SearchFilter) => {
-      return this.config()?.allowEmptySearch
-        ? true
-        : (this.store.q() && filter.showIfQuery === true) || !filter?.showIfQuery;
-    });
-  }
-
-  /**
-   * Show the filter
-   * @param searchFilter - search Filter
-   * @returns true if the filter is show
-   */
-  showFilter(searchFilter: SearchFilter) {
-    if (this.config()?.allowEmptySearch) {
-      return true;
-    }
-    if (!this.store.q()) {
-      return !(searchFilter.showIfQuery === true);
-    } else {
-      return searchFilter.showIfQuery === true || !searchFilter?.showIfQuery;
-    }
   }
 
   scrollToTop(): void {

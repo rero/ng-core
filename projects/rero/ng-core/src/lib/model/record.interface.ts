@@ -48,7 +48,7 @@ export interface EsResult<TMetadata = JsonObject> {
       value: number;
     };
   };
-  links: Links;
+  links?: Links;
 }
 
 export interface File {

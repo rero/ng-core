@@ -108,6 +108,7 @@ export const RecordSearchStore = signalStore(
           index: store.currentIndex(),
           query: store.queryString(),
           page: store.page(),
+          allowEmptySearch: config.allowEmptySearch,
           itemsPerPage: store.size(),
           aggregationsFilters: store.aggregationsFilters(),
           preFilters: config.preFilters,

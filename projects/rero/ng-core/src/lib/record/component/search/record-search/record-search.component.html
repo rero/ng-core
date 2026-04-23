@@ -95,7 +95,7 @@
 
             <ng-core-search-filters styleClassSection="core:my-2" />
 
-            @if (!showEmptySearchMessage || store.q()) {
+            @if (!showEmptySearchMessage() || store.q()) {
               <ng-content select="[top-facets]" />
               @for (item of store.aggregations(); track item.key) {
                 <div>
@@ -108,7 +108,7 @@
           </div>
         }
         <div id="recordlist" class="core:md:col-span-7 core:lg:col-span-9 core:col-span-12">
-          @if (showEmptySearchMessage) {
+          @if (showEmptySearchMessage()) {
             <p-message severity="info">
               {{ 'Enter a query to get results.' | translate }}
             </p-message>

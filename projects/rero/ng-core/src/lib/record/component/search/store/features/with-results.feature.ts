@@ -34,11 +34,12 @@ export interface FetchRecordsParams {
   query: string;
   page: number;
   itemsPerPage: number;
+  allowEmptySearch: boolean;
   aggregationsFilters: AggregationsFilter[];
   preFilters: Record<string, string | string[]>;
   sort: string;
   facets: string[];
-  headers?: HttpHeaders | Record<string, string | string[]>;
+  headers: HttpHeaders | Record<string, string | string[]>;
 }
 
 /**
@@ -141,15 +142,14 @@ export function withResults() {
           // Skip null params (emitted when currentType is not set)
           filter((params) => !!params),
           tap((params) => {
-            if (params != null) {
-              store.setLoading(true);
+            if (!params.allowEmptySearch && !params.query.trim()) {
+              store.setResults({ aggregations: {}, hits: { hits: [], total: { relation: 'eq', value: 0 } } });
             }
           }),
-          switchMap((params) => {
-            if (params == null) {
-              return EMPTY;
-            }
-            return store.recordService.getRecords(params.index, {
+          filter((params) => params.allowEmptySearch || !!params.query.trim()),
+          tap(() => store.setLoading(true)),
+          switchMap((params) =>
+            store.recordService.getRecords(params.index, {
               query: params.query,
               page: params.page,
               itemsPerPage: params.itemsPerPage,
@@ -157,9 +157,9 @@ export function withResults() {
               preFilters: params.preFilters,
               sort: params.sort,
               facets: params.facets,
-              headers: params.headers,
-            });
-          }),
+              headers: params!.headers,
+            }),
+          ),
           tap((records) => {
             if (records != null) {
               store.setResults(records);

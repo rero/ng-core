@@ -222,10 +222,11 @@ export function withAggregations() {
               query: query,
               page: 1,
               itemsPerPage: 1,
+              allowEmptySearch: true,
               aggregationsFilters: aggregationsFilters,
               preFilters: config.preFilters,
               facets: [params.aggregationKey],
-              headers: config?.listHeaders,
+              headers: config.listHeaders,
               sort: sort,
             };
 

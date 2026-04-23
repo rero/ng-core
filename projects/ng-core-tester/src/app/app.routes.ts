@@ -360,7 +360,7 @@ export const routes: Routes = [
               ],
             },
           ],
-          allowEmptySearch: true,
+          allowEmptySearch: false,
           sortOptions: [
             {
               label: 'Relevance',

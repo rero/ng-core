@@ -61,7 +61,6 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
   aggregationsExpand: [],
   aggregationsHide: [],
   aggregationsBucketSize: 0,
-  // processAggregations: (aggregations) => of(aggregations),
   searchFields: [],
   resultsText: null,
   pagination: {

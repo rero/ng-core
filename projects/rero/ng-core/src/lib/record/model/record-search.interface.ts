@@ -87,7 +87,6 @@ export interface RecordType<TMetadata = JsonObject> {
   aggregationsExpand: string[] | (() => string[]);
   aggregationsHide: string[];
   aggregationsBucketSize: number;
-  // processAggregations: (aggregations: Aggregation[]) => Observable<Aggregation[]>;
   searchFields: SearchField[];
   resultsText: ((hits: EsResult['hits']) => string) | null;
   pagination: {
