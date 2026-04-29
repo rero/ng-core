@@ -22,7 +22,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TranslateLanguagePipe } from '../../../../../../translate/pipe/translate-language/translate-language.pipe';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { BucketNamePipe } from './bucket-name.pipe';
 import { BucketsComponent } from './buckets.component';
 
 describe('BucketsComponent', () => {
@@ -39,7 +38,6 @@ describe('BucketsComponent', () => {
         TranslateModule.forRoot(),
         BucketsComponent,
         TranslateLanguagePipe,
-        BucketNamePipe,
       ],
       providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi())],
     });

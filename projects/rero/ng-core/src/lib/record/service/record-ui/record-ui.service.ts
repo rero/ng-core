@@ -19,7 +19,7 @@ import { Injectable, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { JsonObject, RecordData } from 'projects/rero/ng-core/src/public-api';
+import { JsonObject, RecordData } from '../../../model/record.interface';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { CONFIG } from '../../../core';

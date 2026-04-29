@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { ResolveFn, Routes, UrlSegment } from '@angular/router';
-import { ActionStatus, capitalize } from '@rero/ng-core';
+import { ActionStatus, Bucket, capitalize } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';

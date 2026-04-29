@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2019-2024 RERO
+ * Copyright (C) 2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -15,24 +15,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Pipe, PipeTransform } from '@angular/core';
+import { Observable, shareReplay } from 'rxjs';
+import { Bucket } from '../../../../../../model';
 
-@Pipe({ name: 'bucketName' })
+/**
+ * Memoizes the Observable returned by processBucketName per bucket key.
+ * Without this, each template re-render would create a new Observable,
+ * causing the async pipe to re-subscribe and trigger a new HTTP call each time.
+ */
+@Pipe({ name: 'bucketName', pure: true, standalone: true })
 export class BucketNamePipe implements PipeTransform {
+  private readonly cache = new Map<string, Observable<string>>();
+  private lastProcessFn: ((bucket: Bucket) => Observable<string>) | null = null;
 
-  /**
-   * Transform aggregation name
-   * @param value - aggregation value
-   * @param aggregationKey - aggregation type
-   * @returns Observable<string>
-   */
-  transform(value: string, aggregationKey: string): string {
-    let data = value;
-    // Legacy: for compatibility
-    switch (aggregationKey) {
-      case 'language':
-        data = `lang_${value}`;
-        break;
+  transform(bucket: Bucket, processFn: (bucket: Bucket) => Observable<string>): Observable<string> {
+    if (processFn !== this.lastProcessFn) {
+      this.cache.clear();
+      this.lastProcessFn = processFn;
     }
-    return data;
+    const key = `${bucket.aggregationKey ?? ''}:${bucket.key}`;
+    if (!this.cache.has(key)) {
+      this.cache.set(key, processFn(bucket).pipe(shareReplay(1)));
+    }
+    return this.cache.get(key)!;
   }
 }

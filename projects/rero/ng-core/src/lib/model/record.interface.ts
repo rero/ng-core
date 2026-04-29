@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { Observable } from 'rxjs';
 
 export interface JsonObject {
   [key: string]: JsonValue;
@@ -127,7 +128,9 @@ export interface SearchFilterSection {
 export interface Bucket {
   key: string;
   doc_count: number;
-  label?: string;
+  aggregationKey: string;
+  name?: string;
+  label$?: Observable<string>;
   indeterminate?: boolean;
   buckets?: Bucket[];
   [key: string]: any;

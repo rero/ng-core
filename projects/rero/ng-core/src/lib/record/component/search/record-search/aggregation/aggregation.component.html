@@ -18,7 +18,7 @@
 @if (aggregation().doc_count) {
   <div class="core:mb-4">
     <ng-core-record-search-aggregation-buckets
-      [buckets]="[{ key: '1', doc_count: aggregation().doc_count, name: aggregation().key | translate }]"
+      [buckets]="[{ key: '1', doc_count: aggregation().doc_count, aggregationKey: '', name: aggregation().key | translate }]"
       [aggregationKey]="aggregation().key"
     />
   </div>

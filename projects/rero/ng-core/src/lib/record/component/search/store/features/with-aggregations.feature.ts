@@ -19,12 +19,12 @@ import { computed, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
-import { Aggregation, Bucket, EsResult, JsonObject } from '../../../../../model';
+import { Aggregation, Bucket, EsResult } from '../../../../../model';
 import { RecordType } from '../../../../model';
+import { shallowEqual } from '../../../../record-search-utils';
 import { RecordService } from '../../../../service/record/record.service';
 import { AggregationsFilter } from '../../model/aggregations-filter.interface';
 import { FetchRecordsParams } from './with-results.feature';
-import { shallowEqual } from '../../../../record-search-utils';
 
 /**
  * Aggregations state interface
@@ -128,7 +128,6 @@ export function withAggregations() {
        * @returns The indeterminate state of the bucket
        */
       processBuckets(bucket: Bucket, aggregationKey: string): boolean {
-        // checkbox indeterminate state
         bucket.indeterminate = false;
         bucket.aggregationKey = aggregationKey;
         for (const k of Object.keys(bucket).filter((key) => bucket[key].buckets)) {

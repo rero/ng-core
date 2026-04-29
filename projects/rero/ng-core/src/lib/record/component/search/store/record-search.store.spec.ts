@@ -49,6 +49,7 @@ describe('RecordSearchStore', () => {
       query: store.queryString(),
       page: store.page(),
       itemsPerPage: store.size(),
+      allowEmptySearch: store.config()?.allowEmptySearch ?? false,
       aggregationsFilters: store.aggregationsFilters(),
       preFilters: store.config().preFilters,
       sort: store.sort(),
@@ -807,7 +808,7 @@ describe('RecordSearchStore', () => {
     it('should preserve original values when ES data is missing', () => {
       const aggregation: Aggregation = {
         key: 'author',
-        value: { buckets: [{ key: 'Existing', doc_count: 1 }] },
+        value: { buckets: [{ key: 'Existing', doc_count: 1, aggregationKey: 'author' }] },
         expanded: false,
         loaded: false,
         doc_count: 5,

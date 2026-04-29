@@ -14,25 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { SlicePipe } from '@angular/common';
+import { AsyncPipe, SlicePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
 import { Bucket } from '../../../../../../model';
 import { AggregationsFilter } from '../../../model/aggregations-filter.interface';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { BucketNamePipe } from './bucket-name.pipe';
+import { Observable, of, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',
   templateUrl: './buckets.component.html',
-  imports: [Checkbox, FormsModule, SlicePipe, TranslatePipe, BucketNamePipe, Button],
+  imports: [Checkbox, FormsModule, SlicePipe, TranslatePipe, Button, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BucketsComponent {
-  private store = inject(RecordSearchStore);
+  protected store = inject(RecordSearchStore);
+  private translateService = inject(TranslateService);
+
+  readonly enrichedBuckets = computed(() => {
+    const processFn = this.store.config().processBucketName;
+    return this.buckets().map((bucket) => ({
+      ...bucket,
+      label$: (processFn
+        ? processFn(bucket).pipe(shareReplay(1))
+        : bucket.name
+          ? of(bucket.name)
+          : this.translateService.stream(bucket.key)) as Observable<string>,
+    }));
+  });
 
   // COMPONENT ATTRIBUTES ============================================================
   /** Buckets list for aggregation */

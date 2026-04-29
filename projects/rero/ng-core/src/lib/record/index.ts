@@ -19,7 +19,6 @@ export * from './pipe/get-record.pipe';
 export * from './record.routes';
 export * from './component/autocomplete/search-autocomplete.component';
 export * from './component/search/record-search-page.component';
-export * from './component/search/record-search/aggregation/buckets/bucket-name.pipe';
 export * from './component/search/record-search/aggregation/buckets/buckets.component';
 export * from './component/search/record-search/aggregation/aggregation.component';
 export * from './component/search/record-search/aggregation/slider/slider.component';

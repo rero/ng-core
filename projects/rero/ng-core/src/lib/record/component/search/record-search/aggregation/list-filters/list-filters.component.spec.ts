@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { BucketNamePipe } from '../buckets/bucket-name.pipe';
 import { ListFiltersComponent } from './list-filters.component';
 
 describe('ListFiltersComponent', () => {
@@ -31,7 +30,7 @@ describe('ListFiltersComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ButtonModule, ListFiltersComponent, BucketNamePipe],
+      imports: [TranslateModule.forRoot(), ButtonModule, ListFiltersComponent],
       providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     }).compileComponents();
     translateService = TestBed.inject(TranslateService);

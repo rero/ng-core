@@ -22,8 +22,8 @@ import { first } from 'rxjs/operators';
 import { ActionStatus, RecordData } from '../../../../../model';
 import { RecordType } from '../../../../model/record-search.interface';
 import { shallowEqual } from '../../../../record-search-utils';
-import { DefaultSearchResultComponent } from '../../record-search/record-search-result/default-search-result/default-search-result.component';
 import { DefaultDetailComponent } from '../../../detail/default-detail/default-detail.component';
+import { DefaultSearchResultComponent } from '../../record-search/record-search-result/default-search-result/default-search-result.component';
 
 export interface RouteConfig {
   /** Record type configurations */
@@ -48,6 +48,8 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
     longMode: true,
   },
   permissions: () => of({}),
+  processBucketName: null,
+  processFilterName: null,
   exportFormats: [],
   preFilters: {},
   defaultSearchInputFilters: [],

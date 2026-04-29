@@ -14,34 +14,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Bucket } from '../../../../../../model';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { BucketNamePipe } from '../buckets/bucket-name.pipe';
+import { Observable, of, shareReplay } from 'rxjs';
 
 export interface IFilter {
   key: string;
   aggregationKey: string;
   name?: string;
+  label$?: Observable<string>;
 }
 
 @Component({
   selector: 'ng-core-list-filters',
   templateUrl: './list-filters.component.html',
-  imports: [Button, BucketNamePipe, TranslatePipe],
+  imports: [Button, AsyncPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {
   protected translateService: TranslateService = inject(TranslateService);
-  private store = inject(RecordSearchStore);
+  protected store = inject(RecordSearchStore);
 
   // Filters to hide
   filtersToHide = ['simple'];
 
   // Filters selected
   filters = computed(() => this.getActiveFilters());
+
 
   /**
    * Returns promised filters
@@ -86,6 +89,17 @@ export class ListFiltersComponent {
         this.getFilterNames(item.value.buckets, filters);
       });
     }
+    const processFn = this.store.config().processFilterName;
+    filters.forEach((filter) => {
+      if (!filter.label$) {
+        filter.label$ = (processFn
+          ? processFn(filter).pipe(shareReplay(1))
+          : filter.name
+            ? of(filter.name)
+            : this.translateService.stream(filter.key)) as Observable<string>;
+      }
+    });
+
     return filters;
   }
 
@@ -105,14 +119,18 @@ export class ListFiltersComponent {
           this.getFilterNames(bucket[k].buckets, filters);
         }
       }
-      if (bucket.name) {
-        const index = filters.findIndex(
-          (filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey,
-        );
-        if (index > -1) {
+      const index = filters.findIndex(
+        (filter: any) => filter.key === bucket.key && filter.aggregationKey === bucket.aggregationKey,
+      );
+      if (index > -1) {
+        if (bucket.name) {
           filters[index].name = bucket.name;
-          filters[index] = { ...filters[index] };
         }
+        // Reuse bucket.label$ (stable Observable) to avoid re-subscription on re-renders
+        if (bucket.label$) {
+          filters[index].label$ = bucket.label$;
+        }
+        filters[index] = { ...filters[index] };
       }
     });
   }

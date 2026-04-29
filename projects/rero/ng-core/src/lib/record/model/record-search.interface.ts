@@ -19,17 +19,19 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Type } from '@angular/core';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { EditorSettingsConfig, JSONSchema7 } from 'projects/rero/ng-core/src/public-api';
+import { EditorSettingsConfig } from '../editor/component/editor/editor.component';
+import { IFilter } from '../component/search/record-search/aggregation/list-filters/list-filters.component';
+import { JSONSchema7 } from '../editor/utils/utils';
 import { Observable } from 'rxjs';
 import {
   ActionStatus,
-  Aggregation,
+  Bucket,
   EsResult,
   JsonObject,
   RecordData,
   SearchField,
   SearchFilter,
-  SearchFilterSection,
+  SearchFilterSection
 } from '../../model';
 import { AggregationsFilter } from '../component/search/model/aggregations-filter.interface';
 
@@ -71,6 +73,8 @@ export interface RecordType<TMetadata = JsonObject> {
   canRead: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
   canUse: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
   permissions: (record: RecordData<TMetadata>) => Observable<Record<string, ActionStatus>>;
+  processBucketName: null | ((bucket: Bucket) => Observable<string>);
+  processFilterName: null | ((filter: IFilter) => Observable<string>);
   exportFormats: ExportFormat[];
   preFilters: Record<string, string | string[]>;
   //list of filters to apply on load if the query is empty
