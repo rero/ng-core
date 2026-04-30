@@ -68,10 +68,10 @@ export interface RecordType<TMetadata = JsonObject> {
   component: Type<unknown>;
   detailComponent?: Type<unknown>;
   canAdd: () => Observable<ActionStatus>;
-  canUpdate: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
-  canDelete: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
-  canRead: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
-  canUse: (record: RecordData<TMetadata>) => Observable<ActionStatus>;
+  canUpdate: ((record: RecordData<TMetadata>) => Observable<ActionStatus>) | null;
+  canDelete: ((record: RecordData<TMetadata>) => Observable<ActionStatus>) | null;
+  canRead: ((record: RecordData<TMetadata>) => Observable<ActionStatus>) | null;
+  canUse: ((record: RecordData<TMetadata>) => Observable<ActionStatus>) | null;
   permissions: (record: RecordData<TMetadata>) => Observable<Record<string, ActionStatus>>;
   processBucketName: null | ((bucket: Bucket) => Observable<string>);
   processFilterName: null | ((filter: IFilter) => Observable<string>);
