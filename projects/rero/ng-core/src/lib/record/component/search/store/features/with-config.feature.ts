@@ -79,7 +79,7 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
   postprocessRecordEditor: (record) => record,
   preprocessRecordEditor: (record) => record,
   redirectUrl: () => of(''),
-  deleteMessage: () => [],
+  deleteMessage: null,
   searchFilters: [],
 };
 

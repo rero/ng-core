@@ -107,7 +107,7 @@ export interface RecordType<TMetadata = JsonObject> {
   postprocessRecordEditor: (record: TMetadata) => TMetadata;
   preprocessRecordEditor: (record: TMetadata) => TMetadata;
   redirectUrl: (record: RecordData<TMetadata>, action: string) => Observable<string>;
-  deleteMessage: (pid: string) => string[];
+  deleteMessage: ((pid: string) => string[]) | null;
   searchFilters: (SearchFilter | SearchFilterSection)[];
   editorSettings: EditorSettingsConfig;
 }
