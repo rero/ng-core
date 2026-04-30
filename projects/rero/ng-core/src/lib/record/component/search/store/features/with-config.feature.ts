@@ -257,9 +257,9 @@ export function withConfig() {
         if (config.permissions) {
           return config
             .permissions(record)
-            .pipe(switchMap((perms) => ('canUse' in perms ? of(perms.canUse) : of({ can: false, message: '' }))));
+            .pipe(switchMap((perms) => ('canUse' in perms ? of(perms.canUse) : of({ can: true, message: '' }))));
         }
-        return of({ can: false, message: '' });
+        return of({ can: true, message: '' });
       },
     })),
   );
