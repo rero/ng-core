@@ -42,7 +42,8 @@ display_success_message "Linting the projects..."
 ng lint
 
 display_success_message "Run the tests"
-ng test --no-watch --no-progress --browsers=ChromeHeadlessCI
+ng test @rero/ng-core --watch=false --headless
+ng test ng-core-tester --watch=false --headless
 
 display_success_message "Run pack"
 npm run pack

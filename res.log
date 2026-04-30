@@ -1,0 +1,240 @@
+❯ Building...
+One or more browsers which are configured in the project's Browserslist configuration will be ignored as ES5 output is not supported by the Angular CLI.
+Ignored browsers:
+kaios 2.5, op_mini all
+One or more browsers which are configured in the project's Browserslist configuration fall outside Angular's browser support for this version.
+Unsupported browsers:
+and_qq 14.9, and_uc 15.5, android 142, kaios 3.0-3.1, op_mob 80, opera 122, opera 121, samsung 29, samsung 28
+✔ Building...
+Application bundle generation failed. [2.835 seconds] - 2026-01-05T13:09:53.359Z
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/rero/ng-core/src/lib/formly/types/multischema/multischema.component.ts:24:25:
+[37m      24 │     <div [class]="field?.[32mparent[37m?.props?.cssClass">
+         ╵                          [32m~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/rero/ng-core/src/lib/formly/types/remote-autocomplete/remote-autocomplete.component.ts:68:30:
+[37m      68 │           [maxlength]="props?.[32mmaxLength[37m || null"
+         ╵                               [32m~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/rero/ng-core/src/lib/formly/wrappers/card-wrapper/card-wrapper.component.ts:27:19:
+[37m      27 │       @if (!props?.[32misRoot[37m) {
+         ╵                    [32m~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/rero/ng-core/src/lib/record/component/detail/detail-button/detail-button.component.html:44:35:
+[37m      44 │           [outlined]="useStatus()?.[32mcan[37m"
+         ╵                                    [32m~~~[0m
+
+  Warning occurs in the template of component DetailButtonComponent.
+
+    projects/rero/ng-core/src/lib/record/component/detail/detail-button/detail-button.component.ts:27:17:
+[37m      27 │     templateUrl: [32m'./detail-button.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8107: The left side of this optional chain operation does not include 'null' or 'undefined' in its type, therefore the '?.' operator can be replaced with the '.' operator.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/rero/ng-core/src/lib/record/component/search/record-search/aggregation/list-filters/list-filters.component.html:17:16:
+[37m      17 │ @if (filters()?.[32mlength[37m) {
+         ╵                 [32m~~~~~~[0m
+
+  Warning occurs in the template of component ListFiltersComponent.
+
+    projects/rero/ng-core/src/lib/record/component/search/record-search/aggregation/list-filters/list-filters.component.ts:32:17:
+[37m      32 │     templateUrl: [32m'./list-filters.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'string' is not assignable to type 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/app-config.service.ts:34:4:
+[37m      34 │     [32mthis.projectTitle[37m = environment.projectTitle;
+         ╵     [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'string' is not assignable to type 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/app-config.service.ts:37:4:
+[37m      37 │     [32mthis.$refPrefix[37m = environment.$refPrefix;
+         ╵     [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'string[]' is not assignable to type 'never[]'.
+  Type 'string' is not assignable to type 'never'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/app-config.service.ts:39:4:
+[37m      39 │     [32mthis.translationsURLs[37m = environment.translationsURLs;
+         ╵     [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2741: Property 'label' is missing in type '{ separator: true; }' but required in type 'MenuItem'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/menu/menu.component.ts:105:10:
+[37m      105 │           [32m{[37m
+          ╵           [32m^[0m
+
+  'label' is declared here.
+
+    node_modules/primeng/api/index.d.ts:440:4:
+[37m      440 │     [32mlabel[37m: string;
+          ╵     [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/menu/menu.component.ts:169:6:
+[37m      169 │       [32mthis.config.languages[37m.map((language: string) => {
+          ╵       [32m~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:18:7:
+[37m      18 │   @if ([32mdetailUrl[37m()) {
+         ╵        [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2722: Cannot invoke an object which is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:18:7:
+[37m      18 │   @if ([32mdetailUrl[37m()) {
+         ╵        [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2722: Cannot invoke an object which is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:19:9:
+[37m      19 │     @if ([32mdetailUrl[37m().external === false) {
+         ╵          [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:19:21:
+[37m      19 │     @if (detailUrl().[32mexternal[37m === false) {
+         ╵                      [32m~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2722: Cannot invoke an object which is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:20:23:
+[37m      20 │       <a [routerLink]="[32mdetailUrl[37m().link">
+         ╵                        [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:20:35:
+[37m      20 │       <a [routerLink]="detailUrl().[32mlink[37m">
+         ╵                                    [32m~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2722: Cannot invoke an object which is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:24:17:
+[37m      24 │       <a [href]="[32mdetailUrl[37m().link">
+         ╵                  [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2532: Object is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/record/document/document.component.html:24:29:
+[37m      24 │       <a [href]="detailUrl().[32mlink[37m">
+         ╵                              [32m~~~~[0m
+
+  Error occurs in the template of component DocumentComponent.
+
+    projects/ng-core-tester/src/app/record/document/document.component.ts:26:17:
+[37m      26 │     templateUrl: [32m'./document.component.html'[37m,
+         ╵                  [32m~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS18048: 'field.props' is possibly 'undefined'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/routes/documents-route.ts:110:16:
+[37m      110 │                 [32mfield.props[37m.options = [{ label: 'Option 1', value...
+          ╵                 [32m~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/search-bar/search-bar.component.ts:42:2:
+[37m      42 │   [32mvalue[37m: string = undefined;
+         ╵   [32m~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2322: Type '(data: any, query: string) => AutoCompleteData[]' is not assignable to type '(data: any, query?: string | undefined) => AutoCompleteData[]'.
+  Types of parameters 'query' and 'query' are incompatible.
+    Type 'string | undefined' is not assignable to type 'string'.
+      Type 'undefined' is not assignable to type 'string'.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/search-bar/search-bar.component.ts:50:8:
+[37m      50 │         [32mprocessSuggestions[37m: (data: any, query: string) => this.pro...
+         ╵         [32m~~~~~~~~~~~~~~~~~~[0m
+
+  The expected type comes from property 'processSuggestions' which is declared here on type 'AutoCompleteRecordType'
+
+    dist/rero/ng-core/index.d.ts:1873:4:
+[37m      1873 │     [32mprocessSuggestions[37m: (data: any, query?: string) => AutoCompl...
+           ╵     [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'query' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    projects/ng-core-tester/src/app/search-bar/search-bar.component.ts:62:11:
+[37m      62 │   onSearch([32mquery[37m) {
+         ╵            [32m~~~~~[0m
+
+

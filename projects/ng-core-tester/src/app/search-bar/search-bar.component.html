@@ -17,8 +17,7 @@
 <ng-core-search-autocomplete
   [recordTypes]="recordTypes"
   scrollHeight="400px"
-  (onSelect)="onSelect($event)"
-  (onSearch)="onSearch($event)"
+  (searchQuery)="onSearch($event)"
   inputStyleClass="ui:text-lg"
   [value]="value"
 />

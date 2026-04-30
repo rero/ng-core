@@ -1,0 +1,65 @@
+<!--
+  RERO angular core
+  Copyright (C) 2019-2024 RERO
+  Copyright (C) 2019-2023 UCLouvain
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<div class="core:flex core:items-start">
+  <div class="core:grow">
+    <ng-container #item></ng-container>
+  </div>
+  <div class="core:flex core:flex-none core:gap-1 core:justify-end core:ml-2">
+    @if (adminMode()) {
+      <!-- use button -->
+      @if (useStatus().can && useStatusUrl()) {
+        <p-button
+          [outlined]="true"
+          [ariaLabel]="'Use' | translate"
+          (onClick)="useRecord()"
+          [title]="'Use' | translate"
+          icon="fa fa-hand-o-right"
+        />
+      }
+
+      <!-- edit button -->
+      @if (updateStatus().can) {
+        <p-button
+          [outlined]="true"
+          [ariaLabel]="'Edit' | translate"
+          [routerLink]="updateStatusRouterLink() || ['edit', record().id]"
+          icon="fa fa-pencil"
+        />
+      }
+
+      <!-- delete button -->
+      @if (deleteStatus().can || deleteStatus().message) {
+        <p-button
+          icon="fa fa-trash"
+          severity="danger"
+          class="core:pointer-events-auto"
+          outlined
+          [title]="'Delete' | translate"
+          (onClick)="deleteRecord(record().id, deleteStatusType())"
+          [pTooltip]="tooltipContent"
+          tooltipPosition="top"
+          [disabled]="!deleteStatus().can"
+          [tooltipDisabled]="!!deleteStatus().can"
+        />
+        <ng-template #tooltipContent>
+          <span [innerHTML]="deleteStatus().message"></span>
+        </ng-template>
+      }
+    }
+  </div>
+</div>

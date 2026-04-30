@@ -7,16 +7,22 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [22.12.x, 24.0.x]
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js 22
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@v6
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v6
       with:
-        node-version: 22
+        node-version: ${{ matrix.node-version }}
     - name: install package
       run: |
-        npm install -g @angular/cli@19
+        npm install -g @angular/cli@21
         npm ci
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
     - name: run tests
       run: |
         ./run-tests.sh

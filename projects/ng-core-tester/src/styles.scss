@@ -15,21 +15,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "font-awesome/scss/font-awesome";
-@use "easymde/dist/easymde.min";
-@use "ngx-spinner/animations/ball-zig-zag.css";
-@use "ng-core-tailwind";
-@use "ng-core";
-@use "katex";
+@use 'font-awesome/scss/font-awesome';
+@use 'easymde/dist/easymde.min';
+@use 'ngx-spinner/animations/ball-zig-zag.css';
+@use 'ng-core-tailwind';
+@use 'ng-core';
+@use 'katex';
 
-@import "tailwindcss" prefix(ui);
+// CSS cascade layer order is managed by PrimeNG (cssLayer.order in primeng-config.ts).
+// PrimeNG injects its @layer declaration before this stylesheet, establishing:
+//   theme < base < components < primeng < utilities < properties
+// Tailwind utility classes (ui:) therefore override PrimeNG component styles.
+@import 'tailwindcss' prefix(ui);
 
 @plugin "tailwindcss-primeui";
 
 :root {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-family:
+    -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1rem;
 }
