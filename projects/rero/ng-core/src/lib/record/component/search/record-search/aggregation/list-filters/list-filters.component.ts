@@ -16,7 +16,7 @@
  */
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
 import { Bucket } from '../../../../../../model';
 import { RecordSearchStore } from '../../../store/record-search.store';
@@ -32,7 +32,7 @@ export interface IFilter {
 @Component({
   selector: 'ng-core-list-filters',
   templateUrl: './list-filters.component.html',
-  imports: [Button, AsyncPipe],
+  imports: [Button, AsyncPipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {

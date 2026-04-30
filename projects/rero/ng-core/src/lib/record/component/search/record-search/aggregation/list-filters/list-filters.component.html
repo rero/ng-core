@@ -23,6 +23,7 @@
         icon="fa fa-times"
         [outlined]="true"
         severity="secondary"
+        [title]="filter.aggregationKey | translate"
         (onClick)="removeFilter(filter)"
       />
     }
