@@ -277,7 +277,7 @@ export class RecordUiService {
           if ('canUse' in perms) {
             return of(perms.canUse);
           } else {
-            return of({ can: true, message: '' });
+            return of({ can: false, message: '' });
           }
         }),
       );
