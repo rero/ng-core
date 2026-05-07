@@ -117,6 +117,11 @@ export function withAggregations() {
       clearAggregations(): void {
         patchState(store, { aggregations: [] });
       },
+      aggregationNameFromConfig(key: string): string | null {
+    return store.config().aggregationsName && key in store.config().aggregationsName
+      ? store.config().aggregationsName[key]
+      : null;
+  }
     })),
     // processBuckets and enrichAggregation must be in a separate withMethods block
     // so they are available on `store` when fetchAggregationBuckets (rxMethod) is created.

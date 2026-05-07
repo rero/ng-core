@@ -39,7 +39,7 @@ import { RecordSearchStore } from '../../store/record-search.store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordSearchAggregationComponent {
-  private store = inject(RecordSearchStore);
+  protected store = inject(RecordSearchStore);
 
   // COMPONENT ATTRIBUTES =====================================================
   /** Aggregation data */

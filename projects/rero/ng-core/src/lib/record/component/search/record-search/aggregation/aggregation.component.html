@@ -18,13 +18,13 @@
 @if (aggregation().doc_count) {
   <div class="core:mb-4">
     <ng-core-record-search-aggregation-buckets
-      [buckets]="[{ key: '1', doc_count: aggregation().doc_count, aggregationKey: '', name: aggregation().key | translate }]"
+      [buckets]="[{ key: '1', doc_count: aggregation().doc_count, aggregationKey: '', name: (store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key | translate | ucfirst) || '' }]"
       [aggregationKey]="aggregation().key"
     />
   </div>
 } @else {
   <p-fieldset
-    [legend]="(aggregation().name || aggregation().key | translate | ucfirst) || ''"
+    [legend]="(store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key | translate | ucfirst) || ''"
     [toggleable]="true"
     [collapsed]="!isAggregationDisplayed()"
     (collapsedChange)="toggleVisibility()"
