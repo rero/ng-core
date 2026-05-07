@@ -28,7 +28,7 @@ export const primeNGConfig = {
       // "primeng" or Tailwind overrides will stop working.
       cssLayer: {
         name: 'primeng',
-        order: 'theme, base, components, primeng, utilities, properties'
+        order: 'theme, base, primeng, utilities, properties'
       },
       darkModeSelector: false,
     },
