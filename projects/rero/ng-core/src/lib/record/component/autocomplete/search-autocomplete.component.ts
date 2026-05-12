@@ -167,6 +167,9 @@ export class SearchAutocompleteComponent implements AfterViewInit {
   }
 
   sanitize(value: string): string {
+    if (!value) {
+      return value;
+    }
     const re = new RegExp('<[^>]*>', 'g');
     return value.replace(re, '');
   }
