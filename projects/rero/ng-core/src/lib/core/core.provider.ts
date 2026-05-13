@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { EnvironmentProviders, inject, makeEnvironmentProviders, provideEnvironmentInitializer } from '@angular/core';
+import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import { TitleStrategy } from '@angular/router';
 import { FORMLY_CONFIG, provideFormlyCore } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,9 +32,6 @@ export function provideCore(): EnvironmentProviders {
     DialogService,
     MessageService,
     provideFormlyCore(withNgCoreFormly()),
-    provideEnvironmentInitializer(() => {
-      inject(NgCoreTranslateService).initialize();
-    }),
     {
       provide: FORMLY_CONFIG,
       multi: true,

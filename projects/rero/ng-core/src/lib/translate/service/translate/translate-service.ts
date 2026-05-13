@@ -53,7 +53,8 @@ export class NgCoreTranslateService extends TranslateService {
     it: { angular: localeIt, primeng: it },
   };
 
-  initialize(): void {
+  constructor() {
+    super();
     for (const [key, value] of Object.entries(this.locales)) {
       registerLocaleData(value.angular, key);
     }

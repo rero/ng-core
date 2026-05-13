@@ -23,11 +23,12 @@ import de from '../i18n/de.json';
 import en from '../i18n/en.json';
 import fr from '../i18n/fr.json';
 import it from '../i18n/it.json';
-import { inject } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.
  */
+@Injectable()
 export class CoreTranslateLoader implements TranslateLoader {
   // prefix: string;
   // suffix: string;
