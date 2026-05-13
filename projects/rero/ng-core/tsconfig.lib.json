@@ -8,12 +8,9 @@
     "types": []
   },
   "angularCompilerOptions": {
-    "skipTemplateCodegen": true,
-    "strictMetadataEmit": true,
     "strictInjectionParameters": true,
     "preserveSymlinks": true,
     "enableResourceInlining": true
   },
-  "exclude": ["src/test.ts", "**/*.spec.ts"],
-  "typeRoots": ["./typings.d.ts"]
+  "exclude": ["src/test.ts", "**/*.spec.ts"]
 }

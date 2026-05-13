@@ -21,7 +21,7 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
-import { Error } from '../../../core/component/error/error.interface';
+import { Error as CoreError } from '../../../core/component/error/error.interface';
 import { EsResult, JsonObject, JsonValue, RecordData } from '../../../model';
 import { resolveRefs } from '../../editor/utils/utils';
 import { ApiService } from '../api/api.service';
@@ -123,7 +123,7 @@ export class RecordService {
    * @param type - string, type of record
    * @param pid - string, PID to remove
    */
-  delete(type: string, pid: string): Observable<void | Error> {
+  delete(type: string, pid: string): Observable<void | CoreError> {
     return this.http
       .delete<void>(this.apiService.getEndpointByType(type, true) + '/' + pid)
       .pipe(catchError((error) => this._handleError(error)));
