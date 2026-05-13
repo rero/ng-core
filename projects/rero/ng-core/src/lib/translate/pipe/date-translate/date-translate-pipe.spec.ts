@@ -29,7 +29,6 @@ describe('DateTranslatePipePipe', () => {
       providers: [DateTranslatePipe],
     });
     service = TestBed.inject(NgCoreTranslateService);
-    service.initialize();
     pipe = TestBed.inject(DateTranslatePipe);
   });
 

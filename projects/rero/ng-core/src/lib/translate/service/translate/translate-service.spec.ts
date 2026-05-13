@@ -31,7 +31,6 @@ describe('NgCoreTranslateService', () => {
     });
     service = TestBed.inject(NgCoreTranslateService);
     primeConfig = TestBed.inject(PrimeNG);
-    service.initialize();
   });
 
   it('should return the english translation (default)', () => {

@@ -18,7 +18,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { Error } from '../../../core/component/error/error.interface';
+import type { Error as CoreError } from '../../../core/component/error/error.interface';
 import { EsResult } from '../../../model/record.interface';
 import { ApiService } from '../api/api.service';
 import { RecordService } from './record.service';
@@ -97,7 +97,7 @@ describe('RecordService', () => {
       () => {
         throw new Error('should have failed with the 404 error');
       },
-      (error: Error) => {
+      (error: CoreError) => {
         expect(error.title).toBe('Not found');
       },
     );
@@ -114,7 +114,7 @@ describe('RecordService', () => {
       () => {
         throw new Error('should have failed with the 404 error');
       },
-      (error: Error) => {
+      (error: CoreError) => {
         expect(error.title).toBe('An error occurred');
       },
     );
