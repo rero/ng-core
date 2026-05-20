@@ -83,4 +83,36 @@ describe('PageTitleStrategy', () => {
     await router.navigate(['/home']);
     expect(document.title).toBe('Documents | Website');
   });
+
+  it('should not update the title on language change before any navigation', () => {
+    const initialTitle = document.title;
+    translate.use('fr');
+    expect(document.title).toBe(initialTitle);
+  });
+
+  it('should retranslate the title on language change', async () => {
+    translate.setTranslation('de', { doc: 'Dokumente' });
+    config.projectTitle = 'Website';
+    await router.navigate(['/home']);
+    expect(document.title).toBe('Documents | Website');
+
+    translate.use('de');
+    expect(document.title).toBe('Dokumente | Website');
+  });
+
+  it('should retranslate the title on multiple language changes', async () => {
+    translate.setTranslation('de', { doc: 'Dokumente' });
+    translate.setTranslation('en', { doc: 'Documents EN' });
+    config.projectTitle = undefined;
+    await router.navigate(['/home']);
+
+    translate.use('de');
+    expect(document.title).toBe('Dokumente');
+
+    translate.use('en');
+    expect(document.title).toBe('Documents EN');
+
+    translate.use('fr');
+    expect(document.title).toBe('Documents');
+  });
 });
