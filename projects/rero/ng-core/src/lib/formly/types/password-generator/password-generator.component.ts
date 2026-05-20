@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2022-2025 RERO
+ * Copyright (C) 2022-2026 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,6 @@ import { HttpClient } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
-  DestroyRef,
   ElementRef,
   inject,
   OnInit,
@@ -28,7 +27,6 @@ import {
   Signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
@@ -38,8 +36,6 @@ import { Button } from 'primeng/button';
 import { InputGroup } from 'primeng/inputgroup';
 import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
-import { Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 /**
  * Available options for generateOptions (GeneratePassword):
@@ -164,7 +160,6 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
 export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<PasswordGeneratorProps>> implements OnInit {
   protected httpClient: HttpClient = inject(HttpClient);
   protected clipboard: Clipboard = inject(Clipboard);
-  private readonly destroyRef = inject(DestroyRef);
 
   passwordField: Signal<ElementRef | undefined> = viewChild('password');
 
@@ -193,24 +188,12 @@ export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<Passwo
   /** Field password type (show or hide password) */
   readonly type = signal<'text' | 'password'>('password');
 
-  /** Tracks props.readonly reactively — mutated directly in onEdit(), not via Formly expressions */
+  /** Tracks props.readonly reactively - mutated directly in onEdit(), not via Formly expressions */
   readonly readonly = signal(true);
-
-  /** Password Observable */
-  private _password$ = new Subject<string>();
 
   /** OnInit hook */
   ngOnInit(): void {
     this.readonly.set(this.props.readonly);
-    this._password$
-      .pipe(
-        tap((password: string) => this.formControl.setValue(password)),
-        tap((password: string) => this.clipboard.copy(this.formControl.errors ? ' ' : password)),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe(() => {
-        this.hasBeenGenerated.set(true);
-      });
   }
 
   /** Generation of the password when the button is clicked. */
@@ -227,7 +210,7 @@ export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<Passwo
    * @param password - string
    */
   onChange(password: string): void {
-    this._password$.next(password);
+    this._applyPassword(password);
   }
 
   /** Hide or show password data */
@@ -244,6 +227,12 @@ export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<Passwo
     }
   }
 
+  private _applyPassword(password: string): void {
+    this.formControl.setValue(password);
+    this.clipboard.copy(this.formControl.errors ? ' ' : password);
+    this.hasBeenGenerated.set(true);
+  }
+
   /** Generate the password by javascript */
   private _jsGeneration(): void {
     if (!this.props.generateOptions.length) {
@@ -252,21 +241,19 @@ export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<Passwo
     if (!this.props.generateOptions.symbols) {
       this.props.generateOptions.symbols = this.props.specialChar;
     }
-    this._password$.next(GeneratePassword(this.props.generateOptions));
+    this._applyPassword(GeneratePassword(this.props.generateOptions));
   }
 
   /** Call backend api entrypoint */
   private _callApi(): void {
-    if (!this.props.api) {
-      this.httpClient
-        .get(this.props.api, {
-          responseType: 'text',
-          params: {
-            length: this.props.minLength,
-            special_char: this.props.specialChar,
-          },
-        })
-        .subscribe((password: string) => this._password$.next(password));
-    }
+    this.httpClient
+      .get(this.props.api, {
+        responseType: 'text',
+        params: {
+          length: this.props.minLength,
+          special_char: this.props.specialChar,
+        },
+      })
+      .subscribe((password: string) => this._applyPassword(password));
   }
 }
