@@ -20,7 +20,7 @@
     #addField
     optionLabel="props.label"
     [placeholder]="'Add field' | translate"
-    styleClass="core:mb-2 core:w-full"
+    class="core:mb-2 core:w-full"
     [suggestions]="suggestions"
     (completeMethod)="search($event)"
     (onSelect)="onSelect($event)"
@@ -31,7 +31,7 @@
 </div>
 
 @if (essentialsOptions().length > 0) {
-  <p-listbox [options]="essentialsOptions()" scrollHeight="" styleClass="core:mt-2" (onChange)="onAddField($event)">
+  <p-listbox [options]="essentialsOptions()" scrollHeight="" class="core:mt-2" (onChange)="onAddField($event)">
     <ng-template #item let-item>
       {{ item.props.label }}
     </ng-template>

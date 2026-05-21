@@ -19,7 +19,15 @@
   },
   "angularCompilerOptions": {
     "strictTemplates": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "extendedDiagnostics": {
+      "checks": {
+        "interpolatedSignalNotInvoked": "error",
+        "optionalChainNotNullable": "error",
+        "uninvokableObservableInTemplate": "error",
+        "unnecessaryTemplateRefAssignment": "error"
+      }
+    }
   },
   "references": [
     {

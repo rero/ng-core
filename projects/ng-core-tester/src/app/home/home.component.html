@@ -14,19 +14,19 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<p-panel header="Toast" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Toast" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <app-toast />
   </div>
 </p-panel>
 
-<p-panel header="Dialog" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Dialog" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <app-dialog />
   </div>
 </p-panel>
 
-<p-panel header="Nl2br pipe" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Nl2br pipe" class="ui:mt-4 ui:pb-4">
   <div
     class="ui:pl-4"
     [innerHTML]="
@@ -36,7 +36,7 @@
   ></div>
 </p-panel>
 
-<p-panel header="Translate Language pipe" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Translate Language pipe" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <p>
       Translate "fre" code in german: <strong>{{ 'fre' | translateLanguage: 'de' }}</strong>
@@ -51,7 +51,7 @@
   </div>
 </p-panel>
 
-<p-panel header="Katex directive" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Katex directive" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4 ui:flex ui:flex-col ui:gap-4">
     <div [katex]="true">
       {{ katexTitle }}
@@ -62,13 +62,13 @@
   </div>
 </p-panel>
 
-<p-panel header="Spinner" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Spinner" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <p-button label="Show spinner (for 3 seconds)" size="small" [outlined]="true" (onClick)="showSpinner()" />
   </div>
 </p-panel>
 
-<p-panel header="Markdown pipe" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Markdown pipe" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <input
       pInputText
@@ -82,7 +82,7 @@
   </div>
 </p-panel>
 
-<p-panel header="Read More" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Read More" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <ng-core-read-more
       [text]="katex"
@@ -95,7 +95,7 @@
   </div>
 </p-panel>
 
-<p-panel header="Error" styleClass="ui:mt-4 ui:pb-4">
+<p-panel header="Error" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <ng-core-error [error]="{ title: 'title', status: 500 }" />
   </div>
