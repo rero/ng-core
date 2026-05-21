@@ -24,7 +24,7 @@ import { RadioButton } from 'primeng/radiobutton';
 import { Observable, of } from 'rxjs';
 
 interface RadioButtonProps {
-  optionValues: Observable<Option[]>;
+  options: Observable<Option[]>;
   style: 'stacked' | 'inline';
 }
 
@@ -67,7 +67,7 @@ export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonP
 
   defaultOptions?: Partial<FieldTypeConfig<RadioButtonProps>> = {
     props: {
-      optionValues: of([]),
+      options: of([]),
       style: 'stacked',
     },
   };
@@ -76,7 +76,7 @@ export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonP
 
   ngOnInit(): void {
     this.optionValues = runInInjectionContext(this.injector, () =>
-      toSignal(this.props.optionValues ?? of([]), { initialValue: [] })
+      toSignal(this.props.options ?? of([]), { initialValue: [] })
     );
   }
 

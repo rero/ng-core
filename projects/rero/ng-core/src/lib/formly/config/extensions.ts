@@ -231,7 +231,7 @@ export class NgCoreFormlyExtension {
           // do not hide field has been already manipulated
           field.hide === undefined) ||
         // in edition empty fields should be hidden
-        (pid != '' &&
+        (pid &&
           // only during the editor initialization
           !field?.props?.getRoot()?.formControl?.touched)
       ) {
