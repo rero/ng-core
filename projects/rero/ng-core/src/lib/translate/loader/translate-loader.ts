@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { TranslateLoader, TranslationObject } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -23,7 +24,6 @@ import de from '../i18n/de.json';
 import en from '../i18n/en.json';
 import fr from '../i18n/fr.json';
 import it from '../i18n/it.json';
-import { inject, Injectable } from '@angular/core';
 
 /**
  * Loader for translations used in ngx-translate library.

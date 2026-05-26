@@ -38,7 +38,7 @@ import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
-import { Aggregations, SearchField, SearchFilter, SearchFilterSection } from '../../../../model';
+import { Aggregations, SearchField, SearchFilter } from '../../../../model';
 import { ActionStatus } from '../../../../model/action-status.interface';
 import { ExportFormat } from '../../../model/record-search.interface';
 import { ApiService } from '../../../service/api/api.service';

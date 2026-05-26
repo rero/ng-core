@@ -26,10 +26,10 @@ import de from 'primelocale/de.json';
 import en from 'primelocale/en.json';
 import fr from 'primelocale/fr.json';
 import it from 'primelocale/it.json';
+import { Translation } from 'primeng/api';
 import { PrimeNG } from 'primeng/config';
 import { Observable } from 'rxjs';
 import { CoreConfigService } from '../../../core/service/core-config/core-config.service';
-import { Translation } from 'primeng/api';
 
 type Locales = Record<
   string,

@@ -15,10 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ngCoreRoutes } from "@rero/ng-core";
-import { DocumentsRoute } from "../../routes/documents-route";
 import { ResolveFn, Routes } from "@angular/router";
-import { RecordType } from "@rero/ng-core";
+import { ngCoreRoutes, RecordType } from "@rero/ng-core";
+import { DocumentsRoute } from "../../routes/documents-route";
 
 export const typesDocumentResolver: ResolveFn<Partial<RecordType>[]> = () => {
   return new DocumentsRoute().getTypes();
