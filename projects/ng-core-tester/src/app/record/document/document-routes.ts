@@ -18,7 +18,7 @@
 import { ngCoreRoutes } from "@rero/ng-core";
 import { DocumentsRoute } from "../../routes/documents-route";
 import { ResolveFn, Routes } from "@angular/router";
-import { RecordType } from "projects/rero/ng-core/src/lib/record/model";
+import { RecordType } from "@rero/ng-core";
 
 export const typesDocumentResolver: ResolveFn<Partial<RecordType>[]> = () => {
   return new DocumentsRoute().getTypes();

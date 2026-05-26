@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../../out-tsc/app",
     "composite": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "@rero/ng-core": ["../../dist/rero/ng-core"]
+    }
   },
   "files": ["src/main.ts", "src/polyfills.ts"],
   "include": ["src/**/*.d.ts"]

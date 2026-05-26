@@ -63,3 +63,5 @@ projects/rero/ng-core/assets/scss/ng-core-tailwind.scss
 .copilot/
 .aider*
 .ai-cache/
+
+res.log

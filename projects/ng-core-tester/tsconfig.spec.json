@@ -5,7 +5,7 @@
     "composite": true,
     "types": ["vitest/globals"],
     "paths": {
-      "@rero/ng-core": ["dist/rero/ng-core"]
+      "@rero/ng-core": ["../../dist/rero/ng-core"]
     }
   },
   "include": ["src/**/*.ts"]
