@@ -36,6 +36,9 @@ export class ArrayComponent extends FieldArrayType implements OnInit {
     this.props.add = this.add.bind(this);
     this.props.canAdd = this.canAdd.bind(this);
     this.props.canRemove = this.canRemove.bind(this);
+    // props is a plain object mutation — emit fieldChanges so LabelComponent
+    // re-evaluates canAddItem after these callbacks are set.
+    this.field.options?.fieldChanges?.next({ field: this.field, type: 'hidden', value: false });
   }
 
   /**
