@@ -36,7 +36,7 @@ function collectParentRemovals(bucket: Bucket): { key: string; value: string }[]
 /** Collect {key, value} pairs from children buckets (pure function) */
 function collectChildrenRemovals(bucket: Bucket): { key: string; value: string }[] {
   const removals: { key: string; value: string }[] = [];
-  for (const k of Object.keys(bucket).filter((key) => bucket[key].buckets)) {
+  for (const k of Object.keys(bucket).filter((key) => bucket[key]?.buckets)) {
     for (const childBucket of bucket[k].buckets) {
       removals.push({ key: k, value: childBucket.key });
       removals.push(...collectChildrenRemovals(childBucket));

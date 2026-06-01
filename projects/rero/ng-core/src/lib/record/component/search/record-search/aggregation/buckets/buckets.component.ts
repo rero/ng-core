@@ -37,14 +37,18 @@ export class BucketsComponent {
 
   readonly enrichedBuckets = computed(() => {
     const processFn = this.store.config().processBucketName;
-    return this.buckets().map((bucket) => ({
-      ...bucket,
-      label$: (processFn
-        ? processFn(bucket).pipe(shareReplay(1))
-        : bucket.name
-          ? of(bucket.name)
-          : this.translateService.stream(bucket.key)) as Observable<string>,
-    }));
+    return this.buckets().map((bucket) => {
+      const enriched = {
+        ...bucket,
+        parent: bucket.parent,
+        label$: (processFn
+          ? processFn(bucket).pipe(shareReplay(1))
+          : bucket.name
+            ? of(bucket.name)
+            : this.translateService.stream(bucket.key)) as Observable<string>,
+      };
+      return enriched;
+    });
   });
 
   // COMPONENT ATTRIBUTES ============================================================

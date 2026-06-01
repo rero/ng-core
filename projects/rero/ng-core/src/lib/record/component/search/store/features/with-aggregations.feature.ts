@@ -137,7 +137,7 @@ export function withAggregations() {
         bucket.aggregationKey = aggregationKey;
         for (const k of Object.keys(bucket).filter((key) => bucket[key].buckets)) {
           for (const childBucket of bucket[k].buckets) {
-            // set the parent as non-enumerable to avoid circular traversal in equality checks
+            // set the parent as non-enumerable to avoid circular traversal in equality checks (shallowEqual)
             Object.defineProperty(childBucket, 'parent', {
               value: bucket,
               writable: true,
