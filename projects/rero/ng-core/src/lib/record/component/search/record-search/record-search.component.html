@@ -1,0 +1,141 @@
+<!--
+  RERO angular core
+  Copyright (C) 2019-2024 RERO
+  Copyright (C) 2019-2023 UCLouvain
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+@if (store.error(); as error) {
+  <ng-core-error [error]="error"></ng-core-error>
+} @else {
+  <div class="core:flex core:flex-col core:gap-2">
+    <ng-core-search-tabs />
+    @if (availableTypes().length === 1 && showLabel()) {
+      <h5>{{ availableTypes()[0].label | translate }}</h5>
+    }
+    <ng-content select="[header]"></ng-content>
+    <div class="core:flex core:gap-2">
+      @if (store.routeConfig().showSearchInput) {
+        <ng-core-search-input
+          class="core:grow"
+          [placeholder]="('search' | translate | ucfirst) || ''"
+          [searchText]="store.q()"
+          [displayLabel]="false"
+          (searchQuery)="searchByQuery($event)"
+          [focus]="true"
+        />
+      }
+      <ng-content select="[afterInputSearch]" />
+    </div>
+    @if (!store.isLoading() && hasNoRecord) {
+      <p-message severity="info">
+        {{ 'There are no records in this section' | translate }}
+      </p-message>
+      @if (adminMode() && addStatus().can) {
+        <p-button
+          id="search-add-button"
+          [label]="'Add' | translate"
+          icon="fa fa-plus"
+          [routerLink]="addStatus().routerLink || ['new']"
+        />
+      }
+    } @else {
+      <div class="core:flex core:items-stretch core:w-full">
+        <div class="core:flex core:items-center core:w-full">
+          <strong>{{ store.resultsText() | translate: { total: store.total() } }}</strong>
+        </div>
+        <div class="core:flex core:items-center core:justify-end core:w-full">
+          @if (adminMode() && addStatus().can) {
+            <p-button
+              id="search-add-button"
+              [label]="'Add' | translate"
+              icon="fa fa-plus"
+              [routerLink]="addStatus().routerLink || ['new']"
+            />
+          }
+          <!-- Sorting -->
+          @if (config().sortOptions.length) {
+            <ng-core-menu-sort class="core:ml-1" />
+          }
+          <!-- EXPORT BUTTON -->
+          <ng-core-export-button class="core:ml-1" [exportOptions]="exportFormats()" />
+          <!-- END EXPORT BUTTON -->
+        </div>
+      </div>
+      <ng-content select="[beforeResult]"></ng-content>
+      <div class="core:grid core:grid-cols-12 core:gap-4">
+        <ng-core-list-filters class="core:col-span-12" />
+        <ng-content select="[top-search-result]"></ng-content>
+        @if (
+          (store.aggregations() && store.aggregations().length) ||
+          config().searchFields.length > 0 ||
+          config().searchFilters.length > 0
+        ) {
+          <div class="core:md:col-span-5 core:lg:col-span-3 core:col-span-12">
+            @if (config().searchFields.length > 0 && store.q()) {
+              <div class="core:flex core:flex-col core:gap-1 core:mb-2">
+                @for (searchField of config().searchFields; track $index) {
+                  <div class="core:flex core:gap-2 core:items-center">
+                    <p-toggleswitch (onChange)="searchInField($event, searchField.path)" />
+                    <span>{{ searchField.label | translate }}</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <ng-core-search-filters styleClassSection="core:my-2" />
+
+            @if (!showEmptySearchMessage() || store.q()) {
+              <ng-content select="[top-facets]" />
+              @for (item of store.aggregations(); track item.key) {
+                <div>
+                  @if (!config().aggregationsHide.includes(item.key)) {
+                    <ng-core-record-search-aggregation [aggregation]="item" />
+                  }
+                </div>
+              }
+            }
+          </div>
+        }
+        <div id="recordlist" class="core:md:col-span-7 core:lg:col-span-9 core:col-span-12">
+          @if (showEmptySearchMessage()) {
+            <p-message severity="info">
+              {{ 'Enter a query to get results.' | translate }}
+            </p-message>
+          }
+          <ng-content select="[top-result]" />
+          <p-dataView [value]="store.hits()" [emptyMessage]="' '">
+            <ng-template #list let-records>
+              <ul class="core:list-none">
+                @for (record of records; track record.metadata.pid; let first = $first) {
+                  <li class="core:py-2 core:md:py-6" [ngClass]="{ 'core:border-t-1 core:border-surface': !first }">
+                    <ng-core-record-search-result
+                      [record]="record"
+                      (deletedRecord)="deleteRecord($event)"
+                      (deleteMessageEvent)="showDeleteMessage($event)"
+                    />
+                  </li>
+                }
+              </ul>
+            </ng-template>
+          </p-dataView>
+
+          <ng-core-paginator (pageChanged)="scrollToTop()" />
+          <ng-content select="[footer-result]" />
+          <ng-content />
+        </div>
+      </div>
+      <ng-content select="[footer-search-result]" />
+    }
+  </div>
+}

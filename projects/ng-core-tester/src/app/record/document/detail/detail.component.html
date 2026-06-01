@@ -14,9 +14,9 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-@if (record) {
+@if (record()) {
   <h1>Record display</h1>
   <pre>
-    <div class="ui:whitespace-pre-wrap">{{ record.metadata | json }}</div>
+    <div class="ui:whitespace-pre-wrap">{{ record()!.metadata | json }}</div>
   </pre>
 }
