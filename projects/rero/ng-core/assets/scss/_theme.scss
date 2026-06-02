@@ -15,24 +15,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import "./variables";
+@import './variables';
 
 a {
   @apply ui:no-underline;
- }
+}
 
-a:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
+a:not(.p-button):not(.p-ripple):not([role='button']):not([role='tab']) {
   color: var(--p-primary-500);
 }
 
-a:hover:not(.p-button):not(.p-ripple):not([role=button]):not([role=tab]) {
+a:hover:not(.p-button):not(.p-ripple):not([role='button']):not([role='tab']) {
   color: var(--p-primary-600);
   @apply ui:text-primary-600 ui:underline;
 }
 
 // Force links in tag elements to keep the color defined by the tag
 p-tag a {
-  color: inherit!important;
+  color: inherit !important;
 }
 
 dl.metadata {
