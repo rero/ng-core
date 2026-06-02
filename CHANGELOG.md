@@ -1,5 +1,13 @@
 # Changelog
 
+## [v21.0.0](https://github.com/rero/ng-core/tree/v21.0.0) (2026-06-02)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v19.3.1...v21.0.0)
+
+**Breaking change:**
+
+- chore: migrate to Angular 21 with NgRx Signal Store and zoneless change detection [#781](https://github.com/rero/ng-core/pull/781) (by @jma)
+
 ## [v19.3.1](https://github.com/rero/ng-core/tree/v19.3.1) (2026-02-26)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.3.0...v19.3.1)
