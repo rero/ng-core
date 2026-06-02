@@ -1,6 +1,6 @@
 /*
  * RERO angular core
- * Copyright (C) 2020-2024 RERO
+ * Copyright (C) 2020-2025 RERO
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -14,63 +14,38 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, OnInit, inject } from '@angular/core';
-import { CoreConfigService, RecordEvent, RecordService } from '@rero/ng-core';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { CoreConfigService, RecordService } from '@rero/ng-core';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Toast } from 'primeng/toast';
+import { MenuComponent } from './menu/menu.component';
+import { SearchBarComponent } from './search-bar/search-bar.component';
 
 /**
  * Main component of the application.
  */
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    standalone: false
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  imports: [SearchBarComponent, RouterOutlet, NgxSpinnerComponent, MenuComponent, ConfirmDialog, Toast],
 })
-export class AppComponent implements OnInit {
-
-  /** Service injection */
-  // translateService = inject(TranslateService);
+export class AppComponent {
   configService = inject(CoreConfigService);
-  recordService = inject(RecordService);
+  recordService: RecordService = inject(RecordService);
   messageService = inject(MessageService);
 
   // Available languages
-  languages: string[];
+  languages: string[] = [];
 
   // If navigation is collapsed or not.
   isCollapsed = true;
 
   // Application menu
-  appMenu: MenuItem;
+  appMenu: MenuItem | undefined;
 
   // Application language menu
-  languageMenu: MenuItem;
-
-  /**
-   * Component initialization.
-   *
-   * - Initializes listener to record changes.
-   * - Sets title metadata.
-   */
-  ngOnInit(): void {
-    this.initializeEvents();
-  }
-
-  /**
-   * Initializes listening of events when a record is changed.
-   */
-  private initializeEvents(): void {
-    this.recordService.onCreate$.subscribe((recordEvent: RecordEvent) => {
-      const {pid} = recordEvent.data.record;
-      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on create (Record Pid: ${pid})`});
-    });
-    this.recordService.onUpdate$.subscribe((recordEvent: RecordEvent) => {
-      const {pid} = recordEvent.data.record;
-      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on update (Record Pid: ${pid})`});
-    });
-    this.recordService.onDelete$.subscribe((recordEvent: RecordEvent) => {
-      const {pid} = recordEvent.data.record;
-      this.messageService.add({ severity: 'info', summary: 'Record', detail: `Call Record Event on delete (Record Pid: ${pid})`});
-    });
-  }
+  languageMenu: MenuItem | undefined;
 }

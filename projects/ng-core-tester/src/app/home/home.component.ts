@@ -14,19 +14,45 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { Component, inject, OnInit } from '@angular/core';
-import { RecordSearchService } from '@rero/ng-core';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import {
+  ErrorComponent,
+  KatexDirective,
+  MarkdownPipe,
+  Nl2brPipe,
+  ReadMoreComponent,
+  TranslateLanguagePipe,
+} from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { Panel } from 'primeng/panel';
 import { DocumentComponent } from '../record/document/document.component';
+import { AppDialogComponent } from './dialog/app-dialog.component';
+import { ToastComponent } from './toast/toast.component';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: './home.component.html',
-    standalone: false
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  imports: [
+    Panel,
+    ToastComponent,
+    AppDialogComponent,
+    Button,
+    FormsModule,
+    InputText,
+    Nl2brPipe,
+    TranslateLanguagePipe,
+    MarkdownPipe,
+    ReadMoreComponent,
+    ErrorComponent,
+    TranslatePipe,
+    KatexDirective,
+  ],
 })
-export class HomeComponent implements OnInit {
-
-  private recordSearchService: RecordSearchService = inject(RecordSearchService);
+export class HomeComponent {
   private spinner: NgxSpinnerService = inject(NgxSpinnerService);
 
   // Configuration for resources.
@@ -34,13 +60,12 @@ export class HomeComponent implements OnInit {
     {
       key: 'documents',
       label: 'Documents',
-      component: DocumentComponent
-      ,
+      component: DocumentComponent,
       exportFormats: [
         {
           label: 'JSON',
-          format: 'json'
-        }
+          format: 'json',
+        },
       ],
     },
     {
@@ -49,14 +74,14 @@ export class HomeComponent implements OnInit {
       exportFormats: [
         {
           label: 'JSON',
-          format: 'json'
+          format: 'json',
         },
         {
           label: 'CSV',
-          format: 'csv'
-        }
+          format: 'csv',
+        },
       ],
-    }
+    },
   ];
 
   // Markdown text
@@ -65,12 +90,9 @@ export class HomeComponent implements OnInit {
   // Katex
   katexTitle = 'Infinitesimal Hilbertianity of Locally $$\\mathrm{CAT}(\\kappa )$$-Spaces';
 
-  katex = 'We show that, given a metric space $$(\\mathrm{Y},\\textsf {d} )$$of curvature bounded from above in the sense of Alexandrov, and a positive Radon measure $$\\mu $$on $$\\mathrm{Y}$$giving finite mass to bounded sets, the resulting metric measure space $$(\\mathrm{Y},\\textsf {d} ,\\mu )$$is infinitesimally Hilbertian, i.e. the Sobolev space $$W^{1,2}(\\mathrm{Y},\\textsf {d} ,\\mu )$$is a Hilbert space. The result is obtained by constructing an isometric embedding of the ‘abstract and analytical’ space of derivations into the ‘concrete and geometrical’ bundle whose fibre at $$x\\in \\mathrm{Y}$$is the tangent cone at x of $$\\mathrm{Y}$$. The conclusion then follows from the fact that for every $$x\\in \\mathrm{Y}$$such a cone is a $$\\mathrm{CAT}(0)$$space and, as such, has a Hilbert-like structure.';
+  katex =
+    'We show that, given a metric space $$(\\mathrm{Y},\\textsf {d} )$$of curvature bounded from above in the sense of Alexandrov, and a positive Radon measure $$\\mu $$on $$\\mathrm{Y}$$giving finite mass to bounded sets, the resulting metric measure space $$(\\mathrm{Y},\\textsf {d} ,\\mu )$$is infinitesimally Hilbertian, i.e. the Sobolev space $$W^{1,2}(\\mathrm{Y},\\textsf {d} ,\\mu )$$is a Hilbert space. The result is obtained by constructing an isometric embedding of the ‘abstract and analytical’ space of derivations into the ‘concrete and geometrical’ bundle whose fibre at $$x\\in \\mathrm{Y}$$is the tangent cone at x of $$\\mathrm{Y}$$. The conclusion then follows from the fact that for every $$x\\in \\mathrm{Y}$$such a cone is a $$\\mathrm{CAT}(0)$$space and, as such, has a Hilbert-like structure.';
 
-  ngOnInit(): void {
-      // Initializes aggregations filters to launch the first search.
-    this.recordSearchService.setAggregationsFilters([]);
-  }
   /**
    * Show spinner for 5 seconds
    */
