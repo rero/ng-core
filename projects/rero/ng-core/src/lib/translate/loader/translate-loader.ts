@@ -20,10 +20,10 @@ import { TranslateLoader, TranslationObject } from '@ngx-translate/core';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { CoreConfigService } from '../../core';
-import de from '../i18n/de.json';
-import en from '../i18n/en.json';
-import fr from '../i18n/fr.json';
-import it from '../i18n/it.json';
+import de from '../i18n/de.json' with { type: 'json' };
+import en from '../i18n/en.json' with { type: 'json' };
+import fr from '../i18n/fr.json' with { type: 'json' };
+import it from '../i18n/it.json' with { type: 'json' };
 
 /**
  * Loader for translations used in ngx-translate library.
