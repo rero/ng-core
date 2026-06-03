@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { computed, Signal } from '@angular/core';
+import { computed, inject, Injector, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
@@ -303,21 +303,24 @@ export function withAggregations() {
         ),
       ),
     })),
-    withHooks((store) => ({
-      onInit() {
-        store.initializeAggregations(computed(() => ({ currentType: store.currentType(), config: store.config() })));
-        const tracked = computed(() => {
-          const esResult = store.esResult();
-          if (!esResult) {
-            return null;
-          }
-          return {
-            currentType: store.currentType(),
-            esResult: esResult,
-          };
-        });
-        store.setAggregations(tracked);
-      },
-    })),
+    withHooks((store) => {
+      const injector = inject(Injector);
+      return {
+        onInit() {
+          store.initializeAggregations(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+          const tracked = computed(() => {
+            const esResult = store.esResult();
+            if (!esResult) {
+              return null;
+            }
+            return {
+              currentType: store.currentType(),
+              esResult: esResult,
+            };
+          });
+          store.setAggregations(tracked, { injector });
+        },
+      };
+    }),
   );
 }

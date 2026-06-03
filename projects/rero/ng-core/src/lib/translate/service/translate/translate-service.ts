@@ -69,7 +69,9 @@ export class NgCoreTranslateService extends TranslateService {
 
   use(lang: string): Observable<InterpolatableTranslationObject> {
     Settings.defaultLocale = lang;
-    this.primeNG.setTranslation(this.locales[lang].primeng);
+    if (this.locales[lang]) {
+      this.primeNG.setTranslation(this.locales[lang].primeng);
+    }
     return super.use(lang);
   }
 }

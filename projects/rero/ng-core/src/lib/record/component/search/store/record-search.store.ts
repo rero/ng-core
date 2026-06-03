@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { computed, inject } from '@angular/core';
+import { computed, inject, Injector } from '@angular/core';
 import { signalStore, withComputed, withHooks, withMethods, withProps } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { _, TranslateService } from '@ngx-translate/core';
@@ -94,30 +94,33 @@ export const RecordSearchStore = signalStore(
       ),
     ),
   })),
-  withHooks((store) => ({
-    onInit() {
-      store.applyDefaultFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })));
-      store.initializeSearchFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })));
-      // Fetch records when search parameters change
-      // Build a computed signal that produces FetchRecordsParams (or null if not ready)
-      const fetchParams = computed((): FetchRecordsParams | null => {
-        const currentType = store.currentType();
-        if (!currentType) return null;
-        const config = store.config();
-        return {
-          index: store.currentIndex(),
-          query: store.queryString(),
-          page: store.page(),
-          allowEmptySearch: config.allowEmptySearch,
-          itemsPerPage: store.size(),
-          aggregationsFilters: store.aggregationsFilters(),
-          preFilters: config.preFilters,
-          sort: store.sort(),
-          facets: store.facetsParameter(),
-          headers: config.listHeaders,
-        };
-      });
-      store.fetchRecords(fetchParams);
-    },
-  })),
+  withHooks((store) => {
+    const injector = inject(Injector);
+    return {
+      onInit() {
+        store.applyDefaultFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+        store.initializeSearchFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+        // Fetch records when search parameters change
+        // Build a computed signal that produces FetchRecordsParams (or null if not ready)
+        const fetchParams = computed((): FetchRecordsParams | null => {
+          const currentType = store.currentType();
+          if (!currentType) return null;
+          const config = store.config();
+          return {
+            index: store.currentIndex(),
+            query: store.queryString(),
+            page: store.page(),
+            allowEmptySearch: config.allowEmptySearch,
+            itemsPerPage: store.size(),
+            aggregationsFilters: store.aggregationsFilters(),
+            preFilters: config.preFilters,
+            sort: store.sort(),
+            facets: store.facetsParameter(),
+            headers: config.listHeaders,
+          };
+        });
+        store.fetchRecords(fetchParams, { injector });
+      },
+    };
+  }),
 );

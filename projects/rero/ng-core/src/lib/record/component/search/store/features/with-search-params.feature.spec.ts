@@ -112,8 +112,8 @@ describe('withSearchParams', () => {
       const store = TestBed.inject(TestStore);
       const urlParams$ = new BehaviorSubject({ currentType: 'documents', q: 'test' });
 
-      // Should not throw when called with an observable
-      expect(() => store.syncUrlParams(urlParams$)).not.toThrow();
+      // Must run inside an injection context so rxMethod can resolve DestroyRef
+      expect(() => TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$))).not.toThrow();
     });
   });
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { computed, Signal } from '@angular/core';
+import { computed, inject, Injector, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
@@ -127,10 +127,13 @@ export function withSearchFields() {
         ),
       ),
     })),
-    withHooks((store) => ({
-      onInit() {
-        store.initializeSearchFields(computed(() => ({ currentType: store.currentType(), config: store.config() })));
-      },
-    })),
+    withHooks((store) => {
+      const injector = inject(Injector);
+      return {
+        onInit() {
+          store.initializeSearchFields(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+        },
+      };
+    }),
   );
 }
