@@ -17,23 +17,24 @@
 
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, inject, provideEnvironmentInitializer } from '@angular/core';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { TranslateService, provideTranslateLoader, provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateLoader, provideTranslateService, TranslateService } from '@ngx-translate/core';
 import {
   CoreConfigService,
   CoreTranslateLoader,
+  NgCoreTranslateService,
   primeNGConfig,
   provideCore,
   RecordService,
   RemoteAutocompleteService,
 } from '@rero/ng-core';
-import { firstValueFrom } from 'rxjs';
 import { providePrimeNG } from 'primeng/config';
+import { firstValueFrom } from 'rxjs';
 import { AppConfigService } from './app-config.service';
 import { routes } from './app.routes';
-import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 import { RecordServiceMock } from './record/editor/record-service-mock';
+import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,20 +52,20 @@ export const appConfig: ApplicationConfig = {
       const lang = availableLanguages.includes(browserLang) ? browserLang : availableLanguages[0];
       await firstValueFrom(translateService.use(lang));
     }),
-    // TODO: to remove in 21
-    provideAnimationsAsync(),
+    { provide: TranslateService, useExisting: NgCoreTranslateService },
+    provideAnimations(),
     providePrimeNG(primeNGConfig),
     {
       provide: CoreConfigService,
-      useClass: AppConfigService,
+      useExisting: AppConfigService,
     },
     {
       provide: RemoteAutocompleteService,
-      useClass: AppRemoteAutocompleteService,
+      useExisting: AppRemoteAutocompleteService,
     },
     {
       provide: RecordService,
-      useClass: RecordServiceMock,
+      useExisting: RecordServiceMock,
     },
   ],
 };

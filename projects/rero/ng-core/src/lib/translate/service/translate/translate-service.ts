@@ -22,20 +22,20 @@ import localeIt from '@angular/common/locales/it';
 import { inject, Injectable } from '@angular/core';
 import { InterpolatableTranslationObject, TranslateService } from '@ngx-translate/core';
 import { Settings } from 'luxon';
-import de from 'primelocale/de.json';
-import en from 'primelocale/en.json';
-import fr from 'primelocale/fr.json';
-import it from 'primelocale/it.json';
-import { Translation } from 'primeng/api';
+import { de } from 'primelocale/js/de.js';
+import { en } from 'primelocale/js/en.js';
+import { fr } from 'primelocale/js/fr.js';
+import { it } from 'primelocale/js/it.js';
 import { PrimeNG } from 'primeng/config';
 import { Observable } from 'rxjs';
 import { CoreConfigService } from '../../../core/service/core-config/core-config.service';
+import { Translation } from 'primeng/api';
 
 type Locales = Record<
   string,
   {
     angular: unknown;
-    primeng: Record<string, Translation>;
+    primeng: Translation;
   }
 >;
 
@@ -69,8 +69,7 @@ export class NgCoreTranslateService extends TranslateService {
 
   use(lang: string): Observable<InterpolatableTranslationObject> {
     Settings.defaultLocale = lang;
-    this.primeNG.setTranslation(this.locales[lang].primeng[lang]);
-
+    this.primeNG.setTranslation(this.locales[lang].primeng);
     return super.use(lang);
   }
 }

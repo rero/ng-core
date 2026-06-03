@@ -33,11 +33,11 @@ ng build ng-core-tester
 
 Run Angular library tests with Vitest:
 
-ng test @rero/ng-core --watch=false --headless
+ng test @rero/ng-core --watch=false
 
 Run Angular testing application tests with Vitest:
 
-ng test ng-core-tester --watch=false --headless
+ng test ng-core-tester --watch=false
 
 ## Lint
 
