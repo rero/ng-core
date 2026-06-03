@@ -1,12 +1,20 @@
 # Changelog
 
+## [v21.0.1](https://github.com/rero/ng-core/tree/v21.0.1) (2026-06-03)
+
+[Full Changelog](https://github.com/rero/ng-core/compare/v21.0.0...v21.0.1)
+
+**Fixes:**
+
+- fix(translate): migrate primelocale to JS imports and fix JSON import attributes [#811](https://github.com/rero/ng-core/pull/811) (by @jma & @Garfield-fr)
+
 ## [v21.0.0](https://github.com/rero/ng-core/tree/v21.0.0) (2026-06-02)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v19.3.1...v21.0.0)
 
 **Breaking change:**
 
-- chore: migrate to Angular 21 with NgRx Signal Store and zoneless change detection [#781](https://github.com/rero/ng-core/pull/781) (by @jma)
+- chore: migrate to Angular 21 with NgRx Signal Store and zoneless change detection [#781](https://github.com/rero/ng-core/pull/781) (by @jma & @Garfield-fr)
 
 ## [v19.3.1](https://github.com/rero/ng-core/tree/v19.3.1) (2026-02-26)
 
