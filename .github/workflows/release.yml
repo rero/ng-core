@@ -1,0 +1,49 @@
+name: release
+
+on:
+  workflow_dispatch:
+
+concurrency: release
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+          # A PAT is required so the created GitHub Release triggers publish.yml
+          # (the default GITHUB_TOKEN cannot trigger other workflows).
+          token: ${{ secrets.PAT_TOKEN }}
+          persist-credentials: true
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: npm run release
+
+      - name: Fast-forward master to the release commit
+        run: |
+          git fetch origin master
+          git checkout master
+          git merge --ff-only staging
+          git push origin master
