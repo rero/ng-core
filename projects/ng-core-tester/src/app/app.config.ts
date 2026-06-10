@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { httpPendingInterceptor } from '@rero/ng-core';
 import { ApplicationConfig, inject, provideEnvironmentInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -26,7 +27,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideCore(),
     provideRouter(routes),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([httpPendingInterceptor])),
     provideTranslateService({
       loader: provideTranslateLoader(CoreTranslateLoader),
     }),

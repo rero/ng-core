@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
@@ -119,8 +119,25 @@ export class RecordService {
    * Get record data
    * @param type - string, type of resource
    * @param pid - string, record PID
+   * TODO: return the raw Response
    */
   getRecord<T = RecordData>(
+    type: string,
+    pid: string,
+    options: {
+      resolve?: number;
+      headers?: HttpHeaders | Record<string, string | string[]>;
+    } = {},
+  ): Observable<T> {
+    return this.getRecordWithEtag<T>(type, pid, options).pipe(map((response) => response.body!));
+  }
+
+  /**
+   * Get record data along with its ETag header value.
+   * @param type - string, type of resource
+   * @param pid - string, record PID
+   */
+  getRecordWithEtag<T = RecordData>(
     type: string,
     pid: string,
     {
@@ -130,12 +147,21 @@ export class RecordService {
       resolve?: number;
       headers?: HttpHeaders | Record<string, string | string[]>;
     } = {},
-  ): Observable<T> {
+  ): Observable<HttpResponse<T>> {
     return this.http
       .get<T>(`${this.apiService.getEndpointByType(type, true)}/${pid}?resolve=${resolve}`, {
-        headers: headers,
+        headers,
+        observe: 'response',
       })
-      .pipe(catchError((error) => this._handleError(error)));
+      .pipe(
+        map((response: HttpResponse<T>) => {
+          if (response.body == null) {
+            throw new Error('Server returned empty response body');
+          }
+          return response;
+        }),
+        catchError((error) => this._handleError(error)),
+      );
   }
 
   /**
@@ -173,14 +199,20 @@ export class RecordService {
    * @param recordType - string, type of resource
    * @param pid - string, record PID
    * @param record - object, record to update
+   * @param etag - string, optional ETag value sent as If-Match header for optimistic concurrency control
    */
   update<TMetadata = JsonObject>(
     recordType: string,
     pid: string,
     record: TMetadata,
+    etag?: string | null,
   ): Observable<RecordData<TMetadata>> {
+    let headers = new HttpHeaders();
+    if (etag != null) {
+      headers = headers.set('If-Match', etag);
+    }
     const url = `${this.apiService.getEndpointByType(recordType, true)}/${pid}`;
-    return this.http.put<RecordData<TMetadata>>(url, record).pipe(catchError((error) => this._handleError(error)));
+    return this.http.put<RecordData<TMetadata>>(url, record, { headers }).pipe(catchError((error) => this._handleError(error)));
   }
 
   /**
