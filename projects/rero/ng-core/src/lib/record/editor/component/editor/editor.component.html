@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             type="submit"
             id="editor-save-button"
             [label]="'Save' | translate"
-            [disabled]="isSaveButtonDisabled()"
+            [disabled]="isSaving()"
             [hidden]="saveAlternatives().length > 0"
           />
           <!-- END TODO -->
@@ -53,6 +53,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
               [label]="'Save' | translate"
               (onClick)="submit()"
               [model]="saveAlternatives()"
+              [disabled]="isSaving()"
             />
           }
         </div>

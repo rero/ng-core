@@ -26,3 +26,5 @@ export * from './service/crypto-js/crypto-js.service';
 export * from './service/core-config/core-config.service';
 export * from './guard/component-can-deactivate.guard';
 export * from './service/page-title-strategy/page-title-strategy';
+export * from './service/http-pending/http-pending.service';
+export * from './interceptor/http-pending.interceptor';

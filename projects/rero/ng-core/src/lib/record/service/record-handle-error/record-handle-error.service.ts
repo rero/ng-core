@@ -54,6 +54,10 @@ export class RecordHandleErrorService {
         return throwError(() => ({ status: error.status, title: this.translateService.instant('Forbidden') }));
       case 404:
         return throwError(() => ({ status: error.status, title: this.translateService.instant('Not found') }));
+      case 409:
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Conflict') }));
+      case 412:
+        return throwError(() => ({ status: error.status, title: this.translateService.instant('Precondition Failed') }));
       default:
         return throwError(() => ({ status: 500, title: this.translateService.instant('An error occurred') }));
     }

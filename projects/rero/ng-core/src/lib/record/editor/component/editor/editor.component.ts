@@ -31,7 +31,7 @@ import { SplitButton } from 'primeng/splitbutton';
 import { Tooltip } from 'primeng/tooltip';
 import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
-import { UpperCaseFirstPipe } from '../../../../core';
+import { HttpPendingService, UpperCaseFirstPipe } from '../../../../core';
 import { AbstractCanDeactivateComponent } from '../../../../core/component/abstract-can-deactivate/abstract-can-deactivate.component';
 import { ErrorComponent } from '../../../../core/component/error/error.component';
 import { Error } from '../../../../core/component/error/error.interface';
@@ -214,8 +214,13 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
   // If an error occurred, it is stored, to display in interface.
   error = signal<Error | null>(null);
 
-  /** Disables the save button during the action */
-  isSaveButtonDisabled = signal(false);
+  /** True while an HTTP mutation is in flight or a 409/412 conflict requires a page reload */
+  protected readonly httpPending = inject(HttpPendingService);
+  private readonly _keepDisabled = signal(false);
+  readonly isSaving = computed(() => this.httpPending.isPending() || this._keepDisabled());
+
+  /** ETag of the currently loaded record, used for optimistic concurrency control */
+  private _etag = signal<string | null>(null);
 
   // subscribers
   private _subscribers: Subscription = new Subscription();
@@ -434,7 +439,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * Save the data on the server.
    */
   submit(): void {
-    this.isSaveButtonDisabled.set(true);
+    if (this.isSaving()) {
+      return;
+    }
     this.form.markAllAsTouched();
 
     if (this.form.valid === false) {
@@ -456,7 +463,6 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         sticky: true,
         closable: true,
       });
-      this.isSaveButtonDisabled.set(false);
       return;
     }
 
@@ -472,14 +478,18 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     }
 
     let recordAction$: Observable<EditorRecordActionResult>;
+    let keepDisabled = false;
     const pid = this._pid();
     if (pid != null) {
-      recordAction$ = this.recordService.update(this.recordType(), pid, this.preUpdateRecord(data)).pipe(
-        catchError((error) => this._handleError(error)),
+      recordAction$ = this.recordService.update(this.recordType(), pid, this.preUpdateRecord(data), this._etag()).pipe(
+        catchError((error) => {
+          keepDisabled = error.status === 409 || error.status === 412;
+          return this._handleError(error);
+        }),
         map((record) => {
           return { record, action: 'update' as const, message: this.translateService.instant('Record updated.') };
         }),
-        finalize(() => this.isSaveButtonDisabled.set(false)),
+        finalize(() => { if (keepDisabled) this._keepDisabled.set(true); }),
       );
     } else {
       recordAction$ = this.recordService.create(this.recordType(), this.preCreateRecord(data)).pipe(
@@ -487,7 +497,6 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         map((record) => {
           return { record, action: 'create' as const, message: this.translateService.instant('Record created.') };
         }),
-        finalize(() => this.isSaveButtonDisabled.set(false)),
       );
     }
 
@@ -727,13 +736,25 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @return Observable<Error>
    */
   private _handleError(error: { status: number; title: string }): Observable<never> {
-    this.messageService.add({
-      severity: 'error',
-      summary: this.translateService.instant(error.title),
-      detail: this.translateService.instant('Server error.'),
-      sticky: true,
-      closable: true,
-    });
+    if (error.status === 409 || error.status === 412) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: this.translateService.instant('Record conflict'),
+        detail: this.translateService.instant(
+          'This record has been modified by another user. Please reload the page — your local changes will be lost.',
+        ),
+        sticky: true,
+        closable: true,
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translateService.instant(error.title),
+        detail: this.translateService.instant('Server error.'),
+        sticky: true,
+        closable: true,
+      });
+    }
     return throwError(() => ({ status: error.status, title: error.title }));
   }
 
@@ -748,6 +769,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     //   console.log('model', this.model(), 'v', v, 'form', this.form, 'field', this.fields)
     // );
     this.loadingChange.emit(true);
+    this._keepDisabled.set(false);
     if (!params.type) {
       this.formlyModel.set({});
       this._schema.set({});
@@ -793,6 +815,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
     ) as unknown as Observable<EditorSchemaFormResponse>;
     let record$: Observable<EditorRecordLoadResult> = of({ record: {}, result: null });
     const pid = this._pid();
+    this._etag.set(null);
 
     if (queryParams.source === 'templates' && queryParams.pid != null) {
       record$ = this.recordService.getRecord<RecordData<{ data: JsonObject }>>('templates', queryParams.pid).pipe(
@@ -811,11 +834,13 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
       );
     } else if (pid) {
       record$ = this.recordService
-        .getRecord<RecordData<JsonObject>>(this.recordType(), pid, {
+        .getRecordWithEtag<RecordData<JsonObject>>(this.recordType(), pid, {
           headers: editorSettings.getHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
         })
         .pipe(
-          switchMap((record) => {
+          switchMap(response => {
+            this._etag.set(response.headers.get('ETag'));
+            const record = response.body!;
             return this.recordUiService.canUpdateRecord$(record, this._resourceConfig).pipe(
               map((result) => {
                 return {

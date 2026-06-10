@@ -18,6 +18,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     attr.aria-label="{{ placeholder() }}"
   />
   <p-inputGroupAddon>
-    <p-button icon="fa fa-search" variant="text" severity="secondary" (click)="doSearch()" class="core:h-[2.5rem]" />
+    <p-button icon="fa fa-search" variant="text" severity="secondary" [disabled]="disabled()" (click)="doSearch()" class="core:h-[2.5rem]" />
   </p-inputGroupAddon>
 </p-inputGroup>
