@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Fondation RERO+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Prompt Templates
 
 These prompt templates help guide the LLM when performing common tasks in this repository.
