@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Fondation RERO+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Angular Patterns
 
 # Zoneless component pattern

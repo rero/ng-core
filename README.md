@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Fondation RERO+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 [![Build Status](https://github.com/rero/ng-core/workflows/build/badge.svg)](https://github.com/rero/ng-core/actions)
 [![npm version](https://badge.fury.io/js/%40rero%2Fng-core.svg)](https://badge.fury.io/js/%40rero%2Fng-core)
 [![Translation status](https://hosted.weblate.org/widgets/rero_plus/-/ng-core/svg-badge.svg)](https://hosted.weblate.org/engage/rero_plus/?utm_source=widget)

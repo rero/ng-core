@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Fondation RERO+
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # RERO angular core library
 
 This library provides modules, components, services and pipes for common usage in projects.
