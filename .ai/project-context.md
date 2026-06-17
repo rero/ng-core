@@ -14,7 +14,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - NgRx Signal Store for application state
 - Signals preferred over RxJS
 - Vitest for testing
-- Node 20+
+- Node 24
+- npm 11
 
 ## Architecture principles
 
