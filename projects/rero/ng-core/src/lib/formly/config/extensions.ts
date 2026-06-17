@@ -15,7 +15,68 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { inject } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, ValidationErrors } from '@angular/forms';
+
+/**
+ * Adds min/max/step Angular validators directly on the formControl of number/integer fields.
+ * Must run in postPopulate so that FieldValidationExtension has already compiled field._validators.
+ * Exported for testing without requiring Angular DI.
+ */
+export function addNumberValidators(field: FormlyFieldConfig): void {
+  if ((field.type !== 'number' && field.type !== 'integer') || !field.formControl) {
+    return;
+  }
+
+  const control = field.formControl as AbstractControl;
+  if (!field.validation) field.validation = {};
+  if (!field.validation.messages) field.validation.messages = {};
+
+  const min = field.props?.['min'] as number | undefined;
+  if (min !== undefined && !field.validation.messages['min']) {
+    control.addValidators((c: AbstractControl): ValidationErrors | null => {
+      const { value } = c;
+      return value === null || value === undefined || value === '' || Number(value) >= min ? null : { min: true };
+    });
+  }
+
+  const max = field.props?.['max'] as number | undefined;
+  if (max !== undefined && !field.validation.messages['max']) {
+    control.addValidators((c: AbstractControl): ValidationErrors | null => {
+      const { value } = c;
+      return value === null || value === undefined || value === '' || Number(value) <= max ? null : { max: true };
+    });
+  }
+
+  const step = (field.props?.['step'] ?? 0.01) as 'any' | number;
+  if (step !== 'any' && !field.validation.messages['step']) {
+    // Compute stepInt: the integer representation of step at its own decimal precision.
+    // e.g. step=0.4 → factor=10, stepInt=4; step=0.01 → factor=100, stepInt=1.
+    const [, fraction] = step.toString().split('.');
+    const factor = 10 ** (fraction?.length ?? 0);
+    const stepInt = Math.round(step * factor);
+    control.addValidators((c: AbstractControl): ValidationErrors | null => {
+      // Skip empty, null or non-numeric values.
+      if (c.value === null || c.value === undefined || c.value === '') return null;
+      const num = Number(c.value);
+      if (!Number.isFinite(num)) return null;
+      // Work on the string representation to avoid float precision issues.
+      // Split the value into integer and decimal parts as strings.
+      const [intPart, decPart = ''] = String(c.value).split('.');
+      // Reject immediately if the value has more decimal places than step allows.
+      // e.g. step=0.01 (maxDecimals=2): "2.553" → decPart.length=3 > 2 → invalid.
+      if (decPart.length > (fraction?.length ?? 0)) return { step: true };
+      // Pad the decimal part to match step's precision, then concatenate with the
+      // integer part to form a single integer. e.g. step=0.4, value=0.8:
+      // intPart="0", decPart="8" → paddedDec="8" → scaled=8.
+      const paddedDec = decPart.padEnd(fraction?.length ?? 0, '0');
+      const scaled = parseInt(intPart.replace('-', '') + paddedDec, 10);
+      // Check divisibility: scaled=8, stepInt=4 → 8%4=0 → valid.
+      return scaled % stepInt === 0 ? null : { step: true };
+    });
+  }
+
+  control.updateValueAndValidity({ emitEvent: false });
+}
 import { FormlyExtension, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { _, TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
@@ -82,6 +143,16 @@ export class NgCoreFormlyExtension {
         }
       });
     }
+  }
+
+  /**
+   * postPopulate Formly hook — runs after all extensions including FieldValidationExtension.
+   * Adds min/max/step validators directly on the formControl so they run alongside
+   * the validators compiled by Formly. Messages are stored in field.validation.messages
+   * so formly-validation-message can resolve them from formControl.errors.
+   */
+  postPopulate(field: FormlyFieldConfig): void {
+    addNumberValidators(field);
   }
 
   /**
@@ -243,6 +314,7 @@ export class NgCoreFormlyExtension {
       }
     }
   }
+
 
   /**
    * Set custom validators from the props configuration.
@@ -606,6 +678,18 @@ export function registerNgCoreFormlyExtension(translate: TranslateService): Reco
         name: 'const',
         message: (_err: unknown, field: FormlyFieldConfig) =>
           translate.stream(_('should be equal to constant "{{const}}"'), { const: field.props!.const }),
+      },
+      {
+        name: 'step',
+        message: (_err: unknown, field: FormlyFieldConfig) => {
+          const step = field.props?.['step'] ?? 0.01;
+          const parts = step.toString().split('.');
+          const decimals = parts.length > 1 ? parts[1].length : 0;
+          if (step === 1) {
+            return translate.instant(_("should be a whole number"));
+          }
+          return translate.instant(_("shouldn't have more than {{decimals}} digit(s) after the decimal point"), { decimals });
+        },
       },
     ],
     extensions: [

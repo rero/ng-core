@@ -59,5 +59,7 @@
   "Date descending": "Datum absteigend",
   "Date ascending": "Datum aufsteigend",
   "Relevance": "Relevanz",
-  "Title": "Titel"
+  "Title": "Titel",
+  "shouldn't have more than {{decimals}} digit(s) after the decimal point": "sollte nicht mehr als {{decimals}} Stelle(n) hinter dem Dezimalpunkt haben",
+  "should be a whole number": "sollte eine ganze Zahl sein"
 }

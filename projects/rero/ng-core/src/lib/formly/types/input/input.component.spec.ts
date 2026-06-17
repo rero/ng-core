@@ -58,7 +58,7 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(attributes.step).toBeUndefined();
   });
 
-  it('should have the default step parameter set to number on a number field', () => {
+  it('should have the default step parameter set to 0.01 on a number field', () => {
     const { query } = renderComponent({
       key: 'name',
       type: 'input',
@@ -69,7 +69,7 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(query('input')).not.toBeNull();
     const { attributes } = query('input');
     expect(attributes.type).toEqual('number');
-    expect(attributes.step).toEqual('number');
+    expect(attributes.step).toEqual('0.01');
   });
 
   it('should have the step parameter set to 0.5 on a number field', () => {
@@ -78,11 +78,51 @@ describe('ui-primeng: NgCore Input Type', () => {
       type: 'input',
       props: {
         type: 'number',
-        inputStep: 0.5,
+        step: 0.5,
       },
     });
     const { attributes } = query('input');
     expect(attributes.type).toEqual('number');
     expect(attributes.step).toEqual('0.5');
   });
+
+  it('should have the step parameter set to any on a number field', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+        step: 'any' as any,
+      },
+    });
+    const { attributes } = query('input');
+    expect(attributes.type).toEqual('number');
+    expect(attributes.step).toEqual('any');
+  });
+
+  it('should render p-inputnumber when locale is defined', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+        locale: 'en-US',
+      },
+    });
+    expect(query('p-inputnumber')).not.toBeNull();
+    expect(query('input[type="number"]')).toBeNull();
+  });
+
+  it('should render a plain input when locale is not defined', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+      },
+    });
+    expect(query('p-inputnumber')).toBeNull();
+    expect(query('input')).not.toBeNull();
+  });
+
 });

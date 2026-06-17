@@ -21,13 +21,15 @@ import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { NgTemplateOutlet, NgClass } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
+import { InputNumber } from 'primeng/inputnumber';
 
 export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
   type: 'input' | Type<InputComponent>;
   addonRight?: string[];
   addonLeft?: string[];
   class?: string;
-  inputStep?: string | number;
+  step?: 'any' | number;
+  locale?: string;
 }
 
 @Component({
@@ -52,15 +54,27 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
     }
     <ng-template #input let-formControl="formControl" let-props="props" let-field="field" let-showError="showError">
       @if (props.type === 'number') {
-        <input
-          pInputText
-          [class]="props.class"
-          type="number"
-          [attr.step]="props.inputStep"
-          [formControl]="formControl"
-          [formlyAttributes]="field"
-          [ngClass]="{ 'ng-invalid ng-dirty': showError }"
-        />
+        @if (props.locale) {
+          <p-inputnumber
+            [inputStyleClass]="props.class"
+            [locale]="props.locale"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="props.step === 'any' ? 20 : decimalPlaces(props.step ?? 0.01)"
+            [formControl]="formControl"
+            [formlyAttributes]="field"
+            [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+          />
+        } @else {
+          <input
+            pInputText
+            [class]="props.class"
+            type="number"
+            [attr.step]="props.step ?? 0.01"
+            [formControl]="formControl"
+            [formlyAttributes]="field"
+            [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+          />
+        }
       } @else {
         <input
           pInputText
@@ -80,6 +94,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
     NgTemplateOutlet,
     FormsModule,
     InputText,
+    InputNumber,
     ReactiveFormsModule,
     FormlyModule,
     NgClass,
@@ -89,7 +104,12 @@ export class InputComponent extends FieldType<NgCoreFormlyInputFieldConfig> {
   defaultOptions? = {
     props: {
       class: 'core:w-full',
-      inputStep: 'number',
     },
   };
+
+  decimalPlaces(step: 'any' | number | undefined): number {
+    if (!step || step === 'any') return 0;
+    const parts = step.toString().split('.');
+    return parts.length > 1 ? parts[1].length : 0;
+  }
 }
