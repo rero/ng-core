@@ -33,5 +33,7 @@
   "Checkbox 4": "Checkbox 4",
   "Radio button 1": "Radio button 1",
   "Radio button 2": "Radio button 2",
-  "Radio button 3": "Radio button 3"
+  "Radio button 3": "Radio button 3",
+  "shouldn't have more than {{decimals}} digit(s) after the decimal point": "shouldn't have more than {{decimals}} digit(s) after the decimal point",
+  "should be a whole number": "should be a whole number"
 }
