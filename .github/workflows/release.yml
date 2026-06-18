@@ -49,8 +49,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           npm run release
 
-          # A release was made if HEAD now points exactly at a tag.
-          if git describe --exact-match HEAD 2>/dev/null; then
+          # A release was made if HEAD now points exactly at a version tag.
+          if git describe --tags --exact-match --match 'v[0-9]*' HEAD 2>/dev/null; then
             echo "released=true" >> "$GITHUB_OUTPUT"
           else
             echo "released=false" >> "$GITHUB_OUTPUT"
