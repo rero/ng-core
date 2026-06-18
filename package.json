@@ -72,7 +72,7 @@
     "postcss-rename": "^0.8.0",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "prettier": "^3.7.4",
-    "semantic-release": "^24.2.9",
+    "semantic-release": "^25.0.5",
     "tailwindcss": "^4.2.0",
     "tailwindcss-primeui": "^0.6.1",
     "typescript": "~5.9.3",
