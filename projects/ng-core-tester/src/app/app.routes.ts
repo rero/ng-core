@@ -287,16 +287,6 @@ export const routes: Routes = [
             infoExcludedFields: ['restriction', 'type'],
             canUpdateMetadata: canUpdateFilesMetadata,
           },
-          searchFields: [
-            {
-              label: 'Full-text',
-              path: 'fulltext',
-            },
-            {
-              label: 'Main title',
-              path: 'title.mainTitle.value',
-            },
-          ],
           searchFilters: [
             {
               label: 'Advanced search',
@@ -310,6 +300,12 @@ export const routes: Routes = [
                 routerLink: ['/record', 'search', 'documents'],
                 title: 'Link to search document',
               },
+            },
+            {
+              // No `showIfQuery`: the toggle is displayed even without a query.
+              label: 'Full-text',
+              filter: 'fulltext',
+              value: 'true',
             },
             {
               label: 'Open access',

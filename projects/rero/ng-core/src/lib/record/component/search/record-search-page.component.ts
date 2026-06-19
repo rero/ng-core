@@ -60,8 +60,6 @@ export class RecordSearchPageComponent {
         size: this.store.size(),
         sort: this.store.sort(),
         aggregationsFilters: this.store.aggregationsFilters(),
-        searchFields: [],
-        searchFilters: [],
       };
 
       // We use untracked to read current route state without creating dependencies,

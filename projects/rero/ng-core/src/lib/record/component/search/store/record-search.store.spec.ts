@@ -32,7 +32,7 @@ describe('RecordSearchStore', () => {
   function buildFetchParams(): FetchRecordsParams {
     return {
       index: store.currentIndex(),
-      query: store.queryString(),
+      query: store.q(),
       page: store.page(),
       itemsPerPage: store.size(),
       allowEmptySearch: store.config()?.allowEmptySearch ?? false,
@@ -228,10 +228,9 @@ describe('RecordSearchStore', () => {
       expect(resultsText).toBeDefined();
     });
 
-    it('should compute queryString from q and selected fields', () => {
+    it('should expose the query unchanged via q()', () => {
       store.updateQuery('test search');
-      const queryString = store.queryString();
-      expect(queryString).toBe('test search');
+      expect(store.q()).toBe('test search');
     });
   });
 
@@ -607,7 +606,6 @@ describe('RecordSearchStore', () => {
           {
             key: 'documents',
             label: 'Documents',
-            searchFields: [{ path: 'title', label: 'Title' }],
             searchFilters: [{ filter: 'status', label: 'Status', value: 'published' }],
             sortOptions: [
               { value: 'best', label: 'Best', defaultQuery: true, defaultNoQuery: false, icon: '' },
