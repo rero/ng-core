@@ -115,6 +115,27 @@ describe('withSearchParams', () => {
       // Must run inside an injection context so rxMethod can resolve DestroyRef
       expect(() => TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$))).not.toThrow();
     });
+
+    it('should preserve searchFields/searchFilters selection when syncing URL params', () => {
+      const store = TestBed.inject(TestStore);
+
+      // The user has selected a search field and filters are loaded in the store.
+      patchState(store, {
+        q: 'old',
+        searchFields: [{ path: 'fulltext', label: 'Full-text', selected: true }],
+        searchFilters: [{ label: 'Open access', filter: 'open_access', value: '1' }],
+      });
+
+      // URL sync emits params without searchFields/searchFilters (they are never carried in the URL).
+      const urlParams$ = new BehaviorSubject({ q: 'new', searchFields: [], searchFilters: [] });
+      TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$));
+
+      // The URL-carried value (q) is applied...
+      expect(store.q()).toBe('new');
+      // ...but the user's field selection and loaded filters must not be reset.
+      expect(store.searchFields()).toEqual([{ path: 'fulltext', label: 'Full-text', selected: true }]);
+      expect(store.searchFilters()).toEqual([{ label: 'Open access', filter: 'open_access', value: '1' }]);
+    });
   });
 
   describe('patchState', () => {

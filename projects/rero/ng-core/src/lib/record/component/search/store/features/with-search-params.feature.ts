@@ -123,7 +123,11 @@ export function withSearchParams() {
               return;
             }
 
-            patchState(store, urlParams);
+            // searchFields/searchFilters are not carried in the URL (always empty here),
+            // so they must be excluded from the patch to avoid resetting the user's
+            // current selection on every URL synchronization.
+            const { searchFields, searchFilters, ...patch } = urlParams;
+            patchState(store, patch);
           }),
         ),
       ),

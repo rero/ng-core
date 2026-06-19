@@ -3,7 +3,6 @@
 import { computed, inject, Injector, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { filter, pipe, tap } from 'rxjs';
 import { SearchField } from '../../../../../model/record.interface';
 import { RecordType } from '../../../../model';
@@ -35,7 +34,6 @@ export function withSearchFields() {
       }>(),
       props: type<{
         config: Signal<RecordType>;
-        translateService?: TranslateService;
       }>(),
     },
     withComputed((state) => ({
@@ -100,9 +98,9 @@ export function withSearchFields() {
           filter((params) => params.config.searchFields.length > 0),
           tap((params) => {
             const configFields = params.config.searchFields;
+            // Keep the raw label (translation key); the view translates it reactively.
             const fieldsWithSelection = configFields.map((field) => ({
               ...field,
-              label: store.translateService?.instant ? store.translateService.instant(field.label) : field.label,
               selected: field.selected ?? false,
             }));
 

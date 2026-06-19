@@ -69,11 +69,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           config().searchFilters.length > 0
         ) {
           <div class="core:md:col-span-5 core:lg:col-span-3 core:col-span-12">
-            @if (config().searchFields.length > 0 && store.q()) {
+            @if (config().searchFields.length > 0) {
               <div class="core:flex core:flex-col core:gap-1 core:mb-2">
-                @for (searchField of config().searchFields; track $index) {
+                @for (searchField of config().searchFields; track searchField.path) {
                   <div class="core:flex core:gap-2 core:items-center">
-                    <p-toggleswitch (onChange)="searchInField($event, searchField.path)" />
+                    <p-toggleswitch
+                      [ngModel]="isFieldSelected(searchField.path)"
+                      (onChange)="searchInField($event, searchField.path)"
+                    />
                     <span>{{ searchField.label | translate }}</span>
                   </div>
                 }

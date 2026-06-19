@@ -13,6 +13,7 @@ import {
   Signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -51,6 +52,7 @@ import { SearchTabsComponent } from './search-tabs/search-tabs.component';
     Message,
     Button,
     RouterLink,
+    FormsModule,
     MenuSortComponent,
     ExportButtonComponent,
     ListFiltersComponent,
@@ -269,14 +271,25 @@ export class RecordSearchComponent {
     return of(aggregations);
   }
 
+  /**
+   * Whether a search field is currently selected.
+   * The selection state lives in the store; defaults to false before any interaction.
+   * @param path - The search field path
+   * @returns True if the field is selected.
+   */
+  isFieldSelected(path: string): boolean {
+    return this.store.searchFields().find((field: SearchField) => field.path === path)?.selected ?? false;
+  }
+
   searchInField(event: ToggleSwitchChangeEvent, path: string): void {
+    // Rebuild the field list from the config (the authoritative source used for display)
+    // while preserving the current selection held in the store.
+    const selection = this.store.searchFields();
     this.store.updateSearchFields(
-      this.store.config().searchFields.map((item: SearchField) => {
-        if (item.path === path) {
-          item.selected = event.checked;
-        }
-        return item;
-      }),
+      this.config().searchFields.map((field: SearchField) => ({
+        ...field,
+        selected: field.path === path ? event.checked : (selection.find((f) => f.path === field.path)?.selected ?? false),
+      })),
     );
     // If query string is specified, search is processed.
     const q = this.store.q();
