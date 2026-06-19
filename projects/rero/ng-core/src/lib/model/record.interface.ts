@@ -62,16 +62,6 @@ export interface File {
   metadata: any;
 }
 
-/**
- * Interface representing a search property, on which we can do a specific search
- * with query string like: `q=title:query`.
- */
-export interface SearchField {
-  label: string;
-  path: string;
-  selected?: boolean;
-}
-
 /** Interface representing a search filter */
 export interface SearchFilter {
   filter: string;

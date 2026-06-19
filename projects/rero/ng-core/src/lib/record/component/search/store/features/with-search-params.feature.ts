@@ -7,7 +7,7 @@ import { patchState, signalStoreFeature, withComputed, withMethods, withState } 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Bucket } from '../../../../../model/record.interface';
 import { pipe, tap } from 'rxjs';
-import { SearchField, SearchFilter, SearchFilterSection } from '../../../../../model';
+import { SearchFilter, SearchFilterSection } from '../../../../../model';
 import { SearchParams } from '../../../../model';
 import { shallowEqual } from '../../../../record-search-utils';
 import { AggregationsFilter } from '../../model';
@@ -19,7 +19,6 @@ export const DEFAULT_SEARCH_PARAMS: SearchParams = {
   sort: '',
   index: '',
   aggregationsFilters: [],
-  searchFields: [],
   searchFilters: [],
 };
 
@@ -77,24 +76,8 @@ export function withSearchParams() {
         sort: store.sort(),
         index: store.index(),
         aggregationsFilters: store.aggregationsFilters(),
-        searchFields: store.searchFields(),
         searchFilters: store.searchFilters(),
       })),
-      queryString: computed(() => {
-        const q = store.q();
-        const searchFields = store.searchFields() ?? [];
-
-        // Filter to get selected search fields
-        const selectedFields = searchFields.filter((f: SearchField) => f.selected);
-
-        if (!q || selectedFields.length === 0) {
-          return q;
-        }
-
-        // Loop over select fields and add them to final query string
-        const queries: string[] = selectedFields.map((field: SearchField) => `${field.path}:(${q})`);
-        return queries.join(' ');
-      }),
 
       /** Get a flat array of all search filters (extracts filters from sections) */
       flatSearchFilters: computed(() => {

@@ -19,11 +19,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
 import { Message } from 'primeng/message';
-import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
-import { Aggregations, SearchField, SearchFilter } from '../../../../model';
+import { Aggregations, SearchFilter } from '../../../../model';
 import { ActionStatus } from '../../../../model/action-status.interface';
 import { ExportFormat } from '../../../model/record-search.interface';
 import { ApiService } from '../../../service/api/api.service';
@@ -54,7 +53,6 @@ import { SearchTabsComponent } from './search-tabs/search-tabs.component';
     MenuSortComponent,
     ExportButtonComponent,
     ListFiltersComponent,
-    ToggleSwitch,
     SearchFiltersComponent,
     RecordSearchAggregationComponent,
     DataView,
@@ -267,22 +265,6 @@ export class RecordSearchComponent {
    */
   aggregations$(aggregations: Aggregations): Observable<Aggregations> {
     return of(aggregations);
-  }
-
-  searchInField(event: ToggleSwitchChangeEvent, path: string): void {
-    this.store.updateSearchFields(
-      this.store.config().searchFields.map((item: SearchField) => {
-        if (item.path === path) {
-          item.selected = event.checked;
-        }
-        return item;
-      }),
-    );
-    // If query string is specified, search is processed.
-    const q = this.store.q();
-    if (q) {
-      this.searchByQuery(q);
-    }
   }
 
   /**

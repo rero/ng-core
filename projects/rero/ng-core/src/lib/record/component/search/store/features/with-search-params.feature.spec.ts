@@ -30,78 +30,6 @@ describe('withSearchParams', () => {
     });
   });
 
-  describe('queryString', () => {
-    it('should return original query when no search fields selected', () => {
-      const store = TestBed.inject(TestStore);
-
-      patchState(store, {
-        searchFields: [
-          { path: 'title', label: 'Title', selected: false },
-          { path: 'author', label: 'Author', selected: false },
-        ],
-      });
-
-      store.updateQuery('test query');
-
-      expect(store.queryString()).toBe('test query');
-    });
-
-    it('should return original query when query is empty', () => {
-      const store = TestBed.inject(TestStore);
-
-      patchState(store, {
-        searchFields: [{ path: 'title', label: 'Title', selected: true }],
-      });
-
-      store.updateQuery('');
-
-      expect(store.queryString()).toBe('');
-    });
-
-    it('should build query with single selected field', () => {
-      const store = TestBed.inject(TestStore);
-
-      patchState(store, {
-        searchFields: [
-          { path: 'title', label: 'Title', selected: true },
-          { path: 'author', label: 'Author', selected: false },
-        ],
-      });
-
-      store.updateQuery('science');
-
-      expect(store.queryString()).toBe('title:(science)');
-    });
-
-    it('should build query with multiple selected fields', () => {
-      const store = TestBed.inject(TestStore);
-
-      patchState(store, {
-        searchFields: [
-          { path: 'title', label: 'Title', selected: true },
-          { path: 'author', label: 'Author', selected: true },
-          { path: 'subject', label: 'Subject', selected: false },
-        ],
-      });
-
-      store.updateQuery('quantum');
-
-      expect(store.queryString()).toBe('title:(quantum) author:(quantum)');
-    });
-
-    it('should handle complex query strings', () => {
-      const store = TestBed.inject(TestStore);
-
-      patchState(store, {
-        searchFields: [{ path: 'title', label: 'Title', selected: true }],
-      });
-
-      store.updateQuery('quantum mechanics');
-
-      expect(store.queryString()).toBe('title:(quantum mechanics)');
-    });
-  });
-
   describe('syncUrlParams rxMethod', () => {
     it('should exist as a method on the store', () => {
       const store = TestBed.inject(TestStore);
@@ -114,6 +42,25 @@ describe('withSearchParams', () => {
 
       // Must run inside an injection context so rxMethod can resolve DestroyRef
       expect(() => TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$))).not.toThrow();
+    });
+
+    it('should preserve searchFilters when syncing URL params', () => {
+      const store = TestBed.inject(TestStore);
+
+      // Filters are loaded in the store from the config.
+      patchState(store, {
+        q: 'old',
+        searchFilters: [{ label: 'Open access', filter: 'open_access', value: '1' }],
+      });
+
+      // URL sync emits params without searchFilters (they are never carried in the URL).
+      const urlParams$ = new BehaviorSubject({ q: 'new' });
+      TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$));
+
+      // The URL-carried value (q) is applied...
+      expect(store.q()).toBe('new');
+      // ...but the loaded filters must not be reset.
+      expect(store.searchFilters()).toEqual([{ label: 'Open access', filter: 'open_access', value: '1' }]);
     });
   });
 

@@ -60,8 +60,6 @@ export function paramMapToSearchParams(map: ParamMap): Partial<SearchParams> {
     sort: map.get('sort') != null ? map.get('sort') : undefined,
     index: map.get('index') != null ? map.get('index') : undefined,
     aggregationsFilters: aggregationsFilters,
-    searchFields: [],
-    searchFilters: [],
   });
 }
 

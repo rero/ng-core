@@ -11,7 +11,6 @@ import { shallowEqual } from '../../../record-search-utils';
 import { withAggregations } from './features/with-aggregations.feature';
 import { withConfig } from './features/with-config.feature';
 import { FetchRecordsParams, withResults } from './features/with-results.feature';
-import { withSearchFields } from './features/with-search-fields.feature';
 import { withSearchParams } from './features/with-search-params.feature';
 
 /**
@@ -21,7 +20,6 @@ import { withSearchParams } from './features/with-search-params.feature';
  * - Search query and parameters (via withSearchParams)
  * - Results and loading state (via withResults)
  * - Aggregations and filters (via withAggregations)
- * - Search fields selection (via withSearchFields)
  * - Configuration and current type (via withConfig)
  *
  * The store is provided at component level to support multiple instances.
@@ -32,7 +30,6 @@ export const RecordSearchStore = signalStore(
   withConfig(),
   withResults(),
   withAggregations(),
-  withSearchFields(),
   withProps(() => ({
     translateService: inject(TranslateService),
   })),
@@ -58,7 +55,7 @@ export const RecordSearchStore = signalStore(
     applyDefaultFilters: rxMethod<{ currentType: string; config: RecordType }>(
       pipe(
         filter((params) => !!params.currentType),
-        filter(() => !store.queryString()),
+        filter(() => !store.q()),
         filter((params) => params.config.defaultSearchInputFilters?.length > 0),
         tap((params) => {
           params.config.defaultSearchInputFilters.forEach((filter) => {
@@ -94,7 +91,7 @@ export const RecordSearchStore = signalStore(
           const config = store.config();
           return {
             index: store.currentIndex(),
-            query: store.queryString(),
+            query: store.q(),
             page: store.page(),
             allowEmptySearch: config.allowEmptySearch,
             itemsPerPage: store.size(),

@@ -49,7 +49,6 @@ export const DEFAULT_RECORD_TYPE: RecordType = {
   aggregationsExpand: [],
   aggregationsHide: [],
   aggregationsBucketSize: 0,
-  searchFields: [],
   resultsText: null,
   pagination: {
     boundaryLinks: true,
