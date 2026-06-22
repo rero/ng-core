@@ -1,5 +1,26 @@
 # Changelog
 
+## [21.1.0](https://github.com/rero/ng-core/compare/v21.0.1...v21.1.0) (2026-06-22)
+
+### ⚠ BREAKING CHANGES
+
+* **search:** `SearchField`, `RecordType.searchFields` and the store
+`searchFields` state/methods are removed. Configure full-text search as a
+`searchFilter` (e.g. `{ filter: 'fulltext', value: 'true' }`) instead.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+Co-Authored-By: Johnny Mariéthoz <johnny.mariethoz@rero.ch>
+Co-Authored-by: Pascal Repond <pascal.repond@rero.ch>
+
+### Features
+
+* **editor:** prevent double-save and handle version conflicts ([79e8f57](https://github.com/rero/ng-core/commit/79e8f57bce4686b0a8cd36133caac45826c6c3dd))
+* **editor:** template autofocus on dropdown menu ([1534b0d](https://github.com/rero/ng-core/commit/1534b0d00ba63c26f875808ceebfc5cf7230f60a))
+
+### Code Refactoring
+
+* **search:** remove searchFields field-scoping mechanism ([be4d13e](https://github.com/rero/ng-core/commit/be4d13ec7f62a5f5cc282d5b4955d8a4c9fe1007))
+
 ## [v21.0.1](https://github.com/rero/ng-core/tree/v21.0.1) (2026-06-03)
 
 [Full Changelog](https://github.com/rero/ng-core/compare/v21.0.0...v21.0.1)
