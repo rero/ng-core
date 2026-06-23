@@ -23,7 +23,6 @@ export class AppConfigService extends CoreConfigService {
     if (environment.$refPrefix) {
       this.$refPrefix = environment.$refPrefix;
     }
-    this.languages = environment.languages;
     this.translationsURLs = environment.translationsURLs;
   }
 }

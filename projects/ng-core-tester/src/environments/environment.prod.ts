@@ -5,6 +5,5 @@ export const environment = {
   projectTitle: 'NG-Core',
   apiBaseUrl: '',
   $refPrefix: 'https://sonar.ch',
-  languages: ['fr', 'de', 'it', 'en'],
   translationsURLs: ['/assets/i18n/${lang}.json'],
 };

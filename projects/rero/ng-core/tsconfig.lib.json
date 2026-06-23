@@ -9,8 +9,8 @@
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
-    "preserveSymlinks": true,
-    "enableResourceInlining": true
+    "preserveSymlinks": true
   },
+  "include": ["src/**/*.ts", "src/**/*.json"],
   "exclude": ["src/test.ts", "**/*.spec.ts"]
 }

@@ -10,7 +10,7 @@ describe('TranslateLanguageService', () => {
     getCurrentLang: vi.fn(),
     onLangChange: of(null),
   };
-  translateServiceSpy.getCurrentLang.mockReturnValue('fr');
+  translateServiceSpy.getCurrentLang.mockReturnValue('en');
 
   let service: TranslateLanguageService;
 
@@ -26,11 +26,19 @@ describe('TranslateLanguageService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should translate language code hat to human language french', () => {
-    expect(service.translate('hat')).toBe('créole haïtien');
+  it('should translate language code to english', () => {
+    expect(service.translate('hat')).toBe('Haitian French Creole');
   });
 
-  it('should translate language code hat to human language english', () => {
-    expect(service.translate('hat', 'en')).toBe('Haitian French Creole');
+  it('should fallback to english when language is not available', () => {
+    expect(service.translate('hat', 'fr')).toBe('Haitian French Creole');
+  });
+
+  it('should return the code when langCode does not exist in any language', () => {
+    expect(service.translate('xxx')).toBe('xxx');
+  });
+
+  it('should return the code when langCode does not exist and language is not available', () => {
+    expect(service.translate('xxx', 'fr')).toBe('xxx');
   });
 });

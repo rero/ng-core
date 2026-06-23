@@ -86,13 +86,13 @@ export class SearchAutocompleteComponent implements AfterViewInit {
 
   // Input
   delay = input<number>(300);
-  groupClass = input<string>('core:text-gray-400');
-  inputStyleClass = input<string>('core:w-full');
+  groupClass = input<string|undefined>('core:text-gray-400');
+  inputStyleClass = input<string|undefined>('core:w-full');
   minLength = input<number>(3);
   placeholder = input<string>();
   recordTypes = input.required<AutoCompleteRecordType[]>();
   scrollHeight = input<string>(CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT);
-  styleClass = input<string>('core:w-full');
+  styleClass = input<string|undefined>('core:w-full');
   value = input.required<string>();
 
   // Output

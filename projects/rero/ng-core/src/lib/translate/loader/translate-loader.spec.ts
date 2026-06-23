@@ -17,7 +17,11 @@ describe('CoreTranslateLoader', () => {
         TranslateModule.forRoot({
           loader: {
             provide: TranslateLoader,
-            useFactory: () => new CoreTranslateLoader(),
+            useFactory: () => {
+            const loader = new CoreTranslateLoader();
+            (loader as any).coreTranslationLoaders = {};
+            return loader;
+          },
             deps: [HttpClient],
           },
         }),

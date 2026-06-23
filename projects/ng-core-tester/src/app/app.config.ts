@@ -2,26 +2,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { httpPendingInterceptor } from '@rero/ng-core';
-import { ApplicationConfig, inject, provideEnvironmentInitializer } from '@angular/core';
+import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideTranslateLoader, provideTranslateService, TranslateService } from '@ngx-translate/core';
 import {
-  CoreConfigService,
-  CoreTranslateLoader,
-  NgCoreTranslateService,
-  primeNGConfig,
+  CoreConfigService, httpPendingInterceptor, NgCoreTranslateService, primeNGConfig,
   provideCore,
   RecordService,
-  RemoteAutocompleteService,
+  RemoteAutocompleteService, TranslateLanguageService
 } from '@rero/ng-core';
 import { providePrimeNG } from 'primeng/config';
-import { firstValueFrom } from 'rxjs';
 import { AppConfigService } from './app-config.service';
+import { AppTranslateLoader } from './app-translate-loader';
+import { AppTranslateService } from './app-translate.service';
 import { routes } from './app.routes';
 import { RecordServiceMock } from './record/editor/record-service-mock';
+import { AppInitializerService } from './service/app-initializer.service';
 import { AppRemoteAutocompleteService } from './service/app-remote-autocomplete.service';
+import { AppTranslateLanguageService } from './service/app-translate-language.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,17 +28,12 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([httpPendingInterceptor])),
     provideTranslateService({
-      loader: provideTranslateLoader(CoreTranslateLoader),
+      loader: provideTranslateLoader(AppTranslateLoader),
     }),
-    provideEnvironmentInitializer(async () => {
-      const translateService = inject(TranslateService);
-      const configService = inject(CoreConfigService);
-      const availableLanguages: string[] = configService.languages ?? ['en'];
-      const browserLang = navigator.language.split('-')[0];
-      const lang = availableLanguages.includes(browserLang) ? browserLang : availableLanguages[0];
-      await firstValueFrom(translateService.use(lang));
-    }),
-    { provide: TranslateService, useExisting: NgCoreTranslateService },
+    provideAppInitializer(() => inject(AppInitializerService).initialize()),
+    { provide: TranslateService, useExisting: AppTranslateService },
+    { provide: NgCoreTranslateService, useExisting: AppTranslateService },
+    { provide: TranslateLanguageService, useExisting: AppTranslateLanguageService },
     provideAnimations(),
     providePrimeNG(primeNGConfig),
     {
