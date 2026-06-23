@@ -1,15 +1,17 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, WritableSignal, inject, signal } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
-import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { CONFIG, Config, CoreConfigService } from '@rero/ng-core';
+import { TranslateService } from '@ngx-translate/core';
+import { CONFIG } from '@rero/ng-core';
 import { MenuItem, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Badge } from 'primeng/badge';
 import { Menubar } from 'primeng/menubar';
 import { Ripple } from 'primeng/ripple';
-import { Badge } from 'primeng/badge';
-import { NgClass } from '@angular/common';
+import { map } from 'rxjs';
+import { AppUserService, UserInfo } from '../service/app-user.service';
 
 @Component({
   selector: 'app-menu',
@@ -17,21 +19,27 @@ import { NgClass } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Menubar, Ripple, RouterLink, Badge, NgClass],
 })
-export class MenuComponent implements OnInit, OnDestroy {
+export class MenuComponent {
   messageService = inject(MessageService);
   translateService = inject(TranslateService);
   router = inject(Router);
-  config: Config = inject(CoreConfigService);
+  userService = inject(AppUserService);
 
-  menuItems: WritableSignal<MenuItem[]> = signal([]);
+  private currentLang: Signal<string> = toSignal(
+    this.translateService.onLangChange.pipe(map((event) => event.lang)),
+    { initialValue: this.translateService.getCurrentLang() },
+  );
 
-  subscription = new Subscription();
+  private userInfo: Signal<UserInfo | undefined> = toSignal(this.userService.getUserInfo());
 
-  ngOnInit(): void {
-    this.menuItems.set([
+  menuItems: Signal<MenuItem[]> = computed(() => this.buildMenu(this.userInfo(), this.currentLang()));
+
+  private buildMenu(userInfo: UserInfo | undefined, currentLang: string): MenuItem[] {
+    const availableLanguages = userInfo?.settings.availableLanguages.map((l) => l.code) ?? [];
+
+    return [
       {
         label: this.translateService.instant('home'),
-        untranslatedLabel: 'home',
         icon: 'fa-solid fa-house',
         command: () => {
           this.router.navigate(['/']);
@@ -40,41 +48,34 @@ export class MenuComponent implements OnInit, OnDestroy {
       },
       {
         label: this.translateService.instant('Records'),
-        untranslatedLabel: 'Records',
         id: 'records',
         items: [
           {
             label: this.translateService.instant('Global records'),
-            untranslatedLabel: 'Global records',
             icon: 'fa-solid fa-book',
             routerLink: ['/record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('UNISI records'),
-            untranslatedLabel: 'UNISI records',
             icon: 'fa-solid fa-book',
             routerLink: ['/unisi', 'record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('Backend records'),
-            untranslatedLabel: 'Backend records',
             icon: 'fa-solid fa-book',
             routerLink: ['/admin', 'record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('Documents'),
-            untranslatedLabel: 'Documents',
             icon: 'fa-solid fa-book',
             items: [
               {
                 label: this.translateService.instant('Document records'),
-                untranslatedLabel: 'Document records',
                 icon: 'fa-solid fa-book',
                 routerLink: ['/records', 'documents'],
               },
               {
                 label: this.translateService.instant('Document records with query params'),
-                untranslatedLabel: 'Document records with query params',
                 icon: 'fa-solid fa-book',
                 routerLink: ['/records', 'documents'],
                 queryParams: { q: 'anatomic', page: 1, size: 10 },
@@ -83,7 +84,6 @@ export class MenuComponent implements OnInit, OnDestroy {
           },
           {
             label: this.translateService.instant('Organisation'),
-            untranslatedLabel: 'Organisation',
             icon: 'fa-solid fa-industry',
             routerLink: ['/records', 'organisations'],
           },
@@ -93,7 +93,6 @@ export class MenuComponent implements OnInit, OnDestroy {
           },
           {
             label: this.translateService.instant('Editor'),
-            untranslatedLabel: 'Editor',
             icon: 'fa-solid fa-pen-to-square',
             items: [
               {
@@ -101,13 +100,11 @@ export class MenuComponent implements OnInit, OnDestroy {
                 items: [
                   {
                     label: this.translateService.instant('Add mode'),
-                    untranslatedLabel: 'Add mode',
                     icon: 'fa-solid fa-circle-plus',
                     routerLink: ['/editor', 'demo'],
                   },
                   {
                     label: this.translateService.instant('Edit mode'),
-                    untranslatedLabel: 'Edit mode',
                     icon: 'fa-solid fa-pencil',
                     routerLink: ['/editor', 'demo', '1'],
                   },
@@ -118,13 +115,11 @@ export class MenuComponent implements OnInit, OnDestroy {
                 items: [
                   {
                     label: this.translateService.instant('Add mode'),
-                    untranslatedLabel: 'Add mode',
                     icon: 'fa-solid fa-circle-plus',
                     routerLink: ['/editor', 'normal'],
                   },
                   {
                     label: this.translateService.instant('Edit mode'),
-                    untranslatedLabel: 'Edit mode',
                     icon: 'fa-solid fa-pencil',
                     routerLink: ['/editor', 'normal', '1'],
                   },
@@ -143,21 +138,12 @@ export class MenuComponent implements OnInit, OnDestroy {
       },
       {
         label: this.translateService.instant('Language'),
-        untranslatedLabel: 'Language',
         id: 'language',
         icon: 'fa-solid fa-language',
-        items: [],
-      },
-    ]);
-
-    const languageMenu: MenuItem | undefined = this.menuItems().find((item: MenuItem) => item.id === 'language');
-    if (languageMenu !== undefined) {
-      this.config.languages?.forEach((language: string) => {
-        const lang = {
+        items: availableLanguages.map((language) => ({
           label: this.translateService.instant(language),
-          untranslatedLabel: language,
           id: language,
-          styleClass: undefined,
+          styleClass: language === currentLang ? 'ui:font-bold' : '',
           command: () => {
             this.translateService.use(language);
             this.messageService.add({
@@ -167,38 +153,8 @@ export class MenuComponent implements OnInit, OnDestroy {
               life: CONFIG.MESSAGE_LIFE,
             });
           },
-        };
-        languageMenu.items?.push(lang);
-      });
-    }
-    this.subscription.add(
-      this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
-        const menu = this.translateItems(this.menuItems());
-        const language = menu.find((item: MenuItem) => item.id === 'language');
-        if (language !== undefined) {
-          language.items?.map((item: MenuItem) => {
-            item.styleClass = item.id === event.lang ? 'ui:font-bold' : '';
-          });
-        }
-        this.menuItems.set([...menu]);
-      }),
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  private translateItems(menuItems: MenuItem[]): MenuItem[] {
-    menuItems.map((item: MenuItem) => {
-      if (item.untranslatedLabel) {
-        item.label = this.translateService.instant(item.untranslatedLabel);
-      }
-      if (item.items) {
-        this.translateItems(item.items);
-      }
-    });
-
-    return menuItems;
+        })),
+      },
+    ];
   }
 }

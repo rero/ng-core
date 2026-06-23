@@ -14,12 +14,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { HttpPendingService } from '../service/http-pending/http-pending.service';
 
-export function httpPendingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn) {
+export function httpPendingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
     const service = inject(HttpPendingService);
     service.increment();

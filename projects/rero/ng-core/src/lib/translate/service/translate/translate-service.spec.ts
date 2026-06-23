@@ -23,9 +23,14 @@ describe('NgCoreTranslateService', () => {
     expect(primeConfig.translation.today).toEqual('Today');
   });
 
-  it('should have changed the local service', () => {
-    service.use('fr');
-    expect(primeConfig.translation.today).toEqual("Aujourd'hui");
+  it('should set luxon locale and primeng translation on use()', () => {
+    service.use('en');
+    expect(primeConfig.translation.today).toEqual('Today');
+    expect(Settings.defaultLocale).toEqual('en');
+  });
+
+  it('should not throw when using a language not in locales', () => {
+    expect(() => service.use('fr')).not.toThrow();
     expect(Settings.defaultLocale).toEqual('fr');
   });
 });

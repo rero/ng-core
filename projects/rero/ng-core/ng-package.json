@@ -11,8 +11,7 @@
     "marked",
     "primelocale"
   ],
-  "assets": ["./assets/**/*.scss", "./src/**/*.scss"
-],
+  "assets": ["./assets/**/*.scss", "./src/**/*.scss", "./src/lib/translate/i18n/*.json", "./src/lib/translate/languages/*.json"],
   "lib": {
     "entryFile": "src/public-api.ts"
   }

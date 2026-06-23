@@ -12,10 +12,10 @@ export interface Config {
   apiEndpointPrefix?: string;
   $refPrefix?: string;
   schemaFormEndpoint: string;
-  languages?: string[];
   defaultLanguage?: string;
   secretPassphrase: string;
   translationsURLs?: string[];
+  ngCoreAssetsUrl?: string;
 }
 
 /**
@@ -31,8 +31,8 @@ export class CoreConfigService implements Config {
   apiEndpointPrefix = '/api';
   schemaFormEndpoint = '/api/schemaform';
   $refPrefix = '';
-  languages = ['en'];
   defaultLanguage = 'en';
   secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';
   translationsURLs: string[] = [];
+  ngCoreAssetsUrl = '';
 }

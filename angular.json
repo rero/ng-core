@@ -51,7 +51,20 @@
             },
             "index": "projects/ng-core-tester/src/index.html",
             "tsConfig": "projects/ng-core-tester/tsconfig.app.json",
-            "assets": ["projects/ng-core-tester/src/favicon.ico", "projects/ng-core-tester/src/assets"],
+            "assets": [
+              "projects/ng-core-tester/src/favicon.ico",
+              "projects/ng-core-tester/src/assets",
+              {
+                "glob": "*.json",
+                "input": "projects/rero/ng-core/src/lib/translate/i18n",
+                "output": "assets/ng-core/i18n"
+              },
+              {
+                "glob": "*.json",
+                "input": "projects/rero/ng-core/src/lib/translate/languages",
+                "output": "assets/ng-core/languages"
+              }
+            ],
             "styles": ["projects/ng-core-tester/src/styles.scss"],
             "stylePreprocessorOptions": {
               "includePaths": ["projects/rero/ng-core/assets/scss"]

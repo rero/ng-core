@@ -10,3 +10,4 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 @.ai/angular-patterns.md
 @.ai/testing-rules.md
 @.ai/dev-commands.md
+@.ai/commit-conventions.md
