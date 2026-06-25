@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-import { merge } from 'rxjs';
+import { merge, of, switchMap } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
 import { DropdownLabelEditorComponent } from '../dropdown-label-editor/dropdown-label-editor.component';
 import { Button } from 'primeng/button';
@@ -26,6 +26,18 @@ export class LabelComponent {
   readonly field = input.required<FormlyFieldConfig>();
 
   items = signal<MenuItem[]>([]);
+
+  // Subscribes to translate.stream() so the label re-renders on language change
+  // in zoneless mode. switchMap re-subscribes when field() changes.
+  readonly label = toSignal(
+    toObservable(this.field).pipe(
+      switchMap((field) => {
+        const untranslated = field.props?.['untranslatedLabel'] ?? field.props?.label;
+        return untranslated ? this.translateService.stream(untranslated) : of('');
+      })
+    ),
+    { initialValue: '' }
+  );
 
   // Tracks props.required reactively — Formly mutates props directly (plain JS),
   // so we subscribe to fieldChanges to propagate the change into a signal.
@@ -92,7 +104,7 @@ export class LabelComponent {
       onCleanup(() => subs.forEach((fn) => fn()));
     });
 
-    // Update items on language change
+    // Update items on language change.
     this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateItems());
   }
 
