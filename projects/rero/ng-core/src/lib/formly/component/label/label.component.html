@@ -58,9 +58,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   <!-- section title -->
   <ng-template #title let-f="f">
     <div class="core:flex core:gap-1 core:items-center">
-      @if (f.props.label) {
+      @if (label()) {
         <label class="p-fieldset-legend-label" [attr.for]="f.id" [pTooltip]="f.props.description" tooltipPosition="top">
-          {{ f.props.label }}
+          {{ label() }}
         </label>
         @if (required() && f.props.hideRequiredMarker !== true) {
           *
