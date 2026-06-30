@@ -603,7 +603,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
   showLoadTemplateDialog(): void {
     this.dialogService.open(LoadTemplateFormComponent, {
       header: this.translateService.instant('Load from template'),
-      focusOnShow: true,
+      focusOnShow: false,
       width: '50vw',
       position: 'top',
       modal: true,

@@ -25,6 +25,7 @@ import { TranslateLabelService } from '../../service/translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   appendTo?: any;
+  autofocus?: boolean;
   class: string;
   dropdownIcon?: string;
   editable: boolean;
@@ -67,6 +68,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
     @if (props.options) {
       <p-select
         [appendTo]="props.appendTo"
+        [autofocus]="props.autofocus"
         [class]="props.class"
         [dropdownIcon]="props.dropdownIcon"
         [editable]="props.editable"
@@ -129,6 +131,7 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
   /** Default properties */
   defaultOptions: Partial<FieldTypeConfig<ISelectProps>> = {
     props: {
+      autofocus: false,
       disabled: false,
       editable: false,
       filterMatchMode: 'contains',
