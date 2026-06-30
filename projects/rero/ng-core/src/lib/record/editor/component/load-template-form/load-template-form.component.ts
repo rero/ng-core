@@ -51,6 +51,7 @@ export class LoadTemplateFormComponent implements OnInit {
       type: 'select',
       props: {
         appendTo: 'body',
+        autofocus: true,
         required: true,
         group: true,
         filter: true,
