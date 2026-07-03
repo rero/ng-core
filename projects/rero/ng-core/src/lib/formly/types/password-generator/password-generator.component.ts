@@ -99,7 +99,7 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       />
       <p-inputGroupAddon class="core:flex">
         <p-button
-          icon="fa fa-repeat"
+          icon="fa-solid fa-arrows-rotate"
           [title]="'Generate a new password' | translate"
           (click)="onClick()"
           severity="secondary"
@@ -108,7 +108,7 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       </p-inputGroupAddon>
       <p-inputGroupAddon>
         <p-button
-          [icon]="type() === 'text' ? 'fa fa-eye-slash' : 'fa fa-eye'"
+          [icon]="type() === 'text' ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
           [title]="'Show or hide password' | translate"
           (click)="showHidePassword()"
           severity="secondary"
@@ -118,7 +118,7 @@ interface PasswordGeneratorProps extends FormlyFieldProps {
       @if (props.enabledEditMode) {
         <p-inputGroupAddon>
           <p-button
-            [icon]="readonly() ? 'fa fa-lock' : 'fa fa-unlock-alt'"
+            [icon]="readonly() ? 'fa-solid fa-lock' : 'fa-solid fa-unlock-keyhole'"
             [title]="'Edit mode' | translate"
             (click)="onEdit()"
             severity="secondary"

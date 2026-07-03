@@ -29,11 +29,11 @@ import { Button } from 'primeng/button';
           <div class="core:flex core:gap-1 core:items-center">
             <!-- clone button -->
             @if (canAdd()) {
-              <p-button icon="fa fa-clone" severity="secondary" [text]="true" (onClick)="add()" />
+              <p-button icon="fa-regular fa-clone" severity="secondary" [text]="true" (onClick)="add()" />
             }
             <!-- trash button -->
             @if (canRemove()) {
-              <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="remove()" />
+              <p-button icon="fa-solid fa-trash-can" severity="secondary" [text]="true" (onClick)="remove()" />
             }
           </div>
         }

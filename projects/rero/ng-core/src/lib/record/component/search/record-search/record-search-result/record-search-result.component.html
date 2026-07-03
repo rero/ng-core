@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           [ariaLabel]="'Use' | translate"
           (onClick)="useRecord()"
           [title]="'Use' | translate"
-          icon="fa fa-hand-o-right"
+          icon="fa-solid fa-hand-pointer"
         />
       }
 
@@ -25,14 +25,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           [outlined]="true"
           [ariaLabel]="'Edit' | translate"
           [routerLink]="updateStatusRouterLink() || ['edit', record().id]"
-          icon="fa fa-pencil"
+          icon="fa-solid fa-pencil"
         />
       }
 
       <!-- delete button -->
       @if (deleteStatus().can || deleteStatus().message) {
         <p-button
-          icon="fa fa-trash"
+          icon="fa-solid fa-trash-can"
           severity="danger"
           class="core:pointer-events-auto"
           outlined

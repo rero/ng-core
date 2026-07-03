@@ -55,7 +55,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         }
         <span class="ui:ml-2 p-menubar-item-label">{{ item.label }}</span>
         @if (!item.disabled && item.items) {
-          <i [ngClass]="['fa', root ? 'fa-angle-down ui:ml-2' : 'fa-angle-right ui:ml-auto']"></i>
+          <i [ngClass]="['fa-solid', root ? 'fa-angle-down ui:ml-2' : 'fa-angle-right ui:ml-auto']"></i>
         }
       </div>
     }

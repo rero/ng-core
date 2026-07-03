@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   <p-button
     id="detail-back-button"
     styleClass="core:grow"
-    icon="fa fa-arrow-left"
+    icon="fa-solid fa-arrow-left"
     [label]="'Back' | translate"
     severity="secondary"
     [text]="true"
@@ -18,7 +18,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       @if (useStatus() && useStatus().can && useStatus().url) {
         <p-button
           id="detail-use-button"
-          icon="fa fa-hand-o-right"
+          icon="fa-solid fa-hand-pointer"
           [label]="'Use' | translate"
           (onClick)="useRecord()"
           translate
@@ -27,7 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       @if (updateStatus() && updateStatus().can) {
         <p-button
           id="detail-edit-button"
-          icon="fa fa-pencil"
+          icon="fa-solid fa-pencil"
           [label]="'Edit' | translate"
           [outlined]="useStatus().can"
           (onClick)="updateRecord(record()!)"
@@ -37,7 +37,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       @if (deleteStatus()) {
         <p-button
           id="detail-delete-button"
-          icon="fa fa-trash"
+          icon="fa-solid fa-trash-can"
           severity="danger"
           class="core:pointer-events-auto"
           outlined

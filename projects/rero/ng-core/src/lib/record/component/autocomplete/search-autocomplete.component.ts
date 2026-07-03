@@ -49,7 +49,7 @@ export interface AutoCompleteData {
     <p-autoComplete
       #autoComplete
       [overlayOptions]="overlayOptions"
-      dropdownIcon="fa fa-search"
+      dropdownIcon="fa-solid fa-magnifying-glass"
       [dropdown]="true"
       dropdownMode="none"
       [class]="styleClass()"

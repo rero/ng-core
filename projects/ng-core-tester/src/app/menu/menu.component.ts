@@ -32,7 +32,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       {
         label: this.translateService.instant('home'),
         untranslatedLabel: 'home',
-        icon: 'fa fa-home',
+        icon: 'fa-solid fa-house',
         command: () => {
           this.router.navigate(['/']);
           this.messageService.add({ severity: 'success', detail: 'Home menu selected', life: CONFIG.MESSAGE_LIFE });
@@ -46,36 +46,36 @@ export class MenuComponent implements OnInit, OnDestroy {
           {
             label: this.translateService.instant('Global records'),
             untranslatedLabel: 'Global records',
-            icon: 'fa fa-book',
+            icon: 'fa-solid fa-book',
             routerLink: ['/record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('UNISI records'),
             untranslatedLabel: 'UNISI records',
-            icon: 'fa fa-book',
+            icon: 'fa-solid fa-book',
             routerLink: ['/unisi', 'record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('Backend records'),
             untranslatedLabel: 'Backend records',
-            icon: 'fa fa-book',
+            icon: 'fa-solid fa-book',
             routerLink: ['/admin', 'record', 'search', 'documents'],
           },
           {
             label: this.translateService.instant('Documents'),
             untranslatedLabel: 'Documents',
-            icon: 'fa fa-book',
+            icon: 'fa-solid fa-book',
             items: [
               {
                 label: this.translateService.instant('Document records'),
                 untranslatedLabel: 'Document records',
-                icon: 'fa fa-book',
+                icon: 'fa-solid fa-book',
                 routerLink: ['/records', 'documents'],
               },
               {
                 label: this.translateService.instant('Document records with query params'),
                 untranslatedLabel: 'Document records with query params',
-                icon: 'fa fa-book',
+                icon: 'fa-solid fa-book',
                 routerLink: ['/records', 'documents'],
                 queryParams: { q: 'anatomic', page: 1, size: 10 },
               },
@@ -84,7 +84,7 @@ export class MenuComponent implements OnInit, OnDestroy {
           {
             label: this.translateService.instant('Organisation'),
             untranslatedLabel: 'Organisation',
-            icon: 'fa fa-industry',
+            icon: 'fa-solid fa-industry',
             routerLink: ['/records', 'organisations'],
           },
           {
@@ -94,7 +94,7 @@ export class MenuComponent implements OnInit, OnDestroy {
           {
             label: this.translateService.instant('Editor'),
             untranslatedLabel: 'Editor',
-            icon: 'fa fa-pencil-square-o',
+            icon: 'fa-solid fa-pen-to-square',
             items: [
               {
                 label: this.translateService.instant('Long mode'),
@@ -102,13 +102,13 @@ export class MenuComponent implements OnInit, OnDestroy {
                   {
                     label: this.translateService.instant('Add mode'),
                     untranslatedLabel: 'Add mode',
-                    icon: 'fa fa-pencil-square-o',
+                    icon: 'fa-solid fa-circle-plus',
                     routerLink: ['/editor', 'demo'],
                   },
                   {
                     label: this.translateService.instant('Edit mode'),
                     untranslatedLabel: 'Edit mode',
-                    icon: 'fa fa-pencil-square-o',
+                    icon: 'fa-solid fa-pencil',
                     routerLink: ['/editor', 'demo', '1'],
                   },
                 ],
@@ -119,13 +119,13 @@ export class MenuComponent implements OnInit, OnDestroy {
                   {
                     label: this.translateService.instant('Add mode'),
                     untranslatedLabel: 'Add mode',
-                    icon: 'fa fa-pencil-square-o',
+                    icon: 'fa-solid fa-circle-plus',
                     routerLink: ['/editor', 'normal'],
                   },
                   {
                     label: this.translateService.instant('Edit mode'),
                     untranslatedLabel: 'Edit mode',
-                    icon: 'fa fa-pencil-square-o',
+                    icon: 'fa-solid fa-pencil',
                     routerLink: ['/editor', 'normal', '1'],
                   },
                 ],
@@ -137,7 +137,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       {
         label: 'Rero website',
         id: 'rero_website',
-        icon: 'fa fa-external-link',
+        icon: 'fa-solid fa-up-right-from-square',
         url: 'https://www.rero.ch',
         target: '_blank',
       },
@@ -145,7 +145,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         label: this.translateService.instant('Language'),
         untranslatedLabel: 'Language',
         id: 'language',
-        icon: 'fa fa-language',
+        icon: 'fa-solid fa-language',
         items: [],
       },
     ]);
