@@ -348,23 +348,23 @@ export const routes: Routes = [
               label: 'Relevance',
               value: 'relevance',
               defaultQuery: true,
-              icon: 'fa fa-sort-amount-desc',
+              icon: 'fa-solid fa-arrow-down-wide-short',
             },
             {
               label: 'Date descending',
               value: 'newest',
               defaultNoQuery: true,
-              icon: 'fa fa-sort-amount-desc',
+              icon: 'fa-solid fa-arrow-down-wide-short',
             },
             {
               label: 'Date ascending',
               value: 'oldest',
-              icon: 'fa fa-sort-amount-asc',
+              icon: 'fa-solid fa-arrow-down-short-wide',
             },
             {
               label: 'Title',
               value: 'title',
-              icon: 'fa fa-sort-alpha-asc',
+              icon: 'fa-solid fa-arrow-down-a-z',
             },
           ],
           exportFormats: [

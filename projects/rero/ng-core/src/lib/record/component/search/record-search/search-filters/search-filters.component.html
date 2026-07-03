@@ -41,11 +41,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       @if (filter.url) {
         @if (filter.url.external) {
           <a class="core:ml-1" [title]="filter.url.title" [href]="filter.url.link" [target]="filter.url.target">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
           </a>
         } @else {
           <a class="core:ml-1" [title]="filter.url.title" [routerLink]="filter.url.routerLink">
-            <i class="fa fa-info-circle" aria-hidden="true"></i>
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
           </a>
         }
       }

@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       <ng-container menu>
         <div class="core:flex">
           <p-button
-            icon="fa fa-caret-down"
+            icon="fa-solid fa-caret-down"
             severity="secondary"
             size="small"
             [text]="true"
@@ -27,12 +27,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       <ng-container buttons>
         <div class="core:flex">
           @if (canAddItem()) {
-            <p-button icon="fa fa-plus" severity="secondary" size="small" [text]="true" (onClick)="addItem()" />
+            <p-button icon="fa-regular fa-square-plus" severity="secondary" size="small" [text]="true" (onClick)="addItem()" />
           }
           @if (canAdd()) {
             <p-button
               id="{{ f.id }}-clone-button"
-              icon="fa fa-clone"
+              icon="fa-regular fa-clone"
               severity="secondary"
               size="small"
               [text]="true"
@@ -43,7 +43,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           @if (canRemove()) {
             <p-button
               id="{{ f.id }}-remove-button"
-              icon="fa fa-trash"
+              icon="fa-solid fa-trash-can"
               severity="secondary"
               size="small"
               [text]="true"
@@ -66,12 +66,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           *
         }
         @if (canAddItem()) {
-          <p-button icon="fa fa-plus" severity="secondary" [text]="true" size="small" (onClick)="addItem()" />
+          <p-button icon="fa-regular fa-square-plus" severity="secondary" [text]="true" size="small" (onClick)="addItem()" />
         }
         @if (canAdd()) {
           <p-button
             id="{{ f.id }}-clone-button"
-            icon="fa fa-clone"
+            icon="fa-regular fa-clone"
             [text]="true"
             severity="secondary"
             size="small"
@@ -82,7 +82,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         @if (canRemove()) {
           <p-button
             id="{{ f.id }}-remove-button"
-            icon="fa fa-trash"
+            icon="fa-solid fa-trash-can"
             [text]="true"
             severity="secondary"
             size="small"

@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   @if (exportOptions().length === 1) {
     @if (!exportOptions()[0]?.disabled) {
       <a pButton outlined severity="secondary" [href]="exportOptions()[0].url" rel="noopener noreferrer">
-        <i class="fa fa-cloud-download core:mr-1"></i>
+        <i class="fa-solid fa-cloud-arrow-down core:mr-1"></i>
         {{ 'Export as' | translate }} {{ exportOptions()[0].label }}
       </a>
     } @else {
@@ -15,7 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         severity="secondary"
         outlined
         label="{{ 'Export as' | translate }} {{ exportOptions()[0].label }}"
-        icon="fa fa-cloud-download"
+        icon="fa-solid fa-download"
         (onClick)="openLink(exportOptions()[0].url)"
         [disabled]="exportOptions()[0]?.disabled"
         [pTooltip]="exportOptions()[0]?.disabled_message"
@@ -36,9 +36,9 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       (onClick)="menu.toggle($event)"
     >
       <div class="core:flex core:gap-4 core:items-center">
-        <i class="fa fa-download"></i>
+        <i class="fa-solid fa-download"></i>
         {{ 'Export as' | translate }}&nbsp;…
-        <i class="fa fa-caret-down"></i>
+        <i class="fa-solid fa-caret-down"></i>
       </div>
     </p-button>
   }
