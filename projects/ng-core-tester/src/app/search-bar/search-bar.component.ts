@@ -59,7 +59,7 @@ export class SearchBarComponent implements OnInit {
     data.hits.hits.map((hit: RecordData<DocumentMetadata>) => {
       const title = hit.metadata.title[0].mainTitle[0].value.replace(/[:\-[\]()/"]/g, ' ').replace(/\s\s+/g, ' ');
       values.push({
-        iconClass: 'fa fa-book',
+        iconClass: 'fa-solid fa-book',
         index: 'documents',
         label: this.processLabel(title, query, 80),
         value: hit.metadata.pid,
@@ -74,7 +74,7 @@ export class SearchBarComponent implements OnInit {
     const values: AutoCompleteData[] = [];
     data.hits.hits.map((hit: any) => {
       values.push({
-        iconClass: 'fa fa-user',
+        iconClass: 'fa-solid fa-user',
         id: hit.metadata.pid,
         index: 'entities',
         label: hit.metadata.authorized_access_point_en,

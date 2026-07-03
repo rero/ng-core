@@ -12,7 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   template: `
     <div class="core:text-center core:my-8">
       <p class="core:text-4xl">
-        <i class="fa fa-flash core:mr-4"></i>
+        <i class="fa-solid fa-bolt core:mr-4"></i>
         <span class="core:text-muted-color">{{ error().status }}</span>
         {{ error().title }}
       </p>

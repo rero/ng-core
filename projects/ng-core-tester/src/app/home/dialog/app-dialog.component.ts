@@ -24,7 +24,7 @@ export class AppDialogComponent {
       rejectLabel: this.translate.instant('No'),
       message: this.translate.instant('Are you sure that you want to proceed?'),
       header: this.translate.instant('Confirmation'),
-      icon: 'fa fa-exclamation-triangle fa-2x ui:!text-red-500 ui:animate-pulse',
+      icon: 'fa-solid fa-triangle-exclamation fa-2x ui:!text-red-500 ui:animate-pulse',
       rejectButtonStyleClass: 'p-button-text',
       accept: () => {
         this.messageService.add({

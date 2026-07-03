@@ -70,7 +70,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
                 <span class="core:grow" [innerHTML]="data.label"></span>
                 @if (data.link) {
                   <a class="core:flex-none core:text-color-secondary" [href]="data.link" target="_blank">
-                    <i class="fa fa-external-link"></i>
+                    <i class="fa-solid fa-up-right-from-square"></i>
                   </a>
                 }
               </div>
@@ -83,7 +83,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
       } @else {
         <div class="core:flex core:gap-1 core:items-center">
           <div [innerHtml]="valueSelected()"></div>
-          <p-button icon="fa fa-trash" severity="secondary" [text]="true" (onClick)="clear()" />
+          <p-button icon="fa-solid fa-trash-can" severity="secondary" [text]="true" (onClick)="clear()" />
         </div>
       }
     </div>
