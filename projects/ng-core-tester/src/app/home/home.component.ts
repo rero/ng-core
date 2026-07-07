@@ -17,6 +17,7 @@ import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { DocumentComponent } from '../record/document/document.component';
 import { AppDialogComponent } from './dialog/app-dialog.component';
+import { SelectDialogComponent } from './select-dialog/select-dialog.component';
 import { ToastComponent } from './toast/toast.component';
 
 @Component({
@@ -26,6 +27,7 @@ import { ToastComponent } from './toast/toast.component';
     Panel,
     ToastComponent,
     AppDialogComponent,
+    SelectDialogComponent,
     Button,
     FormsModule,
     InputText,

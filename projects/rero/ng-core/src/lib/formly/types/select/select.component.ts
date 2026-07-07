@@ -5,12 +5,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   Injector,
   OnInit,
   Signal,
   signal,
   Type,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -128,6 +130,12 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
   optionValues: Signal<ISelectOption[]> = signal([]);
   filterEnabled = computed(() => this.enableFilter(this.optionValues(), 0).enabled);
 
+  /** Reference to the underlying PrimeNG select, used to open its panel programmatically. */
+  private select = viewChild(Select);
+
+  /** Ensures the panel is opened only once when `autofocus` is enabled. */
+  private hasAutoOpened = false;
+
   /** Default properties */
   defaultOptions: Partial<FieldTypeConfig<ISelectProps>> = {
     props: {
@@ -163,6 +171,23 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
         map(([options]) => this.translateLabelService.translateLabel(options)),
       ),
       { initialValue: [], injector: this.injector },
+    );
+
+    // When autofocus is set, open the panel once options are loaded.
+    // Uses injector so effect() can be called outside the constructor.
+    effect(
+      () => {
+        const select = this.select();
+        const hasOptions = this.optionValues().length > 0;
+        if (!this.props.autofocus || this.hasAutoOpened) {
+          return;
+        }
+        if (select && hasOptions) {
+          this.hasAutoOpened = true;
+          select.show(true);
+        }
+      },
+      { injector: this.injector },
     );
   }
 
