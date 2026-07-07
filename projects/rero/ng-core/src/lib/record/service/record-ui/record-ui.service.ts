@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { JsonObject, RecordData } from '../../../model/record.interface';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
 import { CONFIG } from '../../../core';
 import { ActionStatus } from '../../../model/action-status.interface';
@@ -29,7 +29,7 @@ export class RecordUiService {
    * @returns Observable resolving as a boolean
    */
   deleteRecord(type: string, pid: string, deleteMessage: string[] = this.defaultDeleteMessage()): Observable<boolean> {
-    const delete$ = new BehaviorSubject(false);
+    const delete$ = new Subject<boolean>();
     this.confirmationService.confirm({
       acceptLabel: this.translateService.instant('Delete'),
       rejectLabel: this.translateService.instant('Cancel'),
