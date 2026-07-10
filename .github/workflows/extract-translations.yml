@@ -1,0 +1,68 @@
+# Continuous localization buffer. Keeps the `translations` branch equal to
+# `staging` plus the not-yet-released translations: it merges (never rebases)
+# `staging` into the buffer, regenerates the i18n catalogs from the code, and
+# pushes back to `translations` only when the extracted keys change. Weblate
+# edits the same branch (values only); the buffer is squash-merged into
+# `staging` once per release.
+#
+# Invariants: no rebase, no force-push, no branch lock.
+
+name: Extract translations
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # every day at 02:00 UTC (aligns with Weblate's 24h commit window)
+  workflow_dispatch:
+
+concurrency:
+  group: extract-translations # one run at a time -> no CI<->CI race
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: translations
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+
+      - name: Bring staging code into the buffer
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin staging
+          git merge --no-edit origin/staging # MERGE (never rebase) -> translations is never rewritten
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Extract + update catalogs
+        run: |
+          npm run extract_messages # update en_US.json (source keys)
+          npm run update_catalog   # merge keys into language JSON (JSON merge preserves existing translations)
+
+      - name: Commit & push if changed
+        run: |
+          I18N_PATH='projects/rero/ng-core/src/lib/translate/i18n/'
+          if git diff --quiet -- "$I18N_PATH"; then
+            echo "No translation key changes."
+            exit 0
+          fi
+          git add "$I18N_PATH"
+          git commit -m "chore(i18n): extract messages"
+          # absorb any Weblate commit that landed in the meantime (merge, not rebase), then push; small retry
+          for i in 1 2 3; do
+            git fetch origin translations
+            git merge --no-edit origin/translations || true
+            git push origin translations && break
+            echo "push rejected, retrying ($i)"; sleep 5
+          done
