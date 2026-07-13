@@ -59,5 +59,7 @@
   "Date descending": "Data decrescente",
   "Date ascending": "Data ascendente",
   "Relevance": "Rilevanza",
-  "Title": "Titolo"
+  "Title": "Titolo",
+  "shouldn't have more than {{decimals}} digit(s) after the decimal point": "non dovrebbe avere più di {{decimals}} cifre dopo la virgola",
+  "should be a whole number": "dovrebbe essere un numero intero"
 }
