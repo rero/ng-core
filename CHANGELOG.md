@@ -1,5 +1,14 @@
 # Changelog
 
+## [21.1.1](https://github.com/rero/ng-core/compare/v21.1.0...v21.1.1) (2026-07-14)
+
+### Bug Fixes
+
+* **editor:** autofocus template select after async load ([e0c732b](https://github.com/rero/ng-core/commit/e0c732b822e316c40b474a258d4cd4152f26d284))
+* **label:** translate label signal in zoneless mode ([627e1c2](https://github.com/rero/ng-core/commit/627e1c24cb05eaa4658968ea066eee8698158324))
+* **record-ui:** use Subject in deleteRecord ([ece9b08](https://github.com/rero/ng-core/commit/ece9b0837c316c46683dcb6d67cc387b9e1dfd75))
+* template selector autofocus also auto-opens ([ba1b505](https://github.com/rero/ng-core/commit/ba1b505269781b1afa751619fb32d493ffa76e66))
+
 ## [21.1.0](https://github.com/rero/ng-core/compare/v21.0.1...v21.1.0) (2026-06-22)
 
 ### ⚠ BREAKING CHANGES
