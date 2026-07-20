@@ -39,4 +39,17 @@ describe('Utils', () => {
     expect(removeChars('"House"')).toEqual('House');
     expect(removeChars('"House Philipp\'s"', ["'"])).toEqual('"House Philipps"');
   });
+
+  it('should remove parentheses and backslashes by default', () => {
+    expect(removeChars('foo (bar) baz')).toEqual('foo bar baz');
+    expect(removeChars('foo\\bar')).toEqual('foobar');
+  });
+
+  it('should keep other Elasticsearch operators untouched by default', () => {
+    expect(removeChars('title:foo AND +bar -baz*')).toEqual('title:foo AND +bar -baz*');
+  });
+
+  it('should treat a custom hyphen as a literal char, not a range', () => {
+    expect(removeChars('abcxyz-', ['a', '-', 'z'])).toEqual('bcxy');
+  });
 });
