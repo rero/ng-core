@@ -104,9 +104,11 @@ export function withAggregations() {
       },
 
       setAggregationExpanded(key: string, expanded: boolean): void {
-        const aggregations = store.aggregations().map((agg) =>
-          agg.key === key ? { ...agg, expanded } : agg,
-        );
+        const aggregations = store.aggregations().map((agg) => {
+          if (agg.key !== key) return agg;
+          if (expanded) return { ...agg, expanded };
+          return { ...agg, expanded, loaded: false, value: { ...agg.value, buckets: [] } };
+        });
         patchState(store, { aggregations });
       },
 
@@ -171,6 +173,11 @@ export function withAggregations() {
           type: esAggregation.type || aggregation.type || 'terms',
           config: esAggregation.config || aggregation.config,
           name: aggregation.name || esAggregation.name,
+          // Preserve the existing `included` state (spread from `aggregation`).
+          // Enrichment must not force inclusion: `setAggregations` enriches every
+          // aggregation returned by Elasticsearch, including closed facets that were
+          // only requested because they have an active filter. Inclusion is set
+          // explicitly by `fetchAggregationBuckets` when the user expands a facet.
           value: {
             ...aggregation.value,
             buckets: esAggregation.buckets || aggregation.value.buckets,
@@ -234,7 +241,9 @@ export function withAggregations() {
                   const currentAggregations = store.aggregations();
                   const updatedAggregations = currentAggregations.map(agg => {
                     if (agg.key === params.aggregationKey) {
-                      return store.enrichAggregation(agg, esResult.aggregations[params.aggregationKey]);
+                      // The user explicitly expanded this facet: mark it as included so
+                      // it is requested in subsequent searches.
+                      return { ...store.enrichAggregation(agg, esResult.aggregations[params.aggregationKey]), included: true };
                     }
                     return agg;
                   });
