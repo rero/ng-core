@@ -5,222 +5,311 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # RERO angular core library
 
-This library provides modules, components, services and pipes for common usage in projects.
+This library provides standalone components, services, pipes and providers
+for common usage in Angular projects. It has no `NgModule` — everything is
+consumed either as a standalone import or through a `provide*` function
+registered in your application's `providers` array.
 
-The library embed two main modules, CoreModule and RecordModule. RecordModule imports CoreModule to use pipes and components from it.
+The library is organized in four areas:
 
-## Core module
+* **Core** — generic UI components, pipes, guards and configuration.
+* **Formly** — field types, wrappers and helpers for `@ngx-formly`.
+* **Translate** — `ngx-translate` integration with per-app extensible
+  language loading.
+* **Record** — components and services to interact with Invenio resources
+  (search, detail, editor).
 
-Core module integrates some components and pipes usable in each angular projects.
+## Requirements
 
-## Record module
+* Node.js 24 or bigger (see `.github/workflows/main.yml` for the version
+  used in CI)
+* Angular 21 (standalone APIs, zoneless change detection)
 
-Record module is a specific module to interact with Invenio resources. It provides CRUD functionalities for managing records.
+## Installation
 
-### Components
-
-These components can be found in core module: 
-
-* DialogComponent: A component allowing to show a dialog modal, for displaying an alert or force user to confirm an action.
-* SearchInputComponent: A component to display a search input and emit an event when search is submitted.
-* MenuComponent: A component for displaying a navigation list, based on a configuration object.
-
-Pipes: 
-
-* TranslateLanguagePipe: Display full name of a language code for the given locale.
-* DateTranslatePipe: Display a date in the language given by a locale.
-* UpperCaseFirstPipe: Uppercase the first letter of the given string.
-* TruncateTextPipe: Return the string truncated in the given limit.
-* Nl2brPipe: Convert carriage returns into `<br>` html tags.
-* DefaultPipe: Returns a default value if input value is empty.
-* CallbackArrayFilterPipe: Filter an array by a callback function.
-
-Services: 
-
-* ApiService: Service for configuring calls to a remote API.
-* CoreConfigService: Service for configuring the library behavior.
-* TranslateLanguageService: Service for translating languages.
-* TranslateService: Service for initializing translations (ngx-translate).
-
-## TranslateService
-
-TranslateService is a proxy service for configuring translations with ngx-translate and momentjs. During initialization, it sets the default language defined in configuration for all of them. 
-
-Language can be changed for all dependencies by calling : 
+To install this library, simply do:
 
 ```
-TranslateService::setLanguage(language:string)
+$ pnpm add @rero/ng-core
 ```
 
-The translations loader can be easily overriden as explained in the [ngx-translate documentation](https://github.com/ngx-translate/core#aot).
-Here's an example to do this: 
+## Configuration
 
-```
-// translate-loader.ts
-import { Inject } from '@angular/core';
-import { of } from 'rxjs';
-import { TranslateLoader as BaseTranslateLoader } from '@ngx-translate/core';
+Register `provideCore()` in your application's providers. This wires up
+Formly configuration, PrimeNG dialog/message/confirmation services, the
+page title strategy and the translate service used by the library.
 
-export class CustomTranslateLoader extends NgCoreTranslateLoader {
-  private translations: object = {
-    fr: {
-      'Welcome': 'Bienvenue
-    },
-    de: {
-      'Welcome': 'Willkommen
-    }
-  };
+`provideCore()` does not provide PrimeNG's own configuration, animations
+or `HttpClient` — those remain your application's responsibility, as
+shown in `projects/ng-core-tester/src/app/app.config.ts`:
 
-  /**
-   * Return observable used by ngx-translate to get translations.
-   * @param lang - string, language to rerieve translations from.
-   */
-  getTranslation(lang: string): Observable<any> {
-    if (!this.translations[lang]) {
-      throw new Error(`Translations not found for lang "${lang}"`);
-    }
-    
-    return of(this.translations[lang]);
-  }
-}
+```typescript
+// app.config.ts
+import { ApplicationConfig } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideCore } from '@rero/ng-core';
+import { providePrimeNG } from 'primeng/config';
 
-// app.module.ts
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { CustomTranslateLoader } from 'translate-loader';
-
-@NgModule({
-  imports: [
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useClass: CustomTranslateLoader,
-      }
-    })
-  ]
-})
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideCore(),
+    provideAnimations(),
+    providePrimeNG({ theme: /* your PrimeNG theme preset */ {} }),
+    provideHttpClient(),
+    // ...your other providers
+  ],
+};
 ```
 
+### Overriding the library configuration
 
-## How to use
+Create a service extending `CoreConfigService` for storing configuration
+data:
 
-### Requirements
-
-* node version 11 or bigger
-
-### Installation
-
-To install this library, simply do: 
-
-```
-$ npm i --save @rero/ng-core
-```
-
-### Configuration
-
-First of all, you have to add modules to *app.module.ts:* 
-
-```
-import { RecordModule } from '@rero/ng-core';
-
-@NgModule({
-  imports: [
-    RecordModule # Or CoreModule if you don't want to manage Invenio resources
-  ]
-})
-```
-
-Next, create a service extending CoreConfigService for storing configuration data: 
-
-```
+```typescript
+// app-config.service.ts
 import { Injectable } from '@angular/core';
 import { CoreConfigService } from '@rero/ng-core';
+import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppConfigService extends CoreConfigService {
   constructor() {
     super();
-    this.production = false;
-    this.apiBaseUrl = 'https://localhost:5000';
+    this.production = environment.production;
+    this.projectTitle = environment.projectTitle;
+    this.apiBaseUrl = environment.apiBaseUrl;
     this.schemaFormEndpoint = '/api/schemaform';
-    this.$refPrefix = 'https://test.ch';
-    this.languages = [ 'fr', 'de', 'en' ];
-    this.customTranslations = {};
+    this.$refPrefix = environment.$refPrefix;
+    this.defaultLanguage = 'en';
+    this.translationsURLs = environment.translationsURLs;
   }
 }
 ```
 
-Finally, override CoreConfigService with the new one in *app.module.ts*: 
+Then override `CoreConfigService` with the new one in `app.config.ts`:
 
-```
+```typescript
 import { AppConfigService } from './app-config.service';
+import { CoreConfigService } from '@rero/ng-core';
 
-@NgModule({
+export const appConfig: ApplicationConfig = {
   providers: [
-    {
-      provide: CoreConfigService,
-      useClass: AppConfigService
-    }
-  ]
-})
+    provideCore(),
+    { provide: CoreConfigService, useExisting: AppConfigService },
+  ],
+};
 ```
 
-### Installing a local version of the library
+`CoreConfigService` fields (see
+`src/lib/core/service/core-config/core-config.service.ts` for the
+authoritative source):
 
-Sometimes, it's wanted not to use the version published on NPM registry, but a local one. To do this, there's two choices.
+| Field                | Type       | Purpose                                     |
+|-----------------------|------------|----------------------------------------------|
+| `production`          | `boolean`  | Production flag                               |
+| `projectTitle`         | `string`   | Used by `PageTitleStrategy`                   |
+| `apiBaseUrl`           | `string`   | Base URL for the Invenio API                  |
+| `apiEndpointPrefix`    | `string`   | API path prefix (default `/api`)              |
+| `$refPrefix`           | `string`   | Prefix stripped from `$ref` URLs              |
+| `schemaFormEndpoint`   | `string`   | Endpoint serving JSON schemas                 |
+| `defaultLanguage`      | `string`   | Fallback language (default `en`)              |
+| `secretPassphrase`     | `string`   | Passphrase used by `CryptoJsService`          |
+| `translationsURLs`     | `string[]` | Extra remote translation JSON URLs to fetch   |
+| `ngCoreAssetsUrl`      | `string`   | Base URL to fetch the library's own assets    |
 
-#### With npm link
-The lighter choice is to use the npm link command. It creates a symbolic link in the **global node_modules** folder and use this link in the project in which the library is used.
+### Extending translations
 
-To do this, build the library and create the global symlink:
+Only `en` translations, English (`en-US`) Angular locale data and PrimeNG
+translations are bundled in the library. Consuming applications add the
+languages they need by subclassing three extension points and registering
+them in `app.config.ts`. `projects/ng-core-tester` is the reference
+implementation for this pattern — see
+`projects/ng-core-tester/src/app/app-translate-loader.ts`,
+`app-translate.service.ts` and `service/app-translate-language.service.ts`.
+
+```typescript
+// app-translate-loader.ts — add translation catalogs
+import { Injectable } from '@angular/core';
+import { CORE_TRANSLATION_LOADERS, CoreTranslateLoader, TranslationLoaderFn } from '@rero/ng-core';
+
+const appI18n = (lang: string): TranslationLoaderFn =>
+  () => fetch(`/assets/i18n/${lang}.json`).then(r => r.json()).then(data => ({ default: data }));
+
+@Injectable()
+export class AppTranslateLoader extends CoreTranslateLoader {
+  protected override coreTranslationLoaders: Record<string, TranslationLoaderFn> = {
+    ...CORE_TRANSLATION_LOADERS,
+    fr: appI18n('fr'),
+    de: appI18n('de'),
+  };
+}
+```
+
+```typescript
+// app-translate.service.ts — add Angular locale data + PrimeNG translations
+import { Injectable } from '@angular/core';
+import { CORE_LOCALES, Locales, NgCoreTranslateService } from '@rero/ng-core';
+import localeFr from '@angular/common/locales/fr';
+import fr from 'primelocale/js/fr.js';
+
+@Injectable({ providedIn: 'root' })
+export class AppTranslateService extends NgCoreTranslateService {
+  protected override locales: Locales = {
+    ...CORE_LOCALES,
+    fr: { angular: localeFr, primeng: fr },
+  };
+}
+```
+
+Register everything in `app.config.ts`:
+
+```typescript
+import { provideTranslateLoader, provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { NgCoreTranslateService } from '@rero/ng-core';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideCore(),
+    provideTranslateService({ loader: provideTranslateLoader(AppTranslateLoader) }),
+    { provide: TranslateService, useExisting: AppTranslateService },
+    { provide: NgCoreTranslateService, useExisting: AppTranslateService },
+  ],
+};
+```
+
+Angular locale modules and PrimeNG translations are compiled JS modules
+that must be statically imported — dynamic import paths built from
+template literals are rejected by esbuild at build time, so each language
+must be listed explicitly as shown above.
+
+## Public API
+
+### Core pipes
+
+* `Nl2brPipe` — convert carriage returns into `<br>` HTML tags.
+* `FilesizePipe` — format a byte count as a human-readable file size.
+* `TruncateTextPipe` — truncate a string to a given length.
+* `UcfirstPipe` — uppercase the first letter of a string.
+* `MarkdownPipe` — render Markdown to HTML.
+* `CallbackArrayFilterPipe` — filter an array with a callback function.
+
+### Core components
+
+* `DialogComponent` — dialog modal for alerts or confirmations.
+* `SearchInputComponent` — search input emitting an event on submit.
+* `ErrorComponent` — generic error display.
+* `ReadMoreComponent` — collapsible text block.
+
+### Core services
+
+* `CoreConfigService` — library configuration, meant to be subclassed.
+* `HttpPendingService` — tracks in-flight HTTP mutations (paired with
+  `httpPendingInterceptor`) to guard against double form submits.
+* `LocalStorageService` — typed wrapper around `localStorage`.
+* `CryptoJsService` — encrypt/decrypt helper using `secretPassphrase`.
+* `ComponentCanDeactivateGuard` / `AbstractCanDeactivateComponent` — route
+  guard pair for unsaved-changes confirmation.
+* `PageTitleStrategy` — sets the page title from route data.
+
+### Translate
+
+* `NgCoreTranslateService` — wraps `@ngx-translate/core`'s
+  `TranslateService`, `luxon` locale settings and PrimeNG translations.
+* `CoreTranslateLoader` — extensible `TranslateLoader` (see above).
+* `TranslateLanguageService` — resolves a language code to its display
+  name in the current locale; also extensible per app.
+* `TranslateLanguagePipe` — pipe wrapping `TranslateLanguageService`.
+* `DateTranslatePipe` — formats a date using the current locale.
+
+### Formly
+
+Field types (`ArrayComponent`, `ObjectComponent`, `MultischemaComponent`,
+`SwitchComponent`, `RadioButtonComponent`, `TreeSelectComponent`,
+`MultiCheckboxComponent`, `InputComponent`, `MultiSelectComponent`,
+`SelectComponent`, `DatePickerComponent`, `TextareaComponent`,
+`MarkdownComponent`, `RemoteAutocompleteComponent`,
+`PasswordGeneratorComponent`), wrappers (`HideWrapperComponent`,
+`CardWrapperComponent`, `FormFieldWrapperComponent`) and editor helpers
+(`LabelComponent`, `DropdownLabelEditorComponent`,
+`AddFieldEditorComponent`), registered through `withNgCoreFormly()`
+(used internally by `provideCore()`).
+
+### Record
+
+Components and services to search, display and edit Invenio records:
+`RecordSearchPageComponent`, `RecordSearchComponent`,
+`RecordSearchResultComponent`, `AggregationComponent` and its
+sub-aggregations, `SearchFiltersComponent`, `SearchTabsComponent`,
+`PaginatorComponent`, `DetailComponent`, `DetailButtonComponent`,
+`EditorComponent`, `RecordService`, `RecordUiService`,
+`RecordHandleErrorService`, `ApiService`, `GetRecordPipe`.
+
+See `projects/ng-core-tester` for complete, working examples of every
+integration point described above.
+
+## Installing a local version of the library
+
+Sometimes it's useful not to use the version published on the npm
+registry, but a local one. There are two ways to do this.
+
+### With pnpm link
+
+The lighter choice is to use the `pnpm link` command. It creates a
+symbolic link to the built library directly in your project's
+`node_modules`, pointing at your local `dist/rero/ng-core` folder.
+
+To do this, build the library first:
+
 ```
 $ cd /path/to/ng-core/project
-$ ng build @rero/ng-core
-$ cd dist/rero/ng-core
-$ npm link
+$ pnpm run build-lib
 ```
 
-Then in the project, add the link to the library: 
+Then, from your project, link to the built output:
+
 ```
 $ cd /path/to/your-project/
-$ npm link @rero/ng-core
+$ pnpm link /path/to/ng-core/project/dist/rero/ng-core
 ```
 
-This solution is the most simple, but the *ng test* command will fail as the tester doesn't resolve the symlink.
+This solution is the simplest, but the `ng test` command will fail as
+the tester doesn't resolve the symlink.
 
-#### With npm pack
+### With a packed tarball
 
-This is the closest way to install the library, as it is done with npm registry. 
-
-The command generates a zipped tarball file containing the library.
-
-The steps to do this are the following: 
+This is the closest way to install the library, as it mirrors installing
+it from the npm registry. The command generates a tarball file containing
+the built library.
 
 ```
 $ cd /path/to/ng-core/project
-$ ng build @rero/ng-core
-$ cd dist/rero/ng-core
-$ npm pack
+$ pnpm run pack
 ```
 
-This will create a file named **rero-ng-core-X.X.X.tgz**. Then, go to the project and install the file: 
+This creates a file named **rero-ng-core-X.X.X.tgz** at the repository
+root. Then, in your project, install the file with your package manager,
+e.g. with pnpm:
 
 ```
 $ cd /path/to/your-project/
-$ npm i /path/to/tarball/file/rero-ng-core-X.X.X.tgz
+$ pnpm add /path/to/tarball/file/rero-ng-core-X.X.X.tgz
 ```
 
 ## Test the library
 
-To test the library : 
+To test the library:
 
 ```
 $ git clone https://github.com/rero/ng-core.git
 $ cd ng-core
-$ npm install
-$ ng build @rero/ng-core
-$ ng serve --open # in another terminal
+$ pnpm install
+$ pnpm run build-lib
+$ pnpm exec ng serve --open # in another terminal
 ```
 
-This will launch the tester application, which contains examples for using functionalities.
+This will launch the `ng-core-tester` application, which contains
+examples for using every functionality of the library.
