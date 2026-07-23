@@ -14,7 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 - NgRx Signal Store for application state
 - Signals preferred over RxJS
 - Vitest for testing
-- Node 20+
+- Node 24 (matches `.github/workflows/main.yml`)
 
 ## Architecture principles
 
@@ -68,7 +68,7 @@ Rules:
 - PrimeNG injects its `@layer` declaration before `styles.scss` in the document, establishing the order before Tailwind declares its own layers.
 - Tailwind utility classes (`ui:`, `core:`) therefore override PrimeNG component styles.
 - Do NOT add a manual `@layer` ordering declaration in `tailwind.css` or `styles.scss`. It would be parsed after PrimeNG's injection and break the intended order.
-- The library Tailwind source is `tailwind.css` → compiled to `ng-core-tailwind.scss` via `npm run build-css`.
+- The library Tailwind source is `tailwind.css` → compiled to `ng-core-tailwind.scss` via `pnpm run build-css`.
 
 ## Change detection
 

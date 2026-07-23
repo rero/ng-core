@@ -2,12 +2,13 @@
   "name": "@rero/ng-core",
   "version": "21.1.1",
   "private": true,
+  "packageManager": "pnpm@11.15.1",
   "scripts": {
     "ng": "ng",
     "serve": "ng serve --configuration localhost",
     "build-css": "postcss  --config projects/rero/ng-core projects/rero/ng-core/tailwind.css -o projects/rero/ng-core/assets/scss/ng-core-tailwind.scss",
     "build-lib": "ng build --configuration production @rero/ng-core",
-    "pack": "npm run build-css && ng build --configuration production @rero/ng-core; npm pack dist/rero/ng-core",
+    "pack": "pnpm run build-css && ng build --configuration production @rero/ng-core && cd dist/rero/ng-core && pnpm pack --pack-destination ../../..",
     "test-lib": "ng test @rero/ng-core",
     "lint": "ng lint --cache",
     "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/en_US.json --fi '  '",
@@ -50,12 +51,15 @@
     "@angular/cli": "^21.2.0",
     "@angular/compiler-cli": "^21.2.1",
     "@angular/language-service": "^21.2.1",
+    "@angular-eslint/builder": "^21.4.0",
+    "@eslint/js": "^9.39.0",
     "@ngx-formly/schematics": "^7.1.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^7.1.0",
     "@semantic-release/git": "^10.0.1",
     "@tailwindcss/postcss": "^4.1.17",
     "@types/crypto-js": "^4.2.2",
+    "@types/json-schema": "^7.0.15",
     "@types/katex": "^0.16.7",
     "@types/lodash-es": "^4.17.12",
     "@types/luxon": "^3.7.1",
@@ -78,11 +82,5 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vitest": "^4.0.18"
-  },
-  "allowScripts": {
-    "@parcel/watcher": true,
-    "esbuild": true,
-    "lmdb": true,
-    "msgpackr-extract": true
   }
 }
