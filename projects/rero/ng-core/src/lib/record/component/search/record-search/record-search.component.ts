@@ -22,13 +22,12 @@ import { Message } from 'primeng/message';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
-import { Aggregations, SearchFilter } from '../../../../model';
+import { Aggregations } from '../../../../model';
 import { ActionStatus } from '../../../../model/action-status.interface';
 import { ExportFormat } from '../../../model/record-search.interface';
 import { ApiService } from '../../../service/api/api.service';
 import { RecordUiService } from '../../../service/record-ui/record-ui.service';
 import { RecordService } from '../../../service/record/record.service';
-import { AggregationsFilter } from '../model/aggregations-filter.interface';
 import { RecordSearchStore } from '../store/record-search.store';
 import { RecordSearchAggregationComponent } from './aggregation/aggregation.component';
 import { ListFiltersComponent } from './aggregation/list-filters/list-filters.component';
@@ -265,42 +264,6 @@ export class RecordSearchComponent {
    */
   aggregations$(aggregations: Aggregations): Observable<Aggregations> {
     return of(aggregations);
-  }
-
-  /**
-   * Extract persistent search filters on current url
-   * @return Array of aggregations filter
-   */
-  protected _extractPersistentAggregationsFilters(): AggregationsFilter[] {
-    const persistent: AggregationsFilter[] = [];
-    this._flatSearchFilters()
-      .filter((filter) => filter.persistent === true)
-      .forEach((filter: SearchFilter) => {
-        if (Object.hasOwn(this.activatedRoute.snapshot.queryParams, filter.filter)) {
-          const data = this.activatedRoute.snapshot.queryParams[filter.filter];
-          persistent.push({
-            key: filter.filter,
-            values: Array.isArray(data) ? data : [data],
-          });
-        }
-      });
-    return persistent;
-  }
-
-  /**
-   * Make all search filters on same array level
-   * @returns - A filters array
-   */
-  protected _flatSearchFilters(): SearchFilter[] {
-    const flatFilters: SearchFilter[] = [];
-    this.store.config().searchFilters.forEach((searchFilter: any) => {
-      if (searchFilter.filters) {
-        searchFilter.filters.forEach((filter: any) => flatFilters.push(filter));
-      } else {
-        flatFilters.push(searchFilter);
-      }
-    });
-    return flatFilters;
   }
 
   scrollToTop(): void {

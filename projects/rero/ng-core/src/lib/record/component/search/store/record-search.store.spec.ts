@@ -669,6 +669,88 @@ describe('RecordSearchStore', () => {
       await new Promise((resolve) => setTimeout(resolve, 50));
       expect(store.hasFilter('status', 'published')).toBe(false);
     });
+
+    it('should apply the disabledValue of a persistent filter when it is missing from the url', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [
+              { filter: 'simple', label: 'Expert search', value: '0', disabledValue: '1', persistent: true },
+            ],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('simple', '1')).toBe(true);
+    });
+
+    it('should not override a persistent filter value coming from the url', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [
+              { filter: 'simple', label: 'Expert search', value: '0', disabledValue: '1', persistent: true },
+            ],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      // Simulate the value being set from the URL query params before filters init.
+      store.updateAggregationsFilter('simple', ['0']);
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('simple', '0')).toBe(true);
+      expect(store.hasFilter('simple', '1')).toBe(false);
+    });
+
+    it('should not apply a default for a non-persistent filter', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [{ filter: 'online', label: 'Online', value: 'true', disabledValue: 'false' }],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('online', 'false')).toBe(false);
+    });
+
+    it('should apply the disabledValue of a persistent filter nested in a section', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [
+              {
+                label: 'Search options',
+                filters: [
+                  { filter: 'simple', label: 'Expert search', value: '0', disabledValue: '1', persistent: true },
+                ],
+              },
+            ],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('simple', '1')).toBe(true);
+    });
   });
 
   describe('processBuckets()', () => {

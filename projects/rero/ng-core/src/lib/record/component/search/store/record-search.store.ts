@@ -7,11 +7,25 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { _, TranslateService } from '@ngx-translate/core';
 import { filter, pipe, tap } from 'rxjs';
 import { RecordType } from '../../../model';
+import { SearchFilter, SearchFilterSection } from '../../../../model';
 import { shallowEqual } from '../../../record-search-utils';
 import { withAggregations } from './features/with-aggregations.feature';
 import { withConfig } from './features/with-config.feature';
 import { FetchRecordsParams, withResults } from './features/with-results.feature';
 import { withSearchParams } from './features/with-search-params.feature';
+
+/** Flatten search filters, extracting the filters nested inside sections. */
+function flatSearchFilters(searchFilters: (SearchFilter | SearchFilterSection)[]): SearchFilter[] {
+  const flat: SearchFilter[] = [];
+  (searchFilters ?? []).forEach((item) => {
+    if ('filters' in item) {
+      flat.push(...item.filters);
+    } else {
+      flat.push(item);
+    }
+  });
+  return flat;
+}
 
 /**
  * RecordSearchStore - SignalStore for managing record search state
@@ -73,6 +87,21 @@ export const RecordSearchStore = signalStore(
           if (!shallowEqual(filters, store.searchFilters())) {
             store.updateSearchFilters(filters);
           }
+          // Apply the default value of persistent filters when they are missing from the URL.
+          // For a persistent filter, `disabledValue` is the implicit default, so the search
+          // behaves the same whatever the entry point (menu, shortcut, direct URL). Without
+          // this, opening a search page with no query params would drop e.g. `simple=1` and
+          // silently switch to expert search.
+          flatSearchFilters(filters).forEach((f: SearchFilter) => {
+            const defaultValue = f.disabledValue;
+            if (f.persistent !== true || defaultValue == null) {
+              return;
+            }
+            // Only apply the default when the filter is not already set from the URL.
+            if (!store.aggregationsFilters().some((a) => a.key === f.filter)) {
+              store.updateAggregationsFilter(f.filter, [defaultValue]);
+            }
+          });
         }),
       ),
     ),
