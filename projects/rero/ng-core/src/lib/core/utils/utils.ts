@@ -34,7 +34,8 @@ export function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
-export function removeChars(value: string, chars: string[] = ['"']): string {
-  const re = new RegExp('[' + chars.join('') + ']', 'gi');
+export function removeChars(value: string, chars: string[] = ['"', '(', ')', '\\']): string {
+  const escaped = chars.map((char) => char.replace(/[.*+?^${}()|[\]\\-]/g, '\\$&'));
+  const re = new RegExp('[' + escaped.join('') + ']', 'gi');
   return value.replace(re, '');
 }
