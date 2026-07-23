@@ -582,6 +582,47 @@ describe('withAggregations feature', () => {
       const aggs = store.aggregations();
       expect(aggs[0].loaded).toBe(true);
       expect(aggs[0].value.buckets.length).toBe(1);
+      // Expanding a facet marks it as included for subsequent searches.
+      expect((aggs[0] as any).included).toBe(true);
+    });
+  });
+
+  describe('included state on enrichment', () => {
+    it('should keep a closed facet not included when enriched from esResult', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            aggregationsOrder: ['author'],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      store.setCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      // `author` is not expanded/hidden: it starts as not included.
+      expect((store.aggregations().find((a) => a.key === 'author') as any).included).toBe(false);
+
+      // Elasticsearch returns the aggregation (e.g. because a filter requested it).
+      store.setResults({
+        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        aggregations: {
+          author: {
+            buckets: [{ key: 'Smith', doc_count: 10 }],
+            doc_count: 10,
+            type: 'terms',
+          },
+        } as any,
+        links: { self: '' },
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      const enriched = store.aggregations().find((a) => a.key === 'author');
+      // Enrichment must not force inclusion of a closed facet.
+      expect(enriched!.loaded).toBe(true);
+      expect((enriched as any).included).toBe(false);
     });
   });
 });
