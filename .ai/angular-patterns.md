@@ -12,7 +12,6 @@ Components rely on signals for UI updates.
 Example:
 
 @Component({
-  standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CounterComponent {
@@ -47,9 +46,7 @@ export const CounterStore = signalStore(
 
 Usage in component:
 
-@Component({
-  standalone: true
-})
+@Component({})
 export class CounterComponent {
   store = inject(CounterStore)
 }
@@ -108,14 +105,16 @@ finalize(() => { if (isConflict) this._keepDisabled.set(true); }),
 
 ### Pattern B — Dialog close / one-shot (no HTTP)
 
-When a button closes a dialog or emits an `@Output()` without an HTTP call,
-`HttpPendingService` does not apply. Use a one-shot signal (never reset because
-the dialog closes):
+When a button closes a dialog or emits a one-shot `output()` (an
+`OutputEmitterRef`, not a signal) without an HTTP call, `HttpPendingService`
+does not apply. Guard with a signal instead (never reset, since the dialog
+closes right after):
 
 ```typescript
+readonly confirm = output<void>();
 readonly isSending = signal(false);
 
-confirm(): void {
+onConfirm(): void {
   if (this.isSending()) return;
   this.isSending.set(true);
   this.confirm.emit();
@@ -125,7 +124,7 @@ confirm(): void {
 Template:
 
 ```html
-<p-button [disabled]="formGroup.invalid || isSending()" (click)="confirm()" />
+<p-button [disabled]="formGroup.invalid || isSending()" (click)="onConfirm()" />
 ```
 
 ### Pattern C — Search / scan input guard

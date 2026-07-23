@@ -9,7 +9,9 @@ Framework version: Angular 21
 
 ## Core rules
 
-- Use standalone components only.
+- Use standalone components only. Standalone is the default since
+  Angular 19 — do not set `standalone: true` explicitly, and never set
+  `standalone: false`.
 - Do not introduce NgModules.
 - Prefer Angular Signals for local state.
 - Avoid RxJS when Signals are sufficient.
@@ -28,7 +30,6 @@ Framework version: Angular 21
 Example:
 
 @Component({
-standalone: true,
 changeDetection: ChangeDetectionStrategy.OnPush
 })
 

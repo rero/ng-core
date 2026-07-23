@@ -9,20 +9,6 @@ These prompt templates help guide the LLM when performing common tasks in this r
 
 ---
 
-## Fix Angular test
-
-Goal: migrate this test to Vitest.
-
-Constraints:
-
-- do not change business logic
-- replace Jasmine APIs with Vitest equivalents
-- replace `jasmine.createSpy` with `vi.fn`
-- replace `spyOn` with `vi.spyOn`
-- keep TestBed only if Angular integration is required
-
----
-
 ## Refactor Angular component
 
 Goal: simplify this component.
