@@ -15,13 +15,11 @@ jobs:
       uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
       with:
         node-version: 24
+    - name: Enable Corepack
+      run: corepack enable
     - name: install package
-      run: |
-        npm install -g @angular/cli@21
-        npm ci
+      run: pnpm install --frozen-lockfile
     - name: run tests
-      run: |
-        ./run-tests.sh
-
+      run: pnpm exec ./run-tests.sh
       env:
         CI: true

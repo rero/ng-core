@@ -19,7 +19,7 @@ display_success_message "Building library..."
 ng build --configuration production @rero/ng-core
 
 display_success_message "Generate style file..."
-npm run build-css
+pnpm run build-css
 
 display_success_message "Building test application..."
 ng build ng-core-tester --configuration production
@@ -32,4 +32,4 @@ ng test @rero/ng-core --watch=false --headless
 ng test ng-core-tester --watch=false --headless
 
 display_success_message "Run pack"
-npm run pack
+pnpm run pack
