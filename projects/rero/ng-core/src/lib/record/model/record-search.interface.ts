@@ -73,6 +73,7 @@ export interface RecordType<TMetadata = JsonObject> {
   // remove a call and use a resolve in the route config
   aggregationsExpand: string[] | (() => string[]);
   aggregationsHide: string[];
+  aggregationsHideCount: string[];
   aggregationsBucketSize: number;
   resultsText: ((hits: EsResult['hits']) => string) | null;
   pagination: {

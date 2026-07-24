@@ -42,6 +42,8 @@ export class BucketsComponent {
   buckets = input.required<Bucket[]>();
   /** Aggregation key */
   aggregationKey = input.required<string>();
+  /** Should bucket counts be hidden, inherited from a parent aggregation. */
+  hideCount = input(false);
 
   /** More and less on aggregation content (facet) */
   moreMode = signal(true);
@@ -69,6 +71,11 @@ export class BucketsComponent {
   /** Get the number of bucket items with non-zero doc_count. */
   readonly bucketsLength = computed(() =>
     this.buckets().reduce((acc, bucket) => (bucket.doc_count ? acc + 1 : acc), 0),
+  );
+
+  /** Should bucket counts be displayed for the current aggregation? */
+  readonly displayCount = computed(
+    () => !this.hideCount() && !this.store.config().aggregationsHideCount.includes(this.aggregationKey()),
   );
 
   /** Should display more or less link for a bucket ? */

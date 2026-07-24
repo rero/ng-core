@@ -19,9 +19,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             <label class="core:grow core:overflow-hidden" for="{{ bucket.aggregationKey }}-{{ index }}">
               {{ bucket.label$ | async }}
             </label>
-            <div class="core:pl-2">
-              {{ bucket.doc_count }}
-            </div>
+            @if (displayCount()) {
+              <div class="core:pl-2">
+                {{ bucket.doc_count }}
+              </div>
+            }
           </div>
         }
         <div class="core:ml-6">
@@ -30,6 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
               <ng-core-record-search-aggregation-buckets
                 [buckets]="aggregation.buckets"
                 [aggregationKey]="aggregation.key"
+                [hideCount]="!displayCount()"
               ></ng-core-record-search-aggregation-buckets>
             }
           }
