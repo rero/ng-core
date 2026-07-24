@@ -28,8 +28,6 @@ The following tools must not be introduced:
 
 - Karma
 - Jasmine
-- jasmine.createSpy
-- jasmine.clock
 
 ## Angular testing
 
@@ -89,21 +87,11 @@ Prefer:
 - async/await
 - Promise-based testing
 
-## Migration patterns (Jasmine → Vitest)
+## Vitest gotchas
 
-| Before | After |
-|---|---|
-| `waitForAsync(() => {` | `async () => {` |
-| `fakeAsync(() => {` | `async () => {` |
-| `tick(N)` | `await new Promise(r => setTimeout(r, N))` |
-| `tick()` | `await Promise.resolve()` |
-| `.compileComponents()` | remove (no-op in Angular 14+) |
-| `fail('msg')` | `throw new Error('msg')` |
-| `jasmine.createSpy` | `vi.fn()` |
-| `spyOn(obj, 'method')` | `vi.spyOn(obj, 'method')` |
-
-- Spy types: use `any` instead of `MockedObject<T>` for partial mocks
-- Remove `.mockName('...')` from `vi.fn()` chains (causes TS errors)
+- Spy types: prefer a narrow partial test type or an explicit local mock
+  interface over `MockedObject<T>` for partial mocks
+- `.compileComponents()` is unnecessary — no-op since Angular 14+
 
 ## setTimeout in tests
 
