@@ -23,14 +23,17 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build CSS
-        run: npm run build-css
+        run: pnpm run build-css
 
       - name: Build library
-        run: npm run build-lib
+        run: pnpm run build-lib
 
       - name: Publish
         run: npm publish dist/rero/ng-core

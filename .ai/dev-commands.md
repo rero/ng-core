@@ -10,19 +10,19 @@ LLM tools should prefer these commands instead of inventing new ones.
 
 ## Install dependencies
 
-npm install
+pnpm install
 
 ## Development server
 
 Start the Angular development server:
 
-npm run serve
+pnpm run serve
 
 ## Compile assets
 
 Compile css tailwind style files:
 
-npm run build-css
+pnpm run build-css
 
 ## Build
 
@@ -48,13 +48,13 @@ ng test ng-core-tester --watch=false --headless
 
 Run ESLint:
 
-npm run lint
+pnpm run lint
 
 ## Format
 
 Run Prettier:
 
-npm run format
+pnpm run format
 
 ## Full quality check
 
