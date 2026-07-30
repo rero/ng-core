@@ -17,9 +17,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldSelectProps, FormlySelectOption } from '@ngx-formly/core/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { OverlayOptions } from 'primeng/api';
 import { MultiSelect } from 'primeng/multiselect';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
+import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
 import { TranslateLabelService } from '../../service/translate-label.service';
 
 export interface NgCoreMultiSelectOption extends FormlySelectOption {
@@ -38,6 +40,7 @@ export interface IMultiSelectProps extends FormlyFieldProps, FormlyFieldSelectPr
   fluid: boolean;
   group: boolean;
   loadingIcon?: string;
+  overlayOptions?: OverlayOptions;
   panelStyleClass?: string;
   placeholder?: string;
   required: boolean;
@@ -74,6 +77,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [formlyAttributes]="field"
       [group]="props.group"
       [loadingIcon]="props.loadingIcon"
+      [overlayOptions]="props.overlayOptions"
       [ngClass]="{ 'ng-invalid ng-dirty': showError }"
       [options]="optionValues()"
       optionLabel="label"
@@ -89,6 +93,7 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
       [tooltipStyleClass]="props.tooltipStyleClass"
       (onChange)="props.change && props.change(field, $event)"
       (onClear)="clearValidators()"
+      (onPanelShow)="onOverlayShow()"
     >
       <ng-template #selectedItems let-items>
         @for (option of items; track option.value; let last = $last) {
@@ -139,6 +144,16 @@ export class MultiSelectComponent extends FieldType<FieldTypeConfig<IMultiSelect
       fluid: true,
       class: '',
       group: false,
+      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // listener on every scrollable ancestor of the trigger (e.g. an
+      // enclosing accordion) and closes the overlay when one of them fires.
+      // On iOS Safari this fires while touch-scrolling the option list
+      // itself, closing the overlay before the user can scroll it.
+      // Other dismissal types (outside click, resize, escape) still use
+      // PrimeNG's own validity check.
+      overlayOptions: {
+        listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
+      },
       placeholder: 'Select…',
       emptyFilterMessage: '',
       emptyMessage: '',
@@ -200,5 +215,9 @@ export class MultiSelectComponent extends FieldType<FieldTypeConfig<IMultiSelect
   clearValidators() {
     const { errors } = this.formControl;
     this.formControl.setErrors(errors?.required ? { required: true } : null);
+  }
+
+  onOverlayShow(): void {
+    fixOverlayTouchScroll('.p-multiselect-overlay');
   }
 }
