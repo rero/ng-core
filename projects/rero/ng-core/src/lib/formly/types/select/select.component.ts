@@ -20,9 +20,11 @@ import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyModule } from '@ng
 import { FormlyFieldSelectProps } from '@ngx-formly/core/select';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { OverlayOptions } from 'primeng/api';
 import { Select } from 'primeng/select';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
+import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
 import { TranslateLabelService } from '../../service/translate-label.service';
 
 export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
@@ -37,6 +39,7 @@ export interface ISelectProps extends FormlyFieldProps, FormlyFieldSelectProps {
   fluid: boolean;
   group: boolean;
   loadingIcon?: string;
+  overlayOptions?: OverlayOptions;
   panelStyleClass?: string;
   placeholder?: string;
   required: boolean;
@@ -84,6 +87,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
         [formlyAttributes]="field"
         [group]="props.group"
         [loadingIcon]="props.loadingIcon"
+        [overlayOptions]="props.overlayOptions"
         [scrollHeight]="props.scrollHeight"
         [ngClass]="{ 'ng-invalid ng-dirty': showError }"
         [options]="optionValues()"
@@ -100,6 +104,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
         [tooltipStyleClass]="props.tooltipStyleClass"
         (onChange)="props.change && props.change(field, $event)"
         (onClear)="clearValidators()"
+        (onShow)="onOverlayShow()"
       >
         <ng-template let-selected #selectedItem>
           {{ selected.untranslatedLabel | translate }}
@@ -149,6 +154,16 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
       items: [],
       class: '',
       group: false,
+      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // listener on every scrollable ancestor of the trigger (e.g. an
+      // enclosing accordion) and closes the overlay when one of them fires.
+      // On iOS Safari this fires while touch-scrolling the option list
+      // itself, closing the overlay before the user can scroll it.
+      // Other dismissal types (outside click, resize, escape) still use
+      // PrimeNG's own validity check.
+      overlayOptions: {
+        listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
+      },
       placeholder: _('Select…'),
       required: false,
       scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
@@ -223,5 +238,9 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
   clearValidators() {
     const { errors } = this.formControl;
     this.formControl.setErrors(errors?.required ? { required: true } : null);
+  }
+
+  onOverlayShow(): void {
+    fixOverlayTouchScroll('.p-select-overlay');
   }
 }

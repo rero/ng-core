@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectOption } from '@ngx-formly/core/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { TreeNode } from 'primeng/api';
+import { OverlayOptions, TreeNode } from 'primeng/api';
 import { TreeNodeSelectEvent } from 'primeng/tree';
 import { TreeSelect } from 'primeng/treeselect';
 import { combineLatest, map, of, startWith, tap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
+import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
 import { TranslateLabelService } from '../../service/translate-label.service';
 
 export interface NgCoreTreeSelectOption extends FormlySelectOption {
@@ -28,6 +29,7 @@ export interface ITreeSelectProps extends FormlyFieldProps {
   filterInputAutoFocus: boolean;
   filterPlaceholder?: string;
   fluid: boolean;
+  overlayOptions?: OverlayOptions;
   panelClass: string;
   panelStyleClass: string;
   placeholder: string;
@@ -51,6 +53,7 @@ export interface ITreeSelectProps extends FormlyFieldProps {
       [formlyAttributes]="field"
       [ngModel]="nodeSelected()"
       [options]="optionValues()"
+      [overlayOptions]="props.overlayOptions"
       [panelClass]="props.panelClass"
       [panelStyleClass]="props.panelStyleClass"
       [placeholder]="props.placeholder | translate"
@@ -60,6 +63,7 @@ export interface ITreeSelectProps extends FormlyFieldProps {
       (onNodeSelect)="setFormValue($event)"
       (onNodeUnselect)="clearFormValue()"
       (onClear)="clearFormValue()"
+      (onShow)="onOverlayShow()"
     >
       <ng-template let-item #item>
         <span class="core:whitespace-normal">
@@ -87,6 +91,16 @@ export class TreeSelectComponent extends FieldType<FieldTypeConfig<ITreeSelectPr
       fluid: true,
       class: '',
       containerStyleClass: '',
+      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // listener on every scrollable ancestor of the trigger (e.g. an
+      // enclosing accordion) and closes the overlay when one of them fires.
+      // On iOS Safari this fires while touch-scrolling the option list
+      // itself, closing the overlay before the user can scroll it.
+      // Other dismissal types (outside click, resize, escape) still use
+      // PrimeNG's own validity check.
+      overlayOptions: {
+        listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
+      },
       panelClass: '',
       panelStyleClass: '',
       placeholder: 'Select…',
@@ -168,5 +182,9 @@ export class TreeSelectComponent extends FieldType<FieldTypeConfig<ITreeSelectPr
     }
 
     return data ?? null;
+  }
+
+  onOverlayShow(): void {
+    fixOverlayTouchScroll('.p-treeselect-overlay');
   }
 }
