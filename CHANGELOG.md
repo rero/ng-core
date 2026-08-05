@@ -1,5 +1,18 @@
 # Changelog
 
+## [21.2.0](https://github.com/rero/ng-core/compare/v21.1.1...v21.2.0) (2026-08-05)
+
+### Features
+
+* migrate to Font Awesome Free v7 ([621e9bd](https://github.com/rero/ng-core/commit/621e9bd3ddaa6c784683a353d1f3087070318402))
+
+### Bug Fixes
+
+* **aggregations:** clear buckets and reset loaded state on collapse ([0a5fe78](https://github.com/rero/ng-core/commit/0a5fe784ff8b20a26289cd4d73d1a1d93cb1bec6))
+* **formly:** fix select overlay scroll-dismiss and touch scroll on iOS ([63212e3](https://github.com/rero/ng-core/commit/63212e34bf89f46e2b0ed925577b617ea6ad892e))
+* **search:** apply persistent filter default from url ([88fb554](https://github.com/rero/ng-core/commit/88fb5542dafae46aae731d1f7335f593e06e8b34))
+* **utils:** harden removeChars default char set ([02e2e72](https://github.com/rero/ng-core/commit/02e2e7216a52a80b3e22b90959d03ebfaeac540f))
+
 ## [21.1.1](https://github.com/rero/ng-core/compare/v21.1.0...v21.1.1) (2026-07-14)
 
 ### Bug Fixes
