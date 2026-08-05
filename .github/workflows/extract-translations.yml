@@ -1,0 +1,90 @@
+# Continuous localization buffer: the CI owns the template
+# (projects/rero/ng-core/translations/messages.json), Weblate owns the language
+# files (projects/rero/ng-core/src/lib/translate/i18n/<lang>.json). Disjoint file
+# sets -> a CI<->Weblate conflict is impossible by construction. The template must
+# stay OUTSIDE the component filemask, otherwise Weblate rejects it with "Template
+# language (messages) does not match source language (en_US)". The buffer is
+# squash-merged into `staging` once per release, which must be followed
+# immediately by merging `staging` back into `translations` -- until that resync
+# lands the merge base is stale and the next nightly merge conflicts.
+#
+# Invariants: no rebase, no force-push, no branch lock.
+
+name: Extract translations
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # every day at 02:00 UTC (aligns with Weblate's 24h commit window)
+  workflow_dispatch:
+
+concurrency:
+  group: extract-translations # one run at a time -> no CI<->CI race
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    # Never run on forks: the job pushes to rero/ng-core and would always fail
+    # elsewhere. Skipped (not failed) on any other repository.
+    if: github.repository == 'rero/ng-core'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: translations
+          fetch-depth: 0
+          persist-credentials: false # token is configured just before the push (see below)
+
+      # Merge before installing, so the extraction runs against staging's code
+      # *and* staging's lockfile.
+      - name: Bring staging code into the buffer
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin staging
+          git merge --no-edit origin/staging # MERGE (never rebase) -> translations is never rewritten
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
+        with:
+          node-version: 24
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm ci
+
+      # No update_catalog: in a monolingual format Weblate derives the string list
+      # from the template, so pushing a key there is enough to make it appear
+      # untranslated in every language. The runtime fallback to English comes from
+      # the "Remove blank strings" add-on.
+      - name: Extract message template
+        run: pnpm run extract_messages
+
+      - name: Commit & push if the template changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TEMPLATE='projects/rero/ng-core/translations/messages.json'
+          # Unlike pybabel, ngx-translate-extract writes no timestamp header, so a
+          # plain diff is enough to skip content-free commits.
+          if git diff --quiet -- "$TEMPLATE"; then
+            echo "No template changes."; exit 0
+          fi
+          git add "$TEMPLATE"
+          git commit -m "chore(i18n): extract messages"
+          # Set the token only now, so it is never in git config during dependency install.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Absorb any concurrent Weblate commit (merge, never rebase), then push; retry the race.
+          for i in 1 2 3; do
+            git fetch origin translations \
+              && git merge --no-edit origin/translations \
+              && git push origin translations && exit 0
+            git merge --abort 2>/dev/null || true
+            echo "attempt $i failed, retrying"; sleep 5
+          done
+          echo "::error::failed to push to translations after 3 attempts"; exit 1

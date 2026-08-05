@@ -11,7 +11,7 @@
     "pack": "pnpm run build-css && ng build --configuration production @rero/ng-core && cd dist/rero/ng-core && pnpm pack --pack-destination ../../..",
     "test-lib": "ng test @rero/ng-core",
     "lint": "ng lint --cache",
-    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/en_US.json --fi '  '",
+    "extract_messages": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/translations/messages.json --fi '  '",
     "update_catalog": "ngx-translate-extract -k -c -s -i ./projects/rero/ng-core/src -o ./projects/rero/ng-core/src/lib/translate/i18n/{de,en,fr,it,ar,cs,eo,es,nl,ta,uk}.json --fi '  '",
     "format": "prettier --write projects/**/*.{ts,html,scss,json}",
     "release": "semantic-release"
