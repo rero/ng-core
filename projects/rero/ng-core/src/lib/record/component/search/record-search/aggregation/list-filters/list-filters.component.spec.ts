@@ -42,9 +42,9 @@ describe('ListFiltersComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display 4 buttons', () => {
+  it('should display 5 buttons', () => {
     const buttons = fixture.debugElement.nativeElement.querySelectorAll('p-button');
-    expect(buttons.length).toBe(4);
+    expect(buttons.length).toBe(5);
   });
 
   it('should have the button label translated', () => {

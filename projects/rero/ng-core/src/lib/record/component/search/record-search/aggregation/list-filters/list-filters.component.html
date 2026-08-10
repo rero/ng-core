@@ -15,5 +15,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         (onClick)="removeFilter(filter)"
       />
     }
+    <div class="core:flex core:w-full core:justify-start core:lg:w-auto core:lg:justify-end core:lg:ml-auto">
+      <p-button
+        class="core:mb-2"
+        icon="fa-solid fa-xmark"
+        [outlined]="true"
+        severity="secondary"
+        [title]="'Remove all filters' | translate"
+        [aria-label]="'Remove all filters' | translate"
+        (onClick)="store.clearFilters()"
+      />
+    </div>
   </div>
 }
