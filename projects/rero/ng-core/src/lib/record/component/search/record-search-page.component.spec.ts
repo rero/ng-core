@@ -3,9 +3,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
+import { RecordType } from '../../model';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordService } from '../../service/record/record.service';
 import { RecordSearchPageComponent } from './record-search-page.component';
+import { DEFAULT_RECORD_TYPE } from './store/features/with-config.feature';
 import { RecordSearchStore } from './store/record-search.store';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -21,6 +23,16 @@ describe('RecordSearchPageComponent', () => {
   let queryParamMapSubject: BehaviorSubject<ParamMap>;
   let paramMapSubject: BehaviorSubject<ParamMap>;
   let mockActivatedRoute: any;
+
+  const documentsTypeWithSortOptions: RecordType = {
+    ...DEFAULT_RECORD_TYPE,
+    key: 'documents',
+    label: 'Documents',
+    sortOptions: [
+      { label: 'Relevance', value: 'relevance', defaultQuery: true },
+      { label: 'Date descending', value: 'newest', defaultNoQuery: true },
+    ],
+  };
 
   // No logs needed for tests
 
@@ -303,6 +315,54 @@ describe('RecordSearchPageComponent', () => {
           replaceUrl: true,
         }),
       );
+    });
+
+    it('should materialize the default sort of the configuration in the URL', async () => {
+      mockRouter.navigate.mockClear();
+      component.store.updateRouteConfig({ types: [documentsTypeWithSortOptions] });
+
+      await vi.waitFor(() =>
+        expect(mockRouter.navigate).toHaveBeenLastCalledWith(
+          expect.any(Array),
+          expect.objectContaining({
+            queryParams: expect.objectContaining({ sort: 'newest' }),
+          }),
+        ),
+      );
+    });
+
+    it('should materialize the default sort of a query in the URL', async () => {
+      component.store.updateRouteConfig({ types: [documentsTypeWithSortOptions] });
+
+      // Wait for the configuration default sort to reach the URL before switching to a query
+      await vi.waitFor(() =>
+        expect(mockRouter.navigate).toHaveBeenLastCalledWith(
+          expect.any(Array),
+          expect.objectContaining({
+            queryParams: expect.objectContaining({ sort: 'newest' }),
+          }),
+        ),
+      );
+      mockRouter.navigate.mockClear();
+      component.store.updateQuery('test search');
+
+      await vi.waitFor(() =>
+        expect(mockRouter.navigate).toHaveBeenLastCalledWith(
+          expect.any(Array),
+          expect.objectContaining({
+            queryParams: expect.objectContaining({ sort: 'relevance' }),
+          }),
+        ),
+      );
+    });
+
+    it('should not add an empty sort parameter in the URL without sort options', async () => {
+      mockRouter.navigate.mockClear();
+      component.store.updatePage(2);
+
+      await vi.waitFor(() => expect(mockRouter.navigate).toHaveBeenCalled());
+      const { queryParams } = mockRouter.navigate.mock.calls.at(-1)[1];
+      expect(queryParams.sort).toBeUndefined();
     });
   });
 

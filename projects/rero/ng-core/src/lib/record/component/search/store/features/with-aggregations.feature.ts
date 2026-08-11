@@ -44,7 +44,6 @@ export function withAggregations() {
     {
       state: type<{
         aggregationsFilters: AggregationsFilter[];
-        sort: string;
         q: string;
         esResult: EsResult | null;
         currentType: string;
@@ -53,6 +52,7 @@ export function withAggregations() {
         config: Signal<RecordType>;
         currentIndex: Signal<string>;
         aggregationsExpand: Signal<string[]>;
+        activeSort: Signal<string>;
         recordService: RecordService;
       }>(),
       methods: type<{
@@ -207,7 +207,7 @@ export function withAggregations() {
             const aggregations = store.aggregations();
             const aggregationsFilters = store.aggregationsFilters();
             const config = store.config();
-            const sort = store.sort();
+            const sort = store.activeSort();
             const currentIndex = store.currentIndex();
             const query = store.q();
 
