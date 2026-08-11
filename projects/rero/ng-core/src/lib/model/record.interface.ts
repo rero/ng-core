@@ -24,16 +24,22 @@ export interface Links {
 }
 
 /**
+ * Number of hits of a record set.
+ *
+ * `invenio-records-rest` is overriden by rero apps to return the raw search engine object, while
+ * `invenio-records-resources` returns a plain number. The string form is
+ * tolerated for older endpoints.
+ */
+export type SearchTotal = number | { relation: string; value: number } | string;
+
+/**
  * Class representing a record set returned by API.
  */
 export interface EsResult<TMetadata = JsonObject> {
   aggregations: Aggregations;
   hits: {
     hits: RecordData<TMetadata>[];
-    total: {
-      relation: string;
-      value: number;
-    };
+    total: SearchTotal;
   };
   links?: Links;
 }
