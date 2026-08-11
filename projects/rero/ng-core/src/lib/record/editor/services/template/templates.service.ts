@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EsResult, JsonObject } from '../../../../model';
+import { searchTotalValue } from '../../../record-search-utils';
 import { RecordService } from '../../../service/record/record.service';
 
 export interface TemplateMetadata extends JsonObject {
@@ -39,12 +40,12 @@ export class TemplatesService {
             return data.hits;
           } else {
             return {
-              total: { value: 0 },
+              total: 0,
               hits: [],
             };
           }
         }),
-        map((hits) => (hits.total.value === 0 ? [] : hits.hits)),
+        map((hits) => (searchTotalValue(hits.total) === 0 ? [] : hits.hits)),
         map((hits) => hits.map((hit) => hit.metadata)),
       );
   }

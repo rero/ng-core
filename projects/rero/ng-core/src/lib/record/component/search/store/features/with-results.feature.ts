@@ -8,6 +8,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
 import { Error } from '../../../../../core';
 import { EsResult } from '../../../../../model';
+import { searchTotalValue } from '../../../../record-search-utils';
 import { RecordService } from '../../../../service/record/record.service';
 import { AggregationsFilter } from '../../model/aggregations-filter.interface';
 
@@ -63,13 +64,13 @@ export function withResults() {
       /** Extract hits array from Elasticsearch result */
       hits: computed(() => store.esResult()?.hits?.hits ?? []),
 
-      total: computed(() => store.esResult()?.hits?.total?.value ?? 0),
+      total: computed(() => searchTotalValue(store.esResult()?.hits?.total)),
 
       /** Check if there are any records */
-      hasRecords: computed(() => (store.esResult()?.hits?.total?.value ?? 0) > 0),
+      hasRecords: computed(() => searchTotalValue(store.esResult()?.hits?.total) > 0),
 
       /** Check if result set is empty */
-      isEmpty: computed(() => (store.esResult()?.hits?.total?.value ?? 0) === 0),
+      isEmpty: computed(() => searchTotalValue(store.esResult()?.hits?.total) === 0),
     })),
 
     withProps(() => ({
