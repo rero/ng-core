@@ -64,7 +64,7 @@ export function paramMapToSearchParams(map: ParamMap): Partial<SearchParams> {
 }
 
 export function searchParamsToUrlParams(
-  params: SearchParams,
+  params: Partial<SearchParams>,
   aggregationsFilters: AggregationsFilter[],
 ): Record<string, unknown> {
   const urlParams: Record<string, unknown> = stripUndefined({

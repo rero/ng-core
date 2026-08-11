@@ -630,6 +630,17 @@ describe('RecordSearchStore', () => {
       expect(store.activeSort()).toBe('best');
     });
 
+    it('should fetch records with the default sort when no sort is selected', async () => {
+      store.updateCurrentType('documents');
+
+      await vi.waitFor(() =>
+        expect(mockRecordService.getRecords).toHaveBeenCalledWith(
+          'documents',
+          expect.objectContaining({ sort: 'newest' }),
+        ),
+      );
+    });
+
     it('should apply defaultSearchInputFilters when no query', async () => {
       store.updateRouteConfig({
         types: [
