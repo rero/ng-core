@@ -10,6 +10,7 @@ import {
   ElementRef,
   inject,
   input,
+  signal,
   Signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -18,6 +19,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Button } from 'primeng/button';
 import { DataView } from 'primeng/dataview';
+import { Drawer } from 'primeng/drawer';
 import { Message } from 'primeng/message';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -48,6 +50,7 @@ import { SearchTabsComponent } from './search-tabs/search-tabs.component';
     SearchInputComponent,
     Message,
     Button,
+    Drawer,
     RouterLink,
     MenuSortComponent,
     ExportButtonComponent,
@@ -86,6 +89,17 @@ export class RecordSearchComponent {
 
   /** If we need to show the empty search message info. */
   showEmptySearchMessage = computed(() => this.store.config().allowEmptySearch === false && !this.store.q());
+
+  /** Whether the aggregations panel is displayed in a drawer on mobile. */
+  readonly showAggregationsDrawer = signal(false);
+
+  /** Whether the sort/export actions menu is expanded on mobile. */
+  readonly showActionsMenu = signal(false);
+
+  /** Whether there is at least one sort option or export format to show in the actions menu. */
+  readonly hasActions = computed(
+    () => this.store.config().sortOptions.length > 0 || this.store.config().exportFormats.length > 0,
+  );
 
   /** Define if title have to be displayed or not. */
   readonly _showLabel = input(true);
