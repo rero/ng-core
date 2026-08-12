@@ -361,6 +361,12 @@ describe('RecordSearchStore', () => {
       expect(hasAuthorFilter).toBe(true);
     });
 
+    it('should reset page to 1 when updating an aggregation filter', () => {
+      store.updatePage(5);
+      store.updateAggregationsFilter('author', ['Smith']);
+      expect(store.page()).toBe(1);
+    });
+
     it('should remove filter values', () => {
       store.updateAggregationsFilter('author', ['Smith', 'Jones']);
       store.removeFilterValue('author', 'Smith');
@@ -370,12 +376,26 @@ describe('RecordSearchStore', () => {
       expect(filter?.values).toContain('Jones');
     });
 
+    it('should reset page to 1 when removing a filter value', () => {
+      store.updateAggregationsFilter('author', ['Smith', 'Jones']);
+      store.updatePage(5);
+      store.removeFilterValue('author', 'Smith');
+      expect(store.page()).toBe(1);
+    });
+
     it('should remove entire filter', () => {
       store.updateAggregationsFilter('author', ['Smith']);
       store.removeFilter('author');
 
       const filter = store.aggregationsFilters().find((f) => f.key === 'author');
       expect(filter).toBeUndefined();
+    });
+
+    it('should reset page to 1 when removing an entire filter', () => {
+      store.updateAggregationsFilter('author', ['Smith']);
+      store.updatePage(5);
+      store.removeFilter('author');
+      expect(store.page()).toBe(1);
     });
 
     it('should check if filter exists', () => {
@@ -397,6 +417,20 @@ describe('RecordSearchStore', () => {
       store.updateAggregationsFilters([]);
 
       expect(store.aggregationsFilters()).toEqual([]);
+    });
+
+    it('should reset page to 1 when replacing all filters', () => {
+      store.updateAggregationsFilter('author', ['Smith']);
+      store.updatePage(5);
+      store.updateAggregationsFilters([]);
+      expect(store.page()).toBe(1);
+    });
+
+    it('should reset page to 1 when clearing all filters', () => {
+      store.updateAggregationsFilter('author', ['Smith']);
+      store.updatePage(5);
+      store.clearFilters();
+      expect(store.page()).toBe(1);
     });
   });
 

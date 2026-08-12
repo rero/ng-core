@@ -3,10 +3,10 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { Tag } from 'primeng/tag';
+import { Observable, of, shareReplay } from 'rxjs';
 import { Bucket } from '../../../../../../model';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { Observable, of, shareReplay } from 'rxjs';
 
 export interface IFilter {
   key: string;
@@ -18,7 +18,7 @@ export interface IFilter {
 @Component({
   selector: 'ng-core-list-filters',
   templateUrl: './list-filters.component.html',
-  imports: [Button, AsyncPipe, TranslatePipe],
+  imports: [AsyncPipe, TranslatePipe, Tag],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {

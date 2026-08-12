@@ -2,7 +2,9 @@
 SPDX-FileCopyrightText: Fondation RERO+
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
+<!-- Desktop: full pagination controls -->
 <p-paginator
+  class="core:hidden core:lg:flex"
   (onPageChange)="onPageChange($event)"
   [alwaysShow]="alwaysShow()"
   [first]="first()"
@@ -10,6 +12,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   [rows]="rows()"
   [showCurrentPageReport]="showCurrentPageReport()"
   [showFirstLastIcon]="showFirstLastIcon()"
+  [totalRecords]="totalRecords()"
+  [rowsPerPageOptions]="rowsPerPageOptions()"
+/>
+
+<!-- Mobile: compact controls, previous/next arrows + rows-per-page only -->
+<p-paginator
+  class="core:lg:hidden"
+  (onPageChange)="onPageChange($event)"
+  [alwaysShow]="alwaysShow()"
+  [first]="first()"
+  [pageLinkSize]="pageLinkSize()"
+  [rows]="rows()"
+  [showCurrentPageReport]="false"
+  [showFirstLastIcon]="false"
+  [showPageLinks]="false"
   [totalRecords]="totalRecords()"
   [rowsPerPageOptions]="rowsPerPageOptions()"
 />

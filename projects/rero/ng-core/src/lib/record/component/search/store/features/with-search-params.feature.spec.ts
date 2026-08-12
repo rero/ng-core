@@ -182,6 +182,15 @@ describe('withSearchParams', () => {
 
       expect(store.searchFilters()).toEqual(updated);
     });
+
+    it('should reset page to 1 when updating search filters', () => {
+      const store = TestBed.inject(TestStore);
+      store.updatePage(5);
+
+      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
+
+      expect(store.page()).toBe(1);
+    });
   });
 
   describe('clearSearchFilters', () => {
@@ -193,6 +202,16 @@ describe('withSearchParams', () => {
 
       expect(store.searchFilters()).toEqual([]);
       expect(store.hasSearchFilters()).toBe(false);
+    });
+
+    it('should reset page to 1 when clearing search filters', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
+      store.updatePage(5);
+
+      store.clearSearchFilters();
+
+      expect(store.page()).toBe(1);
     });
   });
 
@@ -261,6 +280,88 @@ describe('withSearchParams', () => {
       expect(flat[1].filter).toBe('grouped1');
       expect(flat[2].filter).toBe('grouped2');
       expect(flat[3].filter).toBe('another');
+    });
+  });
+
+  describe('clearFilters', () => {
+    it('should reset aggregations filters to empty array when no simple filter exists', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([{ key: 'language', values: ['eng'] }]);
+
+      store.clearFilters();
+
+      expect(store.aggregationsFilters()).toEqual([]);
+    });
+
+    it('should keep the simple filter reset to "1" when its value was "0"', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([
+        { key: 'language', values: ['eng'] },
+        { key: 'simple', values: ['0'] },
+      ]);
+
+      store.clearFilters();
+
+      expect(store.aggregationsFilters()).toEqual([{ key: 'simple', values: ['1'] }]);
+    });
+
+    it('should keep the simple filter reset to "1" when its value was already "1"', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([
+        { key: 'language', values: ['eng'] },
+        { key: 'simple', values: ['1'] },
+      ]);
+
+      store.clearFilters();
+
+      expect(store.aggregationsFilters()).toEqual([{ key: 'simple', values: ['1'] }]);
+    });
+
+    it('should reset page to 1 when clearing filters', () => {
+      const store = TestBed.inject(TestStore);
+      store.updatePage(5);
+
+      store.clearFilters();
+
+      expect(store.page()).toBe(1);
+    });
+  });
+
+  describe('hasFilters', () => {
+    it('should return false when no aggregations filters exist', () => {
+      const store = TestBed.inject(TestStore);
+      expect(store.hasFilters()).toBe(false);
+    });
+
+    it('should return true when a non-simple filter exists', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([{ key: 'language', values: ['eng'] }]);
+
+      expect(store.hasFilters()).toBe(true);
+    });
+
+    it('should return false when only the simple filter exists with value "1"', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([{ key: 'simple', values: ['1'] }]);
+
+      expect(store.hasFilters()).toBe(false);
+    });
+
+    it('should return true when only the simple filter exists with value "0"', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([{ key: 'simple', values: ['0'] }]);
+
+      expect(store.hasFilters()).toBe(true);
+    });
+
+    it('should return true when simple is "1" but another filter is also active', () => {
+      const store = TestBed.inject(TestStore);
+      store.updateAggregationsFilters([
+        { key: 'simple', values: ['1'] },
+        { key: 'language', values: ['eng'] },
+      ]);
+
+      expect(store.hasFilters()).toBe(true);
     });
   });
 
