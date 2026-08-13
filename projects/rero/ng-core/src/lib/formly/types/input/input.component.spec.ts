@@ -44,7 +44,7 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(attributes.step).toBeUndefined();
   });
 
-  it('should have the default step parameter set to number on a number field', () => {
+  it('should have the default step and maxFractionDigits on a number field', () => {
     const { query } = renderComponent({
       key: 'name',
       type: 'input',
@@ -52,23 +52,75 @@ describe('ui-primeng: NgCore Input Type', () => {
         type: 'number',
       },
     });
-    expect(query('input')).not.toBeNull();
-    const { attributes } = query('input');
-    expect(attributes.type).toEqual('number');
-    expect(attributes.step).toEqual('number');
+    expect(query('p-inputnumber')).not.toBeNull();
+    const inputNumber = query('p-inputnumber').componentInstance;
+    expect(inputNumber.step()).toEqual(0.01);
+    expect(inputNumber.maxFractionDigits).toEqual(2);
   });
 
-  it('should have the step parameter set to 0.5 on a number field', () => {
+  it('should have step and maxFractionDigits set from a custom step', () => {
     const { query } = renderComponent({
       key: 'name',
       type: 'input',
       props: {
         type: 'number',
-        inputStep: 0.5,
+        step: 0.5,
       },
     });
-    const { attributes } = query('input');
-    expect(attributes.type).toEqual('number');
-    expect(attributes.step).toEqual('0.5');
+    const inputNumber = query('p-inputnumber').componentInstance;
+    expect(inputNumber.step()).toEqual(0.5);
+    expect(inputNumber.maxFractionDigits).toEqual(1);
   });
+
+  it('should have no step and maxFractionDigits set to 20 when step is any', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+        step: 'any' as any,
+      },
+    });
+    const inputNumber = query('p-inputnumber').componentInstance;
+    expect(inputNumber.step()).toBeUndefined();
+    expect(inputNumber.maxFractionDigits).toEqual(20);
+  });
+
+  it('should render p-inputnumber for a number field regardless of locale', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+      },
+    });
+    expect(query('p-inputnumber')).not.toBeNull();
+    expect(query('input[type="number"]')).toBeNull();
+  });
+
+  it('should show buttons by default on a number field', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+      },
+    });
+    const inputNumber = query('p-inputnumber').componentInstance;
+    expect(inputNumber.showButtons).toBe(true);
+  });
+
+  it('should hide buttons when showButtons is set to false', () => {
+    const { query } = renderComponent({
+      key: 'name',
+      type: 'input',
+      props: {
+        type: 'number',
+        showButtons: false,
+      },
+    });
+    const inputNumber = query('p-inputnumber').componentInstance;
+    expect(inputNumber.showButtons).toBe(false);
+  });
+
 });

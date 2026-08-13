@@ -53,7 +53,9 @@
     "name_with_definition",
     "field_expressions",
     "field_with_addon_left_right",
-    "field_radio_button_inline"
+    "field_radio_button_inline",
+    "number_with_2_digits",
+    "round_number"
   ],
   "properties": {
     "date_validator": {
@@ -1628,6 +1630,27 @@
                 "value": "radio_3"
               }
             ]
+          }
+        }
+      }
+    },
+    "number_with_2_digits": {
+      "title": "Number with 2 digits (default)",
+      "default": 2.55,
+      "widget": {
+        "formlyConfig": {
+          "type": "number"
+        }
+      }
+    },
+    "round_number": {
+      "title": "Round Number",
+      "default": 1,
+      "widget": {
+        "formlyConfig": {
+          "type": "number",
+          "props": {
+            "step": 1
           }
         }
       }

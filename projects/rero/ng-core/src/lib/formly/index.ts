@@ -21,6 +21,7 @@ export * from './types/remote-autocomplete/remote-autocomplete.service';
 export * from './types/remote-autocomplete/remote-autocomplete.interface';
 export * from './types/remote-autocomplete/remote-autocomplete.component';
 export * from './types/select/select.component';
+export * from './utils/overlay-scroll-fix';
 export * from './service/translate-label.service';
 export * from './validator/email.validator';
 export * from './config/formly-config';
