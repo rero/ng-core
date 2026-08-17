@@ -99,6 +99,13 @@ export class NgCoreFormlyExtension {
       const expressionFn = Function('expression', `return ${expression};`);
       field.defaultValue = expressionFn();
     }
+    // Integer fields default to a step of 1 when not explicitly configured.
+    if (field.type === 'integer' && field.props?.step === undefined) {
+      if (!field.props) {
+        field.props = {};
+      }
+      field.props.step = 1;
+    }
   }
 
   /**

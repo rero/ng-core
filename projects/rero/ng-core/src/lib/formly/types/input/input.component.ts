@@ -17,6 +17,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
   step?: 'any' | number;
   locale?: string;
   showButtons?: boolean;
+  useGrouping?: boolean;
 }
 
 @Component({
@@ -44,6 +45,7 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
         <p-inputnumber
           [inputStyleClass]="props.class"
           [locale]="props.locale"
+          [useGrouping]="props.useGrouping ?? false"
           [step]="props.step === 'any' ? undefined : (props.step ?? 0.01)"
           [minFractionDigits]="0"
           [maxFractionDigits]="props.step === 'any' ? 20 : decimalPlaces(props.step ?? 0.01)"
