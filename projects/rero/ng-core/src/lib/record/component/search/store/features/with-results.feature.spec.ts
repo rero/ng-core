@@ -87,6 +87,23 @@ describe('withResults', () => {
     expect(store.error()).toBeNull();
   });
 
+  it('should compute the total given as a plain number', () => {
+    const mockResult: EsResult = {
+      hits: {
+        hits: [{ id: '1', metadata: {}, created: '', updated: '', links: { self: '' } }],
+        total: 1,
+      },
+      aggregations: {},
+      links: { self: '' },
+    };
+
+    store.setResults(mockResult);
+
+    expect(store.total()).toBe(1);
+    expect(store.hasRecords()).toBe(true);
+    expect(store.isEmpty()).toBe(false);
+  });
+
   it('should set loading state', () => {
     store.setLoading(true);
     expect(store.isLoading()).toBe(true);
