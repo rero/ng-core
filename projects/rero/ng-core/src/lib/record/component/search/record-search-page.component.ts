@@ -54,13 +54,19 @@ export class RecordSearchPageComponent {
     effect(() => {
       const currentType = this.store.currentType();
       // Read individual signals so the effect tracks only the URL-relevant fields
+      // `activeSort` is used instead of `sort`, so the default sort defined in the
+      // configuration is materialized in the URL instead of an empty `sort` parameter.
+      const activeSort = this.store.activeSort();
       const storeParams: Partial<SearchParams> = {
         q: this.store.q(),
         page: this.store.page(),
         size: this.store.size(),
-        sort: this.store.sort(),
         aggregationsFilters: this.store.aggregationsFilters(),
       };
+      // No sort option is available for this type: keep the parameter out of the URL.
+      if (activeSort) {
+        storeParams.sort = activeSort;
+      }
 
       // We use untracked to read current route state without creating dependencies,
       // preventing recursive effect triggers.
@@ -72,7 +78,7 @@ export class RecordSearchPageComponent {
         const typeInSync = currentType === currentTypeInUrl;
 
         if (!paramsInSync || !typeInSync) {
-          this.navigate(currentType, storeParams as SearchParams);
+          this.navigate(currentType, storeParams);
         }
       });
     });
@@ -81,7 +87,7 @@ export class RecordSearchPageComponent {
   /**
    * Helper method to perform the actual router navigation
    */
-  private navigate(currentType: string, params: SearchParams) {
+  private navigate(currentType: string, params: Partial<SearchParams>) {
     this.router.navigate(['..', currentType], {
       relativeTo: this.route,
       queryParams: searchParamsToUrlParams(params, this.store.aggregationsFilters()),

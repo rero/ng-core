@@ -1,8 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { TestBed } from '@angular/core/testing';
 import { FormControl, UntypedFormControl } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { addNumberValidators } from './extensions';
+import { RecordService } from '../../record/service/record/record.service';
+import { addNumberValidators, NgCoreFormlyExtension } from './extensions';
 
 const buildField = (type: 'number' | 'integer', props: Record<string, unknown> = {}): FormlyFieldConfig => {
   const control = new FormControl(null);
@@ -111,5 +113,34 @@ describe('addNumberValidators', () => {
   it('should do nothing when formControl is absent', () => {
     const field: FormlyFieldConfig = { type: 'number', props: { min: 1 } };
     expect(() => addNumberValidators(field)).not.toThrow();
+  });
+});
+
+describe('NgCoreFormlyExtension.prePopulate', () => {
+  let extension: NgCoreFormlyExtension;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: RecordService, useValue: {} }],
+    });
+    extension = TestBed.runInInjectionContext(() => new NgCoreFormlyExtension());
+  });
+
+  it('should default step to 1 for integer fields when not configured', () => {
+    const field: FormlyFieldConfig = { type: 'integer' };
+    extension.prePopulate(field);
+    expect(field.props?.step).toBe(1);
+  });
+
+  it('should not override an explicitly configured step for integer fields', () => {
+    const field: FormlyFieldConfig = { type: 'integer', props: { step: 5 } };
+    extension.prePopulate(field);
+    expect(field.props?.step).toBe(5);
+  });
+
+  it('should not set a default step for non-integer fields', () => {
+    const field: FormlyFieldConfig = { type: 'number' };
+    extension.prePopulate(field);
+    expect(field.props?.step).toBeUndefined();
   });
 });

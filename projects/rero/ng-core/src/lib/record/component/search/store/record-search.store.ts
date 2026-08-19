@@ -126,7 +126,7 @@ export const RecordSearchStore = signalStore(
             itemsPerPage: store.size(),
             aggregationsFilters: store.aggregationsFilters(),
             preFilters: config.preFilters,
-            sort: store.sort(),
+            sort: store.activeSort(),
             facets: store.facetsParameter(),
             headers: config.listHeaders,
           };

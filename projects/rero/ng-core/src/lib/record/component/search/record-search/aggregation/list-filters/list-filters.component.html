@@ -3,17 +3,24 @@ SPDX-FileCopyrightText: Fondation RERO+
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 @if (filters().length) {
-  <div class="core:flex core:flex-wrap core:mb-2">
+  <div class="core:flex core:flex-col core:mb-2 core:gap-1">
     @for (filter of filters(); track filter.key) {
-      <p-button
-        class="core:mr-2 core:mb-2"
-        [label]="(filter.label$ | async)!"
-        icon="fa-solid fa-xmark"
-        [outlined]="true"
-        severity="secondary"
-        [title]="filter.aggregationKey | translate"
-        (onClick)="removeFilter(filter)"
-      />
+      @let label = (filter.label$ | async)!;
+      <p-tag
+        class="core:cursor-pointer core:items-start core:justify-start core:text-left core:self-start core:max-w-full"
+        tabindex="0"
+        role="button"
+        [title]="label"
+        [attr.aria-label]="('Remove filter' | translate) + ' ' + label"
+        (click)="removeFilter(filter)"
+        (keydown.enter)="removeFilter(filter)"
+        (keydown.space)="$event.preventDefault(); removeFilter(filter)"
+      >
+        <i class="fa-solid fa-xmark core:ml-1 core:mt-1"></i>
+        <span class="core:min-w-0 core:overflow-hidden core:text-ellipsis core:whitespace-nowrap">
+          {{ label }}
+        </span>
+      </p-tag>
     }
   </div>
 }
