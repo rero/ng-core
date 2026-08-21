@@ -1,6 +1,6 @@
 {
   "name": "@rero/ng-core",
-  "version": "21.2.0",
+  "version": "21.3.0",
   "private": true,
   "packageManager": "pnpm@11.15.1",
   "scripts": {
