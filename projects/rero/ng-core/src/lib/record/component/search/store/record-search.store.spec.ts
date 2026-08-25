@@ -4,7 +4,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { Aggregation, EsResult } from '../../../../model';
 import { RecordService } from '../../../service/record/record.service';
@@ -58,13 +58,13 @@ describe('RecordSearchStore', () => {
     mockTranslateService.stream.mockReturnValue(of('2 results'));
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: [
         RecordSearchStore,
         provideHttpClient(),
         provideHttpClientTesting(),
         { provide: RecordService, useValue: mockRecordService },
         { provide: TranslateService, useValue: mockTranslateService },
+        provideTranslateService(),
       ],
     });
     store = TestBed.inject(RecordSearchStore);

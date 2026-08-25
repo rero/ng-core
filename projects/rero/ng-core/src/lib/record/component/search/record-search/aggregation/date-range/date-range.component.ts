@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { DatePicker } from 'primeng/datepicker';
-import { Divider } from 'primeng/divider';
+import { Button } from '@openng/optimus-ui/button';
+import { DatePicker } from '@openng/optimus-ui/datepicker';
+import { Divider } from '@openng/optimus-ui/divider';
 import { RecordSearchStore } from '../../../store/record-search.store';
 
 export interface Filter {
@@ -18,7 +18,6 @@ export interface Filter {
   selector: 'ng-core-aggregation-date-range',
   templateUrl: './date-range.component.html',
   imports: [DatePicker, FormsModule, Divider, Button, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AggregationDateRangeComponent {
   protected store = inject(RecordSearchStore);

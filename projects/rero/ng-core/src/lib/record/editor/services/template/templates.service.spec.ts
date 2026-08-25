@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { TemplatesService } from './templates.service';
 import { of } from 'rxjs';
 import { RecordService } from '../../../service/record/record.service';
@@ -29,8 +29,11 @@ describe('TemplatesService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
-      providers: [{ provide: RecordService, useValue: recordServiceMock }, provideHttpClient(withInterceptorsFromDi())],
+      providers: [
+        { provide: RecordService, useValue: recordServiceMock },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService(),
+      ],
     });
 
     service = TestBed.inject(TemplatesService);

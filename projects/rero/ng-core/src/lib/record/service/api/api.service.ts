@@ -1,14 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CoreConfigService } from '../../../core';
 
 /**
  * Service giving information about API.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class ApiService {
   protected configService: CoreConfigService = inject(CoreConfigService);
 

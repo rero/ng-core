@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { Observable, of, throwError } from 'rxjs';
@@ -13,9 +13,7 @@ import { ApiService } from '../api/api.service';
 import { RecordHandleErrorService } from '../record-handle-error/record-handle-error.service';
 import { AggregationsFilter } from '../../component/search/model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RecordService {
   protected http: HttpClient = inject(HttpClient);
   protected apiService: ApiService = inject(ApiService);

@@ -5,20 +5,20 @@ import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { of } from 'rxjs';
 import { IMultiSelectProps, MultiSelectComponent } from './multi-select.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 
 const renderComponent = (field: FormlyFieldConfig<IMultiSelectProps>) => {
   return createFieldComponent(field, {
     imports: [
       MultiSelectComponent,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'multi-select', component: MultiSelectComponent }],
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
       }),
       NoopAnimationsModule,
     ],
+    providers: [provideTranslateService()],
   });
 };
 

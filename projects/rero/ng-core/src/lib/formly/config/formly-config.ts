@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ConfigOption } from '@ngx-formly/core';
-import { withFormlyPrimeNG } from '@ngx-formly/primeng';
+import { CheckboxComponent } from '../types/checkbox/checkbox.component';
 import { DatePickerComponent } from '../types/date-picker/date-picker.component';
 import { InputComponent } from '../types/input/input.component';
 import { MarkdownFieldComponent } from '../types/markdown/markdown.component';
@@ -28,7 +28,6 @@ import { ArrayComponent } from '../types/array/array.component';
  */
 export function withNgCoreFormly(): ConfigOption[] {
   return [
-    ...withFormlyPrimeNG(),
     {
       extensions: [{ name: 'email', extension: { prePopulate: emailValidator } }],
       extras: {
@@ -44,6 +43,12 @@ export function withNgCoreFormly(): ConfigOption[] {
         {
           name: 'dateTimePicker', // For compatibility TODO: remove in future
           extends: 'datePicker',
+        },
+        { name: 'datepicker', extends: 'datePicker' },
+        {
+          name: 'checkbox',
+          component: CheckboxComponent,
+          wrappers: ['form-field'],
         },
         {
           name: 'multi-select',
@@ -103,6 +108,7 @@ export function withNgCoreFormly(): ConfigOption[] {
         { name: 'markdown', component: MarkdownFieldComponent },
         { name: 'passwordGenerator', component: PasswordGeneratorComponent },
         { name: 'radioButton', component: RadioButtonComponent },
+        { name: 'radio', extends: 'radioButton' },
       ],
       wrappers: [
         { name: 'form-field', component: FormFieldWrapperComponent },

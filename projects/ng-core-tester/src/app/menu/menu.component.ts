@@ -1,22 +1,21 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { CONFIG } from '@rero/ng-core';
-import { MenuItem, MessageService } from 'primeng/api';
-import { Badge } from 'primeng/badge';
-import { Menubar } from 'primeng/menubar';
-import { Ripple } from 'primeng/ripple';
+import { MenuItem, MessageService } from '@openng/optimus-ui/api';
+import { Badge } from '@openng/optimus-ui/badge';
+import { Menubar } from '@openng/optimus-ui/menubar';
+import { Ripple } from '@openng/optimus-ui/ripple';
 import { map } from 'rxjs';
 import { AppUserService, UserInfo } from '../service/app-user.service';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Menubar, Ripple, RouterLink, Badge, NgClass],
 })
 export class MenuComponent {
@@ -25,10 +24,9 @@ export class MenuComponent {
   router = inject(Router);
   userService = inject(AppUserService);
 
-  private currentLang: Signal<string> = toSignal(
-    this.translateService.onLangChange.pipe(map((event) => event.lang)),
-    { initialValue: this.translateService.getCurrentLang() },
-  );
+  private currentLang: Signal<string> = toSignal(this.translateService.onLangChange.pipe(map((event) => event.lang)), {
+    initialValue: this.translateService.getCurrentLang() ?? 'en',
+  });
 
   private userInfo: Signal<UserInfo | undefined> = toSignal(this.userService.getUserInfo());
 

@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute } from '@angular/router';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { IRemoteAutoCompleteProps, RemoteAutocompleteComponent } from './remote-autocomplete.component';
@@ -25,14 +25,17 @@ const renderComponent = (field: FormlyFieldConfig<IRemoteAutoCompleteProps>) => 
     imports: [
       RemoteAutocompleteComponent,
       ReactiveFormsModule,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
         types: [{ name: 'remote-autocomplete', component: RemoteAutocompleteComponent }],
       }),
       NoopAnimationsModule,
     ],
-    providers: [RemoteAutocompleteService, { provide: ActivatedRoute, useValue: ActivatedRouteSpy }],
+    providers: [
+      RemoteAutocompleteService,
+      { provide: ActivatedRoute, useValue: ActivatedRouteSpy },
+      provideTranslateService(),
+    ],
   });
 };
 

@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlySelectOption } from '@ngx-formly/core/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { OverlayOptions, TreeNode } from 'primeng/api';
-import { TreeNodeSelectEvent } from 'primeng/tree';
-import { TreeSelect } from 'primeng/treeselect';
+import { OverlayOptions, TreeNode } from '@openng/optimus-ui/api';
+import { TreeNodeSelectEvent } from '@openng/optimus-ui/tree';
+import { TreeSelect } from '@openng/optimus-ui/treeselect';
 import { combineLatest, map, of, startWith, tap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
@@ -18,8 +18,6 @@ import { TranslateLabelService } from '../../service/translate-label.service';
 export interface NgCoreTreeSelectOption extends FormlySelectOption {
   children?: NgCoreTreeSelectOption[];
 }
-
-// Doc https://primeng.org/treeselect
 
 export interface ITreeSelectProps extends FormlyFieldProps {
   class: string;
@@ -39,7 +37,6 @@ export interface ITreeSelectProps extends FormlyFieldProps {
 
 @Component({
   selector: 'ng-core-tree-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p-treeSelect
       [class]="props.class"
@@ -91,13 +88,13 @@ export class TreeSelectComponent extends FieldType<FieldTypeConfig<ITreeSelectPr
       fluid: true,
       class: '',
       containerStyleClass: '',
-      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // Don't dismiss the overlay on ancestor scroll: Optimus UI binds a scroll
       // listener on every scrollable ancestor of the trigger (e.g. an
       // enclosing accordion) and closes the overlay when one of them fires.
       // On iOS Safari this fires while touch-scrolling the option list
       // itself, closing the overlay before the user can scroll it.
       // Other dismissal types (outside click, resize, escape) still use
-      // PrimeNG's own validity check.
+      // Optimus UI's own validity check.
       overlayOptions: {
         listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
       },
@@ -115,16 +112,18 @@ export class TreeSelectComponent extends FieldType<FieldTypeConfig<ITreeSelectPr
   ngOnInit(): void {
     const optionsObs = this.props.options ?? of([]);
     const langChangeObs = this.translateService.onLangChange.pipe(startWith(null));
-    combineLatest([optionsObs, langChangeObs]).pipe(
-      tap(([options]) => {
-        this.filter = this.enableFilter(options, 0).enabled;
-      }),
-      map(([options]) => this.translateLabelService.translateLabel(options)),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe((options: TreeNode[]) => {
-      this.optionValues.set(options);
-      this.nodeSelected.set(this.formControl?.value ? this.findNodeByValue(options, this.formControl.value) : null);
-    });
+    combineLatest([optionsObs, langChangeObs])
+      .pipe(
+        tap(([options]) => {
+          this.filter = this.enableFilter(options, 0).enabled;
+        }),
+        map(([options]) => this.translateLabelService.translateLabel(options)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((options: TreeNode[]) => {
+        this.optionValues.set(options);
+        this.nodeSelected.set(this.formControl?.value ? this.findNodeByValue(options, this.formControl.value) : null);
+      });
 
     this.formControl?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
       this.nodeSelected.set(value ? this.findNodeByValue(this.optionValues(), value) : null);

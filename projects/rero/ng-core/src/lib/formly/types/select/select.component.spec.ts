@@ -3,7 +3,7 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ISelectProps, SelectComponent } from './select.component';
@@ -13,12 +13,12 @@ const renderComponent = (field: FormlyFieldConfig<ISelectProps>) => {
     imports: [
       SelectComponent,
       NoopAnimationsModule,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'select', component: SelectComponent }],
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
       }),
     ],
+    providers: [provideTranslateService()],
   });
 };
 

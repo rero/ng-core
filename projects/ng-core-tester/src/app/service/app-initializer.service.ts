@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AppTranslateLanguageService } from './app-translate-language.service';
 import { from, Observable, switchMap } from 'rxjs';
 import { AppUserService } from './app-user.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AppInitializerService {
   private translateService = inject(TranslateService);
   private userService = inject(AppUserService);

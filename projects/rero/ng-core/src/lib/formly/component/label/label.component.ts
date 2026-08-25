@@ -1,22 +1,21 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem } from '@openng/optimus-ui/api';
 import { merge, of, switchMap } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
 import { DropdownLabelEditorComponent } from '../dropdown-label-editor/dropdown-label-editor.component';
-import { Button } from 'primeng/button';
-import { TieredMenu } from 'primeng/tieredmenu';
-import { Tooltip } from 'primeng/tooltip';
+import { Button } from '@openng/optimus-ui/button';
+import { TieredMenu } from '@openng/optimus-ui/tieredmenu';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
   selector: 'ng-core-label-editor',
   templateUrl: './label.component.html',
   imports: [NgTemplateOutlet, DropdownLabelEditorComponent, Button, TieredMenu, Tooltip],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LabelComponent {
   protected translateService: TranslateService = inject(TranslateService);
@@ -34,9 +33,9 @@ export class LabelComponent {
       switchMap((field) => {
         const untranslated = field.props?.['untranslatedLabel'] ?? field.props?.label;
         return untranslated ? this.translateService.stream(untranslated) : of('');
-      })
+      }),
     ),
-    { initialValue: '' }
+    { initialValue: '' },
   );
 
   // Tracks props.required reactively — Formly mutates props directly (plain JS),

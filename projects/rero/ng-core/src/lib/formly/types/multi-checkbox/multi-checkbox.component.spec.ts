@@ -5,19 +5,19 @@ import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { of } from 'rxjs';
 import { IMultiCheckBoxProps, MultiCheckboxComponent } from './multi-checkbox.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 
 const renderComponent = (field: FormlyFieldConfig<IMultiCheckBoxProps>) => {
   return createFieldComponent(field, {
     imports: [
       MultiCheckboxComponent,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'multi-checkbox', component: MultiCheckboxComponent }],
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
       }),
     ],
+    providers: [provideTranslateService()],
   });
 };
 

@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Button } from 'primeng/button';
+import { Component, inject } from '@angular/core';
+import { DynamicDialogConfig, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { Button } from '@openng/optimus-ui/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
 
@@ -25,7 +25,6 @@ import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
     </div>
   `,
   imports: [Button, TranslatePipe, Nl2brPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent {
   config: DynamicDialogConfig = inject(DynamicDialogConfig);

@@ -1,21 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  ElementRef,
-  inject,
-  Type,
-  viewChild,
-} from '@angular/core';
-import { FieldType, FieldTypeConfig, FormlyFieldConfig } from '@ngx-formly/core';
-import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
-import { FormlyFieldTextArea } from '@ngx-formly/primeng/textarea';
+import { afterNextRender, Component, DestroyRef, ElementRef, inject, Type, viewChild } from '@angular/core';
+import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { NgClass } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Textarea } from 'primeng/textarea';
+import { Textarea } from '@openng/optimus-ui/textarea';
 // Type-only import: erased at compile time, so it does not load CodeMirror on the server.
 import type EasyMDE from 'easymde';
 
@@ -30,7 +19,7 @@ interface TextAreaProps extends FormlyFieldProps {
 }
 
 export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaProps> {
-  type: 'textarea' | Type<FormlyFieldTextArea>;
+  type: 'textarea' | Type<MarkdownFieldComponent>;
 }
 
 /**
@@ -44,7 +33,6 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
     </div>
   `,
   imports: [NgClass, ReactiveFormsModule, Textarea],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaProps>> {
   // Reference to textarea element.

@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { provideTranslateService } from '@ngx-translate/core';
+import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
 import { DialogComponent } from './dialog.component';
-import { ButtonModule } from 'primeng/button';
+import { ButtonModule } from '@openng/optimus-ui/button';
 import { CommonModule } from '@angular/common';
 
 describe('DialogComponent', () => {
@@ -16,8 +16,8 @@ describe('DialogComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, ButtonModule, DynamicDialogModule, TranslateModule.forRoot(), DialogComponent, Nl2brPipe],
-      providers: [DynamicDialogConfig, DynamicDialogRef],
+      imports: [CommonModule, ButtonModule, DynamicDialogModule, DialogComponent, Nl2brPipe],
+      providers: [DynamicDialogConfig, DynamicDialogRef, provideTranslateService()],
     });
     config = TestBed.inject(DynamicDialogConfig);
     config.data = {

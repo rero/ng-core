@@ -1,15 +1,13 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { CoreConfigService } from '@rero/ng-core';
 import { environment } from '../environments/environment';
 
 /**
  * Service for configuring the application.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class AppConfigService extends CoreConfigService {
   /**
    * Constructor.

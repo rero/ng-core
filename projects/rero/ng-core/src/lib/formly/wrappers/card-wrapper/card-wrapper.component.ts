@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FieldWrapper } from '@ngx-formly/core';
-import { Fieldset } from 'primeng/fieldset';
+import { Fieldset } from '@openng/optimus-ui/fieldset';
 import { LabelComponent } from '../../component/label/label.component';
 
 @Component({
@@ -21,7 +21,6 @@ import { LabelComponent } from '../../component/label/label.component';
     }
   `,
   imports: [Fieldset, LabelComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardWrapperComponent extends FieldWrapper implements OnInit {
   ngOnInit(): void {

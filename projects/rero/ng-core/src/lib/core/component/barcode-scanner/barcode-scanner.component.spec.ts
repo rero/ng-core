@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { provideTranslateService } from '@ngx-translate/core';
+import { DialogService, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
 import { Subject } from 'rxjs';
 
 import { CameraDetectionService } from '../../service/camera-detection/camera-detection.service';
@@ -32,12 +32,13 @@ describe('BarcodeScannerComponent', () => {
     hasCamera = signal(false);
 
     await TestBed.configureTestingModule({
-      imports: [BarcodeScannerComponent, TranslateModule.forRoot()],
+      imports: [BarcodeScannerComponent],
       providers: [
+        provideTranslateService(),
         { provide: DialogService, useValue: { open: dialogServiceOpen } },
         { provide: CameraDetectionService, useValue: { hasCamera } },
       ],
-    }).compileComponents();
+    });
 
     fixture = TestBed.createComponent(BarcodeScannerComponent);
     component = fixture.componentInstance;

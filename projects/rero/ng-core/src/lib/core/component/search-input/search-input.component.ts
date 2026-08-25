@@ -1,17 +1,16 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputText } from 'primeng/inputtext';
-import { AutoFocus } from 'primeng/autofocus';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { Button } from 'primeng/button';
+import { Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { AutoFocus } from '@openng/optimus-ui/autofocus';
+import { InputGroupAddon } from '@openng/optimus-ui/inputgroupaddon';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'ng-core-search-input',
   templateUrl: './search-input.component.html',
   imports: [InputGroup, InputText, AutoFocus, InputGroupAddon, Button],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchInputComponent {
   /** Input Id */

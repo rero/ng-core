@@ -5,8 +5,8 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { TabsModule } from 'primeng/tabs';
+import { provideTranslateService } from '@ngx-translate/core';
+import { TabsModule } from '@openng/optimus-ui/tabs';
 import { RecordSearchStore } from '../../store/record-search.store';
 import { SearchTabsComponent } from './search-tabs.component';
 
@@ -17,14 +17,13 @@ describe('SearchTabsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        TabsModule,
-        RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
-        SearchTabsComponent,
+      imports: [NoopAnimationsModule, TabsModule, RouterModule.forRoot([]), SearchTabsComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
       ],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     }).compileComponents();
 
     store = TestBed.inject(RecordSearchStore);

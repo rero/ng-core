@@ -3,7 +3,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { ListFiltersComponent } from './list-filters.component';
 
@@ -15,8 +15,13 @@ describe('ListFiltersComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ListFiltersComponent],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      imports: [ListFiltersComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
+      ],
     }).compileComponents();
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(RecordSearchStore);

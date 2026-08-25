@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FieldType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
-import { Tooltip } from 'primeng/tooltip';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 @Component({
   selector: 'ng-core-editor-formly-multi-schema',
@@ -22,6 +22,5 @@ import { Tooltip } from 'primeng/tooltip';
     </div>
   `,
   imports: [Tooltip, FormlyModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSchemaComponent extends FieldType<FormlyFieldConfig> {}

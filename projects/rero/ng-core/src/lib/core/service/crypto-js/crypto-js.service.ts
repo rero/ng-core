@@ -1,12 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
 import { CoreConfigService } from '../core-config/core-config.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CryptoJsService {
   protected coreConfigService: CoreConfigService = inject(CoreConfigService);
 

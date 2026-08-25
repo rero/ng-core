@@ -12,7 +12,7 @@ import { RecordSearchStore } from './store/record-search.store';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 
 describe('RecordSearchPageComponent', () => {
   let component: RecordSearchPageComponent;
@@ -86,7 +86,7 @@ describe('RecordSearchPageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [RecordSearchPageComponent, TranslateModule.forRoot(), NoopAnimationsModule],
+      imports: [RecordSearchPageComponent, NoopAnimationsModule],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -94,6 +94,7 @@ describe('RecordSearchPageComponent', () => {
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: RecordUiService, useValue: mockRecordUiService },
         { provide: RecordService, useValue: mockRecordService },
+        provideTranslateService(),
       ],
     }).compileComponents();
 

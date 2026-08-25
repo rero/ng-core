@@ -1,12 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FieldType, FieldTypeConfig, FormlyModule } from '@ngx-formly/core';
-import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
-import { ToggleSwitch } from 'primeng/toggleswitch';
-import { Tooltip } from 'primeng/tooltip';
+import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
+import { ToggleSwitch } from '@openng/optimus-ui/toggleswitch';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 interface SwitchProps extends FormlyFieldProps {
   hideLabel: boolean;
@@ -28,7 +27,6 @@ interface SwitchProps extends FormlyFieldProps {
     </div>
   `,
   imports: [ToggleSwitch, NgClass, FormsModule, ReactiveFormsModule, FormlyModule, Tooltip],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SwitchComponent extends FieldType<FieldTypeConfig<SwitchProps>> {
   /** Default properties */

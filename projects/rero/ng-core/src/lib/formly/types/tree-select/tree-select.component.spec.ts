@@ -4,7 +4,7 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 import { ITreeSelectProps, TreeSelectComponent } from './tree-select.component';
@@ -14,12 +14,12 @@ const renderComponent = (field: FormlyFieldConfig<ITreeSelectProps>) => {
     imports: [
       TreeSelectComponent,
       NoopAnimationsModule,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'tree-select', component: TreeSelectComponent }],
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
       }),
     ],
+    providers: [provideTranslateService()],
   });
 };
 

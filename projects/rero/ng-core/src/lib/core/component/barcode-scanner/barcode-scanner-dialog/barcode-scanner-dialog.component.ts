@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
+import { afterNextRender, Component, DestroyRef, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Message } from 'primeng/message';
+import { DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { Message } from '@openng/optimus-ui/message';
 import { CoreConfigService } from '../../../service/core-config/core-config.service';
 
 /**
@@ -28,7 +28,6 @@ export function zxingWasmUrl(path: string, assetsUrl: string): string {
 
   <video #video class="core:w-full core:aspect-square core:rounded-lg core:object-cover"></video>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarcodeScannerDialogComponent {
 

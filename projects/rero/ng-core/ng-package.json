@@ -9,7 +9,7 @@
     "lodash-es",
     "luxon",
     "marked",
-    "primelocale"
+    "@openng/optimus-ui-locale"
   ],
   "assets": ["./assets/**/*.scss", "./src/**/*.scss", "./src/lib/translate/i18n/*.json", "./src/lib/translate/languages/*.json"],
   "lib": {

@@ -3,18 +3,18 @@
 
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { TextareaFieldComponent } from './textarea.component';
 
 const renderComponent = (field: FormlyFieldConfig) =>
   createFieldComponent(field, {
     imports: [
       TextareaFieldComponent,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'textarea', component: TextareaFieldComponent }],
       }),
     ],
+    providers: [provideTranslateService()],
   });
 
 describe('TextareaFieldComponent', () => {

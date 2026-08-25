@@ -3,7 +3,7 @@
 
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { KatexDirective } from '../../directive/katex.directive';
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
 import { ReadMoreComponent } from './read-more.component';
@@ -17,7 +17,8 @@ describe('ReadMoreComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ReadMoreComponent, Nl2brPipe, KatexDirective],
+      imports: [ReadMoreComponent, Nl2brPipe, KatexDirective],
+      providers: [provideTranslateService()],
     }).overrideComponent(ReadMoreComponent, {
       set: { changeDetection: ChangeDetectionStrategy.Default },
     });

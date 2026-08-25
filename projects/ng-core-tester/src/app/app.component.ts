@@ -4,9 +4,9 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CoreConfigService, RecordService } from '@rero/ng-core';
 import { NgxSpinnerComponent } from 'ngx-spinner';
-import { MenuItem, MessageService } from 'primeng/api';
-import { ConfirmDialog } from 'primeng/confirmdialog';
-import { Toast } from 'primeng/toast';
+import { MenuItem, MessageService } from '@openng/optimus-ui/api';
+import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
+import { Toast } from '@openng/optimus-ui/toast';
 import { MenuComponent } from './menu/menu.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 

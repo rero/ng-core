@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateLoader, TranslationObject } from '@ngx-translate/core';
 import { forkJoin, from, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { ALLOW_HTTP_CACHE, CoreConfigService } from '../../core';
+import en from '../i18n/en.json';
 
 export type TranslationLoaderFn = () => Promise<{ default: Record<string, string> }>;
 
@@ -14,7 +15,7 @@ export type TranslationLoaderFn = () => Promise<{ default: Record<string, string
 // literals (e.g. `import(\`../${lang}.json\`)`) are not statically analysable by esbuild and
 // are therefore rejected at build time — each language must be an explicit import thunk.
 export const CORE_TRANSLATION_LOADERS: Record<string, TranslationLoaderFn> = {
-  en: () => import('../i18n/en.json'),
+  en: () => Promise.resolve({ default: en }),
 };
 
 /**
@@ -31,7 +32,7 @@ export function versionedUrl(url: string, version: string): string {
   return `${url}${separator}v=${encodeURIComponent(version)}`;
 }
 
-@Injectable()
+@Service({ autoProvided: false })
 export class CoreTranslateLoader implements TranslateLoader {
   protected coreConfigService: CoreConfigService = inject(CoreConfigService);
   protected http: HttpClient = inject(HttpClient);

@@ -1,12 +1,19 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { RadioButton } from 'primeng/radiobutton';
+import { RadioButton } from '@openng/optimus-ui/radiobutton';
 import { Observable, of } from 'rxjs';
 
 interface RadioButtonProps {
@@ -45,7 +52,6 @@ interface Option {
       </div>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RadioButton, FormsModule, ReactiveFormsModule, NgTemplateOutlet, TranslatePipe],
 })
 export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonProps>> implements OnInit {
@@ -62,7 +68,7 @@ export class RadioButtonComponent extends FieldType<FieldTypeConfig<RadioButtonP
 
   ngOnInit(): void {
     this.optionValues = runInInjectionContext(this.injector, () =>
-      toSignal(this.props.options ?? of([]), { initialValue: [] })
+      toSignal(this.props.options ?? of([]), { initialValue: [] }),
     );
   }
 

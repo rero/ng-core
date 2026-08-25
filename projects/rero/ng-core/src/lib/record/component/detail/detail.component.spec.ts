@@ -3,8 +3,8 @@
 import { Location } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, RouterModule, convertToParamMap } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 import { BehaviorSubject, of, throwError } from 'rxjs';
 import { RecordService } from '../../service/record/record.service';
 import { DetailComponent } from './detail.component';
@@ -64,13 +64,14 @@ describe('DetailComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [DetailComponent, TranslateModule.forRoot(), RouterModule.forRoot([])],
+      imports: [DetailComponent, RouterModule.forRoot([])],
       providers: [
         { provide: RecordService, useValue: recordServiceSpy },
         { provide: Location, useValue: loc },
         { provide: ActivatedRoute, useClass: ActivatedRouteStub },
         ConfirmationService,
         MessageService,
+        provideTranslateService(),
       ],
     });
 
@@ -130,10 +131,10 @@ describe('DetailComponent', () => {
     const routeSpy = TestBed.inject(ActivatedRoute) as any;
     routeSpy.testData = {
       types: [
-      {
-        key: 'documents',
-        detailComponent: DefaultDetailComponent,
-      },
+        {
+          key: 'documents',
+          detailComponent: DefaultDetailComponent,
+        },
       ],
       showSearchInput: true,
       adminMode,

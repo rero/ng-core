@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
+import { Button } from '@openng/optimus-ui/button';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { SelectDialogFormComponent } from './select-dialog-form.component';
 
 /**
@@ -13,7 +13,6 @@ import { SelectDialogFormComponent } from './select-dialog-form.component';
  */
 @Component({
   selector: 'app-select-dialog',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './select-dialog.component.html',
   imports: [Button, TranslatePipe],
   providers: [DialogService],

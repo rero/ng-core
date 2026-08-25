@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { ErrorComponent } from './error.component';
 
 describe('ErrorComponent', () => {
@@ -10,7 +10,8 @@ describe('ErrorComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ErrorComponent],
+      imports: [ErrorComponent],
+      providers: [provideTranslateService()],
     });
   });
 

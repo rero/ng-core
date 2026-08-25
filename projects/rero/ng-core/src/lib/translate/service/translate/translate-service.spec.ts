@@ -1,29 +1,28 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { Settings } from 'luxon';
-import { PrimeNG } from 'primeng/config';
+import { Optimus } from '@openng/optimus-ui/config';
 import { NgCoreTranslateService } from './translate-service';
 
 describe('NgCoreTranslateService', () => {
   let service: NgCoreTranslateService;
-  let primeConfig: PrimeNG;
+  let primeConfig: Optimus;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
-      providers: [NgCoreTranslateService, PrimeNG],
+      providers: [NgCoreTranslateService, Optimus, provideTranslateService()],
     });
     service = TestBed.inject(NgCoreTranslateService);
-    primeConfig = TestBed.inject(PrimeNG);
+    primeConfig = TestBed.inject(Optimus);
   });
 
   it('should return the english translation (default)', () => {
     expect(primeConfig.translation.today).toEqual('Today');
   });
 
-  it('should set luxon locale and primeng translation on use()', () => {
+  it('should set luxon locale and optimus-ui translation on use()', () => {
     service.use('en');
     expect(primeConfig.translation.today).toEqual('Today');
     expect(Settings.defaultLocale).toEqual('en');

@@ -6,9 +6,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { DynamicDialogConfig, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { MessageService } from '@openng/optimus-ui/api';
 
 import { LoadTemplateFormComponent } from './load-template-form.component';
 
@@ -19,14 +19,7 @@ describe('LoadTemplateFormComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-
-        ReactiveFormsModule,
-        RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
-        LoadTemplateFormComponent,
-      ],
+      imports: [BrowserAnimationsModule, ReactiveFormsModule, RouterModule.forRoot([]), LoadTemplateFormComponent],
       providers: [
         TranslateService,
         DynamicDialogRef,
@@ -34,6 +27,7 @@ describe('LoadTemplateFormComponent', () => {
         DynamicDialogConfig,
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService(),
       ],
     });
 

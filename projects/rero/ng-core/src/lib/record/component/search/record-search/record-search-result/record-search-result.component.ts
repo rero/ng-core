@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import {
-  ChangeDetectionStrategy,
   Component,
   ViewContainerRef,
   computed,
@@ -15,8 +14,8 @@ import {
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
+import { Button } from '@openng/optimus-ui/button';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 import { ActionStatus, DEFAULT_ACTION_STATUS, RecordData } from '../../../../../model';
@@ -33,7 +32,6 @@ export interface IDeleteRecordEvent {
   selector: 'ng-core-record-search-result',
   templateUrl: './record-search-result.component.html',
   imports: [Button, RouterLink, Tooltip, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordSearchResultComponent {
   protected router: Router = inject(Router);

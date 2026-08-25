@@ -2,18 +2,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { RecordUiService } from './record-ui.service';
 import { RouterModule } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 
 describe('RecordUiService', () => {
   let service: RecordUiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), RouterModule.forRoot([])],
-      providers: [ConfirmationService, MessageService, provideHttpClient(withInterceptorsFromDi())],
+      imports: [RouterModule.forRoot([])],
+      providers: [
+        ConfirmationService,
+        MessageService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService(),
+      ],
     });
     service = TestBed.inject(RecordUiService);
   });
@@ -27,7 +32,9 @@ describe('RecordUiService', () => {
   });
 
   it('Should return the default delete message with a defined type, but no message configuration', () => {
-    expect(service.deleteMessage('1', { key: 'holdings' } as any)[0]).toEqual('Do you really want to delete this record?');
+    expect(service.deleteMessage('1', { key: 'holdings' } as any)[0]).toEqual(
+      'Do you really want to delete this record?',
+    );
   });
 
   it('should return the custom delete message', () => {

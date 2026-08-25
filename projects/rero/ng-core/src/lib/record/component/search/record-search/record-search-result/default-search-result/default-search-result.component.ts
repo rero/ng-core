@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
+import { Button } from '@openng/optimus-ui/button';
 import { RecordData } from '../../../../../../model';
 import { DetailUrl, ResultItem } from '../../../../../model/result-item.interface';
 
@@ -25,7 +25,6 @@ import { DetailUrl, ResultItem } from '../../../../../model/result-item.interfac
     }
   `,
   imports: [Button, RouterLink, JsonPipe, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultSearchResultComponent implements ResultItem {
   // Record data.

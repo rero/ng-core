@@ -3,8 +3,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { provideTranslateService } from '@ngx-translate/core';
+import { AutoCompleteSelectEvent } from '@openng/optimus-ui/autocomplete';
 import { EditorComponent } from '../../../record';
 import { AddFieldEditorComponent } from './add-field-editor.component';
 
@@ -18,7 +18,8 @@ describe('AddFieldEditorComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AddFieldEditorComponent, BrowserAnimationsModule, TranslateModule.forRoot()],
+      imports: [AddFieldEditorComponent, BrowserAnimationsModule],
+      providers: [provideTranslateService()],
     });
     fixture = TestBed.createComponent(AddFieldEditorComponent);
     component = fixture.componentInstance;

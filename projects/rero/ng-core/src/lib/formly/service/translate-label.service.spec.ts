@@ -3,7 +3,7 @@
 
 import { TestBed } from '@angular/core/testing';
 import { TranslateLabelService } from './translate-label.service';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 
 describe('TranslateLabelService', () => {
   let service: TranslateLabelService;
@@ -67,8 +67,7 @@ describe('TranslateLabelService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
-      providers: [TranslateService, TranslateLabelService],
+      providers: [TranslateService, TranslateLabelService, provideTranslateService()],
     });
 
     service = TestBed.inject(TranslateLabelService);

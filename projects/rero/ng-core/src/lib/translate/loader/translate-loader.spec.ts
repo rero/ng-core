@@ -3,7 +3,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CoreTranslateLoader, versionedUrl } from './translate-loader';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CoreConfigService } from '../../core/service/core-config/core-config.service';
 import { ALLOW_HTTP_CACHE } from '../../core/interceptor/no-cache.interceptor';
@@ -11,22 +11,10 @@ import { ALLOW_HTTP_CACHE } from '../../core/interceptor/no-cache.interceptor';
 describe('CoreTranslateLoader', () => {
   let translate: TranslateService;
   let http: HttpTestingController;
+  let loader: TranslateLoader;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        TranslateModule.forRoot({
-          loader: {
-            provide: TranslateLoader,
-            useFactory: () => {
-            const loader = new CoreTranslateLoader();
-            (loader as any).coreTranslationLoaders = {};
-            return loader;
-          },
-            deps: [HttpClient],
-          },
-        }),
-      ],
       providers: [
         TranslateService,
         {
@@ -38,10 +26,22 @@ describe('CoreTranslateLoader', () => {
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService({
+          loader: {
+            provide: TranslateLoader,
+            useFactory: () => {
+              const loader = new CoreTranslateLoader();
+              (loader as any).coreTranslationLoaders = {};
+              return loader;
+            },
+            deps: [HttpClient],
+          },
+        }),
       ],
     });
     translate = TestBed.inject(TranslateService);
     http = TestBed.inject(HttpTestingController);
+    loader = TestBed.inject(TranslateLoader);
   });
 
   afterEach(() => {
@@ -51,8 +51,8 @@ describe('CoreTranslateLoader', () => {
 
   it('should be able to provide CoreTranslateLoader', () => {
     expect(TranslateLoader).toBeDefined();
-    expect(translate.currentLoader).toBeDefined();
-    expect(translate.currentLoader instanceof CoreTranslateLoader).toBeTruthy();
+    expect(loader).toBeDefined();
+    expect(loader instanceof CoreTranslateLoader).toBeTruthy();
   });
 
   it('should be able to get translations', () => {

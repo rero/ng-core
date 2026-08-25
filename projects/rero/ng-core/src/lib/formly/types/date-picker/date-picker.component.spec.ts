@@ -4,7 +4,7 @@
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { DatePickerComponent, IDateTimePickerProps } from './date-picker.component';
 import { FormFieldWrapperComponent } from '../../wrappers/form-field-wrapper/form-field-wrapper.component';
 
@@ -12,13 +12,13 @@ const renderComponent = (field: FormlyFieldConfig<IDateTimePickerProps>) => {
   return createFieldComponent(field, {
     imports: [
       DatePickerComponent,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'datePicker', component: DatePickerComponent }],
         wrappers: [{ name: 'form-field', component: FormFieldWrapperComponent }],
       }),
       NoopAnimationsModule,
     ],
+    providers: [provideTranslateService()],
   });
 };
 

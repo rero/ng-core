@@ -3,12 +3,12 @@
 
 import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ButtonModule } from 'primeng/button';
+import { ButtonModule } from '@openng/optimus-ui/button';
 import { DetailButtonComponent } from './detail-button.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { By } from '@angular/platform-browser';
 import { ComponentRef } from '@angular/core';
-import { TooltipModule } from 'primeng/tooltip';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
 
 describe('DetailButtonComponent', () => {
   let fixture: ComponentFixture<DetailButtonComponent>;
@@ -19,7 +19,8 @@ describe('DetailButtonComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, ButtonModule, TooltipModule, TranslateModule.forRoot(), DetailButtonComponent],
+      imports: [CommonModule, ButtonModule, TooltipModule, DetailButtonComponent],
+      providers: [provideTranslateService()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailButtonComponent);

@@ -3,8 +3,8 @@
 import { Component, inject } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
 import { CONFIG } from '@rero/ng-core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'app-dialog',

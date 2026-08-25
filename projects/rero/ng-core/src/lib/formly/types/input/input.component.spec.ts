@@ -5,8 +5,8 @@ import { createFieldComponent } from '@ngx-formly/core/testing';
 import { InputComponent, NgCoreFormlyInputFieldConfig } from './input.component';
 
 import { FormlyModule } from '@ngx-formly/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { DialogService } from 'primeng/dynamicdialog';
+import { provideTranslateService } from '@ngx-translate/core';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { CameraDetectionService } from '../../../core';
 
 const hasCamera = signal(false);
@@ -15,19 +15,19 @@ const renderComponent = (field: NgCoreFormlyInputFieldConfig) => {
   return createFieldComponent(field, {
     imports: [
       InputComponent,
-      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'input', component: InputComponent }],
       }),
     ],
     providers: [
+      provideTranslateService(),
       { provide: CameraDetectionService, useValue: { hasCamera } },
       { provide: DialogService, useValue: { open: vi.fn() } },
     ],
   });
 };
 
-describe('ui-primeng: NgCore Input Type', () => {
+describe('ui-optimus-ui: NgCore Input Type', () => {
   it('should render input type with addon', () => {
     const { query } = renderComponent({
       key: 'name',

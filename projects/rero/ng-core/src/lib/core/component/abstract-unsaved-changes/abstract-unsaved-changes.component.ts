@@ -1,21 +1,25 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Component, HostListener } from '@angular/core';
+import { Directive } from '@angular/core';
 
 /**
+ * Base class for routed components that must confirm before leaving with
+ * unsaved changes. Pair it with `unsavedChangesGuard` on the route.
+ *
  * Doc: https://developer.mozilla.org/en-US/docs/Web/API/Window/beforeunload_event
  *
  * The beforeunload event is fired when the window, the document and its resources
  * are about to be unloaded. The document is still visible and the event is still
  * cancelable at this point.
  */
-@Component({
-  template: '',
+@Directive({
+  host: {
+    '(window:beforeunload)': 'unloadNotification($event)',
+  },
 })
-export abstract class AbstractCanDeactivateComponent {
+export abstract class AbstractUnsavedChangesComponent {
   abstract canDeactivate: boolean;
 
-  @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: BeforeUnloadEvent): void {
     if (!this.canDeactivate) {
       $event.preventDefault();

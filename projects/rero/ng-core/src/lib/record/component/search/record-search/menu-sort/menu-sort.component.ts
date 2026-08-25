@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MenuItem, MenuItemCommandEvent } from 'primeng/api';
-import { Button } from 'primeng/button';
-import { Menu } from 'primeng/menu';
+import { MenuItem, MenuItemCommandEvent } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
+import { Menu } from '@openng/optimus-ui/menu';
 import { SortOption } from '../../../../model/record-search.interface';
 import { RecordSearchStore } from '../../store/record-search.store';
 
@@ -14,7 +14,6 @@ import { RecordSearchStore } from '../../store/record-search.store';
   selector: 'ng-core-menu-sort',
   templateUrl: './menu-sort.component.html',
   imports: [Menu, Button, NgClass, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MenuSortComponent {
   protected translateService: TranslateService = inject(TranslateService);

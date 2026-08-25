@@ -1,7 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -16,9 +15,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { SelectChangeEvent } from 'primeng/select';
-import { Listbox } from 'primeng/listbox';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from '@openng/optimus-ui/autocomplete';
+import { SelectChangeEvent } from '@openng/optimus-ui/select';
+import { Listbox } from '@openng/optimus-ui/listbox';
 import { EditorComponent } from '../../../record';
 import { JsonObject } from '../../../model';
 
@@ -29,7 +28,6 @@ import { JsonObject } from '../../../model';
   selector: 'ng-core-editor-add-field-editor',
   templateUrl: './add-field-editor.component.html',
   imports: [AutoComplete, Listbox, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddFieldEditorComponent<TMetadata extends JsonObject = JsonObject> implements OnInit {
   protected translateService: TranslateService = inject(TranslateService);
