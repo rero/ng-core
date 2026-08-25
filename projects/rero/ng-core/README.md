@@ -36,10 +36,10 @@ $ pnpm add @rero/ng-core
 ## Configuration
 
 Register `provideCore()` in your application's providers. This wires up
-Formly configuration, PrimeNG dialog/message/confirmation services, the
+Formly configuration, Optimus UI dialog/message/confirmation services, the
 page title strategy and the translate service used by the library.
 
-`provideCore()` does not provide PrimeNG's own configuration, animations
+`provideCore()` does not provide Optimus UI's own configuration, animations
 or `HttpClient` — those remain your application's responsibility, as
 shown in `projects/ng-core-tester/src/app/app.config.ts`:
 
@@ -49,13 +49,13 @@ import { ApplicationConfig } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideCore } from '@rero/ng-core';
-import { providePrimeNG } from 'primeng/config';
+import { provideOptimus } from '@openng/optimus-ui/config';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideCore(),
     provideAnimations(),
-    providePrimeNG({ theme: /* your PrimeNG theme preset */ {} }),
+    provideOptimus({ theme: /* your Optimus UI theme preset */ {} }),
     provideHttpClient(),
     // ...your other providers
   ],
@@ -123,7 +123,7 @@ authoritative source):
 
 ### Extending translations
 
-Only `en` translations, English (`en-US`) Angular locale data and PrimeNG
+Only `en` translations, English (`en-US`) Angular locale data and Optimus UI
 translations are bundled in the library. Consuming applications add the
 languages they need by subclassing three extension points and registering
 them in `app.config.ts`. `projects/ng-core-tester` is the reference
@@ -150,17 +150,17 @@ export class AppTranslateLoader extends CoreTranslateLoader {
 ```
 
 ```typescript
-// app-translate.service.ts — add Angular locale data + PrimeNG translations
+// app-translate.service.ts — add Angular locale data + Optimus UI translations
 import { Injectable } from '@angular/core';
 import { CORE_LOCALES, Locales, NgCoreTranslateService } from '@rero/ng-core';
 import localeFr from '@angular/common/locales/fr';
-import fr from 'primelocale/js/fr.js';
+import { fr } from '@openng/optimus-ui-locale/js/fr.js';
 
 @Injectable({ providedIn: 'root' })
 export class AppTranslateService extends NgCoreTranslateService {
   protected override locales: Locales = {
     ...CORE_LOCALES,
-    fr: { angular: localeFr, primeng: fr },
+    fr: { angular: localeFr, optimusUI: fr },
   };
 }
 ```
@@ -181,7 +181,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-Angular locale modules and PrimeNG translations are compiled JS modules
+Angular locale modules and Optimus UI translations are compiled JS modules
 that must be statically imported — dynamic import paths built from
 template literals are rejected by esbuild at build time, so each language
 must be listed explicitly as shown above.
@@ -241,14 +241,14 @@ camera preview starts, but no barcode is ever detected (a 404 for
   `httpPendingInterceptor`) to guard against double form submits.
 * `LocalStorageService` — typed wrapper around `localStorage`.
 * `CryptoJsService` — encrypt/decrypt helper using `secretPassphrase`.
-* `ComponentCanDeactivateGuard` / `AbstractCanDeactivateComponent` — route
+* `unsavedChangesGuard` / `AbstractUnsavedChangesComponent` — route
   guard pair for unsaved-changes confirmation.
 * `PageTitleStrategy` — sets the page title from route data.
 
 ### Translate
 
 * `NgCoreTranslateService` — wraps `@ngx-translate/core`'s
-  `TranslateService`, `luxon` locale settings and PrimeNG translations.
+  `TranslateService`, `luxon` locale settings and Optimus UI translations.
 * `CoreTranslateLoader` — extensible `TranslateLoader` (see above).
 * `TranslateLanguageService` — resolves a language code to its display
   name in the current locale; also extensible per app.

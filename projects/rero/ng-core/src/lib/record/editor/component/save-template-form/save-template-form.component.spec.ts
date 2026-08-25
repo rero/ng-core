@@ -6,8 +6,8 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
 import { FormlyModule } from '@ngx-formly/core';
 
 import { SaveTemplateFormComponent } from './save-template-form.component';
@@ -29,7 +29,6 @@ describe('SaveTemplateFormComponent', () => {
       imports: [
         ReactiveFormsModule,
         RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
         FormlyModule.forRoot({
           types: [{ name: 'string', component: FormlyFieldStringComponent }],
         }),
@@ -40,6 +39,7 @@ describe('SaveTemplateFormComponent', () => {
         DynamicDialogRef,
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService(),
       ],
     });
   });

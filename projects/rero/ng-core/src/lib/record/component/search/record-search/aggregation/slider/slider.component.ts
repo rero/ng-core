@@ -1,18 +1,17 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, inject, input, linkedSignal } from '@angular/core';
+import { Component, computed, inject, input, linkedSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputNumber } from 'primeng/inputnumber';
+import { Button } from '@openng/optimus-ui/button';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputNumber } from '@openng/optimus-ui/inputnumber';
 import { RecordSearchStore } from '../../../store/record-search.store';
 
 @Component({
   selector: 'ng-core-aggregation-slider',
   templateUrl: './slider.component.html',
   imports: [InputGroup, InputNumber, FormsModule, Button, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AggregationSliderComponent {
   protected store = inject(RecordSearchStore);

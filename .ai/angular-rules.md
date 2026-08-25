@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Angular Rules
 
-Framework version: Angular 21
+Framework version: Angular 22
 
 ## Core rules
 
@@ -25,18 +25,19 @@ Framework version: Angular 21
 
 ## Change detection
 
-- Use OnPush change detection by default.
-
-Example:
-
-@Component({
-changeDetection: ChangeDetectionStrategy.OnPush
-})
+- OnPush is the default change detection strategy since Angular 22.
+  Do not set `changeDetection: ChangeDetectionStrategy.OnPush` explicitly
+  on `@Component`.
 
 ## Dependency injection
 
 - Avoid unnecessary services.
 - Prefer simple utility functions when Angular DI is not needed.
+- Use `@Service()` instead of `@Injectable({ providedIn: 'root' })` for
+  root-provided, tree-shakable services (available since Angular 22).
+- Use `@Service({ autoProvided: false })` instead of a bare `@Injectable()`
+  for services that must be registered explicitly in a `providers` array
+  (e.g. route guards, translation loaders provided via a factory).
 
 ## State management
 

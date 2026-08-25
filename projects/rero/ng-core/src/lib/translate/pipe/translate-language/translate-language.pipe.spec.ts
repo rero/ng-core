@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TranslateLanguageService } from '../../service/translate-language/translate-language.service';
 import { TranslateLanguagePipe } from './translate-language.pipe';
 
@@ -46,13 +46,13 @@ describe('TranslateLanguagePipe', () => {
   beforeEach(() => {
     languageServiceMock = new TranslateLanguageServiceMock();
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: TranslateLanguageService, useValue: languageServiceMock },
+        provideTranslateService(),
       ],
     });
     translateService = TestBed.inject(TranslateService);
-    translateService.setDefaultLang('en');
+    translateService.setFallbackLang('en');
   });
 
   it('should create an instance', () => {

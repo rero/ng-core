@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FieldArrayType, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { LabelComponent } from '../../component/label/label.component';
 
@@ -11,7 +11,6 @@ import { LabelComponent } from '../../component/label/label.component';
   selector: 'ng-core-editor-formly-array',
   templateUrl: 'array.component.html',
   imports: [LabelComponent, FormlyModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ArrayComponent extends FieldArrayType implements OnInit {
   /**

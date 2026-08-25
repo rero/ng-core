@@ -4,8 +4,8 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { CheckboxModule } from 'primeng/checkbox';
+import { provideTranslateService } from '@ngx-translate/core';
+import { CheckboxModule } from '@openng/optimus-ui/checkbox';
 import { TranslateLanguagePipe } from '../../../../../../translate/pipe/translate-language/translate-language.pipe';
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { BucketsComponent } from './buckets.component';
@@ -18,14 +18,8 @@ describe('BucketsComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        CheckboxModule,
-        TranslateModule.forRoot(),
-        BucketsComponent,
-        TranslateLanguagePipe,
-      ],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi())],
+      imports: [FormsModule, CheckboxModule, BucketsComponent, TranslateLanguagePipe],
+      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideTranslateService()],
     });
   });
 

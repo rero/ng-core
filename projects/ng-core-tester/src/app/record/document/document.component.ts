@@ -3,7 +3,7 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DetailUrl, RecordData, ResultItem } from '@rero/ng-core';
-import { Tag } from 'primeng/tag';
+import { Tag } from '@openng/optimus-ui/tag';
 
 export interface DocumentMetadata {
   pid: string;

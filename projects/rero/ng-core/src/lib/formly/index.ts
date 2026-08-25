@@ -11,6 +11,7 @@ export * from './types/textarea/textarea.component';
 export * from './types/object/object.component';
 export * from './types/multischema/multischema.component';
 export * from './types/switch/switch.component';
+export * from './types/checkbox/checkbox.component';
 export * from './types/radio-button/radio-button.component';
 export * from './types/tree-select/tree-select.component';
 export * from './types/multi-checkbox/multi-checkbox.component';

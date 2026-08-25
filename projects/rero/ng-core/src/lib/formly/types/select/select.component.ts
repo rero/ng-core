@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -16,12 +15,11 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
+import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldSelectProps } from '@ngx-formly/core/select';
-import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { OverlayOptions } from 'primeng/api';
-import { Select } from 'primeng/select';
+import { OverlayOptions } from '@openng/optimus-ui/api';
+import { Select } from '@openng/optimus-ui/select';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
@@ -67,8 +65,7 @@ export interface IFormlySelectFieldConfig extends FormlyFieldConfig<ISelectProps
 }
 
 @Component({
-  selector: 'ng-core-primeng-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ng-core-optimus-ui-select',
   template: `
     @if (props.options) {
       <p-select
@@ -135,7 +132,7 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
   optionValues: Signal<ISelectOption[]> = signal([]);
   filterEnabled = computed(() => this.enableFilter(this.optionValues(), 0).enabled);
 
-  /** Reference to the underlying PrimeNG select, used to open its panel programmatically. */
+  /** Reference to the underlying Optimus UI select, used to open its panel programmatically. */
   private select = viewChild(Select);
 
   /** Ensures the panel is opened only once when `autofocus` is enabled. */
@@ -154,13 +151,13 @@ export class SelectComponent extends FieldType<FieldTypeConfig<ISelectProps>> im
       items: [],
       class: '',
       group: false,
-      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // Don't dismiss the overlay on ancestor scroll: Optimus UI binds a scroll
       // listener on every scrollable ancestor of the trigger (e.g. an
       // enclosing accordion) and closes the overlay when one of them fires.
       // On iOS Safari this fires while touch-scrolling the option list
       // itself, closing the overlay before the user can scroll it.
       // Other dismissal types (outside click, resize, escape) still use
-      // PrimeNG's own validity check.
+      // Optimus UI's own validity check.
       overlayOptions: {
         listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
       },

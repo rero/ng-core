@@ -1,19 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Location } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ActionStatus } from '../../../../model/action-status.interface';
 import { RecordActionEvent } from './record-action-event.interface';
-import { Button } from 'primeng/button';
+import { Button } from '@openng/optimus-ui/button';
 import { TranslateDirective, TranslatePipe } from '@ngx-translate/core';
-import { Tooltip } from 'primeng/tooltip';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { RecordData } from '../../../../model/record.interface';
 
 @Component({
   selector: 'ng-core-detail-button',
   templateUrl: './detail-button.component.html',
   imports: [Button, TranslateDirective, Tooltip, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DetailButtonComponent {
   // Inject

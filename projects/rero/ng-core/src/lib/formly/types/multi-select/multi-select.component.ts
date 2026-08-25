@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   inject,
@@ -17,8 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldSelectProps, FormlySelectOption } from '@ngx-formly/core/select';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { OverlayOptions } from 'primeng/api';
-import { MultiSelect } from 'primeng/multiselect';
+import { OverlayOptions } from '@openng/optimus-ui/api';
+import { MultiSelect } from '@openng/optimus-ui/multiselect';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { fixOverlayTouchScroll } from '../../utils/overlay-scroll-fix';
@@ -61,7 +60,6 @@ export interface FormlyMultiSelectFieldConfig extends FormlyFieldConfig<IMultiSe
 
 @Component({
   selector: 'ng-core-multi-select',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p-multiSelect
       [appendTo]="props.appendTo"
@@ -144,13 +142,13 @@ export class MultiSelectComponent extends FieldType<FieldTypeConfig<IMultiSelect
       fluid: true,
       class: '',
       group: false,
-      // Don't dismiss the overlay on ancestor scroll: PrimeNG binds a scroll
+      // Don't dismiss the overlay on ancestor scroll: Optimus UI binds a scroll
       // listener on every scrollable ancestor of the trigger (e.g. an
       // enclosing accordion) and closes the overlay when one of them fires.
       // On iOS Safari this fires while touch-scrolling the option list
       // itself, closing the overlay before the user can scroll it.
       // Other dismissal types (outside click, resize, escape) still use
-      // PrimeNG's own validity check.
+      // Optimus UI's own validity check.
       overlayOptions: {
         listener: (_event, options) => (options?.type === 'scroll' ? false : (options?.valid ?? true)),
       },

@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Component, OnInit, inject } from '@angular/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { MessageService, ToastMessageOptions } from 'primeng/api';
-import { Select } from 'primeng/select';
+import { MessageService, ToastMessageOptions } from '@openng/optimus-ui/api';
+import { Select } from '@openng/optimus-ui/select';
 import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
-import { Button } from 'primeng/button';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Button } from '@openng/optimus-ui/button';
 
 interface IToastType {
   name: string;

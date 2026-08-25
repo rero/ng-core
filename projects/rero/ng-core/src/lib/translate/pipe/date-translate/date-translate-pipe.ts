@@ -20,7 +20,7 @@ export class DateTranslatePipe extends DatePipe implements PipeTransform {
     locale?: string,
   ): string | null {
     if (!locale) {
-      locale = this.translateService.getCurrentLang();
+      locale = this.translateService.getCurrentLang() ?? undefined;
     }
 
     if (locale === 'en') {

@@ -6,14 +6,12 @@ import data from './recordData.json';
 import JSONSchema from './schema.json';
 import SimpleJSONSchema from './simple-schema.json';
 import simpleData from './simple-record-data.json';
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { HttpHeaders } from '@angular/common/http';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RecordServiceMock extends RecordService {
   getSchemaForm(recordType: string): Observable<any> {
     return of({ schema: recordType === 'demo' ? JSONSchema : SimpleJSONSchema });

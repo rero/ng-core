@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EsResult, JsonObject } from '../../../../model';
@@ -14,9 +14,7 @@ export interface TemplateMetadata extends JsonObject {
   template_type?: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TemplatesService {
   protected recordService: RecordService = inject(RecordService);
 

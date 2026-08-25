@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,9 +10,7 @@ import { ApiService } from '../../../service/api/api.service';
 import { RecordService } from '../../../service/record/record.service';
 import { JSONSchema7 } from '../../utils/utils';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class JSONSchemaService {
   protected translateService: TranslateService = inject(TranslateService);
   protected recordService: RecordService = inject(RecordService);

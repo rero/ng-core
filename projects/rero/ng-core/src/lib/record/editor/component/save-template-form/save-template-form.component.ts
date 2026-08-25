@@ -1,17 +1,16 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UntypedFormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Button } from 'primeng/button';
+import { DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'ng-core-save-template-form',
   templateUrl: './save-template-form.component.html',
   imports: [FormsModule, ReactiveFormsModule, FormlyModule, Button, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SaveTemplateFormComponent implements OnInit {
   protected dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef);

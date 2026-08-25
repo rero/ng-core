@@ -3,7 +3,6 @@
 import { Location } from '@angular/common';
 import { HttpHeaders } from '@angular/common/http';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   computed,
@@ -23,16 +22,16 @@ import { FormlyFieldConfig, FormlyFormOptions, FormlyModule } from '@ngx-formly/
 import { FormlyJsonschema } from '@ngx-formly/core/json-schema';
 import { TranslateDirective, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { cloneDeep } from 'lodash-es';
-import { MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
-import { Divider } from 'primeng/divider';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SplitButton } from 'primeng/splitbutton';
-import { Tooltip } from 'primeng/tooltip';
+import { MessageService } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
+import { Divider } from '@openng/optimus-ui/divider';
+import { DialogService, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { SplitButton } from '@openng/optimus-ui/splitbutton';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 import { combineLatest, Observable, of, Subscription, throwError } from 'rxjs';
 import { catchError, finalize, map, switchMap } from 'rxjs/operators';
 import { HttpPendingService, UpperCaseFirstPipe } from '../../../../core';
-import { AbstractCanDeactivateComponent } from '../../../../core/component/abstract-can-deactivate/abstract-can-deactivate.component';
+import { AbstractUnsavedChangesComponent } from '../../../../core/component/abstract-unsaved-changes/abstract-unsaved-changes.component';
 import { ErrorComponent } from '../../../../core/component/error/error.component';
 import { Error } from '../../../../core/component/error/error.interface';
 import { CONFIG } from '../../../../core/config/config';
@@ -99,7 +98,6 @@ interface EditorRecordActionResult {
 @Component({
   selector: 'ng-core-editor',
   templateUrl: './editor.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -116,7 +114,7 @@ interface EditorRecordActionResult {
   ],
 })
 export class EditorComponent<TMetadata extends JsonObject = JsonObject>
-  extends AbstractCanDeactivateComponent
+  extends AbstractUnsavedChangesComponent
   implements OnInit, OnChanges, OnDestroy
 {
   protected formlyJsonschema: FormlyJsonschema = inject(FormlyJsonschema);
@@ -489,7 +487,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         map((record) => {
           return { record, action: 'update' as const, message: this.translateService.instant('Record updated.') };
         }),
-        finalize(() => { if (keepDisabled) this._keepDisabled.set(true); }),
+        finalize(() => {
+          if (keepDisabled) this._keepDisabled.set(true);
+        }),
       );
     } else {
       recordAction$ = this.recordService.create(this.recordType(), this.preCreateRecord(data)).pipe(
@@ -792,7 +792,9 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
 
     const editorSettings = this.editorSettings();
     if (editorSettings.template.recordType !== '') {
-      const tmplTypes = this.route.snapshot.data.types.filter((recordType: Partial<RecordType>) => recordType.key === editorSettings.template.recordType);
+      const tmplTypes = this.route.snapshot.data.types.filter(
+        (recordType: Partial<RecordType>) => recordType.key === editorSettings.template.recordType,
+      );
       if (tmplTypes?.length) {
         this.resourceTypes = this.resourceTypes.concat(tmplTypes);
       }
@@ -838,7 +840,7 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
           headers: editorSettings.getHeaders || new HttpHeaders({ 'Content-Type': 'application/json' }),
         })
         .pipe(
-          switchMap(response => {
+          switchMap((response) => {
             this._etag.set(response.headers.get('ETag'));
             const record = response.body!;
             return this.recordUiService.canUpdateRecord$(record, this._resourceConfig).pipe(

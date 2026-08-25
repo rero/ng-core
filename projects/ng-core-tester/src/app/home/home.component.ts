@@ -14,11 +14,11 @@ import {
   TranslateLanguagePipe,
 } from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Button } from 'primeng/button';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { InputText } from 'primeng/inputtext';
-import { Panel } from 'primeng/panel';
+import { Button } from '@openng/optimus-ui/button';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputGroupAddon } from '@openng/optimus-ui/inputgroupaddon';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Panel } from '@openng/optimus-ui/panel';
 import { DocumentComponent } from '../record/document/document.component';
 import { AppDialogComponent } from './dialog/app-dialog.component';
 import { SelectDialogComponent } from './select-dialog/select-dialog.component';

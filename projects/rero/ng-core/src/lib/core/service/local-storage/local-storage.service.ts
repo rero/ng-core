@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Subject } from 'rxjs';
 import { CryptoJsService } from '../crypto-js/crypto-js.service';
 
@@ -15,9 +15,7 @@ export interface LocalStorageEvent {
 /**
  * Service for managing data saved into local storage.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LocalStorageService {
   protected cryptoService: CryptoJsService = inject(CryptoJsService);
 

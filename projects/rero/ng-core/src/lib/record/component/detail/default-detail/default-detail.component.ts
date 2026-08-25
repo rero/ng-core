@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RecordData } from '../../../../model/record.interface';
 import { DetailRecord } from '../detail-record.interface';
 
@@ -18,7 +18,6 @@ import { DetailRecord } from '../detail-record.interface';
     }
   `,
   imports: [JsonPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultDetailComponent implements DetailRecord {
   // Record data

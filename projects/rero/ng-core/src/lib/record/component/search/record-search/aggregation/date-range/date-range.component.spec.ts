@@ -4,14 +4,14 @@ import { CommonModule } from '@angular/common';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
-import { DatePickerModule } from 'primeng/datepicker';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { DatePickerModule } from '@openng/optimus-ui/datepicker';
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { AggregationDateRangeComponent } from './date-range.component';
-import { RippleModule } from 'primeng/ripple';
+import { RippleModule } from '@openng/optimus-ui/ripple';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from 'primeng/api';
+import { SharedModule } from '@openng/optimus-ui/api';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
@@ -25,7 +25,7 @@ describe('AggregationDateRangeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RecordSearchStore, provideHttpClient(), provideHttpClientTesting()],
+      providers: [RecordSearchStore, provideHttpClient(), provideHttpClientTesting(), provideTranslateService()],
       imports: [
         CommonModule,
         BrowserAnimationsModule,
@@ -35,7 +35,6 @@ describe('AggregationDateRangeComponent', () => {
         ButtonModule,
         RippleModule,
         FormsModule,
-        TranslateModule.forRoot(),
         AggregationDateRangeComponent,
       ],
     }).compileComponents();
