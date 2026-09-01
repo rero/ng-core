@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import {
+  BarcodeScannerComponent,
+  CameraDetectionService,
   ErrorComponent,
   KatexDirective,
   MarkdownPipe,
@@ -13,6 +15,8 @@ import {
 } from '@rero/ng-core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Button } from 'primeng/button';
+import { InputGroup } from 'primeng/inputgroup';
+import { InputGroupAddon } from 'primeng/inputgroupaddon';
 import { InputText } from 'primeng/inputtext';
 import { Panel } from 'primeng/panel';
 import { DocumentComponent } from '../record/document/document.component';
@@ -38,10 +42,17 @@ import { ToastComponent } from './toast/toast.component';
     ErrorComponent,
     TranslatePipe,
     KatexDirective,
+    BarcodeScannerComponent,
+    InputText,
+    InputGroup,
+    InputGroupAddon
   ],
 })
 export class HomeComponent {
   private spinner: NgxSpinnerService = inject(NgxSpinnerService);
+  private cameraDetectionService = inject(CameraDetectionService);
+
+  readonly hasCamera = this.cameraDetectionService.hasCamera;
 
   // Configuration for resources.
   recordConfig: any[] = [
@@ -74,6 +85,9 @@ export class HomeComponent {
 
   // Markdown text
   markdownText = '*Hello* **world**';
+
+  // Barcode scanner
+  readonly barcodeValue = signal('');
 
   // Katex
   katexTitle = 'Infinitesimal Hilbertianity of Locally $$\\mathrm{CAT}(\\kappa )$$-Spaces';

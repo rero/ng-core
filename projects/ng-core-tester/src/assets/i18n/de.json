@@ -61,5 +61,8 @@
   "Relevance": "Relevanz",
   "Title": "Titel",
   "shouldn't have more than {{decimals}} digit(s) after the decimal point": "sollte nicht mehr als {{decimals}} Stelle(n) hinter dem Dezimalpunkt haben",
-  "should be a whole number": "sollte eine ganze Zahl sein"
+  "should be a whole number": "sollte eine ganze Zahl sein",
+  "Not available on your device": "Auf deinem Gerät nicht verfügbar",
+  "Barcode Scanner": "Barcode-Scanner",
+  "Open the barcode scanner": "Den Barcode-Scanner öffnen"
 }

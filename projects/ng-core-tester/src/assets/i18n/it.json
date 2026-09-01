@@ -61,5 +61,8 @@
   "Relevance": "Rilevanza",
   "Title": "Titolo",
   "shouldn't have more than {{decimals}} digit(s) after the decimal point": "non dovrebbe avere più di {{decimals}} cifre dopo la virgola",
-  "should be a whole number": "dovrebbe essere un numero intero"
+  "should be a whole number": "dovrebbe essere un numero intero",
+  "Not available on your device": "Non disponibile sul tuo dispositivo",
+  "Barcode Scanner": "Lettore di codici a barre",
+  "Open the barcode scanner": "Apri il lettore di codici a barre"
 }

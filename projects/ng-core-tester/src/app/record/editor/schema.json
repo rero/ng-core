@@ -55,7 +55,8 @@
     "field_with_addon_left_right",
     "field_radio_button_inline",
     "number_with_2_digits",
-    "round_number"
+    "round_number",
+    "field_with_addon_barcodeScanner"
   ],
   "properties": {
     "date_validator": {
@@ -1651,6 +1652,23 @@
           "type": "number",
           "props": {
             "step": 1
+          }
+        }
+      }
+    },
+    "field_with_addon_barcodeScanner": {
+      "title": "Field with addon and barcode scanner",
+      "type": "string",
+      "widget": {
+        "formlyConfig": {
+          "props": {
+            "addonLeft": [
+              "<i class=\"fa-regular fa-star\"></i>"
+            ],
+            "barcodeScanner": {
+              "ariaLabel": "Barcode Scanner",
+              "dialogTitle": "Barcode Scanner"
+            }
           }
         }
       }
