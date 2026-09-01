@@ -77,5 +77,8 @@
   "Relevance": "Pertinence",
   "Title": "Titre",
   "shouldn't have more than {{decimals}} digit(s) after the decimal point": "ne doit pas comporter plus de {{decimals}} chiffre(s) après la virgule",
-  "should be a whole number": "doit être un nombre entier"
+  "should be a whole number": "doit être un nombre entier",
+  "Not available on your device": "Non disponible sur votre appareil",
+  "Barcode Scanner": "Lecteur de codes-barres",
+  "Open the barcode scanner": "Ouvrir le lecteur de codes-barres"
 }
