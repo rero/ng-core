@@ -186,6 +186,32 @@ that must be statically imported — dynamic import paths built from
 template literals are rejected by esbuild at build time, so each language
 must be listed explicitly as shown above.
 
+## Barcode scanner setup
+
+`BarcodeScannerComponent` decodes barcodes and QR codes using
+[`barcode-detector`](https://www.npmjs.com/package/barcode-detector)'s
+ZXing WebAssembly ponyfill. That WASM binary
+(`zxing_reader.wasm`, shipped in the `zxing-wasm` package, itself a
+dependency of `barcode-detector`) is fetched at runtime from the
+application's origin — it cannot be bundled by `ng-packagr` inside the
+library, so every consuming application must copy it to its build
+output root itself.
+
+Add this entry to the `assets` array of your application's build
+target in `angular.json`:
+
+```json
+{
+  "glob": "zxing_reader.wasm",
+  "input": "node_modules/zxing-wasm/dist/reader",
+  "output": "."
+}
+```
+
+Without this entry, opening the scanner dialog fails silently: the
+camera preview starts, but no barcode is ever detected (a 404 for
+`zxing_reader.wasm` appears in the browser console).
+
 ## Public API
 
 ### Core pipes
@@ -203,6 +229,10 @@ must be listed explicitly as shown above.
 * `SearchInputComponent` — search input emitting an event on submit.
 * `ErrorComponent` — generic error display.
 * `ReadMoreComponent` — collapsible text block.
+* `BarcodeScannerComponent` — button opening a dialog that scans a
+  barcode or QR code from the device's camera (see
+  [Barcode scanner setup](#barcode-scanner-setup) below for a required
+  build configuration step).
 
 ### Core services
 
