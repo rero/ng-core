@@ -79,6 +79,21 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   </div>
 </p-panel>
 
+<p-panel header="Barcode scanner" class="ui:mt-4 ui:pb-4">
+  <div class="ui:pl-4">
+    @if (hasCamera()) {
+      <p-inputgroup>
+        <input type="text" pInputText [(ngModel)]="barcodeValue" />
+        <p-inputgroup-addon>
+          <ng-core-barcode-scanner (scanned)="barcodeValue.set($event)" />
+        </p-inputgroup-addon>
+      </p-inputgroup>
+    } @else {
+      {{ 'Not available on your device' | translate }}
+    }
+  </div>
+</p-panel>
+
 <p-panel header="Read More" class="ui:mt-4 ui:pb-4">
   <div class="ui:pl-4">
     <ng-core-read-more

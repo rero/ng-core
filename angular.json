@@ -63,6 +63,11 @@
                 "glob": "*.json",
                 "input": "projects/rero/ng-core/src/lib/translate/languages",
                 "output": "assets/ng-core/languages"
+              },
+              {
+                "glob": "zxing_reader.wasm",
+                "input": "node_modules/zxing-wasm/dist/reader",
+                "output": "."
               }
             ],
             "styles": ["projects/ng-core-tester/src/styles.scss"],

@@ -1,17 +1,28 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { signal } from '@angular/core';
 import { createFieldComponent } from '@ngx-formly/core/testing';
 import { InputComponent, NgCoreFormlyInputFieldConfig } from './input.component';
 
 import { FormlyModule } from '@ngx-formly/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { DialogService } from 'primeng/dynamicdialog';
+import { CameraDetectionService } from '../../../core';
+
+const hasCamera = signal(false);
 
 const renderComponent = (field: NgCoreFormlyInputFieldConfig) => {
   return createFieldComponent(field, {
     imports: [
       InputComponent,
+      TranslateModule.forRoot(),
       FormlyModule.forRoot({
         types: [{ name: 'input', component: InputComponent }],
       }),
+    ],
+    providers: [
+      { provide: CameraDetectionService, useValue: { hasCamera } },
+      { provide: DialogService, useValue: { open: vi.fn() } },
     ],
   });
 };
@@ -123,4 +134,81 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(inputNumber.showButtons).toBe(false);
   });
 
+  describe('barcode scanner', () => {
+    it('should not render the scanner button when no camera is available', () => {
+      hasCamera.set(false);
+      const { query } = renderComponent({
+        key: 'name',
+        type: 'input',
+        props: {
+          barcodeScanner: {},
+        },
+      });
+      expect(query('ng-core-barcode-scanner')).toBeNull();
+    });
+
+    it('should render the scanner button when a camera is available', () => {
+      hasCamera.set(true);
+      const { query } = renderComponent({
+        key: 'name',
+        type: 'input',
+        props: {
+          barcodeScanner: {},
+        },
+      });
+      expect(query('p-inputgroup')).not.toBeNull();
+      expect(query('ng-core-barcode-scanner')).not.toBeNull();
+    });
+
+    it('should not render the scanner button when barcodeScanner is not set', () => {
+      hasCamera.set(true);
+      const { query } = renderComponent({
+        key: 'name',
+        type: 'input',
+      });
+      expect(query('ng-core-barcode-scanner')).toBeNull();
+    });
+
+    it('should not render the scanner button on a non-text field', () => {
+      hasCamera.set(true);
+      const { query } = renderComponent({
+        key: 'name',
+        type: 'input',
+        props: {
+          type: 'number',
+          barcodeScanner: {},
+        },
+      });
+      expect(query('ng-core-barcode-scanner')).toBeNull();
+    });
+
+    it('should render addons alongside the scanner button', () => {
+      hasCamera.set(true);
+      const { query, queryAll } = renderComponent({
+        key: 'name',
+        type: 'input',
+        props: {
+          barcodeScanner: {},
+          addonLeft: ['Left'],
+        },
+      });
+      expect(query('ng-core-barcode-scanner')).not.toBeNull();
+      const addonTexts = queryAll('p-inputgroup-addon').map((addon) => addon.nativeElement.textContent);
+      expect(addonTexts.some((text) => text.includes('Left'))).toBe(true);
+    });
+
+    it('should update the form control when a value is scanned', () => {
+      hasCamera.set(true);
+      const { field, query } = renderComponent({
+        key: 'name',
+        type: 'input',
+        props: {
+          barcodeScanner: {},
+        },
+      });
+      const scanner = query('ng-core-barcode-scanner').componentInstance as { scanned: { emit: (value: string) => void } };
+      scanner.scanned.emit('9782918390329');
+      expect(field.formControl?.value).toBe('9782918390329');
+    });
+  });
 });
