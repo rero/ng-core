@@ -81,6 +81,6 @@
     "tailwindcss-primeui": "^0.6.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.11"
   }
 }
