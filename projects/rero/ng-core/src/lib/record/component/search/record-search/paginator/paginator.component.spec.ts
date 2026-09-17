@@ -20,7 +20,7 @@ describe('PaginatorComponent', () => {
     }).compileComponents();
 
     store = TestBed.inject(RecordSearchStore);
-    store.setResults({ hits: { total: { value: 100, relation: 'eq' }, hits: [] } } as any);
+    store.setResults({ aggregations: {}, hits: { total: 100, hits: [] } });
 
     fixture = TestBed.createComponent(PaginatorComponent);
     component = fixture.componentInstance;

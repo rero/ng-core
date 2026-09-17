@@ -92,7 +92,7 @@ describe('withAggregations feature', () => {
       expect(agg!.loaded).toBeFalsy();
 
       store.setResults({
-        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        hits: { hits: [], total: 0 },
         aggregations: {
           author: {
             buckets: [
@@ -571,7 +571,7 @@ describe('withAggregations feature', () => {
               buckets: [{ key: 'b1', doc_count: 50 }],
             },
           },
-          hits: { hits: [], total: { value: 0, relation: 'eq' } },
+          hits: { hits: [], total: 0 },
           links: { self: '' },
         }),
       );
@@ -607,7 +607,7 @@ describe('withAggregations feature', () => {
 
       // Elasticsearch returns the aggregation (e.g. because a filter requested it).
       store.setResults({
-        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        hits: { hits: [], total: 0 },
         aggregations: {
           author: {
             buckets: [{ key: 'Smith', doc_count: 10 }],

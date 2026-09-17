@@ -59,11 +59,9 @@ describe('RecordSearchComponent', () => {
   const recordServiceSpy: any = {
     getRecords: vi.fn(),
     delete: vi.fn(),
-    totalHits: vi.fn(),
   };
   recordServiceSpy.getRecords.mockReturnValue(of(emptyRecords));
   recordServiceSpy.delete.mockReturnValue(of({}));
-  recordServiceSpy.totalHits.mockReturnValue(10);
 
   const recordUiServiceSpy: any = {
     getResourceConfig: vi.fn(),
