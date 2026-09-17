@@ -4,7 +4,6 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } 
 import { inject, Injectable } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { FormlyFieldConfig } from '@ngx-formly/core';
-import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 import { Error as CoreError } from '../../../core/component/error/error.interface';
@@ -20,7 +19,6 @@ import { AggregationsFilter } from '../../component/search/model';
 export class RecordService {
   protected http: HttpClient = inject(HttpClient);
   protected apiService: ApiService = inject(ApiService);
-  protected translateService: TranslateService = inject(TranslateService);
   protected recordHandleErrorService: RecordHandleErrorService = inject(RecordHandleErrorService);
 
   static readonly DEFAULT_REST_RESULTS_SIZE = 10;
@@ -236,13 +234,7 @@ export class RecordService {
     }
 
     return this.getRecords(recordType, { query, itemsPerPage: 1 }).pipe(
-      map((res): number | string => {
-        if (!res.hits) {
-          return 0;
-        }
-        return res?.hits?.total ? this.totalHits(res.hits.total) : 0;
-      }),
-      map((total) => Number(total)),
+      map((res) => res?.hits?.total ?? 0),
       map((total) => (total > 0 ? { alreadyTaken: value } : null)),
       debounceTime(1000),
     );
@@ -292,52 +284,10 @@ export class RecordService {
       query += ` NOT pid:${excludePid}`;
     }
     return this.getRecords(recordType, { query, itemsPerPage: 1 }).pipe(
-      map((res): number | string | null => {
-        if (!res?.hits) {
-          return null;
-        }
-        return res.hits?.total ? this.totalHits(res.hits.total) : 0;
-      }),
-      map((total) => (total ? { alreadyTaken: value } : null)),
+      map((res) => res?.hits?.total ?? 0),
+      map((total) => (total > 0 ? { alreadyTaken: value } : null)),
       debounceTime(500),
     );
-  }
-
-  /**
-   * Transform a total value string or object representation
-   * (ES compatibility v6 and v7)
-   * @param total - string or object
-   * @param relation - boolean
-   * @return integer, text or null
-   */
-  totalHits(total: number | string | { relation: string; value: number }, relation = false): number | string {
-    switch (typeof total) {
-      case 'object': {
-        if (!('value' in total)) {
-          throw new Error('Invalid total object: missing value property');
-        }
-
-        if (relation) {
-          return `${this.translateService.instant(total.relation)} ${total.value}`;
-        }
-
-        return Number(total.value);
-      }
-
-      case 'number':
-        return total;
-
-      case 'string': {
-        const parsed = Number(total);
-        if (Number.isNaN(parsed)) {
-          throw new Error(`Invalid total string value: "${total}"`);
-        }
-        return parsed;
-      }
-
-      default:
-        throw new Error(`Unsupported total type: ${typeof total}`);
-    }
   }
 
   /**

@@ -22,7 +22,7 @@ describe('RecordSearchStore', () => {
         { id: '1', metadata: { title: 'Test Doc' }, created: '', updated: '', links: { self: '' } },
         { id: '2', metadata: { title: 'Another Doc' }, created: '', updated: '', links: { self: '' } },
       ],
-      total: { value: 2, relation: 'eq' },
+      total: 2,
     },
     aggregations: {},
     links: { self: '' },
@@ -115,7 +115,7 @@ describe('RecordSearchStore', () => {
             { id: '1', metadata: {}, created: '', updated: '', links: { self: '' } },
             { id: '2', metadata: {}, created: '', updated: '', links: { self: '' } },
           ],
-          total: { value: 2, relation: 'eq' },
+          total: 2,
         },
         aggregations: {},
         links: { self: '' },
@@ -152,7 +152,7 @@ describe('RecordSearchStore', () => {
       const mockResult: EsResult = {
         hits: {
           hits: [{ id: '1', metadata: { title: 'Angular Guide' }, created: '', updated: '', links: { self: '' } }],
-          total: { value: 1, relation: 'eq' },
+          total: 1,
         },
         aggregations: {},
         links: { self: '' },
@@ -292,7 +292,7 @@ describe('RecordSearchStore', () => {
         of({
           hits: {
             hits: [],
-            total: { value: 0, relation: 'eq' },
+            total: 0,
           },
           aggregations: {},
           links: { self: '' },
@@ -1072,7 +1072,7 @@ describe('RecordSearchStore', () => {
 
       // Mock API response
       const mockResponse = {
-        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        hits: { hits: [], total: 0 },
         aggregations: {
           author: {
             buckets: [
@@ -1173,7 +1173,7 @@ describe('RecordSearchStore', () => {
       ]);
 
       const mockResponse = {
-        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        hits: { hits: [], total: 0 },
         aggregations: {
           author: {
             buckets: [
@@ -1218,7 +1218,7 @@ describe('RecordSearchStore', () => {
       store.updateQuery('quantum');
 
       const mockResponse = {
-        hits: { hits: [], total: { value: 0, relation: 'eq' } },
+        hits: { hits: [], total: 0 },
         aggregations: {
           author: {
             buckets: [{ key: 'Einstein', doc_count: 42 }],
