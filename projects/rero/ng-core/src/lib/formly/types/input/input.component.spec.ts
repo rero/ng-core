@@ -109,6 +109,22 @@ describe('ui-primeng: NgCore Input Type', () => {
     expect(query('input[type="number"]')).toBeNull();
   });
 
+  it('should focus the input inside a number field', async () => {
+    const { field, fixture, query } = renderComponent({
+      key: 'price',
+      type: 'input',
+      props: {
+        type: 'number',
+      },
+    });
+    const input = query('p-inputnumber').componentInstance.input.nativeElement;
+
+    field.focus = true;
+    await fixture.whenStable();
+
+    expect(document.activeElement).toBe(input);
+  });
+
   it('should show buttons by default on a number field', () => {
     const { query } = renderComponent({
       key: 'name',

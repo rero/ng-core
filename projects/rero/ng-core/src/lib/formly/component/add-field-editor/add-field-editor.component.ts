@@ -43,6 +43,8 @@ export class AddFieldEditorComponent<TMetadata extends JsonObject = JsonObject> 
 
   suggestions: FormlyFieldConfig[] = [];
 
+  private selectedField: FormlyFieldConfig | null = null;
+
   essentialsOptions = computed(() => (this.items() ?? []).filter((f) => this.isFieldEssential(f)));
 
   readonly autocomplete = viewChild<AutoComplete>('addField');
@@ -69,8 +71,18 @@ export class AddFieldEditorComponent<TMetadata extends JsonObject = JsonObject> 
   }
 
   onSelect(event: AutoCompleteSelectEvent): void {
-    this.editorComponent().setHide(event.value, false, true);
+    this.selectedField = event.value;
     this.autocomplete()?.clear();
+  }
+
+  onAutocompleteHide(): void {
+    if (this.selectedField === null) {
+      return;
+    }
+
+    const field = this.selectedField;
+    this.selectedField = null;
+    this.editorComponent().setHide(field, false, true);
   }
 
   /**
