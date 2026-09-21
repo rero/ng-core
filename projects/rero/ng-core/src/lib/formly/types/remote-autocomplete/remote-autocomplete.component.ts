@@ -1,11 +1,22 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
+import { FieldType, FieldTypeConfig, FormlyAttributes } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
@@ -37,7 +48,10 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
     <div
       style="padding-inline: 0; padding-block: 0"
       class="core:flex core:gap-1"
+      tabindex="-1"
+      [formlyAttributes]="field"
       [ngClass]="{ 'p-inputtext ng-invalid ng-dirty': showError }"
+      (focus)="focusInput()"
     >
       @if (!field.formControl.value) {
         @if (props.filters?.options) {
@@ -62,6 +76,8 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           [group]="props.group"
           [suggestions]="suggestions()"
           (completeMethod)="search($event)"
+          (onFocus)="updateFocusState(true)"
+          (onBlur)="updateFocusState(false)"
           (onSelect)="onSelect($event)"
         >
           <ng-template #item let-data>
@@ -88,7 +104,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
       }
     </div>
   `,
-  imports: [NgClass, Select, FormsModule, AutoComplete, Button, TranslatePipe],
+  imports: [NgClass, Select, FormsModule, FormlyAttributes, AutoComplete, Button, TranslatePipe],
 })
 export class RemoteAutocompleteComponent
   extends FieldType<FieldTypeConfig<IRemoteAutoCompleteProps>>
@@ -99,6 +115,7 @@ export class RemoteAutocompleteComponent
   protected route = inject(ActivatedRoute);
   protected translateLabelService: TranslateLabelService = inject(TranslateLabelService);
   private injector = inject(Injector);
+  private autocomplete = viewChild(AutoComplete);
 
   protected query = new Subject<IQuery>();
 
@@ -165,6 +182,31 @@ export class RemoteAutocompleteComponent
         queryOptions: { ...this.field.props.queryOptions },
       });
     }
+
+    this.watchFocus();
+  }
+
+  /** Keep Formly's focus state and the autocomplete input synchronized. */
+  private watchFocus(): void {
+    effect(
+      () => {
+        const autocomplete = this.autocomplete();
+        if (autocomplete && this.field.focus) {
+          this.focusInput();
+        }
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** Focus the text input rendered inside the PrimeNG autocomplete. */
+  protected focusInput(): void {
+    this.autocomplete()?.inputEL?.nativeElement.focus();
+  }
+
+  /** Store the input's current focus state on its Formly field. */
+  protected updateFocusState(focused: boolean): void {
+    this.field.focus = focused;
   }
 
   changeFilter(filter: SelectChangeEvent): void {
