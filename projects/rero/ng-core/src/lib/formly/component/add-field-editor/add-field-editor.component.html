@@ -12,6 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     [suggestions]="suggestions"
     (completeMethod)="search($event)"
     (onSelect)="onSelect($event)"
+    (onHide)="onAutocompleteHide()"
     [disabled]="items().length < 1"
     scrollHeight="400px"
     appendTo="body"
