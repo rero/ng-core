@@ -43,7 +43,7 @@ import { RecordUiService } from '../../../service/record-ui/record-ui.service';
 import { RecordService } from '../../../service/record/record.service';
 import { JSONSchemaService } from '../../services/jsonschema/jsonschema.service';
 import { TemplateMetadata } from '../../services/template/templates.service';
-import { JSONSchema7, processJsonSchema, removeEmptyValues, resolve$ref } from '../../utils/utils';
+import { isEmpty, JSONSchema7, processJsonSchema, removeEmptyValues, resolve$ref } from '../../utils/utils';
 import { LoadTemplateFormComponent } from '../load-template-form/load-template-form.component';
 import { SaveTemplateFormComponent } from '../save-template-form/save-template-form.component';
 import { RecordType } from '../../../model';
@@ -66,6 +66,8 @@ interface EditorResourceConfig {
 }
 
 type ResourceConfigType = ReturnType<RecordUiService['getResourceConfig']> & EditorResourceConfig;
+
+const AUTO_FOCUS_EXCLUDED_TYPES = new Set<FormlyFieldConfig['type']>(['enum', 'multi-select', 'select']);
 
 interface EditorRouteParams {
   type?: string;
@@ -633,6 +635,11 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
    * @param scroll: is the screen should scroll to the field.
    */
   setFieldFocus(field: FormlyFieldConfig, scroll = false): boolean {
+    return this.focusFirstField(field, scroll, true) || this.focusFirstField(field, false, false);
+  }
+
+  /** Search recursively for the first field matching the focus criteria. */
+  private focusFirstField(field: FormlyFieldConfig, scroll: boolean, emptyOnly: boolean): boolean {
     if (scroll === true && field.id) {
       const el = document.getElementById(`field-${field.id}`);
       if (el != null) {
@@ -642,13 +649,23 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
         scroll = false;
       }
     }
-    if (field.fieldGroup && field.fieldGroup.length > 0) {
+    if (field.fieldGroup) {
       const visibleFields = field.fieldGroup.filter((f) => !f.hide);
-      if (visibleFields.length > 0) {
-        return this.setFieldFocus(visibleFields[0], scroll);
+      for (const visibleField of visibleFields) {
+        if (this.focusFirstField(visibleField, scroll, emptyOnly)) {
+          return true;
+        }
       }
+      return false;
+    }
+    if (AUTO_FOCUS_EXCLUDED_TYPES.has(field.type)) {
+      return false;
+    }
+    if (emptyOnly && !isEmpty(field.formControl?.value)) {
+      return false;
     }
     field.focus = true;
+    field.options?.fieldChanges?.next({ field, type: 'focus', value: true });
     return true;
   }
 
@@ -723,9 +740,11 @@ export class EditorComponent<TMetadata extends JsonObject = JsonObject>
       }
     } else {
       this.removeHiddenField(field);
-      this.setFieldFocus(field, scroll);
     }
     field.hide = value;
+    if (!value) {
+      this.setFieldFocus(field, scroll);
+    }
   }
 
   /********************* Private  ***************************************/

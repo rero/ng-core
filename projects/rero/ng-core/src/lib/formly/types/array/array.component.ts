@@ -93,6 +93,7 @@ export class ArrayComponent extends FieldArrayType implements OnInit {
     }
     if (!field.hide) {
       field.focus = true;
+      field.options?.fieldChanges?.next({ field, type: 'focus', value: true });
       return true;
     }
     return false;

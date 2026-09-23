@@ -1,7 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +22,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { Button } from 'primeng/button';
 import { Select, SelectChangeEvent } from 'primeng/select';
-import { map, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { filter, map, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { removeChars } from '../../../core/utils/utils';
 import { TranslateLabelService } from '../../service/translate-label.service';
@@ -62,6 +73,8 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
           [group]="props.group"
           [suggestions]="suggestions()"
           (completeMethod)="search($event)"
+          (onFocus)="updateFocusState(true)"
+          (onBlur)="updateFocusState(false)"
           (onSelect)="onSelect($event)"
         >
           <ng-template #item let-data>
@@ -99,6 +112,7 @@ export class RemoteAutocompleteComponent
   protected route = inject(ActivatedRoute);
   protected translateLabelService: TranslateLabelService = inject(TranslateLabelService);
   private injector = inject(Injector);
+  private autocomplete = viewChild(AutoComplete);
 
   protected query = new Subject<IQuery>();
 
@@ -165,6 +179,50 @@ export class RemoteAutocompleteComponent
         queryOptions: { ...this.field.props.queryOptions },
       });
     }
+
+    this.watchFocus();
+  }
+
+  /** Keep Formly's focus state and the autocomplete input synchronized. */
+  private watchFocus(): void {
+    effect(
+      (onCleanup) => {
+        const autocomplete = this.autocomplete();
+        if (!autocomplete) {
+          return;
+        }
+
+        if (this.field.focus) {
+          this.focusInput();
+        }
+
+        const fieldChanges = this.field.options?.fieldChanges;
+        if (!fieldChanges) {
+          return;
+        }
+
+        const subscription = fieldChanges
+          .pipe(
+            filter(
+              (event) => event.field === this.field && event.type === 'focus' && event.value === true,
+            ),
+          )
+          .subscribe(() => this.focusInput());
+
+        onCleanup(() => subscription.unsubscribe());
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** Focus the text input rendered inside the PrimeNG autocomplete. */
+  private focusInput(): void {
+    this.autocomplete()?.inputEL?.nativeElement.focus();
+  }
+
+  /** Store the input's current focus state on its Formly field. */
+  protected updateFocusState(focused: boolean): void {
+    this.field.focus = focused;
   }
 
   changeFilter(filter: SelectChangeEvent): void {
