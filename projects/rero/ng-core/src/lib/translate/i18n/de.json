@@ -99,7 +99,7 @@
   "should be multiple of ${{step}}": "muss ein Vielfaches von ${{step}} sein",
   "should be null": "sollte null sein",
   "should have {{counter}} {{keys}}": "muss {{counter}} {{keys}} haben",
-  "shouldn't have more than {{decimals}} digit(s) after the decimal point": "sollte nicht mehr als {decimals}} ziffer(n) nach dem dezimalpunkt haben",
+  "shouldn't have more than {{decimals}} digit(s) after the decimal point": "sollte nicht mehr als {{decimals}} Ziffer(n) nach dem Dezimalpunkt haben",
   "show less": "weniger anzeigen",
   "show more": "mehr anzeigen",
   "strictly {{counter}}": "streng {{counter}}",
