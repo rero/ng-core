@@ -41,7 +41,7 @@ describe('withResults', () => {
     const mockResult: EsResult = {
       hits: {
         hits: [{ id: '1', metadata: {}, created: '', updated: '', links: { self: '' } }],
-        total: { value: 1, relation: 'eq' },
+        total: 1,
       },
       aggregations: {},
       links: { self: '' },
@@ -56,7 +56,7 @@ describe('withResults', () => {
     const mockResult: EsResult = {
       hits: {
         hits: [{ id: '1', metadata: {}, created: '', updated: '', links: { self: '' } }],
-        total: { value: 1, relation: 'eq' },
+        total: 1,
       },
       aggregations: {},
       links: { self: '' },
@@ -72,7 +72,7 @@ describe('withResults', () => {
           { id: '1', metadata: { title: 'Record 1' }, created: '', updated: '', links: { self: '' } },
           { id: '2', metadata: { title: 'Record 2' }, created: '', updated: '', links: { self: '' } },
         ],
-        total: { value: 2, relation: 'eq' },
+        total: 2,
       },
       aggregations: {},
       links: { self: '' },
@@ -85,23 +85,6 @@ describe('withResults', () => {
     expect(store.hits()).toEqual(mockResult.hits.hits);
     expect(store.isLoading()).toBe(false);
     expect(store.error()).toBeNull();
-  });
-
-  it('should compute the total given as a plain number', () => {
-    const mockResult: EsResult = {
-      hits: {
-        hits: [{ id: '1', metadata: {}, created: '', updated: '', links: { self: '' } }],
-        total: 1,
-      },
-      aggregations: {},
-      links: { self: '' },
-    };
-
-    store.setResults(mockResult);
-
-    expect(store.total()).toBe(1);
-    expect(store.hasRecords()).toBe(true);
-    expect(store.isEmpty()).toBe(false);
   });
 
   it('should set loading state', () => {
@@ -127,7 +110,7 @@ describe('withResults', () => {
     const mockResult: EsResult = {
       hits: {
         hits: [{ id: '1', metadata: {}, created: '', updated: '', links: { self: '' } }],
-        total: { value: 1, relation: 'eq' },
+        total: 1,
       },
       aggregations: {},
       links: { self: '' },
@@ -152,7 +135,7 @@ describe('withResults', () => {
     expect(store.error()).toBeTruthy();
 
     const mockResult: EsResult = {
-      hits: { hits: [], total: { value: 0, relation: 'eq' } },
+      hits: { hits: [], total: 0 },
       aggregations: {},
       links: { self: '' },
     };

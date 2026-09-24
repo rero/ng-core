@@ -59,10 +59,12 @@ projects/rero/ng-core/assets/scss/ng-core-tailwind.scss
 .vitest-attachments/
 
 # AI tools working directories
-.claude/
 .cursor/
 .copilot/
 .aider*
 .ai-cache/
+
+# Claude Code local settings
+/.claude/settings.local.json
 
 res.log

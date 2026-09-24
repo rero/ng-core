@@ -1,5 +1,19 @@
 # Changelog
 
+## [21.3.0](https://github.com/rero/ng-core/compare/v21.2.0...v21.3.0) (2026-08-21)
+
+### Features
+
+* **formly:** add useGrouping option to number input ([7b3b70d](https://github.com/rero/ng-core/commit/7b3b70da373d3dbec52c485749e9dd393fd041be))
+* **formly:** export overlay touch-scroll iOS fix ([81138bf](https://github.com/rero/ng-core/commit/81138bf73dd5284d19028bcc885fc8c8524803f6))
+* **formly:** step validator for input number ([7b3b9a1](https://github.com/rero/ng-core/commit/7b3b9a102d71d64c83a3de2e0fc52255d270bfa2))
+* **search:** responsive layout for filters and results ([b82bcdf](https://github.com/rero/ng-core/commit/b82bcdfd4f65e2d2f4e65dc32b7ff8840c6e45f2))
+
+### Bug Fixes
+
+* **search:** apply the configured default sort ([406bb39](https://github.com/rero/ng-core/commit/406bb39239a998c0fc5d2e5cec45a65575128d2a))
+* **search:** restore support for non-object total ([8ff7793](https://github.com/rero/ng-core/commit/8ff77934a9a08af58e34ae670daf22785950bda6))
+
 ## [21.2.0](https://github.com/rero/ng-core/compare/v21.1.1...v21.2.0) (2026-08-05)
 
 ### Features

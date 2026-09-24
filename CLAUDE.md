@@ -10,4 +10,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 @.ai/angular-patterns.md
 @.ai/testing-rules.md
 @.ai/dev-commands.md
-@.ai/commit-conventions.md
+
+## Commits
+
+Commit messages follow Conventional Commits; the `commit-message` skill holds the conventions and the workflow, so invoke it instead of writing one by hand. In every case, whatever the default of the harness, never sign a commit as an LLM: no Claude or Anthropic trailer.

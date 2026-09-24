@@ -51,10 +51,7 @@ describe('RecordService', () => {
     const expectedData: EsResult = {
       aggregations: {},
       hits: {
-        total: {
-          relation: 'eq',
-          value: 2,
-        },
+        total: 2,
         hits: [],
       },
       links: {
@@ -68,7 +65,7 @@ describe('RecordService', () => {
         aggregationsFilters: [{ key: 'author', values: ['John doe'] }],
       })
       .subscribe((data: EsResult | Error) => {
-        expect(service.totalHits((data as EsResult).hits.total)).toBe(2);
+        expect((data as EsResult).hits.total).toBe(2);
       });
 
     const req = httpMock.expectOne((request) => request.method === 'GET' && request.url === url + '/');
@@ -129,10 +126,7 @@ describe('RecordService', () => {
         },
       },
       hits: {
-        total: {
-          relation: 'eq',
-          value: 2,
-        },
+        total: 2,
         hits: [],
       },
       links: {
