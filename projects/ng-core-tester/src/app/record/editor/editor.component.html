@@ -6,5 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   <pre [innerHTML]="modelDisplay" class="ui:overflow-auto ui:max-h-[400px]"></pre>
 </p-card>
 <div class="ui:mt-2">
-  <ng-core-editor (modelChange)="modelChanged($event)"></ng-core-editor>
+  <ng-core-editor
+    (modelChange)="modelChanged($event)"
+    (canDeactivateChange)="canDeactivateChanged($event)"
+  ></ng-core-editor>
 </div>

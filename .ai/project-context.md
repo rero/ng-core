@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Stack
 
-- Angular 21
+- Angular 22
 - Standalone components
 - TypeScript strict mode
 - Zoneless change detection (Zone.js disabled)
@@ -24,16 +24,18 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## Folder conventions
 
-src/app/
-components/
-services/
-stores/
-utils/
+This is an Angular workspace with two projects:
 
-- components: UI components
-- services: Angular services and API access
-- stores: signal-based state management
-- utils: framework-independent helpers
+- `projects/rero/ng-core/src/lib/` — the publishable `@rero/ng-core` library,
+  organized by domain: `core/` (shared components, services, pipes), `formly/`
+  (form field types/wrappers), `record/` (search, detail, editor), `translate/`
+  (i18n services/pipes), `model/` (framework-independent types).
+- `projects/ng-core-tester/src/app/` — a demo app consuming the library,
+  organized by feature (`home/`, `menu/`, `record/`, `search-bar/`, `service/`).
+
+Within a domain folder, components/services/stores are colocated with their
+feature rather than split into top-level `components/`, `services/`, `stores/`
+folders (e.g. `record/component/search/store/record-search.store.ts`).
 
 ## Testing philosophy
 
@@ -54,20 +56,20 @@ Rules:
 
 ## CSS layers
 
-The project uses Tailwind CSS v4 (prefix `ui:`) with PrimeNG and the `tailwindcss-primeui` plugin.
+The project uses Tailwind CSS v4 (prefix `ui:`) with Optimus UI and the `@openng/optimus-ui-tailwindcss` plugin.
 
 CSS cascade layer order (lowest → highest priority):
 
 ```
-theme < base < components < primeng < utilities < properties
+theme < base < components < optimus < utilities < properties
 ```
 
 Rules:
 
-- Layer order is managed by `cssLayer.order` in `primeng-config.ts`.
-- PrimeNG injects its `@layer` declaration before `styles.scss` in the document, establishing the order before Tailwind declares its own layers.
-- Tailwind utility classes (`ui:`, `core:`) therefore override PrimeNG component styles.
-- Do NOT add a manual `@layer` ordering declaration in `tailwind.css` or `styles.scss`. It would be parsed after PrimeNG's injection and break the intended order.
+- Layer order is managed by `cssLayer.order` in `optimus-ui-config.ts`.
+- Optimus UI injects its `@layer` declaration before `styles.scss` in the document, establishing the order before Tailwind declares its own layers.
+- Tailwind utility classes (`ui:`, `core:`) therefore override Optimus UI component styles.
+- Do NOT add a manual `@layer` ordering declaration in `tailwind.css` or `styles.scss`. It would be parsed after Optimus UI's injection and break the intended order.
 - The library Tailwind source is `tailwind.css` → compiled to `ng-core-tailwind.scss` via `pnpm run build-css`.
 
 ## Change detection

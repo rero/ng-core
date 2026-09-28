@@ -7,9 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { Component } from '@angular/core';
 import { FieldType, FormlyModule } from '@ngx-formly/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 
 import { EditorComponent } from '../../../record/editor/component/editor/editor.component';
 import { LabelComponent } from './label.component';
@@ -32,7 +32,6 @@ describe('LabelComponent', () => {
       imports: [
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
         FormlyModule.forRoot({
           types: [{ name: 'object', component: FormlyFieldObjectComponent }],
         }),
@@ -44,6 +43,7 @@ describe('LabelComponent', () => {
         ConfirmationService,
         MessageService,
         DialogService,
+        provideTranslateService(),
       ],
     });
   });

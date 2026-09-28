@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { FieldWrapper, FormlyModule } from '@ngx-formly/core';
-import { Tooltip } from 'primeng/tooltip';
-import { Button } from 'primeng/button';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
+import { Button } from '@openng/optimus-ui/button';
 
 @Component({
   selector: 'ng-core-form-field-wrapper',
@@ -45,7 +45,6 @@ import { Button } from 'primeng/button';
       }
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Tooltip, Button, FormlyModule],
 })
 export class FormFieldWrapperComponent extends FieldWrapper {

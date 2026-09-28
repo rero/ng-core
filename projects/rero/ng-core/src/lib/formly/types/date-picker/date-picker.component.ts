@@ -1,15 +1,14 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, LOCALE_ID, model, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, LOCALE_ID, model, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { _, TranslatePipe } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
-import { DatePicker } from 'primeng/datepicker';
+import { DatePicker } from '@openng/optimus-ui/datepicker';
 import { Subscription } from 'rxjs';
 
-// Calendar options: https://primeng.org/calendar
 export interface IDateTimePickerProps extends FormlyFieldProps {
   appendTo?: string;
   clearButtonStyleClass?: string;
@@ -78,7 +77,6 @@ export interface IDateTimePickerProps extends FormlyFieldProps {
       [ngClass]="{ 'ng-invalid ng-dirty': showError }"
     />
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePicker, FormlyModule, FormsModule, NgClass, TranslatePipe],
 })
 export class DatePickerComponent extends FieldType<FieldTypeConfig<IDateTimePickerProps>> implements OnInit, OnDestroy {

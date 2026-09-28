@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { CORE_TRANSLATION_LOADERS, CoreTranslateLoader, TranslationLoaderFn } from '@rero/ng-core';
 
 const ngCoreI18n = (lang: string): TranslationLoaderFn =>
@@ -8,7 +8,7 @@ const ngCoreI18n = (lang: string): TranslationLoaderFn =>
     .then(r => r.json())
     .then(data => ({ default: data }));
 
-@Injectable()
+@Service({ autoProvided: false })
 export class AppTranslateLoader extends CoreTranslateLoader {
   protected override coreTranslationLoaders: Record<string, TranslationLoaderFn> = {
     ...CORE_TRANSLATION_LOADERS,

@@ -114,3 +114,21 @@ expect(...);
 - `createFieldComponent()` returns `{ query, queryAll, fixture, ... }`
 - `query(selector)` → single `DebugElement` (null if not found)
 - `queryAll(selector)` → `DebugElement[]` — use for `toHaveLength(N)` assertions
+
+## @ngx-translate/core in tests
+
+`@ngx-translate/core` v18 is standalone-only — `TranslateModule` no longer
+exists. Register translation via `provideTranslateService()` in `providers`,
+not via `imports`:
+
+```ts
+TestBed.configureTestingModule({
+  imports: [MyStandaloneComponent],
+  providers: [provideTranslateService()],
+});
+```
+
+`TranslateService.setDefaultLang()` was removed — use `setFallbackLang()`
+instead. `TranslateService.currentLoader` is `protected` — inject
+`TranslateLoader` directly via `TestBed.inject(TranslateLoader)` instead of
+reading it off the service instance.

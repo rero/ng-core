@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Tag } from 'primeng/tag';
+import { Tag } from '@openng/optimus-ui/tag';
 import { Observable, of, shareReplay } from 'rxjs';
 import { Bucket } from '../../../../../../model';
 import { RecordSearchStore } from '../../../store/record-search.store';
@@ -19,7 +19,6 @@ export interface IFilter {
   selector: 'ng-core-list-filters',
   templateUrl: './list-filters.component.html',
   imports: [AsyncPipe, TranslatePipe, Tag],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListFiltersComponent {
   protected translateService: TranslateService = inject(TranslateService);
@@ -30,7 +29,6 @@ export class ListFiltersComponent {
 
   // Filters selected
   filters = computed(() => this.getActiveFilters());
-
 
   /**
    * Returns promised filters
@@ -57,8 +55,9 @@ export class ListFiltersComponent {
             const regex = /\d{13,}--\d{13,}/;
             if (regex.test(value)) {
               const [min, max] = value.split('--');
-              const dateMin = new Intl.DateTimeFormat(this.translateService.getCurrentLang()).format(+min);
-              const dateMax = new Intl.DateTimeFormat(this.translateService.getCurrentLang()).format(+max);
+              const currentLang = this.translateService.getCurrentLang() ?? undefined;
+              const dateMin = new Intl.DateTimeFormat(currentLang).format(+min);
+              const dateMax = new Intl.DateTimeFormat(currentLang).format(+max);
               filters.push({ key: value, aggregationKey: filter.key, name: `${dateMin} - ${dateMax}` });
             } else {
               filters.push({ key: value, aggregationKey: filter.key, name: value.replace('--', ' - ') });
@@ -78,11 +77,13 @@ export class ListFiltersComponent {
     const processFn = this.store.config().processFilterName;
     filters.forEach((filter) => {
       if (!filter.label$) {
-        filter.label$ = (processFn
-          ? processFn(filter).pipe(shareReplay(1))
-          : filter.name
-            ? of(filter.name)
-            : this.translateService.stream(filter.key)) as Observable<string>;
+        filter.label$ = (
+          processFn
+            ? processFn(filter).pipe(shareReplay(1))
+            : filter.name
+              ? of(filter.name)
+              : this.translateService.stream(filter.key)
+        ) as Observable<string>;
       }
     });
 

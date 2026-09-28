@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { DialogService } from 'primeng/dynamicdialog';
+import { Button } from '@openng/optimus-ui/button';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
 import { CameraDetectionService } from '../../service/camera-detection/camera-detection.service';
 import { BarcodeScannerDialogComponent } from './barcode-scanner-dialog/barcode-scanner-dialog.component';
 import { _ } from '@ngx-translate/core';
@@ -60,7 +60,6 @@ import { _ } from '@ngx-translate/core';
       </p-button>
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BarcodeScannerComponent {
 

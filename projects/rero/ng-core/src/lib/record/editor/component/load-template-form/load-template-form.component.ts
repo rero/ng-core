@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { TranslateDirective, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Message } from 'primeng/message';
+import { MessageService } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
+import { DynamicDialogConfig, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+import { Message } from '@openng/optimus-ui/message';
 import { CONFIG } from '../../../../core';
 import { RecordService } from '../../../service/record/record.service';
 import { TemplatesService } from '../../services/template/templates.service';
@@ -18,7 +18,6 @@ import { TemplatesService } from '../../services/template/templates.service';
   selector: 'ng-core-load-template-form',
   templateUrl: './load-template-form.component.html',
   imports: [FormsModule, ReactiveFormsModule, Message, TranslateDirective, FormlyModule, Button, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadTemplateFormComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);

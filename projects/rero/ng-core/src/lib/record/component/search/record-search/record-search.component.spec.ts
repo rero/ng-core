@@ -5,10 +5,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ConfirmationService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
+import { ConfirmationService } from '@openng/optimus-ui/api';
+import { ButtonModule } from '@openng/optimus-ui/button';
 import { of } from 'rxjs';
 import { DialogComponent } from '../../../../core/component/dialog/dialog.component';
 import { SearchInputComponent } from '../../../../core/component/search-input/search-input.component';
@@ -114,7 +114,6 @@ describe('RecordSearchComponent', () => {
         ButtonModule,
         BrowserAnimationsModule,
         FormsModule,
-        TranslateModule.forRoot(),
         SearchInputComponent,
         RecordSearchAggregationComponent,
         RecordSearchComponent,
@@ -132,6 +131,7 @@ describe('RecordSearchComponent', () => {
         { provide: NgxSpinnerService, useValue: spinnerServiceSpy },
         { provide: Router, useValue: routerSpy },
         { provide: ActivatedRoute, useValue: route },
+        provideTranslateService(),
       ],
       schemas: [NO_ERRORS_SCHEMA],
     });

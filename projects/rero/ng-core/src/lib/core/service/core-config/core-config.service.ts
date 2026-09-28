@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 /**
  * Interface for configuration.
@@ -21,9 +21,7 @@ export interface Config {
 /**
  * Service for managing configuration of the application.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CoreConfigService implements Config {
   production = false;
   projectTitle: string | undefined = undefined;

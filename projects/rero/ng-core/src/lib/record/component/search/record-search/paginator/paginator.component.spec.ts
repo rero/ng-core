@@ -3,8 +3,8 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { PaginatorModule } from 'primeng/paginator';
+import { provideTranslateService } from '@ngx-translate/core';
+import { PaginatorModule } from '@openng/optimus-ui/paginator';
 import { RecordSearchStore } from '../../store/record-search.store';
 import { PaginatorComponent } from './paginator.component';
 
@@ -15,8 +15,13 @@ describe('PaginatorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PaginatorModule, PaginatorComponent, TranslateModule.forRoot()],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      imports: [PaginatorModule, PaginatorComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
+      ],
     }).compileComponents();
 
     store = TestBed.inject(RecordSearchStore);

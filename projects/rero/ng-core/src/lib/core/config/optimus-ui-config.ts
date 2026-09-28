@@ -1,20 +1,20 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { definePreset } from '@primeuix/themes';
-import Aura from '@primeuix/themes/aura';
+import { definePreset } from '@openng/optimus-ui-themes';
+import Aura from '@openng/optimus-ui-themes/aura';
 
-export const primeNGConfig = {
+export const optimusUIConfig = {
   theme: {
     options: {
-      // Layer order (lowest → highest priority). PrimeNG injects this @layer
-      // declaration before styles.css, so "primeng" is established below
+      // Layer order (lowest → highest priority). Optimus UI injects this @layer
+      // declaration before styles.css, so "optimus" is established below
       // "utilities" — allowing Tailwind utility classes (ui:, core:) to
-      // override PrimeNG component styles. Do not move "utilities" before
-      // "primeng" or Tailwind overrides will stop working.
+      // override Optimus UI component styles. Do not move "utilities" before
+      // "optimus" or Tailwind overrides will stop working.
       cssLayer: {
-        name: 'primeng',
-        order: 'theme, base, primeng, utilities'
+        name: 'optimus',
+        order: 'theme, base, optimus, utilities',
       },
       darkModeSelector: false,
     },

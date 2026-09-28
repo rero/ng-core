@@ -1,13 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, throwError } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RecordHandleErrorService {
   protected translateService: TranslateService = inject(TranslateService);
 

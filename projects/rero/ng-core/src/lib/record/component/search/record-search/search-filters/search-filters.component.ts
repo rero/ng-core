@@ -1,11 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { ToggleSwitch, ToggleSwitchChangeEvent } from 'primeng/toggleswitch';
+import { ToggleSwitch, ToggleSwitchChangeEvent } from '@openng/optimus-ui/toggleswitch';
 import { SearchFilter, SearchFilterSection } from '../../../../../model';
 import { RecordSearchStore } from '../../store/record-search.store';
 
@@ -13,7 +13,6 @@ import { RecordSearchStore } from '../../store/record-search.store';
   selector: 'ng-core-search-filters',
   templateUrl: './search-filters.component.html',
   imports: [NgClass, NgTemplateOutlet, ToggleSwitch, FormsModule, RouterLink, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SearchFiltersComponent {
   protected store = inject(RecordSearchStore);
@@ -81,7 +80,7 @@ export class SearchFiltersComponent {
 
   /**
    * Event on switch — updates the store directly
-   * @param event - ToggleSwitchChangeEvent primeng
+   * @param event - ToggleSwitchChangeEvent optimus-ui
    * @param filter the search filter
    */
   change(event: ToggleSwitchChangeEvent, filter: SearchFilter): void {

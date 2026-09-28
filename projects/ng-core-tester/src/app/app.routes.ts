@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ResolveFn, Routes, UrlSegment } from '@angular/router';
-import { ActionStatus, capitalize } from '@rero/ng-core';
+import { ActionStatus, capitalize, unsavedChangesGuard } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
@@ -173,8 +173,18 @@ export const routes: Routes = [
   {
     path: 'editor',
     children: [
-      { path: ':type', component: EditorComponent, title: titleEditorResolver },
-      { path: ':type/:pid', component: EditorComponent, title: titleEditorResolver },
+      {
+        path: ':type',
+        component: EditorComponent,
+        title: titleEditorResolver,
+        canDeactivate: [unsavedChangesGuard],
+      },
+      {
+        path: ':type/:pid',
+        component: EditorComponent,
+        title: titleEditorResolver,
+        canDeactivate: [unsavedChangesGuard],
+      },
     ],
     data: {
       types: [

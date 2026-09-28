@@ -1,12 +1,19 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Checkbox, CheckboxChangeEvent } from 'primeng/checkbox';
+import { Checkbox, CheckboxChangeEvent } from '@openng/optimus-ui/checkbox';
 import { combineLatest, map, Observable, of, startWith } from 'rxjs';
 import { TranslateLabelService } from '../../service/translate-label.service';
 
@@ -19,7 +26,6 @@ export interface IMultiCheckBoxProps extends FormlyFieldProps {
 
 @Component({
   selector: 'ng-core-multi-checkbox',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       class="core:flex"

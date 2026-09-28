@@ -11,9 +11,7 @@ Components rely on signals for UI updates.
 
 Example:
 
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
+@Component({})
 export class CounterComponent {
 
   store = inject(CounterStore)

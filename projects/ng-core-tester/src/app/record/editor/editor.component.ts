@@ -2,15 +2,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { AfterContentChecked, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditorComponent as CoreEditorComponent, JsonValue } from '@rero/ng-core';
-import { Card } from 'primeng/card';
+import { AbstractUnsavedChangesComponent, EditorComponent as CoreEditorComponent, JsonValue } from '@rero/ng-core';
+import { Card } from '@openng/optimus-ui/card';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   imports: [Card, CoreEditorComponent],
 })
-export class EditorComponent implements OnInit, AfterContentChecked {
+export class EditorComponent extends AbstractUnsavedChangesComponent implements OnInit, AfterContentChecked {
   // Inject
   private route = inject(ActivatedRoute);
 
@@ -19,6 +19,9 @@ export class EditorComponent implements OnInit, AfterContentChecked {
 
   /* Model to display on the top of the form */
   modelDisplay = {};
+
+  /** Leaving the page requires a confirmation until the record is saved or the edition cancelled */
+  canDeactivate = false;
 
   /** Edit or New mode */
   mode: 'Edit' | 'New' = 'New';

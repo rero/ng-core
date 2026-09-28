@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input } from '@angular/core';
 import { BucketsComponent } from './buckets/buckets.component';
-import { Fieldset } from 'primeng/fieldset';
+import { Fieldset } from '@openng/optimus-ui/fieldset';
 import { AggregationSliderComponent } from './slider/slider.component';
 import { AggregationDateRangeComponent } from './date-range/date-range.component';
 import { TranslateDirective, TranslatePipe } from '@ngx-translate/core';
@@ -22,7 +22,6 @@ import { RecordSearchStore } from '../../store/record-search.store';
     TranslatePipe,
     UpperCaseFirstPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordSearchAggregationComponent {
   protected store = inject(RecordSearchStore);

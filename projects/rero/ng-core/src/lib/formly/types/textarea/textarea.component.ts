@@ -1,12 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormsModule, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
-import { FieldType, FieldTypeConfig, FormlyModule } from '@ngx-formly/core';
-import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+import { FieldType, FieldTypeConfig, FormlyFieldProps, FormlyModule } from '@ngx-formly/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Textarea } from 'primeng/textarea';
+import { Textarea } from '@openng/optimus-ui/textarea';
 
 interface ExtraTextAreaProps extends FormlyFieldProps {
   displayChars: boolean;
@@ -57,7 +56,6 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
       </span>
     </ng-template>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, Textarea, ReactiveFormsModule, FormlyModule, NgClass, NgTemplateOutlet, TranslatePipe],
 })
 export class TextareaFieldComponent extends FieldType<FieldTypeConfig<ExtraTextAreaProps>> implements OnInit {

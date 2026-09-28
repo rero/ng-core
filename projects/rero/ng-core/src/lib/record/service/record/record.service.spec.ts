@@ -3,7 +3,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
 import type { Error as CoreError } from '../../../core/component/error/error.interface';
 import { EsResult } from '../../../model/record.interface';
 import { ApiService } from '../api/api.service';
@@ -22,11 +22,11 @@ describe('RecordService', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService(),
       ],
     });
 

@@ -4,9 +4,9 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
-import { MenuModule } from 'primeng/menu';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { MenuModule } from '@openng/optimus-ui/menu';
 import { RecordSearchStore } from '../../store/record-search.store';
 import { MenuSortComponent } from './menu-sort.component';
 
@@ -28,8 +28,13 @@ describe('MenuSortComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, TranslateModule.forRoot(), MenuModule, ButtonModule, MenuSortComponent],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      imports: [BrowserAnimationsModule, MenuModule, ButtonModule, MenuSortComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
+      ],
     }).compileComponents();
 
     translateService = TestBed.inject(TranslateService);

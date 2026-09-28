@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject, effect, untracked } from '@angular/core';
+import { Component, inject, effect, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
@@ -11,11 +11,9 @@ import { SearchParams } from '../../model';
 
 @Component({
   selector: 'ng-core-record-search-page',
-  standalone: true,
   templateUrl: './record-search-page.component.html',
   imports: [RecordSearchComponent],
   providers: [RecordSearchStore], // Store is scoped to this page component
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordSearchPageComponent {
   private readonly route = inject(ActivatedRoute);

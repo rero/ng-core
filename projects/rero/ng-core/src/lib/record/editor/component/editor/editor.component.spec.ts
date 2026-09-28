@@ -3,10 +3,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
-import { DialogService } from 'primeng/dynamicdialog';
-import { MessageService } from 'primeng/api';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
+import { MessageService } from '@openng/optimus-ui/api';
 import { FormlyModule } from '@ngx-formly/core';
 import { RecordUiService } from '../../../service/record-ui/record-ui.service';
 import { RecordService } from '../../../service/record/record.service';
@@ -53,7 +53,7 @@ routeSpy.snapshot = {
       },
     ],
     showSearchInput: true,
-      adminMode: true,
+    adminMode: true,
   },
 };
 
@@ -80,7 +80,6 @@ describe('EditorComponent', () => {
         EditorComponent,
         BrowserAnimationsModule,
         RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
         FormlyModule.forRoot({
           types: [{ name: 'object', component: FormlyFieldObjectComponent }],
         }),
@@ -92,6 +91,7 @@ describe('EditorComponent', () => {
         { provide: ActivatedRoute, useValue: routeSpy },
         DialogService,
         MessageService,
+        provideTranslateService(),
       ],
     });
   });

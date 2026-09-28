@@ -5,9 +5,9 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { InputNumberModule } from '@openng/optimus-ui/inputnumber';
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { AggregationSliderComponent } from './slider.component';
 
@@ -17,14 +17,13 @@ describe('AggregationSliderComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        InputNumberModule,
-        ButtonModule,
-        AggregationSliderComponent,
-        RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
+      imports: [InputNumberModule, ButtonModule, AggregationSliderComponent, RouterModule.forRoot([])],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
       ],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     });
   });
 

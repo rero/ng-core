@@ -1,12 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { IQueryOptions, IRemoteAutocomplete, ISuggestionItem } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class AppRemoteAutocompleteService implements IRemoteAutocomplete {
   private data: ISuggestionItem[] = [
     { label: 'House', value: 'house', summary: 'House description' },

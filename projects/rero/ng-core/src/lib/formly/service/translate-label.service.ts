@@ -1,14 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import type { ISelectOption } from '../types/select/select.component';
 
 export type TranslatableOptionCollection = ISelectOption[] | Record<string, ISelectOption> | null | undefined;
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TranslateLabelService {
   private translateService: TranslateService = inject(TranslateService);
 

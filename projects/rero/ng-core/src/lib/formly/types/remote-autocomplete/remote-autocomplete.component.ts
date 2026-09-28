@@ -1,16 +1,23 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Injector, OnInit, runInInjectionContext, Signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { FieldType, FieldTypeConfig } from '@ngx-formly/core';
-import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
+import { FieldType, FieldTypeConfig, FormlyFieldProps } from '@ngx-formly/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { Button } from 'primeng/button';
-import { Select, SelectChangeEvent } from 'primeng/select';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from '@openng/optimus-ui/autocomplete';
+import { Button } from '@openng/optimus-ui/button';
+import { Select, SelectChangeEvent } from '@openng/optimus-ui/select';
 import { map, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { CONFIG } from '../../../core/config/config';
 import { removeChars } from '../../../core/utils/utils';
@@ -32,7 +39,6 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
 
 @Component({
   selector: 'ng-core-remote-autocomplete',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div
       style="padding-inline: 0; padding-block: 0"
@@ -41,11 +47,7 @@ export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
     >
       @if (!field.formControl.value) {
         @if (props.filters?.options) {
-          <p-select
-            [options]="optionValues()"
-            [ngModel]="props.filters?.selected"
-            (onChange)="changeFilter($event)"
-          >
+          <p-select [options]="optionValues()" [ngModel]="props.filters.selected" (onChange)="changeFilter($event)">
             <ng-template let-selected #selectedItem>
               {{ selected.untranslatedLabel | translate }}
             </ng-template>
@@ -107,11 +109,7 @@ export class RemoteAutocompleteComponent
   suggestions = toSignal(
     this.query.pipe(
       switchMap((data: IQuery) =>
-        this.remoteAutocompleteService.getSuggestions(
-          removeChars(data.query),
-          data.queryOptions,
-          data.recordPid,
-        )
+        this.remoteAutocompleteService.getSuggestions(removeChars(data.query), data.queryOptions, data.recordPid),
       ),
     ),
     { initialValue: [] },
