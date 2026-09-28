@@ -7,12 +7,14 @@ import { FieldType, FieldTypeConfig, FormlyModule } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Textarea } from 'primeng/textarea';
+import { NoLineBreaksDirective } from './no-line-breaks.directive';
 
 interface ExtraTextAreaProps extends FormlyFieldProps {
   displayChars: boolean;
   displayWords: boolean;
   limitWords?: number;
   limitChars?: number;
+  singleLine: boolean;
 }
 
 @Component({
@@ -22,7 +24,9 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
       pTextarea
       [formControl]="formControl"
       [cols]="props.cols"
-      [rows]="props.rows"
+      [rows]="props.singleLine ? 1 : props.rows"
+      [autoResize]="props.singleLine"
+      [ngCoreNoLineBreak]="props.singleLine"
       class="core:w-full"
       [class.is-invalid]="showError"
       [formlyAttributes]="field"
@@ -58,7 +62,16 @@ interface ExtraTextAreaProps extends FormlyFieldProps {
     </ng-template>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, Textarea, ReactiveFormsModule, FormlyModule, NgClass, NgTemplateOutlet, TranslatePipe],
+  imports: [
+    FormsModule,
+    Textarea,
+    ReactiveFormsModule,
+    FormlyModule,
+    NgClass,
+    NgTemplateOutlet,
+    TranslatePipe,
+    NoLineBreaksDirective,
+  ],
 })
 export class TextareaFieldComponent extends FieldType<FieldTypeConfig<ExtraTextAreaProps>> implements OnInit {
   /** Default properties */
@@ -66,6 +79,7 @@ export class TextareaFieldComponent extends FieldType<FieldTypeConfig<ExtraTextA
     props: {
       displayChars: false,
       displayWords: false,
+      singleLine: false,
     },
   };
 

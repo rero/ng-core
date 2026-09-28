@@ -21,6 +21,7 @@
       "hide_with_required_expression_control": "Optional",
       "treeSelect": "node5",
       "markdown": "Hello **world**.\nGreat day.",
+      "singleLineTextarea": "This single-line textarea grows as its content wraps.",
       "array_with_multicheckbox": ["checkbox1", "checkbox2"],
       "input_with_default_value": "slrofar6uh",
       "enum": "val1",

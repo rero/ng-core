@@ -40,6 +40,7 @@
     "selectMultipleWithLabelTranslation",
     "markdown",
     "textarea",
+    "singleLineTextarea",
     "email",
     "datePicker",
     "datePicker_calendar",
@@ -1282,6 +1283,21 @@
             "limitChars": 200,
             "limitWords": 10,
             "ui:grids": 5
+          }
+        }
+      }
+    },
+    "singleLineTextarea": {
+      "title": "Single-line textarea",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100,
+      "widget": {
+        "formlyConfig": {
+          "type": "textarea",
+          "props": {
+            "placeholder": "Type a single-line value here",
+            "singleLine": true
           }
         }
       }
