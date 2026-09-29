@@ -192,10 +192,10 @@ must be listed explicitly as shown above.
 [`barcode-detector`](https://www.npmjs.com/package/barcode-detector)'s
 ZXing WebAssembly ponyfill. That WASM binary
 (`zxing_reader.wasm`, shipped in the `zxing-wasm` package, itself a
-dependency of `barcode-detector`) is fetched at runtime from the
-application's origin — it cannot be bundled by `ng-packagr` inside the
-library, so every consuming application must copy it to its build
-output root itself.
+dependency of `barcode-detector`) is fetched at runtime from
+`ngCoreAssetsUrl` (the origin root when empty) — it cannot be bundled by
+`ng-packagr` inside the library, so every consuming application must
+copy it to its build output root itself.
 
 Add this entry to the `assets` array of your application's build
 target in `angular.json`:
@@ -207,6 +207,10 @@ target in `angular.json`:
   "output": "."
 }
 ```
+
+When the application is not served from the origin root, set
+`ngCoreAssetsUrl` in `CoreConfigService` to the URL of its build output
+root.
 
 Without this entry, opening the scanner dialog fails silently: the
 camera preview starts, but no barcode is ever detected (a 404 for

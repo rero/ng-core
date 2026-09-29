@@ -4,6 +4,19 @@ import { afterNextRender, ChangeDetectionStrategy, Component, DestroyRef, Elemen
 import { TranslateService } from '@ngx-translate/core';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Message } from 'primeng/message';
+import { CoreConfigService } from '../../../service/core-config/core-config.service';
+
+/**
+ * Resolve the URL of a ZXing WebAssembly file.
+ *
+ * The file is copied to the application's build output, which is not
+ * necessarily served from the origin root.
+ * @param path - the file name requested by the ZXing module.
+ * @param assetsUrl - the base URL of the application's build output.
+ */
+export function zxingWasmUrl(path: string, assetsUrl: string): string {
+  return new URL(`${assetsUrl.replace(/\/+$/, '')}/${path}`, window.location.origin).href;
+}
 
 @Component({
   selector: 'ng-core-barcode-scanner-dialog',
@@ -20,6 +33,7 @@ import { Message } from 'primeng/message';
 export class BarcodeScannerDialogComponent {
 
   private readonly translateService = inject(TranslateService);
+  private readonly coreConfigService = inject(CoreConfigService);
   private readonly dynamicDialogRef = inject(DynamicDialogRef);
   private readonly videoElement = viewChild.required<ElementRef<HTMLVideoElement>>('video');
   private stream?: MediaStream;
@@ -40,7 +54,7 @@ export class BarcodeScannerDialogComponent {
       await prepareZXingModule({
         overrides: {
           locateFile: (path: string, prefix: string) =>
-            path.endsWith('.wasm') ? new URL(path, window.location.origin).href : prefix + path,
+            path.endsWith('.wasm') ? zxingWasmUrl(path, this.coreConfigService.ngCoreAssetsUrl) : prefix + path,
         },
         fireImmediately: true,
       });
