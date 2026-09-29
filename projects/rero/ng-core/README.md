@@ -118,8 +118,22 @@ authoritative source):
 | `schemaFormEndpoint`   | `string`   | Endpoint serving JSON schemas                 |
 | `defaultLanguage`      | `string`   | Fallback language (default `en`)              |
 | `secretPassphrase`     | `string`   | Passphrase used by `CryptoJsService`          |
-| `translationsURLs`     | `string[]` | Extra remote translation JSON URLs to fetch   |
+| `translationsURLs`     | `(string \| TranslationURL)[]` | Extra remote translation JSON URLs to fetch |
+| `translationsVersion`  | `string`   | Version appended to `versioned` translation URLs |
 | `ngCoreAssetsUrl`      | `string`   | Base URL to fetch the library's own assets    |
+
+A translation URL declared as `{ url, versioned: true }` points to a static
+file: the loader appends `?v=<translationsVersion>` and allows the browser
+HTTP cache for it, so a new version is fetched after each deployment. Plain
+string URLs (e.g. API endpoints) are always fetched from the server.
+
+```typescript
+this.translationsVersion = environment.translationsVersion;
+this.translationsURLs = [
+  { url: '/assets/i18n/${lang}.json', versioned: true },
+  '/api/translations/${lang}.json',
+];
+```
 
 ### Extending translations
 
@@ -243,6 +257,11 @@ camera preview starts, but no barcode is ever detected (a 404 for
 * `CoreConfigService` — library configuration, meant to be subclassed.
 * `HttpPendingService` — tracks in-flight HTTP mutations (paired with
   `httpPendingInterceptor`) to guard against double form submits.
+* `noCacheInterceptor` — forces the browser to revalidate `GET`/`HEAD`
+  responses with the server instead of serving them from its HTTP cache;
+  register it with `provideHttpClient(withInterceptors([noCacheInterceptor]))`
+  and set the `ALLOW_HTTP_CACHE` context token to `true` to keep the cache
+  for a request.
 * `LocalStorageService` — typed wrapper around `localStorage`.
 * `CryptoJsService` — encrypt/decrypt helper using `secretPassphrase`.
 * `ComponentCanDeactivateGuard` / `AbstractCanDeactivateComponent` — route
