@@ -3,6 +3,18 @@
 import { Injectable } from '@angular/core';
 
 /**
+ * Translation file URL; `${lang}` is replaced by the requested language.
+ *
+ * A `versioned` URL points to a static file: it receives the
+ * `translationsVersion` as query parameter and may be served from the
+ * browser HTTP cache.
+ */
+export interface TranslationURL {
+  url: string;
+  versioned?: boolean;
+}
+
+/**
  * Interface for configuration.
  */
 export interface Config {
@@ -14,7 +26,8 @@ export interface Config {
   schemaFormEndpoint: string;
   defaultLanguage?: string;
   secretPassphrase: string;
-  translationsURLs?: string[];
+  translationsURLs?: (string | TranslationURL)[];
+  translationsVersion?: string;
   ngCoreAssetsUrl?: string;
 }
 
@@ -33,6 +46,7 @@ export class CoreConfigService implements Config {
   $refPrefix = '';
   defaultLanguage = 'en';
   secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';
-  translationsURLs: string[] = [];
+  translationsURLs: (string | TranslationURL)[] = [];
+  translationsVersion = '';
   ngCoreAssetsUrl = '';
 }
