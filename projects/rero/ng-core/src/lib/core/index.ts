@@ -15,6 +15,7 @@ export * from './core.provider';
 export * from './directive/katex.directive';
 export * from './guard/component-can-deactivate.guard';
 export * from './interceptor/http-pending.interceptor';
+export * from './interceptor/no-cache.interceptor';
 export * from './pipe/callback-array-filter/callback-array-filter.pipe';
 export * from './pipe/filesize/filesize.pipe';
 export * from './pipe/markdown/markdown.pipe';
