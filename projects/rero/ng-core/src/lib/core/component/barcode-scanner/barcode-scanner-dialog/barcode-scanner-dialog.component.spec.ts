@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { BarcodeScannerDialogComponent } from './barcode-scanner-dialog.component';
+import { BarcodeScannerDialogComponent, zxingWasmUrl } from './barcode-scanner-dialog.component';
 
 describe('BarcodeScannerDialogComponent', () => {
   let component: BarcodeScannerDialogComponent;
@@ -68,5 +68,25 @@ describe('BarcodeScannerDialogComponent', () => {
     expect(component.error()).toBe('Unable to start the barcode scanner');
     fixture.destroy();
     expect(stop).toHaveBeenCalled();
+  });
+});
+
+describe('zxingWasmUrl', () => {
+  const origin = window.location.origin;
+
+  it('should resolve the file from the origin root without assets URL', () => {
+    expect(zxingWasmUrl('zxing_reader.wasm', '')).toBe(`${origin}/zxing_reader.wasm`);
+  });
+
+  it('should resolve the file from the assets URL', () => {
+    expect(zxingWasmUrl('zxing_reader.wasm', '/static/app/browser')).toBe(`${origin}/static/app/browser/zxing_reader.wasm`);
+  });
+
+  it('should ignore a trailing slash in the assets URL', () => {
+    expect(zxingWasmUrl('zxing_reader.wasm', '/static/app/browser/')).toBe(`${origin}/static/app/browser/zxing_reader.wasm`);
+  });
+
+  it('should keep an absolute assets URL', () => {
+    expect(zxingWasmUrl('zxing_reader.wasm', 'https://cdn.example.org/app')).toBe('https://cdn.example.org/app/zxing_reader.wasm');
   });
 });
