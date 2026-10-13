@@ -1,5 +1,18 @@
 # Changelog
 
+## [21.4.0](https://github.com/rero/ng-core/compare/v21.3.0...v21.4.0) (2026-10-13)
+
+### Features
+
+* **core:** add barcode scanner ([f4cb2ed](https://github.com/rero/ng-core/commit/f4cb2edfedfabc0829b38fbdcd81f23ec4d948c8))
+* **core:** add no-cache HTTP interceptor ([8d9e42f](https://github.com/rero/ng-core/commit/8d9e42ffb08de5ad17a9f04c0b26f205ba8e8b4c))
+* **translate:** cache versioned translation files ([b338020](https://github.com/rero/ng-core/commit/b3380209a2c624e12fe1cdbe19b30a964e9dccf0))
+
+### Bug Fixes
+
+* **core:** load the scanner wasm from assets URL ([f813ca9](https://github.com/rero/ng-core/commit/f813ca9205fe41570acbd6ec4b3d78009c9c2bd8))
+* **editor:** expand single-line fields ([c54c506](https://github.com/rero/ng-core/commit/c54c506f465e2a4ae17b886a08742376a81ce68a))
+
 ## [21.3.0](https://github.com/rero/ng-core/compare/v21.2.0...v21.3.0) (2026-08-21)
 
 ### Features
