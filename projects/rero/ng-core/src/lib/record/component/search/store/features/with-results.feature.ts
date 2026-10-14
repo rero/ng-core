@@ -100,11 +100,12 @@ export function withResults() {
       },
 
       /**
-       * Set error state
+       * Set error state, clearing the results of the previous search
        * @param error Error object
        */
       setError(error: Error): void {
         patchState(store, {
+          esResult: null,
           error,
           isLoading: false,
         });
@@ -156,8 +157,8 @@ export function withResults() {
                 }),
                 // Inside switchMap: a failed request must not complete the stream,
                 // otherwise no search is run anymore until the page is reloaded.
-                catchError(() => {
-                  store.setLoading(false);
+                catchError((error: Error) => {
+                  store.setError(error);
                   return EMPTY;
                 }),
               ),
