@@ -101,10 +101,12 @@ describe('withResults', () => {
     store.setLoading(true);
 
     const mockError = { status: 500, title: 'Search failed', message: 'Server error' };
+    store.setResults({ hits: { hits: [], total: 3 }, aggregations: {}, links: { self: '' } });
     store.setError(mockError);
 
     expect(store.error()).toEqual(mockError);
     expect(store.isLoading()).toBe(false);
+    expect(store.total()).toBe(0);
   });
 
   it('should clear results', () => {
@@ -167,10 +169,12 @@ describe('withResults', () => {
 
       store.fetchRecords(params('$'));
       expect(store.isLoading()).toBe(false);
+      expect(store.error()).toEqual({ status: 400, title: 'Bad request' });
 
       store.fetchRecords(params('Goethe'));
       expect(mockRecordService.getRecords).toHaveBeenCalledTimes(2);
       expect(store.total()).toBe(3);
+      expect(store.error()).toBeNull();
     });
   });
 });
