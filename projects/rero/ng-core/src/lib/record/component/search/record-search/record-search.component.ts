@@ -23,7 +23,7 @@ import { Drawer } from 'primeng/drawer';
 import { Message } from 'primeng/message';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ErrorComponent, SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
+import { SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
 import { Aggregations } from '../../../../model';
 import { ActionStatus } from '../../../../model/action-status.interface';
 import { ExportFormat } from '../../../model/record-search.interface';
@@ -45,7 +45,6 @@ import { SearchTabsComponent } from './search-tabs/search-tabs.component';
   templateUrl: './record-search.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ErrorComponent,
     SearchTabsComponent,
     SearchInputComponent,
     Message,
