@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { HttpHeaders } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { signalStore, withState } from '@ngrx/signals';
-import { withResults } from './with-results.feature';
+import { of, throwError } from 'rxjs';
+import { FetchRecordsParams, withResults } from './with-results.feature';
 import { EsResult } from '../../../../../model';
 import { RecordService } from '../../../../service/record/record.service';
 
@@ -141,5 +143,34 @@ describe('withResults', () => {
     };
     store.setResults(mockResult);
     expect(store.error()).toBeNull();
+  });
+
+  describe('fetchRecords', () => {
+    const params = (query: string): FetchRecordsParams => ({
+      index: 'documents',
+      query,
+      page: 1,
+      itemsPerPage: 10,
+      allowEmptySearch: true,
+      aggregationsFilters: [],
+      preFilters: {},
+      sort: '',
+      facets: [],
+      headers: new HttpHeaders(),
+    });
+    const result: EsResult = { hits: { hits: [], total: 3 }, aggregations: {}, links: { self: '' } };
+
+    it('should keep searching after a failed request', () => {
+      mockRecordService.getRecords
+        .mockReturnValueOnce(throwError(() => ({ status: 400, title: 'Bad request' })))
+        .mockReturnValueOnce(of(result));
+
+      store.fetchRecords(params('$'));
+      expect(store.isLoading()).toBe(false);
+
+      store.fetchRecords(params('Goethe'));
+      expect(mockRecordService.getRecords).toHaveBeenCalledTimes(2);
+      expect(store.total()).toBe(3);
+    });
   });
 });
