@@ -1,12 +1,23 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Type, viewChild } from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  Type,
+  viewChild,
+} from '@angular/core';
 import { FieldType, FieldTypeConfig, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { FormlyFieldTextArea } from '@ngx-formly/primeng/textarea';
-import EasyMDE from 'easymde';
 import { NgClass } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 import { Textarea } from 'primeng/textarea';
+// Type-only import: erased at compile time, so it does not load CodeMirror on the server.
+import type EasyMDE from 'easymde';
 
 interface TextAreaProps extends FormlyFieldProps {
   maxHeight?: string;
@@ -29,15 +40,18 @@ export interface FormlyTextAreaFieldConfig extends FormlyFieldConfig<TextAreaPro
   selector: 'ng-core-editor-formly-field-markdown',
   template: `
     <div style="padding-inline: 0; padding-block: 0" [ngClass]="{ 'p-inputtext ng-invalid ng-dirty': showError }">
-      <textarea pTextarea #textarea></textarea>
+      <textarea pTextarea #textarea [formControl]="formControl"></textarea>
     </div>
   `,
-  imports: [NgClass, Textarea],
+  imports: [NgClass, ReactiveFormsModule, Textarea],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaProps>> implements AfterViewInit {
+export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaProps>> {
   // Reference to textarea element.
-  readonly textarea = viewChild<ElementRef>('textarea');
+  readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
+
+  private editor?: EasyMDE;
+  private destroyed = false;
 
   /** Default options */
   defaultOptions?: Partial<FieldTypeConfig<TextAreaProps>> = {
@@ -65,25 +79,44 @@ export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaPr
     },
   };
 
+  constructor() {
+    super();
+    // Browser only: EasyMDE (CodeMirror) needs the DOM as soon as it is loaded,
+    // so it is imported lazily once the view is rendered.
+    afterNextRender(() => this.initEditor());
+    inject(DestroyRef).onDestroy(() => {
+      this.destroyed = true;
+      this.editor?.cleanup();
+    });
+  }
+
   /**
    * Markdown editor initialization and listen for changes to update the model
    * value.
    */
-  ngAfterViewInit(): void {
-    const mde = new EasyMDE({
-      spellChecker: this.props.spellChecker,
-      promptURLs: this.props.promptURLs,
-      initialValue: this.formControl.value,
-      maxHeight: this.props.maxHeight,
-      minHeight: this.props.minHeight,
-      toolbar: this.props.toolbar,
-      element: this.textarea()?.nativeElement,
-      status: this.props.status,
-    });
-
-    mde.codemirror.on('change', () => {
-      this.formControl.patchValue(mde.value());
-      this.formControl.markAsTouched();
-    });
+  private initEditor(): void {
+    import('easymde')
+      .then(({ default: EasyMDE }) => {
+        if (this.destroyed) {
+          return;
+        }
+        const editor = new EasyMDE({
+          spellChecker: this.props.spellChecker,
+          promptURLs: this.props.promptURLs,
+          initialValue: this.formControl.value,
+          maxHeight: this.props.maxHeight,
+          minHeight: this.props.minHeight,
+          toolbar: this.props.toolbar,
+          element: this.textarea().nativeElement,
+          status: this.props.status,
+        });
+        editor.codemirror.on('change', () => {
+          this.formControl.patchValue(editor.value());
+          this.formControl.markAsTouched();
+        });
+        this.editor = editor;
+      })
+      // The textarea, bound to the form control, remains usable as a fallback.
+      .catch((error) => console.error('[MarkdownFieldComponent] EasyMDE loading failed', error));
   }
 }
