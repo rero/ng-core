@@ -39,9 +39,6 @@ export class RecordSearchResultComponent {
   protected router: Router = inject(Router);
   protected store = inject(RecordSearchStore);
 
-  // Store current URL to come back to the same page
-  currentUrl: string | null = null;
-
   // Record to display (only input needed)
   readonly record = input.required<RecordData>();
 
@@ -94,8 +91,6 @@ export class RecordSearchResultComponent {
   readonly deleteStatusType = computed(() => this.deleteStatus().type);
 
   constructor() {
-    this.currentUrl = window.location.href;
-
     // Effect to create/update the dynamic component when dependencies change
     effect(() => {
       const container = this.container();
