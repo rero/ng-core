@@ -168,6 +168,16 @@ describe('RecordSearchComponent', () => {
     expect(spinnerServiceSpy.show).toHaveBeenCalled();
   });
 
+  it('should display a search error without hiding the search input', () => {
+    component.store.setError({ status: 400, title: 'Bad request' });
+    fixture.detectChanges();
+
+    const element: HTMLElement = fixture.nativeElement;
+    expect(element.querySelector('p-message')?.textContent).toContain('The search failed. Bad request');
+    expect(element.querySelector('ng-core-search-input')).not.toBeNull();
+    expect(element.querySelector('#recordlist')).toBeNull();
+  });
+
   it('should hide spinner when loading stops', () => {
     component.store.setLoading(true);
     fixture.detectChanges();
