@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { RecordType } from '../../model';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordService } from '../../service/record/record.service';
@@ -70,7 +70,7 @@ describe('RecordSearchPageComponent', () => {
     };
 
     mockRecordService = {
-      getRecords: vi.fn(),
+      getRecords: vi.fn().mockReturnValue(of({ aggregations: {}, hits: { hits: [], total: 0 } })),
     };
 
     mockActivatedRoute = {
