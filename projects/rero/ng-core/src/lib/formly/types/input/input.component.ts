@@ -61,6 +61,8 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
     <ng-template #input let-formControl="formControl" let-props="props" let-field="field" let-showError="showError">
       @if (props.type === 'number') {
         <p-inputnumber
+          #inputNumber
+          [attr.tabindex]="-1"
           [inputStyleClass]="props.class"
           [locale]="props.locale"
           [useGrouping]="props.useGrouping ?? false"
@@ -71,6 +73,9 @@ export interface NgCoreFormlyInputFieldConfig extends FormlyFieldConfig {
           [formControl]="formControl"
           [formlyAttributes]="field"
           [ngClass]="{ 'ng-invalid ng-dirty': showError }"
+          (focus)="inputNumber.input.nativeElement.focus()"
+          (onFocus)="field.focus = true"
+          (onBlur)="field.focus = false"
         />
       } @else {
         <input
