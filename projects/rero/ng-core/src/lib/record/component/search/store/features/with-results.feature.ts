@@ -100,11 +100,12 @@ export function withResults() {
       },
 
       /**
-       * Set error state
+       * Set error state, clearing the results of the previous search
        * @param error Error object
        */
       setError(error: Error): void {
         patchState(store, {
+          esResult: null,
           error,
           isLoading: false,
         });
@@ -137,26 +138,31 @@ export function withResults() {
           filter((params) => params.allowEmptySearch || !!params.query.trim()),
           tap(() => store.setLoading(true)),
           switchMap((params) =>
-            store.recordService.getRecords(params.index, {
-              query: params.query,
-              page: params.page,
-              itemsPerPage: params.itemsPerPage,
-              aggregationsFilters: params.aggregationsFilters,
-              preFilters: params.preFilters,
-              sort: params.sort,
-              facets: params.facets,
-              headers: params!.headers,
-            }),
+            store.recordService
+              .getRecords(params.index, {
+                query: params.query,
+                page: params.page,
+                itemsPerPage: params.itemsPerPage,
+                aggregationsFilters: params.aggregationsFilters,
+                preFilters: params.preFilters,
+                sort: params.sort,
+                facets: params.facets,
+                headers: params.headers,
+              })
+              .pipe(
+                tap((records) => {
+                  if (records != null) {
+                    store.setResults(records);
+                  }
+                }),
+                // Inside switchMap: a failed request must not complete the stream,
+                // otherwise no search is run anymore until the page is reloaded.
+                catchError((error: Error) => {
+                  store.setError(error);
+                  return EMPTY;
+                }),
+              ),
           ),
-          tap((records) => {
-            if (records != null) {
-              store.setResults(records);
-            }
-          }),
-          catchError(() => {
-            store.setLoading(false);
-            return EMPTY;
-          }),
         ),
       ),
     })),
