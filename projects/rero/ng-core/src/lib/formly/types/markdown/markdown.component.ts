@@ -4,7 +4,6 @@ import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Type, vi
 import { FieldType, FieldTypeConfig, FormlyFieldConfig } from '@ngx-formly/core';
 import { FormlyFieldProps } from '@ngx-formly/primeng/form-field';
 import { FormlyFieldTextArea } from '@ngx-formly/primeng/textarea';
-import EasyMDE from 'easymde';
 import { NgClass } from '@angular/common';
 import { Textarea } from 'primeng/textarea';
 
@@ -69,7 +68,10 @@ export class MarkdownFieldComponent extends FieldType<FieldTypeConfig<TextAreaPr
    * Markdown editor initialization and listen for changes to update the model
    * value.
    */
-  ngAfterViewInit(): void {
+  async ngAfterViewInit(): Promise<void> {
+    // Lazy import: EasyMDE (CodeMirror) needs the DOM as soon as it is loaded,
+    // so a static import breaks the server-side rendering.
+    const { default: EasyMDE } = await import('easymde');
     const mde = new EasyMDE({
       spellChecker: this.props.spellChecker,
       promptURLs: this.props.promptURLs,
