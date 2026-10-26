@@ -1,5 +1,14 @@
 # Changelog
 
+## [21.4.1](https://github.com/rero/ng-core/compare/v21.4.0...v21.4.1) (2026-10-26)
+
+### Bug Fixes
+
+* **editor:** focus inputs in added fields ([e48e4f4](https://github.com/rero/ng-core/commit/e48e4f4881ee6a5a321c399a483e15868acc0182)), closes [rero/rero-ils#4209](https://github.com/rero/rero-ils/issues/4209)
+* **search:** display the search errors ([8449144](https://github.com/rero/ng-core/commit/844914487025582162b3c9fea154d28eac4ee937))
+* **search:** keep searching after a request error ([85658b2](https://github.com/rero/ng-core/commit/85658b25fb5fba0478dba35cfd023c7968d8501b))
+* support server-side rendering ([81ededa](https://github.com/rero/ng-core/commit/81ededaae30d875a91aceb71c34e3064c0a58e0d))
+
 ## [21.4.0](https://github.com/rero/ng-core/compare/v21.3.0...v21.4.0) (2026-10-13)
 
 ### Features
