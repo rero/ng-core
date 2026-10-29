@@ -1,6 +1,7 @@
 import { ParamMap } from '@angular/router';
-import { SearchParams } from './model';
+
 import { AggregationsFilter } from '../../public-api';
+import { SearchParams } from './model';
 
 export function shallowEqual(a: unknown, b: unknown): boolean {
   if (a === b) return true;

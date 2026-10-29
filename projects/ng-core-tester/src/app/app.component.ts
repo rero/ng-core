@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MenuItem, MessageService } from '@openng/optimus-ui/api';
+import { ConfirmDialog } from '@openng/optimus-ui/confirmdialog';
+import { Toast } from '@openng/optimus-ui/toast';
 import { CoreConfigService, RecordService } from '@rero/ng-core';
 import { NgxSpinnerComponent } from 'ngx-spinner';
-import { MenuItem, MessageService } from 'primeng/api';
-import { ConfirmDialog } from 'primeng/confirmdialog';
-import { Toast } from 'primeng/toast';
+
 import { MenuComponent } from './menu/menu.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 
@@ -16,7 +18,7 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  imports: [SearchBarComponent, RouterOutlet, NgxSpinnerComponent, MenuComponent, ConfirmDialog, Toast],
+  imports: [TranslatePipe, SearchBarComponent, RouterOutlet, NgxSpinnerComponent, MenuComponent, ConfirmDialog, Toast],
 })
 export class AppComponent {
   configService = inject(CoreConfigService);

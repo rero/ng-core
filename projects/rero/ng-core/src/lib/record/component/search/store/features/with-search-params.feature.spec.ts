@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { patchState, signalStore } from '@ngrx/signals';
 import { BehaviorSubject } from 'rxjs';
+
 import { SearchFilter, SearchFilterSection } from '../../../../../model/record.interface';
 import { RecordService } from '../../../../service/record/record.service';
 import { withAggregations } from './with-aggregations.feature';

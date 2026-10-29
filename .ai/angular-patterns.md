@@ -5,53 +5,58 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Angular Patterns
 
-# Zoneless component pattern
+## Zoneless component pattern
 
 Components rely on signals for UI updates.
 
-Example:
-
-@Component({
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
+```typescript
+@Component({})
 export class CounterComponent {
+  private readonly store = inject(CounterStore);
 
-  store = inject(CounterStore)
-
-  count = this.store.count
-
+  readonly count = this.store.count;
 }
+```
 
 ## NgRx Signal Store
 
-Application state should be implemented using NgRx Signal Store.
+Application state should be implemented using NgRx Signal Store. The state
+signals are read-only: update them with `patchState()`.
 
-Example pattern:
-
-import { signalStore, withState, withMethods } from '@ngrx/signals';
+```typescript
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 
 export const CounterStore = signalStore(
   { providedIn: 'root' },
-
-  withState({
-    count: 0
-  }),
-
+  withState({ count: 0 }),
   withMethods((store) => ({
-    increment() {
-      store.count.update(v => v + 1)
-    }
-  }))
-  )
+    increment(): void {
+      patchState(store, (state) => ({ count: state.count + 1 }));
+    },
+  })),
+);
+```
 
-Usage in component:
+## Optional features of `provideCore()`
 
-@Component({})
-export class CounterComponent {
-  store = inject(CounterStore)
-}
+`provideCore()` only provides the core; the optional parts are opted in, so
+applications that do not use them leave their code and dependencies out:
 
-## Guard double-clic sur les appels backend en écriture
+```typescript
+import { provideCore } from '@rero/ng-core';
+import { withBarcodeScanner } from '@rero/ng-core/barcode-scanner';
+import { provideCoreFormly } from '@rero/ng-core/editor';
+
+providers: [
+  provideCore(withBarcodeScanner()), // features: { ɵkind, ɵproviders }, as Angular's provideRouter()
+  provideCoreFormly(), // only for the applications displaying forms
+];
+```
+
+`provideCoreFormly()` can also be registered in the `providers` of a route, as
+`ngCoreEditorRoutes` does, so the editor and Formly are loaded lazily.
+
+## Guard against double clicks on backend writes
 
 Three patterns depending on the context.
 
@@ -65,7 +70,7 @@ Register the interceptor once in `app.config.ts`:
 ```typescript
 import { httpPendingInterceptor } from '@rero/ng-core';
 
-provideHttpClient(withInterceptors([httpPendingInterceptor]))
+provideHttpClient(withInterceptors([httpPendingInterceptor]));
 ```
 
 In the component:
@@ -93,14 +98,16 @@ Special case — keep disabled after a 409/412 conflict (requires page reload):
 private readonly _keepDisabled = signal(false);
 readonly isSaveDisabled = computed(() => this.httpPending.isPending() || this._keepDisabled());
 
-// in catchError:
-catchError(error => {
-  if (error.status === 409 || error.status === 412) {
-    // set after finalize so it overrides the isPending reset
-  }
-  return this._handleError(error);
-}),
-finalize(() => { if (isConflict) this._keepDisabled.set(true); }),
+// in the request pipe:
+let isConflict = false;
+request$.pipe(
+  catchError((error: HttpErrorResponse) => {
+    isConflict = error.status === 409 || error.status === 412;
+    return this._handleError(error);
+  }),
+  // set after finalize so it overrides the isPending reset
+  finalize(() => { if (isConflict) this._keepDisabled.set(true); }),
+);
 ```
 
 ### Pattern B — Dialog close / one-shot (no HTTP)

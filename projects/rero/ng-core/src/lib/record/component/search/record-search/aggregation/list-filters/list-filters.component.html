@@ -14,8 +14,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         [attr.aria-label]="('Remove filter' | translate) + ' ' + label"
         (click)="removeFilter(filter)"
         (keydown.enter)="removeFilter(filter)"
-        (keydown.space)="$event.preventDefault(); removeFilter(filter)"
-      >
+        (keydown.space)="$event.preventDefault(); removeFilter(filter)">
         <i class="fa-solid fa-xmark core:ml-1 core:mt-1"></i>
         <span class="core:min-w-0 core:overflow-hidden core:text-ellipsis core:whitespace-nowrap">
           {{ label }}

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 export interface AvailableLanguage {
@@ -17,7 +17,7 @@ export interface UserInfo {
   settings: UserSettings;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AppUserService {
   getUserInfo(): Observable<UserInfo> {
     return of({

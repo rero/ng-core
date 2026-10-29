@@ -3,7 +3,9 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { firstValueFrom, of } from 'rxjs';
+
 import type { Error as CoreError } from '../../../core/component/error/error.interface';
 import { EsResult } from '../../../model/record.interface';
 import { ApiService } from '../api/api.service';
@@ -22,11 +24,11 @@ describe('RecordService', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: [
         { provide: ApiService, useValue: apiServiceSpy },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
+        provideTranslateService(),
       ],
     });
 
@@ -167,5 +169,46 @@ describe('RecordService', () => {
 
     req.flush(expectedData);
     httpMock.verify();
+  });
+
+  describe('valueAlreadyExists', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should escape the value and add the filter and the excluded pid', async () => {
+      const getRecords = vi.spyOn(service, 'getRecords').mockReturnValue(of({ hits: { total: 0 } } as EsResult));
+      const result = firstValueFrom(service.valueAlreadyExists('documents', 'title', 'a "b"\\', '42', 'library.pid:1'));
+      await vi.advanceTimersByTimeAsync(500);
+
+      expect(await result).toBeNull();
+      expect(getRecords).toHaveBeenCalledWith('documents', {
+        query: 'title:"a \\"b\\"\\\\" AND library.pid:1 NOT pid:42',
+        itemsPerPage: 1,
+      });
+    });
+
+    it('should return the raw value when it is already taken', async () => {
+      const getRecords = vi.spyOn(service, 'getRecords').mockReturnValue(of({ hits: { total: 1 } } as EsResult));
+      const result = firstValueFrom(service.valueAlreadyExists('documents', 'year', 12));
+      await vi.advanceTimersByTimeAsync(500);
+
+      expect(await result).toEqual({ alreadyTaken: 12 });
+      expect(getRecords).toHaveBeenCalledWith('documents', { query: 'year:12', itemsPerPage: 1 });
+    });
+
+    it('should not query the backend before the delay', async () => {
+      const getRecords = vi.spyOn(service, 'getRecords').mockReturnValue(of({ hits: { total: 0 } } as EsResult));
+      const subscription = service.valueAlreadyExists('documents', 'title', 'foo').subscribe();
+      await vi.advanceTimersByTimeAsync(499);
+      expect(getRecords).not.toHaveBeenCalled();
+      subscription.unsubscribe();
+      await vi.advanceTimersByTimeAsync(1);
+      expect(getRecords).not.toHaveBeenCalled();
+    });
   });
 });

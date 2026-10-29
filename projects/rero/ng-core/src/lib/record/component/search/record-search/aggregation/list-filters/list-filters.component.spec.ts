@@ -3,7 +3,8 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { ListFiltersComponent } from './list-filters.component';
 
@@ -15,8 +16,13 @@ describe('ListFiltersComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ListFiltersComponent],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      imports: [ListFiltersComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
+      ],
     }).compileComponents();
     translateService = TestBed.inject(TranslateService);
     store = TestBed.inject(RecordSearchStore);
@@ -62,8 +68,7 @@ describe('ListFiltersComponent', () => {
 
     tags = fixture.debugElement.nativeElement.querySelectorAll('p-tag');
     const yearTag = Array.from(tags).find((tag: any) => tag.innerHTML.includes('1745 - 2050')) as
-      | HTMLElement
-      | undefined;
+      HTMLElement | undefined;
     yearTag?.click();
     fixture.detectChanges();
     const yearFilter = store.aggregationsFilters().find((f) => f.key === 'year');

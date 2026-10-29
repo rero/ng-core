@@ -3,21 +3,22 @@
 
 import { HttpHeaders } from '@angular/common/http';
 import { Type } from '@angular/core';
-import { FormlyFieldConfig } from '@ngx-formly/core';
-import { EditorSettingsConfig } from '../editor/component/editor/editor.component';
-import { IFilter } from '../component/search/record-search/aggregation/list-filters/list-filters.component';
-import { JSONSchema7 } from '../editor/utils/utils';
+import type { FormlyFieldConfig } from '@ngx-formly/core';
 import { Observable } from 'rxjs';
+
 import {
   ActionStatus,
   Bucket,
   EsResult,
   JsonObject,
+  JSONSchema7,
   RecordData,
   SearchFilter,
-  SearchFilterSection
+  SearchFilterSection,
 } from '../../model';
 import { AggregationsFilter } from '../component/search/model/aggregations-filter.interface';
+import { IFilter } from '../component/search/record-search/aggregation/list-filters/list-filters.component';
+import { EditorSettingsConfig } from './editor-settings.interface';
 
 export interface SearchParams {
   index: string;

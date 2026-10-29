@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Component, inject } from '@angular/core';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
 import { CONFIG } from '@rero/ng-core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { Button } from 'primeng/button';
 
 @Component({
   selector: 'app-dialog',

@@ -3,22 +3,23 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputGroupAddon } from '@openng/optimus-ui/inputgroupaddon';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Panel } from '@openng/optimus-ui/panel';
 import {
-  BarcodeScannerComponent,
   CameraDetectionService,
   ErrorComponent,
-  KatexDirective,
   MarkdownPipe,
   Nl2brPipe,
   ReadMoreComponent,
   TranslateLanguagePipe,
 } from '@rero/ng-core';
+import { BarcodeScannerComponent } from '@rero/ng-core/barcode-scanner';
+import { KatexDirective } from '@rero/ng-core/katex';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Button } from 'primeng/button';
-import { InputGroup } from 'primeng/inputgroup';
-import { InputGroupAddon } from 'primeng/inputgroupaddon';
-import { InputText } from 'primeng/inputtext';
-import { Panel } from 'primeng/panel';
+
 import { DocumentComponent } from '../record/document/document.component';
 import { AppDialogComponent } from './dialog/app-dialog.component';
 import { SelectDialogComponent } from './select-dialog/select-dialog.component';
@@ -45,7 +46,7 @@ import { ToastComponent } from './toast/toast.component';
     BarcodeScannerComponent,
     InputText,
     InputGroup,
-    InputGroupAddon
+    InputGroupAddon,
   ],
 })
 export class HomeComponent {

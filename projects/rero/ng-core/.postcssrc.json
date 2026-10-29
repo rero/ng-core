@@ -1,7 +1,7 @@
 {
   "plugins": {
     "@tailwindcss/postcss": {
-	    "base": "./projects/rero/ng-core"
+      "base": "./projects/rero/ng-core"
     }
   }
 }

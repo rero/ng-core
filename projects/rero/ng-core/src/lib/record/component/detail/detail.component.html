@@ -12,8 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       [updateStatus]="updateStatus()"
       [deleteStatus]="deleteStatus()"
       (recordEvent)="recordEvent($event)"
-      (deleteMessageEvent)="showDeleteMessage($event)"
-    />
+      (deleteMessageEvent)="showDeleteMessage($event)" />
   }
   @let err = error();
   @if (err) {

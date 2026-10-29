@@ -4,9 +4,10 @@
 import { Component, DOCUMENT } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, TitleStrategy } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { PageTitleStrategy } from './page-title-strategy';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+
 import { CoreConfigService } from '../core-config/core-config.service';
+import { PageTitleStrategy } from './page-title-strategy';
 
 @Component({ template: '' })
 export class TestComponent {}
@@ -19,12 +20,12 @@ describe('PageTitleStrategy', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
       providers: [
         provideRouter([]),
         { provide: TitleStrategy, useClass: PageTitleStrategy },
         TranslateService,
         CoreConfigService,
+        provideTranslateService(),
       ],
     });
     translate = TestBed.inject(TranslateService);

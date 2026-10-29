@@ -3,8 +3,9 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { AutoCompleteData, AutoCompleteRecordType, SearchAutocompleteComponent, RecordData } from '@rero/ng-core';
-import { MessageService } from 'primeng/api';
+import { MessageService } from '@openng/optimus-ui/api';
+import { AutoCompleteData, AutoCompleteRecordType, RecordData, SearchAutocompleteComponent } from '@rero/ng-core';
+
 import { DocumentMetadata } from '../record/document/document.component';
 
 /**

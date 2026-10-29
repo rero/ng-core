@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpHeaders } from '@angular/common/http';
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { catchError, map } from 'rxjs/operators';
-import { extractIdOnRef } from '../../core/utils/utils';
-import { RecordService } from '../service/record/record.service';
 import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { extractIdOnRef } from '../../core/utils/utils';
 import { JsonValue, RecordData } from '../../model';
+import { RecordService } from '../service/record/record.service';
 
 /**
  * Get a record by its PID.
@@ -41,7 +42,7 @@ export class GetRecordPipe implements PipeTransform {
     }
 
     return this.recordService
-      .getRecord(type, pid, { resolve:1, headers: headers || new HttpHeaders({ 'Content-Type': 'application/json' }) })
+      .getRecord(type, pid, { resolve: 1, headers: headers || new HttpHeaders({ 'Content-Type': 'application/json' }) })
       .pipe(
         map((data) => {
           if (!data) {

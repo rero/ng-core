@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+
 import en from '../../languages/en.json';
 
 export type LanguageMap = Record<string, Record<string, string>>;
@@ -9,9 +10,7 @@ export type LanguageLoaderFn = () => Promise<Record<string, string>>;
 
 export const CORE_LANGUAGE_LOADERS: LanguageMap = { en };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class TranslateLanguageService {
   protected translateService = inject(TranslateService);
 
@@ -31,11 +30,11 @@ export class TranslateLanguageService {
     for (const [lang, data] of entries) {
       this.availableLanguages[lang] = data;
     }
-    this.languagesVersion.update(v => v + 1);
+    this.languagesVersion.update((v) => v + 1);
   }
 
   translate(langCode: string, language?: string) {
-    const lang = language || this.translateService.getCurrentLang();
+    const lang = language || this.translateService.getCurrentLang() || 'en';
     const map = this.availableLanguages[lang] ?? this.availableLanguages['en'];
 
     if (!map || !(langCode in map)) {

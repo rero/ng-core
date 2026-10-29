@@ -3,11 +3,13 @@
   "compilerOptions": {
     "outDir": "../../../out-tsc/spec",
     "composite": true,
-    "types": [
-      "vitest/globals"
-    ]
+    "types": ["vitest/globals"],
+    "paths": {
+      "@rero/ng-core": ["./src/public-api.ts"],
+      "@rero/ng-core/barcode-scanner": ["./barcode-scanner/src/public-api.ts"],
+      "@rero/ng-core/editor": ["./editor/src/public-api.ts"],
+      "@rero/ng-core/katex": ["./katex/src/public-api.ts"]
+    }
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Pipe, PipeTransform } from '@angular/core';
+
 import { capitalize } from '../../utils/utils';
 
 /**

@@ -3,7 +3,8 @@
 import { TestBed } from '@angular/core/testing';
 import { signalStore } from '@ngrx/signals';
 import { of } from 'rxjs';
-import { withConfig, DEFAULT_ROUTE_CONFIG, DEFAULT_RECORD_TYPE } from './with-config.feature';
+
+import { DEFAULT_RECORD_TYPE, DEFAULT_ROUTE_CONFIG, withConfig } from './with-config.feature';
 import { withSearchParams } from './with-search-params.feature';
 
 describe('withConfig', () => {

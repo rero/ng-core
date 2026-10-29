@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpContext, HttpHandlerFn, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { of } from 'rxjs';
+
 import { ALLOW_HTTP_CACHE, noCacheInterceptor } from './no-cache.interceptor';
 
 describe('noCacheInterceptor', () => {
@@ -32,7 +33,7 @@ describe('noCacheInterceptor', () => {
 
   it('should not modify a request allowing the cache', () => {
     const req = new HttpRequest('GET', '/api/documents', {
-      context: new HttpContext().set(ALLOW_HTTP_CACHE, true)
+      context: new HttpContext().set(ALLOW_HTTP_CACHE, true),
     });
     noCacheInterceptor(req, next);
     expect(forwarded()).toBe(req);
@@ -40,7 +41,7 @@ describe('noCacheInterceptor', () => {
 
   it('should keep an existing Cache-Control header', () => {
     const req = new HttpRequest('GET', '/api/documents', {
-      headers: new HttpHeaders({ 'Cache-Control': 'max-age=60' })
+      headers: new HttpHeaders({ 'Cache-Control': 'max-age=60' }),
     });
     noCacheInterceptor(req, next);
     expect(forwarded()).toBe(req);

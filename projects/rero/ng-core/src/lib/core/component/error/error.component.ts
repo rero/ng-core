@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Error } from './error.interface';
+import { Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+
+import { Error } from './error.interface';
 
 /**
  * Component for displaying errors.
@@ -20,7 +21,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     </div>
   `,
   imports: [TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorComponent {
   // Error object containing title, status and optionally a message.

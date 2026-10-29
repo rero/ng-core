@@ -20,8 +20,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         [disabled]="exportOptions()[0]?.disabled"
         [pTooltip]="exportOptions()[0]?.disabled_message"
         [tooltipDisabled]="!exportOptions()[0]?.disabled"
-        tooltipPosition="top"
-      />
+        tooltipPosition="top" />
     }
   } @else {
     <!-- display multiple export formats as dropdown list -->
@@ -33,8 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       [pTooltip]="exportOptions()[0]?.disabled_message"
       [tooltipDisabled]="!exportOptions()[0]?.disabled"
       tooltipPosition="top"
-      (onClick)="menu.toggle($event)"
-    >
+      (onClick)="menu.toggle($event)">
       <div class="core:flex core:gap-4 core:items-center">
         <i class="fa-solid fa-download"></i>
         {{ 'Export as' | translate }}&nbsp;…

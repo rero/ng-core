@@ -4,10 +4,10 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
-import { CheckboxModule } from 'primeng/checkbox';
-import { PanelModule } from 'primeng/panel';
+import { provideTranslateService } from '@ngx-translate/core';
+import { CheckboxModule } from '@openng/optimus-ui/checkbox';
+import { PanelModule } from '@openng/optimus-ui/panel';
+
 import { RecordSearchStore } from '../../store/record-search.store';
 import { RecordSearchAggregationComponent } from './aggregation.component';
 
@@ -18,15 +18,13 @@ describe('RecordSearchAggregationComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [
-        BrowserAnimationsModule,
-        NoopAnimationsModule,
-        PanelModule,
-        CheckboxModule,
-        TranslateModule.forRoot(),
-        RecordSearchAggregationComponent,
+      imports: [PanelModule, CheckboxModule, RecordSearchAggregationComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
       ],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     });
   });
 
@@ -63,7 +61,15 @@ describe('RecordSearchAggregationComponent', () => {
   it('should expand the aggregation on toggle click', () => {
     const store = TestBed.inject(RecordSearchStore);
     store.updateAggregations([
-      { key: 'author', bucketSize: 2, value: { buckets: [] }, expanded: false, included: false, doc_count: 0, name: 'author' },
+      {
+        key: 'author',
+        bucketSize: 2,
+        value: { buckets: [] },
+        expanded: false,
+        included: false,
+        doc_count: 0,
+        name: 'author',
+      },
     ]);
 
     expect(component.aggregation().expanded).toBe(false);

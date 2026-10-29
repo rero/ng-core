@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, DomSanitizer } from '@angular/platform-browser';
+
 import { Nl2brPipe } from './nl2br.pipe';
 
 describe('Nl2brPipe', () => {

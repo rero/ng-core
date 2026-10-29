@@ -1,18 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, of } from 'rxjs';
+
 import { RecordType } from '../../model';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordService } from '../../service/record/record.service';
 import { RecordSearchPageComponent } from './record-search-page.component';
 import { DEFAULT_RECORD_TYPE } from './store/features/with-config.feature';
 import { RecordSearchStore } from './store/record-search.store';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateModule } from '@ngx-translate/core';
 
 describe('RecordSearchPageComponent', () => {
   let component: RecordSearchPageComponent;
@@ -86,7 +86,7 @@ describe('RecordSearchPageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [RecordSearchPageComponent, TranslateModule.forRoot(), NoopAnimationsModule],
+      imports: [RecordSearchPageComponent],
       providers: [
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -94,6 +94,7 @@ describe('RecordSearchPageComponent', () => {
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: RecordUiService, useValue: mockRecordUiService },
         { provide: RecordService, useValue: mockRecordService },
+        provideTranslateService(),
       ],
     }).compileComponents();
 
@@ -120,7 +121,6 @@ describe('RecordSearchPageComponent', () => {
       expect((component as any).route).toBeTruthy();
       expect((component as any).router).toBeTruthy();
     });
-
   });
 
   describe('Route Parameter Extraction', () => {

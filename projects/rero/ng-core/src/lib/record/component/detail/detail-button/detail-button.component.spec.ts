@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { CommonModule } from '@angular/common';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ButtonModule } from 'primeng/button';
-import { DetailButtonComponent } from './detail-button.component';
-import { TranslateModule } from '@ngx-translate/core';
-import { By } from '@angular/platform-browser';
 import { ComponentRef } from '@angular/core';
-import { TooltipModule } from 'primeng/tooltip';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { TooltipModule } from '@openng/optimus-ui/tooltip';
+
+import { DetailButtonComponent } from './detail-button.component';
 
 describe('DetailButtonComponent', () => {
   let fixture: ComponentFixture<DetailButtonComponent>;
@@ -19,7 +20,8 @@ describe('DetailButtonComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, ButtonModule, TooltipModule, TranslateModule.forRoot(), DetailButtonComponent],
+      imports: [CommonModule, ButtonModule, TooltipModule, DetailButtonComponent],
+      providers: [provideTranslateService()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetailButtonComponent);

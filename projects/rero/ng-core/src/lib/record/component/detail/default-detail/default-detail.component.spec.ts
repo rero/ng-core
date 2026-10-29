@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DefaultDetailComponent } from './default-detail.component';
 import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { DefaultDetailComponent } from './default-detail.component';
 
 describe('DefaultDetailComponent', () => {
   let fixture: ComponentFixture<DefaultDetailComponent>;

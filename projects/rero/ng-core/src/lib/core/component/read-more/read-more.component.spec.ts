@@ -1,10 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
-import { KatexDirective } from '../../directive/katex.directive';
+import { provideTranslateService } from '@ngx-translate/core';
+
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
 import { ReadMoreComponent } from './read-more.component';
 
@@ -17,9 +16,8 @@ describe('ReadMoreComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), ReadMoreComponent, Nl2brPipe, KatexDirective],
-    }).overrideComponent(ReadMoreComponent, {
-      set: { changeDetection: ChangeDetectionStrategy.Default },
+      imports: [ReadMoreComponent, Nl2brPipe],
+      providers: [provideTranslateService()],
     });
   });
 

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { TestBed } from '@angular/core/testing';
+
 import { LocalStorageEvent, LocalStorageService } from './local-storage.service';
 
 describe('LocalStorageService', () => {
@@ -57,6 +58,22 @@ describe('LocalStorageService', () => {
     service.remove('local');
     expect(service.has('local')).toBeFalsy();
     service.clear();
+  });
+
+  it('should store the data as plain JSON', () => {
+    service.set('local', { name: 'test' });
+    expect(JSON.parse(localStorage.getItem('local') ?? '').data).toEqual({ name: 'test' });
+    service.clear();
+  });
+
+  it('should drop a value encrypted by a previous version', () => {
+    // Value encrypted with crypto-js by the previous versions of the library.
+    localStorage.setItem('local', 'U2FsdGVkX1+2c3VwZXJzZWNyZXRlbmNyeXB0ZWQ=');
+    expect(service.has('local')).toBeFalsy();
+    expect(service.get('local')).toBeNull();
+    expect(service.isExpired('local', 30)).toBeTruthy();
+    expect(() => service.updateDate('local')).not.toThrow();
+    expect(localStorage.getItem('local')).toBeNull();
   });
 
   it('should clear local storage', () => {

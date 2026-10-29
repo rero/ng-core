@@ -6,6 +6,7 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withMethods, withProps, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, filter, pipe, switchMap, tap } from 'rxjs';
+
 import { Error } from '../../../../../core';
 import { EsResult } from '../../../../../model';
 import { RecordService } from '../../../../service/record/record.service';

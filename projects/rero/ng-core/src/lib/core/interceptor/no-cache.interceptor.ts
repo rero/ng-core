@@ -26,17 +26,19 @@ const CACHEABLE_METHODS = ['GET', 'HEAD'];
  */
 export function noCacheInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   if (
-    !CACHEABLE_METHODS.includes(req.method)
-    || req.context.get(ALLOW_HTTP_CACHE)
-    || req.headers.has('Cache-Control')
+    !CACHEABLE_METHODS.includes(req.method) ||
+    req.context.get(ALLOW_HTTP_CACHE) ||
+    req.headers.has('Cache-Control')
   ) {
     return next(req);
   }
-  return next(req.clone({
-    setHeaders: {
-      'Cache-Control': 'no-cache',
-      // HTTP/1.0 proxies only understand the Pragma header
-      Pragma: 'no-cache'
-    }
-  }));
+  return next(
+    req.clone({
+      setHeaders: {
+        'Cache-Control': 'no-cache',
+        // HTTP/1.0 proxies only understand the Pragma header
+        Pragma: 'no-cache',
+      },
+    }),
+  );
 }

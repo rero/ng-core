@@ -1,0 +1,48 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+import { inject, Service } from '@angular/core';
+import { EsResult, JsonObject, RecordService } from '@rero/ng-core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface TemplateMetadata extends JsonObject {
+  name: string;
+  pid?: string;
+  visibility?: 'public' | 'private';
+  data?: JsonObject;
+  template_type?: string;
+}
+
+@Service()
+export class TemplatesService {
+  protected recordService: RecordService = inject(RecordService);
+
+  /**
+   * Get all templates corresponding to a resource type
+   * @param templateResourceType - string: the resource name where to find templates
+   * @param resourceType - string: the resource type
+   * @return an observable of template record
+   */
+  getTemplates(templateResourceType: string, resourceType?: string): Observable<TemplateMetadata[]> {
+    const query = resourceType !== undefined ? `template_type:${resourceType}` : '';
+    return this.recordService
+      .getRecords<EsResult<TemplateMetadata>>(templateResourceType, {
+        query: query,
+        itemsPerPage: RecordService.MAX_REST_RESULTS_SIZE,
+      })
+      .pipe(
+        map((data) => {
+          if (data.hits) {
+            return data.hits;
+          } else {
+            return {
+              total: 0,
+              hits: [],
+            };
+          }
+        }),
+        map((hits) => (hits.total === 0 ? [] : hits.hits)),
+        map((hits) => hits.map((hit) => hit.metadata)),
+      );
+  }
+}

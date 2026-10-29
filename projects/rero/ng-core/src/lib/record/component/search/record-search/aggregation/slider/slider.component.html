@@ -8,19 +8,19 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     inputId="integeronly"
     [useGrouping]="false"
     [ngModel]="range()[0]"
+    [ngModelOptions]="{ standalone: true }"
     (ngModelChange)="range.set([$event, range()[1]])"
     [min]="range()[0]"
-    [max]="range()[1]"
-  />
+    [max]="range()[1]" />
   <p-inputNumber
     class="core:ml-1"
     inputId="integeronly"
     [useGrouping]="false"
     [ngModel]="range()[1]"
+    [ngModelOptions]="{ standalone: true }"
     (ngModelChange)="range.set([range()[0], $event])"
     [min]="range()[0]"
-    [max]="range()[1]"
-  />
+    [max]="range()[1]" />
 </p-inputGroup>
 <div class="core:flex core:justify-end core:mt-2 core:gap-2">
   @if (hasQueryParam()) {
@@ -28,13 +28,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       size="small"
       [label]="'Clear' | translate"
       [outlined]="true"
-      (onClick)="$event.preventDefault(); clearFilter()"
-    />
+      (onClick)="$event.preventDefault(); clearFilter()" />
   }
   <p-button
     size="small"
     [label]="'Apply' | translate"
     [outlined]="true"
-    (onClick)="$event.preventDefault(); updateFilter()"
-  />
+    (onClick)="$event.preventDefault(); updateFilter()" />
 </div>

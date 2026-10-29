@@ -1,8 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { inject, Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Subject } from 'rxjs';
-import { CryptoJsService } from '../crypto-js/crypto-js.service';
 
 /**
  * LocalStorageEvent interface
@@ -15,12 +14,8 @@ export interface LocalStorageEvent {
 /**
  * Service for managing data saved into local storage.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class LocalStorageService {
-  protected cryptoService: CryptoJsService = inject(CryptoJsService);
-
   /**
    * Event for set data on local storage
    */
@@ -68,7 +63,7 @@ export class LocalStorageService {
    */
   set(key: string, value: unknown) {
     const data = { date: new Date(), data: value };
-    localStorage.setItem(key, this.cryptoService.encrypt(JSON.stringify(data)));
+    localStorage.setItem(key, JSON.stringify(data));
     this.onSet.next({ key, data });
 
     return this;
@@ -81,8 +76,10 @@ export class LocalStorageService {
    */
   updateDate(key: string) {
     const local = this.getItem(key);
-    local.date = new Date();
-    localStorage.setItem(key, this.cryptoService.encrypt(JSON.stringify(local)));
+    if (local) {
+      local.date = new Date();
+      localStorage.setItem(key, JSON.stringify(local));
+    }
 
     return this;
   }
@@ -95,6 +92,9 @@ export class LocalStorageService {
    */
   isExpired(key: string, seconds: number) {
     const local = this.getItem(key);
+    if (!local) {
+      return true;
+    }
     const today = new Date();
     const localDate = new Date(local.date);
     localDate.setSeconds(localDate.getSeconds() + seconds);
@@ -142,22 +142,27 @@ export class LocalStorageService {
    * @return Boolean
    */
   has(key: string) {
-    return this.keys().indexOf(key) > -1;
+    return this.getItem(key) !== null;
   }
 
   /**
    * Get local storage with the key
+   *
+   * A value that is not JSON was encrypted by a previous version of the
+   * library: it can no longer be read, so it is removed.
    * @param key - string
+   * @return the stored object, or null when there is no readable value
    */
   private getItem(key: string) {
-    return JSON.parse(this.cryptoService.decrypt(localStorage.getItem(key) || ''));
-  }
-
-  /**
-   * Return keys of LocaleStorage
-   * @return array
-   */
-  private keys() {
-    return Object.keys(localStorage);
+    const value = localStorage.getItem(key);
+    if (value === null) {
+      return null;
+    }
+    try {
+      return JSON.parse(value);
+    } catch {
+      localStorage.removeItem(key);
+      return null;
+    }
   }
 }

@@ -1,13 +1,14 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { EditorComponent } from './editor.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideTranslateService } from '@ngx-translate/core';
 import { provideCore } from '@rero/ng-core';
+import { provideCoreFormly } from '@rero/ng-core/editor';
+
+import { EditorComponent } from './editor.component';
 
 describe('EditorComponent', () => {
   let component: EditorComponent;
@@ -15,8 +16,14 @@ describe('EditorComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot(), RouterModule.forRoot([]), BrowserAnimationsModule, EditorComponent],
-      providers: [provideCore(), provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
+      imports: [RouterModule.forRoot([]), EditorComponent],
+      providers: [
+        provideCore(),
+        provideCoreFormly(),
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
+      ],
     });
   });
 

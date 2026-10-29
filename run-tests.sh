@@ -15,6 +15,8 @@ display_success_message () {
 
 set -e
 
+display_success_message "Checking the formatting..."
+pnpm run format:check
 display_success_message "Building library..."
 ng build --configuration production @rero/ng-core
 

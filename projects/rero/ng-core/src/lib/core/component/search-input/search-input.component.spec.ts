@@ -1,11 +1,12 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { AutoFocusModule } from '@openng/optimus-ui/autofocus';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { InputGroupModule } from '@openng/optimus-ui/inputgroup';
+import { InputGroupAddonModule } from '@openng/optimus-ui/inputgroupaddon';
+
 import { SearchInputComponent } from './search-input.component';
-import { AutoFocusModule } from 'primeng/autofocus';
-import { ButtonModule } from 'primeng/button';
 
 describe('SearchInputComponent', () => {
   let component: SearchInputComponent;

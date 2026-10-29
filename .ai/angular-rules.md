@@ -5,7 +5,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Angular Rules
 
-Framework version: Angular 21
+Framework version: Angular 22
 
 ## Core rules
 
@@ -25,18 +25,30 @@ Framework version: Angular 21
 
 ## Change detection
 
-- Use OnPush change detection by default.
+- OnPush is the default change detection strategy since Angular 22.
+  Do not set `changeDetection: ChangeDetectionStrategy.OnPush` explicitly
+  on `@Component`.
 
-Example:
+## Templates
 
-@Component({
-changeDetection: ChangeDetectionStrategy.OnPush
-})
+- Translate with the pipe, `{{ 'Key' | translate }}` or
+  `[label]="'Key' | translate"`. Never use the element content as key
+  (`<span translate>Key</span>`) nor a bare `translate` attribute:
+  ngx-translate 18 warns for each element and removes it in version 19.
+- Mark an `ngModel` that only drives a control of the component itself with
+  `[ngModelOptions]="{ standalone: true }"` (e.g. inside a Formly field type
+  or a search filter): Angular 22 warns when an `ngModel` sits in a parent
+  form it cannot register with.
 
 ## Dependency injection
 
 - Avoid unnecessary services.
 - Prefer simple utility functions when Angular DI is not needed.
+- Use `@Service()` instead of `@Injectable({ providedIn: 'root' })` for
+  root-provided, tree-shakable services (available since Angular 22).
+- Use `@Service({ autoProvided: false })` instead of a bare `@Injectable()`
+  for services that must be registered explicitly in a `providers` array
+  (e.g. route guards, translation loaders provided via a factory).
 
 ## State management
 

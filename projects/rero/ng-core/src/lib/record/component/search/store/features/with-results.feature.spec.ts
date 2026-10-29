@@ -5,9 +5,10 @@ import { HttpHeaders } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { signalStore, withState } from '@ngrx/signals';
 import { of, throwError } from 'rxjs';
-import { FetchRecordsParams, withResults } from './with-results.feature';
+
 import { EsResult } from '../../../../../model';
 import { RecordService } from '../../../../service/record/record.service';
+import { FetchRecordsParams, withResults } from './with-results.feature';
 
 describe('withResults', () => {
   const TestStore = signalStore(withState({ currentType: '' }), withResults());

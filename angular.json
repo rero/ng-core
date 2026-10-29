@@ -25,13 +25,26 @@
           "options": {
             "buildTarget": "ng-core-tester:build",
             "browsers": ["chromium"],
+            "include": [
+              "**/*.spec.ts",
+              "../barcode-scanner/**/*.spec.ts",
+              "../editor/**/*.spec.ts",
+              "../katex/**/*.spec.ts"
+            ],
             "tsConfig": "projects/rero/ng-core/tsconfig.spec.json"
           }
         },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": ["projects/rero/ng-core/src/**/*.ts", "projects/rero/ng-core/src/**/*.html"]
+            "lintFilePatterns": [
+              "projects/rero/ng-core/src/**/*.ts",
+              "projects/rero/ng-core/src/**/*.html",
+              "projects/rero/ng-core/barcode-scanner/**/*.ts",
+              "projects/rero/ng-core/editor/**/*.ts",
+              "projects/rero/ng-core/editor/**/*.html",
+              "projects/rero/ng-core/katex/**/*.ts"
+            ]
           }
         }
       }
@@ -45,7 +58,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "allowedCommonJsDependencies": ["crypto-js", "easymde", "js-generate-password"],
+            "allowedCommonJsDependencies": ["easymde", "js-generate-password"],
             "outputPath": {
               "base": "dist/ng-core-tester"
             },

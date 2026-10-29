@@ -12,8 +12,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             @if (showFilter(searchFilter)) {
               <ng-container
                 [ngTemplateOutlet]="searchFilterTemplate"
-                [ngTemplateOutletContext]="{ filter: searchFilter }"
-              />
+                [ngTemplateOutletContext]="{ filter: searchFilter }" />
             }
           }
         }
@@ -31,10 +30,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     <div class="core:flex core:items-center core:mr-2">
       <p-toggleswitch
         [ngModel]="isChecked(filter)"
+        [ngModelOptions]="{ standalone: true }"
         inputId="customSwitch-{{ filter.filter }}"
         [ariaLabel]="filter.label | translate"
-        (onChange)="change($event, filter)"
-      />
+        (onChange)="change($event, filter)" />
     </div>
     <div class="core:flex core:items-center">
       <label for="customSwitch-{{ filter.filter }}">{{ filter.label | translate }}</label>

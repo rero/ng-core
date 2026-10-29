@@ -10,8 +10,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     [label]="'Back' | translate"
     severity="secondary"
     [text]="true"
-    (onClick)="goBack()"
-  />
+    (onClick)="goBack()" />
   <div class="core:flex core:flex-wrap core:items-center core:gap-1">
     <ng-content select="[beforeButton]"></ng-content>
     @if (record() && adminMode()) {
@@ -20,9 +19,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           id="detail-use-button"
           icon="fa-solid fa-hand-pointer"
           [label]="'Use' | translate"
-          (onClick)="useRecord()"
-          translate
-        />
+          (onClick)="useRecord()" />
       }
       @if (updateStatus() && updateStatus().can) {
         <p-button
@@ -30,9 +27,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           icon="fa-solid fa-pencil"
           [label]="'Edit' | translate"
           [outlined]="useStatus().can"
-          (onClick)="updateRecord(record()!)"
-          translate
-        />
+          (onClick)="updateRecord(record()!)" />
       }
       @if (deleteStatus()) {
         <p-button
@@ -46,8 +41,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           tooltipPosition="bottom"
           [disabled]="!deleteStatus().can"
           [label]="'Delete' | translate"
-          [tooltipDisabled]="deleteStatus().can"
-        />
+          [tooltipDisabled]="deleteStatus().can" />
         <ng-template #tooltipContent>
           <span [innerHTML]="deleteStatus().message"></span>
         </ng-template>

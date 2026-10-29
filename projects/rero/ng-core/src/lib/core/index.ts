@@ -1,19 +1,17 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-export * from './component/abstract-can-deactivate/abstract-can-deactivate.component';
-export * from './component/barcode-scanner/barcode-scanner-dialog/barcode-scanner-dialog.component';
-export * from './component/barcode-scanner/barcode-scanner.component';
+export * from './component/abstract-unsaved-changes/abstract-unsaved-changes.component';
+export * from './component/barcode-scanner-outlet/barcode-scanner-outlet.component';
 export * from './component/dialog/dialog.component';
 export * from './component/error/error.component';
 export * from './component/error/error.interface';
 export * from './component/read-more/read-more.component';
 export * from './component/search-input/search-input.component';
 export * from './config/config';
-export * from './config/primeng-config';
+export * from './config/optimus-ui-config';
 export * from './core.provider';
-export * from './directive/katex.directive';
-export * from './guard/component-can-deactivate.guard';
+export * from './guard/unsaved-changes.guard';
 export * from './interceptor/http-pending.interceptor';
 export * from './interceptor/no-cache.interceptor';
 export * from './pipe/callback-array-filter/callback-array-filter.pipe';
@@ -24,7 +22,6 @@ export * from './pipe/truncate-text/truncate-text.pipe';
 export * from './pipe/ucfirst/ucfirst.pipe';
 export * from './route-data-types.interface';
 export * from './service/core-config/core-config.service';
-export * from './service/crypto-js/crypto-js.service';
 export * from './service/http-pending/http-pending.service';
 export * from './service/local-storage/local-storage.service';
 export * from './service/page-title-strategy/page-title-strategy';
@@ -32,4 +29,3 @@ export * from './service/camera-detection/camera-detection.service';
 export * from './utils/utils';
 export * from './validator/time.validator';
 export * from './validator/unique.validator';
-

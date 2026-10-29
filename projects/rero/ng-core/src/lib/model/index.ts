@@ -3,3 +3,4 @@
 
 export * from './record.interface';
 export * from './action-status.interface';
+export * from './json-schema.interface';

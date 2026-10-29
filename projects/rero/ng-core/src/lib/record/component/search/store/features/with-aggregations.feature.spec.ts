@@ -3,13 +3,14 @@
 
 import { TestBed } from '@angular/core/testing';
 import { signalStore } from '@ngrx/signals';
+import { of } from 'rxjs';
+
 import { Aggregation, Bucket } from '../../../../../model';
-import { withConfig } from './with-config.feature';
+import { RecordService } from '../../../../service/record/record.service';
 import { withAggregations } from './with-aggregations.feature';
+import { withConfig } from './with-config.feature';
 import { withResults } from './with-results.feature';
 import { withSearchParams } from './with-search-params.feature';
-import { of } from 'rxjs';
-import { RecordService } from '../../../../service/record/record.service';
 
 describe('withAggregations feature', () => {
   const TestStore = signalStore(
