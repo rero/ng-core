@@ -1,28 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { CommonModule } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  effect,
-  ElementRef,
-  inject,
-  input,
-  signal,
-  Signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, effect, ElementRef, inject, input, signal, Signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { DataView } from '@openng/optimus-ui/dataview';
+import { Drawer } from '@openng/optimus-ui/drawer';
+import { Message } from '@openng/optimus-ui/message';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Button } from 'primeng/button';
-import { DataView } from 'primeng/dataview';
-import { Drawer } from 'primeng/drawer';
-import { Message } from 'primeng/message';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
 import { SearchInputComponent, UpperCaseFirstPipe } from '../../../../core';
 import { Aggregations } from '../../../../model';
 import { ActionStatus } from '../../../../model/action-status.interface';
@@ -43,7 +33,6 @@ import { SearchTabsComponent } from './search-tabs/search-tabs.component';
 @Component({
   selector: 'ng-core-record-search',
   templateUrl: './record-search.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SearchTabsComponent,
     SearchInputComponent,

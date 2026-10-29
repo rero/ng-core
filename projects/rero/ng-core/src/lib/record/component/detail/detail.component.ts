@@ -1,8 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Location } from '@angular/common';
+import { HttpHeaders } from '@angular/common/http';
 import {
-  ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
@@ -10,30 +10,29 @@ import {
   inject,
   inputBinding,
   signal,
-  ViewContainerRef,
   viewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageService } from '@openng/optimus-ui/api';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MessageService } from 'primeng/api';
 import { catchError, finalize, map, of, switchMap } from 'rxjs';
+
+import { Error as RecordError } from '../../../core';
+import { ErrorComponent } from '../../../core/component/error/error.component';
 import { ActionStatus } from '../../../model/action-status.interface';
 import { RecordData } from '../../../model/record.interface';
+import { RecordType } from '../../model';
 import { RecordUiService } from '../../service/record-ui/record-ui.service';
 import { RecordService } from '../../service/record/record.service';
-import { RecordType } from '../../model';
+import { DefaultDetailComponent } from './default-detail/default-detail.component';
 import { DetailButtonComponent } from './detail-button/detail-button.component';
 import { RecordActionEvent } from './detail-button/record-action-event.interface';
-import { DefaultDetailComponent } from './default-detail/default-detail.component';
-import { ErrorComponent } from '../../../core/component/error/error.component';
-import { Error as RecordError } from '../../../core';
-import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   templateUrl: './detail.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DetailButtonComponent, ErrorComponent],
 })
 export class DetailComponent {
@@ -137,7 +136,9 @@ export class DetailComponent {
   readonly adminMode = computed(() => this.routeData()?.adminMode ?? true);
   readonly canReadStatus = toSignal<ActionStatus | null>(
     toObservable(this.recordContext).pipe(
-      switchMap(({ record, config }) => (record && config ? this.recordUiService.canReadRecord$(record, config) : of(null))),
+      switchMap(({ record, config }) =>
+        record && config ? this.recordUiService.canReadRecord$(record, config) : of(null),
+      ),
     ),
     { initialValue: null },
   );
@@ -149,10 +150,7 @@ export class DetailComponent {
       const vcr = this.dynamicHost();
       vcr.clear();
       vcr.createComponent(config?.detailComponent || DefaultDetailComponent, {
-        bindings: [
-          inputBinding('record', () => this.record()),
-          inputBinding('type', () => this.type()),
-        ],
+        bindings: [inputBinding('record', () => this.record()), inputBinding('type', () => this.type())],
       });
     });
 
@@ -206,8 +204,7 @@ export class DetailComponent {
           let redirectUrl = '../..';
           const navigateOptions = { relativeTo: this.route };
           if (typeof element === 'object' && this.config()?.redirectUrl) {
-            this.config()!
-              .redirectUrl!(element, 'delete')
+            this.config()!.redirectUrl!(element, 'delete')
               .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe((redirect: string) => {
                 if (redirect !== null) {

@@ -15,12 +15,12 @@ Goal: simplify this component.
 
 Constraints:
 
-- Angular 21
+- Angular 22
 - standalone components only
 - do not introduce NgModules
 - move business logic outside components when possible
 - avoid RxJS if Angular Signals are sufficient
-- keep change detection strategy OnPush
+- keep the default OnPush change detection, without setting it explicitly
 
 ---
 

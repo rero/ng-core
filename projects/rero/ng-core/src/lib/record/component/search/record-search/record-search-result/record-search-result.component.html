@@ -15,8 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           [ariaLabel]="'Use' | translate"
           (onClick)="useRecord()"
           [title]="'Use' | translate"
-          icon="fa-solid fa-hand-pointer"
-        />
+          icon="fa-solid fa-hand-pointer" />
       }
 
       <!-- edit button -->
@@ -25,8 +24,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           [outlined]="true"
           [ariaLabel]="'Edit' | translate"
           [routerLink]="updateStatusRouterLink() || ['edit', record().id]"
-          icon="fa-solid fa-pencil"
-        />
+          icon="fa-solid fa-pencil" />
       }
 
       <!-- delete button -->
@@ -41,8 +39,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           [pTooltip]="tooltipContent"
           tooltipPosition="top"
           [disabled]="!deleteStatus().can"
-          [tooltipDisabled]="!!deleteStatus().can"
-        />
+          [tooltipDisabled]="!!deleteStatus().can" />
         <ng-template #tooltipContent>
           <span [innerHTML]="deleteStatus().message"></span>
         </ng-template>

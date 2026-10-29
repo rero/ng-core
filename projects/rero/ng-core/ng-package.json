@@ -2,16 +2,20 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/rero/ng-core",
   "allowedNonPeerDependencies": [
-    "crypto-js",
     "easymde",
     "generate-password-lite",
-    "katex",
     "lodash-es",
     "luxon",
     "marked",
-    "primelocale"
+    "@openng/optimus-ui-locale"
   ],
-  "assets": ["./assets/**/*.scss", "./src/**/*.scss", "./src/lib/translate/i18n/*.json", "./src/lib/translate/languages/*.json"],
+  "assets": [
+    "./assets/**/*.scss",
+    "./src/**/*.scss",
+    "./editor/src/**/*.scss",
+    "./src/lib/translate/i18n/*.json",
+    "./src/lib/translate/languages/*.json"
+  ],
   "lib": {
     "entryFile": "src/public-api.ts"
   }

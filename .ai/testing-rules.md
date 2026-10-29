@@ -55,14 +55,25 @@ When testing components:
 
 Example pattern:
 
+```ts
 describe('MyComponent', () => {
+  it('should compute value', () => {
+    const result = computeSomething(2);
+    expect(result).toBe(4);
+  });
+});
+```
 
-it('should compute value', () => {
-const result = computeSomething(2)
-expect(result).toBe(4)
-})
+## Test environment
 
-})
+- The tests run in a real Chromium (Vitest browser mode with Playwright,
+  `browsers: ["chromium"]` in `angular.json`), not in jsdom.
+- `ng test @rero/ng-core` also runs the specs of the secondary entry points
+  (`editor/`, `barcode-scanner/`, `katex/`). Their imports of the main entry
+  (`@rero/ng-core`) resolve to the sources through the `paths` of
+  `projects/rero/ng-core/tsconfig.spec.json`.
+- Failed tests leave screenshots in `__screenshots__/` folders and in the root
+  `.vitest/` folder: local artifacts, never committed.
 
 ## Test performance
 
@@ -114,3 +125,21 @@ expect(...);
 - `createFieldComponent()` returns `{ query, queryAll, fixture, ... }`
 - `query(selector)` → single `DebugElement` (null if not found)
 - `queryAll(selector)` → `DebugElement[]` — use for `toHaveLength(N)` assertions
+
+## @ngx-translate/core in tests
+
+`@ngx-translate/core` v18 is standalone-only — `TranslateModule` no longer
+exists. Register translation via `provideTranslateService()` in `providers`,
+not via `imports`:
+
+```ts
+TestBed.configureTestingModule({
+  imports: [MyStandaloneComponent],
+  providers: [provideTranslateService()],
+});
+```
+
+`TranslateService.setDefaultLang()` was removed — use `setFallbackLang()`
+instead. `TranslateService.currentLoader` is `protected` — inject
+`TranslateLoader` directly via `TestBed.inject(TranslateLoader)` instead of
+reading it off the service instance.

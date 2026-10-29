@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Tag } from '@openng/optimus-ui/tag';
 import { DetailUrl, RecordData, ResultItem } from '@rero/ng-core';
-import { Tag } from 'primeng/tag';
 
 export interface DocumentMetadata {
   pid: string;

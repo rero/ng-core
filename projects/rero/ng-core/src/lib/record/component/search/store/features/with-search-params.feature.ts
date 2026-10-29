@@ -5,9 +5,10 @@
 import { computed } from '@angular/core';
 import { patchState, signalStoreFeature, withComputed, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { Bucket } from '../../../../../model/record.interface';
 import { pipe, tap } from 'rxjs';
+
 import { SearchFilter, SearchFilterSection } from '../../../../../model';
+import { Bucket } from '../../../../../model/record.interface';
 import { SearchParams } from '../../../../model';
 import { shallowEqual } from '../../../../record-search-utils';
 import { AggregationsFilter } from '../../model';
@@ -100,7 +101,7 @@ export function withSearchParams() {
         // TODO: For later: refactor the simple parameter
         const activeFilters = filters.filter((f) => f.key !== 'simple' || !f.values.includes('1'));
         return activeFilters.length > 0;
-      })
+      }),
     })),
     withMethods((store) => ({
       syncUrlParams: rxMethod<Partial<SearchParams>>(

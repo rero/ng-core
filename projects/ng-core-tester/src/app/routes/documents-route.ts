@@ -6,13 +6,13 @@ import { FormlyFieldConfig } from '@ngx-formly/core';
 import { TranslateService } from '@ngx-translate/core';
 import { ActionStatus, Bucket, capitalize, IFilter, RecordType, RouteDataTypesInterface } from '@rero/ng-core';
 import { Observable, of } from 'rxjs';
+
 import { DetailComponent } from '../record/document/detail/detail.component';
 import { DocumentComponent } from '../record/document/document.component';
 
 export const titleResolver: ResolveFn<string> = (route) => {
   return capitalize(route.params['type']);
 };
-
 
 /**
  * Routes for document resources
@@ -31,8 +31,10 @@ export class DocumentsRoute implements RouteDataTypesInterface {
    */
   private processName(bucketOrFilter: Bucket | IFilter): Observable<string> {
     switch (bucketOrFilter.aggregationKey) {
-      case 'language': return this.translateService.stream(`lang_${bucketOrFilter.key}`);
-      default: return bucketOrFilter.name ? of(bucketOrFilter.name) : this.translateService.stream(bucketOrFilter.key);
+      case 'language':
+        return this.translateService.stream(`lang_${bucketOrFilter.key}`);
+      default:
+        return bucketOrFilter.name ? of(bucketOrFilter.name) : this.translateService.stream(bucketOrFilter.key);
     }
   }
 

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 /**
  * Translation file URL; `${lang}` is replaced by the requested language.
@@ -25,7 +25,6 @@ export interface Config {
   $refPrefix?: string;
   schemaFormEndpoint: string;
   defaultLanguage?: string;
-  secretPassphrase: string;
   translationsURLs?: (string | TranslationURL)[];
   translationsVersion?: string;
   ngCoreAssetsUrl?: string;
@@ -34,9 +33,7 @@ export interface Config {
 /**
  * Service for managing configuration of the application.
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class CoreConfigService implements Config {
   production = false;
   projectTitle: string | undefined = undefined;
@@ -45,7 +42,6 @@ export class CoreConfigService implements Config {
   schemaFormEndpoint = '/api/schemaform';
   $refPrefix = '';
   defaultLanguage = 'en';
-  secretPassphrase = 'ShERWIN53SnAggIng48rELAtiVes';
   translationsURLs: (string | TranslationURL)[] = [];
   translationsVersion = '';
   ngCoreAssetsUrl = '';

@@ -1,21 +1,21 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { AsyncPipe, SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Button } from 'primeng/button';
-import { Checkbox } from 'primeng/checkbox';
+import { Button } from '@openng/optimus-ui/button';
+import { Checkbox } from '@openng/optimus-ui/checkbox';
+import { Observable, of, shareReplay } from 'rxjs';
+
 import { Bucket } from '../../../../../../model';
 import { AggregationsFilter } from '../../../model/aggregations-filter.interface';
 import { RecordSearchStore } from '../../../store/record-search.store';
-import { Observable, of, shareReplay } from 'rxjs';
 
 @Component({
   selector: 'ng-core-record-search-aggregation-buckets',
   templateUrl: './buckets.component.html',
   imports: [Checkbox, FormsModule, SlicePipe, TranslatePipe, Button, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BucketsComponent {
   protected store = inject(RecordSearchStore);

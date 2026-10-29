@@ -1,0 +1,60 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+import { Component, inject, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
+import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+
+@Component({
+  selector: 'ng-core-save-template-form',
+  templateUrl: './save-template-form.component.html',
+  imports: [FormsModule, ReactiveFormsModule, FormlyModule, Button, TranslatePipe],
+})
+export class SaveTemplateFormComponent implements OnInit {
+  protected dynamicDialogRef: DynamicDialogRef = inject(DynamicDialogRef);
+  protected translateService: TranslateService = inject(TranslateService);
+
+  /** form group */
+  form: UntypedFormGroup = new UntypedFormGroup({});
+
+  /** fields config of the form */
+  formFields: FormlyFieldConfig[] = [];
+
+  /** model of the form */
+  model: FormModel = { name: '' };
+
+  ngOnInit() {
+    this.formFields.push({
+      key: 'name',
+      type: 'string',
+      props: {
+        required: true,
+        placeholder: this.translateService.instant('Choose a name for your template'),
+        minLength: 3,
+      },
+    });
+  }
+
+  /**
+   * Submit the form
+   */
+  onSubmitForm() {
+    this.closeDialog(this.form.value);
+  }
+
+  /**
+   * Close the modal dialog box
+   */
+  closeDialog(data?: FormModel) {
+    this.dynamicDialogRef.close(data);
+  }
+}
+
+/**
+ * Interface to define fields on form
+ */
+interface FormModel {
+  name: string;
+}

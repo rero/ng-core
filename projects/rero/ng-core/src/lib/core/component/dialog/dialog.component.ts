@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Button } from 'primeng/button';
+import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { DynamicDialogConfig, DynamicDialogRef } from '@openng/optimus-ui/dynamicdialog';
+
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
 
 @Component({
@@ -16,8 +17,7 @@ import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
           [label]="config.data.cancelTitleButton || 'Cancel' | translate"
           severity="danger"
           [outlined]="true"
-          (onClick)="cancel()"
-        />
+          (onClick)="cancel()" />
         @if (config.data.confirmButton) {
           <p-button [label]="config.data.confirmTitleButton || 'OK' | translate" (onClick)="confirm()" />
         }
@@ -25,7 +25,6 @@ import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
     </div>
   `,
   imports: [Button, TranslatePipe, Nl2brPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogComponent {
   config: DynamicDialogConfig = inject(DynamicDialogConfig);

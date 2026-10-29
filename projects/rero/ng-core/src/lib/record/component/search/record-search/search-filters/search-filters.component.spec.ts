@@ -5,8 +5,9 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ToggleSwitchModule } from '@openng/optimus-ui/toggleswitch';
+
 import { RecordSearchStore } from '../../store/record-search.store';
 import { SearchFiltersComponent } from './search-filters.component';
 
@@ -33,14 +34,13 @@ describe('SearchFiltersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        FormsModule,
-        ToggleSwitchModule,
-        TranslateModule.forRoot(),
-        RouterModule.forRoot([]),
-        SearchFiltersComponent,
+      imports: [FormsModule, ToggleSwitchModule, RouterModule.forRoot([]), SearchFiltersComponent],
+      providers: [
+        RecordSearchStore,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        provideTranslateService(),
       ],
-      providers: [RecordSearchStore, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()],
     }).compileComponents();
 
     store = TestBed.inject(RecordSearchStore);

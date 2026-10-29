@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
+
 import { RecordService } from '../service/record/record.service';
 import { GetRecordPipe } from './get-record.pipe';
-import { TestBed } from '@angular/core/testing';
 
 class RecordServiceMock {
   getRecord(type: string, pid: string): Observable<any> {

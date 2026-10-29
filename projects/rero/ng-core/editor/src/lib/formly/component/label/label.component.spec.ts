@@ -1,0 +1,60 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterModule } from '@angular/router';
+import { FieldType, FormlyModule } from '@ngx-formly/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
+import { DialogService } from '@openng/optimus-ui/dynamicdialog';
+
+import { EditorComponent } from '../../../editor/component/editor/editor.component';
+import { LabelComponent } from './label.component';
+
+@Component({
+  selector: 'ng-core-formly-field-object',
+  template: '',
+  standalone: true,
+})
+class FormlyFieldObjectComponent extends FieldType {}
+
+describe('LabelComponent', () => {
+  let component: LabelComponent;
+  let editorComponent: ComponentFixture<EditorComponent>;
+  let fixture: ComponentFixture<LabelComponent>;
+
+  beforeEach(async () => {
+    TestBed.configureTestingModule({
+      imports: [
+        RouterModule.forRoot([]),
+        FormlyModule.forRoot({
+          types: [{ name: 'object', component: FormlyFieldObjectComponent }],
+        }),
+        LabelComponent,
+      ],
+      providers: [
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+        ConfirmationService,
+        MessageService,
+        DialogService,
+        provideTranslateService(),
+      ],
+    });
+  });
+
+  beforeEach(() => {
+    editorComponent = TestBed.createComponent(EditorComponent);
+    fixture = TestBed.createComponent(LabelComponent);
+    component = fixture.componentInstance;
+    fixture.componentRef.setInput('field', { props: { editorComponent: () => editorComponent.componentInstance } });
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

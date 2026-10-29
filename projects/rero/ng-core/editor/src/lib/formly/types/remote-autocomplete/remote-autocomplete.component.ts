@@ -1,0 +1,233 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+import { NgClass } from '@angular/common';
+import {
+  AfterViewInit,
+  Component,
+  effect,
+  inject,
+  Injector,
+  OnInit,
+  runInInjectionContext,
+  Signal,
+  viewChild,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { FieldType, FieldTypeConfig, FormlyAttributes, FormlyFieldProps } from '@ngx-formly/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from '@openng/optimus-ui/autocomplete';
+import { Button } from '@openng/optimus-ui/button';
+import { Select, SelectChangeEvent } from '@openng/optimus-ui/select';
+import { CONFIG, removeChars } from '@rero/ng-core';
+import { map, of, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+
+import { TranslateLabelService } from '../../service/translate-label.service';
+import { IQuery, IQueryOptions, IRemoteAutoCompleteFilter, IValueSelect } from './remote-autocomplete.interface';
+import { RemoteAutocompleteService } from './remote-autocomplete.service';
+
+export interface IRemoteAutoCompleteProps extends FormlyFieldProps {
+  delay: number;
+  filters?: IRemoteAutoCompleteFilter;
+  group: boolean;
+  minLength: number;
+  maxLength?: number;
+  queryOptions?: IQueryOptions;
+  placeholder?: string;
+  scrollHeight: string;
+  summaryClass?: string;
+}
+
+@Component({
+  selector: 'ng-core-remote-autocomplete',
+  template: `
+    <div
+      style="padding-inline: 0; padding-block: 0"
+      class="core:flex core:gap-1"
+      tabindex="-1"
+      [formlyAttributes]="field"
+      [ngClass]="{ 'p-inputtext ng-invalid ng-dirty': showError }"
+      (focus)="focusInput()">
+      @if (!field.formControl.value) {
+        @if (props.filters?.options) {
+          <p-select
+            [options]="optionValues()"
+            [ngModel]="props.filters.selected"
+            [ngModelOptions]="{ standalone: true }"
+            (onChange)="changeFilter($event)">
+            <ng-template let-selected #selectedItem>
+              {{ selected.untranslatedLabel | translate }}
+            </ng-template>
+          </p-select>
+        }
+        <p-autoComplete
+          class="core:grow"
+          inputStyleClass="core:w-full"
+          [scrollHeight]="props.scrollHeight"
+          [minQueryLength]="props.minLength"
+          [maxlength]="props.maxLength || null"
+          [(ngModel)]="value"
+          [ngModelOptions]="{ standalone: true }"
+          [placeholder]="props.placeholder"
+          [group]="props.group"
+          [suggestions]="suggestions()"
+          (completeMethod)="search($event)"
+          (onFocus)="updateFocusState(true)"
+          (onBlur)="updateFocusState(false)"
+          (onSelect)="onSelect($event)">
+          <ng-template #item let-data>
+            <div class="core:w-full">
+              <div class="core:flex core:gap-2">
+                <span class="core:grow" [innerHTML]="data.label"></span>
+                @if (data.link) {
+                  <a class="core:flex-none core:text-color-secondary" [href]="data.link" target="_blank">
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                  </a>
+                }
+              </div>
+              @if (data.summary) {
+                <div class="core:w-full" [innerHTML]="data.summary" [ngClass]="props.summaryClass"></div>
+              }
+            </div>
+          </ng-template>
+        </p-autoComplete>
+      } @else {
+        <div class="core:flex core:gap-1 core:items-center">
+          <div [innerHtml]="valueSelected()"></div>
+          <p-button icon="fa-solid fa-trash-can" severity="secondary" [text]="true" (onClick)="clear()" />
+        </div>
+      }
+    </div>
+  `,
+  imports: [NgClass, Select, FormsModule, FormlyAttributes, AutoComplete, Button, TranslatePipe],
+})
+export class RemoteAutocompleteComponent
+  extends FieldType<FieldTypeConfig<IRemoteAutoCompleteProps>>
+  implements OnInit, AfterViewInit
+{
+  protected translateService: TranslateService = inject(TranslateService);
+  protected remoteAutocompleteService = inject(RemoteAutocompleteService);
+  protected route = inject(ActivatedRoute);
+  protected translateLabelService: TranslateLabelService = inject(TranslateLabelService);
+  private injector = inject(Injector);
+  private autocomplete = viewChild(AutoComplete);
+
+  protected query = new Subject<IQuery>();
+
+  protected onValueSelect = new Subject<IValueSelect>();
+
+  suggestions = toSignal(
+    this.query.pipe(
+      switchMap((data: IQuery) =>
+        this.remoteAutocompleteService.getSuggestions(removeChars(data.query), data.queryOptions, data.recordPid),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  valueSelected = toSignal(
+    this.onValueSelect.pipe(
+      switchMap((data: IValueSelect) => this.remoteAutocompleteService.getValueAsHTML(data.queryOptions, data.item)),
+    ),
+  );
+
+  /** Default properties */
+  defaultOptions: Partial<FieldTypeConfig<IRemoteAutoCompleteProps>> = {
+    props: {
+      delay: 300,
+      group: false,
+      minLength: 3,
+      scrollHeight: CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT,
+      queryOptions: {
+        allowAdd: false,
+        maxOfResult: 100,
+      },
+    },
+  };
+
+  value = '';
+
+  optionValues!: Signal<any[]>;
+
+  ngOnInit(): void {
+    const options$ = (this.props.filters?.options ?? of([])).pipe(shareReplay(1));
+    this.optionValues = runInInjectionContext(this.injector, () =>
+      toSignal(
+        this.translateService.onLangChange.pipe(
+          startWith(null),
+          switchMap(() => options$),
+          map((options: any) => this.translateLabelService.translateLabel(options)),
+        ),
+        { initialValue: [] },
+      ),
+    );
+  }
+
+  ngAfterViewInit(): void {
+    if (this.field.props.filters && this.field.props.queryOptions) {
+      this.field.props.queryOptions.filter = this.field.props.filters.selected;
+    }
+    if (this.formControl?.value?.length > 0) {
+      this.onValueSelect.next({
+        item: { label: this.formControl.value, value: this.formControl.value },
+        queryOptions: { ...this.field.props.queryOptions },
+      });
+    }
+
+    this.watchFocus();
+  }
+
+  /** Keep Formly's focus state and the autocomplete input synchronized. */
+  private watchFocus(): void {
+    effect(
+      () => {
+        const autocomplete = this.autocomplete();
+        if (autocomplete && this.field.focus) {
+          this.focusInput();
+        }
+      },
+      { injector: this.injector },
+    );
+  }
+
+  /** Focus the text input rendered inside the PrimeNG autocomplete. */
+  protected focusInput(): void {
+    this.autocomplete()?.inputEL?.nativeElement.focus();
+  }
+
+  /** Store the input's current focus state on its Formly field. */
+  protected updateFocusState(focused: boolean): void {
+    this.field.focus = focused;
+  }
+
+  changeFilter(filter: SelectChangeEvent): void {
+    if (this.field.props.queryOptions) {
+      this.field.props.queryOptions.filter = filter.value;
+      this.value = '';
+    }
+  }
+
+  search(event: AutoCompleteCompleteEvent): void {
+    this.query.next({
+      query: event.query,
+      queryOptions: { ...this.field.props.queryOptions },
+      recordPid: this.route.snapshot.params.pid || null,
+    });
+  }
+
+  onSelect(event: AutoCompleteSelectEvent): void {
+    this.onValueSelect.next({
+      item: event.value,
+      queryOptions: { ...this.field.props.queryOptions },
+    });
+    this.formControl.patchValue(event.value.value);
+    this.formControl.markAsTouched();
+  }
+
+  clear(): void {
+    this.value = '';
+    this.formControl.reset(null);
+    this.field.focus = true;
+  }
+}

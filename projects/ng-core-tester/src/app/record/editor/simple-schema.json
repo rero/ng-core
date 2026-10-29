@@ -211,12 +211,7 @@
       "minItems": 1,
       "items": {
         "type": "string",
-        "enum": [
-          "checkbox1",
-          "checkbox2",
-          "checkbox3",
-          "checkbox4"
-        ]
+        "enum": ["checkbox1", "checkbox2", "checkbox3", "checkbox4"]
       },
       "widget": {
         "formlyConfig": {
@@ -252,12 +247,7 @@
       "minItems": 1,
       "items": {
         "type": "string",
-        "enum": [
-          "checkbox1",
-          "checkbox2",
-          "checkbox3",
-          "checkbox4"
-        ]
+        "enum": ["checkbox1", "checkbox2", "checkbox3", "checkbox4"]
       },
       "widget": {
         "formlyConfig": {
@@ -307,13 +297,7 @@
     "selectWithSort": {
       "title": "Select with sort",
       "type": "string",
-      "enum": [
-        "baobab",
-        "cypress",
-        "epicea",
-        "larch",
-        "tree"
-      ],
+      "enum": ["baobab", "cypress", "epicea", "larch", "tree"],
       "widget": {
         "formlyConfig": {
           "props": {
@@ -352,11 +336,7 @@
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "enum": [
-          "value1",
-          "value2",
-          "value3"
-        ]
+        "enum": ["value1", "value2", "value3"]
       },
       "widget": {
         "formlyConfig": {

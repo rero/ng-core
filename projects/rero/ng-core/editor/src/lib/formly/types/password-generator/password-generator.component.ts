@@ -1,0 +1,222 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+import { Clipboard } from '@angular/cdk/clipboard';
+import { NgClass } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, inject, OnInit, signal, Signal, viewChild } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FieldType, FieldTypeConfig, FormlyFieldProps } from '@ngx-formly/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+import { InputGroup } from '@openng/optimus-ui/inputgroup';
+import { InputGroupAddon } from '@openng/optimus-ui/inputgroupaddon';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { GeneratePassword } from 'generate-password-lite';
+
+/**
+ * Available options for generateOptions (GeneratePassword):
+ * - length: Integer, length of password.
+ *   default: 10
+ * - lowercase: Boolean, put lowercase letters in password.
+ *   default: true
+ * - uppercase: Boolean, put uppercase letters in password.
+ *   default: true
+ * - numbers: Boolean, put numbers in password.
+ *   default: true
+ * - symbols: Boolean, put symbols in password.
+ *   default: false
+ * - exclude: String, characters to be excluded from password.
+ *   default: ''
+ * - minLengthLowercase: only if lowercase is set to true, minLengthLowercase will create
+ *   a password that will have minimum number of lower case characters in the password.
+ *   default: 1
+ * - minLengthUppercase: only if uppercase is set to true, minLengthUppercase will create
+ *   a password that will have minimum number of upper case characters in the password.
+ *   default: 1
+ * - minLengthNumbers: only if numbers is set to true, minLengthNumbers will create
+ *   a password that will have minimum number of numbers in the password.
+ *   default: 1
+ * - minLengthSymbols: only if symbols is set to true, minLengthSymbols will create
+ *   a password that will have minimum number of symbols in the password.
+ *   default: 1
+ */
+
+interface PasswordGeneratorProps extends FormlyFieldProps {
+  enabledEditMode: boolean;
+  class?: string;
+  minLength: number;
+  maxLength: number;
+  specialChar: boolean;
+  readonly: boolean;
+  generateOptions: {
+    length?: number;
+    symbols?: boolean;
+  };
+  api: string;
+  length?: number;
+  lowercase?: boolean;
+  uppercase?: boolean;
+  numbers?: boolean;
+  symbols?: boolean;
+  exclude?: string;
+  minLengthLowercase?: number;
+  minLengthUppercase?: number;
+  minLengthNumbers?: number;
+  minLengthSymbols?: number;
+}
+
+@Component({
+  selector: 'ng-core-editor-field-password-generator',
+  styles: `
+    p-inputGroupAddon {
+      padding: 0 !important;
+    }
+  `,
+  template: `
+    <p-inputGroup>
+      <input
+        pInputText
+        #password
+        id="password"
+        [type]="type()"
+        autocomplete="off"
+        [formControl]="formControl"
+        (change)="onChange($event.target.value)"
+        [readonly]="readonly()"
+        [class]="props.class ? props.class : readonly() ? 'core:!bg-surface-200' : ''"
+        [ngClass]="{ 'ng-invalid ng-dirty': showError }" />
+      <p-inputGroupAddon class="core:flex">
+        <p-button
+          icon="fa-solid fa-arrows-rotate"
+          [title]="'Generate a new password' | translate"
+          (click)="onClick()"
+          severity="secondary"
+          variant="text" />
+      </p-inputGroupAddon>
+      <p-inputGroupAddon>
+        <p-button
+          [icon]="type() === 'text' ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+          [title]="'Show or hide password' | translate"
+          (click)="showHidePassword()"
+          severity="secondary"
+          variant="text" />
+      </p-inputGroupAddon>
+      @if (props.enabledEditMode) {
+        <p-inputGroupAddon>
+          <p-button
+            [icon]="readonly() ? 'fa-solid fa-lock' : 'fa-solid fa-unlock-keyhole'"
+            [title]="'Edit mode' | translate"
+            (click)="onEdit()"
+            severity="secondary"
+            variant="text" />
+        </p-inputGroupAddon>
+      }
+    </p-inputGroup>
+    @if (!showError && hasBeenGenerated()) {
+      <div class="core:text-muted-color core:my-4">
+        {{ 'The password has been copied to the clipboard.' | translate }}
+      </div>
+    }
+  `,
+  imports: [InputGroup, FormsModule, InputText, ReactiveFormsModule, NgClass, InputGroupAddon, TranslatePipe, Button],
+})
+export class PasswordGeneratorComponent extends FieldType<FieldTypeConfig<PasswordGeneratorProps>> implements OnInit {
+  protected httpClient: HttpClient = inject(HttpClient);
+  protected clipboard: Clipboard = inject(Clipboard);
+
+  passwordField: Signal<ElementRef | undefined> = viewChild('password');
+
+  /** Default options */
+  defaultOptions: Partial<FieldTypeConfig<PasswordGeneratorProps>> = {
+    props: {
+      // Allows you to edit the password
+      enabledEditMode: false,
+      // Minimum password size
+      minLength: 8,
+      // Maximum password size
+      maxLength: 255,
+      // Password generation with special characters (ex: $%&)
+      specialChar: false,
+      // The field is readonly
+      readonly: true,
+      // If you use the function in javascript, it is possible
+      // to pass options. See the information above.
+      generateOptions: {},
+      api: '',
+    },
+  };
+
+  readonly hasBeenGenerated = signal(false);
+
+  /** Field password type (show or hide password) */
+  readonly type = signal<'text' | 'password'>('password');
+
+  /** Tracks props.readonly reactively - mutated directly in onEdit(), not via Formly expressions */
+  readonly readonly = signal(true);
+
+  /** OnInit hook */
+  ngOnInit(): void {
+    this.readonly.set(this.props.readonly);
+  }
+
+  /** Generation of the password when the button is clicked. */
+  onClick(): void {
+    if (!this.props.api) {
+      this._jsGeneration();
+    } else {
+      this._callApi();
+    }
+  }
+
+  /**
+   * Change the password when entering.
+   * @param password - string
+   */
+  onChange(password: string): void {
+    this._applyPassword(password);
+  }
+
+  /** Hide or show password data */
+  showHidePassword(): void {
+    this.type.set(this.type() === 'password' ? 'text' : 'password');
+  }
+
+  onEdit(): void {
+    const newValue = !this.readonly();
+    this.props.readonly = newValue;
+    this.readonly.set(newValue);
+    if (!newValue) {
+      this.passwordField()?.nativeElement.focus();
+    }
+  }
+
+  private _applyPassword(password: string): void {
+    this.formControl.setValue(password);
+    this.clipboard.copy(this.formControl.errors ? ' ' : password);
+    this.hasBeenGenerated.set(true);
+  }
+
+  /** Generate the password by javascript */
+  private _jsGeneration(): void {
+    if (!this.props.generateOptions.length) {
+      this.props.generateOptions.length = this.props.minLength;
+    }
+    if (!this.props.generateOptions.symbols) {
+      this.props.generateOptions.symbols = this.props.specialChar;
+    }
+    this._applyPassword(GeneratePassword(this.props.generateOptions));
+  }
+
+  /** Call backend api entrypoint */
+  private _callApi(): void {
+    this.httpClient
+      .get(this.props.api, {
+        responseType: 'text',
+        params: {
+          length: this.props.minLength,
+          special_char: this.props.specialChar,
+        },
+      })
+      .subscribe((password: string) => this._applyPassword(password));
+  }
+}

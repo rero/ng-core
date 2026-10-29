@@ -12,13 +12,13 @@
 @use 'ng-core';
 @use 'katex';
 
-// CSS cascade layer order is managed by PrimeNG (cssLayer.order in primeng-config.ts).
-// PrimeNG injects its @layer declaration before this stylesheet, establishing:
-//   theme < base < components < primeng < utilities < properties
-// Tailwind utility classes (ui:) therefore override PrimeNG component styles.
+// CSS cascade layer order is managed by Optimus UI (cssLayer.order in optimus-ui-config.ts).
+// Optimus UI injects its @layer declaration before this stylesheet, establishing:
+//   theme < base < components < optimus < utilities < properties
+// Tailwind utility classes (ui:) therefore override Optimus UI component styles.
 @import 'tailwindcss' prefix(ui);
 
-@plugin "tailwindcss-primeui";
+@plugin "@openng/optimus-ui-tailwindcss";
 
 :root {
   font-family:
