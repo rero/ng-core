@@ -1,20 +1,19 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Injectable, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { JsonObject, RecordData } from '../../../model/record.interface';
-import { Observable, Subject, of } from 'rxjs';
+import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
+import { Observable, of, Subject } from 'rxjs';
 import { first, switchMap } from 'rxjs/operators';
+
 import { CONFIG } from '../../../core';
 import { ActionStatus } from '../../../model/action-status.interface';
-import { RecordService } from '../record/record.service';
+import { JsonObject, RecordData } from '../../../model/record.interface';
 import { RecordType } from '../../model';
+import { RecordService } from '../record/record.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RecordUiService {
   protected translateService: TranslateService = inject(TranslateService);
   protected recordService: RecordService = inject(RecordService);
@@ -160,7 +159,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canUpdateRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+  canUpdateRecord$<T = JsonObject>(
+    record: RecordData<T>,
+    config: Partial<RecordType<T>> | null,
+  ): Observable<ActionStatus> {
     if (!config) {
       return of({ can: true, message: '' });
     }
@@ -189,7 +191,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canDeleteRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+  canDeleteRecord$<T = JsonObject>(
+    record: RecordData<T>,
+    config: Partial<RecordType<T>> | null,
+  ): Observable<ActionStatus> {
     if (!config) {
       return of({ can: true, message: '' });
     }
@@ -218,7 +223,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canReadRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+  canReadRecord$<T = JsonObject>(
+    record: RecordData<T>,
+    config: Partial<RecordType<T>> | null,
+  ): Observable<ActionStatus> {
     if (!config) {
       return of({ can: true, message: '' });
     }
@@ -247,7 +255,10 @@ export class RecordUiService {
    * @param type Type of resource
    * @returns Observable resolving an object containing the result of a permission check.
    */
-  canUseRecord$<T = JsonObject>(record: RecordData<T>, config: Partial<RecordType<T>> | null): Observable<ActionStatus> {
+  canUseRecord$<T = JsonObject>(
+    record: RecordData<T>,
+    config: Partial<RecordType<T>> | null,
+  ): Observable<ActionStatus> {
     if (!config) {
       return of({ can: false, message: '' });
     }

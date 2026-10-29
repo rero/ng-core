@@ -1,23 +1,15 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  inject,
-  input,
-  output,
-  viewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, HostListener, inject, input, output, viewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { OverlayOptions } from 'primeng/api';
-import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { AutoFocus } from 'primeng/autofocus';
-import { DomHandler } from 'primeng/dom';
+import { OverlayOptions } from '@openng/optimus-ui/api';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from '@openng/optimus-ui/autocomplete';
+import { AutoFocus } from '@openng/optimus-ui/autofocus';
+import { DomHandler } from '@openng/optimus-ui/dom';
 import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
+
 import { CONFIG } from '../../../core';
 import { removeChars } from '../../../core/utils/utils';
 import { RecordService } from '../../service/record/record.service';
@@ -44,7 +36,6 @@ export interface AutoCompleteData {
 
 @Component({
   selector: 'ng-core-search-autocomplete',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <p-autoComplete
       #autoComplete
@@ -59,6 +50,7 @@ export interface AutoCompleteData {
       [minQueryLength]="minLength()"
       [placeholder]="placeholder()"
       [ngModel]="value()"
+      [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="currentValue = sanitize($event)"
       [scrollHeight]="scrollHeight()"
       [suggestions]="suggestions()"
@@ -66,8 +58,7 @@ export interface AutoCompleteData {
       (onSelect)="onSelectValue($event)"
       (onKeyUp)="search($event)"
       (onDropdownClick)="buttonClick()"
-      [pAutoFocus]="true"
-    >
+      [pAutoFocus]="true">
       <ng-template let-item #group>
         <div class="core:flex core:items-center" [ngClass]="groupClass()" [innerHTML]="item.label"></div>
       </ng-template>
@@ -86,13 +77,13 @@ export class SearchAutocompleteComponent implements AfterViewInit {
 
   // Input
   delay = input<number>(300);
-  groupClass = input<string|undefined>('core:text-gray-400');
-  inputStyleClass = input<string|undefined>('core:w-full');
+  groupClass = input<string | undefined>('core:text-gray-400');
+  inputStyleClass = input<string | undefined>('core:w-full');
   minLength = input<number>(3);
   placeholder = input<string>();
   recordTypes = input.required<AutoCompleteRecordType[]>();
   scrollHeight = input<string>(CONFIG.DEFAULT_SELECT_SCROLL_HEIGHT);
-  styleClass = input<string|undefined>('core:w-full');
+  styleClass = input<string | undefined>('core:w-full');
   value = input.required<string>();
 
   // Output

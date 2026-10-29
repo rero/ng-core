@@ -26,8 +26,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
     [innerHTML]="
       'Multiline
             text' | nl2br
-    "
-  ></div>
+    "></div>
 </p-panel>
 
 <p-panel header="Translate Language pipe" class="ui:mt-4 ui:pb-4">
@@ -73,8 +72,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       type="text"
       id="markdown"
       value="*Hello* **world**"
-      [(ngModel)]="markdownText"
-    />
+      [(ngModel)]="markdownText" />
     <div class="ui:my-4" [innerHTML]="markdownText | markdown"></div>
   </div>
 </p-panel>
@@ -102,8 +100,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       [katex]="true"
       [unit]="'char'"
       [showMoreLabel]="'Show more' | translate"
-      [showLessLabel]="'Show less' | translate"
-    />
+      [showLessLabel]="'Show less' | translate" />
   </div>
 </p-panel>
 

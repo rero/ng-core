@@ -4,11 +4,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 <div class="ui:flex ui:gap-2">
   <p-select
-    [options]="toastTypes"
+    [options]="toastTypes()"
     optionLabel="name"
     [placeholder]="'Select a toast type' | translate"
-    [(ngModel)]="toastType"
-  />
+    [(ngModel)]="toastType" />
   <input type="text" pInputText [(ngModel)]="toastMessage" />
   <p-button styleClass="ui:text-muted-color" [label]="'Show' | translate" [outlined]="true" (onClick)="showToast()" />
 </div>

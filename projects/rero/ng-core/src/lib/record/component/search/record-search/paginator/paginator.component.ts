@@ -1,10 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, Signal, computed, inject, output } from '@angular/core';
-import { Paginator, PaginatorState } from 'primeng/paginator';
-import { RecordSearchStore } from '../../store/record-search.store';
+import { Component, computed, inject, output, Signal } from '@angular/core';
+import { Paginator, PaginatorState } from '@openng/optimus-ui/paginator';
 
-// Documentation: https://primeng.org/paginator
+import { RecordSearchStore } from '../../store/record-search.store';
 
 export interface PageEvent {
   first: number;
@@ -22,7 +21,6 @@ export interface ChangeEvent {
   selector: 'ng-core-paginator',
   templateUrl: './paginator.component.html',
   imports: [Paginator],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatorComponent {
   protected store = inject(RecordSearchStore);
@@ -39,7 +37,7 @@ export class PaginatorComponent {
   showFirstLastIcon: Signal<boolean> = computed(() => this.store.config().pagination.boundaryLinks);
   totalRecords: Signal<number> = computed(() => this.store.total());
 
-  /** Position offset for the current page (0-based, used by PrimeNG paginator) */
+  /** Position offset for the current page (0-based, used by Optimus UI paginator) */
   first: Signal<number> = computed(() => (this.store.page() - 1) * this.store.size());
 
   /** Event on change page */

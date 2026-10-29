@@ -5,6 +5,7 @@ import { computed, inject, Injector, Signal } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { catchError, EMPTY, pipe, switchMap, tap } from 'rxjs';
+
 import { Aggregation, Bucket, EsResult } from '../../../../../model';
 import { RecordType } from '../../../../model';
 import { shallowEqual } from '../../../../record-search-utils';
@@ -160,11 +161,11 @@ export function withAggregations() {
         // Copy the custom properties
         const keys = ['buckets', 'config', 'doc_count', 'name', 'type', 'value'];
         const additionalProperties: any = {};
-        Object.keys(esAggregation).find(key => {
+        Object.keys(esAggregation).find((key) => {
           if (!keys.includes(key)) {
             additionalProperties[key] = esAggregation[key];
-          }}
-        );
+          }
+        });
 
         const enriched: Aggregation = {
           ...aggregation,
@@ -187,7 +188,7 @@ export function withAggregations() {
 
         // Process buckets automatically if requested
         if (processBuckets && enriched.value.buckets) {
-          enriched.value.buckets.forEach(bucket => this.processBuckets(bucket, enriched.key));
+          enriched.value.buckets.forEach((bucket) => this.processBuckets(bucket, enriched.key));
         }
         return enriched;
       },
@@ -203,7 +204,7 @@ export function withAggregations() {
       }>(
         pipe(
           tap(() => store.setLoading(true)),
-          switchMap(params => {
+          switchMap((params) => {
             const aggregations = store.aggregations();
             const aggregationsFilters = store.aggregationsFilters();
             const config = store.config();
@@ -211,7 +212,7 @@ export function withAggregations() {
             const currentIndex = store.currentIndex();
             const query = store.q();
 
-            const aggregation = aggregations.find(agg => agg.key === params.aggregationKey);
+            const aggregation = aggregations.find((agg) => agg.key === params.aggregationKey);
             if (!aggregation) {
               store.setLoading(false);
               return EMPTY;
@@ -235,22 +236,25 @@ export function withAggregations() {
             };
 
             return store.recordService.getRecords(searchParams.index, searchParams).pipe(
-              tap(esResult => {
+              tap((esResult) => {
                 store.setLoading(false);
                 if (esResult.aggregations && esResult.aggregations[params.aggregationKey]) {
                   const currentAggregations = store.aggregations();
-                  const updatedAggregations = currentAggregations.map(agg => {
+                  const updatedAggregations = currentAggregations.map((agg) => {
                     if (agg.key === params.aggregationKey) {
                       // The user explicitly expanded this facet: mark it as included so
                       // it is requested in subsequent searches.
-                      return { ...store.enrichAggregation(agg, esResult.aggregations[params.aggregationKey]), included: true };
+                      return {
+                        ...store.enrichAggregation(agg, esResult.aggregations[params.aggregationKey]),
+                        included: true,
+                      };
                     }
                     return agg;
                   });
                   store.updateAggregations(updatedAggregations);
                 }
               }),
-              catchError(error => {
+              catchError((error) => {
                 store.setLoading(false);
                 console.error('Failed to fetch buckets', error);
                 return EMPTY;
@@ -261,13 +265,13 @@ export function withAggregations() {
       ),
       initializeAggregations: rxMethod<{ currentType: string; config: RecordType }>(
         pipe(
-          tap(params => {
+          tap((params) => {
             const aggregationsOrder = params.config.aggregationsOrder as string[];
             if (!params.currentType || !aggregationsOrder.length) {
               return;
             }
             store.updateAggregations(
-              aggregationsOrder.map(key => ({
+              aggregationsOrder.map((key) => ({
                 key: key,
                 bucketSize: store.config().aggregationsBucketSize,
                 value: { buckets: [] },
@@ -282,12 +286,12 @@ export function withAggregations() {
       ),
       setAggregations: rxMethod<{ currentType: string; esResult: EsResult } | null>(
         pipe(
-          tap(params => {
+          tap((params) => {
             if (params == null) {
               return;
             }
             const currentAggregations = store.aggregations();
-            const updatedAggregations = currentAggregations.map(agg => {
+            const updatedAggregations = currentAggregations.map((agg) => {
               if (params.esResult.aggregations?.[agg.key]) {
                 return store.enrichAggregation(agg, params.esResult.aggregations[agg.key]);
               }
@@ -302,7 +306,10 @@ export function withAggregations() {
       const injector = inject(Injector);
       return {
         onInit() {
-          store.initializeAggregations(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+          store.initializeAggregations(
+            computed(() => ({ currentType: store.currentType(), config: store.config() })),
+            { injector },
+          );
           const tracked = computed(() => {
             const esResult = store.esResult();
             if (!esResult) {

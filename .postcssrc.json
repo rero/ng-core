@@ -1,7 +1,7 @@
 {
   "plugins": {
     "@tailwindcss/postcss": {
-	"base": "./projects/ng-core-tester"
+      "base": "./projects/ng-core-tester"
     }
   }
 }

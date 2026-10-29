@@ -1,0 +1,13 @@
+# Generated / vendored files (Prettier also honours .gitignore)
+pnpm-lock.yaml
+CHANGELOG.md
+.angular
+dist
+coverage
+# Compiled from tailwind.css by `pnpm run build-css`
+projects/rero/ng-core/assets/scss/ng-core-tailwind.scss
+# Translations: written by ngx-translate-extract and Weblate
+projects/rero/ng-core/src/lib/translate/i18n
+projects/rero/ng-core/translations
+# Agent skills shared with the other RERO projects, kept identical to their source
+.claude/skills

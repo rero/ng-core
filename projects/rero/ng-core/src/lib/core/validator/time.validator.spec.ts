@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { TestBed } from '@angular/core/testing';
-import { TimeValidator } from './time.validator';
 import { FormBuilder, FormControl, FormsModule } from '@angular/forms';
+
+import { TimeValidator } from './time.validator';
 
 describe('TimeValidator', () => {
   let formBuilder: FormBuilder;

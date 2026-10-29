@@ -1,19 +1,19 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { CommonModule } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
-import { DatePickerModule } from 'primeng/datepicker';
+import { provideTranslateService } from '@ngx-translate/core';
+import { SharedModule } from '@openng/optimus-ui/api';
+import { ButtonModule } from '@openng/optimus-ui/button';
+import { DatePickerModule } from '@openng/optimus-ui/datepicker';
+import { RippleModule } from '@openng/optimus-ui/ripple';
+
 import { RecordSearchStore } from '../../../store/record-search.store';
 import { AggregationDateRangeComponent } from './date-range.component';
-import { RippleModule } from 'primeng/ripple';
-import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from 'primeng/api';
-import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AggregationDateRangeComponent', () => {
   let fixture: ComponentFixture<AggregationDateRangeComponent>;
@@ -25,17 +25,14 @@ describe('AggregationDateRangeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [RecordSearchStore, provideHttpClient(), provideHttpClientTesting()],
+      providers: [RecordSearchStore, provideHttpClient(), provideHttpClientTesting(), provideTranslateService()],
       imports: [
         CommonModule,
-        BrowserAnimationsModule,
-        NoopAnimationsModule,
         DatePickerModule,
         SharedModule,
         ButtonModule,
         RippleModule,
         FormsModule,
-        TranslateModule.forRoot(),
         AggregationDateRangeComponent,
       ],
     }).compileComponents();

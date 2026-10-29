@@ -17,8 +17,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         [searchText]="store.q()"
         [displayLabel]="false"
         (searchQuery)="searchByQuery($event)"
-        [focus]="true"
-      />
+        [focus]="true" />
     }
     <ng-content select="[afterInputSearch]" />
   </div>
@@ -29,8 +28,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       }
     </div>
     <div
-      class="core:flex core:flex-col core:grow core:items-start core:lg:flex-row core:lg:items-center core:lg:justify-end core:gap-2"
-    >
+      class="core:flex core:flex-col core:grow core:items-start core:lg:flex-row core:lg:items-center core:lg:justify-end core:gap-2">
       <!-- Filters + Actions: same row on mobile, Filters left / Actions right -->
       <div class="core:flex core:w-full core:justify-between core:lg:hidden core:lg:w-auto">
         <!-- Aggregations toggle (mobile only) -->
@@ -41,8 +39,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             [outlined]="true"
             [label]="'Filters' | translate"
             [attr.aria-label]="'Show filters' | translate"
-            (onClick)="showAggregationsDrawer.update((value) => !value)"
-          />
+            (onClick)="showAggregationsDrawer.update((value) => !value)" />
         }
         <!-- Sorting + Export: toggled inline on mobile, always visible on desktop -->
         @if (hasActions()) {
@@ -52,16 +49,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             [outlined]="true"
             [label]="'Actions' | translate"
             [attr.aria-label]="'Show actions' | translate"
-            (onClick)="showActionsMenu.update((value) => !value)"
-          />
+            (onClick)="showActionsMenu.update((value) => !value)" />
         }
       </div>
 
       @if (hasActions()) {
         <div
           class="core:w-full core:overflow-hidden core:transition-all core:duration-300 core:ease-in-out core:lg:hidden"
-          [ngClass]="showActionsMenu() ? 'core:max-h-96 core:opacity-100' : 'core:max-h-0 core:opacity-0'"
-        >
+          [ngClass]="showActionsMenu() ? 'core:max-h-96 core:opacity-100' : 'core:max-h-0 core:opacity-0'">
           <div class="core:flex core:w-full core:flex-wrap core:gap-2 core:pt-2">
             @if (config().sortOptions.length) {
               <ng-core-menu-sort />
@@ -88,16 +83,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           size="small"
           [label]="'Add' | translate"
           icon="fa-regular fa-square-plus"
-          [routerLink]="addStatus().routerLink || ['new']"
-        />
+          [routerLink]="addStatus().routerLink || ['new']" />
         <!-- desktop -->
         <p-button
           class="core:hidden core:lg:inline-flex"
           id="search-add-button"
           [label]="'Add' | translate"
           icon="fa-regular fa-square-plus"
-          [routerLink]="addStatus().routerLink || ['new']"
-        />
+          [routerLink]="addStatus().routerLink || ['new']" />
       }
     </div>
   </div>
@@ -115,8 +108,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
         [outlined]="true"
         [label]="'Clear' | translate"
         [attr.aria-label]="'Clear' | translate"
-        (onClick)="store.clearFilters()"
-      />
+        (onClick)="store.clearFilters()" />
     </div>
     <div class="core:mb-4">
       <ng-core-list-filters />
@@ -138,8 +130,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
       class="core:lg:hidden"
       [(visible)]="showAggregationsDrawer"
       [header]="'Filters' | translate"
-      position="left"
-    >
+      position="left">
       <ng-container [ngTemplateOutlet]="aggregationsContent" />
     </p-drawer>
   }
@@ -178,8 +169,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
                   <ng-core-record-search-result
                     [record]="record"
                     (deletedRecord)="deleteRecord($event)"
-                    (deleteMessageEvent)="showDeleteMessage($event)"
-                  />
+                    (deleteMessageEvent)="showDeleteMessage($event)" />
                 </li>
               }
             </ul>

@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { InputSignal } from '@angular/core';
+
 import { RecordData } from '../../../model/record.interface';
 
 /**

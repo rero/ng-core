@@ -14,8 +14,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
               [indeterminate]="bucket.indeterminate"
               variant="filled"
               [ngModel]="isSelected(bucket.key)"
-              (onChange)="updateFilter(bucket)"
-            />
+              [ngModelOptions]="{ standalone: true }"
+              (onChange)="updateFilter(bucket)" />
             <label class="core:grow core:overflow-hidden" for="{{ bucket.aggregationKey }}-{{ index }}">
               {{ bucket.label$ | async }}
             </label>
@@ -29,8 +29,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             @for (aggregation of bucketChildren()[bucket.key]; track aggregation.key) {
               <ng-core-record-search-aggregation-buckets
                 [buckets]="aggregation.buckets"
-                [aggregationKey]="aggregation.key"
-              ></ng-core-record-search-aggregation-buckets>
+                [aggregationKey]="aggregation.key"></ng-core-record-search-aggregation-buckets>
             }
           }
         </div>

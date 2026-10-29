@@ -1,8 +1,9 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
+
 import { TranslateLanguageService } from '../../service/translate-language/translate-language.service';
 
 @Pipe({

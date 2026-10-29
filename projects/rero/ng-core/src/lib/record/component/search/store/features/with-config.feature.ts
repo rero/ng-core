@@ -5,6 +5,7 @@ import { computed } from '@angular/core';
 import { patchState, signalStoreFeature, type, withComputed, withMethods, withState } from '@ngrx/signals';
 import { Observable, of, switchMap } from 'rxjs';
 import { first } from 'rxjs/operators';
+
 import { ActionStatus, RecordData } from '../../../../../model';
 import { RecordType } from '../../../../model/record-search.interface';
 import { shallowEqual } from '../../../../record-search-utils';

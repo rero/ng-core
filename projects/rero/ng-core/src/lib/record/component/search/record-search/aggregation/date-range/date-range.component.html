@@ -6,10 +6,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   class="core:w-full"
   inputStyleClass="core:text-center"
   [ngModel]="dateRangeModel()"
+  [ngModelOptions]="{ standalone: true }"
   (ngModelChange)="dateRangeModel.set($event)"
   selectionMode="range"
-  showIcon
->
+  showIcon>
   <ng-template #footer>
     <p-divider />
     <div class="core:grid core:grid-cols-12 core:gap-4">
@@ -21,8 +21,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
             class="core:grow core:p-1"
             outlined
             size="small"
-            [label]="cfg.label"
-          />
+            [label]="cfg.label" />
         </div>
       }
     </div>

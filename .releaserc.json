@@ -43,12 +43,7 @@
     [
       "@semantic-release/git",
       {
-        "assets": [
-          "package.json",
-          "pnpm-lock.yaml",
-          "projects/rero/ng-core/package.json",
-          "CHANGELOG.md"
-        ],
+        "assets": ["package.json", "pnpm-lock.yaml", "projects/rero/ng-core/package.json", "CHANGELOG.md"],
         "message": "chore(release): v${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],

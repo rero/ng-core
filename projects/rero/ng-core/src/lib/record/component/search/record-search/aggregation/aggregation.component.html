@@ -6,17 +6,29 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 @if (aggregation().doc_count) {
   <div class="core:mb-4">
     <ng-core-record-search-aggregation-buckets
-      [buckets]="[{ key: '1', doc_count: aggregation().doc_count, aggregationKey: '', name: (store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key | translate | ucfirst) || '' }]"
-      [aggregationKey]="aggregation().key"
-    />
+      [buckets]="[
+        {
+          key: '1',
+          doc_count: aggregation().doc_count,
+          aggregationKey: '',
+          name:
+            (store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key
+              | translate
+              | ucfirst) || '',
+        },
+      ]"
+      [aggregationKey]="aggregation().key" />
   </div>
 } @else {
   <p-fieldset
-    [legend]="(store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key | translate | ucfirst) || ''"
+    [legend]="
+      (store.aggregationNameFromConfig(aggregation().key) || aggregation().name || aggregation().key
+        | translate
+        | ucfirst) || ''
+    "
     [toggleable]="true"
     [collapsed]="!isAggregationDisplayed()"
-    (collapsedChange)="toggleVisibility()"
-  >
+    (collapsedChange)="toggleVisibility()">
     <div class="core:p-2">
       @switch (aggregation().type) {
         @case ('range') {
@@ -29,11 +41,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
           @if (aggregation().value.buckets.length > 0) {
             <ng-core-record-search-aggregation-buckets
               [buckets]="aggregation().value.buckets"
-              [aggregationKey]="aggregation().key"
-            />
+              [aggregationKey]="aggregation().key" />
           } @else {
             @if (aggregation().loaded) {
-              <span class="core:text-sm" translate>No result</span>
+              <span class="core:text-sm">{{ 'No result' | translate }}</span>
             }
           }
         }

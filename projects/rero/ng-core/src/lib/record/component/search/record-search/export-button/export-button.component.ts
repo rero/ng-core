@@ -1,10 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { ButtonDirective, Button } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
-import { Menu } from 'primeng/menu';
+import { Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Button, ButtonDirective } from '@openng/optimus-ui/button';
+import { Menu } from '@openng/optimus-ui/menu';
+import { Tooltip } from '@openng/optimus-ui/tooltip';
 
 export interface IExportOption {
   label: string;
@@ -17,7 +17,6 @@ export interface IExportOption {
   selector: 'ng-core-export-button',
   templateUrl: './export-button.component.html',
   imports: [ButtonDirective, Button, Tooltip, Menu, TranslatePipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExportButtonComponent {
   /** Export formats configuration */

@@ -1,61 +1,67 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { Component, OnInit, inject } from '@angular/core';
-import { TranslateService, TranslatePipe } from '@ngx-translate/core';
-import { MessageService, ToastMessageOptions } from 'primeng/api';
-import { Select } from 'primeng/select';
+import { Component, computed, inject, linkedSignal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { InputText } from 'primeng/inputtext';
-import { Button } from 'primeng/button';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MessageService, ToastMessageOptions } from '@openng/optimus-ui/api';
+import { Button } from '@openng/optimus-ui/button';
+import { InputText } from '@openng/optimus-ui/inputtext';
+import { Select } from '@openng/optimus-ui/select';
 
 interface IToastType {
   name: string;
   code: string;
 }
 
+/** Translation key of each toast type, by severity. */
+const TOAST_TYPES: Record<string, string> = {
+  success: 'Success',
+  info: 'Info',
+  warn: 'Warn',
+  error: 'Error',
+};
+
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
   imports: [Select, FormsModule, InputText, Button, TranslatePipe],
 })
-export class ToastComponent implements OnInit {
-  translateService = inject(TranslateService);
-  messageService = inject(MessageService);
+export class ToastComponent {
+  private readonly translateService = inject(TranslateService);
+  private readonly messageService = inject(MessageService);
 
-  toastTypes: IToastType[] = [];
+  /** Emits on each language change, so that the labels are translated again. */
+  private readonly langChange = toSignal(this.translateService.onLangChange);
 
-  toastType: any;
+  protected readonly toastTypes = computed<IToastType[]>(() => {
+    this.langChange();
+    return Object.entries(TOAST_TYPES).map(([code, key]) => ({ name: this.translateService.instant(key), code }));
+  });
 
-  toastMessage: string | undefined;
+  // Reset on language change, as the selected option belongs to the previous list.
+  protected readonly toastType = linkedSignal<IToastType[], IToastType | undefined>({
+    source: this.toastTypes,
+    computation: () => undefined,
+  });
 
-  ngOnInit(): void {
-    this.toastMessage = this.translateService.instant('This is the message');
-    this.toastTypes = [
-      { name: this.translateService.instant('Success'), code: 'success' },
-      { name: this.translateService.instant('Info'), code: 'info' },
-      { name: this.translateService.instant('Warn'), code: 'warn' },
-      { name: this.translateService.instant('Error'), code: 'error' },
-    ];
-    this.translateService.onLangChange.subscribe(() => {
-      this.toastMessage = this.translateService.instant('This is the message');
-      this.toastTypes.forEach((type: any) => {
-        type.name = this.translateService.instant(type.code);
-      });
-      this.toastType = undefined;
-    });
-  }
+  protected readonly toastMessage = linkedSignal<string>(() => {
+    this.langChange();
+    return this.translateService.instant('This is the message');
+  });
 
-  showToast(): void {
+  protected showToast(): void {
     const message: ToastMessageOptions = {
       severity: 'error',
       summary: this.translateService.instant('Error'),
       detail: this.translateService.instant('Please select a type'),
     };
-    if (this.toastType) {
-      message.summary = this.toastType.code.toUpperCase();
-      message.severity = this.toastType.code;
-      message.text = this.toastType.name;
-      message.detail = this.toastMessage;
+    const toastType = this.toastType();
+    if (toastType) {
+      message.summary = toastType.code.toUpperCase();
+      message.severity = toastType.code;
+      message.text = toastType.name;
+      message.detail = this.toastMessage();
     }
     if (message.severity === 'error') {
       message.sticky = true;

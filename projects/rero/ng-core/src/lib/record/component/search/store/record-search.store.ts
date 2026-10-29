@@ -6,8 +6,9 @@ import { signalStore, withComputed, withHooks, withMethods, withProps } from '@n
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { _, TranslateService } from '@ngx-translate/core';
 import { filter, pipe, tap } from 'rxjs';
-import { RecordType } from '../../../model';
+
 import { SearchFilter, SearchFilterSection } from '../../../../model';
+import { RecordType } from '../../../model';
 import { shallowEqual } from '../../../record-search-utils';
 import { withAggregations } from './features/with-aggregations.feature';
 import { withConfig } from './features/with-config.feature';
@@ -110,8 +111,14 @@ export const RecordSearchStore = signalStore(
     const injector = inject(Injector);
     return {
       onInit() {
-        store.applyDefaultFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
-        store.initializeSearchFilters(computed(() => ({ currentType: store.currentType(), config: store.config() })), { injector });
+        store.applyDefaultFilters(
+          computed(() => ({ currentType: store.currentType(), config: store.config() })),
+          { injector },
+        );
+        store.initializeSearchFilters(
+          computed(() => ({ currentType: store.currentType(), config: store.config() })),
+          { injector },
+        );
         // Fetch records when search parameters change
         // Build a computed signal that produces FetchRecordsParams (or null if not ready)
         const fetchParams = computed((): FetchRecordsParams | null => {

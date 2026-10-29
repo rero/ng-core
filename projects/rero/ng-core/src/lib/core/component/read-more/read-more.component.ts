@@ -1,9 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, input, linkedSignal } from '@angular/core';
+import { Component, computed, input, linkedSignal } from '@angular/core';
 import { _, TranslatePipe } from '@ngx-translate/core';
+import { Button } from '@openng/optimus-ui/button';
+
 import { Nl2brPipe } from '../../pipe/nl2br/nl2br.pipe';
-import { Button } from 'primeng/button';
 
 @Component({
   selector: 'ng-core-read-more',
@@ -15,7 +16,6 @@ import { Button } from 'primeng/button';
     }
   `,
   imports: [TranslatePipe, Nl2brPipe, Button],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadMoreComponent {
   text = input.required<string>();

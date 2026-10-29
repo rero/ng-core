@@ -52,12 +52,34 @@ pnpm run lint
 
 ## Format
 
-Run Prettier:
+Run Prettier (imports sorted by `@ianvs/prettier-plugin-sort-imports`):
 
 pnpm run format
 
+Check the formatting, as the CI does:
+
+pnpm run format:check
+
+VS Code formats the files on save with the Prettier extension
+(`.vscode/settings.json`).
+
+## Translations
+
+Extract the translation keys of the library (main entry, `editor` and
+`barcode-scanner`):
+
+pnpm run extract_messages
+
+## Pack
+
+Build the library in production mode and pack it as `rero-ng-core-X.X.X.tgz`
+at the repository root, to install it in an application before it is
+published:
+
+pnpm run pack
+
 ## Full quality check
 
-Run all quality checks:
+Run all quality checks (library and tester builds, CSS, lint, tests, pack):
 
 ./run-tests.sh

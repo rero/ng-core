@@ -1,21 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, debounceTime, map } from 'rxjs/operators';
+import { Observable, of, throwError, timer } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
+
 import { Error as CoreError } from '../../../core/component/error/error.interface';
 import { EsResult, JsonObject, JsonValue, RecordData } from '../../../model';
-import { resolveRefs } from '../../editor/utils/utils';
+import { AggregationsFilter } from '../../component/search/model';
 import { ApiService } from '../api/api.service';
 import { RecordHandleErrorService } from '../record-handle-error/record-handle-error.service';
-import { AggregationsFilter } from '../../component/search/model';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Service()
 export class RecordService {
   protected http: HttpClient = inject(HttpClient);
   protected apiService: ApiService = inject(ApiService);
@@ -210,83 +207,42 @@ export class RecordService {
       headers = headers.set('If-Match', etag);
     }
     const url = `${this.apiService.getEndpointByType(recordType, true)}/${pid}`;
-    return this.http.put<RecordData<TMetadata>>(url, record, { headers }).pipe(catchError((error) => this._handleError(error)));
+    return this.http
+      .put<RecordData<TMetadata>>(url, record, { headers })
+      .pipe(catchError((error) => this._handleError(error)));
   }
 
   /**
    * Check if a record is already registered with the same value
+   *
+   * The query is sent after a delay: as a form cancels the previous async
+   * validation on each value change, only the last value reaches the backend.
    * @param recordType - string, type of record
    * @param field - string, field to check
-   * @param value - string, value to check
+   * @param value - string or number, value to check
    * @param excludePid - string, PID to ignore (normally the current record we are checking)
+   * @param filter - string, additional es query filter
    */
   valueAlreadyExists(
     recordType: string,
     field: string,
-    value: string,
+    value: string | number,
     excludePid?: string,
-  ): Observable<ValidationErrors | null> {
-    const escapedValue = value.replace(/"/g, '\\"');
-    let query = `${field}:"${escapedValue}"`;
-
-    if (excludePid != null) {
-      query += ` NOT pid:${excludePid}`;
-    }
-
-    return this.getRecords(recordType, { query, itemsPerPage: 1 }).pipe(
-      map((res) => res?.hits?.total ?? 0),
-      map((total) => (total > 0 ? { alreadyTaken: value } : null)),
-      debounceTime(1000),
-    );
-  }
-
-  /**
-   * Check if a record is already registered with the same value
-   * @param field - FormlyFieldConfig, field to check
-   * @param recordType - string, type of record
-   * @param excludePid - string, PID to ignore (normally the current record we are checking)
-   * @param term - string, the elasticsearch term to check the uniqueness, use field.key if not given
-   * @param limitToValues - string[], limit the test to a given list of values
-   * @param filter - string, additional es query filters
-   */
-  uniqueValue(
-    field: FormlyFieldConfig,
-    recordType: string,
-    excludePid?: string,
-    term?: string,
-    limitToValues?: string[],
     filter?: string,
-  ) {
-    let key = field.key;
-    if (term != null) {
-      key = term;
-    }
-    let value = field?.formControl?.value;
-    const model = resolveRefs(field.model);
-    if (value == null) {
-      return of(true);
-    }
-    if (typeof value === 'string') {
-      value = value.replace(/"/g, '\\"');
-    }
-    if (limitToValues && limitToValues?.length > 0 && !limitToValues.some((v) => v === value)) {
-      return of(true);
-    }
-    let query = `${key}:${value}`;
-    if (typeof value === 'string') {
-      query = `${key}:"${value}"`;
-    }
+  ): Observable<ValidationErrors | null> {
+    // Escape backslashes and double quotes inside the quoted phrase.
+    let query = typeof value === 'string' ? `${field}:"${value.replace(/[\\"]/g, '\\$&')}"` : `${field}:${value}`;
     if (filter != null) {
-      const filterFn = Function('model', `return ${filter};`);
-      query = `${query} AND ` + filterFn(model);
+      query += ` AND ${filter}`;
     }
     if (excludePid != null) {
       query += ` NOT pid:${excludePid}`;
     }
-    return this.getRecords(recordType, { query, itemsPerPage: 1 }).pipe(
+
+    return timer(500).pipe(
+      switchMap(() => this.getRecords(recordType, { query, itemsPerPage: 1 })),
       map((res) => res?.hits?.total ?? 0),
       map((total) => (total > 0 ? { alreadyTaken: value } : null)),
-      debounceTime(500),
     );
   }
 

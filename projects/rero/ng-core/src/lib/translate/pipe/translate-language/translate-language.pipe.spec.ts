@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+
 import { TranslateLanguageService } from '../../service/translate-language/translate-language.service';
 import { TranslateLanguagePipe } from './translate-language.pipe';
 
@@ -10,7 +11,9 @@ class TranslateLanguageServiceMock {
   private _currentLang = 'en';
   readonly languagesVersion = signal(0);
 
-  setCurrentLang(lang: string) { this._currentLang = lang; }
+  setCurrentLang(lang: string) {
+    this._currentLang = lang;
+  }
 
   translate(langCode: string, language?: string) {
     const lang = language ?? this._currentLang;
@@ -30,7 +33,7 @@ class TestHostComponent {
 
 @Component({
   selector: 'ng-core-test-host-explicit',
-  template: `<span>{{ langCode | translateLanguage : lang }}</span>`,
+  template: `<span>{{ langCode | translateLanguage: lang }}</span>`,
   imports: [TranslateLanguagePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -46,13 +49,10 @@ describe('TranslateLanguagePipe', () => {
   beforeEach(() => {
     languageServiceMock = new TranslateLanguageServiceMock();
     TestBed.configureTestingModule({
-      imports: [TranslateModule.forRoot()],
-      providers: [
-        { provide: TranslateLanguageService, useValue: languageServiceMock },
-      ],
+      providers: [{ provide: TranslateLanguageService, useValue: languageServiceMock }, provideTranslateService()],
     });
     translateService = TestBed.inject(TranslateService);
-    translateService.setDefaultLang('en');
+    translateService.setFallbackLang('en');
   });
 
   it('should create an instance', () => {
@@ -82,7 +82,7 @@ describe('TranslateLanguagePipe', () => {
 
     languageServiceMock.setCurrentLang('fr');
     translateService.use('fr');
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('span').textContent.trim()).toBe('fre-fr-v0');
@@ -93,8 +93,8 @@ describe('TranslateLanguagePipe', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('span').textContent.trim()).toBe('fre-en-v0');
 
-    languageServiceMock.languagesVersion.update(v => v + 1);
-    await new Promise(resolve => setTimeout(resolve, 0));
+    languageServiceMock.languagesVersion.update((v) => v + 1);
+    await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('span').textContent.trim()).toBe('fre-en-v1');

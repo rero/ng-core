@@ -4,8 +4,8 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from 'primeng/button';
+import { provideTranslateService } from '@ngx-translate/core';
+import { ButtonModule } from '@openng/optimus-ui/button';
 
 import { RecordSearchStore } from '../../store/record-search.store';
 import { DefaultSearchResultComponent } from './default-search-result/default-search-result.component';
@@ -18,15 +18,8 @@ describe('RecordSearchResultComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       schemas: [NO_ERRORS_SCHEMA],
-      imports: [
-        ButtonModule,
-        RouterModule.forRoot([]),
-        TranslateModule.forRoot(),
-
-        DefaultSearchResultComponent,
-        RecordSearchResultComponent,
-      ],
-      providers: [provideHttpClient(withInterceptorsFromDi()), RecordSearchStore],
+      imports: [ButtonModule, RouterModule.forRoot([]), DefaultSearchResultComponent, RecordSearchResultComponent],
+      providers: [provideHttpClient(withInterceptorsFromDi()), RecordSearchStore, provideTranslateService()],
     });
   });
 

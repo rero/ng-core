@@ -1,14 +1,15 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
-import { BucketsComponent } from './buckets/buckets.component';
-import { Fieldset } from 'primeng/fieldset';
-import { AggregationSliderComponent } from './slider/slider.component';
-import { AggregationDateRangeComponent } from './date-range/date-range.component';
-import { TranslateDirective, TranslatePipe } from '@ngx-translate/core';
-import { Aggregation } from '../../../../../model/record.interface';
+import { Component, computed, inject, input } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Fieldset } from '@openng/optimus-ui/fieldset';
+
 import { UpperCaseFirstPipe } from '../../../../../core/pipe/ucfirst/ucfirst.pipe';
+import { Aggregation } from '../../../../../model/record.interface';
 import { RecordSearchStore } from '../../store/record-search.store';
+import { BucketsComponent } from './buckets/buckets.component';
+import { AggregationDateRangeComponent } from './date-range/date-range.component';
+import { AggregationSliderComponent } from './slider/slider.component';
 
 @Component({
   selector: 'ng-core-record-search-aggregation',
@@ -18,11 +19,9 @@ import { RecordSearchStore } from '../../store/record-search.store';
     Fieldset,
     AggregationSliderComponent,
     AggregationDateRangeComponent,
-    TranslateDirective,
     TranslatePipe,
     UpperCaseFirstPipe,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecordSearchAggregationComponent {
   protected store = inject(RecordSearchStore);

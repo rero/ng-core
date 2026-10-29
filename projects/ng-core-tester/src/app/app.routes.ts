@@ -1,8 +1,10 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { ResolveFn, Routes, UrlSegment } from '@angular/router';
-import { ActionStatus, capitalize } from '@rero/ng-core';
+import { ActionStatus, capitalize, ngCoreRoutes, unsavedChangesGuard } from '@rero/ng-core';
+import { ngCoreEditorRoutes } from '@rero/ng-core/editor';
 import { Observable, of } from 'rxjs';
+
 import { HomeComponent } from './home/home.component';
 import { DetailComponent } from './record/document/detail/detail.component';
 import { DocumentComponent } from './record/document/document.component';
@@ -168,13 +170,23 @@ export const routes: Routes = [
   },
   {
     path: 'record',
-    loadChildren: () => import('./record/document/document-routes').then((r) => r.routes)
+    loadChildren: () => import('./record/document/document-routes').then((r) => r.routes),
   },
   {
     path: 'editor',
     children: [
-      { path: ':type', component: EditorComponent, title: titleEditorResolver },
-      { path: ':type/:pid', component: EditorComponent, title: titleEditorResolver },
+      {
+        path: ':type',
+        component: EditorComponent,
+        title: titleEditorResolver,
+        canDeactivate: [unsavedChangesGuard],
+      },
+      {
+        path: ':type/:pid',
+        component: EditorComponent,
+        title: titleEditorResolver,
+        canDeactivate: [unsavedChangesGuard],
+      },
     ],
     data: {
       types: [
@@ -199,7 +211,7 @@ export const routes: Routes = [
   },
   {
     matcher: documentsMatcher,
-    loadChildren: () => import('@rero/ng-core').then((r) => r.ngCoreRoutes),
+    children: [...ngCoreRoutes, ...ngCoreEditorRoutes],
     title: 'Documents',
     data: {
       showSearchInput: true,
@@ -219,7 +231,7 @@ export const routes: Routes = [
   },
   {
     matcher: organisationsMatcher,
-    loadChildren: () => import('@rero/ng-core').then((r) => r.ngCoreRoutes),
+    children: [...ngCoreRoutes, ...ngCoreEditorRoutes],
     title: 'Organisations',
     data: {
       showSearchInput: true,
@@ -234,7 +246,7 @@ export const routes: Routes = [
   },
   {
     path: 'unisi/record/search',
-    loadChildren: () => import('@rero/ng-core').then((r) => r.ngCoreRoutes),
+    children: [...ngCoreRoutes, ...ngCoreEditorRoutes],
     title: 'Documents',
     data: {
       showSearchInput: true,
@@ -253,7 +265,7 @@ export const routes: Routes = [
   },
   {
     path: 'admin/record/search',
-    loadChildren: () => import('@rero/ng-core').then((r) => r.ngCoreRoutes),
+    children: [...ngCoreRoutes, ...ngCoreEditorRoutes],
     title: 'Documents',
     data: {
       types: [
