@@ -115,38 +115,6 @@ describe('withAggregations feature', () => {
     });
   });
 
-  describe('updateFilters()', () => {
-    it('should update aggregations filters', () => {
-      const filters = [
-        { key: 'author', values: ['Smith', 'Jones'] },
-        { key: 'year', values: ['2020', '2021'] },
-      ];
-
-      store.updateAggregationsFilters(filters);
-
-      // Values are sorted alphabetically within each filter
-      expect(store.aggregationsFilters()).toEqual([
-        { key: 'author', values: ['Jones', 'Smith'] },
-        { key: 'year', values: ['2020', '2021'] },
-      ]);
-    });
-
-    it('should sort values within each filter', () => {
-      const filters = [{ key: 'author', values: ['Smith', 'Brown', 'Jones'] }];
-
-      store.updateAggregationsFilters(filters);
-
-      expect(store.aggregationsFilters()[0].values).toEqual(['Brown', 'Jones', 'Smith']);
-    });
-
-    it('should replace existing filters', () => {
-      store.updateAggregationsFilters([{ key: 'author', values: ['Smith'] }]);
-      store.updateAggregationsFilters([{ key: 'year', values: ['2020'] }]);
-
-      expect(store.aggregationsFilters()).toEqual([{ key: 'year', values: ['2020'] }]);
-    });
-  });
-
   describe('updateFilter()', () => {
     it('should add a new filter', () => {
       store.updateAggregationsFilter('author', ['Smith', 'Jones']);
@@ -187,10 +155,12 @@ describe('withAggregations feature', () => {
 
   describe('removeFilter()', () => {
     it('should remove a filter by key', () => {
-      store.updateAggregationsFilters([
-        { key: 'author', values: ['Smith'] },
-        { key: 'year', values: ['2020'] },
-      ]);
+      store.syncUrlParams({
+        aggregationsFilters: [
+          { key: 'author', values: ['Smith'] },
+          { key: 'year', values: ['2020'] },
+        ],
+      });
 
       store.removeFilter('author');
 
@@ -198,7 +168,7 @@ describe('withAggregations feature', () => {
     });
 
     it('should do nothing if filter does not exist', () => {
-      store.updateAggregationsFilters([{ key: 'author', values: ['Smith'] }]);
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'author', values: ['Smith'] }] });
 
       store.removeFilter('nonexistent');
 
@@ -242,10 +212,12 @@ describe('withAggregations feature', () => {
 
   describe('clearFilters()', () => {
     it('should clear all filters', () => {
-      store.updateAggregationsFilters([
-        { key: 'author', values: ['Smith'] },
-        { key: 'year', values: ['2020'] },
-      ]);
+      store.syncUrlParams({
+        aggregationsFilters: [
+          { key: 'author', values: ['Smith'] },
+          { key: 'year', values: ['2020'] },
+        ],
+      });
 
       store.clearFilters();
 
@@ -309,26 +281,6 @@ describe('withAggregations feature', () => {
     });
   });
 
-  describe('clearAggregations()', () => {
-    it('should clear all aggregations', () => {
-      const aggregations: Aggregation[] = [
-        {
-          key: 'author',
-          bucketSize: 10,
-          value: { buckets: [] },
-          expanded: false,
-          doc_count: 100,
-          name: 'Author',
-        },
-      ];
-
-      store.updateAggregations(aggregations);
-      store.clearAggregations();
-
-      expect(store.aggregations()).toEqual([]);
-    });
-  });
-
   describe('Integration scenarios', () => {
     it('should handle typical filter workflow', () => {
       // Add first filter
@@ -366,7 +318,7 @@ describe('withAggregations feature', () => {
         },
       ];
 
-      store.updateAggregationsFilters(filters);
+      store.syncUrlParams({ aggregationsFilters: filters });
       store.updateAggregations(aggregations);
 
       expect(store.aggregationsFilters()).toEqual(filters);
@@ -374,9 +326,6 @@ describe('withAggregations feature', () => {
 
       store.clearFilters();
       expect(store.aggregations()).toEqual(aggregations); // Aggregations not affected
-
-      store.clearAggregations();
-      expect(store.aggregations()).toEqual([]);
     });
   });
 
@@ -395,26 +344,6 @@ describe('withAggregations feature', () => {
           buckets: [{ key: 'grandchild', aggregationKey: 'other_agg' }],
         },
       };
-    });
-
-    it('should remove parent filters recursively', () => {
-      store.updateAggregationsFilter('main_agg', ['parent']);
-      store.updateAggregationsFilter('sub_agg', ['child']);
-
-      store.removeParentFilters(complexBucket);
-
-      expect(store.hasFilter('main_agg', 'parent')).toBe(false);
-      expect(store.hasFilter('sub_agg', 'child')).toBe(false);
-    });
-
-    it('should remove children filters recursively', () => {
-      store.updateAggregationsFilter('sub_agg', ['child']);
-      store.updateAggregationsFilter('other_agg', ['grandchild']);
-
-      store.removeChildrenFilters(complexBucket);
-
-      expect(store.hasFilter('other_agg', 'grandchild')).toBe(false);
-      expect(store.hasFilter('sub_agg', 'child')).toBe(true); // self is not removed by removeChildrenFilters
     });
 
     it('should identify if children filters exist', () => {

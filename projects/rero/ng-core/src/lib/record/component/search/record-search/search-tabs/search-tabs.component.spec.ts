@@ -45,4 +45,28 @@ describe('SearchTabsComponent', () => {
     const tab = fixture.debugElement.nativeElement.querySelectorAll('p-tab');
     expect(tab).toHaveLength(2);
   });
+
+  it('should select the tab of the current type', async () => {
+    store.updateCurrentType('organisation');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const selected = fixture.debugElement.nativeElement.querySelector('p-tab[aria-selected="true"]');
+    expect(selected.textContent.trim()).toBe('organisation');
+  });
+
+  it('should clear the filters when clicking on another tab', async () => {
+    store.updateCurrentType('document');
+    store.syncUrlParams({ aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const tabs: HTMLElement[] = Array.from(fixture.debugElement.nativeElement.querySelectorAll('p-tab'));
+    tabs[1].click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(store.currentType()).toBe('organisation');
+    expect(store.aggregationsFilters()).toEqual([]);
+  });
 });

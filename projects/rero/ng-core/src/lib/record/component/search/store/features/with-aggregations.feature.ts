@@ -33,7 +33,7 @@ export interface AggregationsState {
  * - facetsParameter: Array of aggregation keys to include in search facets
  *
  * Methods:
- * - updateAggregations(), clearAggregations()
+ * - updateAggregations(), setAggregationExpanded(), aggregationNameFromConfig()
  * - processBuckets(): Recursively process buckets for parent refs and indeterminate state
  * - enrichAggregation(): Enrich an aggregation with Elasticsearch response data
  * - fetchAggregationBuckets(): Lazily fetch buckets for an aggregation via API
@@ -95,13 +95,6 @@ export function withAggregations() {
           return;
         }
         patchState(store, { aggregations });
-      },
-
-      /**
-       * Clear aggregations
-       */
-      clearAggregations(): void {
-        patchState(store, { aggregations: [] });
       },
 
       setAggregationExpanded(key: string, expanded: boolean): void {

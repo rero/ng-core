@@ -21,13 +21,11 @@ import { IFilter } from '../component/search/record-search/aggregation/list-filt
 import { EditorSettingsConfig } from './editor-settings.interface';
 
 export interface SearchParams {
-  index: string;
   q: string;
   page: number;
   size: number;
   sort: string;
   aggregationsFilters: AggregationsFilter[];
-  searchFilters: (SearchFilter | SearchFilterSection)[];
 }
 
 export interface SortOption {

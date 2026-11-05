@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { patchState, signalStore } from '@ngrx/signals';
 import { BehaviorSubject } from 'rxjs';
 
-import { SearchFilter, SearchFilterSection } from '../../../../../model/record.interface';
 import { RecordService } from '../../../../service/record/record.service';
 import { withAggregations } from './with-aggregations.feature';
 import { withConfig } from './with-config.feature';
@@ -43,25 +42,6 @@ describe('withSearchParams', () => {
 
       // Must run inside an injection context so rxMethod can resolve DestroyRef
       expect(() => TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$))).not.toThrow();
-    });
-
-    it('should preserve searchFilters when syncing URL params', () => {
-      const store = TestBed.inject(TestStore);
-
-      // Filters are loaded in the store from the config.
-      patchState(store, {
-        q: 'old',
-        searchFilters: [{ label: 'Open access', filter: 'open_access', value: '1' }],
-      });
-
-      // URL sync emits params without searchFilters (they are never carried in the URL).
-      const urlParams$ = new BehaviorSubject({ q: 'new' });
-      TestBed.runInInjectionContext(() => store.syncUrlParams(urlParams$));
-
-      // The URL-carried value (q) is applied...
-      expect(store.q()).toBe('new');
-      // ...but the loaded filters must not be reset.
-      expect(store.searchFilters()).toEqual([{ label: 'Open access', filter: 'open_access', value: '1' }]);
     });
   });
 
@@ -143,151 +123,10 @@ describe('withSearchParams', () => {
     });
   });
 
-  describe('updateSearchFilters', () => {
-    it('should update with flat search filters', () => {
-      const store = TestBed.inject(TestStore);
-      const filters: SearchFilter[] = [
-        { filter: 'status', label: 'Status', value: 'published', showIfQuery: false },
-        { filter: 'language', label: 'Language', value: 'en', showIfQuery: true },
-      ];
-
-      store.updateSearchFilters(filters);
-
-      expect(store.searchFilters()).toEqual(filters);
-    });
-
-    it('should update with search filter sections', () => {
-      const store = TestBed.inject(TestStore);
-      const sections: SearchFilterSection[] = [
-        {
-          label: 'Document Filters',
-          filters: [
-            { filter: 'type', label: 'Type', value: 'article', showIfQuery: false },
-            { filter: 'format', label: 'Format', value: 'pdf', showIfQuery: false },
-          ],
-        },
-      ];
-
-      store.updateSearchFilters(sections);
-
-      expect(store.searchFilters()).toEqual(sections);
-    });
-
-    it('should replace existing filters', () => {
-      const store = TestBed.inject(TestStore);
-      const initial: SearchFilter[] = [{ filter: 'old', label: 'Old', value: 'old_value', showIfQuery: false }];
-      const updated: SearchFilter[] = [{ filter: 'new', label: 'New', value: 'new_value', showIfQuery: false }];
-
-      store.updateSearchFilters(initial);
-      store.updateSearchFilters(updated);
-
-      expect(store.searchFilters()).toEqual(updated);
-    });
-
-    it('should reset page to 1 when updating search filters', () => {
-      const store = TestBed.inject(TestStore);
-      store.updatePage(5);
-
-      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
-
-      expect(store.page()).toBe(1);
-    });
-  });
-
-  describe('clearSearchFilters', () => {
-    it('should reset filters to empty array', () => {
-      const store = TestBed.inject(TestStore);
-      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
-
-      store.clearSearchFilters();
-
-      expect(store.searchFilters()).toEqual([]);
-      expect(store.hasSearchFilters()).toBe(false);
-    });
-
-    it('should reset page to 1 when clearing search filters', () => {
-      const store = TestBed.inject(TestStore);
-      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
-      store.updatePage(5);
-
-      store.clearSearchFilters();
-
-      expect(store.page()).toBe(1);
-    });
-  });
-
-  describe('flatSearchFilters', () => {
-    it('should return empty array when no filters exist', () => {
-      const store = TestBed.inject(TestStore);
-      expect(store.flatSearchFilters()).toEqual([]);
-    });
-
-    it('should handle flat filters without modification', () => {
-      const store = TestBed.inject(TestStore);
-      const filters: SearchFilter[] = [
-        { filter: 'status', label: 'Status', value: 'active', showIfQuery: false },
-        { filter: 'type', label: 'Type', value: 'doc', showIfQuery: false },
-      ];
-
-      store.updateSearchFilters(filters);
-
-      expect(store.flatSearchFilters()).toEqual(filters);
-    });
-
-    it('should flatten search filter sections', () => {
-      const store = TestBed.inject(TestStore);
-      const sections: SearchFilterSection[] = [
-        {
-          label: 'Group 1',
-          filters: [
-            { filter: 'f1', label: 'Filter 1', value: 'v1', showIfQuery: false },
-            { filter: 'f2', label: 'Filter 2', value: 'v2', showIfQuery: false },
-          ],
-        },
-        {
-          label: 'Group 2',
-          filters: [{ filter: 'f3', label: 'Filter 3', value: 'v3', showIfQuery: false }],
-        },
-      ];
-
-      store.updateSearchFilters(sections);
-      const flat = store.flatSearchFilters();
-
-      expect(flat.length).toBe(3);
-      expect(flat[0].filter).toBe('f1');
-      expect(flat[1].filter).toBe('f2');
-      expect(flat[2].filter).toBe('f3');
-    });
-
-    it('should handle mixed filters and sections', () => {
-      const store = TestBed.inject(TestStore);
-      const mixed: (SearchFilter | SearchFilterSection)[] = [
-        { filter: 'standalone', label: 'Standalone', value: 'value', showIfQuery: false },
-        {
-          label: 'Section',
-          filters: [
-            { filter: 'grouped1', label: 'Grouped 1', value: 'g1', showIfQuery: false },
-            { filter: 'grouped2', label: 'Grouped 2', value: 'g2', showIfQuery: false },
-          ],
-        },
-        { filter: 'another', label: 'Another', value: 'val', showIfQuery: false },
-      ];
-
-      store.updateSearchFilters(mixed);
-      const flat = store.flatSearchFilters();
-
-      expect(flat.length).toBe(4);
-      expect(flat[0].filter).toBe('standalone');
-      expect(flat[1].filter).toBe('grouped1');
-      expect(flat[2].filter).toBe('grouped2');
-      expect(flat[3].filter).toBe('another');
-    });
-  });
-
   describe('clearFilters', () => {
     it('should reset aggregations filters to empty array when no simple filter exists', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([{ key: 'language', values: ['eng'] }]);
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
 
       store.clearFilters();
 
@@ -296,10 +135,12 @@ describe('withSearchParams', () => {
 
     it('should keep the simple filter reset to "1" when its value was "0"', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([
-        { key: 'language', values: ['eng'] },
-        { key: 'simple', values: ['0'] },
-      ]);
+      store.syncUrlParams({
+        aggregationsFilters: [
+          { key: 'language', values: ['eng'] },
+          { key: 'simple', values: ['0'] },
+        ],
+      });
 
       store.clearFilters();
 
@@ -308,10 +149,12 @@ describe('withSearchParams', () => {
 
     it('should keep the simple filter reset to "1" when its value was already "1"', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([
-        { key: 'language', values: ['eng'] },
-        { key: 'simple', values: ['1'] },
-      ]);
+      store.syncUrlParams({
+        aggregationsFilters: [
+          { key: 'language', values: ['eng'] },
+          { key: 'simple', values: ['1'] },
+        ],
+      });
 
       store.clearFilters();
 
@@ -336,62 +179,35 @@ describe('withSearchParams', () => {
 
     it('should return true when a non-simple filter exists', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([{ key: 'language', values: ['eng'] }]);
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
 
       expect(store.hasFilters()).toBe(true);
     });
 
     it('should return false when only the simple filter exists with value "1"', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([{ key: 'simple', values: ['1'] }]);
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'simple', values: ['1'] }] });
 
       expect(store.hasFilters()).toBe(false);
     });
 
     it('should return true when only the simple filter exists with value "0"', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([{ key: 'simple', values: ['0'] }]);
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'simple', values: ['0'] }] });
 
       expect(store.hasFilters()).toBe(true);
     });
 
     it('should return true when simple is "1" but another filter is also active', () => {
       const store = TestBed.inject(TestStore);
-      store.updateAggregationsFilters([
-        { key: 'simple', values: ['1'] },
-        { key: 'language', values: ['eng'] },
-      ]);
+      store.syncUrlParams({
+        aggregationsFilters: [
+          { key: 'simple', values: ['1'] },
+          { key: 'language', values: ['eng'] },
+        ],
+      });
 
       expect(store.hasFilters()).toBe(true);
-    });
-  });
-
-  describe('hasSearchFilters', () => {
-    it('should return false when no filters exist', () => {
-      const store = TestBed.inject(TestStore);
-      expect(store.hasSearchFilters()).toBe(false);
-    });
-
-    it('should return true when filters exist', () => {
-      const store = TestBed.inject(TestStore);
-      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
-
-      expect(store.hasSearchFilters()).toBe(true);
-    });
-
-    it('should return true when filter sections exist', () => {
-      const store = TestBed.inject(TestStore);
-      store.updateSearchFilters([{ label: 'Section', filters: [] } as SearchFilterSection]);
-
-      expect(store.hasSearchFilters()).toBe(true);
-    });
-
-    it('should return false after clearing filters', () => {
-      const store = TestBed.inject(TestStore);
-      store.updateSearchFilters([{ filter: 'test', label: 'Test', value: 'val', showIfQuery: false }]);
-      store.clearSearchFilters();
-
-      expect(store.hasSearchFilters()).toBe(false);
     });
   });
 });

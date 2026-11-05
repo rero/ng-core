@@ -3,7 +3,7 @@ SPDX-FileCopyrightText: Fondation RERO+
 SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 @if (typesInTabs().length > 1) {
-  <p-tabs [(value)]="currentType">
+  <p-tabs [value]="currentType()" (valueChange)="selectType($event)">
     <p-tablist>
       @for (tab of typesInTabs(); track tab.key) {
         <p-tab [value]="tab.key">{{ tab.label | translate }}</p-tab>
