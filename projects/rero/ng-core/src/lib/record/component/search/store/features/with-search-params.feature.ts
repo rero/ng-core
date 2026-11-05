@@ -7,7 +7,6 @@ import { patchState, signalStoreFeature, withComputed, withMethods, withState } 
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, tap } from 'rxjs';
 
-import { SearchFilter, SearchFilterSection } from '../../../../../model';
 import { Bucket } from '../../../../../model/record.interface';
 import { SearchParams } from '../../../../model';
 import { shallowEqual } from '../../../../record-search-utils';
@@ -18,9 +17,7 @@ export const DEFAULT_SEARCH_PARAMS: SearchParams = {
   page: 1,
   size: 10,
   sort: '',
-  index: '',
   aggregationsFilters: [],
-  searchFilters: [],
 };
 
 /** Collect {key, value} pairs from parent bucket chain (pure function) */
@@ -75,26 +72,8 @@ export function withSearchParams() {
         page: store.page(),
         size: store.size(),
         sort: store.sort(),
-        index: store.index(),
         aggregationsFilters: store.aggregationsFilters(),
-        searchFilters: store.searchFilters(),
       })),
-
-      /** Get a flat array of all search filters (extracts filters from sections) */
-      flatSearchFilters: computed(() => {
-        const flat: SearchFilter[] = [];
-        (store.searchFilters() ?? []).forEach((item) => {
-          if ('filters' in item) {
-            flat.push(...item.filters);
-          } else {
-            flat.push(item);
-          }
-        });
-        return flat;
-      }),
-
-      /** Check if any search filters are available */
-      hasSearchFilters: computed(() => (store.searchFilters() ?? []).length > 0),
 
       hasFilters: computed(() => {
         const filters = store.aggregationsFilters();
@@ -123,12 +102,6 @@ export function withSearchParams() {
       },
       updatePage(page: number) {
         patchState(store, { page });
-      },
-      updateSearchFilters(searchFilters: (SearchFilter | SearchFilterSection)[]) {
-        patchState(store, { searchFilters, page: 1 });
-      },
-      clearSearchFilters(): void {
-        patchState(store, { searchFilters: [], page: 1 });
       },
       updateSize(size: number) {
         patchState(store, { size });
@@ -164,17 +137,6 @@ export function withSearchParams() {
           newFilters = [...currentFilters, { key, values: [...values].sort() }];
         }
         patchState(store, { aggregationsFilters: newFilters, page: 1 });
-      },
-
-      /**
-       * Replace all aggregation filters at once.
-       * @param filters New set of aggregation filters (values are sorted within each filter)
-       */
-      updateAggregationsFilters(filters: AggregationsFilter[]): void {
-        patchState(store, {
-          aggregationsFilters: filters.map((f) => ({ key: f.key, values: [...f.values].sort() })),
-          page: 1,
-        });
       },
 
       /**
@@ -235,26 +197,6 @@ export function withSearchParams() {
           ...collectChildrenRemovals(bucket),
           ...collectParentRemovals(bucket),
         ];
-        const newFilters = applyRemovals(store.aggregationsFilters(), removals);
-        patchState(store, { aggregationsFilters: newFilters, page: 1 });
-      },
-
-      /**
-       * Remove the parent filters of a given bucket (single state update).
-       * @param bucket The ElasticSearch bucket
-       */
-      removeParentFilters(bucket: Bucket): void {
-        const removals = collectParentRemovals(bucket);
-        const newFilters = applyRemovals(store.aggregationsFilters(), removals);
-        patchState(store, { aggregationsFilters: newFilters, page: 1 });
-      },
-
-      /**
-       * Removes children filters of a given bucket (single state update).
-       * @param bucket The ElasticSearch bucket
-       */
-      removeChildrenFilters(bucket: Bucket): void {
-        const removals = collectChildrenRemovals(bucket);
         const newFilters = applyRemovals(store.aggregationsFilters(), removals);
         patchState(store, { aggregationsFilters: newFilters, page: 1 });
       },

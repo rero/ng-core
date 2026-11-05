@@ -46,7 +46,7 @@ export interface ResultsState {
  *
  * Provides:
  * - State: esResult, total, isLoading, error
- * - Computed: hits (array of record hits from ES), hasRecords, isEmpty
+ * - Computed: hits (array of record hits from ES), total
  * - Methods: setResults(), setLoading(), setError(), clearResults(), fetchRecords()
  */
 export function withResults() {
@@ -65,14 +65,6 @@ export function withResults() {
       hits: computed(() => store.esResult()?.hits?.hits ?? []),
 
       total: computed(() => store.esResult()?.hits?.total ?? 0),
-    })),
-
-    withComputed(({ total }) => ({
-      /** Check if there are any records */
-      hasRecords: computed(() => total() > 0),
-
-      /** Check if result set is empty */
-      isEmpty: computed(() => total() === 0),
     })),
 
     withProps(() => ({
