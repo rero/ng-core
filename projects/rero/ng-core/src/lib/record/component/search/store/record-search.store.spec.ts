@@ -99,6 +99,18 @@ describe('RecordSearchStore', () => {
       store.updateCurrentType('persons');
       expect(store.currentType()).toBe('persons');
     });
+
+    it('should reset the page to 1 when switching to another type', () => {
+      store.updatePage(5);
+      store.updateCurrentType('persons');
+      expect(store.page()).toBe(1);
+    });
+
+    it('should keep the page when the type does not change', () => {
+      store.updatePage(5);
+      store.updateCurrentType('documents');
+      expect(store.page()).toBe(5);
+    });
   });
 
   describe('results feature', () => {
@@ -676,6 +688,16 @@ describe('RecordSearchStore', () => {
       );
     });
 
+    it('should keep the page coming from the url when initializing the search filters', async () => {
+      // Simulate the page being set from the URL query params before filters init.
+      store.updatePage(3);
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.searchFilters()).toEqual([{ filter: 'status', label: 'Status', value: 'published' }]);
+      expect(store.page()).toBe(3);
+    });
+
     it('should apply defaultSearchInputFilters when no query', async () => {
       store.updateRouteConfig({
         types: [
@@ -733,6 +755,28 @@ describe('RecordSearchStore', () => {
 
       await new Promise((resolve) => setTimeout(resolve, 50));
       expect(store.hasFilter('simple', '1')).toBe(true);
+    });
+
+    it('should keep the page coming from the url when applying a persistent filter default', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [
+              { filter: 'simple', label: 'Expert search', value: '0', disabledValue: '1', persistent: true },
+            ],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      // Simulate the page being set from the URL query params before filters init.
+      store.updatePage(3);
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('simple', '1')).toBe(true);
+      expect(store.page()).toBe(3);
     });
 
     it('should not override a persistent filter value coming from the url', async () => {

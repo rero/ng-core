@@ -64,6 +64,11 @@ export const RecordSearchStore = signalStore(
     updateCurrentType(currentType: string) {
       if (currentType !== store.currentType()) {
         store.clearResults();
+        // Switching to another type starts on its first page. The first type is set
+        // during the initial route synchronization, so the page from the URL is kept.
+        if (store.currentType()) {
+          store.updatePage(1);
+        }
       }
       store.setCurrentType(currentType);
     },
@@ -92,7 +97,9 @@ export const RecordSearchStore = signalStore(
           // For a persistent filter, `disabledValue` is the implicit default, so the search
           // behaves the same whatever the entry point (menu, shortcut, direct URL). Without
           // this, opening a search page with no query params would drop e.g. `simple=1` and
-          // silently switch to expert search.
+          // silently switch to expert search. The default only stands for the missing
+          // value, so the page (e.g. from the URL) is restored after it is applied.
+          const page = store.page();
           flatSearchFilters(filters).forEach((f: SearchFilter) => {
             const defaultValue = f.disabledValue;
             if (f.persistent !== true || defaultValue == null) {
@@ -103,6 +110,7 @@ export const RecordSearchStore = signalStore(
               store.updateAggregationsFilter(f.filter, [defaultValue]);
             }
           });
+          store.updatePage(page);
         }),
       ),
     ),

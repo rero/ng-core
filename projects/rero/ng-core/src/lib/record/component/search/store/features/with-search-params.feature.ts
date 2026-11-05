@@ -124,11 +124,13 @@ export function withSearchParams() {
       updatePage(page: number) {
         patchState(store, { page });
       },
+      // Search filters are the filter definitions from the configuration, not their values:
+      // they do not change the results, so the page (e.g. from the URL) is kept.
       updateSearchFilters(searchFilters: (SearchFilter | SearchFilterSection)[]) {
-        patchState(store, { searchFilters, page: 1 });
+        patchState(store, { searchFilters });
       },
       clearSearchFilters(): void {
-        patchState(store, { searchFilters: [], page: 1 });
+        patchState(store, { searchFilters: [] });
       },
       updateSize(size: number) {
         patchState(store, { size });
