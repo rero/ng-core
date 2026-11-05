@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Fondation RERO+
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { ParamMap } from '@angular/router';
 
 import { AggregationsFilter } from '../../public-api';
@@ -49,7 +52,7 @@ function stripUndefined<T extends object>(obj: T): Partial<T> {
 export function paramMapToSearchParams(map: ParamMap): Partial<SearchParams> {
   const aggregationsFilters: AggregationsFilter[] = [];
   map.keys.forEach((key: string) => {
-    if (['q', 'page', 'size', 'sort', 'index'].includes(key) === false) {
+    if (['q', 'page', 'size', 'sort'].includes(key) === false) {
       const values = map.getAll(key);
       aggregationsFilters.push({ key, values });
     }
@@ -59,7 +62,6 @@ export function paramMapToSearchParams(map: ParamMap): Partial<SearchParams> {
     page: map.get('page') ? +map.get('page')! : undefined,
     size: map.get('size') ? +map.get('size')! : undefined,
     sort: map.get('sort') != null ? map.get('sort') : undefined,
-    index: map.get('index') != null ? map.get('index') : undefined,
     aggregationsFilters: aggregationsFilters,
   });
 }

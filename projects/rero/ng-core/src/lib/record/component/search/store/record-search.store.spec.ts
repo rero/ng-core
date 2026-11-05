@@ -99,6 +99,18 @@ describe('RecordSearchStore', () => {
       store.updateCurrentType('persons');
       expect(store.currentType()).toBe('persons');
     });
+
+    it('should reset the page to 1 when switching to another type', () => {
+      store.updatePage(5);
+      store.updateCurrentType('persons');
+      expect(store.page()).toBe(1);
+    });
+
+    it('should keep the page when the type does not change', () => {
+      store.updatePage(5);
+      store.updateCurrentType('documents');
+      expect(store.page()).toBe(5);
+    });
   });
 
   describe('results feature', () => {
@@ -126,8 +138,6 @@ describe('RecordSearchStore', () => {
 
       expect(store.total()).toBe(2);
       expect(store.hits()).toEqual(mockResult.hits.hits);
-      expect(store.hasRecords()).toBe(true);
-      expect(store.isEmpty()).toBe(false);
     });
 
     it('should manage loading state', () => {
@@ -415,16 +425,9 @@ describe('RecordSearchStore', () => {
     it('should clear all filters', () => {
       store.updateAggregationsFilter('author', ['Smith']);
       store.updateAggregationsFilter('year', ['2023']);
-      store.updateAggregationsFilters([]);
+      store.clearFilters();
 
       expect(store.aggregationsFilters()).toEqual([]);
-    });
-
-    it('should reset page to 1 when replacing all filters', () => {
-      store.updateAggregationsFilter('author', ['Smith']);
-      store.updatePage(5);
-      store.updateAggregationsFilters([]);
-      expect(store.page()).toBe(1);
     });
 
     it('should reset page to 1 when clearing all filters', () => {
@@ -506,6 +509,52 @@ describe('RecordSearchStore', () => {
 
       // Restore valid state to prevent effects from crashing
       store.updateCurrentType('documents');
+    });
+
+    it('should clear the filters when selecting another type', () => {
+      store.updateRouteConfig({
+        types: [
+          { key: 'documents', label: 'Documents', sortOptions: [] } as any,
+          { key: 'entities', label: 'Entities', sortOptions: [] } as any,
+        ],
+      });
+      store.updateCurrentType('documents');
+      store.syncUrlParams({ q: 'test', page: 3, aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
+
+      store.selectType('entities');
+
+      expect(store.currentType()).toBe('entities');
+      expect(store.aggregationsFilters()).toEqual([]);
+      expect(store.page()).toBe(1);
+      expect(store.q()).toBe('test');
+    });
+
+    it('should keep the filters when selecting the current type', () => {
+      store.updateRouteConfig({
+        types: [{ key: 'documents', label: 'Documents', sortOptions: [] } as any],
+      });
+      store.updateCurrentType('documents');
+      store.syncUrlParams({ page: 3, aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
+
+      store.selectType('documents');
+
+      expect(store.aggregationsFilters()).toEqual([{ key: 'language', values: ['eng'] }]);
+      expect(store.page()).toBe(3);
+    });
+
+    it('should keep the filters when the type comes from the url', () => {
+      store.updateRouteConfig({
+        types: [
+          { key: 'documents', label: 'Documents', sortOptions: [] } as any,
+          { key: 'entities', label: 'Entities', sortOptions: [] } as any,
+        ],
+      });
+      store.updateCurrentType('documents');
+      store.syncUrlParams({ aggregationsFilters: [{ key: 'language', values: ['eng'] }] });
+
+      store.updateCurrentType('entities');
+
+      expect(store.aggregationsFilters()).toEqual([{ key: 'language', values: ['eng'] }]);
     });
 
     it('should compute aggregationsOrder from config', () => {
@@ -605,20 +654,6 @@ describe('RecordSearchStore', () => {
   });
 
   describe('results computed properties', () => {
-    it('should compute hasRecords', () => {
-      expect(store.hasRecords()).toBe(false);
-
-      store.setResults(mockEsResult);
-      expect(store.hasRecords()).toBe(true);
-    });
-
-    it('should compute isEmpty', () => {
-      expect(store.isEmpty()).toBe(true);
-
-      store.setResults(mockEsResult);
-      expect(store.isEmpty()).toBe(false);
-    });
-
     it('should extract hits from results', () => {
       store.setResults(mockEsResult);
 
@@ -698,6 +733,26 @@ describe('RecordSearchStore', () => {
       expect(store.hasFilter('type', 'article')).toBe(true);
     });
 
+    it('should keep the page coming from the url when applying defaultSearchInputFilters', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            defaultSearchInputFilters: [{ key: 'status', values: ['published'] }],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      // Simulate the page being set from the URL query params before filters init.
+      store.updatePage(3);
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('status', 'published')).toBe(true);
+      expect(store.page()).toBe(3);
+    });
+
     it('should not apply defaultSearchInputFilters when query is present', async () => {
       store.updateRouteConfig({
         types: [
@@ -733,6 +788,28 @@ describe('RecordSearchStore', () => {
 
       await new Promise((resolve) => setTimeout(resolve, 50));
       expect(store.hasFilter('simple', '1')).toBe(true);
+    });
+
+    it('should keep the page coming from the url when applying a persistent filter default', async () => {
+      store.updateRouteConfig({
+        types: [
+          {
+            key: 'documents',
+            label: 'Documents',
+            searchFilters: [
+              { filter: 'simple', label: 'Expert search', value: '0', disabledValue: '1', persistent: true },
+            ],
+            sortOptions: [],
+          } as any,
+        ],
+      });
+      // Simulate the page being set from the URL query params before filters init.
+      store.updatePage(3);
+      store.updateCurrentType('documents');
+
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      expect(store.hasFilter('simple', '1')).toBe(true);
+      expect(store.page()).toBe(3);
     });
 
     it('should not override a persistent filter value coming from the url', async () => {

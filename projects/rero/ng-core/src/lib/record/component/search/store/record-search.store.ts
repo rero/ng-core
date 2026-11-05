@@ -9,7 +9,6 @@ import { filter, pipe, tap } from 'rxjs';
 
 import { SearchFilter, SearchFilterSection } from '../../../../model';
 import { RecordType } from '../../../model';
-import { shallowEqual } from '../../../record-search-utils';
 import { withAggregations } from './features/with-aggregations.feature';
 import { withConfig } from './features/with-config.feature';
 import { FetchRecordsParams, withResults } from './features/with-results.feature';
@@ -64,8 +63,26 @@ export const RecordSearchStore = signalStore(
     updateCurrentType(currentType: string) {
       if (currentType !== store.currentType()) {
         store.clearResults();
+        // Switching to another type starts on its first page. The first type is set
+        // during the initial route synchronization, so the page from the URL is kept.
+        if (store.currentType()) {
+          store.updatePage(1);
+        }
       }
       store.setCurrentType(currentType);
+    },
+    /**
+     * Switch to another type on the user's request (e.g. a click on a tab).
+     * The filters of the previous type do not apply to the new one, so they are
+     * cleared. A type coming from the URL goes through `updateCurrentType` instead,
+     * which keeps the filters given in the URL.
+     * @param currentType the type to display
+     */
+    selectType(currentType: string) {
+      if (currentType !== store.currentType()) {
+        store.clearFilters();
+      }
+      this.updateCurrentType(currentType);
     },
     applyDefaultFilters: rxMethod<{ currentType: string; config: RecordType }>(
       pipe(
@@ -73,27 +90,29 @@ export const RecordSearchStore = signalStore(
         filter(() => !store.q()),
         filter((params) => params.config.defaultSearchInputFilters?.length > 0),
         tap((params) => {
+          // The default filters are part of the initial state of the search, so the
+          // page (e.g. from the URL) is restored after they are applied.
+          const page = store.page();
           params.config.defaultSearchInputFilters.forEach((filter) => {
             store.updateAggregationsFilter(filter.key, filter.values);
           });
+          store.updatePage(page);
         }),
       ),
     ),
-    initializeSearchFilters: rxMethod<{ currentType: string; config: RecordType }>(
+    applyPersistentFilterDefaults: rxMethod<{ currentType: string; config: RecordType }>(
       pipe(
         filter((params) => !!params.currentType),
         filter((params) => params.config.searchFilters?.length > 0),
         tap((params) => {
-          const filters = params.config.searchFilters || [];
-          if (!shallowEqual(filters, store.searchFilters())) {
-            store.updateSearchFilters(filters);
-          }
           // Apply the default value of persistent filters when they are missing from the URL.
           // For a persistent filter, `disabledValue` is the implicit default, so the search
           // behaves the same whatever the entry point (menu, shortcut, direct URL). Without
           // this, opening a search page with no query params would drop e.g. `simple=1` and
-          // silently switch to expert search.
-          flatSearchFilters(filters).forEach((f: SearchFilter) => {
+          // silently switch to expert search. The default only stands for the missing
+          // value, so the page (e.g. from the URL) is restored after it is applied.
+          const page = store.page();
+          flatSearchFilters(params.config.searchFilters).forEach((f: SearchFilter) => {
             const defaultValue = f.disabledValue;
             if (f.persistent !== true || defaultValue == null) {
               return;
@@ -103,6 +122,7 @@ export const RecordSearchStore = signalStore(
               store.updateAggregationsFilter(f.filter, [defaultValue]);
             }
           });
+          store.updatePage(page);
         }),
       ),
     ),
@@ -111,14 +131,9 @@ export const RecordSearchStore = signalStore(
     const injector = inject(Injector);
     return {
       onInit() {
-        store.applyDefaultFilters(
-          computed(() => ({ currentType: store.currentType(), config: store.config() })),
-          { injector },
-        );
-        store.initializeSearchFilters(
-          computed(() => ({ currentType: store.currentType(), config: store.config() })),
-          { injector },
-        );
+        const typeConfig = computed(() => ({ currentType: store.currentType(), config: store.config() }));
+        store.applyDefaultFilters(typeConfig, { injector });
+        store.applyPersistentFilterDefaults(typeConfig, { injector });
         // Fetch records when search parameters change
         // Build a computed signal that produces FetchRecordsParams (or null if not ready)
         const fetchParams = computed((): FetchRecordsParams | null => {

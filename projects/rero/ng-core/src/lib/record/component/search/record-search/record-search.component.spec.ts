@@ -141,7 +141,6 @@ describe('RecordSearchComponent', () => {
     spinnerServiceSpy.hide.mockClear();
     fixture = TestBed.createComponent(RecordSearchComponent);
     component = fixture.componentInstance;
-    component.store.updateAggregationsFilters([]);
     component.store.updateAggregations([]);
     // TODO: updateConfig no longer exists on store
     // component.store.updateConfig({
