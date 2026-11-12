@@ -14,15 +14,14 @@ describe('noCacheInterceptor', () => {
     next = vi.fn<HttpHandlerFn>(() => of());
   });
 
-  it('should add no-cache headers to a GET request', () => {
+  it('should bypass the HTTP cache for a GET request', () => {
     noCacheInterceptor(new HttpRequest('GET', '/api/documents'), next);
-    expect(forwarded().headers.get('Cache-Control')).toBe('no-cache');
-    expect(forwarded().headers.get('Pragma')).toBe('no-cache');
+    expect(forwarded().cache).toBe('no-store');
   });
 
-  it('should add no-cache headers to a HEAD request', () => {
+  it('should bypass the HTTP cache for a HEAD request', () => {
     noCacheInterceptor(new HttpRequest('HEAD', '/api/documents'), next);
-    expect(forwarded().headers.get('Cache-Control')).toBe('no-cache');
+    expect(forwarded().cache).toBe('no-store');
   });
 
   it('should not modify a mutating request', () => {
@@ -35,6 +34,12 @@ describe('noCacheInterceptor', () => {
     const req = new HttpRequest('GET', '/api/documents', {
       context: new HttpContext().set(ALLOW_HTTP_CACHE, true),
     });
+    noCacheInterceptor(req, next);
+    expect(forwarded()).toBe(req);
+  });
+
+  it('should keep an existing cache mode', () => {
+    const req = new HttpRequest('GET', '/api/documents', { cache: 'force-cache' });
     noCacheInterceptor(req, next);
     expect(forwarded()).toBe(req);
   });

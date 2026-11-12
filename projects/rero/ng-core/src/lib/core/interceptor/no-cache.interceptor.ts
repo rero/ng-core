@@ -18,27 +18,22 @@ const CACHEABLE_METHODS = ['GET', 'HEAD'];
 /**
  * Prevent the browser from serving stale API responses from its HTTP cache.
  *
- * The headers force the browser to revalidate any stored response with the
- * server, which either sends a fresh response or confirms with a
- * `304 Not Modified` that the stored one is still up to date. Mutating
- * requests and requests that already define a `Cache-Control` header are
- * left untouched.
+ * The `no-store` cache mode makes the browser get every response from the
+ * server, without reading or storing it in its HTTP cache. A revalidation is
+ * not enough: when a URL serves several representations of a record, the
+ * browser may confirm with a `304 Not Modified` the stored copy of another
+ * one. The cache mode requires the Fetch backend, Angular's default, and is
+ * ignored with `withXhr()`. Mutating requests and requests that already
+ * define a cache mode or a `Cache-Control` header are left untouched.
  */
 export function noCacheInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
   if (
     !CACHEABLE_METHODS.includes(req.method) ||
     req.context.get(ALLOW_HTTP_CACHE) ||
+    req.cache ||
     req.headers.has('Cache-Control')
   ) {
     return next(req);
   }
-  return next(
-    req.clone({
-      setHeaders: {
-        'Cache-Control': 'no-cache',
-        // HTTP/1.0 proxies only understand the Pragma header
-        Pragma: 'no-cache',
-      },
-    }),
-  );
+  return next(req.clone({ cache: 'no-store' }));
 }

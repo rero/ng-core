@@ -327,11 +327,12 @@ Its styles are in `assets/scss/katex.scss`.
 - `CoreConfigService` — library configuration, meant to be subclassed.
 - `HttpPendingService` — tracks in-flight HTTP mutations (paired with
   `httpPendingInterceptor`) to guard against double form submits.
-- `noCacheInterceptor` — forces the browser to revalidate `GET`/`HEAD`
-  responses with the server instead of serving them from its HTTP cache;
-  register it with `provideHttpClient(withInterceptors([noCacheInterceptor]))`
-  and set the `ALLOW_HTTP_CACHE` context token to `true` to keep the cache
-  for a request.
+- `noCacheInterceptor` — keeps `GET`/`HEAD` responses out of the browser
+  HTTP cache with the fetch `no-store` cache mode, so that they always come
+  from the server; register it with
+  `provideHttpClient(withInterceptors([noCacheInterceptor]))`, without
+  `withXhr()`, which ignores the cache mode, and set the `ALLOW_HTTP_CACHE`
+  context token to `true` to keep the cache for a request.
 - `LocalStorageService` — typed wrapper around `localStorage`, storing
   dated JSON values.
 - `unsavedChangesGuard` / `AbstractUnsavedChangesComponent` — route
