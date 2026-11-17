@@ -1,5 +1,20 @@
 # Changelog
 
+## [22.0.0](https://github.com/rero/ng-core/compare/v21.4.1...v22.0.0) (2026-11-17)
+
+### ⚠ BREAKING CHANGES
+
+* upgrade to Angular 22 ([6f534d0](https://github.com/rero/ng-core/commit/6f534d0223d0263aada2a1d4a74930708dc6fd22)): Angular, Angular CDK and NgRx Signals 22, ngx-translate 18, Formly 11, ngx-spinner 22 and KaTeX 0.19 are required.
+* Optimus UI 2 replaces PrimeNG: register `provideOptimus(optimusUIConfig)` instead of `providePrimeNG()`, and declare the locale translations under the `optimusUI` key instead of `primeng`.
+* the library is split into secondary entry points: the record editor and the Formly field types, wrappers and extensions move to `@rero/ng-core/editor`, the barcode scanner to `@rero/ng-core/barcode-scanner` and `KatexDirective` to `@rero/ng-core/katex`. `@ngx-formly/core`, `barcode-detector`, `zxing-wasm` and `katex` become optional peer dependencies.
+* `provideCore()` no longer provides Formly: applications displaying forms register `provideCoreFormly()` from `@rero/ng-core/editor`, and enable the barcode scanner with `provideCore(withBarcodeScanner())`.
+* `@angular/animations` and crypto-js are dropped, with `CryptoJsService` and the `secretPassphrase` configuration field.
+
+### Bug Fixes
+
+* **core:** bypass the HTTP cache with no-store ([c37750d](https://github.com/rero/ng-core/commit/c37750d276f9d4c1f5fbfcab9ee1943755bc6c5d)), references [rero/rero-ils#4247](https://github.com/rero/rero-ils/issues/4247)
+* **search:** keep the page given in the url ([65bb398](https://github.com/rero/ng-core/commit/65bb3984cfa302a7e85d84ab1b42dadf041d33dd)), closes [rero/rero-ils#4313](https://github.com/rero/rero-ils/issues/4313)
+
 ## [21.4.1](https://github.com/rero/ng-core/compare/v21.4.0...v21.4.1) (2026-10-26)
 
 ### Bug Fixes
