@@ -1,11 +1,14 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { TestBed } from '@angular/core/testing';
-import { FormControl, UntypedFormControl } from '@angular/forms';
-import { FormlyFieldConfig } from '@ngx-formly/core';
+import { FormControl, FormGroup, UntypedFormControl } from '@angular/forms';
+import { FormlyFieldConfig, FormlyFormBuilder } from '@ngx-formly/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideCore } from '@rero/ng-core';
 
 import { UniqueValueService } from '../service/unique-value.service';
 import { addNumberValidators, NgCoreFormlyExtension } from './extensions';
+import { provideCoreFormly } from './formly.provider';
 
 const buildField = (type: 'number' | 'integer', props: Record<string, unknown> = {}): FormlyFieldConfig => {
   const control = new FormControl(null);
@@ -163,5 +166,41 @@ describe('NgCoreFormlyExtension.prePopulate', () => {
     const field: FormlyFieldConfig = { type: 'number' };
     extension.prePopulate(field);
     expect(field.props?.step).toBeUndefined();
+  });
+});
+
+describe('NgCoreFormlyExtension default value expression', () => {
+  // Empty fields are hidden only in long mode and in edition, i.e. when a pid is given.
+  const buildForm = (pid: string | null) => {
+    TestBed.configureTestingModule({
+      providers: [provideTranslateService(), provideCore(), provideCoreFormly()],
+    });
+    const model: Record<string, unknown> = {};
+    const field: FormlyFieldConfig = {
+      key: 'date',
+      props: {
+        defaultValueExpression: "'2026-01-01'",
+        editorConfig: { pid, longMode: true },
+        getRoot: () => root,
+      },
+    };
+    const root: FormlyFieldConfig = { form: new FormGroup({}), model, options: {}, fieldGroup: [field] };
+    TestBed.inject(FormlyFormBuilder).build(root);
+    return { field, model, root };
+  };
+
+  it('should set the default value in creation', () => {
+    const { model } = buildForm(null);
+    expect(model['date']).toBe('2026-01-01');
+  });
+
+  it('should set the default value only when the field is added in edition', () => {
+    const { field, model, root } = buildForm('1');
+    expect(model['date']).toBeUndefined();
+    expect(field.hide).toBe(true);
+
+    field.hide = false;
+    root.options?.detectChanges?.(root);
+    expect(model['date']).toBe('2026-01-01');
   });
 });
