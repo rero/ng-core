@@ -96,11 +96,9 @@ export class NgCoreFormlyExtension {
       field.id = this._getKey(field);
     }
     this._setCustomValidators(field);
-    // Set default value from expression.
+    // In edition, postPopulate sets it, so that Formly does not fill the record's empty fields.
     if (field.props?.defaultValueExpression) {
-      const expression = field.props.defaultValueExpression;
-      const expressionFn = Function('expression', `return ${expression};`);
-      field.defaultValue = expressionFn();
+      field.defaultValue = field.props.editorConfig?.pid ? undefined : this._evalDefaultValueExpression(field);
     }
     // Integer fields default to a step of 1 when not explicitly configured.
     if (field.type === 'integer' && field.props?.step === undefined) {
@@ -146,9 +144,24 @@ export class NgCoreFormlyExtension {
    * Adds min/max/step validators directly on the formControl so they run alongside
    * the validators compiled by Formly. Messages are stored in field.validation.messages
    * so formly-validation-message can resolve them from formControl.errors.
+   * In edition, sets the default value from expression, which Formly applies
+   * when the user adds the field.
    */
   postPopulate(field: FormlyFieldConfig): void {
     addNumberValidators(field);
+    if (field.props?.defaultValueExpression && field.props.editorConfig?.pid) {
+      field.defaultValue = this._evalDefaultValueExpression(field);
+    }
+  }
+
+  /**
+   * Evaluate the default value expression of a field.
+   * @param field - FormlyFieldConfig
+   * @returns the default value
+   */
+  private _evalDefaultValueExpression(field: FormlyFieldConfig): unknown {
+    const expressionFn = Function('expression', `return ${field.props?.defaultValueExpression};`);
+    return expressionFn();
   }
 
   /**
