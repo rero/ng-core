@@ -183,7 +183,7 @@ export class DetailComponent {
         }
         break;
       case 'update':
-        this.router.navigate(['../../edit', event.record.id], { relativeTo: this.route, replaceUrl: true });
+        this.router.navigate(['../../edit', event.record.id], { relativeTo: this.route });
         break;
       case 'delete':
         this.deleteRecord(event.record);
@@ -201,19 +201,15 @@ export class DetailComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((result: boolean) => {
         if (result === true) {
-          let redirectUrl = '../..';
-          const navigateOptions = { relativeTo: this.route };
+          // Leave the deleted record's page, so Back does not show it again.
+          const leave = (url: string) =>
+            this.recordUiService.leavePage(this.router.createUrlTree([url], { relativeTo: this.route }));
           if (typeof element === 'object' && this.config()?.redirectUrl) {
             this.config()!.redirectUrl!(element, 'delete')
               .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe((redirect: string) => {
-                if (redirect !== null) {
-                  redirectUrl = redirect;
-                }
-                this.router.navigate([redirectUrl], navigateOptions);
-              });
+              .subscribe((redirect: string) => leave(redirect ?? '../..'));
           } else {
-            this.router.navigate([redirectUrl], navigateOptions);
+            leave('../..');
           }
         }
       });

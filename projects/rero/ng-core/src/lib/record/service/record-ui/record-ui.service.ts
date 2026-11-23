@@ -1,7 +1,8 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { Location } from '@angular/common';
 import { inject, Service } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, containsTree, Router, UrlTree } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmationService, MessageService } from '@openng/optimus-ui/api';
 import { Observable, of, Subject } from 'rxjs';
@@ -20,6 +21,7 @@ export class RecordUiService {
   protected router: Router = inject(Router);
   protected confirmationService: ConfirmationService = inject(ConfirmationService);
   protected messageService: MessageService = inject(MessageService);
+  protected location: Location = inject(Location);
 
   /**
    * Delete a record by its PID.
@@ -97,7 +99,7 @@ export class RecordUiService {
   }
 
   /**
-   * Redirects after saving a resource
+   * Redirects after saving a resource, without keeping the editor in the history.
    * @param pid - string, pid of the record
    * @param record - object, record to save
    * @param recordType - string, Type of resource
@@ -112,19 +114,50 @@ export class RecordUiService {
     route: ActivatedRoute,
   ): void {
     if (!config?.redirectUrl) {
-      if (action === 'update') {
-        this.router.navigate(['../../detail', pid], { relativeTo: route, replaceUrl: true });
-        return;
-      }
-      this.router.navigate(['../detail', pid], { relativeTo: route, replaceUrl: true });
+      const detail = action === 'update' ? ['../../detail', pid] : ['../detail', pid];
+      this.leavePage(this.router.createUrlTree(detail, { relativeTo: route }));
       return;
     }
 
     config.redirectUrl(record, action).subscribe((result: string) => {
       if (result !== null) {
-        this.router.navigateByUrl(result);
+        this.leavePage(this.router.parseUrl(result));
       }
     });
+  }
+
+  /**
+   * Leave the current page (an editor, a deleted record) for the target page,
+   * without keeping the current page in the browser history: go back if the
+   * target is the previous page, replace the current page by the target
+   * otherwise.
+   * @param target - the page to display
+   */
+  leavePage(target: UrlTree): void {
+    if (this.isPreviousPage(target)) {
+      this.location.back();
+      return;
+    }
+    this.router.navigateByUrl(target, { replaceUrl: true });
+  }
+
+  /**
+   * Whether the target is the previous page in the browser history: same path,
+   * with the target's query parameters (the previous page can have more, e.g.
+   * a tab or a search).
+   * @param target - the page to display
+   */
+  private isPreviousPage(target: UrlTree): boolean {
+    const history = window.navigation;
+    const previousUrl = history?.currentEntry && history.entries()[history.currentEntry.index - 1]?.url;
+    if (!previousUrl) {
+      return false;
+    }
+    // Both URLs as in the browser, with the base href.
+    const { pathname, search } = new URL(previousUrl);
+    const previous = this.router.parseUrl(pathname + search);
+    const targetInBrowser = this.router.parseUrl(this.location.prepareExternalUrl(this.router.serializeUrl(target)));
+    return containsTree(previous, targetInBrowser, { paths: 'exact', queryParams: 'subset' });
   }
 
   /**
