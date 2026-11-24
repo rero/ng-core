@@ -1,7 +1,18 @@
 // SPDX-FileCopyrightText: Fondation RERO+
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { NgClass } from '@angular/common';
-import { AfterViewInit, Component, HostListener, inject, input, output, viewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  DOCUMENT,
+  HostListener,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { OverlayOptions } from '@openng/optimus-ui/api';
@@ -13,6 +24,12 @@ import { combineLatest, map, Observable, Subject, switchMap } from 'rxjs';
 import { CONFIG } from '../../../core';
 import { removeChars } from '../../../core/utils/utils';
 import { RecordService } from '../../service/record/record.service';
+import {
+  availableHeightBelow,
+  capScrollHeight,
+  SUGGESTIONS_MIN_HEIGHT,
+  visibleBottom,
+} from './search-autocomplete.utils';
 
 export interface AutoCompleteRecordType {
   field: string;
@@ -52,7 +69,7 @@ export interface AutoCompleteData {
       [ngModel]="value()"
       [ngModelOptions]="{ standalone: true }"
       (ngModelChange)="currentValue = sanitize($event)"
-      [scrollHeight]="scrollHeight()"
+      [scrollHeight]="panelScrollHeight()"
       [suggestions]="suggestions()"
       (completeMethod)="setSuggestionQuery($event)"
       (onSelect)="onSelectValue($event)"
@@ -66,7 +83,10 @@ export interface AutoCompleteData {
         @if (item?.iconClass) {
           <i [ngClass]="item.iconClass"></i>&nbsp;
         }
-        <span [innerHTML]="item.label" [title]="item.originalLabel ? item.originalLabel : ''"></span>
+        <span
+          class="core:break-words core:whitespace-normal"
+          [innerHTML]="item.label"
+          [title]="item.originalLabel ? item.originalLabel : ''"></span>
       </ng-template>
     </p-autoComplete>
   `,
@@ -74,6 +94,7 @@ export interface AutoCompleteData {
 })
 export class SearchAutocompleteComponent implements AfterViewInit {
   protected recordService: RecordService = inject(RecordService);
+  private readonly window = inject(DOCUMENT).defaultView;
 
   // Input
   delay = input<number>(300);
@@ -98,6 +119,12 @@ export class SearchAutocompleteComponent implements AfterViewInit {
 
   readonly autoComplete = viewChild<AutoComplete>('autoComplete');
 
+  /** Height left below the input in the visible area, on touch devices only. */
+  private readonly availableHeight = signal<number | undefined>(undefined);
+
+  /** Scroll height of the suggestion panel, capped so that it fits below the input. */
+  readonly panelScrollHeight = computed(() => capScrollHeight(this.scrollHeight(), this.availableHeight()));
+
   // User Query
   private query = new Subject<string>();
 
@@ -110,6 +137,7 @@ export class SearchAutocompleteComponent implements AfterViewInit {
   });
 
   setSuggestionQuery(event: AutoCompleteCompleteEvent): void {
+    this.updateAvailableHeight();
     this.query.next(event.query);
   }
 
@@ -137,6 +165,27 @@ export class SearchAutocompleteComponent implements AfterViewInit {
   @HostListener('window:resize')
   onResize() {
     this.calculateWidth();
+  }
+
+  /**
+   * On a touch device, the virtual keyboard hides the bottom of the page. The
+   * suggestion panel, too tall to fit above or below the input, is then pinned
+   * at the top of the page and hides the input. Cap its height to the space left
+   * below the input, after scrolling the input to the top of the screen if this
+   * space is too small.
+   */
+  private updateAvailableHeight(): void {
+    const { window } = this;
+    const element: HTMLElement | undefined = this.autoComplete()?.el.nativeElement;
+    if (!window || !element || !window.matchMedia?.('(pointer: coarse)').matches) {
+      return;
+    }
+    let height = availableHeightBelow(element.getBoundingClientRect().bottom, visibleBottom(window));
+    if (height < SUGGESTIONS_MIN_HEIGHT) {
+      element.scrollIntoView({ block: 'start' });
+      height = availableHeightBelow(element.getBoundingClientRect().bottom, visibleBottom(window));
+    }
+    this.availableHeight.set(height);
   }
 
   ngAfterViewInit() {
